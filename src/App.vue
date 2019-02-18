@@ -8,7 +8,7 @@
     >
       <v-list dense>
         <template v-for="(item, index) in items">
-          <v-list-tile v-if="item.text" @click="" :key="item.text">
+          <v-list-tile v-if="item.text" @click="test()" :key="item.text">
             <v-list-tile-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-action>
@@ -33,13 +33,24 @@
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <span class="hidden-sm-and-down">GOKB Client</span>
       </v-toolbar-title>
-      <v-text-field
+      <v-autocomplete
+        v-model="globalSearchSelected"
+        :items="globalSearchItems"
+        :loading="globalSearchIsLoading"
+        :search-input.sync="globalSearchField"
+        hide-no-data
+        hide-selected
+        clearable
+        no-filter
+        item-text="name"
+        item-value="API"
+        placeholder="Titel, Pakete, Verlage"
+        return-object
         flat
         solo-inverted
-        prepend-icon="search"
-        label="Titel, Pakete, Verlage"
+        prepend-inner-icon="search"
         class="hidden-sm-and-down"
-      ></v-text-field>
+      ></v-autocomplete>
       <v-spacer></v-spacer>
 
       <v-menu offset-y open-on-hover>
@@ -150,12 +161,19 @@
 </template>
 
 <script>
+import { createCancelToken } from '@/shared/services/http'
+import searchServices from '@/shared/services/search-services'
 
 export default {
   name: 'App',
   data: () => ({
-    dialog: false,
     drawer: null,
+    globalSearchSelected: undefined,
+    globalSearchField: undefined,
+    globalSearchItems: undefined,
+    globalSearchIsLoading: false,
+
+    dialog: false,
     items: [
       { icon: 'create_new_folder', text: 'Paket anlegen' },
       { icon: 'library_add', text: 'Einzeltitel anlegen' },
@@ -167,6 +185,24 @@ export default {
       { icon: 'keyboard', text: 'Pflege' },
       { icon: 'people', text: 'Benutzer' }
     ]
-  })
+  }),
+  computed: {
+  },
+  watch: {
+    async globalSearchField () {
+      this.isLoading && this.cancelToken.cancel('Operation canceled by the user.')
+      this.cancelToken = createCancelToken()
+      this.isLoading = true
+      const result = await searchServices.globalSearch(this.globalSearchField, this.cancelToken.token)
+      console.log(result.records)
+      this.globalSearchItems = result.records
+      this.isLoading = false
+    },
+    globalSearchSelected () {
+      console.log('edit ', this.globalSearchSelected)
+    },
+  },
+  async created () {
+  }
 }
 </script>
