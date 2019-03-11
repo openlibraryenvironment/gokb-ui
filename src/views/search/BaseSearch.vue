@@ -1,0 +1,126 @@
+<template>
+  <v-container>
+    <v-card flat>
+      <v-form ref="searchForm" @submit.prevent="search">
+        <v-toolbar flat>
+          <v-toolbar-title>
+            <div class="title">{{title}}</div>
+            <div class="subheading">Suche</div>
+          </v-toolbar-title>
+        </v-toolbar>
+        <v-card-text class="ma-2">
+          <template v-for="(row, rowIndex) of searchInputFields">
+            <v-layout :key="`${title}_${rowIndex}`">
+              <template v-for="(column, columnIndex) of row">
+                <component :is="column.type" v-bind="column.properties" :key="`${title}_${rowIndex}_${columnIndex}`"></component>
+                <v-spacer v-if="columnIndex != row.length - 1" :key="`${title}_${rowIndex}_${columnIndex}_spacer`"></v-spacer>
+              </template>
+            </v-layout>
+          </template>
+          <v-layout>
+            <v-spacer></v-spacer>
+            <v-btn @click.stop="resetSearch">Zurücksetzen</v-btn>
+            <v-btn type="submit">Suchen</v-btn>
+          </v-layout>
+        </v-card-text>
+      </v-form>
+    </v-card>
+
+    <v-card flat>
+      <v-form>
+        <v-toolbar flat>
+          <v-toolbar-title>
+            <div class="subheading">Ergebnisse</div>
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-btn flat>Hinzufügen</v-btn>
+            <v-btn flat>Deaktivieren</v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <v-card-text class="ma-2">
+          <v-data-table
+            :headers="resultHeaders"
+            :items="resultItems"
+            hide-actions
+            :pagination.sync="resultPagination"
+            :total-items="resultPagination.totalItems"
+          >
+            <template slot="items" slot-scope="props">
+              <td v-for="header in resultHeaders" :key="header.value"
+                  :class="`text-xs-${header.align}`">{{props.item[header.value]}}
+              </td>
+            </template>
+          </v-data-table>
+          <v-layout>
+            <v-spacer></v-spacer>
+            <v-pagination v-model="resultPagination.page" :length="pages"></v-pagination>
+          </v-layout>
+        </v-card-text>
+      </v-form>
+    </v-card>
+  </v-container>
+</template>
+
+<script>
+import { createCancelToken } from '@/shared/services/http'
+import searchServices from '@/shared/services/search-services'
+
+const ROWS_PER_PAGE = 10
+
+export default {
+  name: 'BaseSearch',
+  data () {
+    return {
+      title: undefined,
+      componentType: undefined,
+      searchInputFields: undefined,
+
+      resultItems: undefined,
+      resultPagination: {
+        descending: false,
+        page: undefined,
+        rowsPerPage: ROWS_PER_PAGE,
+        sortBy: undefined,
+        totalItems: undefined,
+      },
+      resultHeaders: undefined,
+    }
+  },
+  computed: {
+    pages () {
+      if (!this.resultPagination.totalItems) {
+        return 0
+      }
+      return Math.ceil(this.resultPagination.totalItems / this.resultPagination.rowsPerPage)
+    }
+  },
+  watch: {
+    'resultPagination.page': function () {
+      this.search({ page: this.resultPagination.page })
+    }
+  },
+  methods: {
+    resetSearch () {
+      this.$refs.searchForm.reset()
+    },
+    async search ({ page = undefined }) {
+      this.cancelToken = createCancelToken()
+      const result = await searchServices.search({
+        componentType: this.componentType,
+        max: ROWS_PER_PAGE,
+        offset: page ? (page - 1) * this.resultPagination.rowsPerPage : 0
+      }, this.cancelToken.token)
+      console.log(result)
+      if (!page) {
+        this.resultPagination.totalItems = result.count
+        this.resultPagination.page = 1
+      }
+      this.resultItems = result.records
+    },
+  }
+}
+</script>
+
+<style scoped>
+</style>

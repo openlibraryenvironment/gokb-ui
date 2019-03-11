@@ -1,5 +1,5 @@
-import { http } from '@/shared/services/http'
+import baseServices from '@/shared/services/base-services'
 
 import api from './search-services'
 
-export default api(http)
+export default api(baseServices)

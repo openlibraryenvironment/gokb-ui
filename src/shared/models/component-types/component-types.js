@@ -1,0 +1,7 @@
+export const COMPONENT_TYPE_PACKAGE = 'Package'
+export const COMPONENT_TYPE_JOURNAL_INSTANCE = 'JournalInstance'
+export const COMPONENT_TYPE_BOOK_INSTANCE = 'BookInstance'
+export const COMPONENT_TYPE_DATABASE_INSTANCE = 'DatabaseInstance'
+export const COMPONENT_TYPE_PLATFORM = 'Platform'
+export const COMPONENT_TYPE_ORG = 'Org'
+export const COMPONENT_TYPE_TIPP = 'TIPP'
