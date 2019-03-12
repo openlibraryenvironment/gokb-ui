@@ -44,13 +44,6 @@ export default {
       ],
       [
         {
-          type: 'v-select',
-          properties: {
-            label: 'Kuratoren',
-            multiple: true,
-          }
-        },
-        {
           type: 'v-checkbox',
           properties: {
             label: 'Abgeschlossen Anzeigen'

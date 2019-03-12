@@ -7,10 +7,10 @@ module.exports = {
       errors: true
     },
     proxy: {
-      '^/api': {
-        target: 'https://gokbt.gbv.de/gokb',
-        ws: true,
-        changeOrigin: true
+      '^/gokb': {
+        target: 'https://gokbt.gbv.de',
+        changeOrigin: true,
+        logLevel: 'debug',
       },
     }
   },

@@ -12,7 +12,7 @@
           <template v-for="(row, rowIndex) of searchInputFields">
             <v-layout :key="`${title}_${rowIndex}`">
               <template v-for="(column, columnIndex) of row">
-                <component :is="column.type" v-bind="column.properties" :key="`${title}_${rowIndex}_${columnIndex}`"></component>
+                <component :is="column.type" clearable v-bind="column.properties" v-model="column.model" :key="`${title}_${rowIndex}_${columnIndex}`"></component>
                 <v-spacer v-if="columnIndex != row.length - 1" :key="`${title}_${rowIndex}_${columnIndex}_spacer`"></v-spacer>
               </template>
             </v-layout>
@@ -73,7 +73,7 @@ export default {
   data () {
     return {
       title: undefined,
-      componentType: undefined,
+      component: undefined,
       searchInputFields: undefined,
 
       resultItems: undefined,
@@ -105,9 +105,19 @@ export default {
       this.$refs.searchForm.reset()
     },
     async search ({ page = undefined }) {
+      const searchParameters = this.searchInputFields
+        .flat()
+        .map(field => ([field.name, field.model]))
+        .filter(([name, value]) => name && value)
+        .reduce((r, [name, value]) => {
+          r[name] = value
+          return r
+        }, {})
+
       this.cancelToken = createCancelToken()
       const result = await searchServices.search({
-        componentType: this.componentType,
+        ...searchParameters,
+        qbe: this.component,
         max: ROWS_PER_PAGE,
         offset: page ? (page - 1) * this.resultPagination.rowsPerPage : 0
       }, this.cancelToken.token)

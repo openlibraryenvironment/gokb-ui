@@ -1,5 +1,6 @@
-const GLOBAL_SEARCH_URL = './suggest'
-const SEARCH_URL = './find'
+const GLOBAL_SEARCH_URL = './api/suggest'
+const FIND_URL = './api/find'
+const SEARCH_URL = './search'
 
 const api = baseServices => ({
   async globalSearch ({ searchPattern, componentType = '', max = 10 }, cancelToken) {
@@ -10,11 +11,15 @@ const api = baseServices => ({
     return searchResult.data
   },
 
-  async search ({ componentType, max = 10, offset = 0 }, cancelToken) {
-    if (!componentType) {
-      return { records: [] }
-    }
-    const searchResult = await baseServices.request({ method: 'GET', url: `${SEARCH_URL}?componentType=${componentType}&max=${max}&offset=${offset}`, cancelToken })
+  async find (parameters = { max: 10, offset: 0 }, cancelToken) {
+    const queryParameters = baseServices.createQueryParameters(parameters)
+    const searchResult = await baseServices.request({ method: 'GET', url: `${FIND_URL}?${queryParameters}`, cancelToken })
+    return searchResult.data
+  },
+
+  async search (parameters = { max: 10, offset: 0 }, cancelToken) {
+    const queryParameters = baseServices.createQueryParameters(parameters)
+    const searchResult = await baseServices.request({ method: 'GET', url: `${SEARCH_URL}?${queryParameters}`, cancelToken })
     return searchResult.data
   }
 })
