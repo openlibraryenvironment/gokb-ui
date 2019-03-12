@@ -1,4 +1,4 @@
-# gokb-client
+# GOKb-Client
 
 ## Project setup
 ```
@@ -37,3 +37,15 @@ npm run test:unit
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+# GOKb Backend
+The GOKb Backend consists of the data APIs and a generic view.
+It exists a test environment, that can be used for development.
+The data APIs are provided below https://gokbt.gbv.de/gokb, the view below https://gokbt.gbv.de/gokb.
+The link to the admin view needs an account and gets you to https://gokbt.gbv.de/gokb/home/index
+
+## Wiki
+The wiki is provided below https://github.com/openlibraryenvironment/gokb/wiki.
+
+## Source
+You can get the source through github with https://github.com/openlibraryenvironment/gokb.
