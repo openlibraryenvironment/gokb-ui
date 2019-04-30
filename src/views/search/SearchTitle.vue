@@ -1,6 +1,5 @@
 <script>
 import BaseSearch from './BaseSearch'
-import { all } from '@/shared/models/status'
 import PublisherInputField from '@/shared/components/PublisherInputField'
 import ajaxServices from '@/shared/services/ajax-services'
 
@@ -17,6 +16,11 @@ export default {
       baseClass: 'org.gokb.cred.RefdataValue',
       filter1: 'TitleInstance.Medium',
       q: '',
+    })
+    const allStates = await ajaxServices.lookup({
+      baseClass: 'org.gokb.cred.RefdataValue',
+      filter1: 'KBComponent.Status',
+      q: ''
     })
 
     this.title = 'Titel'
@@ -58,7 +62,7 @@ export default {
           name: 'qp_status',
           properties: {
             label: 'Status',
-            items: all
+            items: allStates.values.map(({ id: value, text }) => ({ value, text })),
           }
         }
       ]
@@ -68,13 +72,13 @@ export default {
         text: 'Name/Titel',
         align: 'left',
         sortable: false,
-        value: 'name'
+        value: 'Name/Title'
       },
       {
         text: 'Typ',
         align: 'left',
         sortable: false,
-        value: 'componentType'
+        value: 'Type'
       },
       {
         text: 'Veröffentlicht von',

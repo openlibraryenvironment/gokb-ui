@@ -2,20 +2,17 @@ const AUTH = {
   username: process.env.VUE_APP_API_USER,
   password: process.env.VUE_APP_API_PASSWORD
 }
-// const HEADERS = {
-//   'Content-Type': 'application/json;charset=UTF-8'
-// }
 
 const api = http => ({
-  request ({ method, url, data }, cancelToken) {
-    return http.request({
+  request ({ method, url, useAuth = true, data }, cancelToken) {
+    const parameters = {
       method,
       url,
-      auth: AUTH,
-      /* headers: HEADERS, */
       data,
       cancelToken
-    })
+    }
+    useAuth && (parameters.auth = AUTH)
+    return http.request(parameters)
   },
 
   createQueryParameters (parameters) {

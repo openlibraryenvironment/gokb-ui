@@ -8,5 +8,14 @@ Vue.use(Vuetify, {
   lang: {
     locales: { de },
     current: 'de'
+  },
+  theme: {
+    primary: '#4f4f4f',
+    secondary: '#bdbdbd',
+    accent: '#f2994a',
+    error: '#eb5757',
+    // warning: '',
+    info: '#2d9cdb',
+    // success: ''
   }
 })

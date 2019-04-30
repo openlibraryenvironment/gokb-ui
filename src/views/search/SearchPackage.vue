@@ -1,6 +1,5 @@
 <script>
 import BaseSearch from './BaseSearch'
-import { all } from '@/shared/models/status'
 import ProviderInputField from '@/shared/components/ProviderInputField'
 import ajaxServices from '@/shared/services/ajax-services'
 
@@ -10,9 +9,6 @@ export default {
   components: { ProviderInputField },
   data () {
     return {
-      providerItems: undefined,
-      providerIsLoading: false,
-      providerSearchField: undefined,
     }
   },
   async created () {
@@ -20,6 +16,11 @@ export default {
     this.component = 'g:1packages'
     const allCuratorGroups = await ajaxServices.lookup({
       baseClass: 'org.gokb.cred.CuratoryGroup',
+      q: ''
+    })
+    const allStates = await ajaxServices.lookup({
+      baseClass: 'org.gokb.cred.RefdataValue',
+      filter1: 'KBComponent.Status',
       q: ''
     })
 
@@ -61,7 +62,7 @@ export default {
           name: 'qp_status',
           properties: {
             label: 'Status',
-            items: all
+            items: allStates.values.map(({ id: value, text }) => ({ value, text })),
           }
         },
       ]
@@ -71,19 +72,19 @@ export default {
         text: 'Name',
         align: 'left',
         sortable: false,
-        value: 'name'
+        value: 'Name'
       },
       {
         text: 'Provider',
         align: 'left',
         sortable: false,
-        value: 'provider'
+        value: 'Provider'
       },
       {
         text: 'Plattform',
         align: 'left',
         sortable: false,
-        value: 'platform?'
+        value: 'Nominal Platform'
       },
     ]
   },

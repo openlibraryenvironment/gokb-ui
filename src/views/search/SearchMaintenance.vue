@@ -1,5 +1,6 @@
 <script>
 import BaseSearch from './BaseSearch'
+import ajaxServices from '@/shared/services/ajax-services'
 
 export default {
   name: 'SearchMaintenance',
@@ -8,9 +9,19 @@ export default {
     return {
     }
   },
-  created () {
+  async created () {
     this.title = 'Pflege'
-    this.componentType = '?'
+    this.component = '?'
+    const allCuratorGroups = await ajaxServices.lookup({
+      baseClass: 'org.gokb.cred.CuratoryGroup',
+      q: ''
+    })
+
+    const allUsers = await ajaxServices.lookup({
+      baseClass: 'org.gokb.cred.User',
+      q: ''
+    })
+
     this.searchInputFields = [
       [
         {
@@ -24,6 +35,7 @@ export default {
           properties: {
             label: 'Ersteller',
             multiple: true,
+            items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
           }
         }
       ],
@@ -33,6 +45,7 @@ export default {
           properties: {
             label: 'Kuratoren',
             multiple: true,
+            items: allCuratorGroups.values.map(({ id: value, text }) => ({ value, text })),
           }
         },
         {

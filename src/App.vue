@@ -31,7 +31,7 @@
     >
       <v-toolbar-title style="width: 300px" class="">
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-        <span class="hidden-sm-and-down">GOKB Client</span>
+        <span class="hidden-sm-and-down">GOKb Client</span>
       </v-toolbar-title>
       <v-autocomplete
         v-model="globalSearchSelected"
@@ -75,9 +75,7 @@
         </v-list>
       </v-menu>
 
-      <v-btn icon>
-        <v-icon>person</v-icon>
-      </v-btn>
+      <user-menu></user-menu>
     </v-toolbar>
     <v-content>
       <router-view :key="$route.fullPath"/>
@@ -86,6 +84,7 @@
 </template>
 
 <script>
+import UserMenu from '@/shared/components/UserMenu'
 import { routeTo } from '@/router'
 import { createCancelToken } from '@/shared/services/http'
 import {
@@ -95,11 +94,13 @@ import {
   COMPONENT_TYPE_ORG
 } from '@/shared/models/component-types'
 import searchServices from '@/shared/services/search-services'
+import accountServices from '@/shared/services/account-services'
 
 const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
 
 export default {
   name: 'App',
+  components: { UserMenu },
   data: () => ({
     drawer: null,
     globalSearchSelected: undefined,
@@ -142,6 +143,8 @@ export default {
     },
   },
   async created () {
+    accountServices.login(process.env.VUE_APP_API_USER, process.env.VUE_APP_API_PASSWORD)
+    // console.log('login', result)
   }
 }
 </script>

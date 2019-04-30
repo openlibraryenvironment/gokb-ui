@@ -17,6 +17,11 @@ const router = new Router({
       component: Home
     },
     {
+      path: '/profile',
+      name: 'profile',
+      component: () => import(/* webpackChunkName: "title" */ './views/ProfileComponent.vue')
+    },
+    {
       path: '/title/:id',
       props: true,
       name: 'title',

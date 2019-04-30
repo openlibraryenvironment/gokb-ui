@@ -1,5 +1,6 @@
 <script>
 import BaseSearch from './BaseSearch'
+import ajaxServices from '@/shared/services/ajax-services'
 
 export default {
   name: 'SearchUser',
@@ -8,13 +9,21 @@ export default {
     return {
     }
   },
-  created () {
+  async created () {
     this.title = 'Benutzer'
-    this.componentType = 'User'
+    this.component = 'g:UserOrganisation'
+
+    const allStates = await ajaxServices.lookup({
+      baseClass: 'org.gokb.cred.RefdataValue',
+      filter1: 'KBComponent.Status',
+      q: ''
+    })
+
     this.searchInputFields = [
       [
         {
           type: 'v-text-field',
+          name: 'qp_name',
           properties: {
             label: 'Benutzername'
           }
@@ -37,8 +46,10 @@ export default {
         },
         {
           type: 'v-select',
+          name: 'qp_status',
           properties: {
             label: 'Status',
+            items: allStates.values.map(({ id: value, text }) => ({ value, text })),
           }
         }
       ]
@@ -48,7 +59,7 @@ export default {
         text: 'Benutzername',
         align: 'left',
         sortable: false,
-        value: 'name?'
+        value: 'Name'
       },
       {
         text: 'E-Mail',

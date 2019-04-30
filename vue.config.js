@@ -9,6 +9,8 @@ module.exports = {
     proxy: {
       '^/gokb': {
         target: 'https://gokbt.gbv.de',
+        // cookieDomainRewrite: 'localhost',
+        // cookiePathRewrite: '/',
         changeOrigin: true,
         logLevel: 'debug',
       },

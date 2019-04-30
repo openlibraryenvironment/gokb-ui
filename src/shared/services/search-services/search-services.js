@@ -18,8 +18,8 @@ const api = baseServices => ({
   },
 
   async search (parameters = { max: 10, offset: 0 }, cancelToken) {
-    const queryParameters = baseServices.createQueryParameters(parameters)
-    const searchResult = await baseServices.request({ method: 'GET', url: `${SEARCH_URL}?${queryParameters}`, cancelToken })
+    const queryParameters = baseServices.createQueryParameters({ ...parameters, format: 'json' })
+    const searchResult = await baseServices.request({ method: 'GET', url: `${SEARCH_URL}?${queryParameters}`, useAuth: false, cancelToken })
     return searchResult.data
   }
 })
