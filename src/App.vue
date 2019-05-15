@@ -94,7 +94,6 @@ import {
   COMPONENT_TYPE_ORG
 } from '@/shared/models/component-types'
 import searchServices from '@/shared/services/search-services'
-import accountServices from '@/shared/services/account-services'
 
 const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
 
@@ -142,9 +141,5 @@ export default {
       routeTo(this.globalSearchSelected.componentType, this.globalSearchSelected.id)
     },
   },
-  async created () {
-    accountServices.login(process.env.VUE_APP_API_USER, process.env.VUE_APP_API_PASSWORD)
-    // console.log('login', result)
-  }
 }
 </script>

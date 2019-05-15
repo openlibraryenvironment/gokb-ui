@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Home from './views/HomeView.vue'
 
 const COMPONENT_ROUTE_MAPPER = {
   'Package': 'package',
@@ -19,67 +19,67 @@ const router = new Router({
     {
       path: '/profile',
       name: 'profile',
-      component: () => import(/* webpackChunkName: "title" */ './views/ProfileComponent.vue')
+      component: () => import(/* webpackChunkName: "title" */ './views/ProfileView.vue')
     },
     {
       path: '/title/:id',
       props: true,
       name: 'title',
-      component: () => import(/* webpackChunkName: "title" */ './views/TitleComponent.vue')
+      component: () => import(/* webpackChunkName: "title" */ './views/TitleView.vue')
     },
     {
       path: '/package/:id',
       props: true,
       name: 'package',
-      component: () => import(/* webpackChunkName: "package" */ './views/PackageComponent.vue')
+      component: () => import(/* webpackChunkName: "package" */ './views/PackageView.vue')
     },
     {
       path: '/provider/:id',
       props: true,
       name: 'provider',
-      component: () => import(/* webpackChunkName: "publisher" */ './views/ProviderComponent.vue')
+      component: () => import(/* webpackChunkName: "publisher" */ './views/ProviderView.vue')
     },
 
     {
       path: '/createPackage',
       name: 'createPackage',
-      component: () => import(/* webpackChunkName: "createPackage" */ './views/create/CreatePackage.vue')
+      component: () => import(/* webpackChunkName: "createPackage" */ './views/create/CreatePackageView.vue')
     },
     {
       path: '/createTitle',
       name: 'createTitle',
-      component: () => import(/* webpackChunkName: "createTitle" */ './views/create/CreateTitle.vue')
+      component: () => import(/* webpackChunkName: "createTitle" */ './views/create/CreateTitleView.vue')
     },
     {
       path: '/KBARTImport',
       name: 'KBARTImport',
-      component: () => import(/* webpackChunkName: "KBARTImport" */ './views/create/KBARTImport.vue')
+      component: () => import(/* webpackChunkName: "KBARTImport" */ './views/create/KBARTImportView.vue')
     },
 
     {
       path: '/searchMaintenance',
       name: 'searchMaintenance',
-      component: () => import(/* webpackChunkName: "searchMaintenance" */ './views/search/SearchMaintenance.vue')
+      component: () => import(/* webpackChunkName: "searchMaintenance" */ './views/search/SearchMaintenanceView.vue')
     },
     {
       path: '/searchPackage',
       name: 'searchPackage',
-      component: () => import(/* webpackChunkName: "searchPackage" */ './views/search/SearchPackage.vue')
+      component: () => import(/* webpackChunkName: "searchPackage" */ './views/search/SearchPackageView.vue')
     },
     {
       path: '/searchReview',
       name: 'searchReview',
-      component: () => import(/* webpackChunkName: "searchReview" */ './views/search/SearchReview.vue')
+      component: () => import(/* webpackChunkName: "searchReview" */ './views/search/SearchReviewView.vue')
     },
     {
       path: '/searchTitle',
       name: 'searchTitle',
-      component: () => import(/* webpackChunkName: "searchTitle" */ './views/search/SearchTitle.vue')
+      component: () => import(/* webpackChunkName: "searchTitle" */ './views/search/SearchTitleView.vue')
     },
     {
       path: '/searchUser',
       name: 'searchUser',
-      component: () => import(/* webpackChunkName: "searchUser" */ './views/search/SearchUser.vue')
+      component: () => import(/* webpackChunkName: "searchUser" */ './views/search/SearchUserView.vue')
     },
   ]
 })

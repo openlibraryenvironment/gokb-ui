@@ -1,5 +1,7 @@
 <template>
-  <span></span>
+  <v-btn>
+    <slot></slot>
+  </v-btn>
 </template>
 
 <script>

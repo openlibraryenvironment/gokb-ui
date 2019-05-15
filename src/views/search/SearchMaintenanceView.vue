@@ -1,5 +1,5 @@
 <script>
-import BaseSearch from './BaseSearch'
+import BaseSearch from './BaseSearchView'
 import ajaxServices from '@/shared/services/ajax-services'
 
 export default {

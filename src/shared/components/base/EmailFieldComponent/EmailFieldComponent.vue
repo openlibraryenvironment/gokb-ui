@@ -1,15 +1,19 @@
-<template>
-  <v-text-field label="E-Mail" v-model="value" type="text" required/>
-</template>
-
 <script>
+import TextFieldComponent from '@/shared/components/base/TextFieldComponent'
+
 export default {
+  extends: TextFieldComponent,
   name: 'EmailFieldComponent',
   props: {
-    value: {
+    label: {
       type: String,
-      required: true,
-      default: '',
+      required: false,
+      default: 'E-Mail',
+    },
+    type: {
+      type: String,
+      required: false,
+      default: 'email',
     },
   },
 }

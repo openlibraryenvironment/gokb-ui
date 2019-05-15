@@ -5,6 +5,10 @@
         <v-toolbar-title>
           <span class="subheading">{{title}}</span>
         </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+          <slot name="buttons"></slot>
+        </v-toolbar-items>
       </v-toolbar>
       <v-card-text class="ma-2">
         <slot></slot>

@@ -1,15 +1,15 @@
 <template>
   <v-dialog :value="value" width="400" persistent>
       <v-card class="elevation-12">
-        <v-form ref="form" @submit.prevent="login">
+        <v-form ref="form" @submit.prevent="register">
           <v-toolbar>
             <v-toolbar-title>Registrierung</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-text-field label="Benutzername"
-                          v-model="user"
+                          v-model="username"
                           :rules="rules"
-                          type="text" prepend-icon="person" name="user" autocomplete="username" required/>
+                          type="text" prepend-icon="person" name="username" autocomplete="username" required/>
             <v-text-field label="Email"
                           v-model="email"
                           :rules="rules"
@@ -19,9 +19,9 @@
                           :rules="rules"
                           type="password" prepend-icon="lock" name="password" autocomplete="password" required/>
             <v-text-field label="Kennwort (Wiederholung)"
-                          v-model="passwordRepeat"
+                          v-model="password2"
                           :rules="rules"
-                          type="password" prepend-icon="lock" name="passwordRepeat" autocomplete="password-repeat" required/>
+                          type="password" prepend-icon="lock" name="password2" autocomplete="password2" required/>
           </v-card-text>
           <v-card-actions>
             <v-spacer/>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import accountServices from '@/shared/services/account-services'
 
 export default {
   props: {
@@ -46,10 +47,10 @@ export default {
   data () {
     return {
       valid: true,
-      user: undefined,
+      username: undefined,
       email: undefined,
       password: undefined,
-      passwordRepeat: undefined,
+      password2: undefined,
       save: undefined,
       rules: [
         () => {
@@ -72,19 +73,13 @@ export default {
     }
   },
   methods: {
-    login () {
-      const user = this.user
+    async register () {
+      const username = this.user
       const password = this.password
-      // const save = this.save
-      this.doLogin({ user, password })
-        .then(() => {
-          // this.save && storage.saveLoginData({ user, password, save })
-          this.close()
-          this.route && this.$router.push(this.route)
-        })
-        .catch(error => {
-          this.error = error
-        })
+      const email = this.email
+      const password2 = this.password2
+      const registerResponse = await accountServices.register({ username, email, password, password2 })
+      console.log(registerResponse)
     },
     close () {
       this.$emit('input', false)

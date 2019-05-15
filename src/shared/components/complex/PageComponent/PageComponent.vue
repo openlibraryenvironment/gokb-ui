@@ -6,9 +6,12 @@
           {{title}}
         </v-toolbar-title>
       </v-toolbar>
-      <v-card-text class="ma-2">
+      <v-card-text>
         <slot></slot>
       </v-card-text>
+      <v-card-actions>
+        <slot name="buttons"></slot>
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>

@@ -7,13 +7,13 @@
           </v-toolbar>
           <v-card-text>
             <v-text-field label="Benutzername"
-                          v-model="user"
+                          v-model="username"
                           :rules="rules"
-                          type="text" prepend-icon="person" name="user" autocomplete="username" required/>
+                          type="text" prepend-icon="person" name="username" autocomplete="username" required/>
             <v-text-field label="Kennwort"
                           v-model="password"
                           :rules="rules"
-                          type="password" prepend-icon="lock" name="password" autocomplete="current-password" required/>
+                          type="password" prepend-icon="lock" name="password" autocomplete="password" required/>
             <v-checkbox
               label="automatisch einloggen"
               v-model="save"
@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import accountServices from '@/shared/services/account-services'
+
 export default {
   props: {
     value: {
@@ -46,7 +48,7 @@ export default {
   data () {
     return {
       valid: true,
-      user: undefined,
+      username: undefined,
       password: undefined,
       save: undefined,
       rules: [
@@ -70,19 +72,11 @@ export default {
     }
   },
   methods: {
-    login () {
-      const user = this.user
+    async login () {
+      const username = this.username
       const password = this.password
-      // const save = this.save
-      this.doLogin({ user, password })
-        .then(() => {
-          // this.save && storage.saveLoginData({ user, password, save })
-          this.close()
-          this.route && this.$router.push(this.route)
-        })
-        .catch(error => {
-          this.error = error
-        })
+      const loginResult = await accountServices.login({ username, password })
+      console.log('loginResult', loginResult)
     },
     close () {
       this.$emit('input', false)

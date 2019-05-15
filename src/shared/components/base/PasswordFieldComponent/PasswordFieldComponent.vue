@@ -1,20 +1,19 @@
-<template>
-  <v-text-field :label="label" v-model="value" type="password" required/>
-</template>
-
 <script>
+import TextFieldComponent from '@/shared/components/base/TextFieldComponent'
+
 export default {
+  extends: TextFieldComponent,
   name: 'PasswordFieldComponent',
   props: {
-    value: {
-      type: String,
-      required: true,
-      default: '',
-    },
     label: {
       type: String,
       required: false,
       default: 'Kennwort',
+    },
+    type: {
+      type: String,
+      required: false,
+      default: 'password',
     },
   },
 }

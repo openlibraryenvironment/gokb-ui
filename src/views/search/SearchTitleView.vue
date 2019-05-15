@@ -1,22 +1,21 @@
 <script>
-import BaseSearch from './BaseSearch'
-import ProviderInputField from '@/shared/components/ProviderInputField'
+import BaseSearch from './BaseSearchView'
+import PublisherInputField from '@/shared/components/PublisherInputField'
 import ajaxServices from '@/shared/services/ajax-services'
 
 export default {
-  name: 'SearchPackage',
+  name: 'SearchTitle',
   extends: BaseSearch,
-  components: { ProviderInputField },
+  components: { PublisherInputField },
   data () {
     return {
     }
   },
   async created () {
-    this.title = 'Pakete'
-    this.component = 'g:1packages'
-    const allCuratorGroups = await ajaxServices.lookup({
-      baseClass: 'org.gokb.cred.CuratoryGroup',
-      q: ''
+    const allTypes = await ajaxServices.lookup({
+      baseClass: 'org.gokb.cred.RefdataValue',
+      filter1: 'TitleInstance.Medium',
+      q: '',
     })
     const allStates = await ajaxServices.lookup({
       baseClass: 'org.gokb.cred.RefdataValue',
@@ -24,29 +23,16 @@ export default {
       q: ''
     })
 
+    this.title = 'Titel'
+    this.component = 'g:1titles'
     this.searchInputFields = [
       [
         {
           type: 'v-text-field',
           name: 'qp_name',
           properties: {
-            label: 'Name',
+            label: 'Name/Titel'
           }
-        },
-        {
-          type: 'v-select',
-          name: 'qp_curgroup',
-          properties: {
-            label: 'Kuratoren',
-            multiple: true,
-            items: allCuratorGroups.values.map(({ id: value, text }) => ({ value, text })),
-          }
-        }
-      ],
-      [
-        {
-          type: 'provider-input-field',
-          name: 'qp_provider',
         },
         {
           type: 'v-text-field',
@@ -58,33 +44,53 @@ export default {
       ],
       [
         {
+          type: 'publisher-input-field',
+          name: 'qp_pub',
+        },
+        {
+          type: 'v-select',
+          name: 'qp_medium',
+          properties: {
+            label: 'Typ',
+            items: allTypes.values.map(({ id: value, text }) => ({ value, text })),
+          }
+        }
+      ],
+      [
+        {
           type: 'v-select',
           name: 'qp_status',
           properties: {
             label: 'Status',
             items: allStates.values.map(({ id: value, text }) => ({ value, text })),
           }
-        },
+        }
       ]
     ]
     this.resultHeaders = [
       {
-        text: 'Name',
+        text: 'Name/Titel',
         align: 'left',
         sortable: false,
-        value: 'Name'
+        value: 'Name/Title'
       },
       {
-        text: 'Provider',
+        text: 'Typ',
         align: 'left',
         sortable: false,
-        value: 'Provider'
+        value: 'Type'
       },
       {
-        text: 'Plattform',
-        align: 'left',
+        text: 'Veröffentlicht von',
+        align: 'right',
         sortable: false,
-        value: 'Nominal Platform'
+        value: ''
+      },
+      {
+        text: 'Veröffentlicht bis',
+        align: 'right',
+        sortable: false,
+        value: ''
       },
     ]
   },
@@ -92,4 +98,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>
