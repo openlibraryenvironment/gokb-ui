@@ -1,42 +1,28 @@
 <template>
-  <v-dialog :value="value" width="400" persistent>
-      <v-card class="elevation-12">
-        <v-form ref="form" @submit.prevent="register">
-          <v-toolbar>
-            <v-toolbar-title>Registrierung</v-toolbar-title>
-          </v-toolbar>
-          <v-card-text>
-            <v-text-field label="Benutzername"
-                          v-model="username"
-                          :rules="rules"
-                          type="text" prepend-icon="person" name="username" autocomplete="username" required/>
-            <v-text-field label="Email"
-                          v-model="email"
-                          :rules="rules"
-                          type="text" prepend-icon="email" name="email" autocomplete="email" required/>
-            <v-text-field label="Kennwort"
-                          v-model="password"
-                          :rules="rules"
-                          type="password" prepend-icon="lock" name="password" autocomplete="password" required/>
-            <v-text-field label="Kennwort (Wiederholung)"
-                          v-model="password2"
-                          :rules="rules"
-                          type="password" prepend-icon="lock" name="password2" autocomplete="password2" required/>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer/>
-            <v-btn @click="close" flat>Abbrechen</v-btn>
-            <v-btn type="submit" color="info">Registrieren</v-btn>
-          </v-card-actions>
-        </v-form>
-      </v-card>
-  </v-dialog>
+  <gokb-dialog v-model="localValue" title="Registrierung" :submit="register">
+    <gokb-name-field v-model="username"/>
+    <gokb-email-field v-model="email"/>
+    <gokb-password-field v-model="password"/>
+    <gokb-password-field label="Kennwort (Wiederholung)" v-model="password2"/>
+    <template #buttons>
+      <v-spacer/>
+      <gokb-button @click.native="close" flat>Abbrechen</gokb-button>
+      <gokb-button type="submit" color="info">Registrieren</gokb-button>
+    </template>
+  </gokb-dialog>
 </template>
 
 <script>
 import account from '@/shared/models/account'
+import GokbDialog from '@/shared/components/complex/DialogComponent'
+import GokbButton from '@/shared/components/base/ButtonComponent'
+import GokbNameField from '@/shared/components/simple/NameFieldComponent'
+import GokbEmailField from '@/shared/components/simple/EmailFieldComponent'
+import GokbPasswordField from '@/shared/components/simple/PasswordFieldComponent'
 
 export default {
+  name: 'RegisterPopup',
+  components: { GokbDialog, GokbNameField, GokbEmailField, GokbPasswordField, GokbButton },
   props: {
     value: {
       type: Boolean,
@@ -64,6 +50,16 @@ export default {
       ]
     }
   },
+  computed: {
+    localValue: {
+      get () {
+        return this.value
+      },
+      set (localValue) {
+        this.$emit('input', localValue)
+      }
+    },
+  },
   watch: {
     error () {
       this.$refs.form.validate()
@@ -80,7 +76,7 @@ export default {
       this.close()
     },
     close () {
-      this.$emit('input', false)
+      this.localValue = false
     }
   }
 }
