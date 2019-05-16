@@ -1,6 +1,6 @@
 <script>
 import BaseSearch from './BaseSearchView'
-import PublisherInputField from '@/shared/components/PublisherInputField'
+import PublisherInputField from '@/shared/components/simple/SearchPublisherFieldComponent'
 import ajaxServices from '@/shared/services/ajax-services'
 
 export default {

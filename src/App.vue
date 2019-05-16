@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import UserMenu from '@/shared/components/UserMenu'
+import UserMenu from '@/shared/components/complex/UserMenu'
 import { routeTo } from '@/router'
 import { createCancelToken } from '@/shared/services/http'
 import {

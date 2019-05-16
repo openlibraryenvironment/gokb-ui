@@ -6,14 +6,8 @@
             <v-toolbar-title>Login</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            <v-text-field label="Benutzername"
-                          v-model="username"
-                          :rules="rules"
-                          type="text" prepend-icon="person" name="username" autocomplete="username" required/>
-            <v-text-field label="Kennwort"
-                          v-model="password"
-                          :rules="rules"
-                          type="password" prepend-icon="lock" name="password" autocomplete="password" required/>
+            <gokb-name-field v-model="username"/>
+            <gokb-password-field v-model="password"/>
             <v-checkbox
               label="automatisch einloggen"
               v-model="save"
@@ -22,8 +16,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer/>
-            <v-btn @click="close" flat>Abbrechen</v-btn>
-            <v-btn type="submit" color="info">Login</v-btn>
+            <gokb-button @click="close" flat>Abbrechen</gokb-button>
+            <gokb-button type="submit" color="info">Login</gokb-button>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -31,9 +25,14 @@
 </template>
 
 <script>
-import accountServices from '@/shared/services/account-services'
+import account from '@/shared/models/account'
+import GokbButton from '@/shared/components/base/ButtonComponent'
+import GokbNameField from '@/shared/components/simple/NameFieldComponent'
+import GokbPasswordField from '@/shared/components/simple/PasswordFieldComponent'
 
 export default {
+  name: 'LoginPopup',
+  components: { GokbNameField, GokbPasswordField, GokbButton },
   props: {
     value: {
       type: Boolean,
@@ -64,8 +63,6 @@ export default {
     }
   },
 
-  computed: {
-  },
   watch: {
     error () {
       this.$refs.form.validate()
@@ -75,8 +72,10 @@ export default {
     async login () {
       const username = this.username
       const password = this.password
-      const loginResult = await accountServices.login({ username, password })
-      console.log('loginResult', loginResult)
+      await account.login({ username, password })
+      if (account.loggedIn()) {
+        this.close()
+      }
     },
     close () {
       this.$emit('input', false)

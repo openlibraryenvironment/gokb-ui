@@ -1,5 +1,5 @@
 <script>
-import SearchInputField from '@/shared/components/SearchInputField'
+import SearchInputField from '@/shared/components/base/SearchFieldComponent'
 
 export default {
   extends: SearchInputField,

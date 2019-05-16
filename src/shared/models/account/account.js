@@ -1,10 +1,24 @@
-// import accountServices from '@/shared/account-services'
+const api = (state, accountServices) => ({
+  state,
 
-const account = Vue.observable({
-  username: undefined,
-  email: undefined,
-  password: undefined,
-  password2: undefined,
+  loggedIn () {
+    return !!this.state.username
+  },
+
+  async login ({ username, password }, cancelToken) {
+    const loginResult = await accountServices.login({ username, password }, cancelToken)
+    this.state.username = loginResult.data.username
+    return loginResult
+  },
+
+  logout (cancelToken) {
+    accountServices.logout(cancelToken)
+    this.state.username = undefined
+  },
+
+  register ({ username, email, password, password2 }, cancelToken) {
+    return accountServices.register({ username, email, password, password2 }, cancelToken)
+  },
 })
 
-export default account
+export default api

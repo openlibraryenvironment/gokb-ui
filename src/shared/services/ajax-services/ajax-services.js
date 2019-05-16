@@ -6,8 +6,7 @@ const api = baseServices => ({
     const result = await baseServices.request({
       method: 'GET',
       url: `${LOOKUP_URL}?${queryParameters}`,
-      cancelToken
-    })
+    }, cancelToken)
     return result.data
   },
 })

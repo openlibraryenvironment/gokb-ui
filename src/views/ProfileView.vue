@@ -1,8 +1,6 @@
 <template>
   <gokb-page title="Profil">
     <gokb-section title="Allgemein">
-      <gokb-text-field label="Name" v-model="username"></gokb-text-field>
-      <gokb-text-field label="Name für die Anzeige" v-model="displayName"></gokb-text-field>
       <gokb-email-field v-model="email"></gokb-email-field>
     </gokb-section>
     <gokb-section title="Kennwort">
@@ -26,27 +24,28 @@
 </template>
 
 <script>
+// import accountServices from '@/shared/services/account-services'
 import GokbPage from '@/shared/components/complex/PageComponent'
 import GokbTable from '@/shared/components/complex/TableComponent'
 import GokbSection from '@/shared/components/complex/SectionComponent'
 import GokbButton from '@/shared/components/base/ButtonComponent'
-import GokbTextField from '@/shared/components/base/TextFieldComponent'
-import GokbEmailField from '@/shared/components/base/EmailFieldComponent'
-import GokbPasswordField from '@/shared/components/base/PasswordFieldComponent'
+import GokbEmailField from '@/shared/components/simple/EmailFieldComponent'
+import GokbPasswordField from '@/shared/components/simple/PasswordFieldComponent'
 
 export default {
   name: 'ProfileComponent',
-  components: { GokbPage, GokbSection, GokbTable, GokbTextField, GokbEmailField, GokbButton, GokbPasswordField },
+  components: { GokbPage, GokbSection, GokbTable, GokbEmailField, GokbButton, GokbPasswordField },
   data () {
     return {
-      username: undefined,
-      displayName: undefined,
       email: undefined,
       origpass: undefined,
       newpass: undefined,
       repeatpass: undefined,
     }
   },
+  created () {
+    // accountServices
+  }
 }
 </script>
 

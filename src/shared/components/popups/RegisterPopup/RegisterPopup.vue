@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import accountServices from '@/shared/services/account-services'
+import account from '@/shared/models/account'
 
 export default {
   props: {
@@ -64,9 +64,6 @@ export default {
       ]
     }
   },
-
-  computed: {
-  },
   watch: {
     error () {
       this.$refs.form.validate()
@@ -74,12 +71,13 @@ export default {
   },
   methods: {
     async register () {
-      const username = this.user
+      const username = this.username
       const password = this.password
       const email = this.email
       const password2 = this.password2
-      const registerResponse = await accountServices.register({ username, email, password, password2 })
+      const registerResponse = await account.register({ username, email, password, password2 })
       console.log(registerResponse)
+      this.close()
     },
     close () {
       this.$emit('input', false)

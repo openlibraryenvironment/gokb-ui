@@ -1,5 +1,11 @@
 <template>
-  <v-text-field :label="label" v-model="localValue" :type="type" required/>
+  <v-text-field
+    :label="label"
+    v-model="localValue"
+    :type="type"
+    :required="required"
+    :prepend-icon="prependIcon"
+    :browser-autocomplete="browserAutocomplete"/>
 </template>
 
 <script>
@@ -19,6 +25,18 @@ export default {
       type: String,
       required: false,
       default: 'text',
+    },
+    required: {
+      type: Boolean,
+      required: false,
+    },
+    prependIcon: {
+      type: String,
+      required: false,
+    },
+    browserAutocomplete: {
+      type: String,
+      required: false,
     },
   },
   computed: {

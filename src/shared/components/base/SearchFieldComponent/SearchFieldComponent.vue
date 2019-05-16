@@ -18,6 +18,7 @@ import BaseComponent from '@/shared/components/BaseComponent'
 import ajaxServices from '@/shared/services/ajax-services'
 
 export default {
+  name: 'SearchFieldComponent',
   extends: BaseComponent,
   data () {
     return {

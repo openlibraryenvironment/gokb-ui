@@ -2,27 +2,31 @@
   <span>
     <login-popup v-model="showLogin"/>
     <register-popup v-model="showRegister"/>
-    <v-menu slot="activator" offset-y>
-      <v-btn slot="activator" icon >
-        <v-icon color="info">person</v-icon>
-      </v-btn>
-      <v-list>
-        <span v-for="menu in userMenuItems" :key="menu.id">
-          <v-list-tile v-for="item in menu.items" :key="item.title" @click.stop="execute(item)">
-            <v-list-tile-avatar>
-              <v-icon v-if="!isImageIcon(item.icon)">{{item.icon}}</v-icon>
-              <img v-else :src="item.icon" contain class="image-icon"/>
-            </v-list-tile-avatar>
-            <v-list-tile-title>{{item.title}}</v-list-tile-title>
-          </v-list-tile>
-          <v-divider v-if="!menu.last"></v-divider>
-        </span>
-      </v-list>
-    </v-menu>
+    <v-tooltip :disabled="!username" left>
+      <v-menu slot="activator" offset-y>
+        <v-btn slot="activator" icon >
+          <v-icon color="info">person</v-icon>
+        </v-btn>
+        <v-list>
+          <span v-for="menu in userMenuItems" :key="menu.id">
+            <v-list-tile v-for="item in menu.items" :key="item.title" @click.stop="execute(item)">
+              <v-list-tile-avatar>
+                <v-icon v-if="!isImageIcon(item.icon)">{{item.icon}}</v-icon>
+                <img v-else :src="item.icon" contain class="image-icon"/>
+              </v-list-tile-avatar>
+              <v-list-tile-title>{{item.title}}</v-list-tile-title>
+            </v-list-tile>
+            <v-divider v-if="!menu.last"></v-divider>
+          </span>
+        </v-list>
+      </v-menu>
+    <span>{{username}}</span>
+    </v-tooltip>
   </span>
 </template>
 
 <script>
+import account from '@/shared/models/account'
 import LoginPopup from '@/shared/components/popups/LoginPopup'
 import RegisterPopup from '@/shared/components/popups/RegisterPopup'
 
@@ -41,8 +45,11 @@ export default {
     }
   },
   computed: {
+    username () {
+      return account.state.username
+    },
     loggedIn () {
-      return !!this.user
+      return account.loggedIn()
     },
     userMenuItems () {
       if (this.loggedIn) {
@@ -104,8 +111,7 @@ export default {
       this.showRegister = true
     },
     logout () {
-      // storage.clearLoginData()
-      // this.$store.dispatch(LOGOUT)
+      account.logout()
     },
     navigateTo (path) {
       this.$router.push(path)

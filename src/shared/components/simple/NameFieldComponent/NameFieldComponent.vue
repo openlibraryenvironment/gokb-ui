@@ -3,17 +3,27 @@ import TextFieldComponent from '@/shared/components/base/TextFieldComponent'
 
 export default {
   extends: TextFieldComponent,
-  name: 'PasswordFieldComponent',
+  name: 'NameFieldComponent',
   props: {
     label: {
       type: String,
       required: false,
-      default: 'Kennwort',
+      default: 'Benutzername',
     },
-    type: {
+    required: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    prependIcon: {
       type: String,
       required: false,
-      default: 'password',
+      default: 'person',
+    },
+    browserAutocomplete: {
+      type: String,
+      required: false,
+      default: 'username',
     },
   },
 }

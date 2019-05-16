@@ -15,6 +15,21 @@ export default {
       required: false,
       default: 'email',
     },
+    required: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    prependIcon: {
+      type: String,
+      required: false,
+      default: 'email',
+    },
+    browserAutocomplete: {
+      type: String,
+      required: false,
+      default: 'email',
+    },
   },
 }
 </script>

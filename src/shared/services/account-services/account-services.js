@@ -1,4 +1,5 @@
 const LOGIN_URL = './login/authenticate'
+const LOGOUT_URL = './logoff'
 const REGISTER_URL = './register/register'
 
 const createFormData = data => {
@@ -10,29 +11,33 @@ const createFormData = data => {
 }
 
 const api = baseServices => ({
-  async login ({ username, password }, cancelToken) {
-    const data = createFormData({ username, password })
-    const result = await baseServices.request({
+  login ({ username, password }, cancelToken) {
+    const data = createFormData({ username, password }) // does not work with JSON
+    return baseServices.request({
       method: 'POST',
       url: LOGIN_URL,
       useAuth: false,
-      data,
-      cancelToken
-    })
-    return result
+      data
+    }, cancelToken)
   },
 
-  async register ({ username, email, password, password2 }, cancelToken) {
+  logout (cancelToken) {
+    return baseServices.request({
+      method: 'GET',
+      url: LOGOUT_URL,
+      useAuth: false,
+    }, cancelToken)
+  },
+
+  register ({ username, email, password, password2 }, cancelToken) {
     const data = { username, email, password, password2 }
-    const result = await baseServices.request({
+    return baseServices.request({
       method: 'POST',
       url: REGISTER_URL,
       useAuth: false,
       data,
-      cancelToken
-    })
-    return result
-  }
+    }, cancelToken)
+  },
 })
 
 export default api
