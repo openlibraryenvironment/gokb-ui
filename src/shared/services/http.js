@@ -5,9 +5,6 @@ axios.defaults.withCredentials = true
 
 const http = axios.create({
   baseURL: utils.getApiUrl(),
-  headers: {
-    'X-Requested-With': 'XMLHttpRequest'
-  }
 })
 
 const createCancelToken = () => axios.CancelToken.source()

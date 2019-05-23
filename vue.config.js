@@ -8,7 +8,7 @@ module.exports = {
     },
     proxy: {
       '^/gokb': {
-        target: 'https://gokbt.gbv.de',
+        target: 'https://phaeton-dev.hbz-nrw.de/',
         // cookieDomainRewrite: 'localhost',
         // cookiePathRewrite: '/',
         changeOrigin: true,

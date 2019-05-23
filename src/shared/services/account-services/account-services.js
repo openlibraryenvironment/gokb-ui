@@ -1,18 +1,10 @@
-const LOGIN_URL = './login/authenticate'
-const LOGOUT_URL = './logoff'
-const REGISTER_URL = './register/register'
-
-const createFormData = data => {
-  const formData = new FormData()
-  Object.entries(data).forEach(([k, v]) => {
-    formData.set(k, v)
-  })
-  return formData
-}
+const LOGIN_URL = './rest/login'
+const LOGOUT_URL = './rest/logout'
+const REGISTER_URL = './rest/register'
 
 const api = baseServices => ({
   login ({ username, password }, cancelToken) {
-    const data = createFormData({ username, password }) // does not work with JSON
+    const data = { username, password }
     return baseServices.request({
       method: 'POST',
       url: LOGIN_URL,
