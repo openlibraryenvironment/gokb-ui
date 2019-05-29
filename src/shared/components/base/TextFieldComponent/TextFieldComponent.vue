@@ -5,7 +5,8 @@
     :type="type"
     :required="required"
     :prepend-icon="prependIcon"
-    :browser-autocomplete="browserAutocomplete"/>
+    :browser-autocomplete="browserAutocomplete"
+    :rules="rules"/>
 </template>
 
 <script>
@@ -36,6 +37,10 @@ export default {
     },
     browserAutocomplete: {
       type: String,
+      required: false,
+    },
+    rules: {
+      type: Array,
       required: false,
     },
   },

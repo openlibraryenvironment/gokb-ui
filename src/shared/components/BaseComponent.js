@@ -11,9 +11,6 @@ export default {
   },
 
   methods: {
-    t (key) {
-      return this.$i18n.translate(key)
-    },
     createCancelToken (separate) {
       // log.debug('createCancelToken', separate)
       const token = createCancelToken()
@@ -29,18 +26,5 @@ export default {
       cancelToken && cancelToken.cancel(this.CANCELED_BY_USER)
       this.cancelToken = token ? this.cancelToken : undefined
     },
-    catchError (promise, data, callbackOnError = () => {}, callbackOnFinally = () => {}) {
-      return promise
-        .catch(error => {
-          // log.error(error)
-          // console.log('catchError', error, data)
-          // hide execution canceled error
-          data && (data.error = this.isCancelThrown(error) ? undefined : error)
-          callbackOnError(error)
-        })
-        .finally(
-          callbackOnFinally()
-        )
-    }
   }
 }

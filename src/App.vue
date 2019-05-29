@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <progress-overlay/>
     <v-navigation-drawer
       fixed
       :clipped="$vuetify.breakpoint.mdAndUp"
@@ -84,6 +85,8 @@
 </template>
 
 <script>
+import account from '@/shared/models/account'
+import ProgressOverlay from '@/shared/components/base/ProgressOverlayComponent'
 import UserMenu from '@/shared/components/complex/UserMenu'
 import { routeTo } from '@/router'
 import { createCancelToken } from '@/shared/services/http'
@@ -99,7 +102,7 @@ const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTAN
 
 export default {
   name: 'App',
-  components: { UserMenu },
+  components: { UserMenu, ProgressOverlay },
   data: () => ({
     drawer: null,
     globalSearchSelected: undefined,
@@ -141,5 +144,8 @@ export default {
       routeTo(this.globalSearchSelected.componentType, this.globalSearchSelected.id)
     },
   },
+  created () {
+    account.initialize()
+  }
 }
 </script>

@@ -3,7 +3,7 @@ import TextFieldComponent from '@/shared/components/base/TextFieldComponent'
 
 export default {
   extends: TextFieldComponent,
-  name: 'NameFieldComponent',
+  name: 'UsernameFieldComponent',
   props: {
     label: {
       type: String,

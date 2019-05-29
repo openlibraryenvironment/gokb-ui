@@ -2,12 +2,12 @@
   <v-dialog :value="value" width="400" persistent>
       <v-card class="elevation-12">
         <v-form ref="form" @submit.prevent="login">
-          <v-toolbar color="info">
+          <v-toolbar color="#F2994A">
             <v-toolbar-title>Login</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            <gokb-name-field v-model="username"/>
-            <gokb-password-field v-model="password"/>
+            <gokb-username-field v-model="username" :rules="rules"/>
+            <gokb-password-field v-model="password"  :rules="rules"/>
             <v-checkbox
               label="automatisch einloggen"
               v-model="save"
@@ -16,8 +16,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer/>
-            <gokb-button @click="close" flat>Abbrechen</gokb-button>
-            <gokb-button type="submit" color="info">Login</gokb-button>
+            <gokb-button @click.native="close" flat>Abbrechen</gokb-button>
+            <gokb-button type="submit" default>Login</gokb-button>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -25,14 +25,18 @@
 </template>
 
 <script>
+import BaseComponent from '@/shared/components/BaseComponent'
+import utils from '@/shared/utils/utils'
+import loading from '@/shared/models/loading'
 import account from '@/shared/models/account'
 import GokbButton from '@/shared/components/base/ButtonComponent'
-import GokbNameField from '@/shared/components/simple/NameFieldComponent'
+import GokbUsernameField from '@/shared/components/simple/UsernameFieldComponent'
 import GokbPasswordField from '@/shared/components/simple/PasswordFieldComponent'
 
 export default {
+  extends: BaseComponent,
   name: 'LoginPopup',
-  components: { GokbNameField, GokbPasswordField, GokbButton },
+  components: { GokbUsernameField, GokbPasswordField, GokbButton },
   props: {
     value: {
       type: Boolean,
@@ -46,39 +50,45 @@ export default {
   },
   data () {
     return {
-      valid: true,
+      error: undefined,
       username: undefined,
       password: undefined,
       save: undefined,
-      rules: [
-        () => {
-          if (this.value && this.error) {
-            const response = this.error.response
-            // eslint-disable-next-line
-            return response ? (response?.data?.error_description || response?.data?.ExceptionMessage) : true
-          }
-          return true
-        }
-      ]
     }
   },
-
-  watch: {
-    error () {
-      this.$refs.form.validate()
-    }
+  computed: {
+    loading () { return loading.isLoading() },
+    localValue: {
+      get () {
+        return this.value
+      },
+      set (localValue) {
+        this.$emit('input', localValue)
+      }
+    },
+    rules () {
+      return [
+        value => !!value || 'Bitte erfassen.',
+        value => !this.error || 'Falscher Benutzername oder Passwort.'
+      ]
+    },
   },
   methods: {
     async login () {
       const username = this.username
       const password = this.password
-      await account.login({ username, password })
+      const save = this.save
+      loading.startLoading()
+      const response = await account.login({ username, password, save }, this.cancelToken.token)
+      this.error = utils.errorOccurred(response)
+      this.error && this.$refs.form.validate()
       if (account.loggedIn()) {
         this.close()
       }
+      loading.stopLoading()
     },
     close () {
-      this.$emit('input', false)
+      this.localValue = false
     }
   }
 }

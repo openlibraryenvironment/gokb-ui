@@ -1,13 +1,13 @@
 <template>
   <gokb-dialog v-model="localValue" title="Registrierung" :submit="register">
-    <gokb-name-field v-model="username"/>
+    <gokb-username-field v-model="username"/>
     <gokb-email-field v-model="email"/>
     <gokb-password-field v-model="password"/>
     <gokb-password-field label="Kennwort (Wiederholung)" v-model="password2"/>
     <template #buttons>
       <v-spacer/>
       <gokb-button @click.native="close" flat>Abbrechen</gokb-button>
-      <gokb-button type="submit" color="info">Registrieren</gokb-button>
+      <gokb-button type="submit" default>Registrieren</gokb-button>
     </template>
   </gokb-dialog>
 </template>
@@ -16,13 +16,13 @@
 import account from '@/shared/models/account'
 import GokbDialog from '@/shared/components/complex/DialogComponent'
 import GokbButton from '@/shared/components/base/ButtonComponent'
-import GokbNameField from '@/shared/components/simple/NameFieldComponent'
+import GokbUsernameField from '@/shared/components/simple/UsernameFieldComponent'
 import GokbEmailField from '@/shared/components/simple/EmailFieldComponent'
 import GokbPasswordField from '@/shared/components/simple/PasswordFieldComponent'
 
 export default {
   name: 'RegisterPopup',
-  components: { GokbDialog, GokbNameField, GokbEmailField, GokbPasswordField, GokbButton },
+  components: { GokbDialog, GokbUsernameField, GokbEmailField, GokbPasswordField, GokbButton },
   props: {
     value: {
       type: Boolean,

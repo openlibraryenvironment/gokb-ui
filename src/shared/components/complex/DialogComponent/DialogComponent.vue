@@ -2,7 +2,7 @@
   <v-dialog :value="value" width="400" persistent>
     <v-card class="elevation-12">
       <v-form ref="form" @submit.prevent="submit">
-        <v-toolbar>
+        <v-toolbar color="#F2994A">
           <v-toolbar-title>{{title}}</v-toolbar-title>
         </v-toolbar>
         <v-card-text>

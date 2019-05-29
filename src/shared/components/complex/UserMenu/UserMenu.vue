@@ -1,6 +1,6 @@
 <template>
   <span>
-    <login-popup v-model="showLogin"/>
+    <login-popup v-if="showLogin" v-model="showLogin"/>
     <register-popup v-model="showRegister"/>
     <v-tooltip :disabled="!username" left>
       <v-menu slot="activator" offset-y>
@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     username () {
-      return account.state.username
+      return account.state().username
     },
     loggedIn () {
       return account.loggedIn()
