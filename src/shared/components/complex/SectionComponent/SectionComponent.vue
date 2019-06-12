@@ -1,10 +1,8 @@
 <template>
-  <v-container>
-    <v-card flat>
-      <v-toolbar flat>
-        <v-toolbar-title>
-          <span class="subheading">{{title}}</span>
-        </v-toolbar-title>
+  <span>
+    <v-card flat color="#f2f2f2">
+      <v-toolbar flat dense height="32" color="white">
+        <span class="subheading">{{title}}</span>
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <slot name="buttons"></slot>
@@ -14,7 +12,7 @@
         <slot></slot>
       </v-card-text>
     </v-card>
-  </v-container>
+  </span>
 </template>
 
 <script>
