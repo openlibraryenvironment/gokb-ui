@@ -1,15 +1,15 @@
 <template>
   <v-container>
-    <v-card flat class="pa-2">
+    <v-card flat>
       <v-toolbar flat dense height="32" color="white">
-        <v-toolbar-title>
-          {{title}}
-        </v-toolbar-title>
+        <div class="ml-3">
+          <v-toolbar-title>{{title}}</v-toolbar-title>
+        </div>
       </v-toolbar>
-      <v-card-text class="no-padding">
+      <v-card-text>
         <slot></slot>
       </v-card-text>
-      <v-card-actions class="no-padding">
+      <v-card-actions>
         <slot name="buttons"></slot>
       </v-card-actions>
     </v-card>
@@ -34,7 +34,4 @@ export default {
 </script>
 
 <style scoped>
-  .no-padding {
-    padding: 0;
-  }
 </style>

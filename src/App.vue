@@ -150,8 +150,5 @@ export default {
 }
 </script>
 
-<style>
-  .v-toolbar__content {
-    padding: 0 0 8px 0;
-  }
+<style scoped>
 </style>

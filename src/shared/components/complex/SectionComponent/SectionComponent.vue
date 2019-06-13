@@ -1,6 +1,6 @@
 <template>
   <span>
-    <v-card flat color="#f2f2f2">
+    <v-card flat>
       <v-toolbar flat dense height="32" color="white">
         <span class="subheading">{{title}}</span>
         <v-spacer></v-spacer>
@@ -8,8 +8,10 @@
           <slot name="buttons"></slot>
         </v-toolbar-items>
       </v-toolbar>
-      <v-card-text class="ma-2">
-        <slot></slot>
+      <v-card-text class="mx-2">
+        <div class="controls pa-2">
+          <slot></slot>
+        </div>
       </v-card-text>
     </v-card>
   </span>
@@ -32,5 +34,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+  .controls {
+    background-color: #f2f2f2;
+  }
 </style>
