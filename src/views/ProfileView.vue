@@ -11,26 +11,30 @@
     <gokb-section title="Kuratorengruppen">
       <template #buttons>
         <gokb-button>Hinzufügen</gokb-button>
-        <gokb-button>Löschen</gokb-button>
+        <gokb-button @click.native="deleteSelected">Löschen</gokb-button>
       </template>
-      <gokb-table/>
+      <gokb-table :headers="curatorGroupsTableHeaders" :items="curatorGroups" ref="tableCuratorGroups"/>
     </gokb-section>
     <template #buttons>
       <gokb-button>Konto löschen</gokb-button>
       <v-spacer></v-spacer>
-      <gokb-button>Aktualisieren</gokb-button>
+      <gokb-button default>Aktualisieren</gokb-button>
     </template>
   </gokb-page>
 </template>
 
 <script>
-// import accountServices from '@/shared/services/account-services'
+import profileServices from '@/shared/services/profile-services'
 import GokbPage from '@/shared/components/complex/PageComponent'
 import GokbTable from '@/shared/components/complex/TableComponent'
 import GokbSection from '@/shared/components/complex/SectionComponent'
 import GokbButton from '@/shared/components/base/ButtonComponent'
 import GokbEmailField from '@/shared/components/simple/EmailFieldComponent'
 import GokbPasswordField from '@/shared/components/simple/PasswordFieldComponent'
+
+const CURATOR_GROUPS_TABLE_HEADERS = [
+  { text: 'Gruppe', align: 'left', value: 'Name', sortable: false, width: '100%' },
+]
 
 export default {
   name: 'ProfileComponent',
@@ -41,14 +45,22 @@ export default {
       origpass: undefined,
       newpass: undefined,
       repeatpass: undefined,
+      curatorGroups: undefined,
     }
   },
-  created () {
-    // accountServices
-  }
+  async created () {
+    this.curatorGroupsTableHeaders = CURATOR_GROUPS_TABLE_HEADERS
+    const { email, curatorGroups } = await profileServices.loadProfile()
+    this.email = email
+    this.curatorGroups = curatorGroups
+  },
+  methods: {
+    deleteSelected () {
+      this.$refs.tableCuratorGroups.markSelectedDeleted()
+    },
+  },
 }
 </script>
 
 <style scoped>
-
 </style>

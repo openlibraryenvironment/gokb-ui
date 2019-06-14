@@ -1,12 +1,13 @@
 <template>
   <span>
     <v-data-table
-      :headers="headers"
+      v-model="selected"
+      :headers="localHeaders"
       :items="localItems"
       :pagination.sync="localPagination"
       :total-items="totalItems"
-      :loading="loading"
-      hide-actions>
+      hide-actions
+      select-all>
       <template #no-data>
         <v-layout column align-center>
           <v-alert :value="!!error" type="error">
@@ -17,9 +18,11 @@
       </template>
       <!-- data -->
       <template #items="props">
-        <td v-for="header in headers" :key="header.value"
-            :class="`text-xs-${header.align}`">{{props.item[header.value]}}
+        <td><v-checkbox v-model="props.selected" hide-details/></td>
+        <td v-for="header in headers" :key="props.item.item[header.value]"
+            :class="`text-xs-${header.align}`">{{props.item.item[header.value]}}
         </td>
+        <td><v-icon small @click="markItemDeleted(props.item)">delete</v-icon></td>
       </template>
     </v-data-table>
     <div class="text-xs-center pt-2">
@@ -32,24 +35,13 @@
 export default {
   name: 'TableComponent',
   props: {
-    items: {
+    headers: {
       type: Array,
-      required: false
+      required: true
     },
-    formatter: {
-      type: Object,
-      required: false
-    },
-    loading: {
-      type: Boolean,
-      required: false
-    },
+    items: [Array, undefined],
     pagination: {
       type: Object,
-      required: false,
-    },
-    search: {
-      type: String,
       required: false,
     },
     error: {
@@ -59,6 +51,8 @@ export default {
   },
   data () {
     return {
+      enrichedItems: undefined,
+      selected: [],
       localPagination: {
         descending: null,
         page: 1,
@@ -68,40 +62,23 @@ export default {
     }
   },
   computed: {
-    convertedItems () {
-      return [] // converter.toTable(this.items)
+    localHeaders () {
+      return [...this.headers, { sortable: false, width: '1%' }]
     },
-    headers () {
-      return this.determineTableHeader(this.convertedItems)
-    },
-    filteredItems () {
-      const { header, items } = this.convertedItems
-      if (this.pagination) {
-        return { header, items }
-      } else {
-        return { header, items: this.filter(items) }
-      }
-    },
-    formattedItems () {
-      const { header, items } = this.filteredItems
-      return (this.formatter && items.map(r =>
-        r.map((it, i) => {
-          const formatter = header[i] && this.formatter[header[i]]
-          return (formatter && formatter(it)) || it
-        })
-      )) || items
+    visibleItems () {
+      return this.enrichedItems?.filter(({ deleted }) => !deleted)
     },
     localItems () {
       return this.pagination
-        ? this.formattedItems
-        : this.formattedItems.slice((this.localPagination.page - 1) * this.localPagination.rowsPerPage, this.localPagination.page * this.localPagination.rowsPerPage)
+        ? this.visibleItems
+        : this.visibleItems?.slice((this.localPagination.page - 1) * this.localPagination.rowsPerPage, this.localPagination.page * this.localPagination.rowsPerPage)
     },
     totalItems () {
-      return this.pagination ? this.pagination.totalItems : this.formattedItems.length
+      return this.pagination ? this.pagination.totalItems : this.visibleItems?.length
     },
     pages () {
-      return this.totalItems
-        ? Math.ceil(this.totalItems / (this.pagination ? this.pagination.rowsPerPage : this.localPagination.rowsPerPage))
+      return this.visibleItems
+        ? Math.ceil(this.visibleItems?.length / (this.pagination ? this.pagination.rowsPerPage : this.localPagination.rowsPerPage))
         : 0
     },
   },
@@ -111,6 +88,9 @@ export default {
     }
   },
   watch: {
+    'items': function () {
+      this.enrichedItems = this.items?.map(item => ({ id: item.Id, deleted: false, item }))
+    },
     'localPagination.page': function () {
       this.handlePaging()
     },
@@ -121,22 +101,15 @@ export default {
         this.$emit('paginate')
       }
     },
-    filter (items) {
-      return this.search
-        ? items
-          .filter(i => Object.values(i)
-            .some(v => v && String(v).toLowerCase().includes(this.search.toLowerCase()))
-          )
-        : items
+    markItemDeleted (item) {
+      item.deleted = true
     },
-    determineTableHeader ({ header, items: [first] }) {
-      return header.map((k, i) => ({
-        text: k,
-        value: i,
-        align: !isNaN(first[i]) ? 'right' : 'left',
-        sortable: false,
-      }))
-    }
+    markSelectedDeleted () {
+      this.selected.forEach((selectedItem, index) => {
+        const item = this.enrichedItems.find(item => item.id === selectedItem.id)
+        this.markItemDeleted(item)
+      })
+    },
   }
 }
 </script>

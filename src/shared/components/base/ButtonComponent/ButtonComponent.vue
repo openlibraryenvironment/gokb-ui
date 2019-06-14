@@ -1,5 +1,5 @@
 <template>
-  <v-btn :flat="flat" :color="colorValue">
+  <v-btn :flat="flat" :color="colorValue" :type="type">
     <slot></slot>
   </v-btn>
 </template>
@@ -26,8 +26,11 @@ export default {
   computed: {
     colorValue () {
       return this.color || (this.default && 'info') || undefined
+    },
+    type () {
+      return (this.default && 'submit') || undefined
     }
-  }
+  },
 }
 </script>
 
