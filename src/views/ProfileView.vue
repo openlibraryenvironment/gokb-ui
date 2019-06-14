@@ -16,9 +16,9 @@
       <gokb-table
         :headers="curatorGroupsTableHeaders"
         :items="curatorGroups"
+        :selected-items="selectedCuratorGroups"
         :deleted-items="deletedCuratorGroups"
-        :added-items="addedCuratorGroups"
-        ref="tableCuratorGroups"/>
+        :added-items="addedCuratorGroups"/>
     </gokb-section>
     <template #buttons>
       <gokb-button>Konto löschen</gokb-button>
@@ -52,6 +52,7 @@ export default {
       repeatpass: undefined,
       curatorGroups: undefined,
 
+      selectedCuratorGroups: [],
       deletedCuratorGroups: [],
       addedCuratorGroups: [],
     }
@@ -64,7 +65,8 @@ export default {
   },
   methods: {
     deleteSelectedCuratorGroups () {
-      this.$refs.tableCuratorGroups.markSelectedDeleted()
+      this.selectedCuratorGroups.forEach(selected => this.deletedCuratorGroups.push(selected))
+      this.selectedCuratorGroups = []
     },
     addNewCuratorGroup () {
       this.addedCuratorGroups.push({ Name: 'Name' })

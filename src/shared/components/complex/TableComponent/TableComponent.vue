@@ -1,7 +1,7 @@
 <template>
   <span>
     <v-data-table
-      v-model="selected"
+      v-model="localSelectedItems"
       :headers="localHeaders"
       :items="localItems"
       item-key="Id"
@@ -41,6 +41,7 @@ export default {
       required: true
     },
     items: [Array, undefined],
+    selectedItems: [Array, undefined],
     deletedItems: [Array, undefined],
     addedItems: [Array, undefined],
     pagination: {
@@ -54,7 +55,7 @@ export default {
   },
   data () {
     return {
-      selected: [],
+      localSelectedItems: [],
       localPagination: {
         descending: null,
         page: 1,
@@ -94,6 +95,10 @@ export default {
     }
   },
   watch: {
+    'localSelectedItems': function () {
+      this.selectedItems.length = 0
+      this.selectedItems.push(...this.localSelectedItems)
+    },
     'localPagination.page': function () {
       this.handlePaging()
     },
@@ -108,10 +113,10 @@ export default {
       this.deletedItems.push(item)
     },
     markSelectedDeleted () {
-      this.selected.forEach(item => {
+      this.localSelectedItems.forEach(item => {
         this.markItemDeleted(item)
       })
-      this.selected = []
+      this.localSelectedItems = []
     },
   }
 }
