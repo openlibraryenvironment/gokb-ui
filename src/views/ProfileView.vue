@@ -10,10 +10,15 @@
     </gokb-section>
     <gokb-section title="Kuratorengruppen">
       <template #buttons>
-        <gokb-button>Hinzufügen</gokb-button>
-        <gokb-button @click.native="deleteSelected">Löschen</gokb-button>
+        <gokb-button @click.native="addNewCuratorGroup">Hinzufügen</gokb-button>
+        <gokb-button @click.native="deleteSelectedCuratorGroups">Löschen</gokb-button>
       </template>
-      <gokb-table :headers="curatorGroupsTableHeaders" :items="curatorGroups" ref="tableCuratorGroups"/>
+      <gokb-table
+        :headers="curatorGroupsTableHeaders"
+        :items="curatorGroups"
+        :deleted-items="deletedCuratorGroups"
+        :added-items="addedCuratorGroups"
+        ref="tableCuratorGroups"/>
     </gokb-section>
     <template #buttons>
       <gokb-button>Konto löschen</gokb-button>
@@ -46,6 +51,9 @@ export default {
       newpass: undefined,
       repeatpass: undefined,
       curatorGroups: undefined,
+
+      deletedCuratorGroups: [],
+      addedCuratorGroups: [],
     }
   },
   async created () {
@@ -55,8 +63,11 @@ export default {
     this.curatorGroups = curatorGroups
   },
   methods: {
-    deleteSelected () {
+    deleteSelectedCuratorGroups () {
       this.$refs.tableCuratorGroups.markSelectedDeleted()
+    },
+    addNewCuratorGroup () {
+      this.addedCuratorGroups.push({ Name: 'Name' })
     },
   },
 }

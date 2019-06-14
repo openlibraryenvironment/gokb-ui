@@ -4,6 +4,7 @@
       v-model="selected"
       :headers="localHeaders"
       :items="localItems"
+      item-key="Id"
       :pagination.sync="localPagination"
       :total-items="totalItems"
       hide-actions
@@ -19,8 +20,8 @@
       <!-- data -->
       <template #items="props">
         <td><v-checkbox v-model="props.selected" hide-details/></td>
-        <td v-for="header in headers" :key="props.item.item[header.value]"
-            :class="`text-xs-${header.align}`">{{props.item.item[header.value]}}
+        <td v-for="header in headers" :key="props.item[header.value]"
+            :class="`text-xs-${header.align}`">{{props.item[header.value]}}
         </td>
         <td><v-icon small @click="markItemDeleted(props.item)">delete</v-icon></td>
       </template>
@@ -40,6 +41,8 @@ export default {
       required: true
     },
     items: [Array, undefined],
+    deletedItems: [Array, undefined],
+    addedItems: [Array, undefined],
     pagination: {
       type: Object,
       required: false,
@@ -51,7 +54,6 @@ export default {
   },
   data () {
     return {
-      enrichedItems: undefined,
       selected: [],
       localPagination: {
         descending: null,
@@ -66,7 +68,11 @@ export default {
       return [...this.headers, { sortable: false, width: '1%' }]
     },
     visibleItems () {
-      return this.enrichedItems?.filter(({ deleted }) => !deleted)
+      const items = [
+        ...(this.addedItems ? this.addedItems : []),
+        ...(this.items ? this.items : []),
+      ]
+      return items.filter(item => !this.deletedItems.includes(item))
     },
     localItems () {
       return this.pagination
@@ -88,9 +94,6 @@ export default {
     }
   },
   watch: {
-    'items': function () {
-      this.enrichedItems = this.items?.map(item => ({ id: item.Id, deleted: false, item }))
-    },
     'localPagination.page': function () {
       this.handlePaging()
     },
@@ -102,13 +105,13 @@ export default {
       }
     },
     markItemDeleted (item) {
-      item.deleted = true
+      this.deletedItems.push(item)
     },
     markSelectedDeleted () {
-      this.selected.forEach((selectedItem, index) => {
-        const item = this.enrichedItems.find(item => item.id === selectedItem.id)
+      this.selected.forEach(item => {
         this.markItemDeleted(item)
       })
+      this.selected = []
     },
   }
 }
