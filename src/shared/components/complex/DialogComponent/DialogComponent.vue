@@ -1,7 +1,7 @@
 <template>
   <v-dialog :value="value" width="400" persistent>
     <v-card class="elevation-12">
-      <v-form ref="form" @submit.prevent="submit">
+      <v-form @submit.prevent="doSubmit">
         <v-toolbar color="#F2994A">
           <v-toolbar-title>{{title}}</v-toolbar-title>
         </v-toolbar>
@@ -25,14 +25,15 @@ export default {
       required: true,
       default: false
     },
-    submit: {
-      type: Function,
-      required: true,
-    },
     title: {
       type: String,
       required: true,
     },
   },
+  methods: {
+    doSubmit () {
+      this.$emit('submit')
+    }
+  }
 }
 </script>

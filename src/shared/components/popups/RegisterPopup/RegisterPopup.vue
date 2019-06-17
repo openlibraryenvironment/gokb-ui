@@ -1,5 +1,5 @@
 <template>
-  <gokb-dialog v-model="localValue" title="Registrierung" :submit="register">
+  <gokb-dialog v-model="localValue" title="Registrierung" @submit="register">
     <gokb-username-field v-model="username"/>
     <gokb-email-field v-model="email"/>
     <gokb-password-field v-model="password"/>
@@ -7,7 +7,7 @@
     <template #buttons>
       <v-spacer/>
       <gokb-button @click.native="close" flat>Abbrechen</gokb-button>
-      <gokb-button type="submit" default>Registrieren</gokb-button>
+      <gokb-button default>Registrieren</gokb-button>
     </template>
   </gokb-dialog>
 </template>

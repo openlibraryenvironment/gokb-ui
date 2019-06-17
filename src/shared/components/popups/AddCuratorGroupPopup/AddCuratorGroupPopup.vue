@@ -1,18 +1,27 @@
 <template>
-  <gokb-dialog v-model="localValue" title="Login" @submit="login">
-      <gokb-username-field v-model="username" :rules="rules"/>
-      <gokb-password-field v-model="password"  :rules="rules"/>
-      <v-checkbox
-        label="automatisch einloggen"
-        v-model="save"
-        prepend-icon="cached"
-      ></v-checkbox>
-    <template #buttons>
-      <v-spacer/>
-      <gokb-button @click.native="close" flat>Abbrechen</gokb-button>
-      <gokb-button default>Login</gokb-button>
-    </template>
-  </gokb-dialog>
+  <v-dialog :value="value" width="400" persistent>
+      <v-card class="elevation-12">
+        <v-form ref="form" @submit.prevent="login">
+          <v-toolbar color="#F2994A">
+            <v-toolbar-title>Login</v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <gokb-username-field v-model="username" :rules="rules"/>
+            <gokb-password-field v-model="password"  :rules="rules"/>
+            <v-checkbox
+              label="automatisch einloggen"
+              v-model="save"
+              prepend-icon="cached"
+            ></v-checkbox>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer/>
+            <gokb-button @click.native="close" flat>Abbrechen</gokb-button>
+            <gokb-button type="submit" default>Login</gokb-button>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -20,15 +29,14 @@ import BaseComponent from '@/shared/components/BaseComponent'
 import utils from '@/shared/utils/utils'
 import loading from '@/shared/models/loading'
 import account from '@/shared/models/account'
-import GokbDialog from '@/shared/components/complex/DialogComponent'
 import GokbButton from '@/shared/components/base/ButtonComponent'
 import GokbUsernameField from '@/shared/components/simple/UsernameFieldComponent'
 import GokbPasswordField from '@/shared/components/simple/PasswordFieldComponent'
 
 export default {
   extends: BaseComponent,
-  name: 'LoginPopup',
-  components: { GokbDialog, GokbUsernameField, GokbPasswordField, GokbButton },
+  name: 'AddCuratorGroupPopup',
+  components: { GokbUsernameField, GokbPasswordField, GokbButton },
   props: {
     value: {
       type: Boolean,
