@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-form>
+    <v-form @submit.prevent="doSubmit">
       <v-card flat>
         <v-toolbar flat dense height="32" color="white">
           <div class="ml-3">
@@ -32,6 +32,11 @@ export default {
     return {
     }
   },
+  methods: {
+    doSubmit () {
+      this.$emit('submit')
+    }
+  }
 }
 </script>
 

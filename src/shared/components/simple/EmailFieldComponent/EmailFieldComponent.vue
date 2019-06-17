@@ -30,6 +30,13 @@ export default {
       required: false,
       default: 'email',
     },
+    rules: {
+      type: Array,
+      required: false,
+      default: () => [
+        value => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || 'Bitte erfassen Sie eine gültige E-Mail Adresse.'
+      ]
+    },
   },
 }
 </script>

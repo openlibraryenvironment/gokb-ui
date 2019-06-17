@@ -1,5 +1,5 @@
 <template>
-  <gokb-page title="Profil">
+  <gokb-page title="Profil" @submit="updateProfile">
     <gokb-section title="Allgemein">
       <gokb-email-field v-model="email"></gokb-email-field>
     </gokb-section>
@@ -21,7 +21,7 @@
         :added-items="addedCuratorGroups"/>
     </gokb-section>
     <template #buttons>
-      <gokb-button>Konto löschen</gokb-button>
+      <gokb-button @click.native="removeProfile">Konto löschen</gokb-button>
       <v-spacer></v-spacer>
       <gokb-button default>Aktualisieren</gokb-button>
     </template>
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { HOME } from '@/router/route-names'
+import account from '@/shared/models/account'
 import profileServices from '@/shared/services/profile-services'
 import GokbPage from '@/shared/components/complex/PageComponent'
 import GokbTable from '@/shared/components/complex/TableComponent'
@@ -70,6 +72,25 @@ export default {
     },
     addNewCuratorGroup () {
       this.addedCuratorGroups.push({ Name: 'Name' })
+    },
+    async updateProfile () {
+      const curatorGroups = [
+        ...this.curatorGroups.filter(group => !this.deletedCuratorGroups.includes(group)),
+        ...this.addedCuratorGroups.filter(group => !this.deletedCuratorGroups.includes(group))
+      ]
+      await profileServices.saveProfile({
+        id: undefined,
+        email: this.email,
+        origpass: this.origpass,
+        newpass: this.newpass,
+        repeatpass: this.repeatpass,
+        curatorGroups
+      })
+    },
+    async removeProfile () {
+      await profileServices.deleteProfile({ id: undefined })
+      await account.logout()
+      this.$router.push(HOME)
     },
   },
 }

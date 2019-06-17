@@ -6,7 +6,8 @@
     :required="required"
     :prepend-icon="prependIcon"
     :browser-autocomplete="browserAutocomplete"
-    :rules="rules"/>
+    :rules="rules"
+    clearable/>
 </template>
 
 <script>

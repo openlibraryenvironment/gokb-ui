@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import './plugins/vuetify'
 import App from './App.vue'
-import { router } from './router'
+import { index } from './router'
 import './registerServiceWorker'
 import VueLocalStorage from 'vue-localstorage'
 import utils from '@/shared/utils/utils'
@@ -18,6 +18,6 @@ Vue.config.devtools = isNotProduction
 Vue.config.performance = isNotProduction
 
 new Vue({
-  router,
+  router: index,
   render: h => h(App)
 }).$mount('#app')
