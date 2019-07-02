@@ -8,9 +8,10 @@
       <gokb-password-field label="Neues Kennwort" v-model="newpass"/>
       <gokb-password-field label="Neues Kennwort (Wiederholung)" v-model="repeatpass"/>
     </gokb-section>
+    <gokb-add-curator-groups-popup v-if="addCuratorGroupsPopupVisible" v-model="addCuratorGroupsPopupVisible" @add="addNewCuratorGroup"/>
     <gokb-section title="Kuratorengruppen">
       <template #buttons>
-        <gokb-button @click.native="addNewCuratorGroup">Hinzufügen</gokb-button>
+        <gokb-button @click.native="showAddNewCuratorGroup">Hinzufügen</gokb-button>
         <gokb-button @click.native="deleteSelectedCuratorGroups">Löschen</gokb-button>
       </template>
       <gokb-table
@@ -32,6 +33,8 @@
 import { HOME } from '@/router/route-names'
 import account from '@/shared/models/account'
 import profileServices from '@/shared/services/profile-services'
+import BaseComponent from '@/shared/components/BaseComponent'
+import GokbAddCuratorGroupsPopup from '@/shared/components/popups/AddCuratorGroupsPopup'
 import GokbPage from '@/shared/components/complex/PageComponent'
 import GokbTable from '@/shared/components/complex/TableComponent'
 import GokbSection from '@/shared/components/complex/SectionComponent'
@@ -40,14 +43,25 @@ import GokbEmailField from '@/shared/components/simple/EmailFieldComponent'
 import GokbPasswordField from '@/shared/components/simple/PasswordFieldComponent'
 
 const CURATOR_GROUPS_TABLE_HEADERS = [
-  { text: 'Gruppe', align: 'left', value: 'Name', sortable: false, width: '100%' },
+  { text: 'Gruppe', align: 'left', value: 'name', sortable: false, width: '100%' },
 ]
 
 export default {
   name: 'ProfileComponent',
-  components: { GokbPage, GokbSection, GokbTable, GokbEmailField, GokbButton, GokbPasswordField },
+  extends: BaseComponent,
+  components: {
+    GokbAddCuratorGroupsPopup,
+    GokbPage,
+    GokbSection,
+    GokbTable,
+    GokbEmailField,
+    GokbButton,
+    GokbPasswordField
+  },
   data () {
     return {
+      addCuratorGroupsPopupVisible: false,
+
       email: undefined,
       origpass: undefined,
       newpass: undefined,
@@ -61,17 +75,21 @@ export default {
   },
   async created () {
     this.curatorGroupsTableHeaders = CURATOR_GROUPS_TABLE_HEADERS
-    const { email, curatorGroups } = await profileServices.loadProfile()
+    const { data: { email, curatoryGroups } } = await profileServices.loadProfile(this.cancelToken.token)
     this.email = email
-    this.curatorGroups = curatorGroups
+    this.curatorGroups = curatoryGroups
   },
   methods: {
     deleteSelectedCuratorGroups () {
       this.selectedCuratorGroups.forEach(selected => this.deletedCuratorGroups.push(selected))
       this.selectedCuratorGroups = []
     },
-    addNewCuratorGroup () {
-      this.addedCuratorGroups.push({ Name: 'Name' })
+    showAddNewCuratorGroup () {
+      this.addCuratorGroupsPopupVisible = true
+    },
+    addNewCuratorGroup (item) {
+      const { id, text: name } = item
+      this.addedCuratorGroups.push({ id, name })
     },
     async updateProfile () {
       const curatorGroups = [

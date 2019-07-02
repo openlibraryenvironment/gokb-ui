@@ -4,7 +4,7 @@
       v-model="localSelectedItems"
       :headers="localHeaders"
       :items="localItems"
-      item-key="Id"
+      item-key="id"
       :pagination.sync="localPagination"
       :total-items="totalItems"
       hide-actions
