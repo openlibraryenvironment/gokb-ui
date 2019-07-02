@@ -44,7 +44,7 @@ export default {
     },
   },
   async created () {
-    const { values } = await ajaxServices.lookup({
+    const { data: { values } } = await ajaxServices.lookup({
       baseClass: 'org.gokb.cred.CuratoryGroup',
       q: ''
     })

@@ -1,5 +1,6 @@
 import baseServices from '@/shared/services/base-services'
+import ajaxServices from '@/shared/services/ajax-services'
 
-import profileServices from './profile-services'
+import api from './profile-services'
 
-export default profileServices(baseServices)
+export default api(baseServices, ajaxServices)

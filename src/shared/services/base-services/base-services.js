@@ -26,6 +26,13 @@ const api = http => ({
     return Object.entries(parameters)
       .map(([name, value]) => `${name}=${value}`)
       .join('&')
+  },
+
+  createFormData (parameters) {
+    const data = new FormData()
+    Object.entries(parameters)
+      .forEach(([name, value]) => (data.append(name, value)))
+    return data
   }
 })
 

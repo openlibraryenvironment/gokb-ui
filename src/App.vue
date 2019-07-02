@@ -30,9 +30,11 @@
       :clipped-left="$vuetify.breakpoint.mdAndUp"
       fixed
     >
-      <v-toolbar-title style="width: 300px" class="">
+      <v-toolbar-title style="width: 300px">
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-        <span class="hidden-sm-and-down">GOKb Client</span>
+        <router-link :to="HOME_ROUTE">
+          <span style="color: white;">GOKb Client</span>
+        </router-link>
       </v-toolbar-title>
       <v-autocomplete
         v-model="globalSearchSelected"
@@ -89,6 +91,9 @@ import account from '@/shared/models/account'
 import ProgressOverlay from '@/shared/components/base/ProgressOverlayComponent'
 import UserMenu from '@/shared/components/complex/UserMenu'
 import { routeTo } from '@/router'
+import {
+  HOME_ROUTE,
+} from '@/router/route-names'
 import { createCancelToken } from '@/shared/services/http'
 import {
   COMPONENT_TYPE_PACKAGE,
@@ -145,6 +150,7 @@ export default {
     },
   },
   created () {
+    this.HOME_ROUTE = HOME_ROUTE
     account.initialize()
   }
 }

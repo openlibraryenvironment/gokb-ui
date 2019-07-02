@@ -2,6 +2,8 @@ const TIMEOUT_DELTA_IN_SECONDS = 60
 const FACTOR_SECONDS_TO_MILLISECONDS = 1000
 
 const LOGIN_URL = './rest/login'
+const LOGOUT_URL = './logoff'
+
 const ACCESS_TOKEN = './oauth/access_token'
 const REGISTER_URL = './rest/register'
 
@@ -37,7 +39,15 @@ const api = (utils, storage, baseServices) => ({
     }, (token.expires_in - TIMEOUT_DELTA_IN_SECONDS) * FACTOR_SECONDS_TO_MILLISECONDS)
     return response
   },
+
+  // todo: we can not do a valid logout in the backend, that can be a problem, session can be used by others, memory consumption on server, ...
+  // todo: wrong REST command, should be POST instead of GET
+  // todo: not really a REST logout, redirects to home
   logout (cancelToken) {
+    baseServices.request({
+      method: 'GET',
+      url: LOGOUT_URL,
+    }, cancelToken)
     // stop timeout for re login, if needed
     clearTimeout(tokenTimeoutId)
     // remove authorization header

@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Home from '../views/HomeView.vue'
 
 import {
-  HOME,
+  HOME_ROUTE,
 } from './route-names'
 
 const COMPONENT_ROUTE_MAPPER = {
@@ -16,7 +16,7 @@ Vue.use(Router)
 const index = new Router({
   routes: [
     {
-      path: HOME,
+      path: HOME_ROUTE,
       name: 'home',
       component: Home
     },
