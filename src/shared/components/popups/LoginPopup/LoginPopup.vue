@@ -66,14 +66,14 @@ export default {
     },
   },
   methods: {
-    async login () {
+    async login (form) {
       const username = this.username
       const password = this.password
       const save = this.save
       loading.startLoading()
       const response = await account.login({ username, password, save }, this.cancelToken.token)
       this.error = utils.errorOccurred(response)
-      this.error && this.$refs.form.validate()
+      this.error && form.validate()
       if (account.loggedIn()) {
         this.close()
       }
