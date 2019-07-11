@@ -1,4 +1,4 @@
-# GOKb-Client
+# GOKb Client
 
 ## Project setup
 ```
@@ -41,12 +41,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 # GOKb Backend
 The GOKb Backend consists of the data APIs and a generic view.
 It exists a test environment, that can be used for development.
-The data APIs are provided below https://gokbt.gbv.de/gokb, the view below https://gokbt.gbv.de/gokb.
-The link to the admin view needs an account and gets you to https://gokbt.gbv.de/gokb/home/index
-
-At this time during development you need a hack to make it run. That means you have to manually set
-the cookie given by authenticat with: javascript:document.cookie="JSESSIONID=FB15DEA440AF32F60B17AC4E2CA8B1F7"
-in the console of the developer tools.
+The data APIs and the view are provided below https://phaeton-dev.hbz-nrw.de/gokb.
+The link to the admin view needs an account and gets you to https://phaeton-dev.hbz-nrw.de/gokb/home/index.
 
 ## Wiki
 The wiki is provided below https://github.com/openlibraryenvironment/gokb/wiki.
