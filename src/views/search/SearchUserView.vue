@@ -49,7 +49,7 @@ export default {
           name: 'qp_status',
           properties: {
             label: 'Status',
-            items: allStates.values.map(({ id: value, text }) => ({ value, text })),
+            items: allStates?.values.map(({ id: value, text }) => ({ value, text })),
           }
         }
       ]

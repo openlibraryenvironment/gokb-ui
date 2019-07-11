@@ -19,7 +19,7 @@ const api = (utils, storage, baseServices) => ({
     return token
   },
 
-  async login ({ username, password, refreshToken }, cancelToken) {
+  async login ({ username, password, refreshToken }) {
     !refreshToken && baseServices.deleteAuthorization()
     const data = refreshToken ? undefined : { username, password }
     const url = refreshToken
@@ -29,13 +29,13 @@ const api = (utils, storage, baseServices) => ({
       method: 'POST',
       url,
       data
-    }, cancelToken)
+    })
     const { data: token } = response
     baseServices.setAuthorization(token)
     // refresh token via timeout => auto login
     // token.expires_in = 65 // for testing refresh
     tokenTimeoutId = setTimeout(() => {
-      this.login({ refreshToken: token.refresh_token }, cancelToken)
+      this.login({ refreshToken: token.refresh_token })
     }, (token.expires_in - TIMEOUT_DELTA_IN_SECONDS) * FACTOR_SECONDS_TO_MILLISECONDS)
     return response
   },
@@ -43,11 +43,11 @@ const api = (utils, storage, baseServices) => ({
   // todo: we can not do a valid logout in the backend, that can be a problem, session can be used by others, memory consumption on server, ...
   // todo: wrong REST command, should be POST instead of GET
   // todo: not really a REST logout, redirects to home
-  logout (cancelToken) {
+  logout () {
     baseServices.request({
       method: 'GET',
       url: LOGOUT_URL,
-    }, cancelToken)
+    })
     // stop timeout for re login, if needed
     clearTimeout(tokenTimeoutId)
     // remove authorization header
@@ -55,13 +55,12 @@ const api = (utils, storage, baseServices) => ({
     // no service in the backend available to logoff
   },
 
-  register ({ username, email, password, password2 }, cancelToken) {
-    const data = { username, email, password, password2 }
+  register ({ username, email, password, password2 }) {
     return baseServices.request({
       method: 'POST',
       url: REGISTER_URL,
-      data,
-    }, cancelToken)
+      data: { username, email, password, password2 },
+    })
   },
 })
 

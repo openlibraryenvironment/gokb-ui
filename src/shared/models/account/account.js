@@ -18,13 +18,13 @@ const api = (vue, storage, accountServices, profileServices) => {
     },
 
     // todo: login result gives no id, you have to load the profile to get it
-    async login ({ username, password, save }, cancelToken) {
+    async login ({ username, password, save }) {
       try {
-        const response = await accountServices.login({ username, password }, cancelToken)
+        const response = await accountServices.login({ username, password })
         const { data: token } = response
         save && storage.setToken(token)
         state.username = token?.username
-        const { data: { id } } = await profileServices.loadProfile(cancelToken)
+        const { data: { id } } = await profileServices.loadProfile()
         state.id = id
         return response
       } catch (e) {
@@ -33,14 +33,19 @@ const api = (vue, storage, accountServices, profileServices) => {
       }
     },
 
-    logout (cancelToken) {
-      accountServices.logout(cancelToken)
+    logout () {
+      accountServices.logout()
       storage.removeToken()
       state.username = undefined
     },
 
-    register ({ username, email, password, password2 }, cancelToken) {
-      return accountServices.register({ username, email, password, password2 }, cancelToken)
+    async register ({ username, email, password, password2 }) {
+      try {
+        const response = await accountServices.register({ username, email, password, password2 })
+        return response
+      } catch (e) {
+        return e.response
+      }
     },
   }
 }

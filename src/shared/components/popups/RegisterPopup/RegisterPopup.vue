@@ -14,6 +14,8 @@
 
 <script>
 import account from '@/shared/models/account'
+import utils from '@/shared/utils/utils'
+import loading from '@/shared/models/loading'
 import GokbDialog from '@/shared/components/complex/DialogComponent'
 import GokbButton from '@/shared/components/base/ButtonComponent'
 import GokbUsernameField from '@/shared/components/simple/UsernameFieldComponent'
@@ -60,20 +62,21 @@ export default {
       }
     },
   },
-  watch: {
-    error () {
-      this.$refs.form.validate()
-    }
-  },
   methods: {
-    async register () {
+    async register (form) {
       const username = this.username
       const password = this.password
       const email = this.email
       const password2 = this.password2
-      const registerResponse = await account.register({ username, email, password, password2 })
-      console.log(registerResponse)
-      this.close()
+      loading.startLoading()
+      const response = await account.register({ username, email, password, password2 })
+      this.error = utils.errorOccurred(response)
+      if (this.error) {
+        form.validate()
+      } else {
+        this.close()
+      }
+      loading.stopLoading()
     },
     close () {
       this.localValue = false

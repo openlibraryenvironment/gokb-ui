@@ -25,6 +25,13 @@ export default {
       required: false,
       default: 'username',
     },
+    rules: {
+      type: Array,
+      required: false,
+      default: () => [
+        value => value || 'Bitte erfassen Sie einen Benutzernamen.'
+      ]
+    },
   },
 }
 </script>

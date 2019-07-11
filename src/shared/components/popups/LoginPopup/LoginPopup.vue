@@ -71,7 +71,7 @@ export default {
       const password = this.password
       const save = this.save
       loading.startLoading()
-      const response = await account.login({ username, password, save }, this.cancelToken.token)
+      const response = await account.login({ username, password, save })
       this.error = utils.errorOccurred(response)
       this.error && form.validate()
       if (account.loggedIn()) {
