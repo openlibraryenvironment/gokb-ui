@@ -63,13 +63,16 @@
 </template>
 
 <script>
-import { createCancelToken } from '@/shared/services/http'
+import BaseComponent from '@/shared/components/BaseComponent'
+import GokbTextField from '@/shared/components/base/TextFieldComponent'
 import searchServices from '@/shared/services/search-services'
 
 const ROWS_PER_PAGE = 10
 
 export default {
   name: 'BaseSearch',
+  extends: BaseComponent,
+  components: { GokbTextField },
   data () {
     return {
       title: undefined,
@@ -114,7 +117,6 @@ export default {
           return r
         }, {})
 
-      this.cancelToken = createCancelToken()
       const result = await searchServices.search({
         ...searchParameters,
         qbe: this.component,

@@ -1,6 +1,6 @@
 <script>
 import BaseSearch from './BaseSearchView'
-import ajaxServices from '@/shared/services/ajax-services'
+// import ajaxServices from '@/shared/services/ajax-services'
 
 export default {
   name: 'SearchUser',
@@ -13,16 +13,16 @@ export default {
     this.title = 'Benutzer'
     this.component = 'g:UserOrganisation'
 
-    const allStates = await ajaxServices.lookup({
-      baseClass: 'org.gokb.cred.RefdataValue',
-      filter1: 'KBComponent.Status',
-      q: ''
-    })
+    // const allStates = await ajaxServices.lookup({
+    //   baseClass: 'org.gokb.cred.RefdataValue',
+    //   filter1: 'KBComponent.Status',
+    //   q: ''
+    // })
 
     this.searchInputFields = [
       [
         {
-          type: 'v-text-field',
+          type: 'GokbTextField',
           name: 'qp_name',
           properties: {
             label: 'Benutzername'
@@ -49,7 +49,7 @@ export default {
           name: 'qp_status',
           properties: {
             label: 'Status',
-            items: allStates?.values.map(({ id: value, text }) => ({ value, text })),
+            // items: allStates?.values.map(({ id: value, text }) => ({ value, text })),
           }
         }
       ]
