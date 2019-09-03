@@ -1,13 +1,22 @@
-const api = (vue, encrypt) => {
+/*
+  .expires: "Wed, 12 Jun 2019 08:41:27 GMT"
+  .issued: "Thu, 23 May 2019 08:41:27 GMT"
+  access_token: "..."
+  expires_in: 1727999
+  token_type: "bearer"
+  userName: "..."
+*/
+
+const api = (encrypt) => {
   // name for token in the local storage of the browser
   const TOKEN_KEY = 'token'
 
   const api = {
     removeToken () {
-      vue.localStorage.remove(TOKEN_KEY)
+      window.localStorage.removeItem(TOKEN_KEY)
     },
     getToken () {
-      const token = vue.localStorage.get(TOKEN_KEY)
+      const token = window.localStorage[TOKEN_KEY]
       if (!token) {
         return {}
       }
@@ -20,7 +29,7 @@ const api = (vue, encrypt) => {
       }
     },
     setToken (token) {
-      vue.localStorage.set(TOKEN_KEY, encrypt.e(JSON.stringify(token)))
+      window.localStorage.setItem(TOKEN_KEY, encrypt.e(JSON.stringify(token)))
     },
   }
 

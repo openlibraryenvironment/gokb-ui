@@ -23,7 +23,10 @@ const api = (utils, storage, baseServices) => ({
     !refreshToken && baseServices.deleteAuthorization()
     const data = refreshToken ? undefined : { username, password }
     const url = refreshToken
-      ? `${ACCESS_TOKEN}?${baseServices.createQueryParameters({ grant_type: 'refresh_token', refresh_token: refreshToken })}`
+      ? `${ACCESS_TOKEN}?${baseServices.createQueryParameters({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken
+      })}`
       : LOGIN_URL
     const response = await baseServices.request({
       method: 'POST',

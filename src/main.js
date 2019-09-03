@@ -1,15 +1,9 @@
 import Vue from 'vue'
-import './plugins/vuetify'
-import App from './App.vue'
-import { index } from './router'
-import './registerServiceWorker'
-import VueLocalStorage from 'vue-localstorage'
+import vuetify from './plugins/vuetify'
+import App from './app.vue'
+import { router } from './router'
+import './register-service-worker'
 import utils from '@/shared/utils/utils'
-
-Vue.use(VueLocalStorage, {
-  name: 'localStorage',
-  bind: true // created computed members from your variable declarations
-})
 
 // configuration vue itself
 const isNotProduction = !utils.isProduction()
@@ -18,6 +12,7 @@ Vue.config.devtools = isNotProduction
 Vue.config.performance = isNotProduction
 
 new Vue({
-  router: index,
+  router,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')

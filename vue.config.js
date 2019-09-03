@@ -1,6 +1,13 @@
 // see https://cli.vuejs.org/config/#integrity
 
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
 module.exports = {
+  publicPath: process.env.VUE_APP_PUBLIC_PATH || '/', // base path for the application
+  configureWebpack: {
+    devtool: 'source-map',
+    // plugins: [new BundleAnalyzerPlugin()]
+  },
   devServer: {
     overlay: {
       warnings: true,
@@ -8,7 +15,7 @@ module.exports = {
     },
     proxy: {
       '^/gokb': {
-        target: 'https://phaeton-dev.hbz-nrw.de/',
+        target: 'https://phaeton-qa.hbz-nrw.de/',
         // cookieDomainRewrite: 'localhost',
         // cookiePathRewrite: '/',
         changeOrigin: true,
@@ -23,7 +30,11 @@ module.exports = {
 
   css: {
     sourceMap: false
-  }
+  },
   // configureWebpack: {}
   // chainWebpack:
+  transpileDependencies: [
+    'resize-detector',
+    'vuetify'
+  ],
 }
