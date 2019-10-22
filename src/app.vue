@@ -45,12 +45,13 @@
     >
       <v-toolbar-title class="toolbar-title">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-        <router-link
-          class="ml-4"
+        <v-btn
+          text
+          color="#4f4f4f"
           :to="HOME_ROUTE"
         >
-          <span style="color: white;">GOKb Client</span>
-        </router-link>
+          <span class="application-title title">GOKb Client</span>
+        </v-btn>
       </v-toolbar-title>
       <v-autocomplete
         v-model="globalSearchSelected"
@@ -59,7 +60,6 @@
         :search-input.sync="globalSearchField"
         class="hidden-sm-and-down mt-7"
         clearable
-        text
         hide-no-data
         hide-selected
         item-text="name"
@@ -68,7 +68,7 @@
         placeholder="Titel, Pakete, Verlage"
         prepend-inner-icon="search"
         return-object
-        solo-inverted
+        solo
       />
       <v-spacer />
       <v-menu
@@ -141,15 +141,15 @@
 
       dialog: false,
       items: [
-        { icon: 'create_new_folder', text: 'Paket anlegen', route: 'createPackage', toolbar: true },
-        { icon: 'library_add', text: 'Einzeltitel anlegen', route: 'createTitle', toolbar: true },
-        { icon: 'folder_special', text: 'KBART Import', route: 'KBARTImport', toolbar: true },
+        { icon: 'create_new_folder', text: 'Paket anlegen', route: 'create-package', toolbar: true },
+        { icon: 'library_add', text: 'Einzeltitel anlegen', route: 'create-title', toolbar: true },
+        { icon: 'folder_special', text: 'KBART Import', route: 'kbart-import', toolbar: true },
         {},
-        { icon: 'folder', text: 'Pakete', route: 'searchPackage' },
-        { icon: 'library_books', text: 'Einzeltitel', route: 'searchTitle' },
-        { icon: 'rate_review', text: 'Reviews', route: 'searchReview' },
-        { icon: 'keyboard', text: 'Pflege', route: 'searchMaintenance' },
-        { icon: 'people', text: 'Benutzer', route: 'searchUser' },
+        { icon: 'folder', text: 'Pakete', route: 'search-package' },
+        { icon: 'library_books', text: 'Einzeltitel', route: 'search-title' },
+        { icon: 'rate_review', text: 'Reviews', route: 'search-review' },
+        { icon: 'keyboard', text: 'Pflege', route: 'search-maintenance' },
+        { icon: 'people', text: 'Benutzer', route: 'search-user' },
       ]
     }),
     computed: {},
@@ -162,17 +162,21 @@
         this.isLoading && this.cancelToken.cancel('Operation canceled by the user.')
         this.cancelToken = createCancelToken()
         this.isLoading = true
-        const result = await searchServices.globalSearch({
-          searchPattern: this.globalSearchField,
-          max: 100
-        }, this.cancelToken.token)
-        console.log(result.records)
-        this.globalSearchItems = result.records
-          .filter(e => SEARCH_COMPONENTS.includes(e.componentType))
-        this.isLoading = false
+        try {
+          const result = await searchServices.globalSearch({
+            searchPattern: this.globalSearchField,
+            max: 100
+          }, this.cancelToken.token)
+          this.globalSearchItems = result.records
+            .filter(item => SEARCH_COMPONENTS.includes(item.componentType))
+        } catch (exception) {
+          this.globalSearchItems = []
+        } finally {
+          this.isLoading = false
+        }
       },
       globalSearchSelected () {
-        routeTo(this.globalSearchSelected.componentType, this.globalSearchSelected.id)
+        this.globalSearchSelected && routeTo(this.globalSearchSelected.componentType, this.globalSearchSelected.id)
       },
     },
     created () {
@@ -185,5 +189,8 @@
 <style scoped>
   .toolbar-title {
     width: 300px;
+  }
+  .application-title {
+    color: white;
   }
 </style>
