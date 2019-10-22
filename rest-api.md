@@ -284,6 +284,20 @@ PUT ./rest/identifiers/<id>
 ````
 Status Code: 200
 ````
+
+# Global Find
+## Request 
+````
+POST ./rest/find/
+````
+### Request Payload
+````
+````
+## Response
+````
+Status Code: 200
+````
+
 <!--------------------------------------------------------------------------------------------------------------------->
 
 Organization
