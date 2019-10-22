@@ -7,6 +7,7 @@
     :required="required"
     :rules="rules"
     :type="type"
+    validate-on-blur
     clearable
   />
 </template>
@@ -16,8 +17,10 @@
     name: 'TextFieldComponent',
     props: {
       value: {
-        type: String,
         required: true,
+        validator: value => {
+          return value === null || typeof value === 'string'
+        },
         default: '',
       },
       label: {

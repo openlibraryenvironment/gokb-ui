@@ -1,8 +1,6 @@
 <template>
   <span>
-    <login-popup
-      v-model="showLogin"
-    />
+    <login-popup v-model="showLogin" />
     <register-popup v-model="showRegister" />
     <v-tooltip
       :disabled="!username"
@@ -29,7 +27,7 @@
               <v-list-item
                 v-for="item in menu.items"
                 :key="item.title"
-                @click.stop="execute(item)"
+                @click="execute(item)"
               >
                 <v-list-item-avatar>
                   <v-icon>{{ item.icon }}</v-icon>
@@ -49,6 +47,7 @@
 </template>
 
 <script>
+  import { HOME_ROUTE, PROFILE_ROUTE } from '@/router/route-names'
   import account from '@/shared/models/account'
   import LoginPopup from '@/shared/components/popups/login-popup'
   import RegisterPopup from '@/shared/components/popups/register-popup'
@@ -84,12 +83,13 @@
                 {
                   title: 'Profil',
                   icon: 'mdi-face-profile',
-                  path: '/profile'
+                  path: PROFILE_ROUTE,
                 },
                 {
                   title: 'Logout',
                   icon: 'mdi-logout-variant',
-                  method: 'logout'
+                  method: 'logout',
+                  path: HOME_ROUTE,
                 },
               ],
               last: true
@@ -134,8 +134,8 @@
       logout () {
         account.logout()
       },
-      navigateTo (path) {
-        this.$router.push(path)
+      async navigateTo (path) {
+        await this.$router.push(path)
       },
     }
   }

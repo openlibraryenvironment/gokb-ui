@@ -4,11 +4,11 @@
       v-model="localSelectedItems"
       :headers="localHeaders"
       :items="localItems"
-      :pagination.sync="localPagination"
-      :total-items="totalItems"
-      hide-actions
+      :options.sync="localOptions"
+      :server-items-length="totalItems"
+      hide-default-footer
       item-key="id"
-      select-all
+      show-select
     >
       <template #no-data>
         <v-layout
@@ -51,7 +51,7 @@
     </v-data-table>
     <div class="text-center pt-2">
       <v-pagination
-        v-model="localPagination.page"
+        v-model="localOptions.page"
         :length="pages"
         :total-visible="7"
       />
@@ -83,7 +83,7 @@
         type: Array,
         default: undefined
       },
-      pagination: {
+      options: {
         type: Object,
         required: false,
         default: undefined
@@ -97,11 +97,15 @@
     data () {
       return {
         localSelectedItems: [],
-        localPagination: {
-          descending: null,
+        localOptions: {
           page: 1,
-          rowsPerPage: 10,
-          sortBy: null,
+          itemsPerPage: 10,
+          // sortBy: undefined,
+          // sortDesc: undefined, // boolean[]
+          // groupBy: undefined, // string[]
+          // groupDesc: undefined, // boolean[]
+          // multiSort: undefined, // boolean
+          // mustSort: undefined, // boolean
         }
       }
     },
@@ -119,14 +123,14 @@
       localItems () {
         return this.pagination
           ? this.visibleItems
-          : this.visibleItems?.slice((this.localPagination.page - 1) * this.localPagination.rowsPerPage, this.localPagination.page * this.localPagination.rowsPerPage)
+          : this.visibleItems?.slice((this.localOptions.page - 1) * this.localOptions.rowsPerPage, this.localOptions.page * this.localOptions.rowsPerPage)
       },
       totalItems () {
         return this.pagination ? this.pagination.totalItems : this.visibleItems?.length
       },
       pages () {
         return this.visibleItems
-          ? Math.ceil(this.visibleItems?.length / (this.pagination ? this.pagination.rowsPerPage : this.localPagination.rowsPerPage))
+          ? Math.ceil(this.visibleItems?.length / (this.pagination ? this.pagination.rowsPerPage : this.localOptions.rowsPerPage))
           : 0
       },
     },
@@ -135,13 +139,13 @@
         this.selectedItems.length = 0
         this.selectedItems.push(...this.localSelectedItems)
       },
-      'localPagination.page': function () {
+      'localOptions.page': function () {
         this.handlePaging()
       },
     },
     mounted () {
       if (this.pagination) {
-        this.localPagination = this.pagination
+        this.localOptions = this.pagination
       }
     },
     methods: {

@@ -17,7 +17,7 @@
         <v-card-text>
           <slot />
         </v-card-text>
-        <v-card-actions class="ml-4 mr-3">
+        <v-card-actions class="ml-6 mr-6">
           <slot name="buttons" />
         </v-card-actions>
       </v-card>

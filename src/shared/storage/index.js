@@ -1,5 +1,5 @@
-import encrypt from '@/shared/utils/encrypt'
+import crypt from '@/shared/utils/crypt'
 
 import api from './storage'
 
-export default api(encrypt)
+export default api(crypt)

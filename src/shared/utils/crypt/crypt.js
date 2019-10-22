@@ -2,7 +2,7 @@ const XOR_PATTERN = '6$5335kl5l6feed&656fel&54per989)()deyolf.'
 
 const api = {
   // I use a simple algorithm to make the password not readable on first sight, the rest does https for us
-  e (value) { // encode
+  encrypt (value) { // encode
     if (!value) {
       return value
     }
@@ -15,7 +15,7 @@ const api = {
     return encoded
   },
 
-  d (value) { // decode
+  decrypt (value) { // decode
     if (!value) {
       return value
     }

@@ -1,9 +1,9 @@
 <template>
   <v-progress-circular
+    v-if="loading"
     class="loading"
     color="info"
     indeterminate
-    v-if="loading"
   />
 </template>
 

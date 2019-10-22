@@ -7,11 +7,11 @@
   userName: "..."
 */
 
-const api = (encrypt) => {
+const api = (crypt) => {
   // name for token in the local storage of the browser
   const TOKEN_KEY = 'token'
 
-  const api = {
+  return {
     removeToken () {
       window.localStorage.removeItem(TOKEN_KEY)
     },
@@ -21,7 +21,7 @@ const api = (encrypt) => {
         return {}
       }
       try {
-        return JSON.parse(encrypt.d(token))
+        return JSON.parse(crypt.decrypt(token))
       } catch (exception) {
         // old format of login data or somebody has changed it manually, so not available
         // fail silently not giving a hint
@@ -29,11 +29,9 @@ const api = (encrypt) => {
       }
     },
     setToken (token) {
-      window.localStorage.setItem(TOKEN_KEY, encrypt.e(JSON.stringify(token)))
+      window.localStorage.setItem(TOKEN_KEY, crypt.encrypt(JSON.stringify(token)))
     },
   }
-
-  return api
 }
 
 export default api

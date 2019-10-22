@@ -13,7 +13,7 @@
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>
-      <v-card-text class="mx-2">
+      <v-card-text>
         <div class="controls pa-2">
           <slot />
         </div>
