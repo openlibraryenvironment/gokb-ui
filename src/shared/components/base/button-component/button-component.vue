@@ -3,6 +3,7 @@
     :color="colorValue"
     :text="text"
     :type="type"
+    :disabled="disabled"
   >
     <slot />
   </v-btn>
@@ -23,6 +24,11 @@
         default: undefined,
       },
       text: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+      disabled: {
         type: Boolean,
         required: false,
         default: false,

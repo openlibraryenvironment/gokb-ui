@@ -1,7 +1,7 @@
 <script>
   import BaseSearch from './base-search-view'
   import ProviderInputField from '@/shared/components/simple/search-provider-field-component'
-  import ajaxServices from '@/shared/services/ajax-services'
+  // import ajaxServices from '@/shared/services/ajax-services'
 
   export default {
     name: 'SearchPackage',
@@ -13,15 +13,15 @@
     async created () {
       this.title = 'Pakete'
       this.component = 'g:1packages'
-      const allCuratorGroups = await ajaxServices.lookup({
-        baseClass: 'org.gokb.cred.CuratoryGroup',
-        q: ''
-      })
-      const allStates = await ajaxServices.lookup({
-        baseClass: 'org.gokb.cred.RefdataValue',
-        filter1: 'KBComponent.Status',
-        q: ''
-      })
+      // const allCuratorGroups = await ajaxServices.lookup({
+      //   baseClass: 'org.gokb.cred.CuratoryGroup',
+      //   q: ''
+      // })
+      // const allStates = await ajaxServices.lookup({
+      //   baseClass: 'org.gokb.cred.RefdataValue',
+      //   filter1: 'KBComponent.Status',
+      //   q: ''
+      // })
 
       this.searchInputFields = [
         [
@@ -38,7 +38,7 @@
             properties: {
               label: 'Kuratoren',
               multiple: true,
-              items: allCuratorGroups.values.map(({ id: value, text }) => ({ value, text })),
+              // items: allCuratorGroups.values.map(({ id: value, text }) => ({ value, text })),
             }
           }
         ],
@@ -61,7 +61,7 @@
             name: 'qp_status',
             properties: {
               label: 'Status',
-              items: allStates.values.map(({ id: value, text }) => ({ value, text })),
+              // items: allStates.values.map(({ id: value, text }) => ({ value, text })),
             }
           },
         ]

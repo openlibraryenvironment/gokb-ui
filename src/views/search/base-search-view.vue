@@ -3,7 +3,7 @@
     :title="title"
     @submit="search"
   >
-    <gokb-section title="Suche">
+    <gokb-section sub-title="Suche">
       <template v-for="(row, rowIndex) of searchInputFields">
         <v-layout :key="`${title}_${rowIndex}`">
           <template v-for="(column, columnIndex) of row">
@@ -31,7 +31,7 @@
         </v-btn>
       </v-layout>
     </gokb-section>
-    <gokb-section title="Ergebnisse">
+    <gokb-section sub-title="Ergebnisse">
       <template #buttons>
         <gokb-button @click.native="showAddNewCuratoryGroup">
           Hinzufügen
@@ -50,18 +50,21 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
+  import { VSelect, VTextField } from 'vuetify/lib'
   import GokbPage from '@/shared/components/complex/page-component'
   import GokbTable from '@/shared/components/complex/table-component'
   import GokbSection from '@/shared/components/complex/section-component'
   import GokbButton from '@/shared/components/base/button-component'
   import GokbTextField from '@/shared/components/base/text-field-component'
-  import searchServices from '@/shared/services/search-services'
+  // import searchServices from '@/shared/services/search-services'
 
   const ROWS_PER_PAGE = 10
 
   export default {
     name: 'BaseSearch',
     components: {
+      VSelect,
+      VTextField,
       GokbTextField,
       GokbPage,
       GokbSection,
@@ -104,27 +107,27 @@
         this.$refs.searchForm.reset()
       },
       async search ({ page = undefined }) {
-        const searchParameters = this.searchInputFields
-          .flat()
-          .map(field => ([field.name, field.model]))
-          .filter(([name, value]) => name && value)
-          .reduce((r, [name, value]) => {
-            r[name] = value
-            return r
-          }, {})
+        // const searchParameters = this.searchInputFields
+        //   .flat()
+        //   .map(field => ([field.name, field.model]))
+        //   .filter(([name, value]) => name && value)
+        //   .reduce((r, [name, value]) => {
+        //     r[name] = value
+        //     return r
+        //   }, {})
 
-        const result = await searchServices.search({
-          ...searchParameters,
-          qbe: this.component,
-          max: ROWS_PER_PAGE,
-          offset: page ? (page - 1) * this.resultPagination.rowsPerPage : 0
-        }, this.cancelToken.token)
-        console.log(result)
-        if (!page) {
-          this.resultPagination.totalItems = result.count
-          this.resultPagination.page = 1
-        }
-        this.resultItems = result.records
+        // const result = await searchServices.search({
+        //   ...searchParameters,
+        //   qbe: this.component,
+        //   max: ROWS_PER_PAGE,
+        //   offset: page ? (page - 1) * this.resultPagination.rowsPerPage : 0
+        // }, this.cancelToken.token)
+        // console.log(result)
+        // if (!page) {
+        //   this.resultPagination.totalItems = result.count
+        //   this.resultPagination.page = 1
+        // }
+        // this.resultItems = result.records
       },
     }
   }

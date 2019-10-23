@@ -1,13 +1,25 @@
 <template>
   <span>
     <v-card flat>
+      <span
+        v-if="title"
+        class="headline ml-4"
+      >
+        {{ title }}
+      </span>
       <v-toolbar
+        v-if="subTitle"
         color="white"
         dense
         flat
         height="32"
       >
-        <span class="title">{{ title }}</span>
+        <span
+          v-if="subTitle"
+          class="title"
+        >
+          {{ subTitle }}
+        </span>
         <v-spacer />
         <v-toolbar-items>
           <slot name="buttons" />
@@ -29,7 +41,12 @@
       title: {
         type: String,
         required: false,
-        default: 'missing title for section'
+        default: undefined,
+      },
+      subTitle: {
+        type: String,
+        required: false,
+        default: undefined,
       },
     },
     data () {

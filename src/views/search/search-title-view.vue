@@ -1,7 +1,7 @@
 <script>
   import BaseSearch from './base-search-view'
   import PublisherInputField from '@/shared/components/simple/search-publisher-field-component'
-  import ajaxServices from '@/shared/services/ajax-services'
+  // import ajaxServices from '@/shared/services/ajax-services'
 
   export default {
     name: 'SearchTitle',
@@ -11,16 +11,16 @@
       return {}
     },
     async created () {
-      const allTypes = await ajaxServices.lookup({
-        baseClass: 'org.gokb.cred.RefdataValue',
-        filter1: 'TitleInstance.Medium',
-        q: '',
-      })
-      const allStates = await ajaxServices.lookup({
-        baseClass: 'org.gokb.cred.RefdataValue',
-        filter1: 'KBComponent.Status',
-        q: ''
-      })
+      // const allTypes = await ajaxServices.lookup({
+      //   baseClass: 'org.gokb.cred.RefdataValue',
+      //   filter1: 'TitleInstance.Medium',
+      //   q: '',
+      // })
+      // const allStates = await ajaxServices.lookup({
+      //   baseClass: 'org.gokb.cred.RefdataValue',
+      //   filter1: 'KBComponent.Status',
+      //   q: ''
+      // })
 
       this.title = 'Titel'
       this.component = 'g:1titles'
@@ -51,7 +51,7 @@
             name: 'qp_medium',
             properties: {
               label: 'Typ',
-              items: allTypes.values.map(({ id: value, text }) => ({ value, text })),
+              // items: allTypes.values.map(({ id: value, text }) => ({ value, text })),
             }
           }
         ],
@@ -61,7 +61,7 @@
             name: 'qp_status',
             properties: {
               label: 'Status',
-              items: allStates.values.map(({ id: value, text }) => ({ value, text })),
+              // items: allStates.values.map(({ id: value, text }) => ({ value, text })),
             }
           }
         ]

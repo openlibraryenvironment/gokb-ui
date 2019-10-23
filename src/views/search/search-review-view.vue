@@ -1,6 +1,6 @@
 <script>
   import BaseSearch from './base-search-view'
-  import ajaxServices from '@/shared/services/ajax-services'
+  // import ajaxServices from '@/shared/services/ajax-services'
 
   export default {
     name: 'SearchReview',
@@ -11,10 +11,10 @@
     async created () {
       this.title = 'Reviews'
       this.component = 'g:reviewRequests'
-      const allUsers = await ajaxServices.lookup({
-        baseClass: 'org.gokb.cred.User',
-        q: ''
-      })
+      // const allUsers = await ajaxServices.lookup({
+      //   baseClass: 'org.gokb.cred.User',
+      //   q: ''
+      // })
 
       this.searchInputFields = [
         [
@@ -32,7 +32,7 @@
               label: 'Ersteller',
               multiple: true,
             },
-            items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
+            // items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
           }
         ],
         [
@@ -49,7 +49,7 @@
               label: 'Reviewer',
               multiple: true,
             },
-            items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
+            // items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
           }
         ],
         [
