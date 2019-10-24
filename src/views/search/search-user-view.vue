@@ -1,5 +1,7 @@
 <script>
   import BaseSearch from './base-search-view'
+  import { ADD_USER_ROUTE } from '@/router/route-names'
+
   // import ajaxServices from '@/shared/services/ajax-services'
 
   export default {
@@ -11,6 +13,18 @@
     async created () {
       this.title = 'Benutzer'
       this.component = 'g:UserOrganisation'
+      this.resultActionButtons = [
+        {
+          icon: 'add',
+          label: 'Hinzufügen',
+          route: ADD_USER_ROUTE,
+        },
+        {
+          icon: 'cancel',
+          label: 'Deaktivieren',
+          action: undefined,
+        }
+      ]
 
       // const allStates = await ajaxServices.lookup({
       //   baseClass: 'org.gokb.cred.RefdataValue',

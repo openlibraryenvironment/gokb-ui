@@ -4,6 +4,7 @@
     :text="text"
     :type="type"
     :disabled="disabled"
+    :to="to"
   >
     <v-icon
       v-if="icon"
@@ -30,6 +31,11 @@
         default: undefined,
       },
       icon: {
+        type: String,
+        required: false,
+        default: undefined,
+      },
+      to: {
         type: String,
         required: false,
         default: undefined,

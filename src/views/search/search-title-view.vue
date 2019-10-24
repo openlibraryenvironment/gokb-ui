@@ -24,6 +24,19 @@
 
       this.title = 'Titel'
       this.component = 'g:1titles'
+      this.resultActionButtons = [
+        {
+          icon: 'clear',
+          label: 'Archivieren',
+          action: undefined,
+        },
+        {
+          icon: 'delete',
+          label: 'Löschen',
+          action: undefined,
+        }
+      ]
+
       this.searchInputFields = [
         [
           {

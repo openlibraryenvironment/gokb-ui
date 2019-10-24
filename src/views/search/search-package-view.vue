@@ -13,6 +13,24 @@
     async created () {
       this.title = 'Pakete'
       this.component = 'g:1packages'
+      this.resultActionButtons = [
+        {
+          icon: 'import_export',
+          label: 'Export',
+          route: undefined,
+        },
+        {
+          icon: 'clear',
+          label: 'Archivieren',
+          action: undefined,
+        },
+        {
+          icon: 'delete',
+          label: 'Löschen',
+          action: undefined,
+        }
+      ]
+
       // const allCuratorGroups = await ajaxServices.lookup({
       //   baseClass: 'org.gokb.cred.CuratoryGroup',
       //   q: ''

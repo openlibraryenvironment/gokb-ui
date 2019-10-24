@@ -4,7 +4,7 @@ import Home from '@/views/home-view.vue'
 
 import { HOME_ROUTE, PROFILE_ROUTE, TITLE_ROUTE, PACKAGE_ROUTE, PROVIDER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
   KBART_IMPORT_ROUTE, SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
-  SEARCH_USER_ROUTE
+  SEARCH_USER_ROUTE, ADD_USER_ROUTE
 } from './route-names'
 
 const COMPONENT_ROUTE_MAPPER = {
@@ -86,6 +86,11 @@ const router = new Router({
       path: SEARCH_USER_ROUTE,
       name: 'search-user',
       component: () => import(/* webpackChunkName: "searchUser" */ '../views/search/search-user-view.vue')
+    },
+    {
+      path: ADD_USER_ROUTE,
+      name: 'add-user',
+      component: () => import(/* webpackChunkName: "addUser" */ '../views/add/add-user-view.vue')
     },
   ]
 })

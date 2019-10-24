@@ -11,6 +11,14 @@
     async created () {
       this.title = 'Pflege'
       this.component = '?'
+      this.resultActionButtons = [
+        {
+          icon: 'fast_forward',
+          label: 'Überspringen',
+          action: undefined,
+        }
+      ]
+
       // const allCuratorGroups = await ajaxServices.lookup({
       //   baseClass: 'org.gokb.cred.CuratoryGroup',
       //   q: ''

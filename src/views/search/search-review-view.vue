@@ -11,6 +11,14 @@
     async created () {
       this.title = 'Reviews'
       this.component = 'g:reviewRequests'
+      this.resultActionButtons = [
+        {
+          icon: 'clear',
+          label: 'Schließen',
+          action: undefined,
+        }
+      ]
+
       // const allUsers = await ajaxServices.lookup({
       //   baseClass: 'org.gokb.cred.User',
       //   q: ''

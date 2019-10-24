@@ -37,17 +37,13 @@
     <gokb-section sub-title="Ergebnisse">
       <template #buttons>
         <gokb-button
-          icon="add"
-          @click.native="showAddNewCuratoryGroup"
+          v-for="actionButton of resultActionButtons"
+          :key="actionButton.label"
+          :icon="actionButton.icon"
+          :to="actionButton.route"
+          class="mr-4"
         >
-          Hinzufügen
-        </gokb-button>
-        <gokb-button
-          class="ml-4"
-          icon="cancel"
-          @click.native="deleteSelectedCuratoryGroups"
-        >
-          Deaktivieren
+          {{ actionButton.label }}
         </gokb-button>
       </template>
       <gokb-table
@@ -88,6 +84,7 @@
         component: undefined,
         searchInputFields: undefined,
 
+        resultActionButtons: undefined,
         resultItems: undefined,
         resultPagination: {
           descending: false,
