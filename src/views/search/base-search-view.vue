@@ -23,20 +23,30 @@
       </template>
       <v-layout>
         <v-spacer />
-        <v-btn @click.stop="resetSearch">
+        <gokb-button @click.native.stop="resetSearch">
           Zurücksetzen
-        </v-btn>
-        <v-btn type="submit">
+        </gokb-button>
+        <gokb-button
+          class="ml-4"
+          default
+        >
           Suchen
-        </v-btn>
+        </gokb-button>
       </v-layout>
     </gokb-section>
     <gokb-section sub-title="Ergebnisse">
       <template #buttons>
-        <gokb-button @click.native="showAddNewCuratoryGroup">
+        <gokb-button
+          icon="add"
+          @click.native="showAddNewCuratoryGroup"
+        >
           Hinzufügen
         </gokb-button>
-        <gokb-button @click.native="deleteSelectedCuratoryGroups">
+        <gokb-button
+          class="ml-4"
+          icon="cancel"
+          @click.native="deleteSelectedCuratoryGroups"
+        >
           Deaktivieren
         </gokb-button>
       </template>

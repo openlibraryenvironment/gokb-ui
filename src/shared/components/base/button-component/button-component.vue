@@ -5,6 +5,12 @@
     :type="type"
     :disabled="disabled"
   >
+    <v-icon
+      v-if="icon"
+      left
+    >
+      {{ icon }}
+    </v-icon>
     <slot />
   </v-btn>
 </template>
@@ -19,6 +25,11 @@
         default: false,
       },
       color: {
+        type: String,
+        required: false,
+        default: undefined,
+      },
+      icon: {
         type: String,
         required: false,
         default: undefined,
