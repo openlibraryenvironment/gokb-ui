@@ -53,7 +53,7 @@
     },
     computed: {
       colorValue () {
-        return this.color || (this.default && 'info') || undefined
+        return this.color || (this.default && 'accent') || 'primary'
       },
       type () {
         return (this.default && 'submit') || undefined

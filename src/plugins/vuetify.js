@@ -10,12 +10,16 @@ export default new Vuetify({
     current: 'de'
   },
   theme: {
-    primary: '#4f4f4f',
-    secondary: '#bdbdbd',
-    accent: '#f2994a',
-    error: '#eb5757',
-    // warning: '',
-    info: '#2d9cdb',
-    // success: ''
+    themes: {
+      light: {
+        primary: '#4f4f4f',
+        secondary: '#bdbdbd',
+        accent: '#f2994a',
+        error: '#eb5757',
+        // warning: '',
+        info: '#2d9cdb',
+        // success: ''
+      }
+    }
   }
 })

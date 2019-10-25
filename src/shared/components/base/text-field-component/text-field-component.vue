@@ -3,7 +3,7 @@
     v-model="localValue"
     :autocomplete="browserAutocomplete"
     :label="label"
-    :prepend-icon="prependIcon"
+    :prepend-icon="hideIcon ? '' : prependIcon"
     :required="required"
     :rules="rules"
     :type="type"
@@ -36,6 +36,11 @@
       required: {
         type: Boolean,
         required: false,
+      },
+      hideIcon: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
       prependIcon: {
         type: String,
