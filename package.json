@@ -8,7 +8,7 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "buildDeploy4Dev": "vue-cli-service build --mode qa && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
+    "buildDeploy4Dev": "vue-cli-service build --mode dev && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
     "buildDeploy4Qa": "vue-cli-service build --mode qa && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
     "buildDeploy4Prod": "vue-cli-service build"
   },
