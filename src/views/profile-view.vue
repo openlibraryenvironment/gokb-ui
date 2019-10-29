@@ -60,7 +60,7 @@
   import account from '@/shared/models/account'
   import profileServices from '@/shared/services/profile-services'
   import BaseComponent from '@/shared/components/base-component'
-  import GokbAddCuratoryGroupsPopup from '@/shared/components/popups/add-curatory-groups-popup'
+  import GokbAddCuratoryGroupsPopup from '@/shared/popups/add-curatory-groups-popup'
   import GokbPage from '@/shared/components/complex/page-component'
   import GokbTable from '@/shared/components/complex/table-component'
   import GokbSection from '@/shared/components/complex/section-component'
