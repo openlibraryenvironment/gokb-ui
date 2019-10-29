@@ -111,7 +111,7 @@
   import GokbUsernameField from '@/shared/components/simple/username-field-component'
   import GokbEmailField from '@/shared/components/simple/email-field-component'
   import GokbPasswordField from '@/shared/components/simple/password-field-component'
-  import GokbCheckbox from '@/shared/components/base/checkbox-component'
+  import GokbCheckbox from '@/shared/components/base/checkbox-field-component'
   import GokbTable from '@/shared/components/complex/table-component'
 
   export default {

@@ -1,5 +1,5 @@
 <template>
-  <v-select
+  <v-combobox
     :placeholder="placeholder"
   />
 </template>
@@ -8,7 +8,7 @@
   import BaseComponent from '@/shared/components/base-component'
 
   export default {
-    name: 'SelectFieldComponent',
+    name: 'ComboboxFieldComponent',
     extends: BaseComponent,
     props: {
       placeholder: {

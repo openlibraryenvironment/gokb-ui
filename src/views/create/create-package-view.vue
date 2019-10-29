@@ -39,13 +39,39 @@
             title="Allgemein"
             sub-title="Paket"
           >
-            <gokb-select-field placeholder="Title" />
-            <gokb-select-field placeholder="Quelle" />
-            <gokb-select-field placeholder="URL" />
-            <gokb-select-field placeholder="Beschreibung" />
+            <gokb-text-field
+              v-model="title"
+              placeholder="Titel"
+            />
+            <gokb-combobox-field placeholder="Quelle" />
+            <gokb-text-field
+              v-model="url"
+              placeholder="URL"
+            />
+            <gokb-textarea-field
+              v-model="description"
+              placeholder="Beschreibung"
+            />
             <gokb-select-field placeholder="Umfang" />
-            <gokb-select-field placeholder="Zuordnung" />
-            <gokb-select-field placeholder="URL" />
+            <gokb-radiobutton-group>
+              <gokb-radiobutton-field label="Konsortial" />
+              <gokb-radiobutton-field label="Global" />
+              <gokb-radiobutton-field label="Unbekannt" />
+            </gokb-radiobutton-group>
+            <v-row>
+              <gokb-checkbox-field
+                class="ml-3"
+                label="Paketinhalt ist konsistent"
+              />
+              <gokb-checkbox-field
+                class="ml-3"
+                label="Teilbar für Lizenznehmer"
+              />
+              <gokb-checkbox-field
+                class="ml-3"
+                label="Paket ist unveränderbar"
+              />
+            </v-row>
           </gokb-section>
           <gokb-section sub-title="Identifier">
             <gokb-select-field placeholder="ISSN" />
@@ -62,7 +88,6 @@
             <gokb-select-field placeholder="URL" />
             <gokb-select-field placeholder="Beschreibung" />
             <gokb-select-field placeholder="Umfang" />
-            <gokb-select-field placeholder="Zuordnung" />
             <gokb-select-field placeholder="URL" />
           </gokb-section>
           <gokb-section sub-title="Identifier">
@@ -125,6 +150,12 @@
   import GokbSection from '@/shared/components/complex/section-component'
   import GokbButton from '@/shared/components/base/button-component'
   import GokbSelectField from '@/shared/components/base/select-field-component'
+  import GokbTextField from '@/shared/components/base/text-field-component'
+  import GokbTextareaField from '@/shared/components/base/textarea-field-component'
+  import GokbRadiobuttonGroup from '@/shared/components/base/radiobutton-group-component'
+  import GokbRadiobuttonField from '@/shared/components/base/radiobutton-field-component'
+  import GokbCheckboxField from '@/shared/components/base/checkbox-field-component'
+  import GokbComboboxField from '@/shared/components/base/combobox-field-component'
 
   export default {
     name: 'CreatePackage',
@@ -133,10 +164,19 @@
       GokbSection,
       GokbButton,
       GokbSelectField,
+      GokbTextField,
+      GokbTextareaField,
+      GokbRadiobuttonGroup,
+      GokbRadiobuttonField,
+      GokbCheckboxField,
+      GokbComboboxField,
     },
     data () {
       return {
         step: 1,
+        title: undefined,
+        description: undefined,
+        url: undefined,
       }
     },
     methods: {

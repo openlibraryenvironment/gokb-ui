@@ -71,7 +71,7 @@
   import GokbButton from '@/shared/components/base/button-component'
   import GokbTextField from '@/shared/components/base/text-field-component'
   import GokbUsernameField from '@/shared/components/simple/username-field-component'
-  import GokbCheckbox from '@/shared/components/base/checkbox-component'
+  import GokbCheckbox from '@/shared/components/base/checkbox-field-component'
 
   // import searchServices from '@/shared/services/search-services'
 

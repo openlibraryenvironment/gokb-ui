@@ -1,5 +1,5 @@
 <template>
-  <v-text-field
+  <v-textarea
     v-model="localValue"
     :autocomplete="browserAutocomplete"
     :label="label"
@@ -15,7 +15,7 @@
 
 <script>
   export default {
-    name: 'TextFieldComponent',
+    name: 'TextareaFieldComponent',
     props: {
       value: {
         required: true,
