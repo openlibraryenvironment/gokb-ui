@@ -8,7 +8,7 @@
       :server-items-length="totalItems"
       hide-default-footer
       item-key="id"
-      show-select
+      :show-select="showSelect"
     >
       <template #no-data>
         <v-layout
@@ -63,6 +63,11 @@
   export default {
     name: 'TableComponent',
     props: {
+      showSelect: {
+        type: Boolean,
+        required: false,
+        default: true,
+      },
       headers: {
         type: Array,
         required: true
@@ -73,15 +78,15 @@
       },
       selectedItems: {
         type: Array,
-        default: undefined
+        default: () => [],
       },
       deletedItems: {
         type: Array,
-        default: undefined
+        default: () => []
       },
       addedItems: {
         type: Array,
-        default: undefined
+        default: () => []
       },
       options: {
         type: Object,
@@ -123,14 +128,14 @@
       localItems () {
         return this.pagination
           ? this.visibleItems
-          : this.visibleItems?.slice((this.localOptions.page - 1) * this.localOptions.rowsPerPage, this.localOptions.page * this.localOptions.rowsPerPage)
+          : this.visibleItems?.slice((this.localOptions.page - 1) * this.localOptions.itemsPerPage, this.localOptions.page * this.localOptions.itemsPerPage)
       },
       totalItems () {
         return this.pagination ? this.pagination.totalItems : this.visibleItems?.length
       },
       pages () {
         return this.visibleItems
-          ? Math.ceil(this.visibleItems?.length / (this.pagination ? this.pagination.rowsPerPage : this.localOptions.rowsPerPage))
+          ? Math.ceil(this.visibleItems?.length / (this.pagination ? this.pagination.itemsPerPage : this.localOptions.itemsPerPage))
           : 0
       },
     },

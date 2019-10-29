@@ -18,6 +18,26 @@
           action: undefined,
         }
       ]
+      this.resultHeaders = [
+        {
+          text: 'Titel/Name',
+          align: 'left',
+          sortable: false,
+          value: 'title'
+        },
+        {
+          text: 'Typ',
+          align: 'left',
+          sortable: false,
+          value: 'type'
+        },
+        {
+          text: 'Fällig',
+          align: 'left',
+          sortable: false,
+          value: 'dueDate'
+        },
+      ]
 
       // const allCuratorGroups = await ajaxServices.lookup({
       //   baseClass: 'org.gokb.cred.CuratoryGroup',

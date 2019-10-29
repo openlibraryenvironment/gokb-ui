@@ -107,7 +107,9 @@
       <user-menu />
     </v-app-bar>
     <v-content>
-      <router-view :key="$route.fullPath" />
+      <v-container>
+        <router-view :key="$route.fullPath" />
+      </v-container>
     </v-content>
   </v-app>
 </template>

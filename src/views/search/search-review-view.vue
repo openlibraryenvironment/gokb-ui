@@ -27,7 +27,7 @@
       this.searchInputFields = [
         [
           {
-            type: 'v-text-field',
+            type: 'GokbTextField',
             name: 'qp_cause',
             properties: {
               label: 'Name/Titel'
@@ -62,9 +62,16 @@
         ],
         [
           {
-            type: 'v-checkbox',
+            type: 'v-select',
+            name: '',
             properties: {
-              label: 'Abgeschlossen Anzeigen'
+              label: 'Kuratoren',
+            },
+          },
+          {
+            type: 'GokbCheckbox',
+            properties: {
+              label: 'Abgeschlossene Anzeigen'
             }
           }
         ]

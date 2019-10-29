@@ -5,8 +5,12 @@
   >
     <gokb-section sub-title="Suche">
       <template v-for="(row, rowIndex) of searchInputFields">
-        <v-layout :key="`${title}_${rowIndex}`">
-          <template v-for="(column, columnIndex) of row">
+        <v-row :key="`${title}_${rowIndex}`">
+          <v-col
+            v-for="(column, columnIndex) of row"
+            :key="`${rowIndex}_${columnIndex}`"
+            md="4"
+          >
             <component
               :is="column.type"
               :key="`${title}_${rowIndex}_${columnIndex}`"
@@ -18,21 +22,25 @@
               v-if="columnIndex !== row.length - 1"
               :key="`${title}_${rowIndex}_${columnIndex}_spacer`"
             />
-          </template>
-        </v-layout>
+          </v-col>
+        </v-row>
       </template>
-      <v-layout>
+      <v-row justify-md="end">
         <v-spacer />
-        <gokb-button @click.native.stop="resetSearch">
-          Zurücksetzen
-        </gokb-button>
-        <gokb-button
-          class="ml-4"
-          default
-        >
-          Suchen
-        </gokb-button>
-      </v-layout>
+        <v-col md="4">
+          <gokb-button
+            class="mr-4"
+            @click.native.stop="resetSearch"
+          >
+            Zurücksetzen
+          </gokb-button>
+          <gokb-button
+            default
+          >
+            Suchen
+          </gokb-button>
+        </v-col>
+      </v-row>
     </gokb-section>
     <gokb-section sub-title="Ergebnisse">
       <template #buttons>
@@ -41,7 +49,7 @@
           :key="actionButton.label"
           :icon="actionButton.icon"
           :to="actionButton.route"
-          class="mr-4"
+          class="ml-4"
         >
           {{ actionButton.label }}
         </gokb-button>
@@ -62,6 +70,9 @@
   import GokbSection from '@/shared/components/complex/section-component'
   import GokbButton from '@/shared/components/base/button-component'
   import GokbTextField from '@/shared/components/base/text-field-component'
+  import GokbUsernameField from '@/shared/components/simple/username-field-component'
+  import GokbCheckbox from '@/shared/components/base/checkbox-component'
+
   // import searchServices from '@/shared/services/search-services'
 
   const ROWS_PER_PAGE = 10
@@ -72,10 +83,12 @@
       VSelect,
       VTextField,
       GokbTextField,
+      GokbUsernameField,
       GokbPage,
       GokbSection,
       GokbTable,
       GokbButton,
+      GokbCheckbox,
     },
     extends: BaseComponent,
     data () {

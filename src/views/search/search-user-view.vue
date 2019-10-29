@@ -35,10 +35,10 @@
       this.searchInputFields = [
         [
           {
-            type: 'GokbTextField',
+            type: 'GokbUsernameField',
             name: 'qp_name',
             properties: {
-              label: 'Benutzername'
+              hideIcon: true
             }
           },
           {

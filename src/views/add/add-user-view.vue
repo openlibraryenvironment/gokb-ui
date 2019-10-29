@@ -4,29 +4,55 @@
     @submit="add"
   >
     <gokb-section sub-title="Allgemein">
-      <gokb-select-field placeholder="Benutzername" />
-      <gokb-password-field
-        v-model="password"
-        label="Kennwort"
-        hide-icon
-      />
-      <gokb-checkbox
-        v-model="outdated"
-        label="Kennwort abgelaufen"
-      />
-      <gokb-email-field
-        v-model="email"
-        hide-icon
-      />
-      <gokb-checkbox
-        v-model="active"
-        label="Aktiv"
-      />
-      <gokb-checkbox
-        v-model="locked"
-        label="Gesperrt"
-      />
-      <gokb-select-field placeholder="Organisation" />
+      <v-row>
+        <v-col md="4">
+          <gokb-username-field
+            hide-icon
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col md="4">
+          <gokb-password-field
+            v-model="password"
+            label="Kennwort"
+            hide-icon
+          />
+        </v-col>
+        <v-col md="3">
+          <gokb-checkbox
+            v-model="outdated"
+            label="Kennwort abgelaufen"
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col md="4">
+          <gokb-email-field
+            v-model="email"
+            hide-icon
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col md="1">
+          <gokb-checkbox
+            v-model="active"
+            label="Aktiv"
+          />
+        </v-col>
+        <v-col md="1">
+          <gokb-checkbox
+            v-model="locked"
+            label="Gesperrt"
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col md="4">
+          <gokb-select-field placeholder="Organisation" />
+        </v-col>
+      </v-row>
     </gokb-section>
     <gokb-section sub-title="Rollen">
       <template #buttons>
@@ -82,6 +108,7 @@
   import GokbSection from '@/shared/components/complex/section-component'
   import GokbButton from '@/shared/components/base/button-component'
   import GokbSelectField from '@/shared/components/base/select-field-component'
+  import GokbUsernameField from '@/shared/components/simple/username-field-component'
   import GokbEmailField from '@/shared/components/simple/email-field-component'
   import GokbPasswordField from '@/shared/components/simple/password-field-component'
   import GokbCheckbox from '@/shared/components/base/checkbox-component'
@@ -95,6 +122,7 @@
       GokbButton,
       GokbSelectField,
       GokbEmailField,
+      GokbUsernameField,
       GokbPasswordField,
       GokbCheckbox,
       GokbTable,
