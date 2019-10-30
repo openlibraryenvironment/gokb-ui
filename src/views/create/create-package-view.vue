@@ -158,6 +158,11 @@
         </v-stepper-content>
 
         <v-stepper-content step="3">
+          <gokb-add-title-popup
+            v-if="addTitlePopupVisible"
+            v-model="addTitlePopupVisible"
+            @add="addNewTitle"
+          />
           <gokb-section sub-title="Titel">
             <template #buttons>
               <gokb-button
@@ -168,6 +173,7 @@
               <gokb-button
                 icon="add"
                 class="mr-4"
+                @click.native="showAddNewTitle"
               >
                 Hinzufügen
               </gokb-button>
@@ -222,8 +228,11 @@
 </template>
 
 <script>
+  import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
+
   export default {
     name: 'CreatePackage',
+    components: { GokbAddTitlePopup },
     data () {
       return {
         step: 1,
@@ -248,6 +257,7 @@
           },
         ],
         curatories: [],
+        addTitlePopupVisible: false,
         titlesHeader: [
           {
             text: 'Titel',
@@ -271,6 +281,12 @@
       },
       go2PreviousStep () {
         this.step > 1 && this.step--
+      },
+      showAddNewTitle () {
+        this.addTitlePopupVisible = true
+      },
+      addNewTitle () {
+        console.log('addNewTitle')
       },
       createPackage () {
         console.log('create package')

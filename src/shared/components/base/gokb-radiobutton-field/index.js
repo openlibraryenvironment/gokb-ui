@@ -1,3 +1,1 @@
-import GokbRadioButtonField from './gokb-radiobutton-field'
-
-export default GokbRadioButtonField
+export default from './gokb-radiobutton-field'

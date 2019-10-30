@@ -1,3 +1,1 @@
-import GokbPage from './gokb-page'
-
-export default GokbPage
+export default from './gokb-page'

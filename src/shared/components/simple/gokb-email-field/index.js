@@ -1,3 +1,1 @@
-import GokbEmailField from './gokb-email-field'
-
-export default GokbEmailField
+export default from './gokb-email-field'

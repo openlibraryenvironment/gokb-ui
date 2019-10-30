@@ -1,3 +1,1 @@
-import GokbSearchProviderField from './gokb-search-provider-field'
-
-export default GokbSearchProviderField
+export default from './gokb-search-provider-field'

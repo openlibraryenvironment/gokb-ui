@@ -1,3 +1,1 @@
-import GokbTextField from './gokb-text-field'
-
-export default GokbTextField
+export default from './gokb-text-field'

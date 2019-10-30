@@ -1,3 +1,1 @@
-import GokbSearchFieldComponent from './gokb-search-field'
-
-export default GokbSearchFieldComponent
+export default from './gokb-search-field'

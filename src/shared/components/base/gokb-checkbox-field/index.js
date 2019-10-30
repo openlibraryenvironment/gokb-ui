@@ -1,3 +1,1 @@
-import GokbCheckboxField from './gokb-checkbox-field'
-
-export default GokbCheckboxField
+export default from './gokb-checkbox-field'

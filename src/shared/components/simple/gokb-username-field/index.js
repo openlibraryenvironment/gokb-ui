@@ -1,3 +1,1 @@
-import GokbUsernameField from './gokb-username-field'
-
-export default GokbUsernameField
+export default from './gokb-username-field'

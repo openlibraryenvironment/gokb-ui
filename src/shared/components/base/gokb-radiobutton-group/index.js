@@ -1,3 +1,1 @@
-import GokbRadioButtonGroup from './gokb-radiobutton-group'
-
-export default GokbRadioButtonGroup
+export default from './gokb-radiobutton-group'

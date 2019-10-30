@@ -1,3 +1,1 @@
-import GokbButton from './gokb-button'
-
-export default GokbButton
+export default from './gokb-button'

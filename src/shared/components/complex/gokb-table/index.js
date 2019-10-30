@@ -1,3 +1,1 @@
-import GokbTable from './gokb-table'
-
-export default GokbTable
+export default from './gokb-table'

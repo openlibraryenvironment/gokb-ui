@@ -1,3 +1,1 @@
-import GokbTextareaField from './gokb-textarea-field'
-
-export default GokbTextareaField
+export default from './gokb-textarea-field'

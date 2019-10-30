@@ -1,3 +1,1 @@
-import GokbSearchPublisherField from './gokb-search-publisher-field'
-
-export default GokbSearchPublisherField
+export default from './gokb-search-publisher-field'

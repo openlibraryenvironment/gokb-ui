@@ -1,3 +1,1 @@
-import GokbProgressOverlay from './gokb-progress-overlay'
-
-export default GokbProgressOverlay
+export default from './gokb-progress-overlay'

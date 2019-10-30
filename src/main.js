@@ -18,7 +18,6 @@ const requireComponent = require.context(
   /gokb-[\w-]+.vue/ // the regular expression used to match base component filenames
 )
 requireComponent.keys().forEach(fileName => {
-  console.log(fileName)
   const componentConfig = requireComponent(fileName) // get component config
   // get PascalCase name of component
   const componentName = utils.pascalCase(

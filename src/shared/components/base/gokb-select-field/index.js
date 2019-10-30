@@ -1,3 +1,1 @@
-import GokbSelectField from './gokb-select-field'
-
-export default GokbSelectField
+export default from './gokb-select-field'
