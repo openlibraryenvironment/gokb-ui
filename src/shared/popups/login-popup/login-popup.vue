@@ -33,14 +33,14 @@
 </template>
 
 <script>
-  import BaseComponent from '@/shared/components/base-component'
+  import BaseComponent from '@/shared/base-component'
   import utils from '@/shared/utils/utils'
   import loading from '@/shared/models/loading'
   import account from '@/shared/models/account'
-  import GokbDialog from '@/shared/components/complex/dialog-component'
-  import GokbButton from '@/shared/components/base/button-component'
-  import GokbUsernameField from '@/shared/components/simple/username-field-component'
-  import GokbPasswordField from '@/shared/components/simple/password-field-component'
+  import GokbDialog from '@/shared/components/complex/gokb-dialog'
+  import GokbButton from '@/shared/components/base/gokb-button'
+  import GokbUsernameField from '@/shared/components/simple/gokb-username-field'
+  import GokbPasswordField from '@/shared/components/simple/gokb-password-field'
 
   export default {
     name: 'LoginPopup',

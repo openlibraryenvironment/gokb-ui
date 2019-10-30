@@ -1,11 +1,9 @@
 <script>
   import BaseSearch from './base-search-view'
-  import PublisherInputField from '@/shared/components/simple/search-publisher-field-component'
   // import ajaxServices from '@/shared/services/ajax-services'
 
   export default {
     name: 'SearchTitle',
-    components: { PublisherInputField },
     extends: BaseSearch,
     data () {
       return {}
@@ -40,40 +38,40 @@
       this.searchInputFields = [
         [
           {
-            type: 'v-text-field',
+            type: 'GokbTextField',
             name: 'qp_name',
             properties: {
               label: 'Name/Titel'
             }
           },
           {
-            type: 'v-text-field',
+            type: 'GokbSelectField',
             name: 'qp_identifier',
             properties: {
-              label: 'Identifier'
+              placeholder: 'Identifier'
             }
           }
         ],
         [
           {
-            type: 'publisher-input-field',
+            type: 'GokbSearchPublisherField',
             name: 'qp_pub',
           },
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             name: 'qp_medium',
             properties: {
-              label: 'Typ',
+              placeholder: 'Typ',
               // items: allTypes.values.map(({ id: value, text }) => ({ value, text })),
             }
           }
         ],
         [
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             name: 'qp_status',
             properties: {
-              label: 'Status',
+              placeholder: 'Status',
               // items: allStates.values.map(({ id: value, text }) => ({ value, text })),
             }
           }

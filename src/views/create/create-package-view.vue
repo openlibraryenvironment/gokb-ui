@@ -146,31 +146,8 @@
 </template>
 
 <script>
-  import GokbPage from '@/shared/components/complex/page-component'
-  import GokbSection from '@/shared/components/complex/section-component'
-  import GokbButton from '@/shared/components/base/button-component'
-  import GokbSelectField from '@/shared/components/base/select-field-component'
-  import GokbTextField from '@/shared/components/base/text-field-component'
-  import GokbTextareaField from '@/shared/components/base/textarea-field-component'
-  import GokbRadiobuttonGroup from '@/shared/components/base/radiobutton-group-component'
-  import GokbRadiobuttonField from '@/shared/components/base/radiobutton-field-component'
-  import GokbCheckboxField from '@/shared/components/base/checkbox-field-component'
-  import GokbComboboxField from '@/shared/components/base/combobox-field-component'
-
   export default {
     name: 'CreatePackage',
-    components: {
-      GokbPage,
-      GokbSection,
-      GokbButton,
-      GokbSelectField,
-      GokbTextField,
-      GokbTextareaField,
-      GokbRadiobuttonGroup,
-      GokbRadiobuttonField,
-      GokbCheckboxField,
-      GokbComboboxField,
-    },
     data () {
       return {
         step: 1,

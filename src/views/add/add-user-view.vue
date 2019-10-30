@@ -104,29 +104,8 @@
 </template>
 
 <script>
-  import GokbPage from '@/shared/components/complex/page-component'
-  import GokbSection from '@/shared/components/complex/section-component'
-  import GokbButton from '@/shared/components/base/button-component'
-  import GokbSelectField from '@/shared/components/base/select-field-component'
-  import GokbUsernameField from '@/shared/components/simple/username-field-component'
-  import GokbEmailField from '@/shared/components/simple/email-field-component'
-  import GokbPasswordField from '@/shared/components/simple/password-field-component'
-  import GokbCheckbox from '@/shared/components/base/checkbox-field-component'
-  import GokbTable from '@/shared/components/complex/table-component'
-
   export default {
     name: 'AddUser',
-    components: {
-      GokbPage,
-      GokbSection,
-      GokbButton,
-      GokbSelectField,
-      GokbEmailField,
-      GokbUsernameField,
-      GokbPasswordField,
-      GokbCheckbox,
-      GokbTable,
-    },
     data () {
       return {
         password: undefined,

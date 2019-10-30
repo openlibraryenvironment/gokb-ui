@@ -45,19 +45,8 @@
 </template>
 
 <script>
-  import GokbPage from '@/shared/components/complex/page-component'
-  import GokbTable from '@/shared/components/complex/table-component'
-  import GokbSection from '@/shared/components/complex/section-component'
-  import GokbSelectField from '@/shared/components/base/select-field-component'
-
   export default {
     name: 'ProfileView',
-    components: {
-      GokbPage,
-      GokbSection,
-      GokbTable,
-      GokbSelectField,
-    },
     data () {
       return {
         reviewsHeader: [

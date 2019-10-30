@@ -59,14 +59,8 @@
   import loading from '@/shared/models/loading'
   import account from '@/shared/models/account'
   import profileServices from '@/shared/services/profile-services'
-  import BaseComponent from '@/shared/components/base-component'
+  import BaseComponent from '@/shared/base-component'
   import GokbAddCuratoryGroupsPopup from '@/shared/popups/add-curatory-groups-popup'
-  import GokbPage from '@/shared/components/complex/page-component'
-  import GokbTable from '@/shared/components/complex/table-component'
-  import GokbSection from '@/shared/components/complex/section-component'
-  import GokbButton from '@/shared/components/base/button-component'
-  import GokbEmailField from '@/shared/components/simple/email-field-component'
-  import GokbPasswordField from '@/shared/components/simple/password-field-component'
 
   const CURATORY_GROUPS_TABLE_HEADERS = [
     { text: 'Gruppe', align: 'left', value: 'name', sortable: false, width: '100%' },
@@ -76,12 +70,6 @@
     name: 'ProfileComponent',
     components: {
       GokbAddCuratoryGroupsPopup,
-      GokbPage,
-      GokbSection,
-      GokbTable,
-      GokbEmailField,
-      GokbButton,
-      GokbPasswordField
     },
     extends: BaseComponent,
     data () {

@@ -1,11 +1,9 @@
 <script>
   import BaseSearch from './base-search-view'
-  import ProviderInputField from '@/shared/components/simple/search-provider-field-component'
   // import ajaxServices from '@/shared/services/ajax-services'
 
   export default {
     name: 'SearchPackage',
-    components: { ProviderInputField },
     extends: BaseSearch,
     data () {
       return {}
@@ -44,17 +42,17 @@
       this.searchInputFields = [
         [
           {
-            type: 'v-text-field',
+            type: 'GokbTextField',
             name: 'qp_name',
             properties: {
               label: 'Name',
             }
           },
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             name: 'qp_curgroup',
             properties: {
-              label: 'Kuratoren',
+              placeholder: 'Kuratoren',
               multiple: true,
               // items: allCuratorGroups.values.map(({ id: value, text }) => ({ value, text })),
             }
@@ -62,11 +60,11 @@
         ],
         [
           {
-            type: 'provider-input-field',
+            type: 'GokbSearchProviderField',
             name: 'qp_provider',
           },
           {
-            type: 'v-text-field',
+            type: 'GokbTextField',
             name: 'qp_identifier',
             properties: {
               label: 'Identifier'
@@ -75,10 +73,10 @@
         ],
         [
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             name: 'qp_status',
             properties: {
-              label: 'Status',
+              placeholder: 'Status',
               // items: allStates.values.map(({ id: value, text }) => ({ value, text })),
             }
           },

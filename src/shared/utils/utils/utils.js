@@ -11,6 +11,15 @@ const api = {
     return d ? d < Date.now() : true
   },
 
+  pascalCase (string, separator = '-') {
+    return string.split(separator).map((word) => {
+      return this.upperFirst(word)
+    }).join('')
+  },
+  upperFirst (string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  },
+
   errorOccurred (response) {
     return response.status >= 400
   },

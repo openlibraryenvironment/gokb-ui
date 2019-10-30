@@ -46,19 +46,8 @@
 </template>
 
 <script>
-  import GokbPage from '@/shared/components/complex/page-component'
-  import GokbSection from '@/shared/components/complex/section-component'
-  import GokbButton from '@/shared/components/base/button-component'
-  import GokbSelectField from '@/shared/components/base/select-field-component'
-
   export default {
     name: 'CreateTitle',
-    components: {
-      GokbPage,
-      GokbSection,
-      GokbButton,
-      GokbSelectField,
-    },
     data () {
       return {
       }

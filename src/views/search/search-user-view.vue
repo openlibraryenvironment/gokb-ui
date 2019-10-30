@@ -42,26 +42,26 @@
             }
           },
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             properties: {
-              label: 'Gruppen',
+              placeholder: 'Gruppen',
               multiple: true,
             }
           }
         ],
         [
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             properties: {
-              label: 'Rollen',
+              placeholder: 'Rollen',
               multiple: true,
             }
           },
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             name: 'qp_status',
             properties: {
-              label: 'Status',
+              placeholder: 'Status',
               // items: allStates?.values.map(({ id: value, text }) => ({ value, text })),
             }
           }

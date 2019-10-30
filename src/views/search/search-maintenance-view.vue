@@ -52,15 +52,15 @@
       this.searchInputFields = [
         [
           {
-            type: 'v-text-field',
+            type: 'GokbTextField',
             properties: {
               label: 'Name/Titel'
             }
           },
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             properties: {
-              label: 'Ersteller',
+              placeholder: 'Ersteller',
               multiple: true,
               // items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
             }
@@ -68,15 +68,15 @@
         ],
         [
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             properties: {
-              label: 'Kuratoren',
+              placeholder: 'Kuratoren',
               multiple: true,
               // items: allCuratorGroups.values.map(({ id: value, text }) => ({ value, text })),
             }
           },
           {
-            type: 'v-text-field',
+            type: 'GokbTextField',
             properties: {
               label: 'Fällig Am'
             }

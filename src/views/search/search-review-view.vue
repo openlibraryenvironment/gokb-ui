@@ -34,10 +34,10 @@
             }
           },
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             name: 'qp_raisedby',
             properties: {
-              label: 'Ersteller',
+              placeholder: 'Ersteller',
               multiple: true,
             },
             // items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
@@ -45,16 +45,16 @@
         ],
         [
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             properties: {
-              label: 'Komponente'
+              placeholder: 'Komponente'
             }
           },
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             name: 'qp_allocatedto',
             properties: {
-              label: 'Reviewer',
+              placeholder: 'Reviewer',
               multiple: true,
             },
             // items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
@@ -62,14 +62,14 @@
         ],
         [
           {
-            type: 'v-select',
+            type: 'GokbSelectField',
             name: '',
             properties: {
-              label: 'Kuratoren',
+              placeholder: 'Kuratoren',
             },
           },
           {
-            type: 'GokbCheckbox',
+            type: 'GokbCheckboxField',
             properties: {
               label: 'Abgeschlossene Anzeigen'
             }

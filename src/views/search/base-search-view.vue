@@ -63,15 +63,11 @@
 </template>
 
 <script>
-  import BaseComponent from '@/shared/components/base-component'
-  import { VSelect, VTextField } from 'vuetify/lib'
-  import GokbPage from '@/shared/components/complex/page-component'
-  import GokbTable from '@/shared/components/complex/table-component'
-  import GokbSection from '@/shared/components/complex/section-component'
-  import GokbButton from '@/shared/components/base/button-component'
-  import GokbTextField from '@/shared/components/base/text-field-component'
-  import GokbUsernameField from '@/shared/components/simple/username-field-component'
-  import GokbCheckbox from '@/shared/components/base/checkbox-field-component'
+  import BaseComponent from '@/shared/base-component'
+  import GokbPage from '@/shared/components/complex/gokb-page'
+  import GokbTable from '@/shared/components/complex/gokb-table'
+  import GokbSection from '@/shared/components/complex/gokb-section'
+  import GokbButton from '@/shared/components/base/gokb-button'
 
   // import searchServices from '@/shared/services/search-services'
 
@@ -80,15 +76,10 @@
   export default {
     name: 'BaseSearch',
     components: {
-      VSelect,
-      VTextField,
-      GokbTextField,
-      GokbUsernameField,
       GokbPage,
       GokbSection,
       GokbTable,
       GokbButton,
-      GokbCheckbox,
     },
     extends: BaseComponent,
     data () {
