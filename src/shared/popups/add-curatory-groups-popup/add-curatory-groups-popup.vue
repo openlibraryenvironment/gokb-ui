@@ -28,12 +28,9 @@
 <script>
   import ajaxServices from '@/shared/services/ajax-services'
   import BaseComponent from '@/shared/base-component'
-  import GokbDialog from '@/shared/components/complex/gokb-dialog'
-  import GokbButton from '@/shared/components/base/gokb-button'
 
   export default {
     name: 'AddCuratorGroupsPopup',
-    components: { GokbDialog, GokbButton },
     extends: BaseComponent,
     props: {
       value: {

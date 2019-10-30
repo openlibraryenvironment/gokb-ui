@@ -64,11 +64,6 @@
 
 <script>
   import BaseComponent from '@/shared/base-component'
-  import GokbPage from '@/shared/components/complex/gokb-page'
-  import GokbTable from '@/shared/components/complex/gokb-table'
-  import GokbSection from '@/shared/components/complex/gokb-section'
-  import GokbButton from '@/shared/components/base/gokb-button'
-
   // import searchServices from '@/shared/services/search-services'
 
   const ROWS_PER_PAGE = 10
@@ -76,10 +71,6 @@
   export default {
     name: 'BaseSearch',
     components: {
-      GokbPage,
-      GokbSection,
-      GokbTable,
-      GokbButton,
     },
     extends: BaseComponent,
     data () {

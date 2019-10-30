@@ -9,24 +9,28 @@
     >
       <v-stepper-header>
         <v-stepper-step
+          editable
           step="1"
         >
           Allgemein
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
+          editable
           step="2"
         >
           Organisation und Plattform
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
+          editable
           step="3"
         >
           Titel im Paket
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
+          editable
           step="4"
         >
           Zusammenfassung
@@ -74,6 +78,13 @@
             </v-row>
           </gokb-section>
           <gokb-section sub-title="Identifier">
+            <template #buttons>
+              <gokb-button
+                icon="add"
+              >
+                Identifier hinzufügen
+              </gokb-button>
+            </template>
             <gokb-select-field placeholder="ISSN" />
           </gokb-section>
         </v-stepper-content>
@@ -83,30 +94,94 @@
             title="Organisation"
             sub-title="Allgemein"
           >
-            <gokb-select-field placeholder="Title" />
+            <gokb-text-field placeholder="Name" />
             <gokb-select-field placeholder="Quelle" />
-            <gokb-select-field placeholder="URL" />
-            <gokb-select-field placeholder="Beschreibung" />
-            <gokb-select-field placeholder="Umfang" />
-            <gokb-select-field placeholder="URL" />
+            <gokb-text-field placeholder="Referenz" />
           </gokb-section>
           <gokb-section sub-title="Identifier">
-            <gokb-select-field placeholder="ISSN" />
+            <template #buttons>
+              <gokb-button
+                icon="add"
+              >
+                Identifier hinzufügen
+              </gokb-button>
+            </template>
+            <gokb-select-field placeholder="DOI" />
           </gokb-section>
           <gokb-section sub-title="Alternative Namen">
-            <gokb-select-field placeholder="ISSN" />
+            <template #buttons>
+              <gokb-button
+                icon="add"
+                class="mr-4"
+              >
+                Hinzufügen
+              </gokb-button>
+              <gokb-button
+                icon="delete"
+              >
+                Löschen
+              </gokb-button>
+            </template>
+            <gokb-table
+              :show-select="false"
+              :headers="alternativeNamesHeader"
+              :items="alternativeNames"
+            />
           </gokb-section>
           <gokb-section sub-title="Kuratoren">
-            <gokb-select-field placeholder="ISSN" />
+            <template #buttons>
+              <gokb-button
+                icon="add"
+                class="mr-4"
+              >
+                Hinzufügen
+              </gokb-button>
+              <gokb-button
+                icon="delete"
+              >
+                Löschen
+              </gokb-button>
+            </template>
+            <gokb-table
+              :show-select="false"
+              :headers="curatoriesHeader"
+              :items="curatories"
+            />
           </gokb-section>
           <gokb-section title="Plattform">
-            <gokb-select-field placeholder="ISSN" />
+            <gokb-select-field placeholder="Name" />
+            <gokb-select-field placeholder="Quelle" />
+            <gokb-select-field placeholder="Url" />
+            <gokb-checkbox-field label="Gleicher Provider wie oben" />
+            <gokb-select-field placeholder="Provider" />
           </gokb-section>
         </v-stepper-content>
 
         <v-stepper-content step="3">
           <gokb-section sub-title="Titel">
-            <gokb-select-field placeholder="Titel" />
+            <template #buttons>
+              <gokb-button
+                class="mr-4"
+              >
+                KBART Upload
+              </gokb-button>
+              <gokb-button
+                icon="add"
+                class="mr-4"
+              >
+                Hinzufügen
+              </gokb-button>
+              <gokb-button
+                icon="delete"
+              >
+                Löschen
+              </gokb-button>
+            </template>
+            <gokb-table
+              :show-select="false"
+              :headers="titlesHeader"
+              :items="titles"
+            />
           </gokb-section>
         </v-stepper-content>
 
@@ -137,6 +212,7 @@
       <v-spacer />
       <gokb-button
         v-show="step !== 4"
+        default
         @click.native="go2NextStep"
       >
         Weiter
@@ -154,6 +230,39 @@
         title: undefined,
         description: undefined,
         url: undefined,
+        alternativeNamesHeader: [
+          {
+            text: 'Alias',
+            align: 'left',
+            sortable: false,
+            value: 'alias'
+          },
+        ],
+        alternativeNames: [],
+        curatoriesHeader: [
+          {
+            text: 'Gruppe',
+            align: 'left',
+            sortable: false,
+            value: 'group'
+          },
+        ],
+        curatories: [],
+        titlesHeader: [
+          {
+            text: 'Titel',
+            align: 'left',
+            sortable: false,
+            value: 'title'
+          },
+          {
+            text: 'Plattform',
+            align: 'left',
+            sortable: false,
+            value: 'platform'
+          },
+        ],
+        titles: [],
       }
     },
     methods: {

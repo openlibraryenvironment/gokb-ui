@@ -30,15 +30,9 @@
   import account from '@/shared/models/account'
   import utils from '@/shared/utils/utils'
   import loading from '@/shared/models/loading'
-  import GokbDialog from '@/shared/components/complex/gokb-dialog'
-  import GokbButton from '@/shared/components/base/gokb-button'
-  import GokbUsernameField from '@/shared/components/simple/gokb-username-field'
-  import GokbEmailField from '@/shared/components/simple/gokb-email-field'
-  import GokbPasswordField from '@/shared/components/simple/gokb-password-field'
 
   export default {
     name: 'RegisterPopup',
-    components: { GokbDialog, GokbUsernameField, GokbEmailField, GokbPasswordField, GokbButton },
     props: {
       value: {
         type: Boolean,
