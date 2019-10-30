@@ -117,7 +117,7 @@
 <script>
   import account from '@/shared/models/account'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
-  import UserMenu from '@/shared/components/complex/user-menu'
+  import UserMenu from '@/shared/user-menu'
   import { routeTo } from '@/router'
   import { HOME_ROUTE } from '@/router/route-names'
   import { createCancelToken } from '@/shared/services/http'
