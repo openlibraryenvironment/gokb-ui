@@ -18,13 +18,26 @@
     <gokb-section sub-title="Abdeckung">
       <gokb-select-field placeholder="Art" />
       <gokb-date-range-field label="Abdeckungszeitraum" />
-      <v-row>
-        <gokb-number-field placeholder="Ausgabe von" />
-        <gokb-number-field placeholder="Ausgabe bis" />
-      </v-row>
+      <gokb-number-range-field
+        label-from="Ausgaben von"
+        label-to="bis"
+      />
+      <gokb-number-range-field
+        label-from="Bände von"
+        label-to="bis"
+      />
+      <gokb-textarea-field label="Notizen" />
     </gokb-section>
     <gokb-section sub-title="Embargo">
-      <gokb-select-field />
+      <gokb-select-field placeholder="Typ" />
+      <v-row>
+        <v-col>
+          <gokb-number-field label="Dauer" />
+        </v-col>
+        <v-col>
+          <gokb-select-field label="Einheit" />
+        </v-col>
+      </v-row>
     </gokb-section>
     <template #buttons>
       <v-spacer />
