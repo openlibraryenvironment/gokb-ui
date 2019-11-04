@@ -5,33 +5,33 @@
   >
     <gokb-select-field
       class="ml-4"
-      placeholder="Journal"
+      label="Journal"
     />
     <gokb-section
       sub-title="Identifier"
     >
-      <gokb-select-field placeholder="Title" />
-      <gokb-select-field placeholder="Quelle" />
-      <gokb-select-field placeholder="URL" />
-      <gokb-select-field placeholder="Beschreibung" />
-      <gokb-select-field placeholder="Umfang" />
-      <gokb-select-field placeholder="Zuordnung" />
-      <gokb-select-field placeholder="URL" />
+      <gokb-select-field label="Title" />
+      <gokb-select-field label="Quelle" />
+      <gokb-select-field label="URL" />
+      <gokb-select-field label="Beschreibung" />
+      <gokb-select-field label="Umfang" />
+      <gokb-select-field label="Zuordnung" />
+      <gokb-select-field label="URL" />
     </gokb-section>
     <gokb-section sub-title="Allgemein">
-      <gokb-select-field placeholder="ISSN" />
+      <gokb-select-field label="ISSN" />
     </gokb-section>
     <gokb-section sub-title="Impressum">
-      <gokb-select-field placeholder="ISSN" />
+      <gokb-select-field label="ISSN" />
     </gokb-section>
     <gokb-section sub-title="Publisher">
-      <gokb-select-field placeholder="ISSN" />
+      <gokb-select-field label="ISSN" />
     </gokb-section>
     <gokb-section sub-title="Pflege">
-      <gokb-select-field placeholder="ISSN" />
+      <gokb-select-field label="ISSN" />
     </gokb-section>
     <gokb-section sub-title="Review">
-      <gokb-select-field placeholder="ISSN" />
+      <gokb-select-field label="ISSN" />
     </gokb-section>
 
     <template #buttons>

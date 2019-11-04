@@ -50,7 +50,7 @@
       </v-row>
       <v-row>
         <v-col md="4">
-          <gokb-select-field placeholder="Organisation" />
+          <gokb-select-field label="Organisation" />
         </v-col>
       </v-row>
     </gokb-section>

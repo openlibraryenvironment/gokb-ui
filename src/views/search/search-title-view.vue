@@ -48,7 +48,7 @@
             type: 'GokbSelectField',
             name: 'qp_identifier',
             properties: {
-              placeholder: 'Identifier'
+              label: 'Identifier'
             }
           }
         ],
@@ -61,7 +61,7 @@
             type: 'GokbSelectField',
             name: 'qp_medium',
             properties: {
-              placeholder: 'Typ',
+              label: 'Typ',
               // items: allTypes.values.map(({ id: value, text }) => ({ value, text })),
             }
           }
@@ -71,7 +71,7 @@
             type: 'GokbSelectField',
             name: 'qp_status',
             properties: {
-              placeholder: 'Status',
+              label: 'Status',
               // items: allStates.values.map(({ id: value, text }) => ({ value, text })),
             }
           }

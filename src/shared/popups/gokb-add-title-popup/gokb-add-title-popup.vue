@@ -5,7 +5,7 @@
     @submit="addTitle"
   >
     <gokb-section sub-title="Identifier">
-      <gokb-select-field placeholder="ISSN" />
+      <gokb-select-field label="ISSN" />
     </gokb-section>
     <gokb-section sub-title="Allgemein">
       <gokb-text-field label="Titel" />
@@ -16,7 +16,7 @@
       <gokb-date-range-field label="Zugangszeitraum" />
     </gokb-section>
     <gokb-section sub-title="Abdeckung">
-      <gokb-select-field placeholder="Art" />
+      <gokb-select-field label="Art" />
       <gokb-date-range-field label="Abdeckungszeitraum" />
       <gokb-number-range-field
         label-from="Ausgaben von"
@@ -29,7 +29,7 @@
       <gokb-textarea-field label="Notizen" />
     </gokb-section>
     <gokb-section sub-title="Embargo">
-      <gokb-select-field placeholder="Typ" />
+      <gokb-select-field label="Typ" />
       <v-row>
         <v-col>
           <gokb-number-field label="Dauer" />

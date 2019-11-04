@@ -45,18 +45,18 @@
           >
             <gokb-text-field
               v-model="title"
-              placeholder="Titel"
+              label="Titel"
             />
-            <gokb-combobox-field placeholder="Quelle" />
+            <gokb-combobox-field label="Quelle" />
             <gokb-text-field
               v-model="url"
-              placeholder="URL"
+              label="URL"
             />
             <gokb-textarea-field
               v-model="description"
-              placeholder="Beschreibung"
+              label="Beschreibung"
             />
-            <gokb-select-field placeholder="Umfang" />
+            <gokb-select-field label="Umfang" />
             <gokb-radiobutton-group>
               <gokb-radiobutton-field label="Konsortial" />
               <gokb-radiobutton-field label="Global" />
@@ -85,7 +85,7 @@
                 Identifier hinzufügen
               </gokb-button>
             </template>
-            <gokb-select-field placeholder="ISSN" />
+            <gokb-select-field label="ISSN" />
           </gokb-section>
         </v-stepper-content>
 
@@ -94,9 +94,9 @@
             title="Organisation"
             sub-title="Allgemein"
           >
-            <gokb-text-field placeholder="Name" />
-            <gokb-select-field placeholder="Quelle" />
-            <gokb-text-field placeholder="Referenz" />
+            <gokb-text-field label="Name" />
+            <gokb-select-field label="Quelle" />
+            <gokb-text-field label="Referenz" />
           </gokb-section>
           <gokb-section sub-title="Identifier">
             <template #buttons>
@@ -106,7 +106,7 @@
                 Identifier hinzufügen
               </gokb-button>
             </template>
-            <gokb-select-field placeholder="DOI" />
+            <gokb-select-field label="DOI" />
           </gokb-section>
           <gokb-section sub-title="Alternative Namen">
             <template #buttons>
@@ -149,11 +149,11 @@
             />
           </gokb-section>
           <gokb-section title="Plattform">
-            <gokb-select-field placeholder="Name" />
-            <gokb-select-field placeholder="Quelle" />
-            <gokb-select-field placeholder="Url" />
+            <gokb-select-field label="Name" />
+            <gokb-select-field label="Quelle" />
+            <gokb-select-field label="Url" />
             <gokb-checkbox-field label="Gleicher Provider wie oben" />
-            <gokb-select-field placeholder="Provider" />
+            <gokb-select-field label="Provider" />
           </gokb-section>
         </v-stepper-content>
 
@@ -163,17 +163,22 @@
             v-model="addTitlePopupVisible"
             @add="addNewTitle"
           />
+          <gokb-kbart-import-popup
+            v-if="kbartImportPopupVisible"
+            v-model="kbartImportPopupVisible"
+          />
           <gokb-section sub-title="Titel">
             <template #buttons>
               <gokb-button
                 class="mr-4"
+                @click.native="showKbartImportPopup"
               >
-                KBART Upload
+                KBART Import
               </gokb-button>
               <gokb-button
                 icon="add"
                 class="mr-4"
-                @click.native="showAddNewTitle"
+                @click.native="showAddNewTitlePopup"
               >
                 Hinzufügen
               </gokb-button>
@@ -193,16 +198,34 @@
 
         <v-stepper-content step="4">
           <gokb-section sub-title="Zusammenfassung">
-            df
+            <div>Titel</div><div>Beschreibung</div>
+            <div>Plattform</div><div>Anzahl Titel im Paket</div>
+            <div>Organisation</div>
           </gokb-section>
           <gokb-section sub-title="Pflege">
-            df
+            <gokb-select-field label="Tunus" />
+            <div>Fällig am</div>
           </gokb-section>
           <gokb-section sub-title="Kuratoren">
-            df
+            <template #buttons>
+              <gokb-button @click.native="showAddNewCuratoryGroup">
+                Hinzufügen
+              </gokb-button>
+              <gokb-button @click.native="deleteSelectedCuratoryGroups">
+                Löschen
+              </gokb-button>
+            </template>
+            <gokb-table
+              :added-items="addedCuratoryGroups"
+              :deleted-items="deletedCuratoryGroups"
+              :headers="curatoryGroupsTableHeaders"
+              :items="curatoryGroups"
+              :selected-items="selectedCuratoryGroups"
+            />
           </gokb-section>
           <gokb-section sub-title="Review">
-            df
+            <gokb-select-field label="Reviewer" />
+            <gokb-textarea-field label="Notiz" />
           </gokb-section>
         </v-stepper-content>
       </v-stepper-items>
@@ -229,12 +252,17 @@
 
 <script>
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
+  import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
 
   export default {
     name: 'CreatePackage',
-    components: { GokbAddTitlePopup },
+    components: {
+      GokbAddTitlePopup,
+      GokbKbartImportPopup
+    },
     data () {
       return {
+        kbartImportPopupVisible: false,
         step: 1,
         title: undefined,
         description: undefined,
@@ -273,6 +301,11 @@
           },
         ],
         titles: [],
+
+        curatoryGroups: undefined,
+        selectedCuratoryGroups: [],
+        deletedCuratoryGroups: [],
+        addedCuratoryGroups: [],
       }
     },
     methods: {
@@ -282,8 +315,11 @@
       go2PreviousStep () {
         this.step > 1 && this.step--
       },
-      showAddNewTitle () {
+      showAddNewTitlePopup () {
         this.addTitlePopupVisible = true
+      },
+      showKbartImportPopup () {
+        this.kbartImportPopupVisible = true
       },
       addNewTitle () {
         console.log('addNewTitle')

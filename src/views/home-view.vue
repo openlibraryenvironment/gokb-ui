@@ -6,10 +6,10 @@
       <template #buttons>
         <gokb-select-field
           class="mr-4"
-          placeholder="Typ"
+          label="Typ"
         />
         <gokb-select-field
-          placeholder="Ersteller"
+          label="Ersteller"
         />
       </template>
       <gokb-table
@@ -22,10 +22,10 @@
       <template #buttons>
         <gokb-select-field
           class="mr-4"
-          placeholder="Typ"
+          label="Typ"
         />
         <gokb-select-field
-          placeholder="Ersteller"
+          label="Ersteller"
         />
       </template>
       <gokb-table

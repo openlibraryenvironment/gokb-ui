@@ -60,7 +60,7 @@
           {
             type: 'GokbSelectField',
             properties: {
-              placeholder: 'Ersteller',
+              label: 'Ersteller',
               multiple: true,
               // items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
             }
@@ -70,7 +70,7 @@
           {
             type: 'GokbSelectField',
             properties: {
-              placeholder: 'Kuratoren',
+              label: 'Kuratoren',
               multiple: true,
               // items: allCuratorGroups.values.map(({ id: value, text }) => ({ value, text })),
             }

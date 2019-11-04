@@ -44,7 +44,7 @@
           {
             type: 'GokbSelectField',
             properties: {
-              placeholder: 'Gruppen',
+              label: 'Gruppen',
               multiple: true,
             }
           }
@@ -53,7 +53,7 @@
           {
             type: 'GokbSelectField',
             properties: {
-              placeholder: 'Rollen',
+              label: 'Rollen',
               multiple: true,
             }
           },
@@ -61,7 +61,7 @@
             type: 'GokbSelectField',
             name: 'qp_status',
             properties: {
-              placeholder: 'Status',
+              label: 'Status',
               // items: allStates?.values.map(({ id: value, text }) => ({ value, text })),
             }
           }

@@ -37,7 +37,7 @@
             type: 'GokbSelectField',
             name: 'qp_raisedby',
             properties: {
-              placeholder: 'Ersteller',
+              label: 'Ersteller',
               multiple: true,
             },
             // items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
@@ -47,14 +47,14 @@
           {
             type: 'GokbSelectField',
             properties: {
-              placeholder: 'Komponente'
+              label: 'Komponente'
             }
           },
           {
             type: 'GokbSelectField',
             name: 'qp_allocatedto',
             properties: {
-              placeholder: 'Reviewer',
+              label: 'Reviewer',
               multiple: true,
             },
             // items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
@@ -65,7 +65,7 @@
             type: 'GokbSelectField',
             name: '',
             properties: {
-              placeholder: 'Kuratoren',
+              label: 'Kuratoren',
             },
           },
           {

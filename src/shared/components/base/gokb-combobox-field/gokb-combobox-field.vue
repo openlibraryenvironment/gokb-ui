@@ -1,5 +1,6 @@
 <template>
   <v-combobox
+    :label="label"
     :placeholder="placeholder"
   />
 </template>
@@ -12,6 +13,11 @@
     extends: BaseComponent,
     props: {
       placeholder: {
+        type: String,
+        required: false,
+        default: '',
+      },
+      label: {
         type: String,
         required: false,
         default: '',

@@ -52,7 +52,7 @@
             type: 'GokbSelectField',
             name: 'qp_curgroup',
             properties: {
-              placeholder: 'Kuratoren',
+              label: 'Kuratoren',
               multiple: true,
               // items: allCuratorGroups.values.map(({ id: value, text }) => ({ value, text })),
             }
@@ -76,7 +76,7 @@
             type: 'GokbSelectField',
             name: 'qp_status',
             properties: {
-              placeholder: 'Status',
+              label: 'Status',
               // items: allStates.values.map(({ id: value, text }) => ({ value, text })),
             }
           },
