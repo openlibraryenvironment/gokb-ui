@@ -10,28 +10,63 @@
     <gokb-section
       sub-title="Identifier"
     >
-      <gokb-select-field label="Title" />
-      <gokb-select-field label="Quelle" />
-      <gokb-select-field label="URL" />
-      <gokb-select-field label="Beschreibung" />
-      <gokb-select-field label="Umfang" />
-      <gokb-select-field label="Zuordnung" />
-      <gokb-select-field label="URL" />
+      <gokb-select-field label="ISSN" />
     </gokb-section>
     <gokb-section sub-title="Allgemein">
-      <gokb-select-field label="ISSN" />
+      <gokb-text-field label="Titel" />
+      <v-row>
+        <v-col>
+          <gokb-number-field label="Band" />
+        </v-col>
+        <v-col>
+          <gokb-number-field label="Auflage" />
+        </v-col>
+        <v-col>
+          <gokb-text-field label="Merkmal (Auflage)" />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <gokb-date-field label="Veröffentlichungsdatum (Druck)" />
+        </v-col>
+        <v-col>
+          <gokb-date-field label="Veröffentlichungsdatum (Online)" />
+        </v-col>
+      </v-row>
+      <gokb-textarea-field label="Zusammenfassung" />
+      <gokb-text-field label="Buch Cover" />
     </gokb-section>
     <gokb-section sub-title="Impressum">
-      <gokb-select-field label="ISSN" />
+      <gokb-select-field label="Impressum" />
+      <gokb-select-field label="Zugeordnete Organisation" />
     </gokb-section>
     <gokb-section sub-title="Publisher">
-      <gokb-select-field label="ISSN" />
+      <template #buttons>
+        <gokb-button @click.native="showAddNewPublisher">
+          Hinzufügen
+        </gokb-button>
+        <gokb-button @click.native="deleteSelectedPublisher">
+          Löschen
+        </gokb-button>
+      </template>
+      <gokb-table
+        :added-items="addedPublisher"
+        :deleted-items="deletedPublisher"
+        :headers="publiserTableHeaders"
+        :items="publisher"
+        :selected-items="selectedPublisher"
+      />
     </gokb-section>
     <gokb-section sub-title="Pflege">
-      <gokb-select-field label="ISSN" />
+      <gokb-select-field label="Tunus" />
+      <gokb-date-field
+        disabled
+        label="Fällig am"
+      />
     </gokb-section>
     <gokb-section sub-title="Review">
-      <gokb-select-field label="ISSN" />
+      <gokb-select-field label="Reviewer" />
+      <gokb-textarea-field label="Notiz" />
     </gokb-section>
 
     <template #buttons>
@@ -50,6 +85,14 @@
     name: 'CreateTitle',
     data () {
       return {
+        publisher: undefined,
+        selectedPublisher: [],
+        deletedPublisher: [],
+        addedPublisher: [],
+        publisherTableHeaders: [
+          { text: 'Name', align: 'left', value: 'name', sortable: false, width: '100%' },
+          { text: 'Quelle', align: 'left', value: 'source', sortable: false, width: '100%' },
+        ],
       }
     },
   }
