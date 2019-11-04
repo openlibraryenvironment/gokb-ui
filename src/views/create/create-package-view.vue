@@ -10,35 +10,35 @@
       <v-stepper-header>
         <v-stepper-step
           editable
-          step="1"
+          :step="1"
         >
           Allgemein
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
           editable
-          step="2"
+          :step="2"
         >
           Organisation und Plattform
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
           editable
-          step="3"
+          :step="3"
         >
           Titel im Paket
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
           editable
-          step="4"
+          :step="4"
         >
           Zusammenfassung
         </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
-        <v-stepper-content step="1">
+        <v-stepper-content :step="1">
           <gokb-section
             title="Allgemein"
             sub-title="Paket"
@@ -89,7 +89,7 @@
           </gokb-section>
         </v-stepper-content>
 
-        <v-stepper-content step="2">
+        <v-stepper-content :step="2">
           <gokb-section
             title="Organisation"
             sub-title="Allgemein"
@@ -157,7 +157,7 @@
           </gokb-section>
         </v-stepper-content>
 
-        <v-stepper-content step="3">
+        <v-stepper-content :step="3">
           <gokb-add-title-popup
             v-if="addTitlePopupVisible"
             v-model="addTitlePopupVisible"
@@ -196,15 +196,49 @@
           </gokb-section>
         </v-stepper-content>
 
-        <v-stepper-content step="4">
+        <v-stepper-content :step="4">
           <gokb-section sub-title="Zusammenfassung">
-            <div>Titel</div><div>Beschreibung</div>
-            <div>Plattform</div><div>Anzahl Titel im Paket</div>
-            <div>Organisation</div>
+            <v-row>
+              <v-col>
+                <gokb-text-field
+                  v-model="title"
+                  label="Titel"
+                  disabled
+                />
+              </v-col>
+              <v-col>
+                <gokb-text-field
+                  v-model="description"
+                  label="Beschreibung"
+                  disabled
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <gokb-text-field
+                  label="Plattform"
+                  disabled
+                />
+              </v-col>
+              <v-col>
+                <gokb-text-field
+                  label="Anzahl Titel im Paket"
+                  disabled
+                />
+              </v-col>
+            </v-row>
+            <gokb-text-field
+              label="Organisation"
+              disabled
+            />
           </gokb-section>
           <gokb-section sub-title="Pflege">
             <gokb-select-field label="Tunus" />
-            <div>Fällig am</div>
+            <gokb-text-field
+              label="Fällig am"
+              disabled
+            />
           </gokb-section>
           <gokb-section sub-title="Kuratoren">
             <template #buttons>
@@ -240,11 +274,18 @@
       </gokb-button>
       <v-spacer />
       <gokb-button
-        v-show="step !== 4"
+        v-if="step !== 4"
         default
         @click.native="go2NextStep"
       >
         Weiter
+      </gokb-button>
+      <gokb-button
+        v-else
+        default
+        @click.native="go2NextStep"
+      >
+        Review
       </gokb-button>
     </template>
   </gokb-page>
@@ -264,8 +305,8 @@
       return {
         kbartImportPopupVisible: false,
         step: 1,
-        title: undefined,
-        description: undefined,
+        title: 'Springer Medical Best',
+        description: 'Best Journal of Springer Medical',
         url: undefined,
         alternativeNamesHeader: [
           {
@@ -306,6 +347,9 @@
         selectedCuratoryGroups: [],
         deletedCuratoryGroups: [],
         addedCuratoryGroups: [],
+        curatoryGroupsTableHeaders: [
+          { text: 'Gruppe', align: 'left', value: 'name', sortable: false, width: '100%' },
+        ]
       }
     },
     methods: {

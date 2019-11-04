@@ -1,6 +1,7 @@
 <template>
   <v-text-field
     v-model="localValue"
+    :disabled="disabled"
     :autocomplete="browserAutocomplete"
     :label="label"
     :prepend-icon="hideIcon ? '' : prependIcon"
@@ -23,6 +24,11 @@
           return value === null || typeof value === 'string'
         },
         default: '',
+      },
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
       placeholder: {
         type: String,
