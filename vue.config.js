@@ -25,11 +25,11 @@ module.exports = {
   },
   lintOnSave: process.env.NODE_ENV !== 'production', // not lint in production mode
   runtimeCompiler: false, // no runtime compiler, we use .vue
-  productionSourceMap: false,
+  productionSourceMap: true,
   parallel: undefined,
 
   css: {
-    sourceMap: false
+    sourceMap: true
   },
   // configureWebpack: {}
   // chainWebpack:
