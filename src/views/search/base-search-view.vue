@@ -47,7 +47,7 @@
         <gokb-button
           v-for="actionButton of resultActionButtons"
           :key="actionButton.label"
-          :icon="actionButton.icon"
+          :icon-id="actionButton.icon"
           :to="actionButton.route"
           class="ml-4"
         >

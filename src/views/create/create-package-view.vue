@@ -80,7 +80,7 @@
           <gokb-section sub-title="Identifier">
             <template #buttons>
               <gokb-button
-                icon="add"
+                icon-id="add"
               >
                 Identifier hinzufügen
               </gokb-button>
@@ -101,7 +101,7 @@
           <gokb-section sub-title="Identifier">
             <template #buttons>
               <gokb-button
-                icon="add"
+                icon-id="add"
               >
                 Identifier hinzufügen
               </gokb-button>
@@ -111,13 +111,13 @@
           <gokb-section sub-title="Alternative Namen">
             <template #buttons>
               <gokb-button
-                icon="add"
+                icon-id="add"
                 class="mr-4"
               >
                 Hinzufügen
               </gokb-button>
               <gokb-button
-                icon="delete"
+                icon-id="delete"
               >
                 Löschen
               </gokb-button>
@@ -131,13 +131,13 @@
           <gokb-section sub-title="Kuratoren">
             <template #buttons>
               <gokb-button
-                icon="add"
+                icon-id="add"
                 class="mr-4"
               >
                 Hinzufügen
               </gokb-button>
               <gokb-button
-                icon="delete"
+                icon-id="delete"
               >
                 Löschen
               </gokb-button>
@@ -176,14 +176,14 @@
                 KBART Import
               </gokb-button>
               <gokb-button
-                icon="add"
+                icon-id="add"
                 class="mr-4"
                 @click.native="showAddNewTitlePopup"
               >
                 Hinzufügen
               </gokb-button>
               <gokb-button
-                icon="delete"
+                icon-id="delete"
               >
                 Löschen
               </gokb-button>

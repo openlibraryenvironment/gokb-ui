@@ -58,13 +58,13 @@
       <template #buttons>
         <gokb-button
           class="mr-4"
-          icon="add"
+          icon-id="add"
           @click.native="showAddNewRole"
         >
           Hinzufügen
         </gokb-button>
         <gokb-button
-          icon="delete"
+          icon-id="delete"
           @click.native="deleteSelectedRole"
         >
           Löschen
@@ -78,13 +78,13 @@
       <template #buttons>
         <gokb-button
           class="mr-4"
-          icon="add"
+          icon-id="add"
           @click.native="showAddNewCuratoryGroup"
         >
           Hinzufügen
         </gokb-button>
         <gokb-button
-          icon="delete"
+          icon-id="delete"
           @click.native="deleteSelectedCuratoryGroups"
         >
           Löschen
