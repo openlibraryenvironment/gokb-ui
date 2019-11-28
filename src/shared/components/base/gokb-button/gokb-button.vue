@@ -30,7 +30,7 @@
         required: false,
         default: undefined,
       },
-      icon: {
+      iconId: {
         type: String,
         required: false,
         default: undefined,
