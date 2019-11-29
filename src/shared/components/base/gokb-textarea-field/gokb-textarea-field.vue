@@ -1,14 +1,8 @@
 <template>
   <v-textarea
     v-model="localValue"
-    :disabled="disabled"
-    :autocomplete="browserAutocomplete"
-    :label="label"
-    :prepend-icon="hideIcon ? '' : prependIcon"
-    :required="required"
-    :rules="rules"
-    :type="type"
-    :placeholder="placeholder"
+    v-bind="$props"
+    :prepend-icon-id="hideIcon ? '' : prependIcon"
     validate-on-blur
     clearable
   />
@@ -59,7 +53,7 @@
         required: false,
         default: undefined,
       },
-      browserAutocomplete: {
+      autocomplete: {
         type: String,
         required: false,
         default: undefined,

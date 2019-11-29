@@ -9,7 +9,7 @@
       <v-text-field
         v-model="dateRangeText"
         clearable
-        :label="label"
+        v-bind="$props"
         v-on="on"
       />
     </template>

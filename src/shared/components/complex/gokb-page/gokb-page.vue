@@ -1,6 +1,9 @@
 <template>
   <v-container style="max-width: 1000px;">
-    <v-form @submit.prevent="doSubmit">
+    <v-form
+      ref="form"
+      @submit.prevent="doSubmit"
+    >
       <v-card flat>
         <v-toolbar
           color="white"

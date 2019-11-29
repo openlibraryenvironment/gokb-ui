@@ -7,10 +7,10 @@
     :to="to"
   >
     <v-icon
-      v-if="icon"
+      v-if="iconId"
       left
     >
-      {{ icon }}
+      {{ iconId }}
     </v-icon>
     <slot />
   </v-btn>

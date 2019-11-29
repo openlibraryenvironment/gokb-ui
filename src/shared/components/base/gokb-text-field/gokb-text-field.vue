@@ -2,7 +2,7 @@
   <v-text-field
     v-model="localValue"
     :disabled="disabled"
-    :autocomplete="browserAutocomplete"
+    :autocomplete="autocomplete"
     :label="label"
     :prepend-icon="hideIcon ? '' : prependIcon"
     :required="required"
@@ -59,7 +59,7 @@
         required: false,
         default: undefined,
       },
-      browserAutocomplete: {
+      autocomplete: {
         type: String,
         required: false,
         default: undefined,

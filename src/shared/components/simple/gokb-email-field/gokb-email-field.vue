@@ -25,7 +25,7 @@
         required: false,
         default: 'email',
       },
-      browserAutocomplete: {
+      autocomplete: {
         type: String,
         required: false,
         default: 'email',

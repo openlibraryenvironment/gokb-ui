@@ -1,6 +1,6 @@
 <template>
   <v-file-input
-    :label="label"
+    v-bind="$attrs"
     prepend-icon=""
     show-size
     clearable

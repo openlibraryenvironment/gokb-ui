@@ -1,8 +1,5 @@
 <template>
-  <v-combobox
-    :label="label"
-    :placeholder="placeholder"
-  />
+  <v-combobox v-bind="$props" />
 </template>
 
 <script>

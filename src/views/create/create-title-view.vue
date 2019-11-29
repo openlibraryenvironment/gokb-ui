@@ -52,7 +52,7 @@
       <gokb-table
         :added-items="addedPublisher"
         :deleted-items="deletedPublisher"
-        :headers="publiserTableHeaders"
+        :headers="publisherTableHeaders"
         :items="publisher"
         :selected-items="selectedPublisher"
       />
@@ -95,6 +95,11 @@
         ],
       }
     },
+    methods: {
+      createTitle () {
+        console.log('createTitle')
+      }
+    }
   }
 </script>
 

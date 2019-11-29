@@ -25,7 +25,7 @@
         required: false,
         default: 'lock',
       },
-      browserAutocomplete: {
+      autocomplete: {
         type: String,
         required: false,
         default: 'password',

@@ -1,8 +1,5 @@
 <template>
-  <v-checkbox
-    :label="label"
-    :disabled="disabled"
-  />
+  <v-checkbox v-bind="$props" />
 </template>
 
 <script>

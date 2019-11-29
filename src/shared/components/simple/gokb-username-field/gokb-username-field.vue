@@ -20,7 +20,7 @@
         required: false,
         default: 'person',
       },
-      browserAutocomplete: {
+      autocomplete: {
         type: String,
         required: false,
         default: 'username',

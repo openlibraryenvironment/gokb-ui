@@ -106,7 +106,9 @@
     },
     methods: {
       resetSearch () {
-        this.$refs.searchForm.reset()
+        this.searchInputFields
+          .flat()
+          .forEach(field => { field.model = undefined })
       },
       async search ({ page = undefined }) {
         // const searchParameters = this.searchInputFields

@@ -1,7 +1,7 @@
 <template>
   <v-radio-group
     row
-    :label="label"
+    v-bind="$props"
   >
     <slot />
   </v-radio-group>

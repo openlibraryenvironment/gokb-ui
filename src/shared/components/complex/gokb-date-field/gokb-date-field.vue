@@ -9,8 +9,7 @@
       <v-text-field
         v-model="date"
         clearable
-        :label="label"
-        :disabled="disabled"
+        v-bind="$props"
         v-on="on"
       />
     </template>

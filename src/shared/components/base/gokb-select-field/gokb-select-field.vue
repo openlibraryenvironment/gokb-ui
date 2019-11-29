@@ -1,8 +1,5 @@
 <template>
-  <v-select
-    :label="label"
-    :placeholder="placeholder"
-  />
+  <v-select v-bind="$props" />
 </template>
 
 <script>
@@ -26,8 +23,6 @@
     data () {
       return {
       }
-    },
-    computed: {
     },
   }
 </script>
