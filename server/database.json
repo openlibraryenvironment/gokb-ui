@@ -1,0 +1,32 @@
+{
+  "profiles": [
+    {
+      "id": 0,
+      "email": "frank@gmail.com",
+      "_links": {
+        "self": {
+          "href": "./profiles/0"
+        },
+        "update": {
+          "href": "./profiles/0"
+        },
+        "delete": {
+          "href": "./profiles/0"
+        }
+      }
+    }
+  ],
+
+  "curatoryGroups": [
+    {
+      "id": 0,
+      "name": "LASeR",
+      "profileId": 0
+    },
+    {
+      "id": 1,
+      "name": "OAM",
+      "profileId": 0
+    }
+  ]
+}
