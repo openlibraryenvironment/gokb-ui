@@ -19,6 +19,10 @@
 
   "curatoryGroups": [
     {
+      "id": 2,
+      "name": "andere"
+    },
+    {
       "id": 0,
       "name": "LASeR",
       "profileId": 0
