@@ -13,24 +13,22 @@
         "delete": {
           "href": "./profiles/0"
         }
-      }
+      },
+      "curatoryGroups": []
     }
   ],
-
   "curatoryGroups": [
     {
       "id": 2,
-      "name": "andere"
+      "name": "ZB"
     },
     {
       "id": 0,
-      "name": "LASeR",
-      "profileId": 0
+      "name": "LASeR"
     },
     {
       "id": 1,
-      "name": "OAM",
-      "profileId": 0
+      "name": "OAM"
     }
   ]
 }

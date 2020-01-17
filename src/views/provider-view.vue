@@ -95,7 +95,7 @@
 </template>
 
 <script>
-  import resourceServices from '@/shared/services/resource-services'
+  // import resourceServices from '@/shared/services/resource-services'
 
   export default {
     name: 'ProviderComponent',
@@ -120,7 +120,7 @@
     },
     mounted () {
       console.log(this.id)
-      resourceServices.show({ oid: this.id, withCombos: true }).then(result => console.log(result))
+      // resourceServices.show({ oid: this.id, withCombos: true }).then(result => console.log(result))
     }
   }
 </script>

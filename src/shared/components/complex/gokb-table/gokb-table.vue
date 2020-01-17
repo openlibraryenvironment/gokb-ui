@@ -11,47 +11,33 @@
       :show-select="showSelect"
     >
       <template #no-data>
-        <v-layout
-          align-center
-          column
-        >
+        <v-row justify="center">
           <v-alert
+            v-if="!!error"
             :value="!!error"
             type="error"
           >
             {{ error }}
           </v-alert>
-          <div>Keine Daten verfügbar.</div>
-        </v-layout>
+          <div v-else>
+            Keine Daten verfügbar.
+          </div>
+        </v-row>
       </template>
-      <!-- data -->
-      <template #items="props">
-        <td>
-          <v-checkbox
-            v-model="props.selected"
-            hide-details
-          />
-        </td>
-        <td
-          v-for="header in headers"
-          :key="props.item[header.value]"
-          :class="`text-${header.align}`"
+      <template #item.action="{ item }">
+        <v-icon
+          :disabled="disabled"
+          small
+          @click="deleteItem(item)"
         >
-          {{ props.item[header.value] }}
-        </td>
-        <td>
-          <v-icon
-            small
-            @click="markItemDeleted(props.item)"
-          >
-            delete
-          </v-icon>
-        </td>
+          delete
+        </v-icon>
       </template>
     </v-data-table>
     <div class="text-center pt-2">
       <v-pagination
         v-model="localOptions.page"
+        :disabled="disabled"
         :length="pages"
         :total-visible="7"
       />
@@ -63,6 +49,11 @@
   export default {
     name: 'GokbTable',
     props: {
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
       showSelect: {
         type: Boolean,
         required: false,
@@ -116,7 +107,7 @@
     },
     computed: {
       localHeaders () {
-        return [...this.headers, { sortable: false, width: '1%' }]
+        return [...this.headers, { value: 'action', sortable: false }] // with delete icon
       },
       visibleItems () {
         const items = [
@@ -159,14 +150,8 @@
           this.$emit('paginate')
         }
       },
-      markItemDeleted (item) {
+      deleteItem (item) {
         this.deletedItems.push(item)
-      },
-      markSelectedDeleted () {
-        this.localSelectedItems.forEach(item => {
-          this.markItemDeleted(item)
-        })
-        this.localSelectedItems = []
       },
     }
   }

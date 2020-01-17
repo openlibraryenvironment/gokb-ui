@@ -1,4 +1,4 @@
-const api = (vue, storage, accountServices, profileServices) => {
+const api = (vue, storage, accountServices) => {
   const state = vue.observable({
     username: undefined,
   })
@@ -14,18 +14,15 @@ const api = (vue, storage, accountServices, profileServices) => {
     },
 
     loggedIn () {
-      return !!state.username
+      return state.username !== undefined
     },
 
-    // todo: login result gives no id, you have to load the profile to get it
     async login ({ username, password, save }) {
       try {
         const response = await accountServices.login({ username, password })
-        const { data: token } = response
-        save && storage.setToken(token)
-        state.username = token?.username
-        const { data: { id } } = await profileServices.loadProfile()
-        state.id = id
+        const { data } = response
+        save && storage.setToken(data)
+        state.username = username
         return response
       } catch (e) {
         state.username = undefined
@@ -36,6 +33,7 @@ const api = (vue, storage, accountServices, profileServices) => {
     logout () {
       accountServices.logout()
       storage.removeToken()
+      state.id = undefined
       state.username = undefined
     },
 

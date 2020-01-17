@@ -8,6 +8,8 @@
       v-model="selectedCuratoryGroup"
       :items="curatoryGroups"
       label="Kuratorengruppe"
+      item-value="id"
+      item-text="name"
       return-object
     />
     <template #buttons>
@@ -18,7 +20,10 @@
       >
         Abbrechen
       </gokb-button>
-      <gokb-button default>
+      <gokb-button
+        :disabled="!selectedCuratoryGroup"
+        default
+      >
         Hinzufügen
       </gokb-button>
     </template>
@@ -26,8 +31,10 @@
 </template>
 
 <script>
-  import ajaxServices from '@/shared/services/ajax-services'
   import BaseComponent from '@/shared/base-component'
+  import genericEntityServices from '@/shared/services/generic-entity-services'
+
+  const curatoryGroupServices = genericEntityServices('curatoryGroups')
 
   export default {
     name: 'AddCuratorGroupsPopup',
@@ -57,10 +64,7 @@
       },
     },
     async created () {
-      const { data: { values } } = await ajaxServices.lookup({
-        baseClass: 'org.gokb.cred.CuratoryGroup',
-        q: ''
-      })
+      const { data: values } = await curatoryGroupServices.getAll()
       this.curatoryGroups = values
     },
     methods: {

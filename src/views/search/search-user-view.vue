@@ -2,8 +2,6 @@
   import BaseSearch from './base-search-view'
   import { ADD_USER_ROUTE } from '@/router/route-names'
 
-  // import ajaxServices from '@/shared/services/ajax-services'
-
   export default {
     name: 'SearchUser',
     extends: BaseSearch,

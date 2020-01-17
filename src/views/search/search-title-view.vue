@@ -1,6 +1,5 @@
 <script>
   import BaseSearch from './base-search-view'
-  // import ajaxServices from '@/shared/services/ajax-services'
 
   export default {
     name: 'SearchTitle',

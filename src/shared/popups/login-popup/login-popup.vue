@@ -88,7 +88,7 @@
         loading.startLoading()
         const response = await account.login({ username, password, save })
         this.error = utils.errorOccurred(response)
-        this.error && form.validate()
+        form.validate()
         if (account.loggedIn()) {
           this.close()
         }
@@ -99,7 +99,6 @@
         this.username = undefined
         this.password = undefined
         this.save = undefined
-
         this.localValue = false
       },
     }

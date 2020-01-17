@@ -16,7 +16,6 @@
 
 <script>
   import BaseComponent from '@/shared/base-component'
-  import ajaxServices from '@/shared/services/ajax-services'
 
   export default {
     name: 'GokbSearchField',
@@ -52,13 +51,13 @@
     },
     methods: {
       async query (value) {
-        this.loading = true
-        const items = await this.catchError(ajaxServices.lookup({
-          ...this.queryParameters,
-          q: value,
-        }, this.cancelToken.token), this, this.handleError)
-        this.items = items.values.map(value => ({ value: value.id, text: value.text }))
-        this.loading = false
+        // this.loading = true
+        // const items = await this.catchError(ajaxServices.lookup({
+        //   ...this.queryParameters,
+        //   q: value,
+        // }, this.cancelToken.token), this, this.handleError)
+        // this.items = items.values.map(value => ({ value: value.id, text: value.text }))
+        // this.loading = false
       },
     }
   }

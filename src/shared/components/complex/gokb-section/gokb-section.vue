@@ -1,8 +1,25 @@
 <template>
   <span>
     <v-card flat>
+      <v-toolbar
+        v-if="title && !subTitle"
+        color="white"
+        dense
+        flat
+        height="32"
+      >
+        <span
+          class="headline"
+        >
+          {{ title }}
+        </span>
+        <v-spacer />
+        <v-toolbar-items>
+          <slot name="buttons" />
+        </v-toolbar-items>
+      </v-toolbar>
       <span
-        v-if="title"
+        v-else
         class="headline ml-4"
       >
         {{ title }}

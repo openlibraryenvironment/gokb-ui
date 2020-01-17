@@ -21,7 +21,7 @@ const api = {
   },
 
   errorOccurred (response) {
-    return response.status >= 400
+    return !response?.status || response.status >= 400
   },
 
   isProduction () {

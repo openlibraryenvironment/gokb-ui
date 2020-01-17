@@ -2,10 +2,10 @@ const TIMEOUT_DELTA_IN_SECONDS = 60
 const FACTOR_SECONDS_TO_MILLISECONDS = 1000
 
 const LOGIN_URL = './rest/login'
-const LOGOUT_URL = './logoff'
+const LOGOUT_URL = './rest/logout'
 
-const ACCESS_TOKEN = './oauth/access_token'
-const REGISTER_URL = './rest/register'
+const ACCESS_TOKEN = './auth/access_token'
+const REGISTER_URL = './auth/register'
 
 // actual timeout id for getting a new token
 let tokenTimeoutId
@@ -33,19 +33,16 @@ const api = (utils, storage, baseServices) => ({
       url,
       data
     })
-    const { data: token } = response
-    baseServices.setAuthorization(token)
+    const { data: { token_type: tokenType, access_token: accessToken, refresh_token: refreshToken1, expires_in: expiresIn } } = response
+    baseServices.setAuthorization(tokenType, accessToken)
     // refresh token via timeout => auto login
     // token.expires_in = 65 // for testing refresh
     tokenTimeoutId = setTimeout(() => {
-      this.login({ refreshToken: token.refresh_token })
-    }, (token.expires_in - TIMEOUT_DELTA_IN_SECONDS) * FACTOR_SECONDS_TO_MILLISECONDS)
+      this.login({ refreshToken: refreshToken1 })
+    }, (expiresIn - TIMEOUT_DELTA_IN_SECONDS) * FACTOR_SECONDS_TO_MILLISECONDS)
     return response
   },
 
-  // todo: we can not do a valid logout in the backend, that can be a problem, session can be used by others, memory consumption on server, ...
-  // todo: wrong REST command, should be POST instead of GET
-  // todo: not really a REST logout, redirects to home
   logout () {
     baseServices.request({
       method: 'GET',

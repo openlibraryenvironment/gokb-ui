@@ -7,8 +7,8 @@ const api = http => ({
   deleteAuthorization () {
     delete headers[HEADER_AUTHORIZATION_KEY]
   },
-  setAuthorization (token) {
-    headers[HEADER_AUTHORIZATION_KEY] = `${token.token_type} ${token.access_token}`
+  setAuthorization (tokenType, accessToken) {
+    headers[HEADER_AUTHORIZATION_KEY] = `${tokenType} ${accessToken}`
   },
 
   request ({ method, url, data }, cancelToken) {
