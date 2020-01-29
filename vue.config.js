@@ -3,7 +3,6 @@
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
-  publicPath: process.env.VUE_APP_PUBLIC_PATH || '/', // base path for the application
   configureWebpack: {
     optimization: {
       runtimeChunk: 'single',
@@ -25,6 +24,7 @@ module.exports = {
     devtool: 'source-map',
     // plugins: [new BundleAnalyzerPlugin()]
   },
+
   devServer: {
     overlay: {
       warnings: true,
@@ -40,18 +40,20 @@ module.exports = {
       },
     }
   },
-  lintOnSave: process.env.NODE_ENV !== 'production', // not lint in production mode
-  runtimeCompiler: false, // no runtime compiler, we use .vue
-  productionSourceMap: true,
-  parallel: undefined,
 
-  css: {
-    sourceMap: true
-  },
+  // not lint in production mode
+  lintOnSave: process.env.NODE_ENV !== 'production',
+
+  productionSourceMap: false,
+
   // configureWebpack: {}
   // chainWebpack:
   transpileDependencies: [
     'resize-detector',
     'vuetify'
   ],
+
+  pwa: {
+    name: 'Open Access Monitor'
+  }
 }
