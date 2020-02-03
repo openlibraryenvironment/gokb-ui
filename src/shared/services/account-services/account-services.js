@@ -1,7 +1,7 @@
 const LOGIN_URL = './rest/login'
 const LOGOUT_URL = './rest/logout'
 
-const REGISTER_URL = './auth/register'
+const REGISTER_URL = './rest/register'
 
 const api = (utils, storage, baseServices) => ({
 
