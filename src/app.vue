@@ -149,6 +149,7 @@
         {},
         { icon: 'folder', text: 'Pakete', route: 'search-package' },
         { icon: 'library_books', text: 'Einzeltitel', route: 'search-title' },
+        { icon: 'domain', text: 'Provider', route: 'search-provider' },
         { icon: 'rate_review', text: 'Reviews', route: 'search-review' },
         { icon: 'keyboard', text: 'Pflege', route: 'search-maintenance' },
         { icon: 'people', text: 'Benutzer', route: 'search-user' },
