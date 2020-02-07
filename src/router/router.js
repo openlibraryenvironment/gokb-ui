@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Home from '@/views/home-view.vue'
 
 import { HOME_ROUTE, PROFILE_ROUTE, TITLE_ROUTE, PACKAGE_ROUTE, PROVIDER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
-  KBART_IMPORT_ROUTE, SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
+  KBART_IMPORT_ROUTE, SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE, SEARCH_PROVIDER_ROUTE,
   SEARCH_USER_ROUTE, ADD_USER_ROUTE
 } from './route-names'
 
@@ -76,6 +76,11 @@ const router = new Router({
       path: SEARCH_REVIEW_ROUTE,
       name: 'search-review',
       component: () => import(/* webpackChunkName: "searchReview" */ '../views/search/search-review-view.vue')
+    },
+    {
+      path: SEARCH_PROVIDER_ROUTE,
+      name: 'search-provider',
+      component: () => import(/* webpackChunkName: "searchProvider" */ '../views/search/search-provider-view.vue')
     },
     {
       path: SEARCH_TITLE_ROUTE,
