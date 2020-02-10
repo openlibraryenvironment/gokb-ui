@@ -6,15 +6,15 @@
       :disabled="!username"
       left
     >
-      <template #activator="{ on }">
+      <template #activator="{ on: rootOn }">
         <v-menu
           offset-y
-          v-on="on"
+          v-on="rootOn"
         >
-          <template #activator="{ on }">
+          <template #activator="{ on: accountOn }">
             <v-btn
               icon
-              v-on="on"
+              v-on="accountOn"
             >
               <v-icon color="info">mdi-account</v-icon>
             </v-btn>

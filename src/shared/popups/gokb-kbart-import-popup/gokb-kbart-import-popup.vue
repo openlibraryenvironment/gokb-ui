@@ -9,8 +9,8 @@
       <gokb-select-field label="Titel-ID Namensraum" />
       <gokb-checkbox-field label="Weitere Identifier sind zu beachten" />
       <v-progress-linear :height="20">
-        <template v-slot="{ value }">
-          <strong>{{ value }}%</strong>
+        <template v-slot="{ value1 }">
+          <strong>{{ value1 }}%</strong>
         </template>
       </v-progress-linear>
     </gokb-section>

@@ -131,7 +131,7 @@
       },
     },
     watch: {
-      'localSelectedItems': function () {
+      localSelectedItems: function () {
         this.selectedItems.length = 0
         this.selectedItems.push(...this.localSelectedItems)
       },
