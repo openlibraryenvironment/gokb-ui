@@ -121,11 +121,14 @@
     async created () {
       loading.startLoading()
       this.curatoryGroupsTableHeaders = CURATORY_GROUPS_TABLE_HEADERS
-      const { data: { email, curatoryGroups, _links: {
-        update: { href: updateProfileUrl },
-        delete: { href: deleteProfileUrl }
-      } = { update: { href: undefined }, delete: { href: undefined } } } } =
-        await profileServices.getProfile(this.cancelToken.token)
+      const {
+        data: {
+          email, curatoryGroups, _links: {
+            update: updateProfileUrl,
+            delete: deleteProfileUrl
+          } = { update: undefined, delete: undefined }
+        }
+      } = await profileServices.getProfile(this.cancelToken.token)
       this.updateProfileUrl = updateProfileUrl
       this.deleteProfileUrl = deleteProfileUrl
       this.email = email

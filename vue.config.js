@@ -1,7 +1,3 @@
-// see https://cli.vuejs.org/config/#integrity
-
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-
 module.exports = {
   configureWebpack: {
     optimization: {
@@ -21,8 +17,7 @@ module.exports = {
         },
       },
     },
-    devtool: 'source-map',
-    // plugins: [new BundleAnalyzerPlugin()]
+    devtool: 'source-map'
   },
 
   devServer: {
@@ -46,14 +41,12 @@ module.exports = {
 
   productionSourceMap: false,
 
-  // configureWebpack: {}
-  // chainWebpack:
   transpileDependencies: [
     'resize-detector',
     'vuetify'
   ],
 
   pwa: {
-    name: 'Open Access Monitor'
+    name: 'GOKb'
   }
 }
