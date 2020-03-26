@@ -3,6 +3,9 @@
     :title="title"
     @submit="search"
   >
+    <template v-if="error">
+      <error-component :value="error" />
+    </template>
     <gokb-section sub-title="Suche">
       <template v-for="(row, rowIndex) of searchInputFields">
         <v-row :key="`${title}_${rowIndex}`">
@@ -45,18 +48,25 @@
     <gokb-section sub-title="Ergebnisse">
       <template #buttons>
         <gokb-button
-          v-for="actionButton of resultActionButtons"
-          :key="actionButton.label"
-          :icon-id="actionButton.icon"
-          :to="actionButton.route"
+          v-for="button of resultActionButtons"
+          :key="button.label"
           class="ml-4"
+          :icon-id="button.icon"
+          :to="button.route"
+          :disabled="isButtonDisabled(button.disabled)"
+          @click.native="executeAction(button.action)"
         >
-          {{ actionButton.label }}
+          {{ button.label }}
         </gokb-button>
       </template>
       <gokb-table
         :headers="resultHeaders"
         :items="resultItems"
+        :options.sync="resultOptions"
+        :total-number-of-items="totalNumberOfItems"
+        :selected-items.sync="selectedItems"
+        @paginate="resultPaginate"
+        @delete-item="deleteItem"
       />
     </gokb-section>
   </gokb-page>
@@ -64,45 +74,39 @@
 
 <script>
   import BaseComponent from '@/shared/base-component'
-  // import searchServices from '@/shared/services/search-services'
+  import ErrorComponent from '@/shared/components/complex/error-component'
+  import searchServices from '@/shared/services/search-services'
 
   const ROWS_PER_PAGE = 10
 
   export default {
     name: 'BaseSearch',
-    components: {
-    },
+    components: { ErrorComponent },
     extends: BaseComponent,
     data () {
       return {
         title: undefined,
         component: undefined,
         searchInputFields: undefined,
-
         resultActionButtons: undefined,
-        resultItems: undefined,
-        resultPagination: {
-          descending: false,
-          page: undefined,
-          rowsPerPage: ROWS_PER_PAGE,
-          sortBy: undefined,
-          totalItems: undefined,
+
+        resultHeaders: [],
+        resultItems: [],
+        selectedItems: [],
+        resultOptions: {
+          page: 1,
+          itemsPerPage: ROWS_PER_PAGE
         },
-        resultHeaders: undefined,
-      }
-    },
-    computed: {
-      pages () {
-        if (!this.resultPagination.totalItems) {
-          return 0
-        }
-        return Math.ceil(this.resultPagination.totalItems / this.resultPagination.rowsPerPage)
+        totalNumberOfItems: -1,
       }
     },
     watch: {
-      'resultPagination.page': function () {
-        this.search({ page: this.resultPagination.page })
+      'resultOptions.page': function () {
+        this.search({ page: this.resultOptions.page })
       }
+    },
+    mounted () {
+      this.searchServices = searchServices(this.searchServicesResourceUrl)
     },
     methods: {
       resetSearch () {
@@ -110,29 +114,53 @@
           .flat()
           .forEach(field => { field.model = undefined })
       },
-      async search ({ page = undefined }) {
-        // const searchParameters = this.searchInputFields
-        //   .flat()
-        //   .map(field => ([field.name, field.model]))
-        //   .filter(([name, value]) => name && value)
-        //   .reduce((r, [name, value]) => {
-        //     r[name] = value
-        //     return r
-        //   }, {})
-
-        // const result = await searchServices.search({
-        //   ...searchParameters,
-        //   qbe: this.component,
-        //   max: ROWS_PER_PAGE,
-        //   offset: page ? (page - 1) * this.resultPagination.rowsPerPage : 0
-        // }, this.cancelToken.token)
-        // console.log(result)
-        // if (!page) {
-        //   this.resultPagination.totalItems = result.count
-        //   this.resultPagination.page = 1
-        // }
-        // this.resultItems = result.records
+      resultPaginate (page) {
+        this.search({ page })
       },
+      async deleteItem ({ deleteUrl }) {
+        await this._executeDeleteItemService()
+        this.resultPaginate(this.resultOptions.page)
+      },
+      _executeDeleteItemService (deleteUrl) {
+        return this.catchError({
+          promise: this.searchServices.delete(deleteUrl, this.cancelToken.token),
+          instance: this
+        })
+      },
+      async search ({ page } = { page: undefined }) {
+        const searchParameters = this.searchInputFields
+          .flat()
+          .map(field => ([field.name, field.model]))
+          .filter(([name, value]) => name && value)
+          .reduce((result, [name, value]) => {
+            result[name] = value
+            return result
+          }, {})
+        // console.log(searchParameters)
+        const result = await this.catchError({
+          promise: this.searchServices.search({
+            ...searchParameters,
+            offset: page ? (page - 1) * this.resultOptions.itemsPerPage : 0,
+            limit: this.resultOptions.itemsPerPage
+          }, this.cancelToken.token),
+          instance: this
+        })
+        if (result) {
+          const { data: { data, _pagination } } = result
+          // console.log(data, _pagination, _links)
+          if (!page) {
+            this.resultOptions.page = 1
+          }
+          this.totalNumberOfItems = _pagination.total
+          this.resultItems = this._transformForTable(data)
+        }
+      },
+      executeAction (actionMethodName) {
+        this[actionMethodName]()
+      },
+      isButtonDisabled (attributeName) {
+        return this[attributeName]
+      }
     }
   }
 </script>

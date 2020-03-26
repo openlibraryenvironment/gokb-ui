@@ -1,15 +1,17 @@
 <script>
   import BaseSearch from './base-search-view'
+  import baseServices from '@/shared/services/base-services'
 
   export default {
     name: 'SearchPackage',
     extends: BaseSearch,
-    data () {
-      return {}
+    computed: {
+      isDeleteSelectedDisabled () {
+        return !this.selectedItems.length
+      }
     },
     async created () {
       this.title = 'Pakete'
-      this.component = 'g:1packages'
       this.resultActionButtons = [
         {
           icon: 'import_export',
@@ -19,37 +21,28 @@
         {
           icon: 'clear',
           label: 'Archivieren',
-          action: undefined,
+          disabled: 'isDeleteSelectedDisabled',
+          action: '_retireSelectedItems',
         },
         {
           icon: 'delete',
           label: 'Löschen',
-          action: undefined,
+          disabled: 'isDeleteSelectedDisabled',
+          action: '_deleteSelectedItems',
         }
       ]
-
-      // const allCuratorGroups = await ajaxServices.lookup({
-      //   baseClass: 'org.gokb.cred.CuratoryGroup',
-      //   q: ''
-      // })
-      // const allStates = await ajaxServices.lookup({
-      //   baseClass: 'org.gokb.cred.RefdataValue',
-      //   filter1: 'KBComponent.Status',
-      //   q: ''
-      // })
-
       this.searchInputFields = [
         [
           {
             type: 'GokbTextField',
-            name: 'qp_name',
+            name: 'name',
             properties: {
               label: 'Name',
             }
           },
           {
             type: 'GokbSelectField',
-            name: 'qp_curgroup',
+            name: 'curatory',
             properties: {
               label: 'Kuratoren',
               multiple: true,
@@ -60,11 +53,11 @@
         [
           {
             type: 'GokbSearchProviderField',
-            name: 'qp_provider',
+            name: 'provider'
           },
           {
             type: 'GokbTextField',
-            name: 'qp_identifier',
+            name: 'identifier',
             properties: {
               label: 'Identifier'
             }
@@ -73,7 +66,6 @@
         [
           {
             type: 'GokbSelectField',
-            name: 'qp_status',
             properties: {
               label: 'Status',
               // items: allStates.values.map(({ id: value, text }) => ({ value, text })),
@@ -86,21 +78,46 @@
           text: 'Name',
           align: 'left',
           sortable: false,
-          value: 'Name'
+          value: 'name'
         },
         {
           text: 'Provider',
           align: 'left',
           sortable: false,
-          value: 'Provider'
+          value: 'providerName'
         },
         {
           text: 'Plattform',
           align: 'left',
           sortable: false,
-          value: 'Nominal Platform'
+          value: 'nominalPlatformName'
         },
       ]
+      this.searchServicesResourceUrl = 'rest/packages'
     },
+    methods: {
+      _transformForTable (data) {
+        return data.map(({ id, name, provider, nominalPlatform, _links: { delete: deleteUrl, retire: retireUrl } }) => ({
+          id,
+          name,
+          providerName: provider?.name,
+          nominalPlatformName: nominalPlatform?.name,
+          deleteUrl: deleteUrl?.href,
+          retireUrl: retireUrl?.href,
+        }))
+      },
+      async _deleteSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ deleteUrl }) => this._executeDeleteItemService(deleteUrl)))
+      },
+      _retireSelectedItems () {
+        this.selectedItems.forEach(async ({ retireUrl }) => {
+          await this.catchError({
+            promise: baseServices.request({ method: 'POST', url: retireUrl }, this.cancelToken.token),
+            instance: this
+          })
+        })
+        this.resultPaginate(this.resultOptions.page)
+      },
+    }
   }
 </script>

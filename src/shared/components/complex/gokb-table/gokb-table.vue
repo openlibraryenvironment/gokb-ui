@@ -3,9 +3,9 @@
     <v-data-table
       v-model="localSelectedItems"
       :headers="localHeaders"
-      :items="localItems"
-      :options.sync="localOptions"
-      :server-items-length="totalItems"
+      :items="items"
+      :options="options"
+      :server-items-length="totalNumberOfItems"
       hide-default-footer
       item-key="id"
       :show-select="showSelect"
@@ -26,7 +26,7 @@
       </template>
       <template #item.action="{ item }">
         <v-icon
-          :disabled="disabled"
+          :disabled="disabled || !item.deleteUrl"
           small
           @click="deleteItem(item)"
         >
@@ -36,7 +36,7 @@
     </v-data-table>
     <div class="text-center pt-2">
       <v-pagination
-        v-model="localOptions.page"
+        v-model="options.page"
         :disabled="disabled"
         :length="pages"
         :total-visible="7"
@@ -69,20 +69,23 @@
       },
       selectedItems: {
         type: Array,
-        default: () => [],
+        required: true
       },
-      deletedItems: {
-        type: Array,
-        default: () => []
+      totalNumberOfItems: {
+        type: Number,
+        required: true,
       },
-      addedItems: {
-        type: Array,
-        default: () => []
-      },
+      // deletedItems: {
+      //   type: Array,
+      //   default: () => []
+      // },
+      // addedItems: {
+      //   type: Array,
+      //   default: () => []
+      // },
       options: {
         type: Object,
-        required: false,
-        default: undefined
+        required: true,
       },
       error: {
         type: Error,
@@ -92,66 +95,51 @@
     },
     data () {
       return {
-        localSelectedItems: [],
-        localOptions: {
-          page: 1,
-          itemsPerPage: 10,
-          // sortBy: undefined,
-          // sortDesc: undefined, // boolean[]
-          // groupBy: undefined, // string[]
-          // groupDesc: undefined, // boolean[]
-          // multiSort: undefined, // boolean
-          // mustSort: undefined, // boolean
-        }
       }
     },
     computed: {
+      localSelectedItems: {
+        get () { return [...this.selectedItems] },
+        set (value) { this.selectedItems = value }
+      },
       localHeaders () {
         return [...this.headers, { value: 'action', sortable: false }] // with delete icon
       },
-      visibleItems () {
-        const items = [
-          ...(this.addedItems ? this.addedItems : []),
-          ...(this.items ? this.items : []),
-        ]
-        return items.filter(item => !this.deletedItems.includes(item))
-      },
-      localItems () {
-        return this.pagination
-          ? this.visibleItems
-          : this.visibleItems?.slice((this.localOptions.page - 1) * this.localOptions.itemsPerPage, this.localOptions.page * this.localOptions.itemsPerPage)
-      },
-      totalItems () {
-        return this.pagination ? this.pagination.totalItems : this.visibleItems?.length
-      },
+      // visibleItems () {
+      //   const items = [
+      //     ...(this.addedItems ? this.addedItems : []),
+      //     ...(this.items ? this.items : []),
+      //   ]
+      //   return items.filter(item => !this.deletedItems.includes(item))
+      // },
+      // localItems () {
+      //   return this.pagination
+      //     ? this.visibleItems
+      //     : this.visibleItems?.slice((this.localOptions.page - 1) * this.localOptions.itemsPerPage, this.localOptions.page * this.localOptions.itemsPerPage)
+      // },
+      // totalItems () {
+      //   return this.pagination ? this.pagination.totalItems : this.visibleItems?.length
+      // },
       pages () {
-        return this.visibleItems
-          ? Math.ceil(this.visibleItems?.length / (this.pagination ? this.pagination.itemsPerPage : this.localOptions.itemsPerPage))
-          : 0
+        return Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage)
       },
     },
     watch: {
-      localSelectedItems: function () {
-        this.selectedItems.length = 0
-        this.selectedItems.push(...this.localSelectedItems)
-      },
-      'localOptions.page': function () {
+      'localOptions.page' () {
         this.handlePaging()
       },
     },
-    mounted () {
-      if (this.pagination) {
-        this.localOptions = this.pagination
-      }
-    },
+    // mounted () {
+    //   if (this.pagination) {
+    //     this.localOptions = this.pagination
+    //   }
+    // },
     methods: {
       handlePaging () {
-        if (this.pagination) {
-          this.$emit('paginate')
-        }
+        this.$emit('paginate', this.options.page)
       },
       deleteItem (item) {
-        this.deletedItems.push(item)
+        this.$emit('delete-item', item)
       },
     }
   }

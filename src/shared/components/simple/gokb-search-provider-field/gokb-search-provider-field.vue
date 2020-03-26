@@ -4,14 +4,9 @@
   export default {
     name: 'GokbSearchProviderField',
     extends: GokbSearchField,
-    data () {
-      return {}
-    },
     created () {
       this.label = 'Provider'
-      this.queryParameters = {
-        baseClass: 'org.gokb.cred.Org',
-      }
+      this.searchServicesResourceUrl = 'rest/provider'
     },
   }
 </script>

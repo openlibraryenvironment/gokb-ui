@@ -16,6 +16,7 @@
 
 <script>
   import BaseComponent from '@/shared/base-component'
+  import searchServices from '@/shared/services/search-services'
 
   export default {
     name: 'GokbSearchField',
@@ -25,8 +26,7 @@
         label: undefined,
         placeholder: undefined,
         rules: undefined,
-        queryParameters: undefined,
-
+        searchServicesResourceUrl: undefined,
         loading: false,
         items: [],
         search: null,
@@ -49,15 +49,19 @@
         value && value !== this.value?.value && value.length > 2 && this.query(value)
       }
     },
+    mounted () {
+      this.searchServices = searchServices(this.searchServicesResourceUrl)
+    },
     methods: {
       async query (value) {
-        // this.loading = true
-        // const items = await this.catchError(ajaxServices.lookup({
-        //   ...this.queryParameters,
-        //   q: value,
-        // }, this.cancelToken.token), this, this.handleError)
-        // this.items = items.values.map(value => ({ value: value.id, text: value.text }))
-        // this.loading = false
+        const result = await this.catchError({
+          promise: this.searchServices.search({
+            name: this.search,
+          }, this.cancelToken.token),
+          instance: this
+        })
+        const { data: { data } } = result
+        this.items = data.map(value => ({ value: value.id, text: value.name }))
       },
     }
   }
