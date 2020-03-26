@@ -100,7 +100,7 @@
     computed: {
       localSelectedItems: {
         get () { return [...this.selectedItems] },
-        set (value) { this.selectedItems = value }
+        set (value) { this.$emit('selected-items', value) }
       },
       localHeaders () {
         return [...this.headers, { value: 'action', sortable: false }] // with delete icon

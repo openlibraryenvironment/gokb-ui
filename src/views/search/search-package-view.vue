@@ -93,7 +93,8 @@
           value: 'nominalPlatformName'
         },
       ]
-      this.searchServicesResourceUrl = 'rest/packages'
+      this.searchServicesUrl = 'rest/packages'
+      this.searchServiceIncludes = 'id,name,provider,nominalPlatform,_links'
     },
     methods: {
       _transformForTable (data) {

@@ -64,7 +64,8 @@
         :items="resultItems"
         :options.sync="resultOptions"
         :total-number-of-items="totalNumberOfItems"
-        :selected-items.sync="selectedItems"
+        :selected-items="selectedItems"
+        @selected-items="selectedItems = $event"
         @paginate="resultPaginate"
         @delete-item="deleteItem"
       />
@@ -106,7 +107,7 @@
       }
     },
     mounted () {
-      this.searchServices = searchServices(this.searchServicesResourceUrl)
+      this.searchServices = searchServices(this.searchServicesUrl)
     },
     methods: {
       resetSearch () {
@@ -140,6 +141,7 @@
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...searchParameters,
+            _include: this.searchServiceIncludes,
             offset: page ? (page - 1) * this.resultOptions.itemsPerPage : 0,
             limit: this.resultOptions.itemsPerPage
           }, this.cancelToken.token),
@@ -151,6 +153,7 @@
           if (!page) {
             this.resultOptions.page = 1
           }
+          this.selectedItems = []
           this.totalNumberOfItems = _pagination.total
           this.resultItems = this._transformForTable(data)
         }
