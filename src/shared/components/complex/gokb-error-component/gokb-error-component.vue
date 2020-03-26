@@ -1,17 +1,16 @@
 <template>
-  <span>
+  <span v-if="value">
     <v-btn
-      :value="value"
       absolute
       color="error"
       fab
       right
       small
-      @click.stop="toggleShow"
+      @click="toggleShow"
     >
       <v-icon>mdi-alert-circle</v-icon>
     </v-btn>
-    <v-dialog :value="show">
+    <v-dialog v-model="show">
       <v-card class="elevation-12">
         <v-toolbar color="error">
           <v-toolbar-title>Fehler</v-toolbar-title>
@@ -64,7 +63,7 @@
           <v-spacer />
           <v-btn
             class="error"
-            @click.stop="toggleShow"
+            @click="toggleShow"
           >
             Schließen
           </v-btn>
@@ -77,11 +76,12 @@
 
 <script>
   export default {
-    name: 'ErrorComponent',
+    name: 'GokbErrorComponent',
     props: {
       value: {
-        type: [Object, Error],
-        required: true
+        type: Error,
+        required: false,
+        default: undefined,
       },
     },
     data () {

@@ -3,9 +3,7 @@
     :title="title"
     @submit="search"
   >
-    <template v-if="error">
-      <error-component :value="error" />
-    </template>
+    <gokb-error-component :value="error" />
     <gokb-section sub-title="Suche">
       <template v-for="(row, rowIndex) of searchInputFields">
         <v-row :key="`${title}_${rowIndex}`">
@@ -59,6 +57,11 @@
           {{ button.label }}
         </gokb-button>
       </template>
+      <gokb-confirmation-popup
+        v-model="confirmationPopUpVisible"
+        :message="messageToConfirm"
+        @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+      />
       <gokb-table
         :headers="resultHeaders"
         :items="resultItems"
@@ -67,7 +70,7 @@
         :selected-items="selectedItems"
         @selected-items="selectedItems = $event"
         @paginate="resultPaginate"
-        @delete-item="deleteItem"
+        @delete-item="confirmDeleteItem"
       />
     </gokb-section>
   </gokb-page>
@@ -75,14 +78,15 @@
 
 <script>
   import BaseComponent from '@/shared/base-component'
-  import ErrorComponent from '@/shared/components/complex/error-component'
+  import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import searchServices from '@/shared/services/search-services'
+  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
 
   const ROWS_PER_PAGE = 10
 
   export default {
     name: 'BaseSearch',
-    components: { ErrorComponent },
+    components: { GokbErrorComponent, GokbConfirmationPopup },
     extends: BaseComponent,
     data () {
       return {
@@ -99,6 +103,9 @@
           itemsPerPage: ROWS_PER_PAGE
         },
         totalNumberOfItems: -1,
+        confirmationPopUpVisible: false,
+        actionToConfirm: undefined,
+        parameterToConfirm: undefined,
       }
     },
     watch: {
@@ -118,8 +125,14 @@
       resultPaginate (page) {
         this.search({ page })
       },
-      async deleteItem ({ deleteUrl }) {
-        await this._executeDeleteItemService()
+      confirmDeleteItem ({ deleteUrl }) {
+        this.actionToConfirm = 'deleteItem'
+        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
+        this.parameterToConfirm = deleteUrl
+        this.confirmationPopUpVisible = true
+      },
+      async deleteItem (deleteUrl) {
+        await this._executeDeleteItemService(deleteUrl)
         this.resultPaginate(this.resultOptions.page)
       },
       _executeDeleteItemService (deleteUrl) {
@@ -158,8 +171,8 @@
           this.resultItems = this._transformForTable(data)
         }
       },
-      executeAction (actionMethodName) {
-        this[actionMethodName]()
+      executeAction (actionMethodName, actionMethodParameter) {
+        this[actionMethodName](actionMethodParameter)
       },
       isButtonDisabled (attributeName) {
         return this[attributeName]

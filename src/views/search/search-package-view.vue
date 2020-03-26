@@ -22,13 +22,13 @@
           icon: 'clear',
           label: 'Archivieren',
           disabled: 'isDeleteSelectedDisabled',
-          action: '_retireSelectedItems',
+          action: '_confirmRetireSelectedItems',
         },
         {
           icon: 'delete',
           label: 'Löschen',
           disabled: 'isDeleteSelectedDisabled',
-          action: '_deleteSelectedItems',
+          action: '_confirmDeleteSelectedItems',
         }
       ]
       this.searchInputFields = [
@@ -107,16 +107,29 @@
           retireUrl: retireUrl?.href,
         }))
       },
+      _confirmDeleteSelectedItems () {
+        this.actionToConfirm = '_deleteSelectedItems'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
       async _deleteSelectedItems () {
         await Promise.all(this.selectedItems.map(({ deleteUrl }) => this._executeDeleteItemService(deleteUrl)))
+        this.resultPaginate(this.resultOptions.page)
       },
-      _retireSelectedItems () {
-        this.selectedItems.forEach(async ({ retireUrl }) => {
-          await this.catchError({
+      _confirmRetireSelectedItems () {
+        this.actionToConfirm = '_retireSelectedItems'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich archivieren?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      async _retireSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ retireUrl }) =>
+          this.catchError({
             promise: baseServices.request({ method: 'POST', url: retireUrl }, this.cancelToken.token),
             instance: this
           })
-        })
+        ))
         this.resultPaginate(this.resultOptions.page)
       },
     }
