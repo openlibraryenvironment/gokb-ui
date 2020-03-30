@@ -45,17 +45,25 @@
     </gokb-section>
     <gokb-section sub-title="Ergebnisse">
       <template #buttons>
-        <gokb-button
-          v-for="button of resultActionButtons"
-          :key="button.label"
-          class="ml-4"
-          :icon-id="button.icon"
-          :to="button.route"
-          :disabled="isButtonDisabled(button.disabled)"
-          @click.native="executeAction(button.action)"
-        >
-          {{ button.label }}
-        </gokb-button>
+        <template v-for="button of resultActionButtons">
+          <component
+            :is="button.component"
+            v-if="button.component"
+            :key="button.component.name"
+            v-bind="button.properties"
+          />
+          <gokb-button
+            v-else
+            :key="button.label"
+            class="ml-4"
+            :icon-id="button.icon"
+            :to="button.route"
+            :disabled="isButtonDisabled(button.disabled)"
+            @click.native="executeAction(button.action)"
+          >
+            {{ button.label }}
+          </gokb-button>
+        </template>
       </template>
       <gokb-confirmation-popup
         v-model="confirmationPopUpVisible"
@@ -91,7 +99,6 @@
     data () {
       return {
         title: undefined,
-        component: undefined,
         searchInputFields: undefined,
         resultActionButtons: undefined,
 
@@ -106,6 +113,7 @@
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
+        messageToConfirm: undefined,
       }
     },
     watch: {

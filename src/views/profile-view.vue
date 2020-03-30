@@ -80,7 +80,7 @@
   import account from '@/shared/models/account'
   import profileServices from '@/shared/services/profile-services'
   import BaseComponent from '@/shared/base-component'
-  import GokbAddCuratoryGroupsPopup from '@/shared/popups/add-curatory-groups-popup'
+  import GokbAddCuratoryGroupsPopup from '@/shared/popups/gokb-add-curatory-groups-popup'
 
   const CURATORY_GROUPS_TABLE_HEADERS = [
     { text: 'Gruppe', align: 'left', value: 'name', sortable: false, width: '100%' },

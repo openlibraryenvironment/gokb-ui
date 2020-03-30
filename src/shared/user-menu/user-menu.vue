@@ -49,8 +49,8 @@
 <script>
   import { HOME_ROUTE, PROFILE_ROUTE } from '@/router/route-names'
   import account from '@/shared/models/account'
-  import LoginPopup from '@/shared/popups/login-popup'
-  import RegisterPopup from '@/shared/popups/register-popup'
+  import LoginPopup from '@/shared/popups/gokb-login-popup'
+  import RegisterPopup from '@/shared/popups/gokb-register-popup'
 
   export default {
     components: { LoginPopup, RegisterPopup },

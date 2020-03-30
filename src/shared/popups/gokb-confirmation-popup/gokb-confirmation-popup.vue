@@ -39,7 +39,8 @@
       },
       message: {
         type: String,
-        required: true
+        required: true,
+        default: ''
       },
     },
     data () {

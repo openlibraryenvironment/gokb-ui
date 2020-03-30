@@ -1,9 +1,11 @@
 <script>
   import BaseSearch from './base-search-view'
   import baseServices from '@/shared/services/base-services'
+  import GokbKbartExportPopup from '@/shared/popups/gokb-kbart-export-popup'
 
   export default {
     name: 'SearchPackage',
+    components: { GokbKbartExportPopup },
     extends: BaseSearch,
     computed: {
       isDeleteSelectedDisabled () {
@@ -14,9 +16,10 @@
       this.title = 'Pakete'
       this.resultActionButtons = [
         {
-          icon: 'import_export',
-          label: 'Export',
-          route: undefined,
+          component: GokbKbartExportPopup,
+          properties: {
+            messageToConfirm: this.messageToConfirm
+          }
         },
         {
           icon: 'clear',
