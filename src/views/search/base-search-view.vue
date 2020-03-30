@@ -89,6 +89,7 @@
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import searchServices from '@/shared/services/search-services'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import selection from '@/shared/models/selection'
 
   const ROWS_PER_PAGE = 10
 
@@ -119,6 +120,9 @@
     watch: {
       'resultOptions.page': function () {
         this.search({ page: this.resultOptions.page })
+      },
+      selectedItems (value) {
+        selection.set(value)
       }
     },
     mounted () {

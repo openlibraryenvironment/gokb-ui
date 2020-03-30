@@ -121,15 +121,9 @@
   import { routeTo } from '@/router'
   import { HOME_ROUTE } from '@/router/route-names'
   import { createCancelToken } from '@/shared/services/http'
-  import {
-    COMPONENT_TYPE_BOOK_INSTANCE,
-    COMPONENT_TYPE_JOURNAL_INSTANCE,
-    COMPONENT_TYPE_ORG,
-    COMPONENT_TYPE_PACKAGE
-  } from '@/shared/models/component-types'
   import searchServices from '@/shared/services/search-services'
 
-  const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
+  // const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
 
   export default {
     name: 'App',
@@ -171,7 +165,7 @@
             max: 100
           }, this.cancelToken.token)
           this.globalSearchItems = result.records
-            .filter(item => SEARCH_COMPONENTS.includes(item.componentType))
+            .filter(item => /* SEARCH_COMPONENTS.includes(item.componentType) */ true)
         } catch (exception) {
           this.globalSearchItems = []
         } finally {

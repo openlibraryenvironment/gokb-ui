@@ -1,24 +1,27 @@
 <script>
   import BaseSearch from './base-search-view'
   import baseServices from '@/shared/services/base-services'
-  import GokbKbartExportPopup from '@/shared/popups/gokb-kbart-export-popup'
+  import GokbPackageExportMenu from '@/shared/components/gokb-package-export-menu'
 
   export default {
     name: 'SearchPackage',
-    components: { GokbKbartExportPopup },
+    components: { GokbPackageExportMenu },
     extends: BaseSearch,
     computed: {
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
+      },
+      isExportSelectedDisabled () {
+        return this.selectedItems.length !== 1
       }
     },
     async created () {
       this.title = 'Pakete'
       this.resultActionButtons = [
         {
-          component: GokbKbartExportPopup,
+          component: GokbPackageExportMenu,
           properties: {
-            messageToConfirm: this.messageToConfirm
+            disabled: this.isExportSelectedDisabled,
           }
         },
         {
@@ -97,12 +100,13 @@
         },
       ]
       this.searchServicesUrl = 'rest/packages'
-      this.searchServiceIncludes = 'id,name,provider,nominalPlatform,_links'
+      this.searchServiceIncludes = 'id,uuid,name,provider,nominalPlatform,_links'
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({ id, name, provider, nominalPlatform, _links: { delete: deleteUrl, retire: retireUrl } }) => ({
+        return data.map(({ id, uuid, name, provider, nominalPlatform, _links: { delete: deleteUrl, retire: retireUrl } }) => ({
           id,
+          uuid,
           name,
           providerName: provider?.name,
           nominalPlatformName: nominalPlatform?.name,
