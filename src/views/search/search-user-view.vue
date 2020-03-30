@@ -79,6 +79,8 @@
           value: 'email?'
         },
       ]
+      this.searchServicesUrl = 'rest/users'
+      // this.searchServiceIncludes = 'id,name,provider,nominalPlatform,_links'
     },
   }
 </script>

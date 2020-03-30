@@ -21,14 +21,7 @@
         </v-toolbar>
         <v-card-text>
           <v-row align="center">
-            <v-col cols="6">
-              <v-select
-                v-model="selectedOrganisationId"
-                :items="allowedOrganisations"
-                label="Einrichtung"
-              />
-            </v-col>
-            <v-col cols="6">
+            <v-col>
               <v-file-input
                 v-model="selectedFile"
                 label="CSV-Datei"
@@ -44,8 +37,8 @@
             <v-btn
               class="info"
               x-large
-              :disabled="!selectedFile || importRunning"
-              @click="doImport"
+              :disabled="importRunning"
+              @click="doExport"
             >
               Exportieren
             </v-btn>
@@ -71,8 +64,8 @@
               type="info"
             >
               <span v-if="importRunning === true">Der Export wird durchgeführt.</span>
-              <span v-else-if="importRunning === false && !error">Import erfolgreich ohne Fehler.</span>
-              <span v-else>Bitte wählen Sie eine CSV-Datei aus und starten Sie den Import.</span>
+              <span v-else-if="importRunning === false && !error">Export erfolgreich ohne Fehler.</span>
+              <span v-else>Bitte wählen Sie eine CSV-Datei aus und starten Sie den Export.</span>
             </v-alert>
             <v-expansion-panels v-if="error">
               <v-expansion-panel>
@@ -105,13 +98,6 @@
   import baseServices from '@/shared/services/base-services'
   import GokbButton from '../../components/base/gokb-button/gokb-button'
 
-  const CSV_SEPARATOR = ';'
-  const HEADER_TYPE_CONVERTER = (organisationId) => ({
-    doi: value => value,
-    year: parseInt,
-    organisation: value => organisationId || value,
-  })
-
   export default {
     components: { GokbButton },
     extends: BaseComponent,
@@ -141,7 +127,13 @@
       },
     },
     methods: {
-      doImport () {
+      async doExport () {
+        const result = await baseServices.request({
+          method: 'GET',
+          url: 'https://gokbt.gbv.de/gokb/packages/kbart/6196e907-59df-4cfd-94f6-91dd1e72b0b0',
+        }, this.cancelToken.token)
+        console.log(result)
+        /*
         this.headerTypeConverter = HEADER_TYPE_CONVERTER(this.selectedOrganisationId)
         this.error = undefined
         this.importRunning = true
@@ -150,6 +142,7 @@
         this.readerForImport.onload = this._importCompleted
         this.readerForImport.onprogress = this._importProgress
         this.readerForImport.readAsText(this.selectedFile)
+         */
       },
       async _importCompleted () {
         const csvDataRows = this.readerForImport.result.split(/\r?\n/)
@@ -157,13 +150,7 @@
         if (csvDataRows.length === 0) {
           return
         }
-        const header = csvDataRows.splice(0, 1)[0].split(CSV_SEPARATOR)
-        const rowsAsJson = this._convertRows(header, csvDataRows)
         try {
-          await baseServices.pubchargedb({
-            initiator: this._importCompleted.name,
-            data: rowsAsJson
-          })
         } catch (exception) {
           this.error = exception
         } finally {
@@ -174,26 +161,6 @@
       _importProgress ({ loaded, total }) {
         this.completion = math.asPercent(loaded / (total * 2))
       },
-      _convertRows (header, csvDataRows) {
-        // if (header.length !== 5) {
-        return csvDataRows.map(row => row
-          .split(CSV_SEPARATOR)
-          .reduce((result, value, i) => {
-            const converter = this.headerTypeConverter[header[i]]
-            const convertedValue = converter ? converter(value) : parseFloat(value)
-            if (convertedValue) {
-              result[header[i]] = convertedValue
-            }
-            return result
-          }, {}))
-        // }
-
-        // const entries = new Map()
-        // csvDataRows.forEach(({ doi, year, type, value, organisation }) => {
-        //   const key = { doi, year, type, value, organisation }
-        // })
-        // 0: {doi: "10.3390/cryst8060241", year: "2018", type: "Permission", value: "15,77", organisation: "grid.8385.6"}
-      }
     }
   }
 </script>

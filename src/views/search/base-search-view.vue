@@ -162,7 +162,7 @@
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...searchParameters,
-            _include: this.searchServiceIncludes,
+            ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
             offset: page ? (page - 1) * this.resultOptions.itemsPerPage : 0,
             limit: this.resultOptions.itemsPerPage
           }, this.cancelToken.token),

@@ -26,12 +26,10 @@ module.exports = {
       errors: true
     },
     proxy: {
-      '^/gokb': {
-        target: 'https://phaeton-qa.hbz-nrw.de/',
-        // cookieDomainRewrite: 'localhost',
-        // cookiePathRewrite: '/',
+      '^/rest': {
+        target: process.env.VUE_APP_API_BASE_URL,
         changeOrigin: true,
-        logLevel: 'debug',
+        // logLevel: 'debug',
       },
     }
   },

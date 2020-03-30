@@ -1,10 +1,6 @@
 import native from '@/shared/utils/native'
 
 const api = {
-  getApiUrl () {
-    return process.env.VUE_APP_API_BASE_URL
-  },
-
   // eslint-disable-next-line
   isTokenExpired ({ ['.expires']: expires }) {
     const d = Date.parse(expires)
