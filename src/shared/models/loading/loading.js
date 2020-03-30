@@ -15,6 +15,7 @@ const api = (vue) => {
     },
     startLoading () {
       stopTimer()
+      // we only set loading, if we need more than 100 msec to call stopLoading
       timeoutId = setTimeout(() => (state.loading = true), 100)
     },
     stopLoading () {
