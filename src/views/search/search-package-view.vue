@@ -52,7 +52,6 @@
             properties: {
               label: 'Kuratoren',
               multiple: true,
-              // items: allCuratorGroups.values.map(({ id: value, text }) => ({ value, text })),
             }
           }
         ],
@@ -71,11 +70,8 @@
         ],
         [
           {
-            type: 'GokbSelectField',
-            properties: {
-              label: 'Status',
-              // items: allStates.values.map(({ id: value, text }) => ({ value, text })),
-            }
+            type: 'GokbStateField',
+            name: 'status'
           },
         ]
       ]

@@ -15,7 +15,7 @@
             <component
               :is="column.type"
               :key="`${title}_${rowIndex}_${columnIndex}`"
-              v-model="column.model"
+              v-model="column.value"
               clearable
               v-bind="column.properties"
             />
@@ -132,7 +132,7 @@
       resetSearch () {
         this.searchInputFields
           .flat()
-          .forEach(field => { field.model = undefined })
+          .forEach(field => { field.value = undefined })
       },
       resultPaginate (page) {
         this.search({ page })
@@ -154,15 +154,16 @@
         })
       },
       async search ({ page } = { page: undefined }) {
+        console.log(this.searchInputFields)
         const searchParameters = this.searchInputFields
           .flat()
-          .map(field => ([field.name, field.model]))
+          .map(field => ([field.name, field.value]))
           .filter(([name, value]) => name && value)
           .reduce((result, [name, value]) => {
             result[name] = value
             return result
           }, {})
-        // console.log(searchParameters)
+        console.log(searchParameters)
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...searchParameters,
