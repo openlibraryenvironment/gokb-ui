@@ -1,4 +1,5 @@
 module.exports = {
+  publicPath: process.env.VUE_APP_PUBLIC_PATH || '/', // base path for the application
   configureWebpack: {
     optimization: {
       runtimeChunk: 'single',
