@@ -154,7 +154,7 @@
         })
       },
       async search ({ page } = { page: undefined }) {
-        console.log(this.searchInputFields)
+        // console.log(this.searchInputFields)
         const searchParameters = this.searchInputFields
           .flat()
           .map(field => ([field.name, field.value]))
@@ -163,7 +163,7 @@
             result[name] = value
             return result
           }, {})
-        console.log(searchParameters)
+        // console.log(searchParameters)
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...searchParameters,
