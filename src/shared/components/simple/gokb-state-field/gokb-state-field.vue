@@ -4,8 +4,14 @@
   export default {
     name: 'GokbStateField',
     extends: GokbSelectField,
+    props: {
+      label: {
+        type: String,
+        required: false,
+        default: 'Status',
+      }
+    },
     created () {
-      this.label = 'Status'
       this.selectResourceUrl = 'rest/refdata/categories/KBComponent.Status'
     }
   }
