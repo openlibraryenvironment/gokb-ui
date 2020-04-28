@@ -64,7 +64,7 @@
       },
     },
     async created () {
-      const { data: values } = await curatoryGroupServices.getAll()
+      const { data: { data: values } } = await curatoryGroupServices.getAll()
       this.curatoryGroups = values
     },
     methods: {
