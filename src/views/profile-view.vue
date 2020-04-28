@@ -48,12 +48,15 @@
         </gokb-button>
       </template>
       <gokb-table
-        :disabled="updateProfileAvailable"
-        :added-items="addedCuratoryGroups"
-        :deleted-items="deletedCuratoryGroups"
         :headers="curatoryGroupsTableHeaders"
+        :disabled="updateProfileAvailable"
         :items="curatoryGroups"
         :selected-items="selectedCuratoryGroups"
+        :total-number-of-items="totalNumberOfItems"
+        :options.sync="curatoryGroupsOptions"
+        @selected-items="selectedCuratoryGroups = $event"
+        @paginate="curatoryGroupsPaginate"
+        @delete-item="confirmDeleteItem"
       />
     </gokb-section>
     <template #buttons>
@@ -102,12 +105,15 @@
         repeatpass: undefined,
         curatoryGroups: undefined,
 
-        selectedCuratoryGroups: [],
-        deletedCuratoryGroups: [],
-        addedCuratoryGroups: [],
-
         updateProfileUrl: undefined,
         deleteProfileUrl: undefined,
+
+        totalNumberOfItems: 0,
+        curatoryGroupsOptions: {
+          itemsPerPage: 10,
+        },
+        confirmDeleteItem: false,
+        selectedCuratoryGroups: [],
       }
     },
     computed: {
@@ -123,10 +129,14 @@
       this.curatoryGroupsTableHeaders = CURATORY_GROUPS_TABLE_HEADERS
       const {
         data: {
-          email, curatoryGroups, _links: {
-            update: updateProfileUrl,
-            delete: deleteProfileUrl
-          } = { update: undefined, delete: undefined }
+          data: {
+            email,
+            curatoryGroups,
+            _links: {
+              update: { href: updateProfileUrl },
+              delete: { href: deleteProfileUrl }
+            }
+          }
         }
       } = await profileServices.getProfile(this.cancelToken.token)
       this.updateProfileUrl = updateProfileUrl
@@ -160,10 +170,6 @@
           ...(this.repeatpass ? { repeatpass: this.repeatpass } : {}),
           curatoryGroups
         }, this.cancelToken.token)
-
-        this.selectedCuratoryGroups = []
-        this.deletedCuratoryGroups = []
-        this.addedCuratoryGroups = []
         loading.stopLoading()
       },
       async removeProfile () {
@@ -173,6 +179,8 @@
         loading.stopLoading()
         await this.$router.push(HOME_ROUTE)
       },
+      curatoryGroupsPaginate () {
+      }
     },
   }
 </script>

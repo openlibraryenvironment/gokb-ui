@@ -116,7 +116,7 @@
       }
     },
     mounted () {
-      console.log(this.id)
+      // console.log(this.id)
       // resourceServices.show({ oid: this.id, withCombos: true }).then(result => console.log(result))
     }
   }
