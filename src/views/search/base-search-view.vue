@@ -118,9 +118,6 @@
       }
     },
     watch: {
-      'resultOptions.page': function () {
-        this.search({ page: this.resultOptions.page })
-      },
       selectedItems (value) {
         selection.set(value)
       }
