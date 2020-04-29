@@ -75,14 +75,6 @@
         type: Number,
         required: true,
       },
-      // deletedItems: {
-      //   type: Array,
-      //   default: () => []
-      // },
-      // addedItems: {
-      //   type: Array,
-      //   default: () => []
-      // },
       options: {
         type: Object,
         required: true,
@@ -93,10 +85,6 @@
         default: undefined
       },
     },
-    data () {
-      return {
-      }
-    },
     computed: {
       localSelectedItems: {
         get () { return [...this.selectedItems] },
@@ -105,35 +93,15 @@
       localHeaders () {
         return [...this.headers, { value: 'action', sortable: false }] // with delete icon
       },
-      // visibleItems () {
-      //   const items = [
-      //     ...(this.addedItems ? this.addedItems : []),
-      //     ...(this.items ? this.items : []),
-      //   ]
-      //   return items.filter(item => !this.deletedItems.includes(item))
-      // },
-      // localItems () {
-      //   return this.pagination
-      //     ? this.visibleItems
-      //     : this.visibleItems?.slice((this.localOptions.page - 1) * this.localOptions.itemsPerPage, this.localOptions.page * this.localOptions.itemsPerPage)
-      // },
-      // totalItems () {
-      //   return this.pagination ? this.pagination.totalItems : this.visibleItems?.length
-      // },
       pages () {
         return Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage)
       },
     },
     watch: {
-      'localOptions.page' () {
+      'options.page' () {
         this.handlePaging()
       },
     },
-    // mounted () {
-    //   if (this.pagination) {
-    //     this.localOptions = this.pagination
-    //   }
-    // },
     methods: {
       handlePaging () {
         this.$emit('paginate', this.options.page)
