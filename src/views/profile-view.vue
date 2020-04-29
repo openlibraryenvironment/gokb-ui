@@ -33,19 +33,18 @@
     <gokb-add-curatory-groups-popup
       v-if="addCuratoryGroupsPopupVisible"
       v-model="addCuratoryGroupsPopupVisible"
-      @add="checkNewPassword"
+      @add="addNewCuratoryGroup"
     />
     <gokb-section title="Kuratorengruppen">
       <template #buttons>
         <gokb-button
-          :disabled="updateProfileAvailable"
           @click.native="showAddNewCuratoryGroup"
         >
           Hinzufügen
         </gokb-button>
         <gokb-button
           class="ml-4"
-          :disabled="updateProfileAvailable"
+          :disabled="isDeleteSelectedDisabled"
           @click.native="confirmDeleteSelectedItems"
         >
           Löschen
@@ -64,7 +63,6 @@
         :total-number-of-items="totalNumberOfItems"
         :options.sync="curatoryGroupsOptions"
         @selected-items="selectedCuratoryGroups = $event"
-        @paginate="curatoryGroupsPaginate"
         @delete-item="confirmDeleteItem"
       />
     </gokb-section>
@@ -127,10 +125,9 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
+        allCuratoryGroups: [],
         selectedCuratoryGroups: [],
-        currentCuratoryGroups: [],
         addedCuratoryGroups: [],
-        deletedCuratoryGroups: [],
 
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
@@ -139,11 +136,16 @@
       }
     },
     computed: {
+      isDeleteSelectedDisabled () {
+        return !this.selectedCuratoryGroups.length
+      },
       curatoryGroups () {
-        return [...this.currentCuratoryGroups, ...this.addedCuratoryGroups]
+        return [...this.addedCuratoryGroups, ...this.allCuratoryGroups]
+          .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+          .slice((this.curatoryGroupsOptions.page - 1) * ROWS_PER_PAGE, this.curatoryGroupsOptions.page * ROWS_PER_PAGE)
       },
       totalNumberOfItems () {
-        return this.currentCuratoryGroups.length + this.addedCuratoryGroups.length
+        return this.allCuratoryGroups.length + this.addedCuratoryGroups.length
       },
       removeProfileAvailable () {
         return !this.deleteProfileUrl
@@ -173,15 +175,15 @@
       this.updateProfileUrl = updateProfileUrl
       this.deleteProfileUrl = deleteProfileUrl
       this.email = email
-      this.currentCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
+      this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
       loading.stopLoading()
     },
     methods: {
       checkNewPassword () {
         return this.newpass && this.repeatpass && this.newpass !== this.repeatpass ? 'Das neue Passwort ist nicht identisch.' : true
       },
-      executeAction (actionToConfirm, parameterToConfirm) {
-        this.addedCuratoryGroups = this.addedCuratoryGroups.filter(({ id }) => this.selectedCuratoryGroups.includes(parameterToConfirm))
+      executeAction (actionMethodName, actionMethodParameter) {
+        this[actionMethodName](actionMethodParameter)
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedCuratoryGroups'
@@ -190,14 +192,21 @@
         this.confirmationPopUpVisible = true
       },
       confirmDeleteItem ({ id }) {
-        this.actionToConfirm = 'deleteItem'
+        this.actionToConfirm = '_deleteItem'
         this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
       _deleteSelectedCuratoryGroups () {
-        this.addedCuratoryGroups = this.addedCuratoryGroups.filter(({ id }) => this.selectedCuratoryGroups.includes(id))
+        this.addedCuratoryGroups = this.addedCuratoryGroups.filter(({ id }) => !this.selectedCuratoryGroups
+          .find(({ id: selectedId }) => id === selectedId))
+        this.allCuratoryGroups = this.allCuratoryGroups.filter(({ id }) => !this.selectedCuratoryGroups
+          .find(({ id: selectedId }) => id === selectedId))
         this.selectedCuratoryGroups = []
+      },
+      _deleteItem (idToDelete) {
+        this.addedCuratoryGroups = this.addedCuratoryGroups.filter(({ id }) => id !== idToDelete)
+        this.allCuratoryGroups = this.allCuratoryGroups.filter(({ id }) => id !== idToDelete)
       },
       showAddNewCuratoryGroup () {
         this.addCuratoryGroupsPopupVisible = true
@@ -205,6 +214,7 @@
       addNewCuratoryGroup ({ id, name }) {
         this.addedCuratoryGroups.push({ id, name, isDeletable: true })
       },
+
       async updateProfile () {
         loading.startLoading()
         const curatoryGroups = [
@@ -222,6 +232,7 @@
         })
         loading.stopLoading()
       },
+
       async removeProfile () {
         loading.startLoading()
         await this.catchError({
@@ -231,8 +242,6 @@
         await account.logout()
         loading.stopLoading()
         await this.$router.push(HOME_ROUTE)
-      },
-      curatoryGroupsPaginate () {
       }
     },
   }
