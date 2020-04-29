@@ -26,7 +26,7 @@
       </template>
       <template #item.action="{ item }">
         <v-icon
-          :disabled="disabled || !item.deleteUrl"
+          :disabled="disabled || !item.isDeletable"
           small
           @click="deleteItem(item)"
         >

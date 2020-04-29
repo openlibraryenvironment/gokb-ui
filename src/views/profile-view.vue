@@ -3,6 +3,7 @@
     title="Profil"
     @submit="updateProfile"
   >
+    <gokb-error-component :value="error" />
     <gokb-section title="Allgemein">
       <gokb-email-field
         v-model="email"
@@ -14,22 +15,25 @@
         v-model="origpass"
         :disabled="updateProfileAvailable"
         label="Bisheriges Kennwort"
+        :rules="[]"
       />
       <gokb-password-field
         v-model="newpass"
         :disabled="updateProfileAvailable"
         label="Neues Kennwort"
+        :rules="[checkNewPassword]"
       />
       <gokb-password-field
         v-model="repeatpass"
         :disabled="updateProfileAvailable"
         label="Neues Kennwort (Wiederholung)"
+        :rules="[checkNewPassword]"
       />
     </gokb-section>
     <gokb-add-curatory-groups-popup
       v-if="addCuratoryGroupsPopupVisible"
       v-model="addCuratoryGroupsPopupVisible"
-      @add="addNewCuratoryGroup"
+      @add="checkNewPassword"
     />
     <gokb-section title="Kuratorengruppen">
       <template #buttons>
@@ -42,11 +46,16 @@
         <gokb-button
           class="ml-4"
           :disabled="updateProfileAvailable"
-          @click.native="deleteSelectedCuratoryGroups"
+          @click.native="confirmDeleteSelectedItems"
         >
           Löschen
         </gokb-button>
       </template>
+      <gokb-confirmation-popup
+        v-model="confirmationPopUpVisible"
+        :message="messageToConfirm"
+        @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+      />
       <gokb-table
         :headers="curatoryGroupsTableHeaders"
         :disabled="updateProfileAvailable"
@@ -70,6 +79,7 @@
       <gokb-button
         :disabled="updateProfileAvailable"
         default
+        @click.native="updateProfile"
       >
         Aktualisieren
       </gokb-button>
@@ -83,7 +93,11 @@
   import account from '@/shared/models/account'
   import profileServices from '@/shared/services/profile-services'
   import BaseComponent from '@/shared/base-component'
+  import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbAddCuratoryGroupsPopup from '@/shared/popups/gokb-add-curatory-groups-popup'
+  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+
+  const ROWS_PER_PAGE = 10
 
   const CURATORY_GROUPS_TABLE_HEADERS = [
     { text: 'Gruppe', align: 'left', value: 'name', sortable: false, width: '100%' },
@@ -93,6 +107,8 @@
     name: 'ProfileComponent',
     components: {
       GokbAddCuratoryGroupsPopup,
+      GokbErrorComponent,
+      GokbConfirmationPopup
     },
     extends: BaseComponent,
     data () {
@@ -103,20 +119,32 @@
         origpass: undefined,
         newpass: undefined,
         repeatpass: undefined,
-        curatoryGroups: undefined,
 
         updateProfileUrl: undefined,
         deleteProfileUrl: undefined,
 
-        totalNumberOfItems: 0,
         curatoryGroupsOptions: {
-          itemsPerPage: 10,
+          page: 1,
+          itemsPerPage: ROWS_PER_PAGE
         },
-        confirmDeleteItem: false,
         selectedCuratoryGroups: [],
+        currentCuratoryGroups: [],
+        addedCuratoryGroups: [],
+        deletedCuratoryGroups: [],
+
+        confirmationPopUpVisible: false,
+        actionToConfirm: undefined,
+        parameterToConfirm: undefined,
+        messageToConfirm: undefined,
       }
     },
     computed: {
+      curatoryGroups () {
+        return [...this.currentCuratoryGroups, ...this.addedCuratoryGroups]
+      },
+      totalNumberOfItems () {
+        return this.currentCuratoryGroups.length + this.addedCuratoryGroups.length
+      },
       removeProfileAvailable () {
         return !this.deleteProfileUrl
       },
@@ -138,43 +166,68 @@
             }
           }
         }
-      } = await profileServices.getProfile(this.cancelToken.token)
+      } = await this.catchError({
+        promise: profileServices.getProfile(this.cancelToken.token),
+        instance: this
+      })
       this.updateProfileUrl = updateProfileUrl
       this.deleteProfileUrl = deleteProfileUrl
       this.email = email
-      this.curatoryGroups = curatoryGroups
+      this.currentCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
       loading.stopLoading()
     },
     methods: {
-      deleteSelectedCuratoryGroups () {
-        this.selectedCuratoryGroups.forEach(selected => this.deletedCuratoryGroups.push(selected))
+      checkNewPassword () {
+        return this.newpass && this.repeatpass && this.newpass !== this.repeatpass ? 'Das neue Passwort ist nicht identisch.' : true
+      },
+      executeAction (actionToConfirm, parameterToConfirm) {
+        this.addedCuratoryGroups = this.addedCuratoryGroups.filter(({ id }) => this.selectedCuratoryGroups.includes(parameterToConfirm))
+      },
+      confirmDeleteSelectedItems () {
+        this.actionToConfirm = '_deleteSelectedCuratoryGroups'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      confirmDeleteItem ({ id }) {
+        this.actionToConfirm = 'deleteItem'
+        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
+        this.parameterToConfirm = id
+        this.confirmationPopUpVisible = true
+      },
+      _deleteSelectedCuratoryGroups () {
+        this.addedCuratoryGroups = this.addedCuratoryGroups.filter(({ id }) => this.selectedCuratoryGroups.includes(id))
         this.selectedCuratoryGroups = []
       },
       showAddNewCuratoryGroup () {
         this.addCuratoryGroupsPopupVisible = true
       },
-      addNewCuratoryGroup (item) {
-        const { id, name } = item
-        this.addedCuratoryGroups.push({ id, name })
+      addNewCuratoryGroup ({ id, name }) {
+        this.addedCuratoryGroups.push({ id, name, isDeletable: true })
       },
       async updateProfile () {
         loading.startLoading()
         const curatoryGroups = [
-          ...this.curatoryGroups.filter(group => !this.deletedCuratoryGroups.includes(group)),
-          ...this.addedCuratoryGroups.filter(group => !this.deletedCuratoryGroups.includes(group))
-        ] // .map(({ id }) => id)
-        await profileServices.updateProfile(this.updateProfileUrl, {
-          email: this.email,
-          ...(this.origpass ? { origpass: this.origpass } : {}),
-          ...(this.newpass ? { newpass: this.newpass } : {}),
-          ...(this.repeatpass ? { repeatpass: this.repeatpass } : {}),
-          curatoryGroups
-        }, this.cancelToken.token)
+          ...this.curatoryGroups,
+        ].map(({ id }) => id)
+        await this.catchError({
+          promise: profileServices.updateProfile(this.updateProfileUrl, {
+            email: this.email,
+            ...(this.origpass ? { origpass: this.origpass } : {}),
+            ...(this.newpass ? { newpass: this.newpass } : {}),
+            ...(this.repeatpass ? { repeatpass: this.repeatpass } : {}),
+            curatoryGroups
+          }, this.cancelToken.token),
+          instance: this
+        })
         loading.stopLoading()
       },
       async removeProfile () {
         loading.startLoading()
-        await profileServices.deleteProfile(this.deleteProfileUrl, this.cancelToken.token)
+        await this.catchError({
+          promise: profileServices.deleteProfile(this.deleteProfileUrl, this.cancelToken.token),
+          instance: this
+        })
         await account.logout()
         loading.stopLoading()
         await this.$router.push(HOME_ROUTE)

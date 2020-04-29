@@ -106,6 +106,7 @@
           name,
           providerName: provider?.name,
           nominalPlatformName: nominalPlatform?.name,
+          isDeletable: !!(deleteUrl?.href),
           deleteUrl: deleteUrl?.href,
           retireUrl: retireUrl?.href,
         }))

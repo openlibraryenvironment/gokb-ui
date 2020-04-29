@@ -1,9 +1,10 @@
+const PROFILE_URL = 'rest/profile'
+
 const api = (baseServices) => ({
   getProfile (cancelToken) {
-    const url = 'rest/profile'
     return baseServices.request({
       method: 'GET',
-      url,
+      url: PROFILE_URL,
     }, cancelToken)
   },
   updateProfile (url, data, cancelToken) {
@@ -18,7 +19,7 @@ const api = (baseServices) => ({
       method: 'delete',
       url,
     }, cancelToken)
-  },
+  }
 })
 
 export default api
