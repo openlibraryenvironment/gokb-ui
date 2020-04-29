@@ -38,6 +38,7 @@
     <gokb-section title="Kuratorengruppen">
       <template #buttons>
         <gokb-button
+          :disabled="updateProfileAvailable"
           @click.native="showAddNewCuratoryGroup"
         >
           Hinzufügen
@@ -212,7 +213,7 @@
         this.addCuratoryGroupsPopupVisible = true
       },
       addNewCuratoryGroup ({ id, name }) {
-        this.addedCuratoryGroups.push({ id, name, isDeletable: true })
+        !this.allCuratoryGroups.find(({ id: idInAll }) => id === idInAll) && !this.addedCuratoryGroups.find(({ id: idInAll }) => id === idInAll) && this.addedCuratoryGroups.push({ id, name, isDeletable: true })
       },
 
       async updateProfile () {
