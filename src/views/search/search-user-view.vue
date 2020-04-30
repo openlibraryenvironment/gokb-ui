@@ -34,9 +34,10 @@
         [
           {
             type: 'GokbUsernameField',
-            name: 'qp_name',
+            name: 'name',
             properties: {
-              hideIcon: true
+              hideIcon: true,
+              rules: []
             }
           },
           {
@@ -49,19 +50,16 @@
         ],
         [
           {
-            type: 'GokbSelectField',
+            type: 'GokbRoleField',
+            name: 'role',
             properties: {
               label: 'Rollen',
               multiple: true,
             }
           },
           {
-            type: 'GokbSelectField',
-            name: 'qp_status',
-            properties: {
-              label: 'Status',
-              // items: allStates?.values.map(({ id: value, text }) => ({ value, text })),
-            }
+            type: 'GokbStateField',
+            name: 'status',
           }
         ]
       ]
