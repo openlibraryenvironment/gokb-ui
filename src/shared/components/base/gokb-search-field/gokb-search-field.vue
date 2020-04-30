@@ -21,12 +21,12 @@
   export default {
     name: 'GokbSearchField',
     extends: BaseComponent,
+    searchServicesResourceUrl: undefined,
     data () {
       return {
         label: undefined,
         placeholder: undefined,
         rules: undefined,
-        searchServicesResourceUrl: undefined,
         loading: false,
         items: [],
         search: null,

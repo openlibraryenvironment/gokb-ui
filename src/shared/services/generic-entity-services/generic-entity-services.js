@@ -1,7 +1,8 @@
 const api = (baseServices) =>
   (entityName) => ({
-    getAll (cancelToken) {
-      const url = `/rest/${entityName}`
+    get ({ parameters }, cancelToken) {
+      const urlParameters = baseServices.createQueryParameters({ _sort: 'name', _order: 'asc' })
+      const url = `/rest/${entityName}?${urlParameters}`
       return baseServices.request({
         method: 'GET',
         url,

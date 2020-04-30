@@ -12,7 +12,13 @@
       }
     },
     created () {
-      this.selectResourceUrl = 'rest/refdata/categories/KBComponent.Status'
+      this.entityName = 'refdata/categories/KBComponent.Status'
+    },
+    methods: {
+      transform (result) {
+        const { data: { _embedded: { values } } } = result
+        return values.map(({ id, value }) => ({ id, name: value }))
+      }
     }
   }
 </script>

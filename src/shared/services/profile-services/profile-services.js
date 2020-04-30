@@ -9,14 +9,14 @@ const api = (baseServices) => ({
   },
   updateProfile (url, data, cancelToken) {
     return baseServices.request({
-      method: 'patch',
+      method: 'PATCH',
       url,
       data,
     }, cancelToken)
   },
   deleteProfile (url, cancelToken) {
     return baseServices.request({
-      method: 'delete',
+      method: 'DELETE',
       url,
     }, cancelToken)
   }

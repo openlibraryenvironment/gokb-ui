@@ -47,7 +47,7 @@
             }
           },
           {
-            type: 'GokbSelectField',
+            type: 'GokbCuratoryGroupField',
             name: 'curatory',
             properties: {
               label: 'Kuratoren',
@@ -62,7 +62,7 @@
           },
           {
             type: 'GokbTextField',
-            name: 'identifier',
+            name: 'ids',
             properties: {
               label: 'Identifier'
             }

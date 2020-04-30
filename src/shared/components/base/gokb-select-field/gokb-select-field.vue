@@ -3,22 +3,25 @@
     v-model="localSelectedItem"
     :items="items"
     v-bind="$props"
+    item-text="name"
+    item-value="id"
     clearable
   />
 </template>
 
 <script>
   import BaseComponent from '@/shared/base-component'
-  import baseServices from '@/shared/services/base-services'
+  import genericEntityServices from '@/shared/services/generic-entity-services'
 
   export default {
     name: 'GokbSelectField',
     extends: BaseComponent,
+    entityName: undefined,
     props: {
       value: {
-        type: Number,
+        type: [Object, Number, Array],
         required: false,
-        default: 0,
+        default: () => {},
       },
       placeholder: {
         type: String,
@@ -29,11 +32,20 @@
         type: String,
         required: false,
         default: '',
+      },
+      returnObject: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      multiple: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
       return {
-        selectResourceUrl: undefined,
         selectedItem: undefined,
         items: []
       }
@@ -49,16 +61,19 @@
       },
     },
     async mounted () {
-      const urlParameters = baseServices.createQueryParameters({ _sort: 'value', _order: 'asc' })
+      const entityService = genericEntityServices(this.entityName)
+      const parameters = { _select: 'id, name', _sort: 'name', _order: 'asc' }
       const result = await this.catchError({
-        promise: baseServices.request({
-          method: 'GET',
-          url: `${this.selectResourceUrl}?${urlParameters}`
-        }, this.cancelToken.token),
+        promise: entityService.get({ parameters }, this.cancelToken.token),
         instance: this
       })
-      const { data: { _embedded: { values } } } = result
-      this.items = values.map(({ id, value }) => ({ value: id, text: value }))
+      this.items = this.transform(result)
+    },
+    methods: {
+      transform (result) {
+        const { data: { data: values } } = result
+        return values
+      }
     }
   }
 </script>

@@ -4,12 +4,9 @@
     title="Kuratorengruppe hinzufügen"
     @submit="addCuratoryGroup"
   >
-    <v-select
+    <gokb-curatory-group-field
       v-model="selectedCuratoryGroup"
-      :items="curatoryGroups"
       label="Kuratorengruppe"
-      item-value="id"
-      item-text="name"
       return-object
     />
     <template #buttons>
@@ -32,12 +29,11 @@
 
 <script>
   import BaseComponent from '@/shared/base-component'
-  import genericEntityServices from '@/shared/services/generic-entity-services'
-
-  const curatoryGroupServices = genericEntityServices('curatoryGroups')
+  import GokbCuratoryGroupField from '@/shared/components/simple/gokb-curatory-group-field'
 
   export default {
     name: 'AddCuratorGroupsPopup',
+    components: { GokbCuratoryGroupField },
     extends: BaseComponent,
     props: {
       value: {
@@ -62,10 +58,6 @@
           this.$emit('input', localValue)
         }
       },
-    },
-    async created () {
-      const { data: { data: values } } = await curatoryGroupServices.getAll()
-      this.curatoryGroups = values
     },
     methods: {
       addCuratoryGroup () {
