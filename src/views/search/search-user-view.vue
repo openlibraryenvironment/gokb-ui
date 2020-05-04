@@ -1,12 +1,18 @@
 <script>
   import BaseSearch from './base-search-view'
   import { ADD_USER_ROUTE } from '@/router/route-names'
+  import userServices from '@/shared/services/user-services'
 
   export default {
     name: 'SearchUser',
     extends: BaseSearch,
     data () {
       return {}
+    },
+    computed: {
+      isDeactivateSelectedDisabled () {
+        return this.selectedItems.length === 0
+      }
     },
     async created () {
       this.title = 'Benutzer'
@@ -19,7 +25,8 @@
         {
           icon: 'cancel',
           label: 'Deaktivieren',
-          action: undefined,
+          disabled: 'isDeactivateSelectedDisabled',
+          action: '_confirmDeactivateSelectedItems',
         }
       ]
 
@@ -76,11 +83,27 @@
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({ id, username, email }) => ({
+        return data.map(({ id, username, email, _links: { update: { href: updateUrl } } }) => ({
           id,
           username,
-          email
+          email,
+          updateUrl
         }))
+      },
+      _confirmDeactivateSelectedItems () {
+        this.actionToConfirm = '_deactivateSelectedItems'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Benutzer wirklich deaktivieren?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      async _deactivateSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ updateUrl }) =>
+          this.catchError({
+            promise: userServices.deactivateUser(updateUrl, this.cancelToken.token),
+            instance: this
+          })
+        ))
+        this.resultPaginate(this.resultOptions.page)
       },
     }
   }

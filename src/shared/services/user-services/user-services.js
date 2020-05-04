@@ -14,6 +14,13 @@ const api = (baseServices) => ({
       data,
     }, cancelToken)
   },
+  deactivateUser (url, cancelToken) {
+    return baseServices.request({
+      method: 'PATCH',
+      url,
+      data: { enabled: false },
+    }, cancelToken)
+  }
 })
 
 export default api

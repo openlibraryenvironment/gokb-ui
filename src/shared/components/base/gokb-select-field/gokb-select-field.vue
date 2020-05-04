@@ -19,7 +19,7 @@
     entityName: undefined,
     props: {
       value: {
-        type: [Object, Number, Array],
+        type: [Object, Number, Array, Boolean],
         required: false,
         default: () => {},
       },
