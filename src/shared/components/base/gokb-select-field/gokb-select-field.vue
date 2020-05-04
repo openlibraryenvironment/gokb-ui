@@ -61,13 +61,15 @@
       },
     },
     async mounted () {
-      const entityService = genericEntityServices(this.entityName)
-      const parameters = { _select: 'id, name', _sort: 'name', _order: 'asc' }
-      const result = await this.catchError({
-        promise: entityService.get({ parameters }, this.cancelToken.token),
-        instance: this
-      })
-      this.items = this.transform(result)
+      if (this.entityName) {
+        const entityService = genericEntityServices(this.entityName)
+        const parameters = { _select: 'id, name', _sort: 'name', _order: 'asc' }
+        const result = await this.catchError({
+          promise: entityService.get({ parameters }, this.cancelToken.token),
+          instance: this
+        })
+        this.items = this.transform(result)
+      }
     },
     methods: {
       transform (result) {

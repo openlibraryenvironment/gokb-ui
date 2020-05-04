@@ -28,7 +28,7 @@
       autocomplete: {
         type: String,
         required: false,
-        default: 'password',
+        default: 'current-password',
       },
       rules: {
         type: Array,

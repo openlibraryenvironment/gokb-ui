@@ -52,8 +52,8 @@
             }
           },
           {
-            type: 'GokbStateField',
-            name: 'status',
+            type: 'GokbActiveField',
+            name: 'enabled',
           }
         ]
       ]
@@ -62,17 +62,26 @@
           text: 'Benutzername',
           align: 'left',
           sortable: false,
-          value: 'Name'
+          value: 'username'
         },
         {
           text: 'E-Mail',
           align: 'left',
           sortable: false,
-          value: 'email?'
+          value: 'email'
         },
       ]
       this.searchServicesUrl = 'rest/users'
-      // this.searchServiceIncludes = 'id,name,provider,nominalPlatform,_links'
+      this.searchServiceIncludes = 'id,username,email'
     },
+    methods: {
+      _transformForTable (data) {
+        return data.map(({ id, username, email }) => ({
+          id,
+          username,
+          email
+        }))
+      },
+    }
   }
 </script>

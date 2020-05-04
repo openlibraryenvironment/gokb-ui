@@ -155,12 +155,12 @@
         const searchParameters = this.searchInputFields
           .flat()
           .map(field => ([field.name, field.value]))
-          .filter(([name, value]) => name && value)
+          .filter(([name, value]) => name && value !== undefined && value !== null)
           .reduce((result, [name, value]) => {
             result[name] = value
             return result
           }, {})
-        // console.log(searchParameters)
+        // console.log(this.searchInputFields, this.searchParameters)
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...searchParameters,

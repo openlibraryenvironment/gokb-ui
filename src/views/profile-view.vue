@@ -21,12 +21,14 @@
         v-model="newpass"
         :disabled="updateProfileAvailable"
         label="Neues Kennwort"
+        autocomplete="new-password"
         :rules="[checkNewPassword]"
       />
       <gokb-password-field
         v-model="repeatpass"
         :disabled="updateProfileAvailable"
         label="Neues Kennwort (Wiederholung)"
+        autocomplete="new-password"
         :rules="[checkNewPassword]"
       />
     </gokb-section>
@@ -103,7 +105,7 @@
   ]
 
   export default {
-    name: 'ProfileComponent',
+    name: 'ProfileView',
     components: {
       GokbAddCuratoryGroupsPopup,
       GokbErrorComponent,
