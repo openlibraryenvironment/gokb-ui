@@ -13,7 +13,7 @@
         expand
         nav
       >
-        <template v-for="(item, index) in items">
+        <template v-for="(item, index) in visibleItems">
           <v-list-item
             v-if="item.text"
             :key="item.text"
@@ -116,6 +116,7 @@
 
 <script>
   import account from '@/shared/models/account'
+  import { ROLE_ADMIN } from '@/shared/models/roles'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
   import { routeTo } from '@/router'
@@ -124,6 +125,19 @@
   import searchServices from '@/shared/services/search-services'
 
   // const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
+
+  const MENU_ITEMS = [
+    { icon: 'create_new_folder', text: 'Paket anlegen', route: 'create-package', toolbar: true },
+    { icon: 'library_add', text: 'Einzeltitel anlegen', route: 'create-title', toolbar: true },
+    { icon: 'folder_special', text: 'KBART Import', route: 'kbart-import', toolbar: true },
+    {},
+    { icon: 'folder', text: 'Pakete', route: 'search-package' },
+    { icon: 'library_books', text: 'Einzeltitel', route: 'search-title' },
+    { icon: 'domain', text: 'Provider', route: 'search-provider' },
+    { icon: 'rate_review', text: 'Reviews', route: 'search-review' },
+    { icon: 'keyboard', text: 'Pflege', route: 'search-maintenance' },
+    { icon: 'people', text: 'Benutzer', route: 'search-user', needsRole: ROLE_ADMIN },
+  ]
 
   export default {
     name: 'App',
@@ -136,20 +150,12 @@
       globalSearchIsLoading: false,
 
       dialog: false,
-      items: [
-        { icon: 'create_new_folder', text: 'Paket anlegen', route: 'create-package', toolbar: true },
-        { icon: 'library_add', text: 'Einzeltitel anlegen', route: 'create-title', toolbar: true },
-        { icon: 'folder_special', text: 'KBART Import', route: 'kbart-import', toolbar: true },
-        {},
-        { icon: 'folder', text: 'Pakete', route: 'search-package' },
-        { icon: 'library_books', text: 'Einzeltitel', route: 'search-title' },
-        { icon: 'domain', text: 'Provider', route: 'search-provider' },
-        { icon: 'rate_review', text: 'Reviews', route: 'search-review' },
-        { icon: 'keyboard', text: 'Pflege', route: 'search-maintenance' },
-        { icon: 'people', text: 'Benutzer', route: 'search-user' },
-      ]
     }),
-    computed: {},
+    computed: {
+      visibleItems () {
+        return MENU_ITEMS.filter(item => !item.needsRole || account.state().roles?.includes(item.needsRole))
+      }
+    },
     watch: {
       async globalSearchField () {
         if (!this.globalSearchField || this.globalSearchField.length < 3) {

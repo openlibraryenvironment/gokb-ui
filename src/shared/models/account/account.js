@@ -1,6 +1,7 @@
 const api = (vue, storage, accountServices) => {
   const state = vue.observable({
     username: undefined,
+    roles: undefined,
   })
 
   return {
@@ -23,10 +24,12 @@ const api = (vue, storage, accountServices) => {
         const { data } = response
         save && storage.setToken(data)
         state.username = username
+        state.roles = data.roles
         return response
-      } catch (e) {
+      } catch (exception) {
         state.username = undefined
-        return e.response
+        state.roles = undefined
+        return exception.response
       }
     },
 
@@ -35,14 +38,15 @@ const api = (vue, storage, accountServices) => {
       storage.removeToken()
       state.id = undefined
       state.username = undefined
+      state.roles = []
     },
 
     async register ({ username, email, password, password2 }) {
       try {
         const response = await accountServices.register({ username, email, password, password2 })
         return response
-      } catch (e) {
-        return e.response
+      } catch (exception) {
+        return exception.response
       }
     },
   }
