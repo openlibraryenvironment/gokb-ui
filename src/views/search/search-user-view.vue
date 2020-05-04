@@ -10,7 +10,6 @@
     },
     async created () {
       this.title = 'Benutzer'
-      this.component = 'g:UserOrganisation'
       this.resultActionButtons = [
         {
           icon: 'add',
@@ -24,12 +23,6 @@
         }
       ]
 
-      // const allStates = await ajaxServices.lookup({
-      //   baseClass: 'org.gokb.cred.RefdataValue',
-      //   filter1: 'KBComponent.Status',
-      //   q: ''
-      // })
-
       this.searchInputFields = [
         [
           {
@@ -41,7 +34,8 @@
             }
           },
           {
-            type: 'GokbSelectField',
+            type: 'GokbCuratoryGroupField',
+            name: 'curatory',
             properties: {
               label: 'Gruppen',
               multiple: true,
@@ -82,7 +76,3 @@
     },
   }
 </script>
-
-<style scoped>
-
-</style>
