@@ -1,7 +1,7 @@
 <template>
   <gokb-page
-    title="Benutzer hinzufügen"
-    @submit="add"
+    :title="title"
+    @submit="update"
   >
     <gokb-section sub-title="Allgemein">
       <v-row>
@@ -24,7 +24,7 @@
         </v-col>
         <v-col md="3">
           <gokb-checkbox-field
-            v-model="outdated"
+            v-model="passwordExpired"
             label="Kennwort abgelaufen"
           />
         </v-col>
@@ -40,13 +40,13 @@
       <v-row>
         <v-col md="1">
           <gokb-checkbox-field
-            v-model="active"
+            v-model="enabled"
             label="Aktiv"
           />
         </v-col>
         <v-col md="1">
           <gokb-checkbox-field
-            v-model="locked"
+            v-model="accountLocked"
             label="Gesperrt"
           />
         </v-col>
@@ -99,8 +99,14 @@
     <!--    </gokb-section>-->
     <template #buttons>
       <v-spacer />
+      <gokb-button
+        text
+        @click.native="pageBack"
+      >
+        Abbrechen
+      </gokb-button>
       <gokb-button default>
-        Hinzufügen
+        {{ updateButtonText }}
       </gokb-button>
     </template>
   </gokb-page>
@@ -112,16 +118,16 @@
   import userServices from '@/shared/services/user-services'
 
   export default {
-    name: 'AddUserView',
+    name: 'EditUserView',
     extends: BaseComponent,
     data () {
       return {
         username: undefined,
         password: undefined,
-        outdated: undefined,
+        passwordExpired: undefined,
         email: undefined,
-        active: undefined,
-        locked: undefined,
+        enabled: undefined,
+        accountLocked: undefined,
         roleHeaders: [
           {
             text: 'Rolle',
@@ -140,18 +146,53 @@
         ]
       }
     },
-    methods: {
-      async add () {
+    computed: {
+      id () {
+        return this.$route.params?.id
+      },
+      isEdit () {
+        return !!this.id
+      },
+      title () {
+        return this.isEdit ? 'Benutzer bearbeiten' : 'Benutzer hinzufügen'
+      },
+      updateButtonText () {
+        return this.id ? 'Aktualisieren' : 'Hinzufügen'
+      }
+    },
+    async created () {
+      if (this.isEdit) {
         loading.startLoading()
+        const { data: { data: { username, email, accountLocked, enabled, passwordExpired } } } = await this.catchError({
+          promise: userServices.getUser(this.id, this.cancelToken.token),
+          instance: this
+        })
+        this.username = username
+        this.password = undefined
+        this.email = email
+        this.accountLocked = accountLocked
+        this.enabled = enabled
+        this.passwordExpired = passwordExpired
+        loading.stopLoading()
+      }
+    },
+    methods: {
+      async update () {
+        loading.startLoading()
+        const data = {
+          id: this.id,
+          username: this.username,
+          password: this.password,
+          email: this.email,
+        }
         await this.catchError({
-          promise: userServices.createUser({
-            username: this.username,
-            password: this.password,
-            email: this.email,
-          }, this.cancelToken.token),
+          promise: userServices.createOrUpdateUser(data, this.cancelToken.token),
           instance: this
         })
         loading.stopLoading()
+        this.pageBack()
+      },
+      pageBack () {
         this.$router.go(-1)
       }
     }

@@ -97,12 +97,12 @@ const router = new Router({
     {
       path: `/${ADD_USER_ROUTE}`,
       name: ADD_USER_ROUTE,
-      component: () => import(/* webpackChunkName: "addUser" */ '../views/add/add-user-view.vue')
+      component: () => import(/* webpackChunkName: "editUser" */ '../views/edit/edit-user-view.vue')
     },
     {
       path: `/${EDIT_USER_ROUTE}/:id`,
       name: EDIT_USER_ROUTE,
-      component: () => import(/* webpackChunkName: "addUser" */ '../views/add/add-user-view.vue')
+      component: () => import(/* webpackChunkName: "editUser" */ '../views/edit/edit-user-view.vue')
     },
   ]
 })

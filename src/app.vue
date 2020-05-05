@@ -90,7 +90,7 @@
             <v-list-item
               v-if="item.text && item.toolbar"
               :key="item.text"
-              :to="item.route"
+              :to="{ name: item.route }"
             >
               <v-list-item-avatar>
                 <v-icon color="#F2994A">

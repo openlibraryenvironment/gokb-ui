@@ -29,7 +29,7 @@
       >
         <router-link
           :style="{ color: '#f2994a' }"
-          :to="{ name: item.link.route, params: { [item.link.id]: item[item.link.id] }}"
+          :to="{ name: item.link.route, params: { [item.link.id]: item[item.link.id] } }"
         >
           {{ item.link.value }}
         </router-link>

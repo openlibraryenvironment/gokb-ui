@@ -182,7 +182,7 @@
         }
       },
       executeAction (actionMethodName, actionMethodParameter) {
-        this[actionMethodName](actionMethodParameter)
+        actionMethodName && actionMethodParameter && this[actionMethodName](actionMethodParameter)
       },
       isButtonDisabled (attributeName) {
         return this[attributeName]
