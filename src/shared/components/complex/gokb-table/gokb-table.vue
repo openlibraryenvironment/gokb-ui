@@ -24,6 +24,16 @@
           </div>
         </v-row>
       </template>
+      <template
+        #item.link="{ item }"
+      >
+        <router-link
+          :style="{ color: '#f2994a' }"
+          :to="{ name: item.link.route, params: { [item.link.id]: item[item.link.id] }}"
+        >
+          {{ item.link.value }}
+        </router-link>
+      </template>
       <template #item.action="{ item }">
         <v-icon
           v-if="item.isDeletable !== undefined"

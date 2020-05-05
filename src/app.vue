@@ -48,7 +48,7 @@
         <v-btn
           text
           color="#4f4f4f"
-          :to="HOME_ROUTE"
+          :to="{ name: HOME_ROUTE }"
         >
           <span class="application-title title">GOKb Client</span>
         </v-btn>
@@ -86,7 +86,7 @@
           </v-btn>
         </template>
         <v-list>
-          <template v-for="(item) in items">
+          <template v-for="(item) in visibleItems">
             <v-list-item
               v-if="item.text && item.toolbar"
               :key="item.text"

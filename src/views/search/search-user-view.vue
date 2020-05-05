@@ -1,6 +1,6 @@
 <script>
   import BaseSearch from './base-search-view'
-  import { ADD_USER_ROUTE } from '@/router/route-names'
+  import { EDIT_USER_ROUTE, ADD_USER_ROUTE } from '@/router/route-names'
   import userServices from '@/shared/services/user-services'
 
   export default {
@@ -69,7 +69,7 @@
           text: 'Benutzername',
           align: 'left',
           sortable: false,
-          value: 'username'
+          value: 'link'
         },
         {
           text: 'E-Mail',
@@ -85,7 +85,7 @@
       _transformForTable (data) {
         return data.map(({ id, username, email, _links: { update: { href: updateUrl } } }) => ({
           id,
-          username,
+          link: { value: username, route: EDIT_USER_ROUTE, id: 'id' },
           email,
           updateUrl
         }))
