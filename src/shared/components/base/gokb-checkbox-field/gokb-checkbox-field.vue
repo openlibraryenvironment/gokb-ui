@@ -1,5 +1,9 @@
 <template>
-  <v-checkbox v-bind="$props" />
+  <v-checkbox
+    v-model="localValue"
+    :label="label"
+    :disabled="disabled"
+  />
 </template>
 
 <script>
@@ -16,9 +20,21 @@
         required: false,
         default: false,
       },
+      value: {
+        type: Boolean,
+        required: true,
+        default: false
+      },
+    },
+    computed: {
+      localValue: {
+        get () {
+          return this.value
+        },
+        set (localValue) {
+          this.$emit('input', localValue)
+        }
+      },
     },
   }
 </script>
-
-<style scoped>
-</style>

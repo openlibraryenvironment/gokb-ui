@@ -184,6 +184,9 @@
           username: this.username,
           password: this.password,
           email: this.email,
+          accountLocked: this.accountLocked,
+          enabled: this.enabled,
+          passwordExpired: this.passwordExpired
         }
         await this.catchError({
           promise: userServices.createOrUpdateUser(data, this.cancelToken.token),
