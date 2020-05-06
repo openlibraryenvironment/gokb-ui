@@ -40,6 +40,7 @@
     <gokb-section title="Kuratorengruppen">
       <template #buttons>
         <gokb-button
+          icon-id="add"
           :disabled="updateProfileAvailable"
           @click.native="showAddNewCuratoryGroup"
         >
@@ -47,6 +48,7 @@
         </gokb-button>
         <gokb-button
           class="ml-4"
+          icon-id="delete"
           :disabled="isDeleteSelectedDisabled"
           @click.native="confirmDeleteSelectedItems"
         >
@@ -210,6 +212,7 @@
       _deleteItem (idToDelete) {
         this.addedCuratoryGroups = this.addedCuratoryGroups.filter(({ id }) => id !== idToDelete)
         this.allCuratoryGroups = this.allCuratoryGroups.filter(({ id }) => id !== idToDelete)
+        this.selectedCuratoryGroups = this.allCuratoryGroups.filter(({ id }) => id !== idToDelete)
       },
       showAddNewCuratoryGroup () {
         this.addCuratoryGroupPopupVisible = true
@@ -220,16 +223,13 @@
 
       async updateProfile () {
         loading.startLoading()
-        const curatoryGroups = [
-          ...this.curatoryGroups,
-        ].map(({ id }) => id)
         await this.catchError({
           promise: profileServices.updateProfile(this.updateProfileUrl, {
             email: this.email,
             ...(this.origpass ? { origpass: this.origpass } : {}),
             ...(this.newpass ? { newpass: this.newpass } : {}),
             ...(this.repeatpass ? { repeatpass: this.repeatpass } : {}),
-            curatoryGroups
+            curatoryGroups: this.curatoryGroups.map(({ id }) => id)
           }, this.cancelToken.token),
           instance: this
         })
