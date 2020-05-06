@@ -32,9 +32,9 @@
         :rules="[checkNewPassword]"
       />
     </gokb-section>
-    <gokb-add-curatory-groups-popup
-      v-if="addCuratoryGroupsPopupVisible"
-      v-model="addCuratoryGroupsPopupVisible"
+    <gokb-add-curatory-group-popup
+      v-if="addCuratoryGroupPopupVisible"
+      v-model="addCuratoryGroupPopupVisible"
       @add="addNewCuratoryGroup"
     />
     <gokb-section title="Kuratorengruppen">
@@ -95,7 +95,7 @@
   import profileServices from '@/shared/services/profile-services'
   import BaseComponent from '@/shared/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
-  import GokbAddCuratoryGroupsPopup from '@/shared/popups/gokb-add-curatory-groups-popup'
+  import GokbAddCuratoryGroupPopup from '@/shared/popups/gokb-add-curatory-group-popup'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
 
   const ROWS_PER_PAGE = 10
@@ -107,14 +107,14 @@
   export default {
     name: 'ProfileView',
     components: {
-      GokbAddCuratoryGroupsPopup,
+      GokbAddCuratoryGroupPopup,
       GokbErrorComponent,
       GokbConfirmationPopup
     },
     extends: BaseComponent,
     data () {
       return {
-        addCuratoryGroupsPopupVisible: false,
+        addCuratoryGroupPopupVisible: false,
 
         email: undefined,
         origpass: undefined,
@@ -212,7 +212,7 @@
         this.allCuratoryGroups = this.allCuratoryGroups.filter(({ id }) => id !== idToDelete)
       },
       showAddNewCuratoryGroup () {
-        this.addCuratoryGroupsPopupVisible = true
+        this.addCuratoryGroupPopupVisible = true
       },
       addNewCuratoryGroup ({ id, name }) {
         !this.allCuratoryGroups.find(({ id: idInAll }) => id === idInAll) && !this.addedCuratoryGroups.find(({ id: idInAll }) => id === idInAll) && this.addedCuratoryGroups.push({ id, name, isDeletable: true })
