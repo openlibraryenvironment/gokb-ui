@@ -119,24 +119,27 @@
   import { ROLE_ADMIN } from '@/shared/models/roles'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
-  import { routeTo } from '@/router'
-  import { HOME_ROUTE } from '@/router/route-names'
+  import {
+    HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
+    KBART_IMPORT_ROUTE, SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
+    SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE
+  } from '@/router/route-paths'
   import { createCancelToken } from '@/shared/services/http'
   import searchServices from '@/shared/services/search-services'
 
   // const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
 
   const MENU_ITEMS = [
-    { icon: 'create_new_folder', text: 'Paket anlegen', route: 'create-package', toolbar: true },
-    { icon: 'library_add', text: 'Einzeltitel anlegen', route: 'create-title', toolbar: true },
-    { icon: 'folder_special', text: 'KBART Import', route: 'kbart-import', toolbar: true },
+    { icon: 'create_new_folder', text: 'Paket anlegen', route: CREATE_PACKAGE_ROUTE, toolbar: true },
+    { icon: 'library_add', text: 'Einzeltitel anlegen', route: CREATE_TITLE_ROUTE, toolbar: true },
+    { icon: 'folder_special', text: 'KBART Import', route: KBART_IMPORT_ROUTE, toolbar: true },
     {},
-    { icon: 'folder', text: 'Pakete', route: 'search-package' },
-    { icon: 'library_books', text: 'Einzeltitel', route: 'search-title' },
-    { icon: 'domain', text: 'Provider', route: 'search-provider' },
-    { icon: 'rate_review', text: 'Reviews', route: 'search-review' },
-    { icon: 'keyboard', text: 'Pflege', route: 'search-maintenance' },
-    { icon: 'people', text: 'Benutzer', route: 'search-user', needsRole: ROLE_ADMIN },
+    { icon: 'folder', text: 'Pakete', route: SEARCH_PACKAGE_ROUTE },
+    { icon: 'library_books', text: 'Einzeltitel', route: SEARCH_TITLE_ROUTE },
+    { icon: 'domain', text: 'Provider', route: SEARCH_PROVIDER_ROUTE },
+    { icon: 'rate_review', text: 'Reviews', route: SEARCH_REVIEW_ROUTE },
+    { icon: 'keyboard', text: 'Pflege', route: SEARCH_MAINTENANCE_ROUTE },
+    { icon: 'people', text: 'Benutzer', route: SEARCH_USER_ROUTE, needsRole: ROLE_ADMIN },
   ]
 
   export default {
@@ -179,7 +182,7 @@
         }
       },
       globalSearchSelected () {
-        this.globalSearchSelected && routeTo(this.globalSearchSelected.componentType, this.globalSearchSelected.id)
+        // this.globalSearchSelected && routeTo(this.globalSearchSelected.componentType, this.globalSearchSelected.id)
       },
     },
     created () {

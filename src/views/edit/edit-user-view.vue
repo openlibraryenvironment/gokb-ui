@@ -150,6 +150,12 @@
     name: 'EditUserView',
     components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent },
     extends: BaseComponent,
+    props: {
+      id: {
+        type: Number,
+        required: true,
+      }
+    },
     data () {
       return {
         addRolePopupVisible: false,
@@ -208,9 +214,6 @@
       },
       totalNumberOfRoles () {
         return this.allRoles.length + this.addedRoles.length
-      },
-      id () {
-        return this.$route.params?.id
       },
       isEdit () {
         return !!this.id

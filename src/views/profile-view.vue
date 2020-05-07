@@ -92,7 +92,7 @@
 </template>
 
 <script>
-  import { HOME_ROUTE } from '@/router/route-names'
+  import { HOME_ROUTE } from '@/router/route-paths'
   import loading from '@/shared/models/loading'
   import account from '@/shared/models/account'
   import profileServices from '@/shared/services/profile-services'

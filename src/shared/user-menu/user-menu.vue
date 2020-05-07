@@ -47,7 +47,7 @@
 </template>
 
 <script>
-  import { HOME_ROUTE, PROFILE_ROUTE } from '@/router/route-names'
+  import { HOME_ROUTE, PROFILE_ROUTE } from '@/router/route-paths'
   import account from '@/shared/models/account'
   import LoginPopup from '@/shared/popups/gokb-login-popup'
   import RegisterPopup from '@/shared/popups/gokb-register-popup'

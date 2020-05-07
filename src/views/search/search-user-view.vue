@@ -1,6 +1,6 @@
 <script>
   import BaseSearch from './base-search-view'
-  import { EDIT_USER_ROUTE, ADD_USER_ROUTE } from '@/router/route-names'
+  import { EDIT_USER_ROUTE, ADD_USER_ROUTE } from '@/router/route-paths'
   import userServices from '@/shared/services/user-services'
 
   export default {
