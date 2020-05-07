@@ -58,9 +58,10 @@
         </v-col>
       </v-row>
     </gokb-section>
-    <gokb-add-role-popup
+    <gokb-add-item-popup
       v-if="addRolePopupVisible"
       v-model="addRolePopupVisible"
+      :component="{ type: 'GokbRoleField', name: 'Rolle' }"
       @add="addNewRole"
     />
     <gokb-section sub-title="Rollen">
@@ -135,7 +136,7 @@
   import BaseComponent from '@/shared/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
-  import GokbAddRolePopup from '@/shared/popups/gokb-add-role-popup'
+  import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import loading from '@/shared/models/loading'
   import userServices from '@/shared/services/user-services'
 
@@ -147,7 +148,7 @@
 
   export default {
     name: 'EditUserView',
-    components: { GokbAddRolePopup, GokbConfirmationPopup, GokbErrorComponent },
+    components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent },
     extends: BaseComponent,
     data () {
       return {
@@ -259,6 +260,7 @@
         this[actionMethodName](actionMethodParameter)
       },
       addNewRole ({ id, name }) {
+        console.log('addNewRole', id, name)
         !this.allRoles.find(({ id: idInAll }) => id === idInAll) && !this.addedRoles.find(({ id: idInAll }) => id === idInAll) && this.addedRoles.push({ id, name, isDeletable: true })
       },
       showAddNewRole () {

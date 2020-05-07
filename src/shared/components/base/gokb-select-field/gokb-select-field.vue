@@ -2,10 +2,12 @@
   <v-select
     v-model="localSelectedItem"
     :items="items"
-    v-bind="$props"
+    :label="label"
+    :placeholder="placeholder"
     item-text="name"
     item-value="id"
     clearable
+    return-object
   />
 </template>
 
@@ -33,11 +35,6 @@
         required: false,
         default: '',
       },
-      returnObject: {
-        type: Boolean,
-        required: false,
-        default: false
-      },
       multiple: {
         type: Boolean,
         required: false,
@@ -46,17 +43,16 @@
     },
     data () {
       return {
-        selectedItem: undefined,
         items: []
       }
     },
     computed: {
       localSelectedItem: {
         get () {
-          return this.selectedItem
+          return this.value
         },
-        set (localSelectedItem) {
-          this.$emit('input', localSelectedItem)
+        set (value) {
+          this.$emit('input', value)
         }
       },
     },

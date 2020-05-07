@@ -32,9 +32,10 @@
         :rules="[checkNewPassword]"
       />
     </gokb-section>
-    <gokb-add-curatory-group-popup
+    <gokb-add-item-popup
       v-if="addCuratoryGroupPopupVisible"
       v-model="addCuratoryGroupPopupVisible"
+      :component="{ type: 'GokbCuratoryGroupField', name: 'Kuratorengruppe' }"
       @add="addNewCuratoryGroup"
     />
     <gokb-section title="Kuratorengruppen">
@@ -97,7 +98,7 @@
   import profileServices from '@/shared/services/profile-services'
   import BaseComponent from '@/shared/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
-  import GokbAddCuratoryGroupPopup from '@/shared/popups/gokb-add-curatory-group-popup'
+  import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
 
   const ROWS_PER_PAGE = 10
@@ -109,7 +110,7 @@
   export default {
     name: 'ProfileView',
     components: {
-      GokbAddCuratoryGroupPopup,
+      GokbAddItemPopup,
       GokbErrorComponent,
       GokbConfirmationPopup
     },
