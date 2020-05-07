@@ -1,13 +1,12 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    title="Rolle hinzufügen"
-    @submit="addRole"
+    :title="`${component.name} hinzufügen`"
+    @submit="addItem"
   >
-    <gokb-role-field
-      v-model="selectedRole"
-      label="Rollen"
-      return-object
+    <component
+      :is="component.type"
+      v-model="selectedItem"
     />
     <template #buttons>
       <v-spacer />
@@ -18,7 +17,7 @@
         Abbrechen
       </gokb-button>
       <gokb-button
-        :disabled="!selectedRole"
+        :disabled="!selectedItem"
         default
       >
         Hinzufügen
@@ -29,11 +28,9 @@
 
 <script>
   import BaseComponent from '@/shared/base-component'
-  import GokbRoleField from '@/shared/components/simple/gokb-role-field'
 
   export default {
-    name: 'AddRolePopup',
-    components: { GokbRoleField },
+    name: 'AddItemPopup',
     extends: BaseComponent,
     props: {
       value: {
@@ -41,12 +38,14 @@
         required: true,
         default: false
       },
+      component: {
+        type: Object,
+        required: true
+      },
     },
     data () {
       return {
-        error: undefined,
-        roles: undefined,
-        selectedRole: undefined,
+        selectedItem: undefined,
       }
     },
     computed: {
@@ -60,8 +59,8 @@
       },
     },
     methods: {
-      addRole () {
-        this.$emit('add', this.selectedRole)
+      addItem () {
+        this.$emit('add', this.selectedItem)
         this.close()
       },
       close () {
