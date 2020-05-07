@@ -1,4 +1,1 @@
-export {
-  router,
-  routeTo,
-} from './router'
+export * from './router'

@@ -6,114 +6,103 @@ import {
   HOME_ROUTE, PROFILE_ROUTE, TITLE_ROUTE, PACKAGE_ROUTE, PROVIDER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
   KBART_IMPORT_ROUTE, SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
   SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_USER_ROUTE, EDIT_USER_ROUTE
-} from './route-names'
-
-const COMPONENT_ROUTE_MAPPER = {
-  Package: 'package',
-  Org: 'provider',
-  BookInstance: 'title',
-}
+} from './route-paths'
 
 Vue.use(Router)
 
 const router = new Router({
+  // mode: 'history', https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
   routes: [
     {
-      path: `/${HOME_ROUTE}`,
+      path: HOME_ROUTE,
       name: HOME_ROUTE,
       alias: '/',
       component: Home
     },
     {
-      path: `/${PROFILE_ROUTE}`,
+      path: PROFILE_ROUTE,
       name: PROFILE_ROUTE,
-      component: () => import(/* webpackChunkName: "title" */ '../views/profile-view.vue')
+      component: () => import('../views/profile-view.vue')
     },
     {
-      path: `/${TITLE_ROUTE}/:id`,
-      props: true,
+      path: `${TITLE_ROUTE}/:id`,
       name: TITLE_ROUTE,
-      component: () => import(/* webpackChunkName: "title" */ '../views/title-view.vue')
+      component: () => import('../views/title-view.vue')
     },
     {
-      path: `/${PACKAGE_ROUTE}/:id`,
-      props: true,
+      path: `${PACKAGE_ROUTE}/:id`,
       name: PACKAGE_ROUTE,
-      component: () => import(/* webpackChunkName: "package" */ '../views/package-view.vue')
+      component: () => import('../views/package-view.vue')
     },
     {
-      path: `/${PROVIDER_ROUTE}/:id`,
-      props: true,
+      path: `${PROVIDER_ROUTE}/:id`,
       name: PROVIDER_ROUTE,
-      component: () => import(/* webpackChunkName: "publisher" */ '../views/provider-view.vue')
+      component: () => import('../views/provider-view.vue')
     },
 
     {
-      path: `/${CREATE_PACKAGE_ROUTE}`,
+      path: CREATE_PACKAGE_ROUTE,
       name: CREATE_PACKAGE_ROUTE,
-      component: () => import(/* webpackChunkName: "createPackage" */ '../views/create/create-package-view.vue')
+      component: () => import('../views/create/create-package-view.vue')
     },
     {
-      path: `/${CREATE_TITLE_ROUTE}`,
-      name: CREATE_TITLE_ROUTE,
-      component: () => import(/* webpackChunkName: "createTitle" */ '../views/create/create-title-view.vue')
-    },
-    {
-      path: `/${KBART_IMPORT_ROUTE}`,
+      path: CREATE_TITLE_ROUTE,
       name: KBART_IMPORT_ROUTE,
-      component: () => import(/* webpackChunkName: "KBARTImport" */ '../views/create/kbart-import-view.vue')
+      component: () => import('../views/create/create-title-view.vue')
+    },
+    {
+      path: KBART_IMPORT_ROUTE,
+      component: () => import('../views/create/kbart-import-view.vue')
     },
 
     {
-      path: `/${SEARCH_MAINTENANCE_ROUTE}`,
+      path: SEARCH_MAINTENANCE_ROUTE,
       name: SEARCH_MAINTENANCE_ROUTE,
-      component: () => import(/* webpackChunkName: "searchMaintenance" */ '../views/search/search-maintenance-view.vue')
+      component: () => import('../views/search/search-maintenance-view.vue')
     },
     {
-      path: `/${SEARCH_PACKAGE_ROUTE}`,
+      path: SEARCH_PACKAGE_ROUTE,
       name: SEARCH_PACKAGE_ROUTE,
-      component: () => import(/* webpackChunkName: "searchPackage" */ '../views/search/search-package-view.vue')
+      component: () => import('../views/search/search-package-view.vue')
     },
     {
-      path: `/${SEARCH_REVIEW_ROUTE}`,
+      path: SEARCH_REVIEW_ROUTE,
       name: SEARCH_REVIEW_ROUTE,
-      component: () => import(/* webpackChunkName: "searchReview" */ '../views/search/search-review-view.vue')
+      component: () => import('../views/search/search-review-view.vue')
     },
     {
-      path: `/${SEARCH_PROVIDER_ROUTE}`,
-      name: SEARCH_PROVIDER_ROUTE,
-      component: () => import(/* webpackChunkName: "searchProvider" */ '../views/search/search-provider-view.vue')
-    },
-    {
-      path: `/${SEARCH_TITLE_ROUTE}`,
+      path: SEARCH_PROVIDER_ROUTE,
       name: SEARCH_TITLE_ROUTE,
-      component: () => import(/* webpackChunkName: "searchTitle" */ '../views/search/search-title-view.vue')
+      component: () => import('../views/search/search-provider-view.vue')
     },
     {
-      path: `/${SEARCH_USER_ROUTE}`,
+      path: SEARCH_TITLE_ROUTE,
+      component: () => import('../views/search/search-title-view.vue')
+    },
+    {
+      path: SEARCH_USER_ROUTE,
       name: SEARCH_USER_ROUTE,
-      component: () => import(/* webpackChunkName: "searchUser" */ '../views/search/search-user-view.vue')
+      component: () => import('../views/search/search-user-view.vue')
     },
     {
-      path: `/${ADD_USER_ROUTE}`,
+      path: ADD_USER_ROUTE,
       name: ADD_USER_ROUTE,
-      component: () => import(/* webpackChunkName: "editUser" */ '../views/edit/edit-user-view.vue')
+      component: () => import('../views/edit/edit-user-view.vue')
     },
     {
-      path: `/${EDIT_USER_ROUTE}/:id`,
+      path: `${EDIT_USER_ROUTE}/:id`,
       name: EDIT_USER_ROUTE,
-      component: () => import(/* webpackChunkName: "editUser" */ '../views/edit/edit-user-view.vue')
+      props: true,
+      component: () => import('../views/edit/edit-user-view.vue')
     },
   ]
 })
 
-const routeTo = (name, id) => {
-  name = COMPONENT_ROUTE_MAPPER[name] || name
-  console.log(`route to ${name} with id ${id}`)
-  router.push({ name, params: { id } })
-}
+// router.beforeEach((to, from, next) => {
+//   console.log('routing', from, to)
+//   next()
+// })
 
 export {
-  router,
-  routeTo,
+  router
 }
