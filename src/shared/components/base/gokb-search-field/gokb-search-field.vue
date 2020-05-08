@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import BaseComponent from '@/shared/base-component'
+  import BaseComponent from '@/shared/components/base-component'
   import searchServices from '@/shared/services/search-services'
 
   export default {

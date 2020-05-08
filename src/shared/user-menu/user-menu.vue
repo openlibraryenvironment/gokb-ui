@@ -3,20 +3,23 @@
     <login-popup v-model="showLogin" />
     <register-popup v-model="showRegister" />
     <v-tooltip
-      :disabled="!username"
-      left
+      bottom
     >
-      <template #activator="{ on: rootOn }">
+      <template #activator="{ on: tooltipOn }">
         <v-menu
           offset-y
-          v-on="rootOn"
         >
-          <template #activator="{ on: accountOn }">
+          <template #activator="{ on: menuOn }">
             <v-btn
               icon
-              v-on="accountOn"
+              v-on="menuOn"
             >
-              <v-icon color="info">mdi-account</v-icon>
+              <v-icon
+                :color="colorAccountIcon"
+                v-on="tooltipOn"
+              >
+                mdi-account
+              </v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -48,19 +51,13 @@
 
 <script>
   import { HOME_ROUTE, PROFILE_ROUTE } from '@/router/route-paths'
-  import account from '@/shared/models/account'
+  import accountModel from '@/shared/models/account-model'
   import LoginPopup from '@/shared/popups/gokb-login-popup'
   import RegisterPopup from '@/shared/popups/gokb-register-popup'
 
   export default {
+    name: 'UserMenu',
     components: { LoginPopup, RegisterPopup },
-    props: {
-      user: {
-        type: String,
-        required: false,
-        default: undefined,
-      },
-    },
     data () {
       return {
         showLogin: false,
@@ -68,11 +65,14 @@
       }
     },
     computed: {
+      colorAccountIcon () {
+        return this.loggedIn ? 'success' : 'info'
+      },
       username () {
-        return account.state().username
+        return accountModel.username()
       },
       loggedIn () {
-        return account.loggedIn()
+        return accountModel.loggedIn()
       },
       userMenuItems () {
         if (this.loggedIn) {
@@ -132,7 +132,7 @@
         this.showRegister = true
       },
       logout () {
-        account.logout()
+        accountModel.logout()
       },
       async navigateTo (path) {
         await this.$router.push(path)

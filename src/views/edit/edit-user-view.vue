@@ -133,7 +133,7 @@
 </template>
 
 <script>
-  import BaseComponent from '@/shared/base-component'
+  import BaseComponent from '@/shared/components/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'

@@ -16,10 +16,6 @@ const api = {
     return string.charAt(0).toUpperCase() + string.slice(1)
   },
 
-  errorOccurred (response) {
-    return !response?.status || response.status >= 400
-  },
-
   isProduction () {
     return process.env.NODE_ENV === 'production'
   },

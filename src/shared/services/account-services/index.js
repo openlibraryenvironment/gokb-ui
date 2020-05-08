@@ -1,7 +1,9 @@
+import log from '@/shared/utils/logger'
+import assert from '@/shared/utils/assert'
+import tokenModel from '@/shared/models/token-model'
 import baseServices from '@/shared/services/base-services'
-import utils from '@/shared/utils/utils'
-import storage from '@/shared/storage'
+import profileServices from '@/shared/services/profile-services'
 
 import accountServices from './account-services'
 
-export default accountServices(utils, storage, baseServices)
+export default accountServices(assert, log, tokenModel, baseServices, profileServices)

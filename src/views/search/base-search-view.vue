@@ -85,7 +85,7 @@
 </template>
 
 <script>
-  import BaseComponent from '@/shared/base-component'
+  import BaseComponent from '@/shared/components/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import searchServices from '@/shared/services/search-services'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'

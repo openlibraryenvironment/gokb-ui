@@ -1,4 +1,5 @@
 export const HOME_ROUTE = '/home'
+
 export const PROFILE_ROUTE = '/profile'
 export const TITLE_ROUTE = '/title'
 export const PACKAGE_ROUTE = '/package'
@@ -14,3 +15,5 @@ export const SEARCH_PROVIDER_ROUTE = '/search-provider'
 export const SEARCH_USER_ROUTE = '/search-user'
 export const ADD_USER_ROUTE = '/add-user'
 export const EDIT_USER_ROUTE = '/edit-user'
+
+export const ERROR_ROUTE = '/error'

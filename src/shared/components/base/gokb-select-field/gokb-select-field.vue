@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import BaseComponent from '@/shared/base-component'
+  import BaseComponent from '@/shared/components/base-component'
   import genericEntityServices from '@/shared/services/generic-entity-services'
 
   export default {

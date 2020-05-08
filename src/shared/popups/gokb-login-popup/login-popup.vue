@@ -33,10 +33,9 @@
 </template>
 
 <script>
-  import BaseComponent from '@/shared/base-component'
-  import utils from '@/shared/utils/utils'
+  import BaseComponent from '@/shared/components/base-component'
   import loading from '@/shared/models/loading'
-  import account from '@/shared/models/account'
+  import accountModel from '@/shared/models/account-model'
 
   export default {
     name: 'LoginPopup',
@@ -86,10 +85,12 @@
         const password = this.password
         const save = this.save
         loading.startLoading()
-        const response = await account.login({ username, password, save })
-        this.error = utils.errorOccurred(response)
+        await this.catchError({
+          promise: accountModel.login({ username, password, save }, this.cancelToken.token),
+          instance: this
+        })
         form.validate()
-        if (account.loggedIn()) {
+        if (accountModel.loggedIn()) {
           this.close()
         }
         loading.stopLoading()

@@ -117,7 +117,7 @@
 </template>
 
 <script>
-  import account from '@/shared/models/account'
+  import accountModel from '@/shared/models/account-model'
   import { ROLE_ADMIN } from '@/shared/models/roles'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
@@ -158,7 +158,7 @@
     }),
     computed: {
       visibleItems () {
-        return MENU_ITEMS.filter(item => !item.needsRole || account.state().roles?.includes(item.needsRole))
+        return MENU_ITEMS.filter(item => !item.needsRole || accountModel.hasRole(item.needsRole))
       }
     },
     watch: {
@@ -189,7 +189,6 @@
     },
     created () {
       this.HOME_ROUTE = HOME_ROUTE
-      account.initialize()
     }
   }
 </script>

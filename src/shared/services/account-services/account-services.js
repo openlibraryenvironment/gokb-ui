@@ -3,33 +3,52 @@ const LOGOUT_URL = './rest/logout'
 
 const REGISTER_URL = './rest/register'
 
-const api = (utils, storage, baseServices) => ({
+const api = (assert, log, tokenModel, baseServices, profileServices) => ({
 
-  initialize () {
-    const token = storage.getToken()
-    baseServices.setAuthorization(token)
-    return token
+  async initialize (cancelToken) {
+    const token = tokenModel.getToken()
+    if (token) { // we have a token, try to use it
+      baseServices.setAuthorization(token.token_type, token.access_token)
+      try {
+        await profileServices.getProfile(cancelToken)
+      } catch (exception) {
+        baseServices.deleteAuthorization()
+        log.info('saved token invalid', token, exception)
+        return
+      }
+      return token
+    }
   },
 
-  async login ({ username, password }) {
+  async login ({ username, password, save }, cancelToken) {
+    assert.isDefined(username && password)
+    // remove old authorization for requests
     baseServices.deleteAuthorization()
-    const response = await baseServices.request({
+    const { data: result } = await baseServices.request({
+      initiator: this.login.name,
       method: 'POST',
       url: LOGIN_URL,
-      data: { username, password }
+      data: { username, password },
+      cancelToken
     })
-    const { data: { token_type: tokenType, access_token: accessToken } } = response
-    baseServices.setAuthorization(tokenType, accessToken)
-    return response
+    log.debug('logged in')
+    tokenModel.setToken(result, save)
+    baseServices.setAuthorization(result.token_type, result.access_token)
+    return { roles: result.roles }
   },
 
-  logout () {
-    baseServices.request({
-      method: 'POST',
-      url: LOGOUT_URL,
-    })
-    // remove authorization header
+  async logout (cancelToken) {
+    try {
+      await baseServices.request({
+        initiator: this.logout.name,
+        method: 'POST',
+        url: LOGOUT_URL,
+        cancelToken
+      })
+    } catch {}
+    tokenModel.removeToken()
     baseServices.deleteAuthorization()
+    log.debug('logged out')
   },
 
   register ({ username, email, password, password2 }) {

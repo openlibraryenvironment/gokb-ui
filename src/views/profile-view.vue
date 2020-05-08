@@ -94,9 +94,9 @@
 <script>
   import { HOME_ROUTE } from '@/router/route-paths'
   import loading from '@/shared/models/loading'
-  import account from '@/shared/models/account'
+  import account from '@/shared/models/account-model'
   import profileServices from '@/shared/services/profile-services'
-  import BaseComponent from '@/shared/base-component'
+  import BaseComponent from '@/shared/components/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'

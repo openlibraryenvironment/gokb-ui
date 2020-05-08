@@ -1,3 +1,1 @@
-import api from './crypt'
-
-export default api
+export default from './crypt'

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import BaseComponent from '@/shared/base-component'
+  import BaseComponent from '@/shared/components/base-component'
 
   export default {
     name: 'AddItemPopup',

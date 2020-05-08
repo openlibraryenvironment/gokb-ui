@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import account from '@/shared/models/account'
+  import account from '@/shared/models/account-model'
   import utils from '@/shared/utils/utils'
   import loading from '@/shared/models/loading'
 
