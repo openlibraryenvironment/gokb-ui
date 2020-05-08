@@ -108,7 +108,9 @@
     </v-app-bar>
     <v-content>
       <v-container>
-        <router-view :key="$route.fullPath" />
+        <keep-alive>
+          <router-view :key="$route.fullPath" />
+        </keep-alive>
       </v-container>
     </v-content>
   </v-app>
