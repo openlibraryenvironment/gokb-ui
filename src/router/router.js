@@ -1,7 +1,7 @@
 import {
   HOME_ROUTE, PROFILE_ROUTE, TITLE_ROUTE, PACKAGE_ROUTE, PROVIDER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
   KBART_IMPORT_ROUTE, SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
-  SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_USER_ROUTE, EDIT_USER_ROUTE, ERROR_ROUTE
+  SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_USER_ROUTE, EDIT_USER_ROUTE, ERROR_ROUTE, EDIT_PACKAGE_ROUTE
 } from './route-paths'
 
 const api = (log, errorModel, accountModel, Router, HomeView) => {
@@ -63,6 +63,12 @@ const api = (log, errorModel, accountModel, Router, HomeView) => {
         path: SEARCH_PACKAGE_ROUTE,
         name: SEARCH_PACKAGE_ROUTE,
         component: () => import('@/views/search/search-package-view.vue')
+      },
+      {
+        path: `${EDIT_PACKAGE_ROUTE}/:id`,
+        name: EDIT_PACKAGE_ROUTE,
+        props: true,
+        component: () => import('@/views/edit/edit-package-view.vue')
       },
       {
         path: SEARCH_REVIEW_ROUTE,

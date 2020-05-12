@@ -1,5 +1,6 @@
 <script>
   import BaseSearch from './base-search-view'
+  import { EDIT_PACKAGE_ROUTE } from '@/router/route-paths'
   import baseServices from '@/shared/services/base-services'
   import GokbPackageExportMenu from '@/shared/components/gokb-package-export-menu'
 
@@ -80,7 +81,7 @@
           text: 'Name',
           align: 'left',
           sortable: false,
-          value: 'name'
+          value: 'link'
         },
         {
           text: 'Provider',
@@ -102,8 +103,7 @@
       _transformForTable (data) {
         return data.map(({ id, uuid, name, provider, nominalPlatform, _links: { delete: deleteUrl, retire: retireUrl } }) => ({
           id,
-          uuid,
-          name,
+          link: { value: name, route: EDIT_PACKAGE_ROUTE, id: 'id' },
           providerName: provider?.name,
           nominalPlatformName: nominalPlatform?.name,
           isDeletable: !!(deleteUrl?.href),

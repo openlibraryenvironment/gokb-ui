@@ -24,9 +24,7 @@
           </div>
         </v-row>
       </template>
-      <template
-        #item.link="{ item }"
-      >
+      <template #item.link="{ item }">
         <router-link
           :style="{ color: '#f2994a' }"
           :to="{ name: item.link.route, params: { [item.link.id]: item[item.link.id] } }"
