@@ -7,7 +7,7 @@
     item-text="name"
     item-value="id"
     clearable
-    return-object
+    :return-object="returnObject"
   />
 </template>
 
@@ -39,7 +39,12 @@
         type: Boolean,
         required: false,
         default: false
-      }
+      },
+      returnObject: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
     },
     data () {
       return {
