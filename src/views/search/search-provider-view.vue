@@ -1,5 +1,7 @@
 <script>
   import BaseSearch from './base-search-view'
+  import { EDIT_PROVIDER_ROUTE, ADD_PROVIDER_ROUTE } from '@/router/route-paths'
+  import providerServices from '@/shared/services/provider-services'
 
   export default {
     name: 'SearchProvider',
@@ -8,44 +10,38 @@
       return {}
     },
     async created () {
-      // const allTypes = await ajaxServices.lookup({
-      //   baseClass: 'org.gokb.cred.RefdataValue',
-      //   filter1: 'TitleInstance.Medium',
-      //   q: '',
-      // })
-      // const allStates = await ajaxServices.lookup({
-      //   baseClass: 'org.gokb.cred.RefdataValue',
-      //   filter1: 'KBComponent.Status',
-      //   q: ''
-      // })
-
       this.title = 'Provider'
-      this.component = 'g:1provider'
       this.resultActionButtons = [
+        {
+          icon: 'add',
+          label: 'Hinzufügen',
+          route: ADD_PROVIDER_ROUTE,
+        },
         {
           icon: 'clear',
           label: 'Archivieren',
-          action: undefined,
+          disabled: 'isNothingSelected',
+          action: '_confirmArchiveSelectedItems',
         },
         {
           icon: 'delete',
           label: 'Löschen',
-          action: undefined,
-        }
+          disabled: 'isNothingSelected',
+          action: '_confirmDeleteSelectedItems',
+        },
       ]
-
       this.searchInputFields = [
         [
           {
             type: 'GokbTextField',
-            name: 'qp_name',
+            name: 'name',
             properties: {
-              label: 'Name/Titel'
+              label: 'Name'
             }
           },
           {
-            type: 'GokbSelectField',
-            name: 'qp_identifier',
+            type: 'GokbTextField',
+            name: 'ids',
             properties: {
               label: 'Identifier'
             }
@@ -53,59 +49,72 @@
         ],
         [
           {
-            type: 'GokbSearchPublisherField',
-            name: 'qp_pub',
+            type: 'GokbCuratoryGroupField',
+            name: 'curatory',
+            properties: {
+              label: 'Kuratoren',
+              multiple: true,
+              returnObject: false
+            }
           },
-          {
-            type: 'GokbSelectField',
-            name: 'qp_medium',
-            properties: {
-              label: 'Typ',
-              // items: allTypes.values.map(({ id: value, text }) => ({ value, text })),
-            }
-          }
         ],
-        [
-          {
-            type: 'GokbSelectField',
-            name: 'qp_status',
-            properties: {
-              label: 'Status',
-              // items: allStates.values.map(({ id: value, text }) => ({ value, text })),
-            }
-          }
-        ]
       ]
       this.resultHeaders = [
         {
-          text: 'Name/Titel',
+          text: 'Name',
           align: 'left',
           sortable: false,
-          value: 'Name/Title'
-        },
-        {
-          text: 'Typ',
-          align: 'left',
-          sortable: false,
-          value: 'Type'
-        },
-        {
-          text: 'Veröffentlicht von',
-          align: 'right',
-          sortable: false,
-          value: ''
-        },
-        {
-          text: 'Veröffentlicht bis',
-          align: 'right',
-          sortable: false,
-          value: ''
+          value: 'link'
         },
       ]
+      this.searchServicesUrl = 'rest/provider'
+      this.searchServiceIncludes = 'id,name'
     },
+    methods: {
+      _transformForTable (data) {
+        return data.map(({
+          id,
+          name,
+          _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
+        }) => ({
+          id,
+          link: { value: name, route: EDIT_PROVIDER_ROUTE, id: 'id' },
+          isDeletable: !!deleteUrl,
+          isRetireable: !!retireUrl,
+          deleteUrl,
+          retireUrl
+        }))
+      },
+      _confirmArchiveSelectedItems () {
+        this.actionToConfirm = '_archiveSelectedItems'
+        this.messageToConfirm = 'Wollen Sie den ausgewählten Provider wirklich archivieren?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      _confirmDeleteSelectedItems () {
+        this.actionToConfirm = '_deleteSelectedItems'
+        this.messageToConfirm = 'Wollen Sie den ausgewählten Provider wirklich löschen?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      async _archiveSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ retireUrl }) =>
+          this.catchError({
+            promise: providerServices.archiveProvider(retireUrl, this.cancelToken.token),
+            instance: this
+          })
+        ))
+        this.resultPaginate(this.resultOptions.page)
+      },
+      async _deleteSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ deleteUrl }) =>
+          this.catchError({
+            promise: providerServices.deleteProvider(deleteUrl, this.cancelToken.token),
+            instance: this
+          })
+        ))
+        this.resultPaginate(this.resultOptions.page)
+      },
+    }
   }
 </script>
-
-<style scoped>
-
-</style>

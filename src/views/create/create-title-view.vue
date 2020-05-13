@@ -64,17 +64,12 @@
         label="Fällig am"
       />
     </gokb-section>
-    <gokb-section sub-title="Review">
-      <gokb-select-field label="Reviewer" />
-      <gokb-textarea-field label="Notiz" />
-    </gokb-section>
-
     <template #buttons>
       <v-spacer />
       <gokb-button
-        @click.native="review"
+        @click.native="create"
       >
-        Review
+        Anlegen
       </gokb-button>
     </template>
   </gokb-page>

@@ -6,14 +6,6 @@
   export default {
     name: 'SearchUser',
     extends: BaseSearch,
-    data () {
-      return {}
-    },
-    computed: {
-      isDeactivateSelectedDisabled () {
-        return this.selectedItems.length === 0
-      }
-    },
     async created () {
       this.title = 'Benutzer'
       this.resultActionButtons = [
@@ -25,7 +17,7 @@
         {
           icon: 'cancel',
           label: 'Deaktivieren',
-          disabled: 'isDeactivateSelectedDisabled',
+          disabled: 'isNothingSelected',
           action: '_confirmDeactivateSelectedItems',
         }
       ]
@@ -46,6 +38,7 @@
             properties: {
               label: 'Gruppen',
               multiple: true,
+              returnObject: false
             }
           }
         ],

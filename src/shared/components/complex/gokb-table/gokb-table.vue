@@ -34,6 +34,15 @@
       </template>
       <template #item.action="{ item }">
         <v-icon
+          v-if="item.isRetireable !== undefined"
+          class="mr-2"
+          :disabled="disabled || !item.isRetireable"
+          small
+          @click="retireItem(item)"
+        >
+          close
+        </v-icon>
+        <v-icon
           v-if="item.isDeletable !== undefined"
           :disabled="disabled || !item.isDeletable"
           small
@@ -117,6 +126,9 @@
       },
       deleteItem (item) {
         this.$emit('delete-item', item)
+      },
+      retireItem (item) {
+        this.$emit('retire-item', item)
       },
     }
   }

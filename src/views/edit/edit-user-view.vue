@@ -54,7 +54,7 @@
       </v-row>
       <v-row>
         <v-col md="4">
-          <gokb-select-field label="Organisation" />
+          <gokb-search-provider-field label="Organisation" />
         </v-col>
       </v-row>
     </gokb-section>
@@ -137,6 +137,7 @@
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
+  import GokbSearchProviderField from '@/shared/components/simple/gokb-search-provider-field'
   import loading from '@/shared/models/loading'
   import userServices from '@/shared/services/user-services'
 
@@ -148,7 +149,7 @@
 
   export default {
     name: 'EditUserView',
-    components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent },
+    components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent, GokbSearchProviderField },
     extends: BaseComponent,
     props: {
       id: {

@@ -34,6 +34,13 @@ const api = baseServices =>
       url,
     }, cancelToken)
   },
+
+  retire (url, cancelToken) {
+    return baseServices.request({
+      method: 'POST',
+      url,
+    }, cancelToken)
+  },
 })
 
 export default api

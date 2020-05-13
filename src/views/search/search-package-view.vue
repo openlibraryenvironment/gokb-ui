@@ -53,6 +53,7 @@
             properties: {
               label: 'Kuratoren',
               multiple: true,
+              returnObject: false
             }
           }
         ],
@@ -101,14 +102,20 @@
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({ id, uuid, name, provider, nominalPlatform, _links: { delete: deleteUrl, retire: retireUrl } }) => ({
+        return data.map(({
+          id,
+          name,
+          provider,
+          nominalPlatform,
+          _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
+        }) => ({
           id,
           link: { value: name, route: EDIT_PACKAGE_ROUTE, id: 'id' },
           providerName: provider?.name,
           nominalPlatformName: nominalPlatform?.name,
-          isDeletable: !!(deleteUrl?.href),
-          deleteUrl: deleteUrl?.href,
-          retireUrl: retireUrl?.href,
+          isDeletable: !!deleteUrl,
+          deleteUrl: deleteUrl,
+          retireUrl: retireUrl,
         }))
       },
       _confirmDeleteSelectedItems () {

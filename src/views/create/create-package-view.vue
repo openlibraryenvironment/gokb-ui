@@ -257,10 +257,6 @@
               :selected-items="selectedCuratoryGroups"
             />
           </gokb-section>
-          <gokb-section sub-title="Review">
-            <gokb-select-field label="Reviewer" />
-            <gokb-textarea-field label="Notiz" />
-          </gokb-section>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -285,7 +281,7 @@
         default
         @click.native="go2NextStep"
       >
-        Review
+        Anlegen
       </gokb-button>
     </template>
   </gokb-page>

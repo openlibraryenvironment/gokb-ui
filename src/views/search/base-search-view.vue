@@ -79,6 +79,7 @@
         @selected-items="selectedItems = $event"
         @paginate="resultPaginate"
         @delete-item="confirmDeleteItem"
+        @retire-item="confirmRetireItem"
       />
     </gokb-section>
   </gokb-page>
@@ -117,6 +118,11 @@
         messageToConfirm: undefined,
       }
     },
+    computed: {
+      isNothingSelected () {
+        return this.selectedItems.length === 0
+      }
+    },
     watch: {
       selectedItems (value) {
         selection.set(value)
@@ -144,9 +150,25 @@
         await this._executeDeleteItemService(deleteUrl)
         this.resultPaginate(this.resultOptions.page)
       },
+      confirmRetireItem ({ retireUrl }) {
+        this.actionToConfirm = 'retireItem'
+        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich archivieren?'
+        this.parameterToConfirm = retireUrl
+        this.confirmationPopUpVisible = true
+      },
+      async retireItem (retireUrl) {
+        await this._executeRetireItemService(retireUrl)
+        this.resultPaginate(this.resultOptions.page)
+      },
       _executeDeleteItemService (deleteUrl) {
         return this.catchError({
           promise: this.searchServices.delete(deleteUrl, this.cancelToken.token),
+          instance: this
+        })
+      },
+      _executeRetireItemService (retireUrl) {
+        return this.catchError({
+          promise: this.searchServices.retire(retireUrl, this.cancelToken.token),
           instance: this
         })
       },
@@ -182,7 +204,7 @@
         }
       },
       executeAction (actionMethodName, actionMethodParameter) {
-        actionMethodName && actionMethodParameter && this[actionMethodName](actionMethodParameter)
+        actionMethodName && this[actionMethodName](actionMethodParameter)
       },
       isButtonDisabled (attributeName) {
         return this[attributeName]
