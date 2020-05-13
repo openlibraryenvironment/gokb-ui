@@ -69,7 +69,7 @@
       <gokb-button
         @click.native="create"
       >
-        Anlegen
+        Hinzufügen
       </gokb-button>
     </template>
   </gokb-page>

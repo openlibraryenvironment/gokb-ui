@@ -281,7 +281,7 @@
         default
         @click.native="go2NextStep"
       >
-        Anlegen
+        Hinzufügen
       </gokb-button>
     </template>
   </gokb-page>
