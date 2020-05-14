@@ -114,6 +114,10 @@ const api = (log, errorModel, accountModel, Router, HomeView) => {
         props: true,
         component: () => import('@/views/edit/edit-user-view.vue')
       },
+      {
+        path: '*',
+        component: () => import('@/views/not-found-view.vue')
+      }
     ]
   })
 
