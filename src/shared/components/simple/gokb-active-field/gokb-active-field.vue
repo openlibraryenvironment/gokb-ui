@@ -9,6 +9,11 @@
         type: String,
         required: false,
         default: 'Status',
+      },
+      returnObject: {
+        type: Boolean,
+        required: false,
+        default: false,
       }
     },
     mounted () {
