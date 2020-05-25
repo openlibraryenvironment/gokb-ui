@@ -108,7 +108,7 @@
     </v-app-bar>
     <v-content>
       <v-container>
-        <keep-alive>
+        <keep-alive :exclude="/^Edit\w*$/">
           <router-view :key="$route.fullPath" />
         </keep-alive>
       </v-container>
