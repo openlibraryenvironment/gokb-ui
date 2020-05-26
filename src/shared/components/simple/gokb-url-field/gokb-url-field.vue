@@ -9,6 +9,11 @@
         type: String,
         required: false,
         default: 'url'
+      },
+      label: {
+        type: String,
+        required: false,
+        default: 'URL'
       }
     },
   }
