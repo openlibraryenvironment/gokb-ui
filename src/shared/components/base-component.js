@@ -36,7 +36,6 @@ export default {
 
     catchError ({ promise, instance }) {
       loading.startLoading()
-      this.error = undefined
       return promise
         .then(result => result)
         .catch(error => {

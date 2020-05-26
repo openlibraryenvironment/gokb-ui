@@ -47,10 +47,11 @@
               v-model="title"
               label="Titel"
             />
-            <gokb-combobox-field label="Quelle" />
-            <gokb-text-field
+            <gokb-search-source-field
+              v-model="source"
+            />
+            <gokb-url-field
               v-model="url"
-              label="URL"
             />
             <gokb-textarea-field
               v-model="description"
@@ -288,12 +289,16 @@
 </template>
 
 <script>
+  import GokbUrlField from '@/shared/components/simple/gokb-url-field'
+  import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
   import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
 
   export default {
     name: 'CreatePackage',
     components: {
+      GokbUrlField,
+      GokbSearchSourceField,
       GokbAddTitlePopup,
       GokbKbartImportPopup
     },
@@ -301,9 +306,10 @@
       return {
         kbartImportPopupVisible: false,
         step: 1,
-        title: 'Springer Medical Best',
-        description: 'Best Journal of Springer Medical',
+        title: undefined,
+        source: undefined,
         url: undefined,
+        description: undefined,
         alternativeNamesHeader: [
           {
             text: 'Alias',

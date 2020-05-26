@@ -50,7 +50,7 @@
         [
           {
             type: 'GokbCuratoryGroupField',
-            name: 'curatory',
+            name: 'curatoryGroupId',
             properties: {
               label: 'Kuratoren',
               multiple: true,

@@ -2,11 +2,11 @@
   import GokbSearchField from '@/shared/components/base/gokb-search-field'
 
   export default {
-    name: 'GokbSearchPublisherField',
+    name: 'GokbSearchSourceField',
     extends: GokbSearchField,
     created () {
-      this.label = 'Publisher'
-      this.searchServicesResourceUrl = 'rest/publisher'
+      this.label = 'Quelle'
+      this.searchServicesResourceUrl = 'rest/source'
     },
   }
 </script>

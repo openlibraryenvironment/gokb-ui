@@ -34,7 +34,7 @@
           },
           {
             type: 'GokbCuratoryGroupField',
-            name: 'curatory',
+            name: 'curatoryGroupId',
             properties: {
               label: 'Gruppen',
               multiple: true,
@@ -45,15 +45,16 @@
         [
           {
             type: 'GokbRoleField',
-            name: 'role',
+            name: 'roleId',
             properties: {
               label: 'Rollen',
               multiple: true,
+              returnObject: false
             }
           },
           {
             type: 'GokbActiveField',
-            name: 'enabled',
+            name: 'status',
           }
         ]
       ]

@@ -52,11 +52,6 @@
           />
         </v-col>
       </v-row>
-      <v-row>
-        <v-col md="4">
-          <gokb-search-provider-field label="Organisation" />
-        </v-col>
-      </v-row>
     </gokb-section>
     <gokb-add-item-popup
       v-if="addRolePopupVisible"
@@ -137,7 +132,6 @@
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
-  import GokbSearchProviderField from '@/shared/components/simple/gokb-search-provider-field'
   import loading from '@/shared/models/loading'
   import userServices from '@/shared/services/user-services'
 
@@ -146,10 +140,13 @@
   const ROLES_TABLE_HEADERS = [
     { text: 'Rolle', align: 'left', value: 'name', sortable: false, width: '100%' },
   ]
+  const CURATORY_GROUPS_TABLE_HEADERS = [
+    { text: 'Gruppen', align: 'left', value: 'name', sortable: false, width: '100%' },
+  ]
 
   export default {
     name: 'EditUserView',
-    components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent, GokbSearchProviderField },
+    components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent },
     extends: BaseComponent,
     props: {
       id: {
@@ -172,27 +169,9 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
-        roleHeaders: [
-          {
-            text: 'Rolle',
-            align: 'left',
-            sortable: false,
-            value: 'role'
-          },
-        ],
         allRoles: [],
         selectedRoles: [],
         addedRoles: [],
-
-        curatoryHeaders: [
-          {
-            text: 'Gruppe',
-            align: 'left',
-            sortable: false,
-            value: 'group'
-          },
-        ],
-
         updateUserUrl: undefined,
 
         confirmationPopUpVisible: false,
@@ -228,6 +207,7 @@
     },
     async created () {
       this.rolesTableHeaders = ROLES_TABLE_HEADERS
+      this.curatoryGroupsTableHeaders = CURATORY_GROUPS_TABLE_HEADERS
       if (this.isEdit) {
         loading.startLoading()
         const {
@@ -264,7 +244,7 @@
         this[actionMethodName](actionMethodParameter)
       },
       addNewRole ({ id, name }) {
-        console.log('addNewRole', id, name)
+        // console.log('addNewRole', id, name)
         !this.allRoles.find(({ id: idInAll }) => id === idInAll) && !this.addedRoles.find(({ id: idInAll }) => id === idInAll) && this.addedRoles.push({ id, name, isDeletable: true })
       },
       showAddNewRole () {
