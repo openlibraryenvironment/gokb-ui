@@ -1,5 +1,8 @@
 <template>
-  <v-radio v-bind="$attrs" />
+  <v-radio
+    :disabled="disabled"
+    :label="label"
+  />
 </template>
 
 <script>
@@ -19,6 +22,3 @@
     },
   }
 </script>
-
-<style scoped>
-</style>
