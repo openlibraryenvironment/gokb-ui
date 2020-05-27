@@ -57,7 +57,9 @@
               v-model="description"
               label="Beschreibung"
             />
-            <gokb-select-field label="Umfang" />
+            <gokb-scope-field
+              v-model="scope"
+            />
             <gokb-radiobutton-group>
               <gokb-radiobutton-field label="Konsortial" />
               <gokb-radiobutton-field label="Global" />
@@ -79,14 +81,23 @@
             </v-row>
           </gokb-section>
           <gokb-section sub-title="Identifier">
+            <gokb-add-item-popup
+              v-if="addIdentifierPopupVisible"
+              v-model="addIdentifierPopupVisible"
+              :component="{ type: 'GokbNamespaceField', name: 'Identifier' }"
+              @add="addNewIdentifier"
+            />
             <template #buttons>
               <gokb-button
                 icon-id="add"
+                @click.native="showAddIdentifierPopup"
               >
                 Identifier hinzufügen
               </gokb-button>
             </template>
-            <gokb-select-field label="ISSN" />
+            <gokb-identifier-field
+              v-model="identifier"
+            />
           </gokb-section>
         </v-stepper-content>
 
@@ -289,21 +300,28 @@
 </template>
 
 <script>
+  import GokbIdentifierField from '@/shared/components/simple/gokb-search-identifier-field'
+  import GokbScopeField from '@/shared/components/simple/gokb-scope-field'
   import GokbUrlField from '@/shared/components/simple/gokb-url-field'
   import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
+  import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
   import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
 
   export default {
     name: 'CreatePackage',
     components: {
+      GokbIdentifierField,
+      GokbScopeField,
       GokbUrlField,
       GokbSearchSourceField,
       GokbAddTitlePopup,
+      GokbAddItemPopup,
       GokbKbartImportPopup
     },
     data () {
       return {
+        addIdentifierPopupVisible: false,
         kbartImportPopupVisible: false,
         step: 1,
         title: undefined,
@@ -355,6 +373,9 @@
       }
     },
     methods: {
+      showAddIdentifierPopup () {
+        this.addIdentifierPopupVisible = true
+      },
       go2NextStep () {
         this.step < 4 && this.step++
       },

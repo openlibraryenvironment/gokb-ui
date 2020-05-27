@@ -1,14 +1,13 @@
 <script>
   import BaseSearch from './base-search-view'
+  import GokbIdentifierField from '@/shared/components/simple/gokb-search-identifier-field'
   import { EDIT_PROVIDER_ROUTE, ADD_PROVIDER_ROUTE } from '@/router/route-paths'
   import providerServices from '@/shared/services/provider-services'
 
   export default {
     name: 'SearchProvider',
+    components: { GokbIdentifierField },
     extends: BaseSearch,
-    data () {
-      return {}
-    },
     async created () {
       this.title = 'Provider'
       this.resultActionButtons = [
@@ -40,11 +39,8 @@
             }
           },
           {
-            type: 'GokbTextField',
-            name: 'ids',
-            properties: {
-              label: 'Identifier'
-            }
+            type: 'GokbIdentifierField',
+            name: 'ids'
           }
         ],
         [

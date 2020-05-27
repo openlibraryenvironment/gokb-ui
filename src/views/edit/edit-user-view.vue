@@ -260,7 +260,7 @@
           accountLocked: this.accountLocked,
           enabled: this.enabled,
           passwordExpired: this.passwordExpired,
-          roles: this.roles.map(({ id }) => id)
+          roleIds: this.roles.map(({ id }) => id)
         }
         await this.catchError({
           promise: userServices.createOrUpdateUser(data, this.cancelToken.token),
