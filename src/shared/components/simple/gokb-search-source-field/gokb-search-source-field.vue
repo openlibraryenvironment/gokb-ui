@@ -6,7 +6,7 @@
     extends: GokbSearchField,
     created () {
       this.label = 'Quelle'
-      this.searchServicesResourceUrl = 'rest/source'
+      this.searchServicesResourceUrl = 'rest/sources'
     },
   }
 </script>
