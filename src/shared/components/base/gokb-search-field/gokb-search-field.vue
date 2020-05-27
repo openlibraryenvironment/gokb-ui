@@ -57,13 +57,16 @@
         const result = await this.catchError({
           promise: this.searchServices.search({
             name: this.search,
+            _include: 'id,name,value'
           }, this.cancelToken.token),
           instance: this
         })
-        const { data: { data } } = result
-        // todo: value.value used for identifier
-        this.items = data.map(value => ({ value: value.id, text: value.name || value.value }))
+        this.items = this.transform(result)
       },
+      transform (result) {
+        const { data: { data } } = result
+        return data.map(value => ({ value: value.id, text: value.name }))
+      }
     }
   }
 </script>

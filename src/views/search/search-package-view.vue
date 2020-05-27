@@ -63,11 +63,8 @@
             name: 'provider'
           },
           {
-            type: 'GokbTextField',
-            name: 'ids',
-            properties: {
-              label: 'Identifier'
-            }
+            type: 'GokbSearchIdentifierField',
+            name: 'ids'
           }
         ],
         [

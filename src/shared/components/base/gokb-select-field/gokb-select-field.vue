@@ -74,8 +74,8 @@
     },
     methods: {
       transform (result) {
-        const { data: { data: values } } = result
-        return values
+        const { data: { data } } = result
+        return data
       }
     }
   }

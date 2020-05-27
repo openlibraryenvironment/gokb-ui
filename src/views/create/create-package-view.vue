@@ -84,7 +84,7 @@
             <gokb-add-item-popup
               v-if="addIdentifierPopupVisible"
               v-model="addIdentifierPopupVisible"
-              :component="{ type: 'GokbNamespaceField', name: 'Identifier' }"
+              :component="{ type: 'GokbIdentifierComponent', name: 'Identifier' }"
               @add="addNewIdentifier"
             />
             <template #buttons>
@@ -106,7 +106,7 @@
             title="Organisation"
             sub-title="Allgemein"
           >
-            <gokb-text-field label="Name" />
+            <gokb-search-provider-field v-model="provider" />
             <gokb-select-field label="Quelle" />
             <gokb-text-field label="Referenz" />
           </gokb-section>
@@ -300,7 +300,7 @@
 </template>
 
 <script>
-  import GokbIdentifierField from '@/shared/components/simple/gokb-search-identifier-field'
+  import GokbSearchProviderField from '@/shared/components/simple/gokb-search-provider-field'
   import GokbScopeField from '@/shared/components/simple/gokb-scope-field'
   import GokbUrlField from '@/shared/components/simple/gokb-url-field'
   import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
@@ -311,7 +311,7 @@
   export default {
     name: 'CreatePackage',
     components: {
-      GokbIdentifierField,
+      GokbSearchProviderField,
       GokbScopeField,
       GokbUrlField,
       GokbSearchSourceField,
@@ -375,6 +375,9 @@
     methods: {
       showAddIdentifierPopup () {
         this.addIdentifierPopupVisible = true
+      },
+      addNewIdentifier () {
+        console.log('addNewIdentifier called')
       },
       go2NextStep () {
         this.step < 4 && this.step++
