@@ -61,7 +61,8 @@
           instance: this
         })
         const { data: { data } } = result
-        this.items = data.map(value => ({ value: value.id, text: value.name }))
+        // todo: value.value used for identifier
+        this.items = data.map(value => ({ value: value.id, text: value.name || value.value }))
       },
     }
   }
