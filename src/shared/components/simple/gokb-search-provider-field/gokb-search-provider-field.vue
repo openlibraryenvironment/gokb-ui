@@ -4,8 +4,15 @@
   export default {
     name: 'GokbSearchProviderField',
     extends: GokbSearchField,
+    props: {
+      label: {
+        type: String,
+        required: false,
+        default: 'Provider'
+      }
+    },
     created () {
-      this.label = 'Provider'
+      // this.label = 'Provider'
       this.searchServicesResourceUrl = 'rest/provider'
     },
   }

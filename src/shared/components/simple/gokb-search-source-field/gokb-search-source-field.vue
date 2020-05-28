@@ -4,8 +4,14 @@
   export default {
     name: 'GokbSearchSourceField',
     extends: GokbSearchField,
+    props: {
+      label: {
+        type: String,
+        required: false,
+        default: 'Quelle'
+      }
+    },
     created () {
-      this.label = 'Quelle'
       this.searchServicesResourceUrl = 'rest/sources'
     },
   }

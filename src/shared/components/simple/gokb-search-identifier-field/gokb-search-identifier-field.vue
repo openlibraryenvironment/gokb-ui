@@ -4,8 +4,14 @@
   export default {
     name: 'GokbSearchIdentifierField',
     extends: GokbSearchField,
+    props: {
+      label: {
+        type: String,
+        required: false,
+        default: 'Identifier'
+      }
+    },
     created () {
-      this.label = 'Identifier'
       this.searchServicesResourceUrl = 'rest/identifiers'
     },
     methods: {

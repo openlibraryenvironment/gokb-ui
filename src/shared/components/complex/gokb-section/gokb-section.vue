@@ -37,12 +37,19 @@
         >
           {{ subTitle }}
         </span>
+        <v-btn
+          v-if="expandable"
+          icon
+          @click="doExpandCollapse"
+        >
+          <v-icon>{{ expansionIcon }}</v-icon>
+        </v-btn>
         <v-spacer />
         <v-toolbar-items>
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>
-      <v-card-text>
+      <v-card-text v-show="expanded">
         <div class="controls pa-2">
           <slot />
         </div>
@@ -55,6 +62,11 @@
   export default {
     name: 'GokbSection',
     props: {
+      expandable: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
       title: {
         type: String,
         required: false,
@@ -67,8 +79,20 @@
       },
     },
     data () {
-      return {}
+      return {
+        expanded: true
+      }
     },
+    computed: {
+      expansionIcon () {
+        return this.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
+      }
+    },
+    methods: {
+      doExpandCollapse () {
+        this.expanded = !this.expanded
+      }
+    }
   }
 </script>
 

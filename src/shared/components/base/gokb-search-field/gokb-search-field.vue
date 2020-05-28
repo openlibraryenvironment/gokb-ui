@@ -22,9 +22,15 @@
     name: 'GokbSearchField',
     extends: BaseComponent,
     searchServicesResourceUrl: undefined,
+    props: {
+      label: {
+        type: String,
+        required: false,
+        default: ''
+      }
+    },
     data () {
       return {
-        label: undefined,
         placeholder: undefined,
         rules: undefined,
         loading: false,

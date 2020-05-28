@@ -9,6 +9,7 @@
     :rules="rules"
     :type="type"
     :placeholder="placeholder"
+    :append-icon="appendIcon"
     validate-on-blur
     clearable
   />
@@ -55,6 +56,11 @@
         default: false,
       },
       prependIcon: {
+        type: String,
+        required: false,
+        default: undefined,
+      },
+      appendIcon: {
         type: String,
         required: false,
         default: undefined,

@@ -13,11 +13,11 @@
     },
     created () {
       // todo: should be changed to scopes
-      this.entityName = 'package-scope' // 'refdata/categories/Package.Scope'
+      this.entityName = 'package-scopes' // 'refdata/categories/Package.Scope'
     },
     methods: {
       transform (result) {
-        const { data: { data: values } } = result
+        const { data: { data: values } } = result || { data: { data: [] } }
         return values.map(({ id, value }) => ({ id, name: value }))
       }
     }
