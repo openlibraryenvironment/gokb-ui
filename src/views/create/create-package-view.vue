@@ -126,80 +126,18 @@
 
         <v-stepper-content :step="2">
           <gokb-section
-            title="Organisation"
-            sub-title="Allgemein"
+            sub-title="Organisation"
           >
             <gokb-search-provider-field
               v-model="provider"
               label="Name"
             />
-            <gokb-select-field
-              v-model="source"
-              label="Quelle"
-            />
-            <gokb-text-field
-              v-model="reference"
-              label="Referenz"
-            />
           </gokb-section>
-          <gokb-section
-            expandable
-            sub-title="Identifier"
-          >
-            <template #buttons>
-              <gokb-button
-                icon-id="add"
-              >
-                Identifier hinzufügen
-              </gokb-button>
-            </template>
-          </gokb-section>
-          <gokb-section sub-title="Alternative Namen">
-            <template #buttons>
-              <gokb-button
-                icon-id="add"
-                class="mr-4"
-              >
-                Hinzufügen
-              </gokb-button>
-              <gokb-button
-                icon-id="delete"
-              >
-                Löschen
-              </gokb-button>
-            </template>
-            <gokb-table
-              :show-select="false"
-              :headers="alternativeNamesHeader"
-              :items="alternativeNames"
+          <gokb-section sub-title="Plattform">
+            <gokb-search-platform-field
+              v-model="platform"
+              label="Name"
             />
-          </gokb-section>
-          <gokb-section sub-title="Kuratoren">
-            <template #buttons>
-              <gokb-button
-                icon-id="add"
-                class="mr-4"
-              >
-                Hinzufügen
-              </gokb-button>
-              <gokb-button
-                icon-id="delete"
-              >
-                Löschen
-              </gokb-button>
-            </template>
-            <gokb-table
-              :show-select="false"
-              :headers="curatoriesHeader"
-              :items="curatories"
-            />
-          </gokb-section>
-          <gokb-section title="Plattform">
-            <gokb-select-field label="Name" />
-            <gokb-select-field label="Quelle" />
-            <gokb-select-field label="Url" />
-            <gokb-checkbox-field label="Gleicher Provider wie oben" />
-            <gokb-select-field label="Provider" />
           </gokb-section>
         </v-stepper-content>
 
