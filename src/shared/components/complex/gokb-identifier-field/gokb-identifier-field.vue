@@ -31,6 +31,7 @@
       value: {
         type: Object,
         required: true,
+        default: () => ({ id: undefined, value: undefined, namespace: { id: undefined, name: undefined } })
       },
     },
     computed: {
