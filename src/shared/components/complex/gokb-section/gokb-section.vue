@@ -19,7 +19,7 @@
         </v-toolbar-items>
       </v-toolbar>
       <span
-        v-else
+        v-else-if="title"
         class="headline ml-4"
       >
         {{ title }}
