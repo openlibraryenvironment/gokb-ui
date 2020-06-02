@@ -2,7 +2,7 @@
   <v-dialog
     :value="value"
     persistent
-    width="400"
+    :width="width"
   >
     <v-card class="elevation-12">
       <v-form
@@ -36,6 +36,11 @@
         type: String,
         required: true,
       },
+      width: {
+        type: Number,
+        required: false,
+        default: 400
+      }
     },
     methods: {
       doSubmit () {
