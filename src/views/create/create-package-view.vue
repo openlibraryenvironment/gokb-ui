@@ -96,32 +96,9 @@
               />
             </v-row>
           </gokb-section>
-          <gokb-section
-            expandable
-            sub-title="Identifier"
-          >
-            <gokb-add-item-popup
-              v-if="addIdentifierPopupVisible"
-              v-model="addIdentifierPopupVisible"
-              :component="{ type: 'GokbIdentifierField', name: 'Identifier' }"
-              @add="addNewIdentifier"
-            />
-            <template #buttons>
-              <gokb-button
-                icon-id="add"
-                @click.native="showAddIdentifierPopup"
-              >
-                Identifier hinzufügen
-              </gokb-button>
-            </template>
-            <gokb-identifier-field
-              v-for="(identifier, i) of identifiers"
-              :key="identifier.id"
-              v-model="identifiers[i]"
-              namespace-fixed
-              deleteable
-            />
-          </gokb-section>
+          <gokb-identifier-section
+            v-model="identifiers"
+          />
         </v-stepper-content>
 
         <v-stepper-content :step="2">
@@ -141,110 +118,134 @@
           </gokb-section>
         </v-stepper-content>
 
-      <!--        <v-stepper-content :step="3">-->
-      <!--          <gokb-add-title-popup-->
-      <!--            v-if="addTitlePopupVisible"-->
-      <!--            v-model="addTitlePopupVisible"-->
-      <!--            @add="addNewTitle"-->
-      <!--          />-->
-      <!--          <gokb-kbart-import-popup-->
-      <!--            v-if="kbartImportPopupVisible"-->
-      <!--            v-model="kbartImportPopupVisible"-->
-      <!--          />-->
-      <!--          <gokb-section sub-title="Titel">-->
-      <!--            <template #buttons>-->
-      <!--              <gokb-button-->
-      <!--                class="mr-4"-->
-      <!--                @click.native="showKbartImportPopup"-->
-      <!--              >-->
-      <!--                KBART Import-->
-      <!--              </gokb-button>-->
-      <!--              <gokb-button-->
-      <!--                icon-id="add"-->
-      <!--                class="mr-4"-->
-      <!--                @click.native="showAddNewTitlePopup"-->
-      <!--              >-->
-      <!--                Hinzufügen-->
-      <!--              </gokb-button>-->
-      <!--              <gokb-button-->
-      <!--                icon-id="delete"-->
-      <!--              >-->
-      <!--                Löschen-->
-      <!--              </gokb-button>-->
-      <!--            </template>-->
-      <!--            <gokb-table-->
-      <!--              :show-select="false"-->
-      <!--              :headers="titlesHeader"-->
-      <!--              :items="titles"-->
-      <!--            />-->
-      <!--          </gokb-section>-->
-      <!--        </v-stepper-content>-->
+        <v-stepper-content :step="3">
+          <gokb-add-title-popup
+            v-if="addTitlePopupVisible"
+            v-model="addTitlePopupVisible"
+            :title-type="addTitleType"
+            @add="addNewTitle"
+          />
+          <gokb-kbart-import-popup
+            v-if="kbartImportPopupVisible"
+            v-model="kbartImportPopupVisible"
+          />
+          <gokb-section sub-title="Titel">
+            <template #buttons>
+              <gokb-button
+                class="mr-4"
+                @click.native="showKbartImportPopup"
+              >
+                KBART Import
+              </gokb-button>
 
-      <!--        <v-stepper-content :step="4">-->
-      <!--          <gokb-section sub-title="Zusammenfassung">-->
-      <!--            <v-row>-->
-      <!--              <v-col>-->
-      <!--                <gokb-text-field-->
-      <!--                  v-model="title"-->
-      <!--                  label="Titel"-->
-      <!--                  disabled-->
-      <!--                />-->
-      <!--              </v-col>-->
-      <!--              <v-col>-->
-      <!--                <gokb-text-field-->
-      <!--                  v-model="description"-->
-      <!--                  label="Beschreibung"-->
-      <!--                  disabled-->
-      <!--                />-->
-      <!--              </v-col>-->
-      <!--            </v-row>-->
-      <!--            <v-row>-->
-      <!--              <v-col>-->
-      <!--                <gokb-text-field-->
-      <!--                  v-model="plattform"-->
-      <!--                  label="Plattform"-->
-      <!--                  disabled-->
-      <!--                />-->
-      <!--              </v-col>-->
-      <!--              <v-col>-->
-      <!--                <gokb-text-field-->
-      <!--                  v-model="numberOfTitles"-->
-      <!--                  label="Anzahl Titel im Paket"-->
-      <!--                  disabled-->
-      <!--                />-->
-      <!--              </v-col>-->
-      <!--            </v-row>-->
-      <!--            <gokb-text-field-->
-      <!--              v-model="organisation"-->
-      <!--              label="Organisation"-->
-      <!--              disabled-->
-      <!--            />-->
-      <!--          </gokb-section>-->
-      <!--          <gokb-section sub-title="Pflege">-->
-      <!--            <gokb-select-field label="Tunus" />-->
-      <!--            <gokb-text-field-->
-      <!--              label="Fällig am"-->
-      <!--              disabled-->
-      <!--            />-->
-      <!--          </gokb-section>-->
-      <!--          <gokb-section sub-title="Kuratoren">-->
-      <!--            <template #buttons>-->
-      <!--              <gokb-button @click.native="showAddNewCuratoryGroup">-->
-      <!--                Hinzufügen-->
-      <!--              </gokb-button>-->
-      <!--              <gokb-button @click.native="deleteSelectedCuratoryGroups">-->
-      <!--                Löschen-->
-      <!--              </gokb-button>-->
-      <!--            </template>-->
-      <!--            <gokb-table-->
-      <!--              :added-items="addedCuratoryGroups"-->
-      <!--              :deleted-items="deletedCuratoryGroups"-->
-      <!--              :headers="curatoryGroupsTableHeaders"-->
-      <!--              :items="curatoryGroups"-->
-      <!--              :selected-items="selectedCuratoryGroups"-->
-      <!--            />-->
-      <!--          </gokb-section>-->
-      <!--        </v-stepper-content>-->
+              <v-menu
+                offset-y
+                open-on-hover
+              >
+                <template #activator="{ on }">
+                  <v-btn
+                    class="mr-4"
+                    color="primary"
+                    v-on="on"
+                  >
+                    <v-icon>add</v-icon>
+                    Hinzufügen
+                    <v-icon>keyboard_arrow_down</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <template v-for="type in packageTypes">
+                    <v-list-item
+                      :key="type.text"
+                      @click.native="showAddNewTitlePopup(type)"
+                    >
+                      <v-list-item-title>
+                        {{ type.text }}
+                      </v-list-item-title>
+                    </v-list-item>
+                  </template>
+                </v-list>
+              </v-menu>
+
+              <gokb-button
+                icon-id="delete"
+              >
+                Löschen
+              </gokb-button>
+            </template>
+            <gokb-table
+              :show-select="false"
+              :headers="titlesHeader"
+              :items="titles"
+            />
+          </gokb-section>
+        </v-stepper-content>
+
+        <v-stepper-content :step="4">
+          <gokb-section sub-title="Zusammenfassung">
+            <v-row>
+              <v-col>
+                <gokb-text-field
+                  v-model="title"
+                  label="Titel"
+                  disabled
+                />
+              </v-col>
+              <v-col>
+                <gokb-text-field
+                  v-model="description"
+                  label="Beschreibung"
+                  disabled
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <gokb-text-field
+                  v-model="plattform"
+                  label="Plattform"
+                  disabled
+                />
+              </v-col>
+              <v-col>
+                <gokb-text-field
+                  v-model="numberOfTitles"
+                  label="Anzahl Titel im Paket"
+                  disabled
+                />
+              </v-col>
+            </v-row>
+            <gokb-text-field
+              v-model="organisation"
+              label="Organisation"
+              disabled
+            />
+          </gokb-section>
+          <gokb-section sub-title="Pflege">
+            <gokb-select-field label="Tunus" />
+            <gokb-text-field
+              label="Fällig am"
+              disabled
+            />
+          </gokb-section>
+          <gokb-section sub-title="Kuratoren">
+            <template #buttons>
+              <gokb-button @click.native="showAddNewCuratoryGroup">
+                Hinzufügen
+              </gokb-button>
+              <gokb-button @click.native="deleteSelectedCuratoryGroups">
+                Löschen
+              </gokb-button>
+            </template>
+            <gokb-table
+              :added-items="addedCuratoryGroups"
+              :deleted-items="deletedCuratoryGroups"
+              :headers="curatoryGroupsTableHeaders"
+              :items="curatoryGroups"
+              :selected-items="selectedCuratoryGroups"
+            />
+          </gokb-section>
+        </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
 
@@ -275,28 +276,29 @@
 </template>
 
 <script>
-  // import GokbSearchProviderField from '@/shared/components/simple/gokb-search-provider-field'
+  import GokbSearchProviderField from '@/shared/components/simple/gokb-search-provider-field'
+  import GokbSearchPlatformField from '@/shared/components/simple/gokb-search-platform-field'
   import GokbScopeField from '@/shared/components/simple/gokb-scope-field'
   import GokbUrlField from '@/shared/components/simple/gokb-url-field'
   import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
-  import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
-  // import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
-  // import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
+  import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
+  import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
+  import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
 
   export default {
     name: 'CreatePackage',
     components: {
-      // GokbSearchProviderField,
+      GokbIdentifierSection,
+      GokbSearchProviderField,
+      GokbSearchPlatformField,
       GokbScopeField,
       GokbUrlField,
       GokbSearchSourceField,
-      // GokbAddTitlePopup,
-      GokbAddItemPopup,
-      // GokbKbartImportPopup
+      GokbAddTitlePopup,
+      GokbKbartImportPopup
     },
     data () {
       return {
-        addIdentifierPopupVisible: false,
         kbartImportPopupVisible: false,
         step: 1,
         title: undefined,
@@ -310,6 +312,7 @@
         fixed: undefined,
         identifiers: [{ id: 42, namespace: { id: 42, name: 'issn' }, value: '1231' }],
         provider: undefined,
+        packageTypes: [{ id: 'serial', text: 'Journal' }, { id: 'monograph', text: 'Monographie' }],
         alternativeNamesHeader: [
           {
             text: 'Alias',
@@ -355,19 +358,14 @@
       }
     },
     methods: {
-      showAddIdentifierPopup () {
-        this.addIdentifierPopupVisible = true
-      },
-      addNewIdentifier () {
-        console.log('addNewIdentifier called')
-      },
       go2NextStep () {
         this.step < 4 && this.step++
       },
       go2PreviousStep () {
         this.step > 1 && this.step--
       },
-      showAddNewTitlePopup () {
+      showAddNewTitlePopup (titleType) {
+        this.addTitleType = titleType
         this.addTitlePopupVisible = true
       },
       showKbartImportPopup () {

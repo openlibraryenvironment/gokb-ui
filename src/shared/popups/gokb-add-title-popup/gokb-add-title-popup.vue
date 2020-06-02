@@ -1,12 +1,13 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    title="Neuer Titel"
+    :title="`${titleType.text} hinzufügen`"
+    width="600"
     @submit="addTitle"
   >
-    <gokb-section sub-title="Identifier">
-      <gokb-select-field label="ISSN" />
-    </gokb-section>
+    <gokb-identifier-section
+      v-model="identifiers"
+    />
     <gokb-section sub-title="Allgemein">
       <gokb-text-field label="Titel" />
       <gokb-date-field label="Veröffentlichungsdatum" />
@@ -56,9 +57,11 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
+  import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
 
   export default {
     name: 'GokbAddTitlePopup',
+    components: { GokbIdentifierSection },
     extends: BaseComponent,
     props: {
       value: {
@@ -66,6 +69,10 @@
         required: true,
         default: false
       },
+      titleType: {
+        type: Object,
+        required: true,
+      }
     },
     data () {
       return {

@@ -86,7 +86,7 @@
           </v-btn>
         </template>
         <v-list>
-          <template v-for="(item) in visibleItems">
+          <template v-for="item in visibleItems">
             <v-list-item
               v-if="item.text && item.toolbar"
               :key="item.text"
