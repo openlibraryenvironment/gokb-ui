@@ -9,7 +9,9 @@
       v-model="identifiers"
     />
     <gokb-section sub-title="Allgemein">
-      <gokb-text-field label="Titel" />
+      <gokb-title-field
+        v-model="title"
+      />
       <gokb-date-field label="Veröffentlichungsdatum" />
       <gokb-text-field label="Titel URL" />
     </gokb-section>
@@ -76,7 +78,7 @@
     },
     data () {
       return {
-        error: undefined,
+        title: undefined,
       }
     },
     computed: {

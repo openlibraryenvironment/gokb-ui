@@ -2,26 +2,28 @@
   import GokbSearchField from '@/shared/components/base/gokb-search-field'
 
   export default {
-    name: 'GokbSearchIdentifierField',
+    name: 'GokbTitleField',
     extends: GokbSearchField,
     props: {
       label: {
         type: String,
         required: false,
-        default: 'Identifier'
+        default: 'Titel'
+      },
+      allowNewValues: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     created () {
-      this.searchServicesResourceUrl = 'rest/identifiers'
+      this.searchServicesResourceUrl = 'rest/titles'
     },
     methods: {
       _include () {
-        return 'id,value'
+        return 'id,name,dateCreated'
       },
-      transform (result) {
-        const { data: { data } } = result
-        return data.map(value => ({ value: value.id, text: value.value }))
-      }
+
     }
   }
 </script>

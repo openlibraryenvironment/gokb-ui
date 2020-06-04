@@ -7,11 +7,12 @@ const api = (baseServices) => ({
       url: `${USER_URL}/${id}`,
     }, cancelToken)
   },
-  createOrUpdateUser (data, cancelToken) {
-    const { id } = data
+  createOrUpdateUser (dataObject, cancelToken) {
+    const { id } = dataObject
+    const data = { data: dataObject }
     const url = id ? `${USER_URL}/${id}` : USER_URL
     return baseServices.request({
-      method: data.id ? 'PATCH' : 'POST',
+      method: id ? 'PATCH' : 'POST',
       url,
       data,
     }, cancelToken)

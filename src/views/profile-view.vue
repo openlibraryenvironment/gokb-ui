@@ -230,7 +230,7 @@
             ...(this.origpass ? { origpass: this.origpass } : {}),
             ...(this.newpass ? { newpass: this.newpass } : {}),
             ...(this.repeatpass ? { repeatpass: this.repeatpass } : {}),
-            curatoryGroups: this.curatoryGroups.map(({ id }) => id)
+            curatoryGroupIds: this.curatoryGroups.map(({ id }) => id)
           }, this.cancelToken.token),
           instance: this
         })

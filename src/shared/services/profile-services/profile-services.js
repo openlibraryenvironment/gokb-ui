@@ -7,7 +7,8 @@ const api = (baseServices) => ({
       url: PROFILE_URL,
     }, cancelToken)
   },
-  updateProfile (url, data, cancelToken) {
+  updateProfile (url, dataObject, cancelToken) {
+    const data = { data: dataObject }
     return baseServices.request({
       method: 'PATCH',
       url,

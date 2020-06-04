@@ -1,5 +1,20 @@
 <template>
+  <v-combobox
+    v-if="allowNewValues"
+    v-model="localValue"
+    :items="items"
+    :label="label"
+    :loading="loading"
+    :placeholder="placeholder"
+    :rules="rules"
+    :search-input.sync="search"
+    clearable
+    hide-details
+    hide-no-data
+    no-filter
+  />
   <v-autocomplete
+    v-else
     v-model="localValue"
     :items="items"
     :label="label"
@@ -27,6 +42,11 @@
         type: String,
         required: false,
         default: ''
+      },
+      allowNewValues: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -59,11 +79,14 @@
       this.searchServices = searchServices(this.searchServicesResourceUrl)
     },
     methods: {
+      _include () {
+        return 'id,name'
+      },
       async query (value) {
         const result = await this.catchError({
           promise: this.searchServices.search({
             name: this.search,
-            _include: 'id,name,value'
+            _include: this._include()
           }, this.cancelToken.token),
           instance: this
         })
@@ -71,7 +94,7 @@
       },
       transform (result) {
         const { data: { data } } = result
-        return data.map(value => ({ value: value.id, text: value.name }))
+        return data.map(({ id, name, ...rest }) => ({ value: id, text: name, ...rest }))
       }
     }
   }
