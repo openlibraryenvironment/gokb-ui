@@ -227,9 +227,9 @@
         await this.catchError({
           promise: profileServices.updateProfile(this.updateProfileUrl, {
             email: this.email,
-            ...(this.origpass ? { origpass: this.origpass } : {}),
-            ...(this.newpass ? { newpass: this.newpass } : {}),
-            ...(this.repeatpass ? { repeatpass: this.repeatpass } : {}),
+            ...(this.origpass ? { password: this.origpass } : {}),
+            ...(this.newpass ? { new_password: this.newpass } : {}),
+            // ...(this.repeatpass ? { repeatpass: this.repeatpass } : {}),
             curatoryGroupIds: this.curatoryGroups.map(({ id }) => id)
           }, this.cancelToken.token),
           instance: this
