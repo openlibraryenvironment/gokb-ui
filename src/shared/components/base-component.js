@@ -42,10 +42,10 @@ export default {
           return result
         })
         .catch(error => {
-          log.error(error)
           // hide execution canceled error
           if (error.response.status >= 500 && instance) {
-             instance.error = this.isCancelThrown(error) ? undefined : error
+            log.error(error)
+            instance.error = this.isCancelThrown(error) ? undefined : error
           } else {
             return error.response
           }
