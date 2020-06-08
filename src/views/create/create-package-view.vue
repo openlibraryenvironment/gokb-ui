@@ -105,7 +105,7 @@
           <gokb-section
             sub-title="Organisation"
           >
-            <gokb-search-provider-field
+            <gokb-search-organisation-field
               v-model="provider"
               label="Name"
             />
@@ -276,7 +276,7 @@
 </template>
 
 <script>
-  import GokbSearchProviderField from '@/shared/components/simple/gokb-search-provider-field'
+  import GokbSearchOrganisationField from '@/shared/components/simple/gokb-search-organisation-field'
   import GokbSearchPlatformField from '@/shared/components/simple/gokb-search-platform-field'
   import GokbScopeField from '@/shared/components/simple/gokb-scope-field'
   import GokbUrlField from '@/shared/components/simple/gokb-url-field'
@@ -289,7 +289,7 @@
     name: 'CreatePackage',
     components: {
       GokbIdentifierSection,
-      GokbSearchProviderField,
+      GokbSearchOrganisationField,
       GokbSearchPlatformField,
       GokbScopeField,
       GokbUrlField,
