@@ -37,11 +37,18 @@ export default {
     catchError ({ promise, instance }) {
       loading.startLoading()
       return promise
-        .then(result => result)
+        .then(result => {
+          instance && (instance.error = undefined)
+          return result
+        })
         .catch(error => {
           log.error(error)
           // hide execution canceled error
-          instance && (instance.error = this.isCancelThrown(error) ? undefined : error)
+          if (error.response.status >= 500 && instance) {
+             instance.error = this.isCancelThrown(error) ? undefined : error
+          } else {
+            return error.response
+          }
         })
         .finally(() => {
           loading.stopLoading()
