@@ -21,8 +21,8 @@
     "register-service-worker": "^1.7.1",
     "uuid4": "^1.1.4",
     "vue": "^2.6.11",
-    "vue-router": "^3.3.1",
-    "vuetify": "^2.2.30"
+    "vue-router": "^3.3.2",
+    "vuetify": "^2.2.32"
   },
   "devDependencies": {
     "@babel/plugin-proposal-export-default-from": "^7.10.1",
@@ -36,15 +36,15 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-config-vuetify": "^0.2.0",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.21.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.2",
     "eslint-plugin-vuetify": "^1.0.0-beta.5",
-    "sass": "^1.26.5",
+    "sass": "^1.26.8",
     "sass-loader": "^8.0.2",
-    "snowpack": "^2.2.1",
+    "snowpack": "^2.3.1",
     "vue-cli-plugin-vuetify": "^2.0.5",
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.4.4"
