@@ -12,10 +12,11 @@
     </gokb-section>
     <gokb-section title="Kennwort">
       <gokb-password-field
+        ref="passwordField"
         v-model="origpass"
         :disabled="updateProfileAvailable"
         label="Bisheriges Kennwort"
-        :rules="[]"
+        :rules="[isPasswordWrong]"
       />
       <gokb-password-field
         v-model="newpass"
@@ -93,7 +94,6 @@
 
 <script>
   import { HOME_ROUTE } from '@/router/route-paths'
-  import loading from '@/shared/models/loading'
   import account from '@/shared/models/account-model'
   import profileServices from '@/shared/services/profile-services'
   import BaseComponent from '@/shared/components/base-component'
@@ -139,9 +139,14 @@
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
+
+        passwordWrongMessage: undefined,
       }
     },
     computed: {
+      isPasswordWrong () {
+        return this.passwordWrongMessage || true
+      },
       isDeleteSelectedDisabled () {
         return !this.selectedCuratoryGroups.length
       },
@@ -160,9 +165,12 @@
         return !this.updateProfileUrl
       }
     },
-    async created () {
-      loading.startLoading()
-      this.curatoryGroupsTableHeaders = CURATORY_GROUPS_TABLE_HEADERS
+    watch: {
+      passwordWrongMessage () {
+        this.$refs.passwordField.validate()
+      }
+    },
+    async activated () {
       const {
         data: {
           data: {
@@ -182,7 +190,9 @@
       this.deleteProfileUrl = deleteProfileUrl
       this.email = email
       this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
-      loading.stopLoading()
+    },
+    created () {
+      this.curatoryGroupsTableHeaders = CURATORY_GROUPS_TABLE_HEADERS
     },
     methods: {
       checkNewPassword () {
@@ -223,8 +233,7 @@
       },
 
       async updateProfile () {
-        loading.startLoading()
-        await this.catchError({
+        const { data: { error: { message } } } = await this.catchError({
           promise: profileServices.updateProfile(this.updateProfileUrl, {
             email: this.email,
             ...(this.origpass ? { password: this.origpass } : {}),
@@ -234,17 +243,15 @@
           }, this.cancelToken.token),
           instance: this
         })
-        loading.stopLoading()
+        this.passwordWrongMessage = message
       },
 
       async removeProfile () {
-        loading.startLoading()
         await this.catchError({
           promise: profileServices.deleteProfile(this.deleteProfileUrl, this.cancelToken.token),
           instance: this
         })
         await account.logout()
-        loading.stopLoading()
         await this.$router.push(HOME_ROUTE)
       }
     },

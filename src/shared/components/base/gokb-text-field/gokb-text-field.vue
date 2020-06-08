@@ -1,5 +1,6 @@
 <template>
   <v-text-field
+    ref="textField"
     v-model="localValue"
     :disabled="disabled"
     :autocomplete="autocomplete"
@@ -86,6 +87,11 @@
         }
       },
     },
+    methods: {
+      validate () {
+        this.$refs.textField.validate(true)
+      }
+    }
   }
 </script>
 
