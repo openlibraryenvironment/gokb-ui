@@ -16,21 +16,21 @@
         v-model="origpass"
         :disabled="updateProfileAvailable"
         label="Bisheriges Kennwort"
-        :rules="[isPasswordWrong]"
+        :rules="[isPasswordEmpty, isPasswordWrong]"
       />
       <gokb-password-field
         v-model="newpass"
         :disabled="updateProfileAvailable"
         label="Neues Kennwort"
         autocomplete="new-password"
-        :rules="[checkNewPassword]"
+        :rules="[checkNewPassword, isPasswordEmpty]"
       />
       <gokb-password-field
         v-model="repeatpass"
         :disabled="updateProfileAvailable"
         label="Neues Kennwort (Wiederholung)"
         autocomplete="new-password"
-        :rules="[checkNewPassword]"
+        :rules="[checkNewPassword, isPasswordEmpty]"
       />
     </gokb-section>
     <gokb-add-item-popup
@@ -144,9 +144,6 @@
       }
     },
     computed: {
-      isPasswordWrong () {
-        return this.passwordWrongMessage || true
-      },
       isDeleteSelectedDisabled () {
         return !this.selectedCuratoryGroups.length
       },
@@ -195,7 +192,16 @@
       this.curatoryGroupsTableHeaders = CURATORY_GROUPS_TABLE_HEADERS
     },
     methods: {
+      isPasswordEmpty () {
+        console.log('isPasswordEmpty')
+        return (this.newpass || this.repeatpass) && !this.origpass ? 'Bitte erfassen Sie das alte Passwort' : true
+      },
+      isPasswordWrong () {
+        console.log('isPasswordWrong')
+        return (this.origpass && this.passwordWrongMessage) || true
+      },
       checkNewPassword () {
+        console.log('checkNewPassword')
         return this.newpass && this.repeatpass && this.newpass !== this.repeatpass ? 'Das neue Passwort ist nicht identisch.' : true
       },
       executeAction (actionMethodName, actionMethodParameter) {
