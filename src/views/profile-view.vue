@@ -193,15 +193,12 @@
     },
     methods: {
       isPasswordEmpty () {
-        console.log('isPasswordEmpty')
         return (this.newpass || this.repeatpass) && !this.origpass ? 'Bitte erfassen Sie das alte Passwort' : true
       },
       isPasswordWrong () {
-        console.log('isPasswordWrong')
         return (this.origpass && this.passwordWrongMessage) || true
       },
       checkNewPassword () {
-        console.log('checkNewPassword')
         return this.newpass && this.repeatpass && this.newpass !== this.repeatpass ? 'Das neue Passwort ist nicht identisch.' : true
       },
       executeAction (actionMethodName, actionMethodParameter) {
