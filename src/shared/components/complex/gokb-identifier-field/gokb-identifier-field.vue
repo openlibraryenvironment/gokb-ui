@@ -1,12 +1,12 @@
 <template>
   <v-row>
     <v-col v-if="!namespaceFixed">
-      <gokb-namespace-field v-model="localValue.namespace.id" />
+      <gokb-namespace-field v-model="localNamespace" />
     </v-col>
     <v-col>
       <gokb-text-field
-        v-model="localValue.value"
-        :label="namespaceFixed ? localValue.namespace.name : 'Identifikator'"
+        v-model="localValue"
+        :label="namespaceFixed ? localNamespace.name : 'Identifikator'"
         :append-icon="deleteIcon"
       />
     </v-col>
@@ -31,22 +31,27 @@
       value: {
         type: Object,
         required: true,
-        default: () => ({ id: undefined, value: undefined, namespace: { id: undefined, name: undefined } })
+        default: () => ({ value: undefined, namespace: { id: undefined, name: undefined } })
       },
     },
     computed: {
       deleteIcon () {
         return this.deleteable ? 'delete' : undefined
       },
-      colsNamespace () {
-        return this.namespaceFixed ? 1 : 6
-      },
       localValue: {
         get () {
-          return this.value
+          return this.value.value
         },
-        set (localValue) {
-          this.$emit('input', localValue)
+        set (value) {
+          this.$emit('input', { value, namespace: this.value.namespace })
+        }
+      },
+      localNamespace: {
+        get () {
+          return this.value.namespace
+        },
+        set (namespace) {
+          this.$emit('input', { value: this.value.value, namespace })
         }
       },
     }
