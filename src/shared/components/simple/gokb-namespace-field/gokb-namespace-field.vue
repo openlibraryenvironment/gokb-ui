@@ -12,7 +12,7 @@
       }
     },
     created () {
-      this.entityName = 'namespaces'
+      this.entityName = 'identifier-namespaces'
     },
     methods: {
       transform (result) {

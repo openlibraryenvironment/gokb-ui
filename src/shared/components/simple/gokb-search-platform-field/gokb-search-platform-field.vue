@@ -12,7 +12,7 @@
       }
     },
     created () {
-      this.searchServicesResourceUrl = 'rest/platform'
+      this.searchServicesResourceUrl = 'rest/platforms'
     },
   }
 </script>

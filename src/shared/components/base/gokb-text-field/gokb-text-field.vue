@@ -13,6 +13,7 @@
     :append-icon="appendIcon"
     validate-on-blur
     clearable
+    @click:append="$emit('click:append', $event)"
   />
 </template>
 

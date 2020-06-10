@@ -29,7 +29,7 @@
         type: Array,
         required: false,
         default: () => [
-          value => value || 'Bitte erfassen Sie einen Benutzernamen.'
+          value => !!value || 'Bitte erfassen Sie einen Benutzernamen.'
         ]
       },
     },

@@ -43,6 +43,11 @@
         required: false,
         default: ''
       },
+      value: {
+        type: Number,
+        required: true,
+        default: NaN
+      },
       allowNewValues: {
         type: Boolean,
         required: false,

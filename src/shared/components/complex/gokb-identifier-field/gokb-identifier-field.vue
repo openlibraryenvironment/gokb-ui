@@ -8,6 +8,7 @@
         v-model="localValue"
         :label="namespaceFixed ? localNamespace.name : 'Identifikator'"
         :append-icon="deleteIcon"
+        @click:append="$emit('delete', value)"
       />
     </v-col>
   </v-row>

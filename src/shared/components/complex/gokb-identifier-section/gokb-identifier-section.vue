@@ -23,6 +23,7 @@
       v-model="localValue[i]"
       namespace-fixed
       deleteable
+      @delete="deleteIdentifier"
     />
   </gokb-section>
 </template>
@@ -58,9 +59,12 @@
       showAddIdentifierPopup () {
         this.addIdentifierPopupVisible = true
       },
-      addNewIdentifier () {
-        console.log('addNewIdentifier called')
+      addNewIdentifier (value) {
+        this.localValue.push(value)
       },
+      deleteIdentifier (value) {
+        this.localValue = this.localValue.filter(v => v !== value)
+      }
     }
   }
 </script>

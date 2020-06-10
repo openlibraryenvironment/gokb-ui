@@ -34,7 +34,7 @@
         type: Array,
         required: false,
         default: () => [
-          value => value || 'Bitte erfassen Sie ein Kennwort.'
+          value => !!value || 'Bitte erfassen Sie ein Kennwort.'
         ]
       },
     },

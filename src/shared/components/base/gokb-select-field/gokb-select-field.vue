@@ -1,6 +1,6 @@
 <template>
   <v-select
-    v-model="localSelectedItem"
+    v-model="localValue"
     :items="items"
     :label="label"
     :placeholder="placeholder"
@@ -23,7 +23,7 @@
       value: {
         type: [Object, Number, Array, Boolean],
         required: false,
-        default: () => {},
+        default: () => undefined,
       },
       placeholder: {
         type: String,
@@ -52,7 +52,7 @@
       }
     },
     computed: {
-      localSelectedItem: {
+      localValue: {
         get () {
           return this.value
         },
