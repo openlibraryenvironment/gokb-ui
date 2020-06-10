@@ -76,7 +76,7 @@
     <template #buttons>
       <gokb-button
         :disabled="removeProfileAvailable"
-        @click.native="removeProfile"
+        @click.native="confirmRemoveProfile"
       >
         Konto löschen
       </gokb-button>
@@ -84,7 +84,6 @@
       <gokb-button
         :disabled="updateProfileAvailable"
         default
-        @click.native="updateProfile"
       >
         Aktualisieren
       </gokb-button>
@@ -216,6 +215,12 @@
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
+      confirmRemoveProfile () {
+        this.actionToConfirm = '_removeProfile'
+        this.messageToConfirm = 'Wollen Sie das Profil wirklich löschen?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
       _deleteSelectedCuratoryGroups () {
         this.addedCuratoryGroups = this.addedCuratoryGroups.filter(({ id }) => !this.selectedCuratoryGroups
           .find(({ id: selectedId }) => id === selectedId))
@@ -236,20 +241,18 @@
       },
 
       async updateProfile () {
-        const { data: { error: { message } } } = await this.catchError({
+        const result = await this.catchError({
           promise: profileServices.updateProfile(this.updateProfileUrl, {
             email: this.email,
             ...(this.origpass ? { password: this.origpass } : {}),
             ...(this.newpass ? { new_password: this.newpass } : {}),
-            // ...(this.repeatpass ? { repeatpass: this.repeatpass } : {}),
             curatoryGroupIds: this.curatoryGroups.map(({ id }) => id)
           }, this.cancelToken.token),
           instance: this
         })
-        this.passwordWrongMessage = message
+        this.passwordWrongMessage = result?.data?.error?.message
       },
-
-      async removeProfile () {
+      async _removeProfile () {
         await this.catchError({
           promise: profileServices.deleteProfile(this.deleteProfileUrl, this.cancelToken.token),
           instance: this
