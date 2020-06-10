@@ -2,7 +2,7 @@
   <v-container style="max-width: 1000px;">
     <v-form
       ref="form"
-      @submit.prevent
+      @submit.prevent="$emit('submit')"
     >
       <v-card flat>
         <v-toolbar
