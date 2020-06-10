@@ -6,7 +6,7 @@
   >
     <component
       :is="component.type"
-      v-model="selectedItem"
+      v-model="item"
     />
     <template #buttons>
       <v-spacer />
@@ -17,7 +17,7 @@
         Abbrechen
       </gokb-button>
       <gokb-button
-        :disabled="!selectedItem"
+        :disabled="!item"
         default
       >
         Hinzufügen
@@ -45,7 +45,7 @@
     },
     data () {
       return {
-        selectedItem: undefined,
+        item: undefined,
       }
     },
     computed: {
@@ -60,7 +60,7 @@
     },
     methods: {
       addItem () {
-        this.$emit('add', this.selectedItem)
+        this.$emit('add', this.item)
         this.close()
       },
       close () {

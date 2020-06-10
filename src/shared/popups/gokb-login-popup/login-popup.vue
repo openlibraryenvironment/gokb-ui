@@ -84,16 +84,15 @@
         const username = this.username
         const password = this.password
         const save = this.save
-        loading.startLoading()
-        await this.catchError({
+        const response = await this.catchError({
           promise: accountModel.login({ username, password, save }, this.cancelToken.token),
           instance: this
         })
+        this.error = response?.status
         form.validate()
         if (accountModel.loggedIn()) {
           this.close()
         }
-        loading.stopLoading()
       },
       close () {
         this.error = undefined
