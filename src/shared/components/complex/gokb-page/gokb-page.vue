@@ -2,7 +2,7 @@
   <v-container style="max-width: 1000px;">
     <v-form
       ref="form"
-      @submit.prevent="doSubmit"
+      @submit.prevent
     >
       <v-card flat>
         <v-toolbar
@@ -37,14 +37,6 @@
         required: false,
         default: 'missing title for page'
       },
-    },
-    data () {
-      return {}
-    },
-    methods: {
-      doSubmit () {
-        this.$emit('submit')
-      }
     }
   }
 </script>
