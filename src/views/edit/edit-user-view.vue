@@ -151,7 +151,8 @@
     props: {
       id: {
         type: Number,
-        required: true,
+        required: false,
+        default: undefined
       }
     },
     data () {
