@@ -21,7 +21,7 @@
       <v-spacer />
       <gokb-button
         text
-        @click.native="close"
+        @click="close"
       >
         Abbrechen
       </gokb-button>

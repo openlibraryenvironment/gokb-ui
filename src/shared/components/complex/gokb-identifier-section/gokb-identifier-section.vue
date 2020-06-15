@@ -12,7 +12,7 @@
     <template #buttons>
       <gokb-button
         icon-id="add"
-        @click.native="showAddIdentifierPopup"
+        @click="showAddIdentifierPopup"
       >
         Identifier hinzufügen
       </gokb-button>

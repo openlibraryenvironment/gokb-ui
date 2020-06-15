@@ -4,7 +4,7 @@
       <gokb-button
         icon-id="import_export"
         :disabled="disabled"
-        @click.native="on.click"
+        @click="on.click"
       >
         Export
       </gokb-button>
