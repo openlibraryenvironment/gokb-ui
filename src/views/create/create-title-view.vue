@@ -42,10 +42,10 @@
     </gokb-section>
     <gokb-section sub-title="Publisher">
       <template #buttons>
-        <gokb-button @click.native="showAddNewPublisher">
+        <gokb-button @click="showAddNewPublisher">
           Hinzufügen
         </gokb-button>
-        <gokb-button @click.native="deleteSelectedPublisher">
+        <gokb-button @click="deleteSelectedPublisher">
           Löschen
         </gokb-button>
       </template>
@@ -67,7 +67,7 @@
     <template #buttons>
       <v-spacer />
       <gokb-button
-        @click.native="create"
+        @click="create"
       >
         Hinzufügen
       </gokb-button>
