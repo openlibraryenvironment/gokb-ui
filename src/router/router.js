@@ -1,6 +1,6 @@
 import {
   HOME_ROUTE, PROFILE_ROUTE, TITLE_ROUTE, PACKAGE_ROUTE, PROVIDER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
-  KBART_IMPORT_ROUTE, SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
+  SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
   SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_USER_ROUTE, EDIT_USER_ROUTE, ERROR_ROUTE, EDIT_PACKAGE_ROUTE,
   EDIT_PROVIDER_ROUTE, ADD_PROVIDER_ROUTE
 } from './route-paths'
@@ -46,14 +46,9 @@ const api = (log, errorModel, accountModel, Router, HomeView) => {
       },
       {
         path: CREATE_TITLE_ROUTE,
-        name: KBART_IMPORT_ROUTE,
+        name: CREATE_TITLE_ROUTE,
         component: () => import('@/views/create/create-title-view.vue')
       },
-      {
-        path: KBART_IMPORT_ROUTE,
-        component: () => import('@/views/create/kbart-import-view.vue')
-      },
-
       {
         path: SEARCH_MAINTENANCE_ROUTE,
         name: SEARCH_MAINTENANCE_ROUTE,

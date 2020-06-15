@@ -123,7 +123,7 @@
   import UserMenu from '@/shared/user-menu'
   import {
     HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
-    KBART_IMPORT_ROUTE, SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
+    SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
     SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_PROVIDER_ROUTE
   } from '@/router/route-paths'
   import { createCancelToken } from '@/shared/services/http'
@@ -135,7 +135,6 @@
     { icon: 'create_new_folder', text: 'Paket anlegen', route: CREATE_PACKAGE_ROUTE, toolbar: true },
     { icon: 'library_add', text: 'Einzeltitel anlegen', route: CREATE_TITLE_ROUTE, toolbar: true },
     { icon: 'domain', text: 'Provider anlegen', route: ADD_PROVIDER_ROUTE, toolbar: true },
-    { icon: 'folder_special', text: 'KBART Import', route: KBART_IMPORT_ROUTE, toolbar: true },
     {},
     { icon: 'folder', text: 'Pakete', route: SEARCH_PACKAGE_ROUTE },
     { icon: 'library_books', text: 'Einzeltitel', route: SEARCH_TITLE_ROUTE },
