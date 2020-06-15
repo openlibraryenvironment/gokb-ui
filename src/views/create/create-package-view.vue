@@ -44,60 +44,60 @@
             sub-title="Paket"
           >
             <gokb-text-field
-              v-model="title"
+              v-model="packageItem.name"
               label="Titel"
             />
             <gokb-search-source-field
-              v-model="source"
+              v-model="packageItem.source"
             />
             <gokb-url-field
-              v-model="url"
+              v-model="packageItem.descriptionUrl"
             />
             <gokb-textarea-field
-              v-model="description"
+              v-model="packageItem.description"
               label="Beschreibung"
             />
             <gokb-scope-field
-              v-model="scope"
+              v-model="packageItem.scope"
             />
             <gokb-radiobutton-group>
               <gokb-radiobutton-field
-                v-model="global"
+                v-model="packageItem.global"
                 label="Konsortial"
               />
               <gokb-radiobutton-field
-                v-model="global"
+                v-model="packageItem.global"
                 label="Global"
               />
               <gokb-radiobutton-field
-                v-model="global"
+                v-model="packageItem.global"
                 label="Regional"
               />
               <gokb-radiobutton-field
-                v-model="global"
+                v-model="packageItem.global"
                 label="Unbekannt"
               />
             </gokb-radiobutton-group>
             <v-row>
               <gokb-checkbox-field
-                v-model="consistent"
+                v-model="packageItem.consistent"
                 class="ml-3"
                 label="Paketinhalt ist konsistent"
               />
               <gokb-checkbox-field
-                v-model="breakable"
+                v-model="packageItem.breakable"
                 class="ml-3"
                 label="Teilbar für Lizenznehmer"
               />
               <gokb-checkbox-field
-                v-model="fixed"
+                v-model="packageItem.fixed"
                 class="ml-3"
                 label="Paket ist unveränderbar"
               />
             </v-row>
           </gokb-section>
           <gokb-identifier-section
-            v-model="identifiers"
+            v-model="packageItem.ids"
           />
         </v-stepper-content>
 
@@ -106,13 +106,13 @@
             sub-title="Organisation"
           >
             <gokb-search-organisation-field
-              v-model="provider"
+              v-model="packageItem.organisation"
               label="Name"
             />
           </gokb-section>
           <gokb-section sub-title="Plattform">
             <gokb-search-platform-field
-              v-model="platform"
+              v-model="packageItem.nominalPlatform"
               label="Name"
             />
           </gokb-section>
@@ -125,15 +125,11 @@
             :title-type="addTitleType"
             @add="addNewTitle"
           />
-          <gokb-kbart-import-popup
-            v-if="kbartImportPopupVisible"
-            v-model="kbartImportPopupVisible"
-          />
           <gokb-section sub-title="Titel">
             <template #buttons>
               <gokb-button
                 class="mr-4"
-                @click.native="showKbartImportPopup"
+                @click="showKbartImportPopup"
               >
                 KBART Import
               </gokb-button>
@@ -157,7 +153,7 @@
                   <template v-for="type in packageTypes">
                     <v-list-item
                       :key="type.text"
-                      @click.native="showAddNewTitlePopup(type)"
+                      @click="showAddNewTitlePopup(type)"
                     >
                       <v-list-item-title>
                         {{ type.text }}
@@ -169,19 +165,29 @@
 
               <gokb-button
                 icon-id="delete"
+                @click="confirmDeleteSelectedItems"
               >
                 Löschen
               </gokb-button>
             </template>
+            <gokb-confirmation-popup
+              v-model="confirmationPopUpVisible"
+              :message="messageToConfirm"
+              @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+            />
             <gokb-table
-              :show-select="false"
               :headers="titlesHeader"
               :items="titles"
+              :selected-items="selectedTitles"
+              :total-number-of-items="totalNumberOfTitles"
+              :options.sync="titlesOptions"
+              @selected-items="selectedTitles = $event"
+              @delete-item="confirmDeleteItem"
             />
           </gokb-section>
         </v-stepper-content>
 
-        <v-stepper-content :step="4">
+        <!--<v-stepper-content :step="4">
           <gokb-section sub-title="Zusammenfassung">
             <v-row>
               <v-col>
@@ -202,7 +208,7 @@
             <v-row>
               <v-col>
                 <gokb-text-field
-                  v-model="plattform"
+                  v-model="platform"
                   label="Plattform"
                   disabled
                 />
@@ -230,10 +236,10 @@
           </gokb-section>
           <gokb-section sub-title="Kuratoren">
             <template #buttons>
-              <gokb-button @click.native="showAddNewCuratoryGroup">
+              <gokb-button @click="showAddNewCuratoryGroup">
                 Hinzufügen
               </gokb-button>
-              <gokb-button @click.native="deleteSelectedCuratoryGroups">
+              <gokb-button @click="deleteSelectedCuratoryGroups">
                 Löschen
               </gokb-button>
             </template>
@@ -245,14 +251,14 @@
               :selected-items="selectedCuratoryGroups"
             />
           </gokb-section>
-        </v-stepper-content>
+        </v-stepper-content>-->
       </v-stepper-items>
     </v-stepper>
 
     <template #buttons>
       <gokb-button
         v-show="step !== 1"
-        @click.native="go2PreviousStep"
+        @click="go2PreviousStep"
       >
         Zurück
       </gokb-button>
@@ -260,14 +266,14 @@
       <gokb-button
         v-if="step !== 4"
         default
-        @click.native="go2NextStep"
+        @click="go2NextStep"
       >
         Weiter
       </gokb-button>
       <gokb-button
         v-else
         default
-        @click.native="go2NextStep"
+        @click="go2NextStep"
       >
         Hinzufügen
       </gokb-button>
@@ -282,8 +288,25 @@
   import GokbUrlField from '@/shared/components/simple/gokb-url-field'
   import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
-  import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
+  // import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
   import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
+
+  const ROWS_PER_PAGE = 10
+
+  const TITLES_HEADER = [
+    {
+      text: 'Titel',
+      align: 'left',
+      sortable: false,
+      value: 'title'
+    },
+    {
+      text: 'Plattform',
+      align: 'left',
+      sortable: false,
+      value: 'platform'
+    },
+  ]
 
   export default {
     name: 'CreatePackage',
@@ -295,25 +318,29 @@
       GokbUrlField,
       GokbSearchSourceField,
       GokbAddTitlePopup,
-      GokbKbartImportPopup
+      // GokbKbartImportPopup
     },
     data () {
       return {
         kbartImportPopupVisible: false,
         step: 1,
-        title: undefined,
-        source: undefined,
-        url: undefined,
-        description: undefined,
-        scope: undefined,
-        global: undefined,
-        consistent: undefined,
-        breakable: undefined,
-        fixed: undefined,
-        identifiers: [{ id: 42, namespace: { id: 42, name: 'issn' }, value: '1231' }],
-        provider: undefined,
+        packageItem: {
+          name: undefined,
+          source: undefined,
+          descriptionUrl: undefined,
+          description: undefined,
+          scope: undefined,
+          global: undefined,
+          consistent: undefined,
+          breakable: undefined,
+          fixed: undefined,
+          ids: [],
+          variantNames: undefined,
+          provider: undefined,
+          nominalPlatform: undefined,
+        },
         packageTypes: [{ id: 'serial', text: 'Journal' }, { id: 'monograph', text: 'Monographie' }],
-        alternativeNamesHeader: [
+        variantNamesHeader: [
           {
             text: 'Alias',
             align: 'left',
@@ -321,41 +348,28 @@
             value: 'alias'
           },
         ],
-        alternativeNames: [],
-        curatoriesHeader: [
-          {
-            text: 'Gruppe',
-            align: 'left',
-            sortable: false,
-            value: 'group'
-          },
-        ],
-        curatories: [],
+
         addTitlePopupVisible: false,
-        titlesHeader: [
-          {
-            text: 'Titel',
-            align: 'left',
-            sortable: false,
-            value: 'title'
-          },
-          {
-            text: 'Plattform',
-            align: 'left',
-            sortable: false,
-            value: 'platform'
-          },
-        ],
+        titlesOptions: {
+          page: 1,
+          itemsPerPage: ROWS_PER_PAGE
+        },
+        selectedTitles: [],
         titles: [],
 
-        curatoryGroups: undefined,
-        selectedCuratoryGroups: [],
-        deletedCuratoryGroups: [],
-        addedCuratoryGroups: [],
-        curatoryGroupsTableHeaders: [
-          { text: 'Gruppe', align: 'left', value: 'name', sortable: false, width: '100%' },
-        ]
+        confirmationPopUpVisible: false,
+        actionToConfirm: undefined,
+        parameterToConfirm: undefined,
+        messageToConfirm: undefined,
       }
+    },
+    computed: {
+      totalNumberOfTitles () {
+        return this.titles.length
+      },
+    },
+    created () {
+      this.titlesHeader = TITLES_HEADER
     },
     methods: {
       go2NextStep () {
@@ -364,6 +378,30 @@
       go2PreviousStep () {
         this.step > 1 && this.step--
       },
+      executeAction (actionMethodName, actionMethodParameter) {
+        this[actionMethodName](actionMethodParameter)
+      },
+      confirmDeleteSelectedItems () {
+        this.actionToConfirm = '_deleteSelectedCuratoryGroups'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      confirmDeleteItem ({ id }) {
+        this.actionToConfirm = '_deleteItem'
+        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
+        this.parameterToConfirm = id
+        this.confirmationPopUpVisible = true
+      },
+      _deleteSelectedTitles () {
+        this.titles = this.titles.filter(({ id }) => !this.selectedTitles
+          .find(({ id: selectedId }) => id === selectedId))
+        this.selectedTitles = []
+      },
+      _deleteItem (idToDelete) {
+        this.titles = this.titles.filter(({ id }) => id !== idToDelete)
+        this.selectedTitles = this.selectedTitles.filter(({ id }) => id !== idToDelete)
+      },
       showAddNewTitlePopup (titleType) {
         this.addTitleType = titleType
         this.addTitlePopupVisible = true
@@ -371,8 +409,9 @@
       showKbartImportPopup () {
         this.kbartImportPopupVisible = true
       },
-      addNewTitle () {
-        console.log('addNewTitle')
+      addNewTitle (title) {
+        !this.titles.find(({ id: idInAll }) => title.id === idInAll) &&
+          this.titles.push(title)
       },
       createPackage () {
         console.log('create package')

@@ -106,13 +106,13 @@
       </v-menu>
       <user-menu />
     </v-app-bar>
-    <v-content>
+    <v-main>
       <v-container>
         <keep-alive :exclude="/^Edit\w*$/">
           <router-view :key="$route.fullPath" />
         </keep-alive>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
