@@ -5,6 +5,7 @@
     :type="type"
     :disabled="disabled"
     :to="to"
+    @click="$emit('click', $event)"
   >
     <v-icon
       v-if="iconId"
