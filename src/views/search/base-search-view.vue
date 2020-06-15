@@ -31,7 +31,7 @@
         <v-col md="4">
           <gokb-button
             class="mr-4"
-            @click.native.stop="resetSearch"
+            @click="resetSearch"
           >
             Zurücksetzen
           </gokb-button>
@@ -59,7 +59,7 @@
             :icon-id="button.icon"
             :to="button.route"
             :disabled="isButtonDisabled(button.disabled)"
-            @click.native="executeAction(button.action)"
+            @click="executeAction(button.action)"
           >
             {{ button.label }}
           </gokb-button>

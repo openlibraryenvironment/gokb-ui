@@ -64,14 +64,14 @@
         <gokb-button
           class="mr-4"
           icon-id="add"
-          @click.native="showAddNewRole"
+          @click="showAddNewRole"
         >
           Hinzufügen
         </gokb-button>
         <gokb-button
           icon-id="delete"
           :disabled="isDeleteSelectedRolesDisabled"
-          @click.native="confirmDeleteSelectedRoles"
+          @click="confirmDeleteSelectedRoles"
         >
           Löschen
         </gokb-button>
@@ -97,13 +97,13 @@
     <!--        <gokb-button-->
     <!--          class="mr-4"-->
     <!--          icon-id="add"-->
-    <!--          @click.native="showAddNewCuratoryGroup"-->
+    <!--          @click="showAddNewCuratoryGroup"-->
     <!--        >-->
     <!--          Hinzufügen-->
     <!--        </gokb-button>-->
     <!--        <gokb-button-->
     <!--          icon-id="delete"-->
-    <!--          @click.native="deleteSelectedCuratoryGroups"-->
+    <!--          @click="deleteSelectedCuratoryGroups"-->
     <!--        >-->
     <!--          Löschen-->
     <!--        </gokb-button>-->
@@ -116,7 +116,7 @@
       <v-spacer />
       <gokb-button
         text
-        @click.native="pageBack"
+        @click="pageBack"
       >
         Abbrechen
       </gokb-button>
