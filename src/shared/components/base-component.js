@@ -1,6 +1,7 @@
 import log from '@/shared/utils/logger'
 import { createCancelToken, isCancelThrown } from '@/shared/services/http'
 import loading from '@/shared/models/loading'
+import { HOME_ROUTE } from '@/router/route-paths'
 
 export default {
   data () {
@@ -46,6 +47,8 @@ export default {
           if (error.response.status >= 500 && instance) {
             log.error(error)
             instance.error = this.isCancelThrown(error) ? undefined : error
+          } else if (error.response.status === 401) {
+            this.$router.replace({ name: HOME_ROUTE, query: { login: true } })
           } else {
             return error.response
           }

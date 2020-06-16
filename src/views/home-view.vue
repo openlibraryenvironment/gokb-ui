@@ -2,6 +2,7 @@
   <gokb-page
     title="Dashboard"
   >
+    <login-popup v-model="showLogin" />
     <gokb-section sub-title="Reviews">
       <template #buttons>
         <gokb-select-field
@@ -45,10 +46,14 @@
 </template>
 
 <script>
+  import LoginPopup from '@/shared/popups/gokb-login-popup'
+
   export default {
     name: 'ProfileView',
+    components: { LoginPopup },
     data () {
       return {
+        showLogin: false,
         reviewsHeader: [
           {
             text: 'Name',
@@ -120,6 +125,11 @@
         kbartImports: [
           { filename: 'American Science Journal.tsv', importDate: '01.12.2018 12:43' },
         ],
+      }
+    },
+    activated () {
+      if (this.$route.query.login) {
+        this.showLogin = true
       }
     }
   }
