@@ -52,7 +52,11 @@
 </template>
 
 <script>
+  import baseComponent from '@/shared/components/base-component'
+  import genericEntityServices from '@/shared/services/generic-entity-services'
   import LoginPopup from '@/shared/popups/gokb-login-popup'
+
+  const reviewServices = genericEntityServices('reviews')
 
   const ROWS_PER_PAGE = 10
 
@@ -63,23 +67,23 @@
       sortable: false,
       value: 'name'
     },
-    {
-      text: 'Typ',
-      align: 'left',
-      sortable: false,
-      value: 'type'
-    },
+    // {
+    //   text: 'Typ',
+    //   align: 'left',
+    //   sortable: false,
+    //   value: 'type'
+    // },
     {
       text: 'Erstellt am',
       align: 'left',
       sortable: false,
-      value: 'createdDate'
+      value: 'dateCreated'
     },
     {
       text: 'Ersteller',
       align: 'left',
       sortable: false,
-      value: 'creator'
+      value: 'raisedBy'
     },
   ]
   const MAINTENANCES_HEADER = [
@@ -120,6 +124,7 @@
   export default {
     name: 'ProfileView',
     components: { LoginPopup },
+    extends: baseComponent,
     data () {
       return {
         showLogin: false,
@@ -145,10 +150,22 @@
         },
       }
     },
-    activated () {
+    async activated () {
       if (this.$route.query.login) {
         this.showLogin = true
       }
+      const parameters = {} // { 'status.name': 'Open', _sort: 'dateCreated', _order: 'desc' }
+      const { data: { data: reviews } } = await this.catchError({
+        promise: reviewServices.get({ parameters }, this.cancelToken.token),
+        instance: this
+      })
+      // name type createdDate creator
+      this.reviews = reviews.map(entry => {
+        const name = entry?.componentToReview?.name
+        const dateCreated = entry?.dateCreated
+        const raisedBy = entry?.raisedBy?.name
+        return { name, dateCreated, raisedBy }
+      })
     },
     created () {
       this.reviewsHeader = REVIEWS_HEADER
@@ -156,10 +173,6 @@
       this.kbartImportsHeader = KBARTIMPORTS_HEADER
 
       // todo: replace dummy data with backend requests
-      this.reviews = [
-        { name: 'American Science Journal', type: 'Einzeltitel', createdDate: '22.01.2018 12:45', creator: 'Jochen Schweitzer' },
-        { name: 'Springer Best Journals', type: 'Paket', createdDate: '11.04.2018 16:23', creator: 'Frank Thelen' },
-      ]
       this.maintenances = [
         { name: 'American Science Journal', type: 'Einzeltitel', dueDate: '01.12.2018' },
         { name: 'Springer Best Journals', type: 'Paket', dueDate: '06.01.2019' },
