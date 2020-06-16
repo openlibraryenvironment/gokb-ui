@@ -87,7 +87,8 @@
       },
       selectedItems: {
         type: Array,
-        required: true
+        required: false,
+        default: () => []
       },
       totalNumberOfItems: {
         type: Number,

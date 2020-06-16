@@ -16,9 +16,9 @@
       <gokb-table
         :items="reviews"
         :headers="reviewsHeader"
-        :selected-items="selectedReviews"
         :total-number-of-items="totalNumberOfReviews"
         :options.sync="reviewsOptions"
+        :show-select="false"
       />
     </gokb-section>
     <gokb-section sub-title="Pflege">
@@ -34,18 +34,18 @@
       <gokb-table
         :items="maintenances"
         :headers="maintenancesHeader"
-        :selected-items="selectedMaintenances"
         :total-number-of-items="totalNumberOfMaintenances"
         :options.sync="maintenancesOptions"
+        :show-select="false"
       />
     </gokb-section>
     <gokb-section sub-title="KBART Import">
       <gokb-table
         :items="kbartImports"
         :headers="kbartImportsHeader"
-        :selected-items="selectedKbartImports"
         :total-number-of-items="totalNumberOfKbartImports"
         :options.sync="kbartImportsOptions"
+        :show-select="false"
       />
     </gokb-section>
   </gokb-page>
@@ -124,7 +124,6 @@
       return {
         showLogin: false,
         reviews: [],
-        selectedReviews: [],
         totalNumberOfReviews: undefined,
         reviewsOptions: {
           page: 1,
@@ -132,7 +131,6 @@
         },
 
         maintenances: [],
-        selectedMaintenances: [],
         totalNumberOfMaintenances: undefined,
         maintenancesOptions: {
           page: 1,
@@ -140,7 +138,6 @@
         },
 
         kbartImports: [],
-        selectedKbartImports: [],
         totalNumberOfKbartImports: undefined,
         kbartImportsOptions: {
           page: 1,
