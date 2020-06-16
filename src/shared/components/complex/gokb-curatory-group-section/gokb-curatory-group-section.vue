@@ -1,5 +1,8 @@
 <template>
-  <gokb-section title="Kuratorengruppen">
+  <gokb-section
+    :title="title"
+    :sub-title="subTitle"
+  >
     <gokb-add-item-popup
       v-if="addCuratoryGroupPopupVisible"
       v-model="addCuratoryGroupPopupVisible"
@@ -59,6 +62,16 @@
       value: {
         type: Array,
         required: true
+      },
+      title: {
+        type: String,
+        required: false,
+        default: undefined
+      },
+      subTitle: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {

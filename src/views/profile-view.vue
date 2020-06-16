@@ -33,7 +33,10 @@
         :rules="[checkNewPassword, isPasswordEmpty]"
       />
     </gokb-section>
-    <gokb-curatory-group-section v-model="allCuratoryGroups" />
+    <gokb-curatory-group-section
+      v-model="allCuratoryGroups"
+      title="Kuratorengruppen"
+    />
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
       :message="messageToConfirm"
