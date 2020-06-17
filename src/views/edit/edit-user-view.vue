@@ -125,9 +125,6 @@
   const ROLES_TABLE_HEADERS = [
     { text: 'Rolle', align: 'left', value: 'name', sortable: false, width: '100%' },
   ]
-  const CURATORY_GROUPS_TABLE_HEADERS = [
-    { text: 'Gruppen', align: 'left', value: 'name', sortable: false, width: '100%' },
-  ]
 
   export default {
     name: 'EditUserView',
@@ -194,7 +191,6 @@
     },
     async created () {
       this.rolesTableHeaders = ROLES_TABLE_HEADERS
-      this.curatoryGroupsTableHeaders = CURATORY_GROUPS_TABLE_HEADERS
       if (this.isEdit) {
         const {
           data: {
