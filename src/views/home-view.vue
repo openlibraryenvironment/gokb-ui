@@ -54,6 +54,7 @@
 
 <script>
   import baseComponent from '@/shared/components/base-component'
+  import account from '@/shared/models/account-model'
   import genericEntityServices from '@/shared/services/generic-entity-services'
   import LoginPopup from '@/shared/popups/gokb-login-popup'
 
@@ -152,7 +153,7 @@
       }
     },
     activated () {
-      if (this.$route.query.login) {
+      if (this.$route.query.login && !account.loggedIn()) {
         this.showLogin = true
       }
       this.paginateReviews(this.reviewsOptions.page)
