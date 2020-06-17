@@ -160,7 +160,10 @@
           }, this.cancelToken.token),
           instance: this
         })
-        this.passwordWrongMessage = result?.data?.error?.message
+        // todo: sometimes error is an array and sometimes an object
+        const message = Object.values(result?.data?.errors)
+          ?.reduce((result, { message }) => `${result} ${message}`, '')
+        this.passwordWrongMessage = message
       },
       async _removeProfile () {
         await this.catchError({
