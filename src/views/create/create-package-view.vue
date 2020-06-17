@@ -106,7 +106,7 @@
             sub-title="Organisation"
           >
             <gokb-search-organisation-field
-              v-model="packageItem.organisation"
+              v-model="packageItem.provider"
               label="Name"
             />
           </gokb-section>
@@ -187,19 +187,19 @@
           </gokb-section>
         </v-stepper-content>
 
-        <!--<v-stepper-content :step="4">
+        <v-stepper-content :step="4">
           <gokb-section sub-title="Zusammenfassung">
             <v-row>
               <v-col>
                 <gokb-text-field
-                  v-model="title"
+                  v-model="packageItem.name"
                   label="Titel"
                   disabled
                 />
               </v-col>
               <v-col>
                 <gokb-text-field
-                  v-model="description"
+                  v-model="packageItem.description"
                   label="Beschreibung"
                   disabled
                 />
@@ -208,21 +208,21 @@
             <v-row>
               <v-col>
                 <gokb-text-field
-                  v-model="platform"
+                  v-model="packageItem.nominalPlatform"
                   label="Plattform"
                   disabled
                 />
               </v-col>
               <v-col>
                 <gokb-text-field
-                  v-model="numberOfTitles"
+                  v-model="totalNumberOfTitles"
                   label="Anzahl Titel im Paket"
                   disabled
                 />
               </v-col>
             </v-row>
             <gokb-text-field
-              v-model="organisation"
+              v-model="packageItem.provider"
               label="Organisation"
               disabled
             />
@@ -230,28 +230,16 @@
           <gokb-section sub-title="Pflege">
             <gokb-select-field label="Tunus" />
             <gokb-text-field
+              v-model="dueTo"
               label="Fällig am"
               disabled
             />
           </gokb-section>
-          <gokb-section sub-title="Kuratoren">
-            <template #buttons>
-              <gokb-button @click="showAddNewCuratoryGroup">
-                Hinzufügen
-              </gokb-button>
-              <gokb-button @click="deleteSelectedCuratoryGroups">
-                Löschen
-              </gokb-button>
-            </template>
-            <gokb-table
-              :added-items="addedCuratoryGroups"
-              :deleted-items="deletedCuratoryGroups"
-              :headers="curatoryGroupsTableHeaders"
-              :items="curatoryGroups"
-              :selected-items="selectedCuratoryGroups"
-            />
-          </gokb-section>
-        </v-stepper-content>-->
+          <gokb-curatory-group-section
+            v-model="packageItem.allCuratoryGroups"
+            sub-title="Kuratorengruppen"
+          />
+        </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
 
@@ -288,8 +276,9 @@
   import GokbUrlField from '@/shared/components/simple/gokb-url-field'
   import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
-  // import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
   import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
+  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
 
   const ROWS_PER_PAGE = 10
 
@@ -318,7 +307,8 @@
       GokbUrlField,
       GokbSearchSourceField,
       GokbAddTitlePopup,
-      // GokbKbartImportPopup
+      GokbConfirmationPopup,
+      GokbCuratoryGroupSection
     },
     data () {
       return {
@@ -335,20 +325,17 @@
           breakable: undefined,
           fixed: undefined,
           ids: [],
-          variantNames: undefined,
-          provider: undefined,
+          provider: undefined, // organisation
           nominalPlatform: undefined,
+          allCuratoryGroups: [],
         },
-        packageTypes: [{ id: 'serial', text: 'Journal' }, { id: 'monograph', text: 'Monographie' }],
-        variantNamesHeader: [
-          {
-            text: 'Alias',
-            align: 'left',
-            sortable: false,
-            value: 'alias'
-          },
+        packageTypes: [
+          { id: 'book', text: 'Buch' },
+          { id: 'database', text: 'Datenbank' },
+          { id: 'journal', text: 'Journal' },
+          { id: 'monograph', text: 'Monographie' },
+          { id: 'serial', text: 'Serie?' }
         ],
-
         addTitlePopupVisible: false,
         titlesOptions: {
           page: 1,
@@ -356,6 +343,7 @@
         },
         selectedTitles: [],
         titles: [],
+        dueTo: undefined,
 
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
