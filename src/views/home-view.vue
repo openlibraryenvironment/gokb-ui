@@ -19,6 +19,7 @@
         :total-number-of-items="totalNumberOfReviews"
         :options.sync="reviewsOptions"
         :show-select="false"
+        @paginate="paginateReviews"
       />
     </gokb-section>
     <gokb-section sub-title="Pflege">
@@ -58,7 +59,7 @@
 
   const reviewServices = genericEntityServices('reviews')
 
-  const ROWS_PER_PAGE = 10
+  const ROWS_PER_PAGE = 5
 
   const REVIEWS_HEADER = [
     {
@@ -150,22 +151,11 @@
         },
       }
     },
-    async activated () {
+    activated () {
       if (this.$route.query.login) {
         this.showLogin = true
       }
-      const parameters = {} // { 'status.name': 'Open', _sort: 'dateCreated', _order: 'desc' }
-      const { data: { data: reviews } } = await this.catchError({
-        promise: reviewServices.get({ parameters }, this.cancelToken.token),
-        instance: this
-      })
-      // name type createdDate creator
-      this.reviews = reviews.map(entry => {
-        const name = entry?.componentToReview?.name
-        const dateCreated = entry?.dateCreated
-        const raisedBy = entry?.raisedBy?.name
-        return { name, dateCreated, raisedBy }
-      })
+      this.paginateReviews(this.reviewsOptions.page)
     },
     created () {
       this.reviewsHeader = REVIEWS_HEADER
@@ -180,9 +170,29 @@
       this.kbartImports = [
         { filename: 'American Science Journal.tsv', importDate: '01.12.2018 12:43' },
       ]
-      this.totalNumberOfReviews = 2
       this.totalNumberOfMaintenances = 2
       this.totalNumberOfKbartImports = 2
+    },
+    methods: {
+      async paginateReviews (page) {
+        const parameters = {
+          offset: page ? (page - 1) * this.reviewsOptions.itemsPerPage : 0,
+          limit: this.reviewsOptions.itemsPerPage
+        } // { 'status.name': 'Open', _sort: 'dateCreated', _order: 'desc' }
+        const { data: { data: reviews, _pagination: { total } } } = await this.catchError({
+          promise: reviewServices.get({ parameters }, this.cancelToken.token),
+          instance: this
+        })
+        // name type createdDate creator
+        this.reviews = reviews.map(entry => {
+          const name = entry?.componentToReview?.name
+          const dateCreated = entry?.dateCreated
+          const raisedBy = entry?.raisedBy?.name
+          return { name, dateCreated, raisedBy }
+        })
+        this.totalNumberOfReviews = total
+      },
+
     }
   }
 </script>

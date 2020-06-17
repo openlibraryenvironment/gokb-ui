@@ -9,6 +9,7 @@
       hide-default-footer
       item-key="id"
       :show-select="showSelect"
+      dense
     >
       <template #no-data>
         <v-row justify="center">
