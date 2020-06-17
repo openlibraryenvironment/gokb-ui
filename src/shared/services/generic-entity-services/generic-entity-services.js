@@ -1,3 +1,5 @@
+const CACHE = {}
+
 const api = (baseServices) =>
   (entityName) => ({
     get ({ parameters }, cancelToken) {
@@ -5,10 +7,12 @@ const api = (baseServices) =>
         ? baseServices.createQueryParameters(parameters)
         : baseServices.createQueryParameters({ _sort: 'name', _order: 'asc' })
       const url = `/rest/${entityName}?${urlParameters}`
-      return baseServices.request({
+      const result = CACHE[url] || baseServices.request({
         method: 'GET',
         url,
       }, cancelToken)
+      CACHE[url] = result
+      return result
     },
 })
 
