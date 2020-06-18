@@ -1,14 +1,15 @@
 <template>
   <v-menu
-    v-model="menu2"
+    v-model="menu"
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
   >
     <template v-slot:activator="{ on }">
       <v-text-field
-        v-model="localDate"
+        v-model="localDateFormatted"
         clearable
+        hint="DD.MM.YYYY format"
         v-bind="$props"
         v-on="on"
       />
@@ -16,7 +17,7 @@
     <v-date-picker
       v-model="localDate"
       :disabled="disabled"
-      @input="menu2 = false"
+      @input="menu = false"
     />
   </v-menu>
 </template>
@@ -42,7 +43,7 @@
     },
     data () {
       return {
-        menu2: false,
+        menu: false,
       }
     },
     computed: {
@@ -53,10 +54,10 @@
         set (localDate) {
           this.$emit('input', localDate)
         }
+      },
+      localDateFormatted () {
+        return this.localDate.toLocaleDateString('de-DE')
       }
     }
   }
 </script>
-
-<style scoped>
-</style>
