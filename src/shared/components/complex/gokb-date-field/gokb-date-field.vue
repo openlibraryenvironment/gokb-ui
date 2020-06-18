@@ -56,7 +56,7 @@
         }
       },
       localDateFormatted () {
-        return this.localDate.toLocaleDateString('de-DE')
+        return this.localDate?.toLocaleDateString('de-DE')
       }
     }
   }
