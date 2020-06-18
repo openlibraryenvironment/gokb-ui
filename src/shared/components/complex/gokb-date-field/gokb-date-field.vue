@@ -7,14 +7,14 @@
   >
     <template v-slot:activator="{ on }">
       <v-text-field
-        v-model="date"
+        v-model="localDate"
         clearable
         v-bind="$props"
         v-on="on"
       />
     </template>
     <v-date-picker
-      v-model="date"
+      v-model="localDate"
       :disabled="disabled"
       @input="menu2 = false"
     />
@@ -35,10 +35,24 @@
         required: false,
         default: false,
       },
+      value: {
+        type: Date,
+        required: true
+      }
     },
     data () {
       return {
         menu2: false,
+      }
+    },
+    computed: {
+      localDate: {
+        get () {
+          return this.value
+        },
+        set (localDate) {
+          this.$emit('input', localDate)
+        }
       }
     }
   }

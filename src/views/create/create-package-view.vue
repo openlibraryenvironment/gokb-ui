@@ -228,8 +228,8 @@
             />
           </gokb-section>
           <gokb-section sub-title="Pflege">
-            <gokb-select-field label="Tunus" />
-            <gokb-text-field
+            <gokb-maintenance-cycle-field v-model="maintenanceCycle" />
+            <gokb-date-field
               v-model="dueTo"
               label="Fällig am"
               disabled
@@ -275,10 +275,12 @@
   import GokbScopeField from '@/shared/components/simple/gokb-scope-field'
   import GokbUrlField from '@/shared/components/simple/gokb-url-field'
   import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
+  import GokbMaintenanceCycleField from '@/shared/components/simple/gokb-maintenance-cycle-field'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
   import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
+  import GokbDateField from '@/shared/components/complex/gokb-date-field'
 
   const ROWS_PER_PAGE = 10
 
@@ -300,6 +302,7 @@
   export default {
     name: 'CreatePackage',
     components: {
+      GokbDateField,
       GokbIdentifierSection,
       GokbSearchOrganisationField,
       GokbSearchPlatformField,
@@ -308,7 +311,8 @@
       GokbSearchSourceField,
       GokbAddTitlePopup,
       GokbConfirmationPopup,
-      GokbCuratoryGroupSection
+      GokbCuratoryGroupSection,
+      GokbMaintenanceCycleField
     },
     data () {
       return {
@@ -334,7 +338,6 @@
           { id: 'database', text: 'Datenbank' },
           { id: 'journal', text: 'Journal' },
           { id: 'monograph', text: 'Monographie' },
-          { id: 'serial', text: 'Serie?' }
         ],
         addTitlePopupVisible: false,
         titlesOptions: {
@@ -343,7 +346,7 @@
         },
         selectedTitles: [],
         titles: [],
-        dueTo: undefined,
+        maintenanceCycle: undefined,
 
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
@@ -355,6 +358,9 @@
       totalNumberOfTitles () {
         return this.titles.length
       },
+      dueTo () {
+        return this.maintenanceCycle?.createMaintenanceDate(new Date())
+      }
     },
     created () {
       this.titlesHeader = TITLES_HEADER
