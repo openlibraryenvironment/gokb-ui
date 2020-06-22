@@ -245,6 +245,12 @@
 
     <template #buttons>
       <gokb-button
+        text
+        @click="cancelPackage"
+      >
+        Abbrechen
+      </gokb-button>
+      <gokb-button
         v-show="step !== 1"
         @click="go2PreviousStep"
       >
@@ -261,7 +267,7 @@
       <gokb-button
         v-else
         default
-        @click="go2NextStep"
+        @click="createPackage"
       >
         Hinzufügen
       </gokb-button>
@@ -281,6 +287,7 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
+  import { HOME_ROUTE } from '@/router/route-paths'
 
   const ROWS_PER_PAGE = 10
 
@@ -412,6 +419,9 @@
       addNewTitle (title) {
         !this.titles.find(({ id: idInAll }) => title.id === idInAll) &&
           this.titles.push(title)
+      },
+      cancelPackage () {
+        this.$router.push(HOME_ROUTE)
       },
       createPackage () {
         console.log('create package')
