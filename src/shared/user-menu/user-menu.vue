@@ -52,6 +52,7 @@
 <script>
   import { HOME_ROUTE, PROFILE_ROUTE } from '@/router/route-paths'
   import accountModel from '@/shared/models/account-model'
+  import showLoginModel from '@/shared/models/show-login-model'
   import LoginPopup from '@/shared/popups/gokb-login-popup'
   import RegisterPopup from '@/shared/popups/gokb-register-popup'
 
@@ -60,11 +61,18 @@
     components: { LoginPopup, RegisterPopup },
     data () {
       return {
-        showLogin: false,
         showRegister: false,
       }
     },
     computed: {
+      showLogin: {
+        get () {
+          return showLoginModel.get()
+        },
+        set (show) {
+          showLoginModel.set(show)
+        }
+      },
       colorAccountIcon () {
         return this.loggedIn ? 'success' : 'info'
       },
@@ -117,7 +125,6 @@
         ]
       }
     },
-
     methods: {
       execute ({ method, path }) {
         if (method) {
@@ -126,7 +133,7 @@
         path && this.navigateTo(path)
       },
       login () {
-        this.showLogin = true
+        showLoginModel.set(true)
       },
       register () {
         this.showRegister = true
