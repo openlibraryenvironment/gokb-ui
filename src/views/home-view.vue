@@ -177,7 +177,7 @@
           instance: this
         })
         const reviews = response?.data?.data
-        const total = response?.data?.total
+        const total = response?.data?._pagination?.total
         // name type createdDate creator
         this.reviews = reviews?.map(entry => {
           const name = entry?.componentToReview?.name
