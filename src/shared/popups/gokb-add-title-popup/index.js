@@ -1,3 +1,1 @@
-import GokbAddTitlePopup from './gokb-add-title-popup'
-
-export default GokbAddTitlePopup
+export default from './gokb-add-title-popup'

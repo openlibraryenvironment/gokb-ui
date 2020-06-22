@@ -38,7 +38,7 @@
   import accountModel from '@/shared/models/account-model'
 
   export default {
-    name: 'LoginPopup',
+    name: 'GokbLoginPopup',
     extends: BaseComponent,
     props: {
       value: {

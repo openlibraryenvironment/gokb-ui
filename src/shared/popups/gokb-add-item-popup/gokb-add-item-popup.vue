@@ -30,7 +30,7 @@
   import BaseComponent from '@/shared/components/base-component'
 
   export default {
-    name: 'AddItemPopup',
+    name: 'GokbAddItemPopup',
     extends: BaseComponent,
     props: {
       value: {

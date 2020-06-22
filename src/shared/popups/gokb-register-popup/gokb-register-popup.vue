@@ -32,7 +32,7 @@
   import loading from '@/shared/models/loading'
 
   export default {
-    name: 'RegisterPopup',
+    name: 'GokbRegisterPopup',
     props: {
       value: {
         type: Boolean,
