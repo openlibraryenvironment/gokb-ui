@@ -8,6 +8,8 @@
     :placeholder="placeholder"
     :rules="rules"
     :search-input.sync="search"
+    :item-text="itemText"
+    :item-value="itemValue"
     clearable
     hide-details
     hide-no-data
@@ -22,6 +24,8 @@
     :placeholder="placeholder"
     :rules="rules"
     :search-input.sync="search"
+    :item-text="itemText"
+    :item-value="itemValue"
     clearable
     hide-details
     hide-no-data
@@ -52,7 +56,17 @@
         type: Boolean,
         required: false,
         default: false
-      }
+      },
+      itemText: {
+        type: String,
+        required: false,
+        default: 'name'
+      },
+      itemValue: {
+        type: String,
+        required: false,
+        default: 'id'
+      },
     },
     data () {
       return {
@@ -84,22 +98,15 @@
       this.searchServices = searchServices(this.searchServicesResourceUrl)
     },
     methods: {
-      _include () {
-        return 'id,name'
-      },
       async query (value) {
         const result = await this.catchError({
           promise: this.searchServices.search({
-            name: this.search,
-            _include: this._include()
+            [this.itemText]: this.search,
+            _include: [this.itemValue, this.itemText],
           }, this.cancelToken.token),
           instance: this
         })
-        this.items = this.transform(result)
-      },
-      transform (result) {
-        const { data: { data } } = result
-        return data.map(({ id, name, ...rest }) => ({ value: id, text: name, ...rest }))
+        this.items = result?.data?.data
       }
     }
   }

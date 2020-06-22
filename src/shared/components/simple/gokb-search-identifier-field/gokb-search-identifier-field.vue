@@ -9,18 +9,26 @@
         type: String,
         required: false,
         default: 'Identifier'
-      }
+      },
+      itemText: {
+        type: String,
+        required: false,
+        default: 'value'
+      },
     },
     created () {
       this.searchServicesResourceUrl = 'rest/identifiers'
     },
     methods: {
-      _include () {
-        return 'id,value'
-      },
-      transform (result) {
-        const { data: { data } } = result
-        return data.map(value => ({ value: value.id, text: value.value }))
+      async query (value) {
+        const result = await this.catchError({
+          promise: this.searchServices.search({
+            name: this.search,
+            _include: [this.itemValue, this.itemText],
+          }, this.cancelToken.token),
+          instance: this
+        })
+        this.items = this.transform(result)
       }
     }
   }
