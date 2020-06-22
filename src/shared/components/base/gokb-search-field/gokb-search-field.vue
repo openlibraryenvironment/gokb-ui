@@ -10,6 +10,7 @@
     :search-input.sync="search"
     :item-text="itemText"
     :item-value="itemValue"
+    :return-object="returnObject"
     clearable
     hide-details
     hide-no-data
@@ -26,6 +27,7 @@
     :search-input.sync="search"
     :item-text="itemText"
     :item-value="itemValue"
+    :return-object="returnObject"
     clearable
     hide-details
     hide-no-data
@@ -66,6 +68,11 @@
         type: String,
         required: false,
         default: 'id'
+      },
+      returnObject: {
+        type: Boolean,
+        required: false,
+        default: true
       },
     },
     data () {

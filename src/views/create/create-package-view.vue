@@ -208,7 +208,7 @@
             <v-row>
               <v-col>
                 <gokb-text-field
-                  v-model="packageItem.nominalPlatform"
+                  v-model="platformName"
                   label="Plattform"
                   disabled
                 />
@@ -222,7 +222,7 @@
               </v-col>
             </v-row>
             <gokb-text-field
-              v-model="packageItem.provider"
+              v-model="providerName"
               label="Organisation"
               disabled
             />
@@ -355,6 +355,12 @@
       }
     },
     computed: {
+      providerName () {
+        return this.packageItem?.provider?.name
+      },
+      platformName () {
+        return this.packageItem?.nominalPlatform?.name
+      },
       totalNumberOfTitles () {
         return this.titles.length
       },
