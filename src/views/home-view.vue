@@ -2,7 +2,6 @@
   <gokb-page
     title="Dashboard"
   >
-    <login-popup v-model="showLogin" />
     <gokb-section sub-title="Reviews">
       <template #buttons>
         <gokb-select-field
@@ -54,9 +53,7 @@
 
 <script>
   import baseComponent from '@/shared/components/base-component'
-  import account from '@/shared/models/account-model'
   import genericEntityServices from '@/shared/services/generic-entity-services'
-  import LoginPopup from '@/shared/popups/gokb-login-popup'
 
   const reviewServices = genericEntityServices('reviews')
 
@@ -124,28 +121,26 @@
   ]
 
   export default {
-    name: 'ProfileView',
-    components: { LoginPopup },
+    name: 'HomeView',
     extends: baseComponent,
     data () {
       return {
-        showLogin: false,
         reviews: [],
-        totalNumberOfReviews: undefined,
+        totalNumberOfReviews: 0,
         reviewsOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
 
         maintenances: [],
-        totalNumberOfMaintenances: undefined,
+        totalNumberOfMaintenances: 0,
         maintenancesOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
 
         kbartImports: [],
-        totalNumberOfKbartImports: undefined,
+        totalNumberOfKbartImports: 0,
         kbartImportsOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
@@ -153,9 +148,6 @@
       }
     },
     activated () {
-      if (this.$route.query.login && !account.loggedIn()) {
-        this.showLogin = true
-      }
       this.paginateReviews(this.reviewsOptions.page)
     },
     created () {
@@ -180,20 +172,21 @@
           offset: page ? (page - 1) * this.reviewsOptions.itemsPerPage : 0,
           limit: this.reviewsOptions.itemsPerPage
         } // { 'status.name': 'Open', _sort: 'dateCreated', _order: 'desc' }
-        const { data: { data: reviews, _pagination: { total } } } = await this.catchError({
+        const response = await this.catchError({
           promise: reviewServices.get({ parameters }, this.cancelToken.token),
           instance: this
         })
+        const reviews = response?.data?.data
+        const total = response?.data?.total
         // name type createdDate creator
-        this.reviews = reviews.map(entry => {
+        this.reviews = reviews?.map(entry => {
           const name = entry?.componentToReview?.name
           const dateCreated = entry?.dateCreated
           const raisedBy = entry?.raisedBy?.name
           return { name, dateCreated, raisedBy }
         })
-        this.totalNumberOfReviews = total
+        this.totalNumberOfReviews = total || 0
       },
-
     }
   }
 </script>
