@@ -6,7 +6,7 @@
   export default {
     name: 'SearchUser',
     extends: BaseSearch,
-    async created () {
+    created () {
       this.title = 'Benutzer'
       this.resultActionButtons = [
         {
