@@ -36,10 +36,7 @@
         required: false,
         default: false,
       },
-      value: {
-        type: Date,
-        required: true
-      }
+      value: Date
     },
     data () {
       return {

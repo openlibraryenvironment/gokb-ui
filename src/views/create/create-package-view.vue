@@ -214,8 +214,8 @@
                 />
               </v-col>
               <v-col>
-                <gokb-text-field
-                  v-model="totalNumberOfTitles"
+                <gokb-number-field
+                  :value="totalNumberOfTitles"
                   label="Anzahl Titel im Paket"
                   disabled
                 />
@@ -372,7 +372,7 @@
         return this.titles.length
       },
       dueTo () {
-        return this.maintenanceCycle?.createMaintenanceDate(new Date())
+        return this.maintenanceCycle ? this.maintenanceCycle.createMaintenanceDate(new Date()) : null
       }
     },
     created () {

@@ -22,10 +22,8 @@
     name: 'GokbTextField',
     props: {
       value: {
+        type: String,
         required: true,
-        validator: value => {
-          return value === null || typeof value === 'string'
-        },
         default: '',
       },
       disabled: {
