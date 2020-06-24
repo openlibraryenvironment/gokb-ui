@@ -22,9 +22,11 @@
     name: 'GokbTextField',
     props: {
       value: {
-        type: String,
         required: true,
         default: '',
+        validator: function (value) {
+          return value === undefined || value === null || typeof value === 'string'
+        }
       },
       disabled: {
         type: Boolean,

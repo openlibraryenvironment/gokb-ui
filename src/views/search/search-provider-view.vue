@@ -8,6 +8,13 @@
     name: 'SearchProvider',
     components: { GokbIdentifierField },
     extends: BaseSearch,
+    data () {
+      return {
+        name: undefined,
+        identifier: undefined,
+        curatoryGroupIds: undefined
+      }
+    },
     async created () {
       this.title = 'Provider'
       this.resultActionButtons = [
@@ -34,19 +41,22 @@
           {
             type: 'GokbTextField',
             name: 'name',
+            value: this.name,
             properties: {
               label: 'Name'
             }
           },
           {
             type: 'GokbIdentifierField',
-            name: 'ids'
+            name: 'ids',
+            value: this.identifier,
           }
         ],
         [
           {
             type: 'GokbCuratoryGroupField',
             name: 'curatoryGroupId',
+            value: this.curatoryGroupIds,
             properties: {
               label: 'Kuratoren',
               multiple: true,

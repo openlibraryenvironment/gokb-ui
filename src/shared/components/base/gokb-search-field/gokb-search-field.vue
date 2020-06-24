@@ -50,9 +50,10 @@
         default: ''
       },
       value: {
-        type: Number,
         required: true,
-        default: NaN
+        validator: function (value) {
+          return value === undefined || typeof value === 'number' || typeof value === 'object'
+        }
       },
       allowNewValues: {
         type: Boolean,
@@ -72,7 +73,7 @@
       returnObject: {
         type: Boolean,
         required: false,
-        default: true
+        default: false
       },
     },
     data () {
@@ -88,7 +89,7 @@
       localValue: {
         get () {
           // console.log('get', this.label, this.value)
-          return this.value?.value
+          return this.returnObject ? this.value : this.value?.[this.itemValue]
         },
         set (localValue) {
           // console.log('set', this.label, localValue, this.items)
@@ -98,6 +99,7 @@
     },
     watch: {
       search (value) {
+        // console.log('search', this.value, this.localValue, this.search, value)
         value && value !== this.value?.value && value.length > 2 && this.query(value)
       }
     },
@@ -108,7 +110,7 @@
       async query (value) {
         const result = await this.catchError({
           promise: this.searchServices.search({
-            [this.itemText]: this.search,
+            [this.itemText]: value,
             _include: [this.itemValue, this.itemText],
           }, this.cancelToken.token),
           instance: this

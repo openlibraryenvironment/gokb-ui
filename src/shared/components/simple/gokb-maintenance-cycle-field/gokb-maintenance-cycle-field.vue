@@ -15,7 +15,12 @@
         type: String,
         required: false,
         default: 'Turnus',
-      }
+      },
+      returnObject: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
     },
     created () {
       this.items = [

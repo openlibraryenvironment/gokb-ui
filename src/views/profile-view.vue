@@ -161,8 +161,8 @@
           instance: this
         })
         // todo: sometimes error is an array and sometimes an object
-        const message = Object.values(result?.data?.errors)
-          ?.reduce((result, { message }) => `${result} ${message}`, '')
+        const message = result?.data?.errors ? Object.values(result.data.errors)
+          ?.reduce((result, { message }) => `${result} ${message}`, '') : undefined
         this.passwordWrongMessage = message
       },
       async _removeProfile () {

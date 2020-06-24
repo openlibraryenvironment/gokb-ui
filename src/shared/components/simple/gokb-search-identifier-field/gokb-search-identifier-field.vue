@@ -21,14 +21,15 @@
     },
     methods: {
       async query (value) {
+        // console.log('query', this.value, this.localValue, this.search, value)
         const result = await this.catchError({
           promise: this.searchServices.search({
-            name: this.search,
+            name: value,
             _include: [this.itemValue, this.itemText],
           }, this.cancelToken.token),
           instance: this
         })
-        this.items = this.transform(result)
+        this.items = result?.data?.data
       }
     }
   }

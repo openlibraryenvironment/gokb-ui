@@ -6,6 +6,14 @@
   export default {
     name: 'SearchUser',
     extends: BaseSearch,
+    data () {
+      return {
+        name: undefined,
+        curatoryGroupIds: undefined,
+        roleIds: undefined,
+        status: undefined,
+      }
+    },
     created () {
       this.title = 'Benutzer'
       this.resultActionButtons = [
@@ -27,6 +35,7 @@
           {
             type: 'GokbUsernameField',
             name: 'name',
+            value: this.name,
             properties: {
               hideIcon: true,
               rules: []
@@ -35,10 +44,10 @@
           {
             type: 'GokbCuratoryGroupField',
             name: 'curatoryGroupId',
+            value: this.curatoryGroupIds,
             properties: {
               label: 'Gruppen',
               multiple: true,
-              returnObject: false
             }
           }
         ],
@@ -46,15 +55,16 @@
           {
             type: 'GokbRoleField',
             name: 'roleId',
+            value: this.roleIds,
             properties: {
               label: 'Rollen',
               multiple: true,
-              returnObject: false
             }
           },
           {
             type: 'GokbActiveField',
             name: 'status',
+            value: this.status,
           }
         ]
       ]

@@ -104,7 +104,9 @@
       >
         Abbrechen
       </gokb-button>
-      <gokb-button default>
+      <gokb-button
+        default
+      >
         {{ updateButtonText }}
       </gokb-button>
     </template>
@@ -278,7 +280,6 @@
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedRoles = []
       },
-
     }
   }
 </script>
