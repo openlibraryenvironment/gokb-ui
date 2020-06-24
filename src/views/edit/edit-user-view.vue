@@ -92,26 +92,10 @@
         @delete-item="confirmDeleteRole"
       />
     </gokb-section>
-    <!--    <gokb-section sub-title="Kuratorengruppen">-->
-    <!--      <template #buttons>-->
-    <!--        <gokb-button-->
-    <!--          class="mr-4"-->
-    <!--          icon-id="add"-->
-    <!--          @click="showAddNewCuratoryGroup"-->
-    <!--        >-->
-    <!--          Hinzufügen-->
-    <!--        </gokb-button>-->
-    <!--        <gokb-button-->
-    <!--          icon-id="delete"-->
-    <!--          @click="deleteSelectedCuratoryGroups"-->
-    <!--        >-->
-    <!--          Löschen-->
-    <!--        </gokb-button>-->
-    <!--      </template>-->
-    <!--      <gokb-table-->
-    <!--        :headers="curatoryHeaders"-->
-    <!--      />-->
-    <!--    </gokb-section>-->
+    <gokb-curatory-group-section
+      v-model="allCuratoryGroups"
+      sub-title="Kuratorengruppen"
+    />
     <template #buttons>
       <v-spacer />
       <gokb-button
@@ -120,7 +104,9 @@
       >
         Abbrechen
       </gokb-button>
-      <gokb-button default>
+      <gokb-button
+        default
+      >
         {{ updateButtonText }}
       </gokb-button>
     </template>
@@ -132,7 +118,8 @@
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
-  import loading from '@/shared/models/loading'
+  import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
+
   import userServices from '@/shared/services/user-services'
 
   const ROWS_PER_PAGE = 10
@@ -140,13 +127,10 @@
   const ROLES_TABLE_HEADERS = [
     { text: 'Rolle', align: 'left', value: 'name', sortable: false, width: '100%' },
   ]
-  const CURATORY_GROUPS_TABLE_HEADERS = [
-    { text: 'Gruppen', align: 'left', value: 'name', sortable: false, width: '100%' },
-  ]
 
   export default {
     name: 'EditUserView',
-    components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent },
+    components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent, GokbCuratoryGroupSection },
     extends: BaseComponent,
     props: {
       id: {
@@ -173,6 +157,7 @@
         allRoles: [],
         selectedRoles: [],
         addedRoles: [],
+        allCuratoryGroups: [],
         updateUserUrl: undefined,
 
         confirmationPopUpVisible: false,
@@ -208,9 +193,7 @@
     },
     async created () {
       this.rolesTableHeaders = ROLES_TABLE_HEADERS
-      this.curatoryGroupsTableHeaders = CURATORY_GROUPS_TABLE_HEADERS
       if (this.isEdit) {
-        loading.startLoading()
         const {
           data: {
             data: {
@@ -220,6 +203,7 @@
               enabled,
               passwordExpired,
               roles,
+              curatoryGroups,
               _links: {
                 update: { href: updateUserUrl },
               }
@@ -237,7 +221,7 @@
         this.passwordExpired = passwordExpired
         this.allRoles = roles.map(({ authority, ...rest }) => ({ ...rest, name: authority }))
         this.updateUserUrl = updateUserUrl
-        loading.stopLoading()
+        this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
       }
     },
     methods: {
@@ -252,7 +236,6 @@
         this.addRolePopupVisible = true
       },
       async update () {
-        loading.startLoading()
         const data = {
           id: this.id,
           username: this.username,
@@ -261,13 +244,13 @@
           accountLocked: this.accountLocked,
           enabled: this.enabled,
           passwordExpired: this.passwordExpired,
-          roleIds: this.roles.map(({ id }) => id)
+          roleIds: this.roles.map(({ id }) => id),
+          curatoryGroupIds: this.allCuratoryGroups.map(({ id }) => id)
         }
         await this.catchError({
           promise: userServices.createOrUpdateUser(data, this.cancelToken.token),
           instance: this
         })
-        loading.stopLoading()
         this.pageBack()
       },
       pageBack () {
@@ -297,7 +280,6 @@
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedRoles = []
       },
-
     }
   }
 </script>

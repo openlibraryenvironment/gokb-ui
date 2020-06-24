@@ -39,6 +39,7 @@
     },
     computed: {
       dateRangeText () {
+        // todo: convert to DD.MM.YYYY using .toLocaleDateString('de-DE')
         return this.dates.join(' - ')
       },
     },
@@ -49,6 +50,3 @@
     },
   }
 </script>
-
-<style scoped>
-</style>

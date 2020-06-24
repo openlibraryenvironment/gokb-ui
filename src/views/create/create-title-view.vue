@@ -65,9 +65,15 @@
       />
     </gokb-section>
     <template #buttons>
+      <gokb-button
+        text
+        @click="cancelTitle"
+      >
+        Abbrechen
+      </gokb-button>
       <v-spacer />
       <gokb-button
-        @click="create"
+        @click="createTitle"
       >
         Hinzufügen
       </gokb-button>
@@ -76,6 +82,8 @@
 </template>
 
 <script>
+  import { HOME_ROUTE } from '@/router/route-paths'
+
   export default {
     name: 'CreateTitle',
     data () {
@@ -91,12 +99,12 @@
       }
     },
     methods: {
+      cancelTitle () {
+        this.$router.push(HOME_ROUTE)
+      },
       createTitle () {
         console.log('createTitle')
       }
     }
   }
 </script>
-
-<style scoped>
-</style>

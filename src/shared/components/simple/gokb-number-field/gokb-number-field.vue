@@ -9,7 +9,13 @@
         type: String,
         required: false,
         default: 'number'
-      }
+      },
+      value: {
+        type: Number,
+        required: true,
+        default: 0,
+      },
+
     },
   }
 </script>

@@ -23,10 +23,10 @@
     props: {
       value: {
         required: true,
-        validator: value => {
-          return value === null || typeof value === 'string'
-        },
         default: '',
+        validator: function (value) {
+          return value === undefined || value === null || typeof value === 'string'
+        }
       },
       disabled: {
         type: Boolean,

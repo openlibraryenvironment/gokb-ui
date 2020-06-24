@@ -8,6 +8,15 @@
     name: 'SearchPackage',
     components: { GokbPackageExportMenu },
     extends: BaseSearch,
+    data () {
+      return {
+        name: undefined,
+        curatoryGroupIds: undefined,
+        providerId: undefined,
+        identifierIds: undefined,
+        status: undefined,
+      }
+    },
     computed: {
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
@@ -43,34 +52,38 @@
           {
             type: 'GokbTextField',
             name: 'name',
+            value: this.name,
             properties: {
               label: 'Name',
             }
           },
           {
             type: 'GokbCuratoryGroupField',
-            name: 'curatory',
+            name: 'curatoryGroupId',
+            value: this.curatoryGroupIds,
             properties: {
               label: 'Kuratoren',
               multiple: true,
-              returnObject: false
             }
           }
         ],
         [
           {
             type: 'GokbSearchProviderField',
-            name: 'provider'
+            name: 'provider',
+            value: this.providerId,
           },
           {
             type: 'GokbSearchIdentifierField',
-            name: 'ids'
+            name: 'ids',
+            value: this.identifierIds,
           }
         ],
         [
           {
             type: 'GokbStateField',
-            name: 'status'
+            name: 'status',
+            value: this.status,
           },
         ]
       ]

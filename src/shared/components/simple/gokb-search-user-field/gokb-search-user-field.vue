@@ -2,22 +2,23 @@
   import GokbSearchField from '@/shared/components/base/gokb-search-field'
 
   export default {
-    name: 'GokbTitleField',
+    name: 'GokbSearchSourceField',
     extends: GokbSearchField,
     props: {
       label: {
         type: String,
         required: false,
-        default: 'Titel'
+        default: 'Benutzer'
       },
-      allowNewValues: {
-        type: Boolean,
+      itemText: {
+        type: String,
         required: false,
-        default: true
-      }
+        default: 'username'
+      },
+
     },
     created () {
-      this.searchServicesResourceUrl = 'rest/titles'
-    }
+      this.searchServicesResourceUrl = 'rest/users'
+    },
   }
 </script>

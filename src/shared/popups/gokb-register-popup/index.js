@@ -1,3 +1,1 @@
-import RegisterPopup from './register-popup'
-
-export default RegisterPopup
+export default from './gokb-register-popup'

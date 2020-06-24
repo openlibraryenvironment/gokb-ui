@@ -2,7 +2,7 @@
   <gokb-dialog
     v-model="localValue"
     :title="`${titleType.text} hinzufügen`"
-    width="600"
+    :width="600"
     @submit="addTitle"
   >
     <gokb-identifier-section
@@ -79,6 +79,8 @@
     data () {
       return {
         title: undefined,
+        identifiers: [],
+        date: undefined,
       }
     },
     computed: {

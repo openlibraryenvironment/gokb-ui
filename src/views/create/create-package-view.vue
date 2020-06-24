@@ -106,14 +106,16 @@
             sub-title="Organisation"
           >
             <gokb-search-organisation-field
-              v-model="packageItem.organisation"
+              v-model="packageItem.provider"
               label="Name"
+              return-object
             />
           </gokb-section>
           <gokb-section sub-title="Plattform">
             <gokb-search-platform-field
               v-model="packageItem.nominalPlatform"
               label="Name"
+              return-object
             />
           </gokb-section>
         </v-stepper-content>
@@ -191,19 +193,19 @@
           </gokb-section>
         </v-stepper-content>
 
-        <!--<v-stepper-content :step="4">
+        <v-stepper-content :step="4">
           <gokb-section sub-title="Zusammenfassung">
             <v-row>
               <v-col>
                 <gokb-text-field
-                  v-model="title"
+                  v-model="packageItem.name"
                   label="Titel"
                   disabled
                 />
               </v-col>
               <v-col>
                 <gokb-text-field
-                  v-model="description"
+                  v-model="packageItem.description"
                   label="Beschreibung"
                   disabled
                 />
@@ -212,54 +214,48 @@
             <v-row>
               <v-col>
                 <gokb-text-field
-                  v-model="platform"
+                  v-model="platformName"
                   label="Plattform"
                   disabled
                 />
               </v-col>
               <v-col>
-                <gokb-text-field
-                  v-model="numberOfTitles"
+                <gokb-number-field
+                  :value="totalNumberOfTitles"
                   label="Anzahl Titel im Paket"
                   disabled
                 />
               </v-col>
             </v-row>
             <gokb-text-field
-              v-model="organisation"
+              v-model="providerName"
               label="Organisation"
               disabled
             />
           </gokb-section>
           <gokb-section sub-title="Pflege">
-            <gokb-select-field label="Tunus" />
-            <gokb-text-field
+            <gokb-maintenance-cycle-field v-model="maintenanceCycle" />
+            <gokb-date-field
+              v-model="dueTo"
               label="Fällig am"
               disabled
             />
           </gokb-section>
-          <gokb-section sub-title="Kuratoren">
-            <template #buttons>
-              <gokb-button @click="showAddNewCuratoryGroup">
-                Hinzufügen
-              </gokb-button>
-              <gokb-button @click="deleteSelectedCuratoryGroups">
-                Löschen
-              </gokb-button>
-            </template>
-            <gokb-table
-              :added-items="addedCuratoryGroups"
-              :deleted-items="deletedCuratoryGroups"
-              :headers="curatoryGroupsTableHeaders"
-              :items="curatoryGroups"
-              :selected-items="selectedCuratoryGroups"
-            />
-          </gokb-section>
-        </v-stepper-content>-->
+          <gokb-curatory-group-section
+            v-model="allCuratoryGroups"
+            sub-title="Kuratorengruppen"
+          />
+        </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
 
     <template #buttons>
+      <gokb-button
+        text
+        @click="cancelPackage"
+      >
+        Abbrechen
+      </gokb-button>
       <gokb-button
         v-show="step !== 1"
         @click="go2PreviousStep"
@@ -277,7 +273,7 @@
       <gokb-button
         v-else
         default
-        @click="go2NextStep"
+        @click="createPackage"
       >
         Hinzufügen
       </gokb-button>
@@ -286,14 +282,21 @@
 </template>
 
 <script>
+  import BaseComponent from '@/shared/components/base-component'
   import GokbSearchOrganisationField from '@/shared/components/simple/gokb-search-organisation-field'
   import GokbSearchPlatformField from '@/shared/components/simple/gokb-search-platform-field'
   import GokbScopeField from '@/shared/components/simple/gokb-scope-field'
   import GokbUrlField from '@/shared/components/simple/gokb-url-field'
   import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
+  import GokbMaintenanceCycleField from '@/shared/components/simple/gokb-maintenance-cycle-field'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
   import GokbOpenFilePopup from '@/shared/popups/gokb-open-file-popup'
   import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
+  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
+  import GokbDateField from '@/shared/components/complex/gokb-date-field'
+  import { HOME_ROUTE } from '@/router/route-paths'
+  import packageServices from '@/shared/services/package-services'
 
   const ROWS_PER_PAGE = 10
 
@@ -315,6 +318,7 @@
   export default {
     name: 'CreatePackage',
     components: {
+      GokbDateField,
       GokbIdentifierSection,
       GokbSearchOrganisationField,
       GokbSearchPlatformField,
@@ -322,9 +326,12 @@
       GokbUrlField,
       GokbSearchSourceField,
       GokbAddTitlePopup,
-      GokbOpenFilePopup
-      // GokbKbartImportPopup
+      GokbOpenFilePopup,
+      GokbConfirmationPopup,
+      GokbCuratoryGroupSection,
+      GokbMaintenanceCycleField
     },
+    extends: BaseComponent,
     data () {
       return {
         fileImportPopupVisible: false,
@@ -340,20 +347,16 @@
           breakable: undefined,
           fixed: undefined,
           ids: [],
-          variantNames: undefined,
-          provider: undefined,
+          provider: undefined, // organisation
           nominalPlatform: undefined,
         },
-        packageTypes: [{ id: 'serial', text: 'Journal' }, { id: 'monograph', text: 'Monographie' }],
-        variantNamesHeader: [
-          {
-            text: 'Alias',
-            align: 'left',
-            sortable: false,
-            value: 'alias'
-          },
+        allCuratoryGroups: [],
+        packageTypes: [
+          { id: 'book', text: 'Buch' },
+          { id: 'database', text: 'Datenbank' },
+          { id: 'journal', text: 'Journal' },
+          { id: 'monograph', text: 'Monographie' },
         ],
-
         addTitlePopupVisible: false,
         titlesOptions: {
           page: 1,
@@ -361,6 +364,7 @@
         },
         selectedTitles: [],
         titles: [],
+        maintenanceCycle: undefined,
 
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
@@ -369,9 +373,18 @@
       }
     },
     computed: {
+      providerName () {
+        return this.packageItem?.provider?.name
+      },
+      platformName () {
+        return this.packageItem?.nominalPlatform?.name
+      },
       totalNumberOfTitles () {
         return this.titles.length
       },
+      dueTo () {
+        return this.maintenanceCycle ? this.maintenanceCycle.createMaintenanceDate(new Date()) : null
+      }
     },
     created () {
       this.titlesHeader = TITLES_HEADER
@@ -418,8 +431,22 @@
         !this.titles.find(({ id: idInAll }) => title.id === idInAll) &&
           this.titles.push(title)
       },
-      createPackage () {
-        console.log('create package')
+      cancelPackage () {
+        this.$router.push(HOME_ROUTE)
+      },
+      async createPackage () {
+        // POST /rest/identifiers {value: "someString", namespace: namespaceID}
+        // POST /rest/package
+        const newPackage = {
+          ...this.packageItem,
+          nominalPlatform: this.packageItem.nominalPlatform?.id,
+          provider: this.packageItem.provider?.id,
+          ids: this.packageItem.ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace }))
+        }
+        await this.catchError({
+          promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
+          instance: this
+        })
       }
     }
   }

@@ -9,7 +9,12 @@
         type: String,
         required: false,
         default: 'Namensraum',
-      }
+      },
+      returnObject: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
     },
     created () {
       this.entityName = 'identifier-namespaces'

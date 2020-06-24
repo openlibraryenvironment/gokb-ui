@@ -8,6 +8,9 @@
     :placeholder="placeholder"
     :rules="rules"
     :search-input.sync="search"
+    :item-text="itemText"
+    :item-value="itemValue"
+    :return-object="returnObject"
     clearable
     hide-details
     hide-no-data
@@ -22,6 +25,9 @@
     :placeholder="placeholder"
     :rules="rules"
     :search-input.sync="search"
+    :item-text="itemText"
+    :item-value="itemValue"
+    :return-object="returnObject"
     clearable
     hide-details
     hide-no-data
@@ -44,15 +50,31 @@
         default: ''
       },
       value: {
-        type: Number,
         required: true,
-        default: NaN
+        validator: function (value) {
+          return value === undefined || typeof value === 'number' || typeof value === 'object'
+        }
       },
       allowNewValues: {
         type: Boolean,
         required: false,
         default: false
-      }
+      },
+      itemText: {
+        type: String,
+        required: false,
+        default: 'name'
+      },
+      itemValue: {
+        type: String,
+        required: false,
+        default: 'id'
+      },
+      returnObject: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
     },
     data () {
       return {
@@ -67,7 +89,7 @@
       localValue: {
         get () {
           // console.log('get', this.label, this.value)
-          return this.value?.value
+          return this.returnObject ? this.value : this.value?.[this.itemValue]
         },
         set (localValue) {
           // console.log('set', this.label, localValue, this.items)
@@ -77,6 +99,7 @@
     },
     watch: {
       search (value) {
+        // console.log('search', this.value, this.localValue, this.search, value)
         value && value !== this.value?.value && value.length > 2 && this.query(value)
       }
     },
@@ -84,22 +107,15 @@
       this.searchServices = searchServices(this.searchServicesResourceUrl)
     },
     methods: {
-      _include () {
-        return 'id,name'
-      },
       async query (value) {
         const result = await this.catchError({
           promise: this.searchServices.search({
-            name: this.search,
-            _include: this._include()
+            [this.itemText]: value,
+            _include: [this.itemValue, this.itemText],
           }, this.cancelToken.token),
           instance: this
         })
-        this.items = this.transform(result)
-      },
-      transform (result) {
-        const { data: { data } } = result
-        return data.map(({ id, name, ...rest }) => ({ value: id, text: name, ...rest }))
+        this.items = result?.data?.data
       }
     }
   }

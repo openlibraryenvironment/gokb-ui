@@ -1,3 +1,1 @@
-import LoginPopup from './login-popup'
-
-export default LoginPopup
+export default from './gokb-login-popup'

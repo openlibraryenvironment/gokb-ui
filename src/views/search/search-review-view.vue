@@ -1,45 +1,38 @@
 <script>
   import BaseSearch from './base-search-view'
+  import reviewServices from '@/shared/services/review-services'
 
   export default {
     name: 'SearchReview',
     extends: BaseSearch,
-    data () {
-      return {}
-    },
-    async created () {
+    created () {
       this.title = 'Reviews'
       this.component = 'g:reviewRequests'
       this.resultActionButtons = [
         {
           icon: 'clear',
           label: 'Schließen',
-          action: undefined,
+          disabled: 'isNothingSelected',
+          action: '_confirmCloseSelectedItems',
         }
       ]
-
-      // const allUsers = await ajaxServices.lookup({
-      //   baseClass: 'org.gokb.cred.User',
-      //   q: ''
-      // })
 
       this.searchInputFields = [
         [
           {
             type: 'GokbTextField',
-            name: 'qp_cause',
+            name: 'name',
             properties: {
               label: 'Name/Titel'
             }
           },
           {
-            type: 'GokbSelectField',
-            name: 'qp_raisedby',
+            type: 'GokbSearchUserField',
+            name: 'raisedby',
             properties: {
               label: 'Ersteller',
               multiple: true,
             },
-            // items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
           }
         ],
         [
@@ -50,22 +43,21 @@
             }
           },
           {
-            type: 'GokbSelectField',
-            name: 'qp_allocatedto',
+            type: 'GokbSearchUserField',
+            name: 'allocatedto',
             properties: {
               label: 'Reviewer',
               multiple: true,
             },
-            // items: allUsers.values.map(({ id: value, text }) => ({ value, text })),
           }
         ],
         [
           {
-            type: 'GokbSelectField',
-            name: '',
+            type: 'GokbCuratoryGroupField',
+            name: 'curatoryGroupId',
             properties: {
-              label: 'Kuratoren',
-            },
+              returnObject: false
+            }
           },
           {
             type: 'GokbCheckboxField',
@@ -80,32 +72,55 @@
           text: 'Titel/Name',
           align: 'left',
           sortable: false,
-          value: 'Titel/Name'
+          value: 'link'
         },
-        {
-          text: 'Typ',
-          align: 'left',
-          sortable: false,
-          value: 'Typ'
-        },
+        // {
+        //   text: 'Typ',
+        //   align: 'left',
+        //   sortable: false,
+        //   value: 'Typ'
+        // },
         {
           text: 'Ersteller',
           align: 'left',
           sortable: false,
-          value: 'Raised By'
+          value: 'raisedBy'
         },
         {
           text: 'Reviewer',
           align: 'left',
           sortable: false,
-          value: 'Allocated To'
+          value: 'allocatedTo'
         },
       ]
+      this.searchServicesUrl = 'rest/reviews'
+      // this.searchServiceIncludes = 'id,'
     },
-    // https://gokbt.gbv.de/gokb/ajaxSupport/lookup?format=json&q=&baseClass=org.gokb.cred.RefdataValue&filter1=ReviewRequest.Status&addEmpty=Y&_=1552396318578
+    methods: {
+      _transformForTable (data) {
+        return data.map(({ id, reviewRequest, raisedBy, allocatedTo, _links: { update: { href: updateUrl } } }) => ({
+          id,
+          link: { value: reviewRequest, /* route: EDIT_USER_ROUTE , */ id: 'id' },
+          raisedBy: raisedBy?.name,
+          allocatedTo: allocatedTo?.name,
+          updateUrl
+        }))
+      },
+      _confirmCloseSelectedItems () {
+        this.actionToConfirm = '_closeSelectedItems'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Reviews wirklich schließen?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      async _closeSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ updateUrl }) =>
+          this.catchError({
+            promise: reviewServices.closeReview(updateUrl, this.cancelToken.token),
+            instance: this
+          })
+        ))
+        this.resultPaginate(this.resultOptions.page)
+      },
+    }
   }
 </script>
-
-<style scoped>
-
-</style>

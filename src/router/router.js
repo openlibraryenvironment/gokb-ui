@@ -5,7 +5,7 @@ import {
   EDIT_PROVIDER_ROUTE, ADD_PROVIDER_ROUTE
 } from './route-paths'
 
-const api = (log, errorModel, accountModel, Router, HomeView) => {
+const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
   const router = new Router({
     // mode: 'history', https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
     routes: [
@@ -117,6 +117,7 @@ const api = (log, errorModel, accountModel, Router, HomeView) => {
   })
 
   router.beforeEach(async ({ path: toPath }, { path: fromPath }, next) => {
+    loading.startLoading()
     log.debug(`navigation from ${fromPath} to path ${toPath}`)
     if (toPath !== ERROR_ROUTE) {
       if (!accountModel.isInitialized()) {
@@ -129,6 +130,7 @@ const api = (log, errorModel, accountModel, Router, HomeView) => {
       }
     }
     next()
+    loading.stopLoading()
   })
 
   return router

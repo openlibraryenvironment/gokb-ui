@@ -33,7 +33,10 @@
         :rules="[checkNewPassword, isPasswordEmpty]"
       />
     </gokb-section>
-    <gokb-curatory-group-section v-model="allCuratoryGroups" />
+    <gokb-curatory-group-section
+      v-model="allCuratoryGroups"
+      title="Kuratorengruppen"
+    />
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
       :message="messageToConfirm"
@@ -157,7 +160,10 @@
           }, this.cancelToken.token),
           instance: this
         })
-        this.passwordWrongMessage = result?.data?.error?.message
+        // todo: sometimes error is an array and sometimes an object
+        const message = result?.data?.errors ? Object.values(result.data.errors)
+          ?.reduce((result, { message }) => `${result} ${message}`, '') : undefined
+        this.passwordWrongMessage = message
       },
       async _removeProfile () {
         await this.catchError({
