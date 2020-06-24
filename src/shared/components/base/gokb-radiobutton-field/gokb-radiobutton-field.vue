@@ -2,6 +2,7 @@
   <v-radio
     :disabled="disabled"
     :label="label"
+    :value="value"
   />
 </template>
 
@@ -19,6 +20,10 @@
         required: false,
         default: false,
       },
+      value: {
+        type: String,
+        required: true
+      }
     },
   }
 </script>

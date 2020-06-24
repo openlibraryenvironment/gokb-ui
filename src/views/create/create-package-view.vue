@@ -60,21 +60,21 @@
             <gokb-scope-field
               v-model="packageItem.scope"
             />
-            <gokb-radiobutton-group>
+            <gokb-radiobutton-group v-model="packageItem.global">
               <gokb-radiobutton-field
-                v-model="packageItem.global"
+                value="Consortium"
                 label="Konsortial"
               />
               <gokb-radiobutton-field
-                v-model="packageItem.global"
+                value="Global"
                 label="Global"
               />
               <gokb-radiobutton-field
-                v-model="packageItem.global"
+                value="Regional"
                 label="Regional"
               />
               <gokb-radiobutton-field
-                v-model="packageItem.global"
+                value="Other"
                 label="Unbekannt"
               />
             </gokb-radiobutton-group>
@@ -269,7 +269,6 @@
       <gokb-button
         v-else
         default
-        @click="createPackage"
       >
         Hinzufügen
       </gokb-button>
@@ -428,19 +427,20 @@
       cancelPackage () {
         this.$router.push(HOME_ROUTE)
       },
-      async createPackage () {
-        // POST /rest/identifiers {value: "someString", namespace: namespaceID}
-        // POST /rest/package
-        const newPackage = {
-          ...this.packageItem,
-          nominalPlatform: this.packageItem.nominalPlatform?.id,
-          provider: this.packageItem.provider?.id,
-          ids: this.packageItem.ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace }))
+      async createPackage (form) {
+        const valid = form.validate()
+        if (valid) {
+          const newPackage = {
+            ...this.packageItem,
+            nominalPlatform: this.packageItem.nominalPlatform?.id,
+            provider: this.packageItem.provider?.id,
+            ids: this.packageItem.ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace }))
+          }
+          await this.catchError({
+            promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
+            instance: this
+          })
         }
-        await this.catchError({
-          promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
-          instance: this
-        })
       }
     }
   }

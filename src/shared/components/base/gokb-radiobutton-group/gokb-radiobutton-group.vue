@@ -1,7 +1,8 @@
 <template>
   <v-radio-group
+    v-model="localValue"
     row
-    v-bind="$props"
+    :label="label"
   >
     <slot />
   </v-radio-group>
@@ -15,6 +16,23 @@
         type: String,
         required: false,
         default: undefined,
+      },
+      value: {
+        required: true,
+        default: '',
+        validator: function (value) {
+          return value === undefined || value === null || typeof value === 'string'
+        }
+      },
+    },
+    computed: {
+      localValue: {
+        get () {
+          return this.value
+        },
+        set (localValue) {
+          this.$emit('input', localValue)
+        }
       },
     },
   }
