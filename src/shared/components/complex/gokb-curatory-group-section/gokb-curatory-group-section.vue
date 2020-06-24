@@ -6,7 +6,7 @@
     <gokb-add-item-popup
       v-if="addCuratoryGroupPopupVisible"
       v-model="addCuratoryGroupPopupVisible"
-      :component="{ type: 'GokbCuratoryGroupField', name: 'Kuratorengruppe' }"
+      :component="{ type: 'GokbCuratoryGroupField', name: 'Kuratorengruppe', properties: { returnObject: true } }"
       @add="addNewCuratoryGroup"
     />
     <template #buttons>

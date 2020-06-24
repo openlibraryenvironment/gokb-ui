@@ -7,6 +7,7 @@
     <component
       :is="component.type"
       v-model="item"
+      v-bind="component.properties"
     />
     <template #buttons>
       <v-spacer />

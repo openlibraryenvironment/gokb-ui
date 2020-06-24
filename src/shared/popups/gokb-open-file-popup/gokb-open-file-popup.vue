@@ -20,14 +20,14 @@
         <v-spacer />
         <v-btn
           color="secondary"
-          flat
+          text
           @click.stop="show=false"
         >
           Abbrechen
         </v-btn>
         <v-btn
           color="primary"
-          flat
+          text
           @click.stop="importTxtFile()"
         >
           OK
