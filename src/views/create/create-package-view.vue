@@ -121,6 +121,11 @@
         </v-stepper-content>
 
         <v-stepper-content :step="3">
+          <gokb-open-file-popup
+            v-if="fileImportPopupVisible"
+            v-model="fileImportPopupVisible"
+            @add="addNewTitle"
+          />
           <gokb-add-title-popup
             v-if="addTitlePopupVisible"
             v-model="addTitlePopupVisible"
@@ -133,9 +138,8 @@
                 class="mr-4"
                 @click="showKbartImportPopup"
               >
-                KBART Import
+                KBart Import
               </gokb-button>
-
               <v-menu
                 offset-y
                 open-on-hover
@@ -285,6 +289,7 @@
   import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
   import GokbMaintenanceCycleField from '@/shared/components/simple/gokb-maintenance-cycle-field'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
+  import GokbOpenFilePopup from '@/shared/popups/gokb-open-file-popup'
   import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
@@ -320,6 +325,7 @@
       GokbUrlField,
       GokbSearchSourceField,
       GokbAddTitlePopup,
+      GokbOpenFilePopup,
       GokbConfirmationPopup,
       GokbCuratoryGroupSection,
       GokbMaintenanceCycleField
@@ -327,7 +333,7 @@
     extends: BaseComponent,
     data () {
       return {
-        kbartImportPopupVisible: false,
+        fileImportPopupVisible: false,
         step: 1,
         packageItem: {
           name: undefined,
@@ -400,7 +406,7 @@
       },
       confirmDeleteItem ({ id }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
+        this.messageToConfirm = 'Wollen Sie das ausgewählte Element wirklich löschen?'
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -418,7 +424,7 @@
         this.addTitlePopupVisible = true
       },
       showKbartImportPopup () {
-        this.kbartImportPopupVisible = true
+        this.fileImportPopupVisible = true
       },
       addNewTitle (title) {
         !this.titles.find(({ id: idInAll }) => title.id === idInAll) &&
