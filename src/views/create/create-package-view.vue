@@ -108,12 +108,14 @@
             <gokb-search-organisation-field
               v-model="packageItem.provider"
               label="Name"
+              return-object
             />
           </gokb-section>
           <gokb-section sub-title="Plattform">
             <gokb-search-platform-field
               v-model="packageItem.nominalPlatform"
               label="Name"
+              return-object
             />
           </gokb-section>
         </v-stepper-content>
@@ -236,7 +238,7 @@
             />
           </gokb-section>
           <gokb-curatory-group-section
-            v-model="packageItem.allCuratoryGroups"
+            v-model="allCuratoryGroups"
             sub-title="Kuratorengruppen"
           />
         </v-stepper-content>
@@ -276,6 +278,7 @@
 </template>
 
 <script>
+  import BaseComponent from '@/shared/components/base-component'
   import GokbSearchOrganisationField from '@/shared/components/simple/gokb-search-organisation-field'
   import GokbSearchPlatformField from '@/shared/components/simple/gokb-search-platform-field'
   import GokbScopeField from '@/shared/components/simple/gokb-scope-field'
@@ -288,6 +291,7 @@
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
   import { HOME_ROUTE } from '@/router/route-paths'
+  import packageServices from '@/shared/services/package-services'
 
   const ROWS_PER_PAGE = 10
 
@@ -321,6 +325,7 @@
       GokbCuratoryGroupSection,
       GokbMaintenanceCycleField
     },
+    extends: BaseComponent,
     data () {
       return {
         kbartImportPopupVisible: false,
@@ -338,8 +343,8 @@
           ids: [],
           provider: undefined, // organisation
           nominalPlatform: undefined,
-          allCuratoryGroups: [],
         },
+        allCuratoryGroups: [],
         packageTypes: [
           { id: 'book', text: 'Buch' },
           { id: 'database', text: 'Datenbank' },
@@ -423,8 +428,19 @@
       cancelPackage () {
         this.$router.push(HOME_ROUTE)
       },
-      createPackage () {
-        console.log('create package')
+      async createPackage () {
+        // POST /rest/identifiers {value: "someString", namespace: namespaceID}
+        // POST /rest/package
+        const newPackage = {
+          ...this.packageItem,
+          nominalPlatform: this.packageItem.nominalPlatform?.id,
+          provider: this.packageItem.provider?.id,
+          ids: this.packageItem.ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace }))
+        }
+        await this.catchError({
+          promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
+          instance: this
+        })
       }
     }
   }
