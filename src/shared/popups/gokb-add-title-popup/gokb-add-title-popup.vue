@@ -78,9 +78,20 @@
     },
     data () {
       return {
-        title: undefined,
-        identifiers: [],
-        date: undefined,
+        titleItem: {
+          name: undefined,
+          ids: [],
+          publisher: undefined,
+          publishedFrom: undefined,
+          publishedTo: undefined
+        },
+        tippItem: {
+          titleURL: undefined,
+          accessFrom: undefined,
+          accessTo: undefined,
+          coverage: undefined,
+          embargo: undefined,
+        }
       }
     },
     computed: {
