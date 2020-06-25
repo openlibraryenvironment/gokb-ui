@@ -1,12 +1,6 @@
 import native from '@/shared/utils/native'
 
 const api = {
-  // eslint-disable-next-line
-  isTokenExpired ({ ['.expires']: expires }) {
-    const d = Date.parse(expires)
-    return d ? d < Date.now() : true
-  },
-
   pascalCase (string, separator = '-') {
     return string.split(separator).map((word) => {
       return this.upperFirst(word)
@@ -18,6 +12,10 @@ const api = {
 
   isProduction () {
     return process.env.NODE_ENV === 'production'
+  },
+
+  asYesNo (value) {
+    return value ? 'Yes' : 'No'
   },
 
   isString: native.isString,

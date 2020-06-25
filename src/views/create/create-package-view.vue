@@ -264,7 +264,7 @@
       </gokb-button>
       <v-spacer />
       <gokb-button
-        v-if="step !== 4"
+        v-if="!isInLastStep"
         default
         @click="go2NextStep"
       >
@@ -272,6 +272,7 @@
       </gokb-button>
       <gokb-button
         v-else
+        key="add"
         default
       >
         Hinzufügen
@@ -281,6 +282,7 @@
 </template>
 
 <script>
+  import utils from '@/shared/utils/utils'
   import BaseComponent from '@/shared/components/base-component'
   import GokbSearchOrganisationField from '@/shared/components/simple/gokb-search-organisation-field'
   import GokbSearchPlatformField from '@/shared/components/simple/gokb-search-platform-field'
@@ -372,6 +374,9 @@
       }
     },
     computed: {
+      isInLastStep () {
+        return this.step === 4
+      },
       providerName () {
         return this.packageItem?.provider?.name
       },
@@ -438,6 +443,9 @@
         if (valid) {
           const newPackage = {
             ...this.packageItem,
+            breakable: utils.asYesNo(this.packageItem.breakable),
+            consistent: utils.asYesNo(this.packageItem.consistent),
+            fixed: utils.asYesNo(this.packageItem.fixed),
             nominalPlatform: this.packageItem.nominalPlatform?.id,
             provider: this.packageItem.provider?.id,
             ids: this.packageItem.ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace }))
@@ -447,10 +455,18 @@
             instance: this
           })
         }
+      //   [
+      //     name: "TestFullJournal",
+      //   ids|identifiers: [
+      //     identifierID,
+      //     [namespace: namespaceID, value: "3344-5544"],
+      //   [namespace: namespaceName, value: "1234435-6"]
+      // ],
+      //   publisher: publisherId|publisherName,
+      //     publishedFrom: publishedFromDate,
+      //     publishedTo: publishedToDate
+      // ]
       }
     }
   }
 </script>
-
-<style scoped>
-</style>
