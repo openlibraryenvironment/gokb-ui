@@ -1,6 +1,7 @@
 <template>
   <gokb-page
     title="Profil"
+    @valid="valid = $event"
     @submit="updateProfile"
   >
     <gokb-error-component :value="error" />
@@ -16,7 +17,7 @@
         v-model="origpass"
         :disabled="updateProfileAvailable"
         label="Bisheriges Kennwort"
-        :rules="[isPasswordEmpty, isPasswordWrong]"
+        :rules="[isOldPasswordEmpty, isPasswordWrong]"
       />
       <gokb-password-field
         v-model="newpass"
@@ -51,7 +52,7 @@
       </gokb-button>
       <v-spacer />
       <gokb-button
-        :disabled="updateProfileAvailable"
+        :disabled="updateProfileAvailable || !valid"
         default
       >
         Aktualisieren
@@ -79,6 +80,7 @@
     extends: BaseComponent,
     data () {
       return {
+        valid: undefined,
         email: undefined,
         origpass: undefined,
         newpass: undefined,
@@ -132,8 +134,11 @@
       this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
     },
     methods: {
-      isPasswordEmpty () {
+      isOldPasswordEmpty () {
         return (this.newpass || this.repeatpass) && !this.origpass ? 'Bitte erfassen Sie das alte Passwort' : true
+      },
+      isPasswordEmpty () {
+        return (this.newpass && !this.repeatpass) || (!this.newpass && this.repeatpass) ? 'Bitte erfassen Sie das neue Passwort zweimal.' : true
       },
       isPasswordWrong () {
         return (this.origpass && this.passwordWrongMessage) || true
@@ -150,7 +155,7 @@
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      async updateProfile () {
+      async updateProfile (form) {
         const result = await this.catchError({
           promise: profileServices.updateProfile(this.updateProfileUrl, {
             email: this.email,

@@ -2,6 +2,7 @@
   <v-container style="max-width: 1000px;">
     <v-form
       ref="form"
+      @input="$emit('valid', $event)"
       @submit.prevent="doSubmit"
     >
       <v-card flat>
@@ -36,7 +37,7 @@
         type: String,
         required: false,
         default: 'missing title for page'
-      },
+      }
     },
     methods: {
       doSubmit () {

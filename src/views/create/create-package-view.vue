@@ -1,6 +1,7 @@
 <template>
   <gokb-page
     title="Paket anlegen"
+    @valid="valid = $event"
     @submit="createPackage"
   >
     <v-stepper
@@ -266,13 +267,16 @@
       <gokb-button
         v-if="!isInLastStep"
         default
+        :disabled="!valid"
         @click="go2NextStep"
       >
         Weiter
       </gokb-button>
+      <!-- without key, submit is executed on previous page -->
       <gokb-button
         v-else
         key="add"
+        :disabled="!valid"
         default
       >
         Hinzufügen
@@ -335,6 +339,7 @@
     extends: BaseComponent,
     data () {
       return {
+        valid: undefined,
         fileImportPopupVisible: false,
         step: 1,
         packageItem: {
