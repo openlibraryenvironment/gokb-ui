@@ -47,7 +47,7 @@ export default {
           if (error.response.status >= 500 && instance) {
             log.error(error)
             instance.error = this.isCancelThrown(error) ? undefined : error
-          } else if (error.response.status === 401) {
+          } else if (error.response.status === 401 && !showLoginModel.get()) {
             showLoginModel.set(true)
           } else {
             return error.response
