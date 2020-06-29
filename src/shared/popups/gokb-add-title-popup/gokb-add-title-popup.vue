@@ -11,6 +11,7 @@
     <gokb-section sub-title="Allgemein">
       <gokb-title-field
         v-model="title"
+        return-object
       />
       <gokb-date-field label="Veröffentlichungsdatum" />
       <gokb-text-field label="Titel URL" />
