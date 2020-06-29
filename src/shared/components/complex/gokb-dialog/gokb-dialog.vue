@@ -45,6 +45,9 @@
     methods: {
       doSubmit () {
         this.$emit('submit', this.$refs.form)
+      },
+      resetValidation () {
+        this.$refs.form.resetValidation()
       }
     }
   }

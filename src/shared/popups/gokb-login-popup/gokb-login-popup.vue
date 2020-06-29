@@ -1,5 +1,6 @@
 <template>
   <gokb-dialog
+    ref="dialog"
     v-model="localValue"
     title="Login"
     @submit="login"
@@ -100,6 +101,7 @@
         this.password = undefined
         this.save = undefined
         this.localValue = false
+        this.$refs.dialog.resetValidation()
       },
     }
   }
