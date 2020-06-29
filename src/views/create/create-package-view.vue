@@ -266,7 +266,7 @@
       <v-spacer />
       <gokb-button
         v-if="!isInLastStep"
-        default
+        color="accent"
         :disabled="!valid"
         @click="go2NextStep"
       >
