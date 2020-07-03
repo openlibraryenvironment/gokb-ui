@@ -4,6 +4,7 @@
     @valid="valid = $event"
     @submit="createPackage"
   >
+    <gokb-error-component :value="error" />
     <v-stepper
       v-model="step"
       alt-labels
