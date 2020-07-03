@@ -38,6 +38,11 @@
             hide-icon
           />
         </v-col>
+        <v-col md="4">
+          <gokb-search-organisation-field
+            v-model="organisation"
+          />
+        </v-col>
       </v-row>
       <v-row>
         <v-col md="1">
@@ -50,13 +55,6 @@
           <gokb-checkbox-field
             v-model="accountLocked"
             label="Gesperrt"
-          />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col md="4">
-          <gokb-search-organisation-field
-            v-model="organisation"
           />
         </v-col>
       </v-row>
