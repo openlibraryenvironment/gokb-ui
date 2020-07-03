@@ -6,40 +6,69 @@
     @submit="addTitle"
   >
     <gokb-identifier-section
-      v-model="identifiers"
+      v-model="titleItem.ids"
     />
     <gokb-section sub-title="Allgemein">
       <gokb-title-field
-        v-model="title"
+        v-model="titleItem.title"
         return-object
       />
-      <gokb-date-field label="Veröffentlichungsdatum" />
-      <gokb-text-field label="Titel URL" />
+      <gokb-date-range-field
+        v-model="publicationDate"
+        label="Veröffentlichungsdatum"
+      />
+      <gokb-text-field
+        v-model="packageTitleItem.url"
+        label="Titel URL"
+      />
     </gokb-section>
     <gokb-section sub-title="Zugangszeitraum">
-      <gokb-date-range-field label="Zugangszeitraum" />
+      <gokb-date-range-field
+        v-model="accessInterval"
+        label="Zugangszeitraum"
+      />
     </gokb-section>
     <gokb-section sub-title="Abdeckung">
-      <gokb-select-field label="Art" />
-      <gokb-date-range-field label="Abdeckungszeitraum" />
+      <gokb-select-field
+        v-model="packageTitleItem.coverageStatement.coverageDepth"
+        label="Art"
+      />
+      <gokb-date-range-field
+        v-model="converageInterval"
+        label="Abdeckungszeitraum"
+      />
       <gokb-number-range-field
+        model="issueInterval"
         label-from="Ausgaben von"
         label-to="bis"
       />
       <gokb-number-range-field
+        v-model="volumeInterval"
         label-from="Bände von"
         label-to="bis"
       />
-      <gokb-textarea-field label="Notizen" />
+      <gokb-textarea-field
+        v-model="packageTitleItem.coverageStatement.coverageNote"
+        label="Notizen"
+      />
     </gokb-section>
     <gokb-section sub-title="Embargo">
-      <gokb-select-field label="Typ" />
+      <gokb-select-field
+        v-model="embargoType"
+        label="Typ"
+      />
       <v-row>
         <v-col>
-          <gokb-number-field label="Dauer" />
+          <gokb-number-field
+            v-model="embargoDuration"
+            label="Dauer"
+          />
         </v-col>
         <v-col>
-          <gokb-select-field label="Einheit" />
+          <gokb-select-field
+            v-model="embargoUnit"
+            label="Einheit"
+          />
         </v-col>
       </v-row>
     </gokb-section>
@@ -80,18 +109,30 @@
     data () {
       return {
         titleItem: {
-          name: undefined,
+          title: undefined,
           ids: [],
           publisher: undefined,
           publishedFrom: undefined,
           publishedTo: undefined
         },
-        tippItem: {
-          titleURL: undefined,
-          accessFrom: undefined,
-          accessTo: undefined,
-          coverage: undefined,
-          embargo: undefined,
+        packageTitleItem: {
+          title: undefined,
+          pkg: undefined,
+          hostPlatform: undefined,
+          url: undefined,
+          accessStartDate: undefined,
+          accessEndDate: undefined,
+          coverageStatement: { // not for ebooks
+            coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
+            startDate: undefined,
+            endDate: undefined,
+            startVolume: undefined, // number
+            endVolume: undefined, // number
+            startIssue: undefined, // number
+            endIssue: undefined, // number
+            coverageNote: undefined, // note
+            embargo: undefined // embargo code: <Type(P|R)><Duration><Unit(D|M|Y)>
+          }
         }
       }
     },
@@ -104,6 +145,75 @@
           this.$emit('input', localValue)
         }
       },
+      publicationDate: {
+        get () {
+          return [this.titleItem.publishedFrom, this.titleItem.publishedTo]
+        },
+        set ([from, to]) {
+          this.titleItem.publishedFrom = from
+          this.titleItem.publishedTo = to
+        }
+      },
+      accessInterval: {
+        get () {
+          return [this.packageTitleItem.accessStartDate, this.packageTitleItem.accessEndDate]
+        },
+        set ([from, to]) {
+          this.packageTitleItem.accessStartDate = from
+          this.packageTitleItem.accessEndDate = to
+        }
+      },
+      converageInterval: {
+        get () {
+          return [this.packageTitleItem.coverageStatement.startDate, this.packageTitleItem.coverageStatement.endDate]
+        },
+        set ([from, to]) {
+          this.packageTitleItem.coverageStatement.startDate = from
+          this.packageTitleItem.coverageStatement.endDate = to
+        }
+      },
+      issueInterval: {
+        get () {
+          return [this.packageTitleItem.coverageStatement.startIssue, this.packageTitleItem.coverageStatement.endIssue]
+        },
+        set ([from, to]) {
+          this.packageTitleItem.coverageStatement.startIssue = from
+          this.packageTitleItem.coverageStatement.endIssue = to
+        }
+      },
+      volumeInterval: {
+        get () {
+          return [this.packageTitleItem.coverageStatement.startVolume, this.packageTitleItem.coverageStatement.endVolume]
+        },
+        set ([from, to]) {
+          this.packageTitleItem.coverageStatement.startVolume = from
+          this.packageTitleItem.coverageStatement.endVolume = to
+        }
+      },
+      embargoType: {
+        get () {
+          return this.embargo
+        },
+        set (value) {
+          this.embargo = value
+        }
+      },
+      embargoDuration: {
+        get () {
+          return this.embargo
+        },
+        set (value) {
+          this.embargo = value
+        }
+      },
+      embargoUnit: {
+        get () {
+          return this.embargo
+        },
+        set (value) {
+          this.embargo = value
+        }
+      }
     },
     methods: {
       addTitle () {
