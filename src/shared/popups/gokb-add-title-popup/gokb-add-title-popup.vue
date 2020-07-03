@@ -17,7 +17,7 @@
         v-model="publicationDate"
         label="Veröffentlichungsdatum"
       />
-      <gokb-text-field
+      <gokb-url-field
         v-model="packageTitleItem.url"
         label="Titel URL"
       />
