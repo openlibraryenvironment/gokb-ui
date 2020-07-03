@@ -1,36 +1,39 @@
 <script>
   import BaseSearch from './base-search-view'
+  import { EDIT_TITLE_ROUTE } from '@/router/route-paths'
+  import baseServices from '@/shared/services/base-services'
 
   export default {
     name: 'SearchTitle',
     extends: BaseSearch,
     data () {
-      return {}
+      return {
+        name: undefined,
+        identifierIds: undefined,
+        publisherId: undefined,
+        type: undefined,
+        status: undefined,
+      }
+    },
+    computed: {
+      isDeleteSelectedDisabled () {
+        return !this.selectedItems.length
+      }
     },
     async created () {
-      // const allTypes = await ajaxServices.lookup({
-      //   baseClass: 'org.gokb.cred.RefdataValue',
-      //   filter1: 'TitleInstance.Medium',
-      //   q: '',
-      // })
-      // const allStates = await ajaxServices.lookup({
-      //   baseClass: 'org.gokb.cred.RefdataValue',
-      //   filter1: 'KBComponent.Status',
-      //   q: ''
-      // })
-
       this.title = 'Titel'
-      this.component = 'g:1titles'
       this.resultActionButtons = [
         {
           icon: 'clear',
           label: 'Archivieren',
-          action: undefined,
+          disabled: 'isDeleteSelectedDisabled',
+          action: '_confirmRetireSelectedItems'
         },
         {
           icon: 'delete',
           label: 'Löschen',
-          action: undefined,
+          disabled: 'isDeleteSelectedDisabled',
+          action: '_confirmDeleteSelectedItems',
         }
       ]
 
@@ -38,23 +41,23 @@
         [
           {
             type: 'GokbTextField',
-            name: 'qp_name',
+            name: 'name',
+            value: this.name,
             properties: {
               label: 'Name/Titel'
             }
           },
           {
-            type: 'GokbSelectField',
-            name: 'qp_identifier',
-            properties: {
-              label: 'Identifier'
-            }
+            type: 'GokbSearchIdentifierField',
+            name: 'ids',
+            value: this.identifierIds,
           }
         ],
         [
           {
             type: 'GokbSearchPublisherField',
-            name: 'qp_pub',
+            name: 'publisher',
+            value: this.publisherId
           },
           {
             type: 'GokbSelectField',
@@ -67,12 +70,8 @@
         ],
         [
           {
-            type: 'GokbSelectField',
-            name: 'qp_status',
-            properties: {
-              label: 'Status',
-              // items: allStates.values.map(({ id: value, text }) => ({ value, text })),
-            }
+            type: 'GokbStateField',
+            name: 'status',
           }
         ]
       ]
@@ -81,31 +80,73 @@
           text: 'Name/Titel',
           align: 'left',
           sortable: false,
-          value: 'Name/Title'
+          value: 'link'
         },
         {
           text: 'Typ',
           align: 'left',
           sortable: false,
-          value: 'Type'
+          value: 'type'
         },
         {
           text: 'Veröffentlicht von',
           align: 'right',
           sortable: false,
-          value: ''
+          value: 'createdBy'
         },
         {
           text: 'Veröffentlicht bis',
           align: 'right',
           sortable: false,
-          value: ''
+          value: 'createdUntil'
         },
       ]
+      this.searchServicesUrl = 'rest/titles'
+      this.searchServiceIncludes = 'id,name,publisher,_links'
     },
+    methods: {
+      _transformForTable (data) {
+        return data.map(({
+          id,
+          name,
+          provider,
+          nominalPlatform,
+          _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
+        }) => ({
+          id,
+          link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
+          providerName: provider?.name,
+          nominalPlatformName: nominalPlatform?.name,
+          isDeletable: !!deleteUrl,
+          deleteUrl: deleteUrl,
+          retireUrl: retireUrl,
+        }))
+      },
+      _confirmDeleteSelectedItems () {
+        this.actionToConfirm = '_deleteSelectedItems'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      async _deleteSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ deleteUrl }) => this._executeDeleteItemService(deleteUrl)))
+        this.resultPaginate(this.resultOptions.page)
+      },
+      _confirmRetireSelectedItems () {
+        this.actionToConfirm = '_retireSelectedItems'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich archivieren?'
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      async _retireSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ retireUrl }) =>
+          this.catchError({
+            promise: baseServices.request({ method: 'POST', url: retireUrl }, this.cancelToken.token),
+            instance: this
+          })
+        ))
+        this.resultPaginate(this.resultOptions.page)
+      },
+    }
   }
 </script>
-
-<style scoped>
-
-</style>
