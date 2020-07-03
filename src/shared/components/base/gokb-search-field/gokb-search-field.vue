@@ -52,7 +52,7 @@
       value: {
         required: true,
         validator: function (value) {
-          return value === undefined || typeof value === 'number' || typeof value === 'object'
+          return value === undefined || typeof value === 'string' || typeof value === 'number' || typeof value === 'object'
         }
       },
       allowNewValues: {
