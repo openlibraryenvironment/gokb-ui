@@ -21,6 +21,7 @@
             label="Kennwort"
             hide-icon
             autocomplete="off"
+            rules=""
           />
         </v-col>
         <v-col md="3">

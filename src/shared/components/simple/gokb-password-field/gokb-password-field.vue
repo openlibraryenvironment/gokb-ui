@@ -15,11 +15,6 @@
         required: false,
         default: 'password',
       },
-      required: {
-        type: Boolean,
-        required: false,
-        default: true,
-      },
       prependIcon: {
         type: String,
         required: false,
