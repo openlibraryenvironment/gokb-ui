@@ -56,7 +56,7 @@
     <gokb-add-item-popup
       v-if="addRolePopupVisible"
       v-model="addRolePopupVisible"
-      :component="{ type: 'GokbRoleField', name: 'Rolle' }"
+      :component="{ type: 'GokbRoleField', name: 'Rolle', properties: { returnObject: true } }"
       @add="addNewRole"
     />
     <gokb-section sub-title="Rollen">
