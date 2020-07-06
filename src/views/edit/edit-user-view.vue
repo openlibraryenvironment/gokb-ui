@@ -214,7 +214,7 @@
               _links: {
                 update: { href: updateUserUrl },
               },
-              // organisation
+              organisation
             }
           }
         } = await this.catchError({
@@ -230,7 +230,7 @@
         this.allRoles = roles.map(({ authority, ...rest }) => ({ ...rest, name: authority }))
         this.updateUserUrl = updateUserUrl
         this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
-        // this.organisation = organisation
+        this.organisation = organisation
       }
     },
     methods: {
@@ -255,13 +255,16 @@
           passwordExpired: this.passwordExpired,
           roleIds: this.roles.map(({ id }) => id),
           curatoryGroupIds: this.allCuratoryGroups.map(({ id }) => id),
-          // organisation: this.organisation
+          organisation: this.organisation
         }
-        await this.catchError({
+        const response = await this.catchError({
           promise: userServices.createOrUpdateUser(data, this.cancelToken.token),
           instance: this
         })
-        this.pageBack()
+        // todo: check error code
+        if (response.status === 200) {
+          this.pageBack()
+        }
       },
       pageBack () {
         this.$router.go(-1)
