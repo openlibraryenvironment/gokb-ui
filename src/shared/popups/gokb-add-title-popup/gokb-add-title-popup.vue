@@ -53,9 +53,8 @@
       />
     </gokb-section>
     <gokb-section sub-title="Embargo">
-      <gokb-select-field
+      <gokb-embargo-type-field
         v-model="embargoType"
-        label="Typ"
       />
       <v-row>
         <v-col>
@@ -65,9 +64,8 @@
           />
         </v-col>
         <v-col>
-          <gokb-select-field
+          <gokb-time-period-field
             v-model="embargoUnit"
-            label="Einheit"
           />
         </v-col>
       </v-row>
@@ -131,7 +129,7 @@
             startIssue: undefined, // number
             endIssue: undefined, // number
             coverageNote: undefined, // note
-            embargo: undefined // embargo code: <Type(P|R)><Duration><Unit(D|M|Y)>
+            embargo: undefined
           }
         }
       }
@@ -192,26 +190,32 @@
       },
       embargoType: {
         get () {
-          return this.embargo
+          const { type } = this.decodeEmbargo()
+          return type
         },
-        set (value) {
-          this.embargo = value
+        set (type) {
+          const { duration, unit } = this.decodeEmbargo()
+          this.packageTitleItem.coverageStatement.embargo = `${type || ''}${duration || ''}${unit || ''}`
         }
       },
       embargoDuration: {
         get () {
-          return this.embargo
+          const { duration } = this.decodeEmbargo()
+          return parseInt(duration, 10) || duration
         },
-        set (value) {
-          this.embargo = value
+        set (duration) {
+          const { type, unit } = this.decodeEmbargo()
+          this.packageTitleItem.coverageStatement.embargo = `${type || ''}${duration || ''}${unit || ''}`
         }
       },
       embargoUnit: {
         get () {
-          return this.embargo
+          const { unit } = this.decodeEmbargo()
+          return unit
         },
-        set (value) {
-          this.embargo = value
+        set (unit) {
+          const { type, duration } = this.decodeEmbargo()
+          this.packageTitleItem.coverageStatement.embargo = `${type || ''}${duration || ''}${unit || ''}`
         }
       }
     },
@@ -222,6 +226,11 @@
       },
       close () {
         this.localValue = false
+      },
+      decodeEmbargo () {
+        const matches = this.packageTitleItem.coverageStatement.embargo?.match(/^([P,R]?)([0-9]*)([D,M,Y]?)$/)
+        const [, type, duration, unit] = matches || []
+        return { type, duration, unit }
       }
     }
   }

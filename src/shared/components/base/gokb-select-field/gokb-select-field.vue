@@ -21,7 +21,7 @@
     entityName: undefined,
     props: {
       value: {
-        type: [Object, Number, Array, Boolean],
+        type: [Object, String, Number, Array, Boolean],
         required: false,
         default: () => undefined,
       },
@@ -57,6 +57,7 @@
           return this.value
         },
         set (value) {
+          // console.log('select field', value)
           this.$emit('input', value)
         }
       },
