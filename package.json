@@ -22,10 +22,10 @@
     "uuid4": "^1.1.4",
     "vue": "^2.6.11",
     "vue-router": "^3.3.4",
-    "vuetify": "^2.3.2"
+    "vuetify": "^2.3.3"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-export-default-from": "^7.10.1",
+    "@babel/plugin-proposal-export-default-from": "^7.10.4",
     "@vue/cli-plugin-babel": "^4.4.6",
     "@vue/cli-plugin-e2e-cypress": "^4.4.6",
     "@vue/cli-plugin-eslint": "^4.4.6",
