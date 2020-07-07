@@ -107,6 +107,7 @@
     data () {
       return {
         titleItem: {
+          id: undefined,
           title: undefined,
           ids: [],
           publisher: undefined,
@@ -216,6 +217,13 @@
         set (unit) {
           const { type, duration } = this.decodeEmbargo()
           this.packageTitleItem.coverageStatement.embargo = `${type || ''}${duration || ''}${unit || ''}`
+        }
+      }
+    },
+    watch: {
+      'titleItem.title': {
+        handler () {
+          console.log('titleItem.title', this.titleItem.title)
         }
       }
     },
