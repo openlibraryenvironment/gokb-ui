@@ -1,16 +1,15 @@
-// const USER_URL = 'rest/provider'
 
 const api = (baseServices) => ({
   archiveProvider (url, cancelToken) {
     return baseServices.request({
       method: 'POST',
-      url,
+      url: baseServices.relativeUrl(url),
     }, cancelToken)
   },
   deleteProvider (url, cancelToken) {
     return baseServices.request({
       method: 'DELETE',
-      url,
+      url: baseServices.relativeUrl(url),
     }, cancelToken)
   }
 })
