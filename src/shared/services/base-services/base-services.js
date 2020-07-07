@@ -2,7 +2,7 @@ const HEADER_AUTHORIZATION_KEY = 'Authorization'
 
 const headers = {}
 
-const api = http => ({
+const api = (http, utils) => ({
 
   deleteAuthorization () {
     delete headers[HEADER_AUTHORIZATION_KEY]
@@ -33,7 +33,11 @@ const api = http => ({
     Object.entries(parameters)
       .forEach(([name, value]) => (data.append(name, value)))
     return data
-  }
+  },
+
+  relativeUrl (url) {
+    return utils.isProduction() ? url : url.replace(process.env.VUE_APP_API_BASE_URL, '')
+  },
 })
 
 export default api
