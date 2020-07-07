@@ -93,13 +93,13 @@
       },
       _confirmArchiveSelectedItems () {
         this.actionToConfirm = '_archiveSelectedItems'
-        this.messageToConfirm = 'Wollen Sie den ausgewählten Provider wirklich archivieren?'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich archivieren?'
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       _confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = 'Wollen Sie den ausgewählten Provider wirklich löschen?'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
