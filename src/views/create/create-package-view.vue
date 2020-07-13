@@ -123,9 +123,9 @@
         </v-stepper-content>
 
         <v-stepper-content :step="3">
-          <gokb-open-file-popup
-            v-if="fileImportPopupVisible"
-            v-model="fileImportPopupVisible"
+          <gokb-kbart-import-popup
+            v-if="kbartImportPopupVisible"
+            v-model="kbartImportPopupVisible"
             @add="addNewTitle"
           />
           <gokb-add-title-popup
@@ -296,7 +296,7 @@
   import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
   import GokbMaintenanceCycleField from '@/shared/components/simple/gokb-maintenance-cycle-field'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
-  import GokbOpenFilePopup from '@/shared/popups/gokb-open-file-popup'
+  import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
   import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
@@ -332,7 +332,7 @@
       GokbUrlField,
       GokbSearchSourceField,
       GokbAddTitlePopup,
-      GokbOpenFilePopup,
+      GokbKbartImportPopup,
       GokbConfirmationPopup,
       GokbCuratoryGroupSection,
       GokbMaintenanceCycleField
@@ -341,7 +341,7 @@
     data () {
       return {
         valid: undefined,
-        fileImportPopupVisible: false,
+        kbartImportPopupVisible: false,
         step: 1,
         packageItem: {
           name: undefined,
@@ -435,7 +435,7 @@
         this.addTitlePopupVisible = true
       },
       showKbartImportPopup () {
-        this.fileImportPopupVisible = true
+        this.kbartImportPopupVisible = true
       },
       addNewTitle (title) {
         !this.titles.find(({ id: idInAll }) => title.id === idInAll) &&

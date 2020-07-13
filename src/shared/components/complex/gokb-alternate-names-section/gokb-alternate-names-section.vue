@@ -100,7 +100,7 @@
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
-        this[actionMethodName](actionMethodParameter)
+        this[actionMethodName](...actionMethodParameter)
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
@@ -108,27 +108,29 @@
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      confirmDeleteItem ({ id }) {
+      confirmDeleteItem ({ id, name }) {
         this.actionToConfirm = '_deleteItem'
         this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
-        this.parameterToConfirm = id
+        this.parameterToConfirm = [id, name]
         this.confirmationPopUpVisible = true
       },
       _deleteSelected () {
-        this.localValue = this.localValue.filter(({ id }) => !this.selected
-          .find(({ id: selectedId }) => id === selectedId))
+        console.log('_deleteSelected')
+        this.localValue = this.localValue.filter(({ id, name }) => !this.selected
+          .find(({ id: selectedId, name: selectedName }) => id === selectedId || name === selectedName))
         this.selectedItems = []
       },
-      _deleteItem (idToDelete) {
-        this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
-        this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
+      _deleteItem ([id, name]) {
+        console.log('_deleteItem', id, name)
+        this.localValue = this.localValue.filter(({ id: idLocal }) => idLocal && idLocal !== id)
+        this.selectedItems = this.selectedItems.filter(({ id: idLocal }) => idLocal && idLocal !== id)
       },
       showAddItem () {
         this.addItemPopupVisible = true
       },
-      addItem ({ id, name }) {
-        !this.localValue.find(({ id: idInAll }) => id === idInAll) &&
-          this.localValue.push({ id, name, isDeletable: true })
+      addItem (name) {
+        !this.localValue.find(value => name === value) &&
+          this.localValue.push({ name, isDeletable: true })
       },
     }
   }
