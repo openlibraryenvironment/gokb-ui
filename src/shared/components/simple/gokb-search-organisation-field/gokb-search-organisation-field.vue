@@ -12,7 +12,7 @@
       }
     },
     created () {
-      this.searchServicesResourceUrl = 'rest/orgs'
+      this.searchServicesResourceUrl = 'rest/organizations'
     },
   }
 </script>
