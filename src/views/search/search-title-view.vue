@@ -1,7 +1,6 @@
 <script>
   import BaseSearch from './base-search-view'
   import { EDIT_TITLE_ROUTE } from '@/router/route-paths'
-  import baseServices from '@/shared/services/base-services'
 
   export default {
     name: 'SearchTitle',
@@ -141,7 +140,7 @@
       async _retireSelectedItems () {
         await Promise.all(this.selectedItems.map(({ retireUrl }) =>
           this.catchError({
-            promise: baseServices.request({ method: 'POST', url: retireUrl }, this.cancelToken.token),
+            promise: this.searchServices.retire(retireUrl, this.cancelToken.token),
             instance: this
           })
         ))
