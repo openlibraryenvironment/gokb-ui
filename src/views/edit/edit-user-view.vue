@@ -21,7 +21,7 @@
             label="Kennwort"
             hide-icon
             autocomplete="off"
-            rules=""
+            :rules="[]"
           />
         </v-col>
         <v-col md="3">
