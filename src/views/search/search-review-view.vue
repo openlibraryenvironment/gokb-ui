@@ -54,7 +54,7 @@
         [
           {
             type: 'GokbCuratoryGroupField',
-            name: 'curatoryGroupId',
+            name: 'curatoryGroups',
             properties: {
               returnObject: false
             }
