@@ -104,6 +104,7 @@
         if (csvDataRows.length === 0) {
           return
         }
+        console.log(csvDataRows.length, csvDataRows[0], csvDataRows[1])
         try {
           // await baseServices.pubchargedb({
           //   initiator: this._importCompleted.name,

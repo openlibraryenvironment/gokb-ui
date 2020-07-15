@@ -27,7 +27,7 @@
       selectedFile: {
         type: String,
         required: false,
-        default: '',
+        default: undefined,
       },
     },
     computed: {
