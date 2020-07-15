@@ -8,7 +8,8 @@
           class="mr-4"
           label="Typ"
         />
-        <gokb-select-field
+        <gokb-search-user-field
+          v-model="reviewsRaisedBy"
           label="Ersteller"
         />
       </template>
@@ -53,9 +54,8 @@
 
 <script>
   import baseComponent from '@/shared/components/base-component'
-  import genericEntityServices from '@/shared/services/generic-entity-services'
-
-  const reviewServices = genericEntityServices('reviews')
+  import reviewServices from '@/shared/services/review-services'
+  import GokbSearchUserField from '@/shared/components/simple/gokb-search-user-field'
 
   const ROWS_PER_PAGE = 5
 
@@ -122,15 +122,16 @@
 
   export default {
     name: 'HomeView',
+    components: { GokbSearchUserField },
     extends: baseComponent,
     data () {
       return {
-        reviews: [],
-        totalNumberOfReviews: 0,
+        rawReviews: undefined,
         reviewsOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
+        reviewsRaisedBy: undefined,
 
         maintenances: [],
         totalNumberOfMaintenances: 0,
@@ -147,8 +148,28 @@
         },
       }
     },
+    computed: {
+      reviews () {
+        const reviews = this.rawReviews?.data?.data
+        return reviews?.map(entry => {
+          const name = entry?.componentToReview?.name
+          const dateCreated = entry?.dateCreated
+          const raisedBy = entry?.raisedBy?.name
+          return { name, dateCreated, raisedBy }
+        })
+      },
+      totalNumberOfReviews () {
+        return this.rawReviews?.data?._pagination?.total || 0
+      }
+    },
+    watch: {
+      reviewsRaisedBy (value) {
+        this.reviewsOptions.page = 1
+        this.paginateReviews()
+      }
+    },
     activated () {
-      this.paginateReviews(this.reviewsOptions.page)
+      this.paginateReviews()
     },
     created () {
       this.reviewsHeader = REVIEWS_HEADER
@@ -167,25 +188,16 @@
       this.totalNumberOfKbartImports = 2
     },
     methods: {
-      async paginateReviews (page) {
+      async paginateReviews () {
         const parameters = {
-          offset: page ? (page - 1) * this.reviewsOptions.itemsPerPage : 0,
+          raisedBy: this.reviewsRaisedBy,
+          offset: this.reviewsOptions.page ? (this.reviewsOptions.page - 1) * this.reviewsOptions.itemsPerPage : 0,
           limit: this.reviewsOptions.itemsPerPage
-        } // { 'status.name': 'Open', _sort: 'dateCreated', _order: 'desc' }
-        const response = await this.catchError({
+        }
+        this.rawReviews = await this.catchError({
           promise: reviewServices.get({ parameters }, this.cancelToken.token),
           instance: this
         })
-        const reviews = response?.data?.data
-        const total = response?.data?._pagination?.total
-        // name type createdDate creator
-        this.reviews = reviews?.map(entry => {
-          const name = entry?.componentToReview?.name
-          const dateCreated = entry?.dateCreated
-          const raisedBy = entry?.raisedBy?.name
-          return { name, dateCreated, raisedBy }
-        })
-        this.totalNumberOfReviews = total || 0
       },
     }
   }
