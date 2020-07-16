@@ -56,6 +56,7 @@
   import baseComponent from '@/shared/components/base-component'
   import reviewServices from '@/shared/services/review-services'
   import GokbSearchUserField from '@/shared/components/simple/gokb-search-user-field'
+  import { EDIT_REVIEW_ROUTE } from '@/router/route-paths'
 
   const ROWS_PER_PAGE = 5
 
@@ -64,7 +65,7 @@
       text: 'Name',
       align: 'left',
       sortable: false,
-      value: 'name'
+      value: 'link'
     },
     // {
     //   text: 'Typ',
@@ -152,10 +153,12 @@
       reviews () {
         const reviews = this.rawReviews?.data?.data
         return reviews?.map(entry => {
+          const id = entry?.id
           const name = entry?.componentToReview?.name
           const dateCreated = entry?.dateCreated
           const raisedBy = entry?.raisedBy?.name
-          return { name, dateCreated, raisedBy }
+          const link = { value: name, route: EDIT_REVIEW_ROUTE, id: 'id' }
+          return { id, name, dateCreated, raisedBy, link }
         })
       },
       totalNumberOfReviews () {
