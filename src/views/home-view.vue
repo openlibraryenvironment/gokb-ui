@@ -28,8 +28,8 @@
           class="mr-4"
           label="Typ"
         />
-        <gokb-select-field
-          label="Ersteller"
+        <gokb-date-field
+          label="Fällig am"
         />
       </template>
       <gokb-table
@@ -56,7 +56,7 @@
   import baseComponent from '@/shared/components/base-component'
   import reviewServices from '@/shared/services/review-services'
   import GokbSearchUserField from '@/shared/components/simple/gokb-search-user-field'
-  import { EDIT_REVIEW_ROUTE } from '@/router/route-paths'
+  import GokbDateField from '@/shared/components/complex/gokb-date-field'
 
   const ROWS_PER_PAGE = 5
 
@@ -123,7 +123,7 @@
 
   export default {
     name: 'HomeView',
-    components: { GokbSearchUserField },
+    components: { GokbSearchUserField, GokbDateField },
     extends: baseComponent,
     data () {
       return {
@@ -157,7 +157,8 @@
           const name = entry?.componentToReview?.name
           const dateCreated = entry?.dateCreated
           const raisedBy = entry?.raisedBy?.name
-          const link = { value: name, route: EDIT_REVIEW_ROUTE, id: 'id' }
+          // todo: the type of the review specifies the dialog to open on click
+          const link = { value: name, route: 'EDIT_TYPE_ROUTE', id: 'id' }
           return { id, name, dateCreated, raisedBy, link }
         })
       },
