@@ -48,7 +48,7 @@
   const ROWS_PER_PAGE = 10
 
   const TABLE_HEADERS = [
-    { text: 'Name', align: 'left', value: 'name', sortable: false, width: '100%' },
+    { text: 'Name', align: 'left', value: 'variantName', sortable: false, width: '100%' },
   ]
 
   export default {
@@ -85,7 +85,7 @@
       },
       items () {
         return [...this.value]
-          .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+          .sort(({ variantName: first }, { variantName: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
       isDeleteSelectedDisabled () {
@@ -115,13 +115,13 @@
         this.confirmationPopUpVisible = true
       },
       _deleteSelected () {
-        console.log('_deleteSelected')
+        // console.log('_deleteSelected')
         this.localValue = this.localValue.filter(({ id, name }) => !this.selected
           .find(({ id: selectedId, name: selectedName }) => id === selectedId || name === selectedName))
         this.selectedItems = []
       },
       _deleteItem ([id, name]) {
-        console.log('_deleteItem', id, name)
+        // console.log('_deleteItem', id, name)
         this.localValue = this.localValue.filter(({ id: idLocal }) => idLocal && idLocal !== id)
         this.selectedItems = this.selectedItems.filter(({ id: idLocal }) => idLocal && idLocal !== id)
       },
@@ -129,8 +129,8 @@
         this.addItemPopupVisible = true
       },
       addItem (name) {
-        !this.localValue.find(value => name === value) &&
-          this.localValue.push({ name, isDeletable: true })
+        !this.localValue.find(({ variantName }) => variantName === name) &&
+          this.localValue.push({ variantName: name, isDeletable: true })
       },
     }
   }
