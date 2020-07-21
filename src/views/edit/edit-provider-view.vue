@@ -93,29 +93,50 @@
         return this.id ? 'Aktualisieren' : 'Hinzufügen'
       }
     },
+    async created () {
+      if (this.isEdit) {
+        const {
+          data: {
+            //  data: {
+            name,
+            source,
+            homepage,
+            _embedded: {
+              curatoryGroups,
+              ids,
+              variantNames
+            },
+            _links: {
+              update: { href: updateUserUrl },
+            },
+            //  }
+          }
+        } = await this.catchError({
+          promise: providerServices.getProvider(this.id, this.cancelToken.token),
+          instance: this
+        })
+        console.log(updateUserUrl)
+        this.name = name
+        this.source = source
+        this.reference = homepage
+        this.ids = ids
+        this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: true }))
+        this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
+      }
+    },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
-      addNewRole ({ id, name }) {
-        // console.log('addNewRole', id, name)
-        !this.allRoles.find(({ id: idInAll }) => id === idInAll) && !this.addedRoles.find(({ id: idInAll }) => id === idInAll) && this.addedRoles.push({ id, name, isDeletable: true })
-      },
-      showAddNewRole () {
-        this.addRolePopupVisible = true
-      },
       async update () {
         const data = {
           id: this.id,
-          username: this.username,
-          password: this.password,
-          email: this.email,
-          accountLocked: this.accountLocked,
-          enabled: this.enabled,
-          passwordExpired: this.passwordExpired,
-          roleIds: this.roles.map(({ id }) => id),
+          name: this.username,
+          source: this.source,
+          reference: this.reference,
+          ids: this.ids,
+          alternateNames: this.allAlternateNames.map(({ name }) => name),
           curatoryGroupIds: this.allCuratoryGroups.map(({ id }) => id),
-          organisation: this.organisation
         }
         const response = await this.catchError({
           promise: providerServices.createOrUpdateProvider(data, this.cancelToken.token),
