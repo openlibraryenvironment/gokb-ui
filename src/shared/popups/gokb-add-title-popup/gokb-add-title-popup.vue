@@ -29,9 +29,8 @@
       />
     </gokb-section>
     <gokb-section sub-title="Abdeckung">
-      <gokb-select-field
+      <gokb-coverage-field
         v-model="packageTitleItem.coverageStatement.coverageDepth"
-        label="Art"
       />
       <gokb-date-range-field
         v-model="converageInterval"
