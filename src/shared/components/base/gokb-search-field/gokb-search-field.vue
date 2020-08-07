@@ -98,19 +98,21 @@
       },
     },
     watch: {
-      search (value) {
+      search (text) {
         // console.log('search', this.value, this.localValue, this.search, value)
-        value && value !== this.value?.value && value.length > 2 && this.query(value)
+        text && text !== this.value?.value && text.length > 2 && this.query({ text })
       }
     },
     mounted () {
       this.searchServices = searchServices(this.searchServicesResourceUrl)
+      this.query({ id: this.value?.value || this.value })
     },
     methods: {
-      async query (value) {
+      async query ({ id, text }) {
         const result = await this.catchError({
           promise: this.searchServices.search({
-            [this.itemText]: value,
+            [this.itemText]: text,
+            [this.itemValue]: id,
             _include: [this.itemValue, this.itemText],
           }, this.cancelToken.token),
           instance: this

@@ -67,7 +67,7 @@
     extends: BaseComponent,
     props: {
       id: {
-        type: Number,
+        type: String,
         required: false,
         default: undefined
       }
@@ -80,6 +80,7 @@
         ids: [],
         allAlternateNames: [],
         allCuratoryGroups: [],
+        updateProviderUrl: undefined,
       }
     },
     computed: {
@@ -107,7 +108,7 @@
               variantNames
             },
             _links: {
-              update: { href: updateUserUrl },
+              update: { href: updateProviderUrl },
             },
             //  }
           }
@@ -115,13 +116,13 @@
           promise: providerServices.getProvider(this.id, this.cancelToken.token),
           instance: this
         })
-        console.log(updateUserUrl)
         this.name = name
         this.source = source
         this.reference = homepage
         this.ids = ids
         this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: true }))
         this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
+        this.updateProviderUrl = updateProviderUrl
       }
     },
     methods: {
@@ -132,10 +133,10 @@
         const data = {
           id: this.id,
           name: this.username,
-          source: this.source,
+          source: this.source || null,
           reference: this.reference,
-          ids: this.ids,
-          alternateNames: this.allAlternateNames.map(({ name }) => name),
+          ids: this.ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace })),
+          variantNames: this.allAlternateNames.map(({ variantName }) => ({ variantName })),
           curatoryGroupIds: this.allCuratoryGroups.map(({ id }) => id),
         }
         const response = await this.catchError({
