@@ -1,5 +1,18 @@
 <template>
+  <v-row
+    v-if="!loggedIn"
+  >
+    <v-spacer />
+    <v-col>
+      <v-img
+        src="img/logo.png"
+        width="500"
+      />
+    </v-col>
+    <v-spacer />
+  </v-row>
   <gokb-page
+    v-else
     title="Dashboard"
   >
     <gokb-section sub-title="Reviews">
@@ -57,6 +70,7 @@
   import reviewServices from '@/shared/services/review-services'
   import GokbSearchUserField from '@/shared/components/simple/gokb-search-user-field'
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
+  import account from '@/shared/models/account-model'
 
   const ROWS_PER_PAGE = 5
 
@@ -150,6 +164,9 @@
       }
     },
     computed: {
+      loggedIn () {
+        return account.loggedIn()
+      },
       reviews () {
         const reviews = this.rawReviews?.data?.data
         return reviews?.map(entry => {

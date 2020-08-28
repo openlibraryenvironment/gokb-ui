@@ -1,7 +1,7 @@
 import log from '@/shared/utils/logger'
 import { createCancelToken, isCancelThrown } from '@/shared/services/http'
 import loading from '@/shared/models/loading'
-import showLoginModel from '@/shared/models/show-login-model'
+// import showLoginModel from '@/shared/models/show-login-model'
 
 export default {
   data () {
@@ -47,8 +47,8 @@ export default {
           if (error.response.status >= 500 && instance) {
             log.error(error)
             instance.error = this.isCancelThrown(error) ? undefined : error
-          } else if (error.response.status === 401 && !showLoginModel.get()) {
-            showLoginModel.set(true)
+          // } else if (error.response.status === 401 && !showLoginModel.get()) {
+          //   showLoginModel.set(true)
           } else {
             return error.response
           }
