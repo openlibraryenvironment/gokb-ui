@@ -2,14 +2,12 @@
   <v-row
     v-if="!loggedIn"
   >
-    <v-spacer />
     <v-col>
       <v-img
         src="img/logo.png"
         width="500"
       />
     </v-col>
-    <v-spacer />
   </v-row>
   <gokb-page
     v-else
@@ -184,6 +182,9 @@
       }
     },
     watch: {
+      loggedIn () {
+        this.loggedIn && this.paginateReviews()
+      },
       reviewsRaisedBy (value) {
         this.reviewsOptions.page = 1
         this.paginateReviews()
