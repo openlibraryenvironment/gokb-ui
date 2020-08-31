@@ -38,11 +38,11 @@
             hide-icon
           />
         </v-col>
-        <v-col md="4">
-          <gokb-search-organisation-field
-            v-model="organisation"
-          />
-        </v-col>
+        <!--        <v-col md="4">-->
+        <!--          <gokb-search-organisation-field-->
+        <!--            v-model="organisation"-->
+        <!--          />-->
+        <!--        </v-col>-->
       </v-row>
       <v-row>
         <v-col md="1">
@@ -155,7 +155,7 @@
         email: undefined,
         enabled: undefined,
         accountLocked: undefined,
-        organisation: undefined,
+        // organisation: undefined,
 
         rolesOptions: {
           page: 1,
@@ -214,7 +214,7 @@
               _links: {
                 update: { href: updateUserUrl },
               },
-              organisation
+              // organisation
             }
           }
         } = await this.catchError({
@@ -230,7 +230,7 @@
         this.allRoles = roles.map(({ authority, ...rest }) => ({ ...rest, name: authority }))
         this.updateUserUrl = updateUserUrl
         this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
-        this.organisation = organisation
+        // this.organisation = organisation
       }
     },
     methods: {
@@ -255,7 +255,7 @@
           passwordExpired: this.passwordExpired,
           roleIds: this.roles.map(({ id }) => id),
           curatoryGroupIds: this.allCuratoryGroups.map(({ id }) => id),
-          organisation: this.organisation
+          // organisation: this.organisation
         }
         const response = await this.catchError({
           promise: userServices.createOrUpdateUser(data, this.cancelToken.token),
