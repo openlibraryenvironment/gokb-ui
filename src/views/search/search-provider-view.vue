@@ -50,6 +50,9 @@
             type: 'GokbIdentifierField',
             name: 'ids',
             value: this.identifier,
+            properties: {
+              entity: 'Org' // means Provider ;-)
+            }
           }
         ],
         [
