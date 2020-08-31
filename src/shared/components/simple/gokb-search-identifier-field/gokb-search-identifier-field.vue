@@ -17,14 +17,15 @@
       },
     },
     created () {
-      this.searchServicesResourceUrl = 'rest/identifiers'
+      this.searchServicesResourceUrl = `rest/identifiers`
     },
     methods: {
       async query (value) {
         // console.log('query', this.value, this.localValue, this.search, value)
         const result = await this.catchError({
           promise: this.searchServices.search({
-            name: value,
+            targetType: this.$attrs.entity,
+            name: this.value,
             _include: [this.itemValue, this.itemText],
           }, this.cancelToken.token),
           instance: this
