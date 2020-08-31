@@ -6,6 +6,7 @@
     :label="label"
     :loading="loading"
     :placeholder="placeholder"
+    :disabled="disabled"
     :rules="rules"
     :search-input.sync="search"
     :item-text="itemText"
@@ -23,6 +24,7 @@
     :label="label"
     :loading="loading"
     :placeholder="placeholder"
+    :disabled="disabled"
     :rules="rules"
     :search-input.sync="search"
     :item-text="itemText"
@@ -75,6 +77,11 @@
         required: false,
         default: false
       },
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: false
+      }
     },
     data () {
       return {

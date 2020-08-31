@@ -1,6 +1,9 @@
 <template>
   <span>
-    <v-card flat>
+    <v-card
+      flat
+      class="mb-2"
+    >
       <v-toolbar
         v-if="title && !subTitle"
         color="white"
@@ -37,6 +40,12 @@
         >
           {{ subTitle }}
         </span>
+        <v-chip
+          v-if="itemsTotal"
+          class="ma-2"
+        >
+          {{ itemsTotal }}
+        </v-chip>
         <v-btn
           v-if="expandable"
           icon
@@ -77,6 +86,11 @@
         required: false,
         default: undefined,
       },
+      itemsTotal: {
+        type: Number,
+        required: false,
+        default: undefined,
+      }
     },
     data () {
       return {

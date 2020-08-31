@@ -7,9 +7,8 @@
   >
     <template v-slot:activator="{ on }">
       <v-text-field
-        v-model="localDateFormatted"
-        clearable
-        hint="DD.MM.YYYY format"
+        v-model="localDate"
+        readonly
         v-bind="$props"
         v-on="on"
       />
@@ -36,7 +35,11 @@
         required: false,
         default: false,
       },
-      value: Date
+      value: {
+        type: String,
+        required: false,
+        default: undefined
+      }
     },
     data () {
       return {
@@ -51,9 +54,6 @@
         set (localDate) {
           this.$emit('input', localDate)
         }
-      },
-      localDateFormatted () {
-        return this.localDate?.toLocaleDateString('de-DE')
       }
     }
   }

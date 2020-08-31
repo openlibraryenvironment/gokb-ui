@@ -88,34 +88,31 @@
           value: 'type'
         },
         {
-          text: 'Veröffentlicht von',
-          align: 'right',
+          text: 'Datum',
+          algin: 'left',
           sortable: false,
-          value: 'createdBy'
-        },
-        {
-          text: 'Veröffentlicht bis',
-          align: 'right',
-          sortable: false,
-          value: 'createdUntil'
-        },
+          value: 'startDate'
+        }
       ]
       this.searchServicesUrl = 'rest/titles'
-      this.searchServiceIncludes = 'id,name,publisher,_links'
+      this.searchServiceIncludes = 'id,name,_links,publishedFrom,dateFirstInPrint,dateFiirstOnline'
+      this.searchServiceEmbeds = 'ids'
     },
     methods: {
       _transformForTable (data) {
         return data.map(({
           id,
           name,
-          provider,
-          nominalPlatform,
+          type,
+          publishedFrom,
+          dateFirstInPrint,
+          dateFirstOnline,
           _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
         }) => ({
           id,
+          type,
+          startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom)),
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
-          providerName: provider?.name,
-          nominalPlatformName: nominalPlatform?.name,
           isDeletable: !!deleteUrl,
           deleteUrl: deleteUrl,
           retireUrl: retireUrl,

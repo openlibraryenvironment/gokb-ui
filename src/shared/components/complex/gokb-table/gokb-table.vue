@@ -35,7 +35,7 @@
       </template>
       <template #item.action="{ item }">
         <v-icon
-          v-if="item.isRetireable !== undefined"
+          v-if="showSelect && item.isRetireable !== undefined"
           class="mr-2"
           :disabled="disabled || !item.isRetireable"
           small
@@ -44,7 +44,7 @@
           close
         </v-icon>
         <v-icon
-          v-if="item.isDeletable !== undefined"
+          v-if="showSelect && item.isDeletable !== undefined"
           :disabled="disabled || !item.isDeletable"
           small
           @click="deleteItem(item)"
@@ -73,7 +73,7 @@
         required: false,
         default: false,
       },
-      showSelect: {
+      editable: {
         type: Boolean,
         required: false,
         default: true,
@@ -116,6 +116,9 @@
       pages () {
         return Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage)
       },
+      showSelect () {
+        return this.editable
+      }
     },
     watch: {
       'options.page' () {

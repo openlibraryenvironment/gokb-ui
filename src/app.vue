@@ -71,7 +71,16 @@
         solo
       />
       <v-spacer />
+      <v-select
+        v-model="$i18n.locale"
+        offset-y
+        :items="locales"
+        class="pt-2 mr-2"
+        style="max-width:80px"
+        dense
+      />
       <v-menu
+        ref="actions-menu"
         offset-y
         open-on-hover
       >
@@ -155,10 +164,19 @@
       globalSearchIsLoading: false,
 
       dialog: false,
+      locales: ['de', 'en']
     }),
     computed: {
       visibleItems () {
         return MENU_ITEMS.filter(item => !item.needsRole || accountModel.hasRole(item.needsRole))
+      },
+      currentLocale: {
+        get () {
+          return this.$vuetify.lang.current
+        },
+        set (locale) {
+          this.$vuetify.lang.current = locale
+        }
       }
     },
     watch: {

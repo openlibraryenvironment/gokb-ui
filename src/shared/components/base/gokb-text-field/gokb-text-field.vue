@@ -3,7 +3,9 @@
     ref="textField"
     v-model="localValue"
     :disabled="disabled"
+    :readonly="readonly"
     :autocomplete="autocomplete"
+    :full-width="fw"
     :label="label"
     :prepend-icon="hideIcon ? '' : prependIcon"
     :required="required"
@@ -29,6 +31,11 @@
         }
       },
       disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+      readonly: {
         type: Boolean,
         required: false,
         default: false,
@@ -77,6 +84,11 @@
         required: false,
         default: undefined,
       },
+      fw: {
+        type: Boolean,
+        required: false,
+        default: false
+      }
     },
     computed: {
       localValue: {

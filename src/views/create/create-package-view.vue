@@ -362,7 +362,7 @@
           { id: 'book', text: 'Buch' },
           { id: 'database', text: 'Datenbank' },
           { id: 'journal', text: 'Journal' },
-          { id: 'monograph', text: 'Monographie' },
+          { id: 'mixed', text: 'Gemischt' },
         ],
         addTitlePopupVisible: false,
         titlesOptions: {

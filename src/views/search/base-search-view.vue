@@ -187,6 +187,7 @@
           promise: this.searchServices.search({
             ...searchParameters,
             ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
+            ...((this.searchServiceEmbeds && { _embed: this.searchServiceEmbeds }) || {}),
             offset: page ? (page - 1) * this.resultOptions.itemsPerPage : 0,
             limit: this.resultOptions.itemsPerPage
           }, this.cancelToken.token),

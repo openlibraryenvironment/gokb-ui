@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import vuetify from './plugins/vuetify'
+import VueI18n from 'vue-i18n'
 import App from './app.vue'
 import router from './router'
 import './register-service-worker'
@@ -10,6 +11,8 @@ const isNotProduction = !utils.isProduction()
 Vue.config.productionTip = isNotProduction
 Vue.config.devtools = isNotProduction
 Vue.config.performance = isNotProduction
+
+Vue.use(VueI18n)
 
 // make all gokb components global available
 const requireComponent = require.context(
@@ -37,8 +40,41 @@ requireComponent.keys().forEach(fileName => {
   )
 })
 
+const messages = {
+  en: {
+    edit: {
+      label: 'Edit {0}'
+    },
+    title: {
+      type: {
+        Journal: 'Journal',
+        Book: 'Monograph',
+        Database: 'Database'
+      }
+    }
+  },
+  de: {
+    edit: {
+      label: '{0} bearbeiten'
+    },
+    title: {
+      type: {
+        Journal: 'Journal',
+        Book: 'Monographie',
+        Database: 'Datenbank'
+      }
+    }
+  }
+}
+
+const i18n = new VueI18n({
+  locale: 'de', // set locale
+  messages, // set locale messages
+})
+
 new Vue({
   router,
+  i18n,
   vuetify,
   render: h => h(App)
 }).$mount('#app')
