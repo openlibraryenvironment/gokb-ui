@@ -14,7 +14,7 @@
     :placeholder="placeholder"
     :append-icon="appendIcon"
     validate-on-blur
-    clearable
+    :clearable="!readonly"
     @click:append="$emit('click:append', $event)"
   />
 </template>

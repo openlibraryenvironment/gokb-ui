@@ -1,6 +1,7 @@
 <template>
   <v-radio
     :disabled="disabled"
+    :readonly="readonly"
     :label="label"
     :value="value"
   />
@@ -16,6 +17,11 @@
         default: undefined,
       },
       disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+      readonly: {
         type: Boolean,
         required: false,
         default: false,

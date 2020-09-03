@@ -1,23 +1,22 @@
 <template>
   <gokb-section
     expandable
-    :expanded="expanded"
-    sub-title="Platformen"
+    sub-title="Identifikatoren"
     :items-total="totalNumberOfItems"
   >
     <gokb-add-item-popup
-      v-if="addPlatformPopupVisible"
-      v-model="addPlatformPopupVisible"
-      :component="{ type: 'GokbPlatformField', name: 'Platform' }"
-      @add="addNewPlatform"
+      v-if="addIdentifierPopupVisible"
+      v-model="addIdentifierPopupVisible"
+      :component="{ type: 'GokbIdentifierField', name: 'Identifikator' }"
+      @add="addNewIdentifier"
     />
     <template #buttons>
       <gokb-button
         v-if="isEditable"
         icon-id="add"
-        @click="showAddPlatformPopup"
+        @click="showAddIdentifierPopup"
       >
-        Platform hinzufügen
+        Identifier hinzufügen
       </gokb-button>
       <gokb-button
         v-if="isEditable"
@@ -37,7 +36,7 @@
     />
     <gokb-table
       :headers="tableHeaders"
-      :items="platforms"
+      :items="identifiers"
       :editable="isEditable"
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
@@ -55,12 +54,12 @@
   const ROWS_PER_PAGE = 10
 
   const TABLE_HEADERS = [
-    { text: 'Name', align: 'left', value: 'name', sortable: false, width: '40%' },
-    { text: 'URL', align: 'left', value: 'primaryUrl', sortable: false, width: '60%' },
+    { text: 'Namensraum', align: 'left', value: 'namespace', sortable: false, width: '15%' },
+    { text: 'Identifikator', align: 'left', value: 'value', sortable: false, width: '100%' },
   ]
 
   export default {
-    name: 'GokbPlatformSection',
+    name: 'GokbJobsSection',
     components: {
       GokbAddItemPopup,
       GokbConfirmationPopup
@@ -74,16 +73,11 @@
         type: Boolean,
         required: false,
         default: false
-      },
-      expanded: {
-        type: Boolean,
-        required: false,
-        default: false
       }
     },
     data () {
       return {
-        addPlatformPopupVisible: false,
+        addIdentifierPopupVisible: false,
         options: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
@@ -105,9 +99,9 @@
           this.$emit('input', localValue)
         }
       },
-      platforms () {
+      identifiers () {
         return [...this.value]
-          .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+          .sort(({ value: first }, { value: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
       isDeleteSelectedDisabled () {
@@ -148,13 +142,13 @@
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
       },
-      showAddPlatformPopup () {
-        this.addPlatformPopupVisible = true
+      showAddIdentifierPopup () {
+        this.addIdentifierPopupVisible = true
       },
-      addNewPlatform (value) {
+      addNewIdentifier (value) {
         this.localValue.push(value)
       },
-      deletePlatform (value) {
+      deleteIdentifier (value) {
         this.localValue = this.localValue.filter(v => v !== value)
       }
     }

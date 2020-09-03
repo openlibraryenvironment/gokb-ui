@@ -1,12 +1,17 @@
 <template>
+  <gokb-text-field
+    v-if="readonly"
+    v-model="localLabel"
+    :label="label"
+    readonly
+  />
   <v-combobox
-    v-if="allowNewValues"
+    v-else-if="allowNewValues"
     v-model="localValue"
     :items="items"
     :label="label"
     :loading="loading"
     :placeholder="placeholder"
-    :disabled="disabled"
     :rules="rules"
     :search-input.sync="search"
     :item-text="itemText"
@@ -24,14 +29,12 @@
     :label="label"
     :loading="loading"
     :placeholder="placeholder"
-    :disabled="disabled"
     :rules="rules"
     :search-input.sync="search"
     :item-text="itemText"
     :item-value="itemValue"
     :return-object="returnObject"
     clearable
-    hide-details
     hide-no-data
     no-filter
   />
@@ -77,7 +80,7 @@
         required: false,
         default: false
       },
-      disabled: {
+      readonly: {
         type: Boolean,
         required: false,
         default: false
@@ -93,6 +96,9 @@
       }
     },
     computed: {
+      localLabel () {
+        return this.value?.[this.itemText]
+      },
       localValue: {
         get () {
           // console.log('get', this.label, this.value)
@@ -102,7 +108,7 @@
           // console.log('set', this.label, localValue, this.items)
           this.$emit('input', localValue)
         }
-      },
+      }
     },
     watch: {
       search (text) {
@@ -112,10 +118,11 @@
     },
     mounted () {
       this.searchServices = searchServices(this.searchServicesResourceUrl)
-      this.query({ id: this.value?.value || this.value })
+      this.items = this.value ? [this.value] : []
     },
     methods: {
       async query ({ id, text }) {
+        this.loading = true
         const result = await this.catchError({
           promise: this.searchServices.search({
             [this.itemText]: text,
@@ -124,6 +131,7 @@
           }, this.cancelToken.token),
           instance: this
         })
+        this.loading = false
         this.items = result?.data?.data
       }
     }

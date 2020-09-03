@@ -1,5 +1,21 @@
 <template>
   <gokb-page
+    v-if="!loggedIn"
+    title=""
+  >
+    <v-card>
+      <v-card-text>
+        <div class="display-1 primary--text">
+          {{ $i18n.t('welcome.title') }}
+        </div>
+        <p class="primary--text">
+          {{ $i18n.t('welcome.p1') }}
+        </p>
+      </v-card-text>
+    </v-card>
+  </gokb-page>
+  <gokb-page
+    v-else
     title="Dashboard"
   >
     <gokb-section sub-title="Reviews">
@@ -22,7 +38,10 @@
         @paginate="paginateReviews"
       />
     </gokb-section>
-    <gokb-section sub-title="Pflege">
+    <gokb-section
+      v-if="maintenance"
+      sub-title="Pflege"
+    >
       <template #buttons>
         <gokb-select-field
           class="mr-4"
@@ -57,6 +76,7 @@
   import reviewServices from '@/shared/services/review-services'
   import GokbSearchUserField from '@/shared/components/simple/gokb-search-user-field'
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
+  import account from '@/shared/models/account-model'
 
   const ROWS_PER_PAGE = 5
 
@@ -150,6 +170,9 @@
       }
     },
     computed: {
+      loggedIn () {
+        return account.loggedIn()
+      },
       reviews () {
         const reviews = this.rawReviews?.data?.data
         return reviews?.map(entry => {
@@ -167,6 +190,9 @@
       }
     },
     watch: {
+      loggedIn () {
+        this.loggedIn && this.paginateReviews()
+      },
       reviewsRaisedBy (value) {
         this.reviewsOptions.page = 1
         this.paginateReviews()

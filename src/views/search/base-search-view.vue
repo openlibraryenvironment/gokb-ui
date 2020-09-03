@@ -16,6 +16,7 @@
               :is="column.type"
               :key="`${title}_${rowIndex}_${columnIndex}`"
               v-model="column.value"
+              :items="column.items"
               clearable
               v-bind="column.properties"
             />

@@ -1,49 +1,53 @@
 <template>
-  <v-banner>
-    <span class="title">
-      {{ value.name }}
-    </span>
-    <template v-slot:actions>
-      <gokb-dialog
-        v-if="editNamePopupVisible"
-        v-model="editNamePopupVisible"
-        :title="`Namen anpassen`"
-        :width="dialogWidth"
-        @submit="selectNewName"
-      >
-        <component
-          :is="'GokbTextField'"
-          v-model="value.name"
+  <div>
+    <span>Name</span>
+    <v-banner>
+      <span style="font-size:1.1rem">
+        {{ oldVal || value.name }}
+      </span>
+      <template v-slot:actions>
+        <gokb-dialog
+          v-if="editNamePopupVisible"
+          v-model="editNamePopupVisible"
+          :title="`Namen anpassen`"
+          :width="dialogWidth"
+          @submit="selectNewName"
+        >
+          <component
+            :is="'GokbTextField'"
+            ref="nameTextField"
+            v-model="value.name"
+          />
+          <template #buttons>
+            <v-spacer />
+            <gokb-button
+              text
+              @click="close"
+            >
+              Abbrechen
+            </gokb-button>
+            <gokb-button
+              :disabled="!value.name"
+              default
+            >
+              Bestätigen
+            </gokb-button>
+          </template>
+        </gokb-dialog>
+        <gokb-confirmation-popup
+          v-model="confirmationPopUpVisible"
+          :message="messageToConfirm"
+          @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
         />
-        <template #buttons>
-          <v-spacer />
-          <gokb-button
-            text
-            @click="close"
-          >
-            Abbrechen
-          </gokb-button>
-          <gokb-button
-            :disabled="!value.name"
-            default
-          >
-            Bestätigen
-          </gokb-button>
-        </template>
-      </gokb-dialog>
-      <gokb-confirmation-popup
-        v-model="confirmationPopUpVisible"
-        :message="messageToConfirm"
-        @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-      />
-      <v-btn
-        v-if="editable"
-        @click="showEditName"
-      >
-        Bearbeiten
-      </v-btn>
-    </template>
-  </v-banner>
+        <v-btn
+          v-if="!disabled"
+          @click="showEditName"
+        >
+          Bearbeiten
+        </v-btn>
+      </template>
+    </v-banner>
+  </div>
 </template>
 
 <script>
@@ -60,10 +64,15 @@
           return value.name === undefined || value.name === null || typeof value.name === 'string'
         }
       },
-      editable: {
+      disabled: {
         type: Boolean,
         required: false,
         default: true
+      },
+      oldVal: {
+        type: String,
+        required: false,
+        default: undefined
       },
       dialogWidth: {
         type: Number,
@@ -92,7 +101,7 @@
     },
     methods: {
       validate () {
-        this.$refs.textField.validate(true)
+        this.$refs.nameTextField.validate(true)
       },
       tempId () {
         return 'tempId' + Math.random().toString(36).substr(2, 5)
@@ -102,20 +111,21 @@
       },
       showEditName () {
         this.editNamePopupVisible = true
+        this.oldVal = this.value.name
       },
       close () {
         this.editNamePopupVisible = false
       },
       selectNewName (name) {
-        if (this.value.name !== name) {
-          if (!this.value.alts.find(({ variantName }) => variantName === name)) {
-            this.value.alts.push({ id: this.tempId(), variantName: name, isDeletable: true })
+        if (this.value.name !== this.oldVal) {
+          if (!this.value.alts.find(({ variantName }) => variantName === this.value.name)) {
+            this.value.alts.push({ id: this.tempId(), variantName: this.oldVal, isDeletable: true })
           }
 
-          this.value.name = name
           this.editNamePopupVisible = false
+          this.oldVal = undefined
         } else {
-          this.$refs.textField.error = true
+          this.$refs.nameTextField.error = true
         }
       },
     }

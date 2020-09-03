@@ -42,8 +42,31 @@ requireComponent.keys().forEach(fileName => {
 
 const messages = {
   en: {
-    edit: {
-      label: 'Edit {0}'
+    btn: {
+      edit: 'Edit',
+      submit: 'Submit',
+      create: 'Create',
+      cancel: 'Cancel',
+      back: 'Back',
+      next: 'Next',
+      prev: 'Previous'
+    },
+    header: {
+      edit: {
+        label: 'Edit {0}'
+      },
+      create: {
+        label: 'Create {0}'
+      },
+      show: {
+        label: '{0} details'
+      },
+      welcome: 'Welcome to GOKb',
+      dashboard: 'Dashboard'
+    },
+    welcome: {
+      title: 'Welcome to GOKb',
+      p1: ''
     },
     title: {
       type: {
@@ -51,11 +74,40 @@ const messages = {
         Book: 'Monograph',
         Database: 'Database'
       }
+    },
+    package: {
+      label: 'Package'
+    },
+    provider: {
+      label: 'Provider'
     }
   },
   de: {
-    edit: {
-      label: '{0} bearbeiten'
+    btn: {
+      edit: 'Bearbeiten',
+      submit: 'Abschicken',
+      create: 'Erstellen',
+      cancel: 'Abbrechen',
+      back: 'Zurück',
+      next: 'Weiter',
+      prev: 'Zurück'
+    },
+    header: {
+      edit: {
+        label: '{0} bearbeiten'
+      },
+      create: {
+        label: '{0} anlegen'
+      },
+      show: {
+        label: '{0}details'
+      },
+      welcome: 'Willkommen zur GOKb',
+      dashboard: 'Dashboard'
+    },
+    welcome: {
+      title: 'Willkommen zur GOKb',
+      p1: ''
     },
     title: {
       type: {
@@ -63,6 +115,12 @@ const messages = {
         Book: 'Monographie',
         Database: 'Datenbank'
       }
+    },
+    package: {
+      label: 'Paket'
+    },
+    provider: {
+      label: 'Provider'
     }
   }
 }

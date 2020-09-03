@@ -1,5 +1,11 @@
 <template>
+  <gokb-text-field
+    v-if="readonly"
+    v-model="localLabel"
+    readonly
+  />
   <v-select
+    v-else
     v-model="localValue"
     :items="items"
     :label="label"
@@ -45,6 +51,11 @@
         required: false,
         default: false
       },
+      readonly: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
     },
     data () {
       return {
@@ -61,6 +72,9 @@
           this.$emit('input', value)
         }
       },
+      localLabel () {
+        return this.value?.name
+      }
     },
     async mounted () {
       if (this.entityName) {
@@ -71,6 +85,8 @@
           instance: this
         })
         this.items = this.transform(result)
+      } else if (this.$attrs.items) {
+        this.items = this.$attrs.items
       }
     },
     methods: {

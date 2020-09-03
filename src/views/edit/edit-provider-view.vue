@@ -12,11 +12,11 @@
     </span>
     <gokb-section sub-title="Allgemein">
       <v-row>
-        <v-col md="4">
-          <gokb-text-field
-            v-model="name"
-            label="Name"
+        <v-col md="12">
+          <gokb-name-field
+            v-model="allNames"
             :disabled="isReadonly"
+            label="Titel"
           />
         </v-col>
       </v-row>
@@ -24,14 +24,14 @@
         <v-col md="4">
           <gokb-search-source-field
             v-model="source"
-            :disabled="isReadonly"
+            :readonly="isReadonly"
           />
         </v-col>
         <v-col md="4">
           <gokb-text-field
             v-model="reference"
-            label="Referenz"
-            :disabled="isReadonly"
+            label="Homepage"
+            :readonly="isReadonly"
           />
         </v-col>
       </v-row>
@@ -79,6 +79,7 @@
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import providerServices from '@/shared/services/provider-services'
+  import accountModel from '@/shared/models/account-model'
 
   export default {
     name: 'EditProviderView',
@@ -100,6 +101,7 @@
         ids: [],
         allAlternateNames: [],
         allCuratoryGroups: [],
+        allNames: { name: undefined, alts: [] },
         allPlatforms: [],
         updateUrl: undefined,
         successMsg: false
@@ -110,13 +112,26 @@
         return !!this.id
       },
       title () {
-        return this.isEdit ? this.$i18n.t('edit.label', ['Provider']) : this.$i18n.t('create.label', ['Provider'])
+        return this.$i18n.t(this.titleCode, [this.$i18n.t('provider.label')])
+      },
+      titleCode () {
+        return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
       },
       updateButtonText () {
         return this.id ? 'Aktualisieren' : 'Hinzufügen'
       },
       isReadonly () {
         return !this.updateUrl
+      },
+      loggedIn () {
+        return accountModel.loggedIn()
+      }
+    },
+    watch: {
+      loggedIn (value) {
+        if (value) {
+          this.reload()
+        }
       }
     },
     async created () {
@@ -151,6 +166,7 @@
         this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
         this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: !!updateUrl }))
         this.allPlatforms = providedPlatforms.map(platform => ({ ...platform, isDeletable: !!updateUrl }))
+        this.allNames = { name: name, alts: this.allAlternateNames }
         this.updateUrl = updateUrl
         this.successMsg = false
       }
@@ -184,6 +200,43 @@
       },
       forceUpdate () {
         this.version += 1
+      },
+      async reload () {
+        if (this.isEdit) {
+          const {
+            data: {
+              //  data: {
+              name,
+              source,
+              version,
+              homepage,
+              _embedded: {
+                curatoryGroups,
+                ids,
+                variantNames,
+                providedPlatforms
+              },
+              _links: {
+                update: { href: updateUrl },
+              },
+              //  }
+            }
+          } = await this.catchError({
+            promise: providerServices.getProvider(this.id, this.cancelToken.token),
+            instance: this
+          })
+          this.name = name
+          this.source = source
+          this.reference = homepage
+          this.version = version
+          this.ids = ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace, isDeletable: !!updateUrl }))
+          this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
+          this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: !!updateUrl }))
+          this.allPlatforms = providedPlatforms.map(platform => ({ ...platform, isDeletable: !!updateUrl }))
+          this.allNames = { name: name, alts: this.allAlternateNames }
+          this.updateUrl = updateUrl
+          this.successMsg = false
+        }
       }
     }
   }

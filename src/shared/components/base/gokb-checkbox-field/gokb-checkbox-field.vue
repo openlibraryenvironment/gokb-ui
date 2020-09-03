@@ -3,6 +3,7 @@
     v-model="localValue"
     :label="label"
     :disabled="disabled"
+    :readonly="readonly"
   />
 </template>
 
@@ -24,6 +25,11 @@
         type: Boolean,
         required: true,
         default: false
+      },
+      readonly: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
     },
     computed: {

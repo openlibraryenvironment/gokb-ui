@@ -58,29 +58,30 @@
         :items="globalSearchItems"
         :loading="globalSearchIsLoading"
         :search-input.sync="globalSearchField"
-        class="hidden-sm-and-down mt-7"
+        class="hidden-sm-and-down pt-7 ma-7"
         clearable
         hide-no-data
         hide-selected
         item-text="name"
         item-value="API"
+        full-width
         no-filter
         placeholder="Titel, Pakete, Verlage"
         prepend-inner-icon="search"
         return-object
         solo
       />
-      <v-spacer />
       <v-select
         v-model="$i18n.locale"
         offset-y
         :items="locales"
-        class="pt-2 mr-2"
+        class="pt-2 ma-2"
         style="max-width:80px"
         dense
       />
-      <v-menu
+      <!-- <v-menu
         ref="actions-menu"
+        :disabled="canCreate"
         offset-y
         open-on-hover
       >
@@ -112,7 +113,7 @@
             </v-list-item>
           </template>
         </v-list>
-      </v-menu>
+      </v-menu> -->
       <user-menu />
     </v-app-bar>
     <v-main>
@@ -127,7 +128,7 @@
 
 <script>
   import accountModel from '@/shared/models/account-model'
-  import { ROLE_ADMIN } from '@/shared/models/roles'
+  import { ROLE_ADMIN, ROLE_EDITOR } from '@/shared/models/roles'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
   import {
@@ -141,16 +142,16 @@
   // const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
 
   const MENU_ITEMS = [
-    { icon: 'create_new_folder', text: 'Paket anlegen', route: CREATE_PACKAGE_ROUTE, toolbar: true },
-    { icon: 'library_add', text: 'Einzeltitel anlegen', route: CREATE_TITLE_ROUTE, toolbar: true },
-    { icon: 'domain', text: 'Provider anlegen', route: ADD_PROVIDER_ROUTE, toolbar: true },
+    { icon: 'create_new_folder', text: 'Paket anlegen', route: CREATE_PACKAGE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+    { icon: 'library_add', text: 'Einzeltitel anlegen', route: CREATE_TITLE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+    { icon: 'domain', text: 'Provider anlegen', route: ADD_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
     {},
     { icon: 'folder', text: 'Pakete', route: SEARCH_PACKAGE_ROUTE },
     { icon: 'library_books', text: 'Einzeltitel', route: SEARCH_TITLE_ROUTE },
     { icon: 'domain', text: 'Provider', route: SEARCH_PROVIDER_ROUTE },
-    { icon: 'rate_review', text: 'Reviews', route: SEARCH_REVIEW_ROUTE },
-    { icon: 'keyboard', text: 'Pflege', route: SEARCH_MAINTENANCE_ROUTE },
-    { icon: 'people', text: 'Benutzer', route: SEARCH_USER_ROUTE, needsRole: ROLE_ADMIN },
+    { icon: 'rate_review', text: 'Reviews', route: SEARCH_REVIEW_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
+    { icon: 'keyboard', text: 'Pflege', route: SEARCH_MAINTENANCE_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
+    { icon: 'people', text: 'Benutzer', route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
   ]
 
   export default {
@@ -168,7 +169,7 @@
     }),
     computed: {
       visibleItems () {
-        return MENU_ITEMS.filter(item => !item.needsRole || accountModel.hasRole(item.needsRole))
+        return MENU_ITEMS.filter(item => (!accountModel.loggedIn && !item.needsLogin) || (accountModel.loggedIn && (!item.needsRole || accountModel.hasRole(item.needsRole))))
       },
       currentLocale: {
         get () {
@@ -177,6 +178,9 @@
         set (locale) {
           this.$vuetify.lang.current = locale
         }
+      },
+      canCreate () {
+        return accountModel.hasRole('ROLE_CONTRIBUTOR')
       }
     },
     watch: {
@@ -188,13 +192,24 @@
         this.isLoading && this.cancelToken.cancel('Operation canceled by the user.')
         this.cancelToken = createCancelToken()
         this.isLoading = true
+
         try {
-          const result = await searchServices.globalSearch({
-            searchPattern: this.globalSearchField,
-            max: 100
+          this.typeRoutes = [
+            { type: 'Organization', path: '/provider/' },
+            { type: 'Package', path: '/package/' },
+            { type: 'Journal', path: '/title/' },
+            { type: 'Book', path: '/title/' },
+            { type: 'Database', path: '/title/' },
+          ]
+
+          const result = await this.searchServices.search({
+            name: this.globalSearchField,
+            max: 20
           }, this.cancelToken.token)
-          this.globalSearchItems = result.records
-            .filter(item => /* SEARCH_COMPONENTS.includes(item.componentType) */ true)
+
+          if (result?.data?.data) {
+            this.globalSearchItems = result.data.data.map(res => ({ ...res, path: this.typeRoutes.find(({ type: atype }) => atype === res.type)?.path })).filter(path => !!path)
+          }
         } catch (exception) {
           this.globalSearchItems = []
         } finally {
@@ -202,12 +217,18 @@
         }
       },
       globalSearchSelected () {
-        // this.globalSearchSelected && routeTo(this.globalSearchSelected.componentType, this.globalSearchSelected.id)
+        if (this.globalSearchSelected.path) {
+          this.globalSearchSelected && this.$router.push({ path: this.globalSearchSelected.path + this.globalSearchSelected.id })
+          this.globalSearchField = undefined
+        }
       },
+    },
+    mounted () {
+      this.searchServices = searchServices('rest/entities')
     },
     created () {
       this.HOME_ROUTE = HOME_ROUTE
-    }
+    },
   }
 </script>
 

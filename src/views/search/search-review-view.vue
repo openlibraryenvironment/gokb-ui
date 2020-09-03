@@ -5,6 +5,17 @@
   export default {
     name: 'SearchReview',
     extends: BaseSearch,
+    data () {
+      return {
+        name: undefined,
+        identifier: undefined,
+        curatoryGroupIds: undefined,
+        allStates: [
+          { name: this.$i18n.t(), id: 'Open' },
+          { name: this.$i18n.t(), id: 'Closed' }
+        ]
+      }
+    },
     created () {
       this.title = 'Reviews'
       this.component = 'g:reviewRequests'
@@ -21,9 +32,9 @@
         [
           {
             type: 'GokbTextField',
-            name: 'name',
+            name: 'cause',
             properties: {
-              label: 'Name/Titel'
+              label: 'Ursache'
             }
           },
           {
@@ -61,8 +72,10 @@
           },
           {
             type: 'GokbCheckboxField',
+            name: 'status',
             properties: {
-              label: 'Abgeschlossene Anzeigen'
+              label: 'Abgeschlossene Anzeigen',
+              items: this.allItems
             }
           }
         ]

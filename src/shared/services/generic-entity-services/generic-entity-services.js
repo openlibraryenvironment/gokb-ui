@@ -6,7 +6,7 @@ const api = (baseServices) =>
       const urlParameters = parameters
         ? baseServices.createQueryParameters(parameters)
         : baseServices.createQueryParameters({ _sort: 'name', _order: 'asc' })
-      const url = `/rest/${entityName}?${urlParameters}`
+      const url = process.env.VUE_APP_API_BASE_URL + `/rest/${entityName}?${urlParameters}`
       const result = CACHE[url] || baseServices.request({
         method: 'GET',
         url,

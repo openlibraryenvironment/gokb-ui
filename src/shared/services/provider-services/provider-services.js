@@ -1,15 +1,15 @@
-const PROVIDER_URL = 'rest/provider'
+const PROVIDER_URL = '/rest/provider'
 
 const api = (baseServices) => ({
   getProvider (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: `${PROVIDER_URL}/${id}`,
+      url: process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}`,
     }, cancelToken)
   },
   createOrUpdateProvider (data, cancelToken) {
     const { id } = data
-    const url = id ? `${PROVIDER_URL}/${id}` : PROVIDER_URL
+    const url = id ? process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}` : process.env.VUE_APP_API_BASE_URL + PROVIDER_URL
     return baseServices.request({
       method: id ? 'PUT' : 'POST',
       url,

@@ -1,9 +1,11 @@
 <template>
   <v-menu
+    v-if="!readonly"
     v-model="menu"
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
+    min-width="290px"
   >
     <template v-slot:activator="{ on }">
       <v-text-field
@@ -14,11 +16,17 @@
       />
     </template>
     <v-date-picker
+      v-if="!readonly"
       v-model="localDate"
-      :disabled="disabled"
       @input="menu = false"
     />
   </v-menu>
+  <v-text-field
+    v-else
+    v-model="localDate"
+    v-bind="$props"
+    readonly
+  />
 </template>
 
 <script>
@@ -30,7 +38,7 @@
         required: false,
         default: '',
       },
-      disabled: {
+      readonly: {
         type: Boolean,
         required: false,
         default: false,

@@ -42,12 +42,12 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
       {
         path: CREATE_PACKAGE_ROUTE,
         name: CREATE_PACKAGE_ROUTE,
-        component: () => import('@/views/create/create-package-view.vue')
+        component: () => import('@/views/edit/edit-package-view.vue')
       },
       {
         path: CREATE_TITLE_ROUTE,
         name: CREATE_TITLE_ROUTE,
-        component: () => import('@/views/create/create-title-view.vue')
+        component: () => import('@/views/edit/edit-title-view.vue')
       },
       {
         path: SEARCH_MAINTENANCE_ROUTE,

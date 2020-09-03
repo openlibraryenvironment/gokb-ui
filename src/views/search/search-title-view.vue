@@ -47,9 +47,12 @@
             }
           },
           {
-            type: 'GokbSearchIdentifierField',
+            type: 'GokbTextField',
             name: 'ids',
             value: this.identifierIds,
+            properties: {
+              label: 'Identifikator'
+            }
           }
         ],
         [
@@ -60,11 +63,15 @@
           },
           {
             type: 'GokbSelectField',
-            name: 'qp_medium',
+            name: 'type',
             properties: {
               label: 'Typ',
-              // items: allTypes.values.map(({ id: value, text }) => ({ value, text })),
-            }
+            },
+            items: [
+              { name: this.$i18n.t('title.type.Journal'), id: 'journal' },
+              { name: this.$i18n.t('title.type.Book'), id: 'book' },
+              { name: this.$i18n.t('title.type.Database'), id: 'database' },
+            ]
           }
         ],
         [
@@ -88,7 +95,7 @@
           value: 'type'
         },
         {
-          text: 'Datum',
+          text: 'Erscheinungsbeginn',
           algin: 'left',
           sortable: false,
           value: 'startDate'
@@ -110,8 +117,8 @@
           _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
         }) => ({
           id,
-          type,
-          startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom)),
+          type: this.$i18n.t('title.type.' + type),
+          startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
           isDeletable: !!deleteUrl,
           deleteUrl: deleteUrl,

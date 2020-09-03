@@ -47,9 +47,12 @@
             }
           },
           {
-            type: 'GokbIdentifierField',
+            type: 'GokbTextField',
             name: 'ids',
             value: this.identifier,
+            properties: {
+              label: 'Identifikator'
+            }
           }
         ],
         [

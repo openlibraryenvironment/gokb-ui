@@ -1,10 +1,10 @@
-const PROFILE_URL = 'rest/profile'
+const PROFILE_URL = '/rest/profile'
 
 const api = (baseServices) => ({
   getProfile (cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: PROFILE_URL,
+      url: process.env.VUE_APP_API_BASE_URL + PROFILE_URL,
     }, cancelToken)
   },
   updateProfile (url, data, cancelToken) {
