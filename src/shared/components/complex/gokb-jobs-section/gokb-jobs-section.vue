@@ -30,14 +30,6 @@
 
   const ROWS_PER_PAGE = 10
 
-  const TABLE_HEADERS = [
-    { text: 'ID', align: 'left', value: 'id', sortable: false, width: '10%' },
-    { text: 'Bezeichnung', align: 'left', value: 'popup', sortable: false, width: '40%' },
-    { text: 'Status', align: 'left', value: 'status', sortable: false, width: '20%' },
-    { text: 'Startzeit', align: 'left', value: 'startTime', sortable: false, width: '15%' },
-    { text: 'Endzeit', align: 'left', value: 'endTime', sortable: false, width: '15%' },
-  ]
-
   export default {
     name: 'GokbJobsSection',
     components: {
@@ -95,7 +87,13 @@
       }
     },
     created () {
-      this.tableHeaders = TABLE_HEADERS
+      this.tableHeaders = [
+        { text: 'ID', align: 'left', value: 'id', sortable: false, width: '10%' },
+        { text: this.$i18n.t('job.description'), align: 'left', value: 'popup', sortable: false, width: '40%' },
+        { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '20%' },
+        { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '15%' },
+        { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '15%' },
+      ]
       this.fetchJobs(this.page)
 
       this.interval = setInterval(function () {
@@ -129,9 +127,9 @@
                 popup: { value: description, label: 'job', type: 'GokbEditJobPopup' },
                 progress,
                 messages,
-                startTime: new Date(startTime).toLocaleString(),
-                endTime: new Date(endTime).toLocaleString(),
-                status: (begun ? (endTime ? 'finished' : progress + '%') : 'waiting')
+                startTime: new Date(startTime).toLocaleString(this.$i18n.locale),
+                endTime: new Date(endTime).toLocaleString(this.$i18n.locale),
+                status: (begun ? (endTime ? this.$i18n.t('job.finished') : progress + '%') : this.$i18n.t('job.waiting'))
               }
             )
           )

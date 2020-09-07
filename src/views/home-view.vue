@@ -18,15 +18,14 @@
     v-else
     title="Dashboard"
   >
-    <gokb-section sub-title="Reviews">
+    <gokb-section
+      v-if="isContrib"
+      sub-title="Reviews"
+    >
       <template #buttons>
         <gokb-select-field
           class="mr-4"
           label="Typ"
-        />
-        <gokb-search-user-field
-          v-model="reviewsRaisedBy"
-          label="Ersteller"
         />
       </template>
       <gokb-table
@@ -67,35 +66,28 @@
 <script>
   import baseComponent from '@/shared/components/base-component'
   import reviewServices from '@/shared/services/review-services'
-  import GokbSearchUserField from '@/shared/components/simple/gokb-search-user-field'
   import account from '@/shared/models/account-model'
 
   const ROWS_PER_PAGE = 5
 
   const REVIEWS_HEADER = [
     {
-      text: 'Name',
+      text: 'Komponente',
       align: 'left',
       sortable: false,
       value: 'link'
     },
-    // {
-    //   text: 'Typ',
-    //   align: 'left',
-    //   sortable: false,
-    //   value: 'type'
-    // },
+    {
+      text: 'Typ',
+      align: 'left',
+      sortable: false,
+      value: 'type'
+    },
     {
       text: 'Erstellt am',
       align: 'left',
       sortable: false,
       value: 'dateCreated'
-    },
-    {
-      text: 'Ersteller',
-      align: 'left',
-      sortable: false,
-      value: 'raisedBy'
     },
   ]
   const MAINTENANCES_HEADER = [
@@ -121,7 +113,6 @@
 
   export default {
     name: 'HomeView',
-    components: { GokbSearchUserField },
     extends: baseComponent,
     data () {
       return {
@@ -150,15 +141,19 @@
         return reviews?.map(entry => {
           const id = entry?.id
           const name = entry?.componentToReview?.name
-          const dateCreated = entry?.dateCreated
-          const raisedBy = entry?.raisedBy?.name
+          const type = entry?.componentToReview?.type ? this.$i18n.t('component.' + entry?.componentToReview?.type.toLowerCase() + '.label') : undefined
+          const dateCreated = new Date(entry?.dateCreated).toLocaleString(this.$i18n.locale)
+          const stdDesc = entry?.stdDesc?.name
           // todo: the type of the review specifies the dialog to open on click
           const link = { value: name, route: 'EDIT_TYPE_ROUTE', id: 'id' }
-          return { id, name, dateCreated, raisedBy, link }
+          return { id, name, dateCreated, type, stdDesc, link }
         })
       },
       totalNumberOfReviews () {
         return this.rawReviews?.data?._pagination?.total || 0
+      },
+      isContrib () {
+        return this.loggedIn && account.hasRole('ROLE_CONTRIBUTOR')
       }
     },
     watch: {
@@ -187,7 +182,7 @@
     methods: {
       async paginateReviews () {
         const parameters = {
-          raisedBy: this.reviewsRaisedBy,
+          raisedBy: account.id(),
           offset: this.reviewsOptions.page ? (this.reviewsOptions.page - 1) * this.reviewsOptions.itemsPerPage : 0,
           limit: this.reviewsOptions.itemsPerPage
         }

@@ -3,6 +3,7 @@ const api = (vue, accountServices) => {
     initialized: false,
     loggedIn: false,
     username: undefined,
+    id: undefined,
     roles: undefined,
   })
 
@@ -17,6 +18,10 @@ const api = (vue, accountServices) => {
 
     username () {
       return state.username
+    },
+
+    id () {
+      return state.id
     },
 
     async initialize (cancelToken) {

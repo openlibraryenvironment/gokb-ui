@@ -10,7 +10,7 @@
         <gokb-textarea-field
           v-model="selectedItem.popup.value"
           readonly
-          label="Description"
+          :label="$i18n.t('job.description')"
         />
       </v-col>
     </v-row>
@@ -19,14 +19,14 @@
         <gokb-text-field
           v-model="selectedItem.startTime"
           readonly
-          label="Start"
+          :label="$i18n.t('job.startTime')"
         />
       </v-col>
       <v-col md="4">
         <gokb-text-field
           v-model="selectedItem.endTime"
           readonly
-          label="Ende"
+          :label="$i18n.t('job.endTime')"
         />
       </v-col>
     </v-row>
@@ -35,12 +35,12 @@
         <div
           class="primary--text"
         >
-          Messages
+          {{ $i18n.t('job.messages') }}
         </div>
         <ul class="mt-2">
           <li
-            v-for="m in selectedItem.messages"
-            :key="m"
+            v-for="(m, idx) in selectedItem.messages"
+            :key="idx"
           >
             {{ m.message }}
           </li>

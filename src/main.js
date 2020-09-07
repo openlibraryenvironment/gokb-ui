@@ -57,6 +57,15 @@ const messages = {
         keepCurrent: 'Keep current name as variant'
       }
     },
+    job: {
+      finished: 'Finished',
+      description: 'Description',
+      waiting: 'Waiting',
+      messages: 'Messages',
+      status: 'Status',
+      startTime: 'Start',
+      endTime: 'End'
+    },
     header: {
       edit: {
         label: 'Edit {0}'
@@ -89,6 +98,12 @@ const messages = {
       },
       package: {
         label: 'Package'
+      },
+      org: {
+        label: 'Organization'
+      },
+      platform: {
+        label: 'Platform'
       },
       provider: {
         label: 'Provider'
@@ -123,6 +138,15 @@ const messages = {
         keepCurrent: 'Bisherigen Namen als Variante behalten'
       }
     },
+    job: {
+      finished: 'Fertig',
+      waiting: 'Warten',
+      description: 'Beschreibung',
+      messages: 'Ereignisse',
+      status: 'Status',
+      startTime: 'Start',
+      endTime: 'Ende'
+    },
     header: {
       edit: {
         label: '{0} bearbeiten'
@@ -155,6 +179,12 @@ const messages = {
       },
       package: {
         label: 'Paket'
+      },
+      org: {
+        label: 'Organisation'
+      },
+      platform: {
+        label: 'Plattform'
       },
       provider: {
         label: 'Provider'
