@@ -1,36 +1,43 @@
 <template>
   <div>
-    <span>Name</span>
+    <span>{{ $i18n.t('component.general.name') }}</span>
     <v-banner>
       <span style="font-size:1.1rem">
-        {{ oldVal || value.name }}
+        {{ currentName || value.name }}
       </span>
       <template v-slot:actions>
         <gokb-dialog
           v-if="editNamePopupVisible"
           v-model="editNamePopupVisible"
-          :title="`Namen anpassen`"
+          :title="editNamePopupLabel"
           :width="dialogWidth"
           @submit="selectNewName"
         >
           <component
             :is="'GokbTextField'"
             ref="nameTextField"
-            v-model="value.name"
+            v-model="editedVal"
           />
           <template #buttons>
             <v-spacer />
+            <v-checkbox
+              v-if="currentName"
+              v-model="keepCurrent"
+              class="mr-2"
+              :label="keepCurrentLabel"
+            />
             <gokb-button
               text
               @click="close"
             >
-              Abbrechen
+              {{ $i18n.t('btn.cancel') }}
             </gokb-button>
+
             <gokb-button
-              :disabled="!value.name"
+              :disabled="!value"
               default
             >
-              Bestätigen
+              {{ $i18n.t('btn.confirm') }}
             </gokb-button>
           </template>
         </gokb-dialog>
@@ -69,21 +76,23 @@
         required: false,
         default: true
       },
-      oldVal: {
-        type: String,
-        required: false,
-        default: undefined
-      },
       dialogWidth: {
         type: Number,
         required: false,
         default: 800
-      }
+      },
+      keepCurrent: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
     },
     data () {
       return {
         editNamePopupVisible: false,
         confirmationPopUpVisible: false,
+        editedVal: undefined,
+        currentName: undefined,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
@@ -92,11 +101,17 @@
     computed: {
       localValue: {
         get () {
-          return this.value.name
+          return this.value
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('name', localValue)
         }
+      },
+      keepCurrentLabel () {
+        return this.$i18n.t('popups.name.keepCurrent')
+      },
+      editNamePopupLabel () {
+        return this.$i18n.t('header.edit.label', [this.$i18n.t('component.general.name')])
       }
     },
     methods: {
@@ -111,19 +126,22 @@
       },
       showEditName () {
         this.editNamePopupVisible = true
-        this.oldVal = this.value.name
+        this.editedVal = this.localValue.name
       },
       close () {
+        this.localValue.name = this.currentName
         this.editNamePopupVisible = false
       },
-      selectNewName (name) {
-        if (this.value.name !== this.oldVal) {
-          if (!this.value.alts.find(({ variantName }) => variantName === this.value.name)) {
-            this.value.alts.push({ id: this.tempId(), variantName: this.oldVal, isDeletable: true })
+      selectNewName () {
+        if (this.localValue.name !== this.editedVal) {
+          if (this.localValue.name && this.keepCurrent && !this.localValue.alts.find(({ variantName }) => variantName === this.editedVal)) {
+            this.localValue.alts.push({ id: this.tempId(), variantName: this.oldVal, isDeletable: true })
           }
-
+          this.localValue.name = this.editedVal
+          console.log(this.editedVal)
+          this.currentName = this.localValue.name
           this.editNamePopupVisible = false
-          this.oldVal = undefined
+          this.editedVal = undefined
         } else {
           this.$refs.nameTextField.error = true
         }

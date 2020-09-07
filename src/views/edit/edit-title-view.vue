@@ -156,9 +156,9 @@
         updateUrl: undefined,
         successMsg: false,
         allTypes: [
-          { name: this.$i18n.t('title.type.Journal'), id: 'Journal' },
-          { name: this.$i18n.t('title.type.Book'), id: 'Book' },
-          { name: this.$i18n.t('title.type.Database'), id: 'Database' }
+          { name: this.$i18n.t('component.title.type.Journal'), id: 'Journal' },
+          { name: this.$i18n.t('component.title.type.Book'), id: 'Book' },
+          { name: this.$i18n.t('component.title.type.Database'), id: 'Database' }
         ]
       }
     },
@@ -167,7 +167,7 @@
         return !!this.id
       },
       title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.t('title.type.' + this.currentType)])
+        return this.$i18n.t(this.titleCode, [this.$i18n.t('component.title.label')])
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
@@ -176,13 +176,10 @@
         return this.id ? 'Aktualisieren' : 'Hinzufügen'
       },
       isReadonly () {
-        return !this.updateUrl || !this.isEdit
+        return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
       },
       allNames () {
         return { name: this.name, alts: this.allAlternateNames }
-      },
-      currentTypeLabel () {
-        return this.$i18n.t('title.type.' + this.currentType)
       },
       loggedIn () {
         return accountModel.loggedIn()
@@ -196,52 +193,7 @@
       }
     },
     async created () {
-      if (this.isEdit) {
-        const {
-          data: {
-            //  data: {
-            name,
-            source,
-            type,
-            publishedFrom,
-            publishedTo,
-            editionStatement,
-            editionNumber,
-            firstPublishedInPrint,
-            firstPublishedOnline,
-            volumeNumber,
-            version,
-            _embedded: {
-              publisher,
-              ids,
-              variantNames
-            },
-            _links: {
-              update: { href: updateUrl }
-            },
-            //  }
-          }
-        } = await this.catchError({
-          promise: titleServices.getTitle(this.id, this.cancelToken.token),
-          instance: this
-        })
-        this.name = name
-        this.source = source
-        this.version = version
-        this.currentType = type
-        this.publishedFrom = publishedFrom && publishedFrom.substr(0, 10)
-        this.publishedTo = publishedTo && publishedTo.substr(0, 10)
-        this.publishers = publisher.map(name => ({ ...name, isDeletable: !!updateUrl }))
-        this.ids = ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace, isDeletable: !!updateUrl }))
-        this.allAlternateNames = variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!updateUrl }))
-        this.editionStatement = editionStatement
-        this.editionNumber = editionNumber
-        this.firstPublishedInPrint = firstPublishedInPrint
-        this.firstPublishedOnline = firstPublishedOnline
-        this.volumeNumber = volumeNumber
-        this.updateUrl = updateUrl
-        this.successMsg = false
-      }
+      this.reload()
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

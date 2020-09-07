@@ -59,7 +59,7 @@
       <gokb-button
         v-if="updateUrl"
         text
-        @click="forceUpdate"
+        @click="reload"
       >
         Abbrechen
       </gokb-button>
@@ -112,7 +112,7 @@
         return !!this.id
       },
       title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.t('provider.label')])
+        return this.$i18n.t(this.titleCode, [this.$i18n.t('component.provider.label')])
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
@@ -121,7 +121,7 @@
         return this.id ? 'Aktualisieren' : 'Hinzufügen'
       },
       isReadonly () {
-        return !this.updateUrl
+        return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
       },
       loggedIn () {
         return accountModel.loggedIn()
@@ -135,41 +135,7 @@
       }
     },
     async created () {
-      if (this.isEdit) {
-        const {
-          data: {
-            //  data: {
-            name,
-            source,
-            version,
-            homepage,
-            _embedded: {
-              curatoryGroups,
-              ids,
-              variantNames,
-              providedPlatforms
-            },
-            _links: {
-              update: { href: updateUrl },
-            },
-            //  }
-          }
-        } = await this.catchError({
-          promise: providerServices.getProvider(this.id, this.cancelToken.token),
-          instance: this
-        })
-        this.name = name
-        this.source = source
-        this.reference = homepage
-        this.version = version
-        this.ids = ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace, isDeletable: !!updateUrl }))
-        this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
-        this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: !!updateUrl }))
-        this.allPlatforms = providedPlatforms.map(platform => ({ ...platform, isDeletable: !!updateUrl }))
-        this.allNames = { name: name, alts: this.allAlternateNames }
-        this.updateUrl = updateUrl
-        this.successMsg = false
-      }
+      this.reload()
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -192,14 +158,11 @@
         })
         // todo: check error code
         if (response.status === 200) {
-          this.forceUpdate()
+          this.reload()
           this.successMsg = true
         }
 
         window.scrollTo(0, 0)
-      },
-      forceUpdate () {
-        this.version += 1
       },
       async reload () {
         if (this.isEdit) {

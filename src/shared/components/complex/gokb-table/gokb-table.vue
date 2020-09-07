@@ -33,6 +33,23 @@
           {{ item.link.value }}
         </router-link>
       </template>
+      <template #item.popup="{ item }">
+        <a
+          href="#"
+          @click="editItemPopupVisible = true"
+        >
+          {{ item.popup.value }}
+        </a>
+
+        <component
+          :is="item.popup.type"
+          v-if="editItemPopupVisible"
+          :key="`${item.popup.label}_${item.id}`"
+          v-model="editItemPopupVisible"
+          :items="items"
+          :selected="item"
+        />
+      </template>
       <template #item.action="{ item }">
         <v-icon
           v-if="showSelect && item.isRetireable !== undefined"
@@ -65,8 +82,13 @@
 </template>
 
 <script>
+  import BaseComponent from '@/shared/components/base-component'
+  import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
+
   export default {
     name: 'GokbTable',
+    components: { GokbEditJobPopup },
+    extends: BaseComponent,
     props: {
       disabled: {
         type: Boolean,
@@ -86,6 +108,11 @@
         type: Array,
         default: undefined
       },
+      label: {
+        type: String,
+        required: false,
+        default: undefined
+      },
       selectedItems: {
         type: Array,
         required: false,
@@ -98,12 +125,12 @@
       options: {
         type: Object,
         required: true,
-      },
-      error: {
-        type: Error,
-        required: false,
-        default: undefined
-      },
+      }
+    },
+    data () {
+      return {
+        editItemPopupVisible: false,
+      }
     },
     computed: {
       localSelectedItems: {
@@ -135,6 +162,9 @@
       retireItem (item) {
         this.$emit('retire-item', item)
       },
+      closeEdit () {
+        this.editItemPopupVisible = false
+      }
     }
   }
 </script>

@@ -47,9 +47,15 @@ const messages = {
       submit: 'Submit',
       create: 'Create',
       cancel: 'Cancel',
+      confirm: 'Confirm',
       back: 'Back',
       next: 'Next',
       prev: 'Previous'
+    },
+    popups: {
+      name: {
+        keepCurrent: 'Keep current name as variant'
+      }
     },
     header: {
       edit: {
@@ -61,6 +67,9 @@ const messages = {
       show: {
         label: '{0} details'
       },
+      add: {
+        label: 'Add {0}'
+      },
       welcome: 'Welcome to GOKb',
       dashboard: 'Dashboard'
     },
@@ -68,29 +77,51 @@ const messages = {
       title: 'Welcome to GOKb',
       p1: ''
     },
-    title: {
-      type: {
-        Journal: 'Journal',
-        Book: 'Monograph',
-        Database: 'Database'
+    component: {
+      title: {
+        label: 'Title',
+        type: {
+          Journal: 'Journal',
+          Book: 'Monograph',
+          Database: 'Database',
+          Other: 'Other'
+        }
+      },
+      package: {
+        label: 'Package'
+      },
+      provider: {
+        label: 'Provider'
+      },
+      identifier: {
+        label: 'Identifier',
+        value: 'Value',
+        namespace: 'Namespace'
+      },
+      general: {
+        name: 'Name',
+        ids: 'Identifiers',
+        variantNames: 'Name Variants',
+        curatoryGroups: 'Curatory Groups',
+        source: 'Source'
       }
-    },
-    package: {
-      label: 'Package'
-    },
-    provider: {
-      label: 'Provider'
     }
   },
   de: {
     btn: {
       edit: 'Bearbeiten',
       submit: 'Abschicken',
+      confirm: 'Bestätigen',
       create: 'Erstellen',
       cancel: 'Abbrechen',
       back: 'Zurück',
       next: 'Weiter',
       prev: 'Zurück'
+    },
+    popups: {
+      name: {
+        keepCurrent: 'Bisherigen Namen als Variante behalten'
+      }
     },
     header: {
       edit: {
@@ -100,7 +131,10 @@ const messages = {
         label: '{0} anlegen'
       },
       show: {
-        label: '{0}details'
+        label: '{0}-Details'
+      },
+      add: {
+        label: '{0} hinzufügen'
       },
       welcome: 'Willkommen zur GOKb',
       dashboard: 'Dashboard'
@@ -109,18 +143,34 @@ const messages = {
       title: 'Willkommen zur GOKb',
       p1: ''
     },
-    title: {
-      type: {
-        Journal: 'Journal',
-        Book: 'Monographie',
-        Database: 'Datenbank'
+    component: {
+      title: {
+        label: 'Titel',
+        type: {
+          Journal: 'Journal',
+          Book: 'Monographie',
+          Database: 'Datenbank',
+          Other: 'Andere'
+        }
+      },
+      package: {
+        label: 'Paket'
+      },
+      provider: {
+        label: 'Provider'
+      },
+      identifier: {
+        label: 'Identifikator',
+        value: 'Wert',
+        namespace: 'Namensraum'
+      },
+      general: {
+        name: 'Name',
+        ids: 'Identifikatoren',
+        variantNames: 'Weitere Namensformen',
+        curatoryGroups: 'Kuratorengruppen',
+        source: 'Quelle'
       }
-    },
-    package: {
-      label: 'Paket'
-    },
-    provider: {
-      label: 'Provider'
     }
   }
 }

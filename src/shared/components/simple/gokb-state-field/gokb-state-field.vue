@@ -9,10 +9,15 @@
         type: String,
         required: false,
         default: 'Status',
+      },
+      url: {
+        type: String,
+        required: false,
+        default: 'refdata/categories/KBComponent.Status'
       }
     },
     created () {
-      this.entityName = 'refdata/categories/KBComponent.Status'
+      this.entityName = this.url
     },
     methods: {
       transform (result) {

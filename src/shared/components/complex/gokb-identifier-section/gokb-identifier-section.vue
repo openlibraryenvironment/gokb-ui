@@ -123,13 +123,13 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.messageToConfirm = 'Wollen Sie die ausgewählten Jobs wirklich abbrechen?'
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       confirmDeleteItem ({ id }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
+        this.messageToConfirm = 'Wollen Sie diesen Job wirklich abbrechen?'
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },

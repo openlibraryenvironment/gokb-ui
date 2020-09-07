@@ -6,6 +6,7 @@
     :readonly="readonly"
     :autocomplete="autocomplete"
     :full-width="fw"
+    :error="error"
     :label="label"
     :prepend-icon="hideIcon ? '' : prependIcon"
     :required="required"
@@ -78,6 +79,11 @@
         type: String,
         required: false,
         default: undefined,
+      },
+      error: {
+        type: Boolean,
+        required: false,
+        default: false
       },
       rules: {
         type: Array,

@@ -38,8 +38,7 @@
         @paginate="paginateReviews"
       />
     </gokb-section>
-    <gokb-section
-      v-if="maintenance"
+    <!-- <gokb-section
       sub-title="Pflege"
     >
       <template #buttons>
@@ -58,16 +57,10 @@
         :options.sync="maintenancesOptions"
         :show-select="false"
       />
-    </gokb-section>
-    <gokb-section sub-title="KBART Import">
-      <gokb-table
-        :items="kbartImports"
-        :headers="kbartImportsHeader"
-        :total-number-of-items="totalNumberOfKbartImports"
-        :options.sync="kbartImportsOptions"
-        :show-select="false"
-      />
-    </gokb-section>
+    </gokb-section> -->
+    <gokb-jobs-section
+      v-model="groupId"
+    />
   </gokb-page>
 </template>
 
@@ -75,7 +68,6 @@
   import baseComponent from '@/shared/components/base-component'
   import reviewServices from '@/shared/services/review-services'
   import GokbSearchUserField from '@/shared/components/simple/gokb-search-user-field'
-  import GokbDateField from '@/shared/components/complex/gokb-date-field'
   import account from '@/shared/models/account-model'
 
   const ROWS_PER_PAGE = 5
@@ -126,24 +118,10 @@
       value: 'dueDate'
     },
   ]
-  const KBARTIMPORTS_HEADER = [
-    {
-      text: 'Dateiname',
-      align: 'left',
-      sortable: false,
-      value: 'filename'
-    },
-    {
-      text: 'Importiert am',
-      align: 'left',
-      sortable: false,
-      value: 'importDate'
-    },
-  ]
 
   export default {
     name: 'HomeView',
-    components: { GokbSearchUserField, GokbDateField },
+    components: { GokbSearchUserField },
     extends: baseComponent,
     data () {
       return {
@@ -160,13 +138,7 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
-
-        kbartImports: [],
-        totalNumberOfKbartImports: 0,
-        kbartImportsOptions: {
-          page: 1,
-          itemsPerPage: ROWS_PER_PAGE
-        },
+        groupId: -1
       }
     },
     computed: {
@@ -204,18 +176,13 @@
     created () {
       this.reviewsHeader = REVIEWS_HEADER
       this.maintenancesHeader = MAINTENANCES_HEADER
-      this.kbartImportsHeader = KBARTIMPORTS_HEADER
 
       // todo: replace dummy data with backend requests
       this.maintenances = [
         { name: 'American Science Journal', type: 'Einzeltitel', dueDate: '01.12.2018' },
         { name: 'Springer Best Journals', type: 'Paket', dueDate: '06.01.2019' },
       ]
-      this.kbartImports = [
-        { filename: 'American Science Journal.tsv', importDate: '01.12.2018 12:43' },
-      ]
       this.totalNumberOfMaintenances = 2
-      this.totalNumberOfKbartImports = 2
     },
     methods: {
       async paginateReviews () {

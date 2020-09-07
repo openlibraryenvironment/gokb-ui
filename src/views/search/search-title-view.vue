@@ -68,9 +68,10 @@
               label: 'Typ',
             },
             items: [
-              { name: this.$i18n.t('title.type.Journal'), id: 'journal' },
-              { name: this.$i18n.t('title.type.Book'), id: 'book' },
-              { name: this.$i18n.t('title.type.Database'), id: 'database' },
+              { name: this.$i18n.t('component.title.type.Journal'), id: 'journal' },
+              { name: this.$i18n.t('component.title.type.Book'), id: 'book' },
+              { name: this.$i18n.t('component.title.type.Database'), id: 'database' },
+              { name: this.$i18n.t('component.title.type.Other'), id: 'other' },
             ]
           }
         ],
@@ -117,7 +118,7 @@
           _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
         }) => ({
           id,
-          type: this.$i18n.t('title.type.' + type),
+          type: this.$i18n.t('component.title.type.' + type),
           startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
           isDeletable: !!deleteUrl,

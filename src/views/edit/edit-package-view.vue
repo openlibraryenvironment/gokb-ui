@@ -6,7 +6,7 @@
     @submit="createPackage"
   >
     <gokb-error-component :value="error" />
-    <span v-if="successMsgShown">
+    <span v-if="successMsg">
       <v-alert type="success">
         Update erfolgreich
       </v-alert>
@@ -53,7 +53,7 @@
           >
             <gokb-name-field
               v-model="allNames"
-              :readonly="isReadonly"
+              :disabled="isReadonly"
               label="Titel"
             />
             <gokb-search-source-field
@@ -291,7 +291,7 @@
       <gokb-button
         v-if="!isReadonly"
         text
-        @click="cancelPackage"
+        @click="reload"
       >
         Abbrechen
       </gokb-button>
@@ -383,6 +383,11 @@
         type: String,
         required: false,
         default: undefined
+      },
+      maintenance: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -436,7 +441,7 @@
     },
     computed: {
       title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.t('package.label')])
+        return this.$i18n.t(this.titleCode, [this.$i18n.t('component.package.label')])
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
@@ -473,61 +478,14 @@
       },
     },
     watch: {
-      isReadonly () {
-        this.version += 1
+      loggedIn (value) {
+        if (value) {
+          this.reload()
+        }
       }
     },
     async created () {
-      if (this.isEdit) {
-        const {
-          data: {
-            name,
-            source,
-            descriptionUrl,
-            description,
-            scope,
-            global,
-            consistent,
-            breakable,
-            fixed,
-            provider,
-            nominalPlatform,
-            _tippCount,
-            version,
-            _embedded: {
-              ids,
-              variantNames,
-              curatoryGroups
-            },
-            _links: {
-              update: { href: updateUrl }
-            }
-          }
-        } = await this.catchError({
-          promise: packageServices.getPackage(this.id, this.cancelToken.token),
-          instance: this
-        })
-        this.packageItem.name = name
-        this.packageItem.source = source
-        this.packageItem.descriptionUrl = descriptionUrl
-        this.packageItem.description = description
-        this.packageItem.scope = scope
-        this.packageItem.global = global?.name
-        this.packageItem.consistent = consistent?.name === 'Yes'
-        this.packageItem.breakable = breakable?.name === 'Yes'
-        this.packageItem.fixed = fixed?.name === 'Yes'
-        this.packageItem.provider = provider
-        this.packageItem.nominalPlatform = nominalPlatform
-        this.version = version
-        this.packageItem.ids = ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace, isDeletable: !!updateUrl }))
-        this.allAlternateNames = variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!updateUrl }))
-        this.allCuratoryGroups = curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!updateUrl }))
-        this.updateUrl = updateUrl
-        this.providerSelect = provider
-        this.platformSelect = nominalPlatform
-        this.titleCount = _tippCount
-        this.allNames = { name: name, alts: this.allAlternateNames }
-      }
+      this.reload()
     },
     methods: {
       go2NextStep () {
@@ -580,6 +538,7 @@
         if (valid) {
           const newPackage = {
             ...this.packageItem,
+            id: this.id,
             breakable: utils.asYesNo(this.packageItem.breakable),
             consistent: utils.asYesNo(this.packageItem.consistent),
             fixed: utils.asYesNo(this.packageItem.fixed),
@@ -591,6 +550,63 @@
             promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
             instance: this
           })
+
+          if (newPackage.status === 200) {
+            this.successMsg = true
+            this.reload()
+          }
+        }
+      },
+      async reload () {
+        if (this.isEdit) {
+          const {
+            data: {
+              name,
+              source,
+              descriptionUrl,
+              description,
+              scope,
+              global,
+              consistent,
+              breakable,
+              fixed,
+              provider,
+              nominalPlatform,
+              _tippCount,
+              version,
+              _embedded: {
+                ids,
+                variantNames,
+                curatoryGroups
+              },
+              _links: {
+                update: { href: updateUrl }
+              }
+            }
+          } = await this.catchError({
+            promise: packageServices.getPackage(this.id, this.cancelToken.token),
+            instance: this
+          })
+          this.packageItem.name = name
+          this.packageItem.source = source
+          this.packageItem.descriptionUrl = descriptionUrl
+          this.packageItem.description = description
+          this.packageItem.scope = scope
+          this.packageItem.global = global?.name
+          this.packageItem.consistent = consistent?.name === 'Yes'
+          this.packageItem.breakable = breakable?.name === 'Yes'
+          this.packageItem.fixed = fixed?.name === 'Yes'
+          this.packageItem.provider = provider
+          this.packageItem.nominalPlatform = nominalPlatform
+          this.version = version
+          this.packageItem.ids = ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace, isDeletable: !!updateUrl }))
+          this.allAlternateNames = variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!updateUrl }))
+          this.allCuratoryGroups = curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!updateUrl }))
+          this.updateUrl = updateUrl
+          this.providerSelect = provider
+          this.platformSelect = nominalPlatform
+          this.titleCount = _tippCount
+          this.allNames = { name: name, alts: this.allAlternateNames }
         }
       }
     }
