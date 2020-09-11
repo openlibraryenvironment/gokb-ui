@@ -1,6 +1,9 @@
 <template>
   <gokb-section
-    sub-title="Alternative Namen"
+    expandable
+    expanded="false"
+    :sub-title="headerLabel"
+    :items-total="totalNumberOfItems"
   >
     <gokb-add-item-popup
       v-if="addItemPopupVisible"
@@ -10,18 +13,20 @@
     />
     <template #buttons>
       <gokb-button
+        v-if="isEditable"
         icon-id="add"
-        @click="showAddItem"
+        @click="showAddVariantName"
       >
-        Hinzufügen
+        {{ $i18n.t('btn.add') }}
       </gokb-button>
       <gokb-button
+        v-if="isEditable"
         class="ml-4"
         icon-id="delete"
         :disabled="isDeleteSelectedDisabled"
         @click="confirmDeleteSelectedItems"
       >
-        Löschen
+        {{ $i18n.t('btn.delete') }}
       </gokb-button>
     </template>
     <gokb-confirmation-popup
@@ -31,11 +36,12 @@
     />
     <gokb-table
       :headers="tableHeaders"
-      :items="items"
-      :selected-items="selectedItems"
+      :items="variantNames"
+      :editable="isEditable"
+      :selected-items="selectedVariantNames"
       :total-number-of-items="totalNumberOfItems"
-      :options.sync="options"
-      @selected-items="selectedItems = $event"
+      :options.sync="variantNameOptions"
+      @selected-items="selectedVariantNames = $event"
       @delete-item="confirmDeleteItem"
     />
   </gokb-section>
@@ -58,20 +64,30 @@
       value: {
         type: Array,
         required: true
+      },
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      expanded: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
       return {
         addItemPopupVisible: false,
-        options: {
+        variantNameOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
-        selectedItems: [],
+        selectedVariantNames: [],
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: undefined,
+        messageToConfirm: undefined
       }
     },
     computed: {
@@ -83,24 +99,33 @@
           this.$emit('input', localValue)
         }
       },
-      items () {
+      variantNames () {
         return [...this.value]
           .sort(({ variantName: first }, { variantName: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-          .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
+          .slice((this.variantNameOptions.page - 1) * ROWS_PER_PAGE, this.variantNameOptions.page * ROWS_PER_PAGE)
       },
       isDeleteSelectedDisabled () {
-        return !this.selectedItems.length
+        return !this.selectedVariantNames.length
       },
       totalNumberOfItems () {
         return this.localValue.length
       },
+      isEditable () {
+        return !this.disabled
+      },
+      headerLabel () {
+        return this.$i18n.t('component.general.variantNames')
+      }
     },
     created () {
       this.tableHeaders = TABLE_HEADERS
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
-        this[actionMethodName](...actionMethodParameter)
+        this[actionMethodName](actionMethodParameter)
+      },
+      tempId () {
+        return 'tempId' + Math.random().toString(36).substr(2, 5)
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
@@ -108,29 +133,28 @@
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      confirmDeleteItem ({ id, name }) {
+      confirmDeleteItem ({ id }) {
         this.actionToConfirm = '_deleteItem'
         this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
-        this.parameterToConfirm = [id, name]
+        this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
       _deleteSelected () {
         // console.log('_deleteSelected')
-        this.localValue = this.localValue.filter(({ id, name }) => !this.selected
-          .find(({ id: selectedId, name: selectedName }) => id === selectedId || name === selectedName))
-        this.selectedItems = []
+        this.localValue = this.localValue.filter(({ id }) => !this.selectedVariantNames
+          .find(({ id: selectedId }) => id === selectedId))
+        this.selectedVariantNames = []
       },
-      _deleteItem ([id, name]) {
-        // console.log('_deleteItem', id, name)
-        this.localValue = this.localValue.filter(({ id: idLocal }) => idLocal && idLocal !== id)
-        this.selectedItems = this.selectedItems.filter(({ id: idLocal }) => idLocal && idLocal !== id)
+      _deleteItem (idToDelete) {
+        this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
+        this.selectedVariantNames = this.selectedVariantNames.filter(({ id }) => id !== idToDelete)
       },
-      showAddItem () {
+      showAddVariantName () {
         this.addItemPopupVisible = true
       },
-      addItem (name) {
+      addItem ({ id, name }) {
         !this.localValue.find(({ variantName }) => variantName === name) &&
-          this.localValue.push({ variantName: name, isDeletable: true })
+          this.localValue.push({ id: id || this.tempId(), variantName: name, isDeletable: true })
       },
     }
   }

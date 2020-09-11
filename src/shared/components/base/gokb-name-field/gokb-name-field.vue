@@ -1,0 +1,154 @@
+<template>
+  <div>
+    <span>{{ $i18n.t('component.general.name') }}</span>
+    <v-banner>
+      <span style="font-size:1.1rem">
+        {{ currentName || value.name }}
+      </span>
+      <template v-slot:actions>
+        <gokb-dialog
+          v-if="editNamePopupVisible"
+          v-model="editNamePopupVisible"
+          :title="editNamePopupLabel"
+          :width="dialogWidth"
+          @submit="selectNewName"
+        >
+          <component
+            :is="'GokbTextField'"
+            ref="nameTextField"
+            v-model="editedVal"
+          />
+          <template #buttons>
+            <v-spacer />
+            <v-checkbox
+              v-if="currentName"
+              v-model="keepCurrent"
+              class="mr-2"
+              :label="keepCurrentLabel"
+            />
+            <gokb-button
+              text
+              @click="close"
+            >
+              {{ $i18n.t('btn.cancel') }}
+            </gokb-button>
+
+            <gokb-button
+              :disabled="!value"
+              default
+            >
+              {{ $i18n.t('btn.confirm') }}
+            </gokb-button>
+          </template>
+        </gokb-dialog>
+        <gokb-confirmation-popup
+          v-model="confirmationPopUpVisible"
+          :message="messageToConfirm"
+          @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+        />
+        <v-btn
+          v-if="!disabled"
+          @click="showEditName"
+        >
+          {{ $i18n.t('btn.edit') }}
+        </v-btn>
+      </template>
+    </v-banner>
+  </div>
+</template>
+
+<script>
+  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+
+  export default {
+    name: 'GokbNameField',
+    components: { GokbConfirmationPopup },
+    props: {
+      value: {
+        required: true,
+        default: '',
+        validator: function (value) {
+          return value.name === undefined || value.name === null || typeof value.name === 'string'
+        }
+      },
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
+      dialogWidth: {
+        type: Number,
+        required: false,
+        default: 800
+      },
+      keepCurrent: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+    },
+    data () {
+      return {
+        editNamePopupVisible: false,
+        confirmationPopUpVisible: false,
+        editedVal: undefined,
+        currentName: undefined,
+        actionToConfirm: undefined,
+        parameterToConfirm: undefined,
+        messageToConfirm: undefined,
+      }
+    },
+    computed: {
+      localValue: {
+        get () {
+          return this.value
+        },
+        set (localValue) {
+          this.$emit('name', localValue)
+        }
+      },
+      keepCurrentLabel () {
+        return this.$i18n.t('popups.name.keepCurrent')
+      },
+      editNamePopupLabel () {
+        return this.$i18n.t('header.edit.label', [this.$i18n.t('component.general.name')])
+      }
+    },
+    methods: {
+      validate () {
+        this.$refs.nameTextField.validate(true)
+      },
+      tempId () {
+        return 'tempId' + Math.random().toString(36).substr(2, 5)
+      },
+      executeAction (actionMethodName, actionMethodParameter) {
+        this[actionMethodName](actionMethodParameter)
+      },
+      showEditName () {
+        this.editNamePopupVisible = true
+        this.editedVal = this.localValue.name
+      },
+      close () {
+        this.localValue.name = this.currentName
+        this.editNamePopupVisible = false
+      },
+      selectNewName () {
+        if (this.localValue.name !== this.editedVal) {
+          if (this.localValue.name && this.keepCurrent && !this.localValue.alts.find(({ variantName }) => variantName === this.editedVal)) {
+            this.localValue.alts.push({ id: this.tempId(), variantName: this.oldVal, isDeletable: true })
+          }
+          this.localValue.name = this.editedVal
+          console.log(this.editedVal)
+          this.currentName = this.localValue.name
+          this.editNamePopupVisible = false
+          this.editedVal = undefined
+        } else {
+          this.$refs.nameTextField.error = true
+        }
+      },
+    }
+  }
+</script>
+
+<style scoped>
+</style>

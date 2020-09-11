@@ -20,17 +20,17 @@
       }
     },
     async created () {
-      this.title = 'Titel'
+      this.title = this.$i18n.t('component.title.plural')
       this.resultActionButtons = [
         {
           icon: 'clear',
-          label: 'Archivieren',
+          label: this.$i18n.t('btn.retire'),
           disabled: 'isDeleteSelectedDisabled',
           action: '_confirmRetireSelectedItems'
         },
         {
           icon: 'delete',
-          label: 'Löschen',
+          label: this.$i18n.t('btn.delete'),
           disabled: 'isDeleteSelectedDisabled',
           action: '_confirmDeleteSelectedItems',
         }
@@ -43,13 +43,16 @@
             name: 'name',
             value: this.name,
             properties: {
-              label: 'Name/Titel'
+              label: this.$i18n.t('component.general.name')
             }
           },
           {
-            type: 'GokbSearchIdentifierField',
+            type: 'GokbTextField',
             name: 'ids',
             value: this.identifierIds,
+            properties: {
+              label: this.$i18n.t('component.identifier.label')
+            }
           }
         ],
         [
@@ -60,11 +63,16 @@
           },
           {
             type: 'GokbSelectField',
-            name: 'qp_medium',
+            name: 'type',
             properties: {
-              label: 'Typ',
-              // items: allTypes.values.map(({ id: value, text }) => ({ value, text })),
-            }
+              label: this.$i18n.t('component.title.type.label'),
+            },
+            items: [
+              { name: this.$i18n.t('component.title.type.Journal'), id: 'journal' },
+              { name: this.$i18n.t('component.title.type.Book'), id: 'book' },
+              { name: this.$i18n.t('component.title.type.Database'), id: 'database' },
+              { name: this.$i18n.t('component.title.type.Other'), id: 'other' },
+            ]
           }
         ],
         [
@@ -76,46 +84,43 @@
       ]
       this.resultHeaders = [
         {
-          text: 'Name/Titel',
+          text: this.$i18n.t('component.general.name'),
           align: 'left',
           sortable: false,
           value: 'link'
         },
         {
-          text: 'Typ',
+          text: this.$i18n.t('component.title.type.label'),
           align: 'left',
           sortable: false,
           value: 'type'
         },
         {
-          text: 'Veröffentlicht von',
-          align: 'right',
+          text: this.$i18n.t('component.title.publishStart'),
+          algin: 'left',
           sortable: false,
-          value: 'createdBy'
-        },
-        {
-          text: 'Veröffentlicht bis',
-          align: 'right',
-          sortable: false,
-          value: 'createdUntil'
-        },
+          value: 'startDate'
+        }
       ]
       this.searchServicesUrl = 'rest/titles'
-      this.searchServiceIncludes = 'id,name,publisher,_links'
+      this.searchServiceIncludes = 'id,name,_links,publishedFrom,dateFirstInPrint,dateFiirstOnline'
+      this.searchServiceEmbeds = 'ids'
     },
     methods: {
       _transformForTable (data) {
         return data.map(({
           id,
           name,
-          provider,
-          nominalPlatform,
+          type,
+          publishedFrom,
+          dateFirstInPrint,
+          dateFirstOnline,
           _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
         }) => ({
           id,
+          type: this.$i18n.t('component.title.type.' + type),
+          startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
-          providerName: provider?.name,
-          nominalPlatformName: nominalPlatform?.name,
           isDeletable: !!deleteUrl,
           deleteUrl: deleteUrl,
           retireUrl: retireUrl,

@@ -2,6 +2,7 @@
   <gokb-section
     :title="title"
     :sub-title="subTitle"
+    :items-total="totalNumberOfItems"
   >
     <gokb-add-item-popup
       v-if="addCuratoryGroupPopupVisible"
@@ -11,12 +12,14 @@
     />
     <template #buttons>
       <gokb-button
+        v-if="isEditable"
         icon-id="add"
         @click="showAddNewCuratoryGroup"
       >
         Hinzufügen
       </gokb-button>
       <gokb-button
+        v-if="isEditable"
         class="ml-4"
         icon-id="delete"
         :disabled="isDeleteSelectedDisabled"
@@ -33,6 +36,7 @@
     <gokb-table
       :headers="curatoryGroupsTableHeaders"
       :items="curatoryGroups"
+      :editable="isEditable"
       :selected-items="selectedCuratoryGroups"
       :total-number-of-items="totalNumberOfItems"
       :options.sync="curatoryGroupsOptions"
@@ -72,6 +76,11 @@
         type: String,
         required: false,
         default: undefined
+      },
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -109,14 +118,14 @@
       totalNumberOfItems () {
         return this.localValue.length
       },
+      isEditable () {
+        return !this.disabled
+      }
     },
     created () {
       this.curatoryGroupsTableHeaders = CURATORY_GROUPS_TABLE_HEADERS
     },
     methods: {
-      showAddIdentifierPopup () {
-        this.addIdentifierPopupVisible = true
-      },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },

@@ -4,11 +4,9 @@
   export default {
     name: 'GokbSearchSourceField',
     extends: GokbSearchField,
-    props: {
-      label: {
-        type: String,
-        required: false,
-        default: 'Quelle'
+    computed: {
+      label () {
+        return this.$i18n.t('component.general.source')
       }
     },
     created () {

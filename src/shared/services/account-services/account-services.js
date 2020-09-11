@@ -1,7 +1,7 @@
-const LOGIN_URL = './rest/login'
-const LOGOUT_URL = './rest/logout'
+const LOGIN_URL = '/rest/login'
+const LOGOUT_URL = '/rest/logout'
 
-const REGISTER_URL = './rest/register'
+const REGISTER_URL = '/rest/register'
 
 const api = (assert, log, tokenModel, baseServices, profileServices) => ({
 
@@ -27,7 +27,7 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
     const { data: result } = await baseServices.request({
       initiator: this.login.name,
       method: 'POST',
-      url: LOGIN_URL,
+      url: process.env.VUE_APP_API_BASE_URL + LOGIN_URL,
       data: { username, password },
       cancelToken
     })
@@ -42,7 +42,7 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
       await baseServices.request({
         initiator: this.logout.name,
         method: 'POST',
-        url: LOGOUT_URL,
+        url: process.env.VUE_APP_API_BASE_URL + LOGOUT_URL,
         cancelToken
       })
     } catch {}
@@ -54,7 +54,7 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
   register ({ username, email, password, password2 }) {
     return baseServices.request({
       method: 'POST',
-      url: REGISTER_URL,
+      url: process.env.VUE_APP_API_BASE_URL + REGISTER_URL,
       data: { username, email, password, password2 },
     })
   },

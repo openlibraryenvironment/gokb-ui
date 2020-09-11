@@ -6,7 +6,7 @@ import loading from '@/shared/models/loading'
 export default {
   data () {
     return {
-      error: undefined,
+      error: undefined
     }
   },
 
@@ -35,8 +35,9 @@ export default {
       this.cancelToken = token ? this.cancelToken : undefined
     },
 
-    catchError ({ promise, instance }) {
-      loading.startLoading()
+    catchError ({ promise, instance, doLoading }) {
+      doLoading && loading.startLoading()
+
       return promise
         .then(result => {
           instance && (instance.error = undefined)
@@ -44,7 +45,7 @@ export default {
         })
         .catch(error => {
           // hide execution canceled error
-          if (error.response.status >= 500 && instance) {
+          if (error.response && error.response.status >= 500 && instance) {
             log.error(error)
             instance.error = this.isCancelThrown(error) ? undefined : error
           // } else if (error.response.status === 401 && !showLoginModel.get()) {
@@ -54,7 +55,7 @@ export default {
           }
         })
         .finally(() => {
-          loading.stopLoading()
+          doLoading && loading.stopLoading()
         })
     }
   }

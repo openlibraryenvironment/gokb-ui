@@ -6,6 +6,7 @@
     <v-col>
       <gokb-text-field
         v-model="localValue"
+        :disabled="disabled"
         :label="namespaceFixed ? localNamespace.name : 'Identifikator'"
         :append-icon="deleteIcon"
         @click:append="$emit('delete', value)"
@@ -24,6 +25,11 @@
       namespaceFixed: {
         type: Boolean,
         required: false
+      },
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: false
       },
       deleteable: {
         type: Boolean,

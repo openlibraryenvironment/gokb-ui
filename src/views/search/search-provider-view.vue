@@ -16,7 +16,7 @@
       }
     },
     async created () {
-      this.title = 'Provider'
+      this.title = this.$i18n.t('component.provider.plural')
       this.resultActionButtons = [
         {
           icon: 'add',
@@ -47,11 +47,12 @@
             }
           },
           {
-            type: 'GokbIdentifierField',
+            type: 'GokbTextField',
             name: 'ids',
             value: this.identifier,
             properties: {
-              entity: 'Org' // means Provider ;-)
+              entity: 'Org', // means Provider ;-)
+              label: 'Identifikator'
             }
           }
         ],

@@ -37,7 +37,7 @@
         required: true,
       },
       width: {
-        type: Number,
+        type: [Number, String],
         required: false,
         default: 400
       }

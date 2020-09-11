@@ -3,7 +3,10 @@
     ref="textField"
     v-model="localValue"
     :disabled="disabled"
+    :readonly="readonly"
     :autocomplete="autocomplete"
+    :full-width="fw"
+    :error="error"
     :label="label"
     :prepend-icon="hideIcon ? '' : prependIcon"
     :required="required"
@@ -12,7 +15,7 @@
     :placeholder="placeholder"
     :append-icon="appendIcon"
     validate-on-blur
-    clearable
+    :clearable="!readonly"
     @click:append="$emit('click:append', $event)"
   />
 </template>
@@ -29,6 +32,11 @@
         }
       },
       disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+      readonly: {
         type: Boolean,
         required: false,
         default: false,
@@ -72,11 +80,21 @@
         required: false,
         default: undefined,
       },
+      error: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
       rules: {
         type: Array,
         required: false,
         default: undefined,
       },
+      fw: {
+        type: Boolean,
+        required: false,
+        default: false
+      }
     },
     computed: {
       localValue: {

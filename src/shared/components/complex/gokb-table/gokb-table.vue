@@ -21,7 +21,7 @@
             {{ error }}
           </v-alert>
           <div v-else>
-            Keine Daten verfügbar.
+            {{ $i18n.t('search.results.empty') }}
           </div>
         </v-row>
       </template>
@@ -33,9 +33,26 @@
           {{ item.link.value }}
         </router-link>
       </template>
+      <template #item.popup="{ item }">
+        <a
+          href="#"
+          @click="editItemPopupVisible = true"
+        >
+          {{ item.popup.value }}
+        </a>
+
+        <component
+          :is="item.popup.type"
+          v-if="editItemPopupVisible"
+          :key="`${item.popup.label}_${item.id}`"
+          v-model="editItemPopupVisible"
+          :items="items"
+          :selected="item"
+        />
+      </template>
       <template #item.action="{ item }">
         <v-icon
-          v-if="item.isRetireable !== undefined"
+          v-if="showSelect && item.isRetireable !== undefined"
           class="mr-2"
           :disabled="disabled || !item.isRetireable"
           small
@@ -44,7 +61,7 @@
           close
         </v-icon>
         <v-icon
-          v-if="item.isDeletable !== undefined"
+          v-if="showSelect && item.isDeletable !== undefined"
           :disabled="disabled || !item.isDeletable"
           small
           @click="deleteItem(item)"
@@ -65,15 +82,20 @@
 </template>
 
 <script>
+  import BaseComponent from '@/shared/components/base-component'
+  import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
+
   export default {
     name: 'GokbTable',
+    components: { GokbEditJobPopup },
+    extends: BaseComponent,
     props: {
       disabled: {
         type: Boolean,
         required: false,
         default: false,
       },
-      showSelect: {
+      editable: {
         type: Boolean,
         required: false,
         default: true,
@@ -84,6 +106,11 @@
       },
       items: {
         type: Array,
+        default: undefined
+      },
+      label: {
+        type: String,
+        required: false,
         default: undefined
       },
       selectedItems: {
@@ -98,12 +125,12 @@
       options: {
         type: Object,
         required: true,
-      },
-      error: {
-        type: Error,
-        required: false,
-        default: undefined
-      },
+      }
+    },
+    data () {
+      return {
+        editItemPopupVisible: false,
+      }
     },
     computed: {
       localSelectedItems: {
@@ -116,6 +143,9 @@
       pages () {
         return Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage)
       },
+      showSelect () {
+        return this.editable
+      }
     },
     watch: {
       'options.page' () {
@@ -132,6 +162,9 @@
       retireItem (item) {
         this.$emit('retire-item', item)
       },
+      closeEdit () {
+        this.editItemPopupVisible = false
+      }
     }
   }
 </script>

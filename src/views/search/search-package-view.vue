@@ -1,7 +1,6 @@
 <script>
   import BaseSearch from './base-search-view'
   import { EDIT_PACKAGE_ROUTE } from '@/router/route-paths'
-  import baseServices from '@/shared/services/base-services'
   import GokbPackageExportMenu from '@/shared/components/gokb-package-export-menu'
 
   export default {
@@ -59,11 +58,12 @@
           },
           {
             type: 'GokbCuratoryGroupField',
-            name: 'curatoryGroupId',
+            name: 'curatoryGroups',
             value: this.curatoryGroupIds,
             properties: {
               label: 'Kuratoren',
               multiple: true,
+              returnObject: false
             }
           }
         ],
@@ -72,11 +72,18 @@
             type: 'GokbSearchProviderField',
             name: 'provider',
             value: this.providerId,
+            properties: {
+              label: 'Provider',
+
+            }
           },
           {
-            type: 'GokbSearchIdentifierField',
+            type: 'GokbTextField',
             name: 'ids',
             value: this.identifierIds,
+            properties: {
+              label: 'Identifikator',
+            }
           }
         ],
         [
@@ -147,7 +154,7 @@
       async _retireSelectedItems () {
         await Promise.all(this.selectedItems.map(({ retireUrl }) =>
           this.catchError({
-            promise: baseServices.request({ method: 'POST', url: retireUrl }, this.cancelToken.token),
+            promise: this.searchServices.retire(retireUrl, this.cancelToken.token),
             instance: this
           })
         ))

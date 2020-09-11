@@ -2,6 +2,7 @@
   <v-textarea
     v-model="localValue"
     v-bind="$props"
+    :readonly="readonly"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
     validate-on-blur
     clearable
@@ -20,6 +21,11 @@
         default: '',
       },
       disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+      readonly: {
         type: Boolean,
         required: false,
         default: false,

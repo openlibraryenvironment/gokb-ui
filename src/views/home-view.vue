@@ -1,27 +1,32 @@
 <template>
-  <v-row
+  <gokb-page
     v-if="!loggedIn"
+    title=""
   >
-    <v-col>
-      <v-img
-        src="img/logo.png"
-        width="500"
-      />
-    </v-col>
-  </v-row>
+    <v-card>
+      <v-card-text>
+        <div class="display-1 primary--text">
+          {{ $i18n.t('welcome.title') }}
+        </div>
+        <p class="primary--text">
+          {{ $i18n.t('welcome.p1') }}
+        </p>
+      </v-card-text>
+    </v-card>
+  </gokb-page>
   <gokb-page
     v-else
     title="Dashboard"
   >
-    <gokb-section sub-title="Reviews">
+    <gokb-section
+      v-if="isContrib"
+      sub-title="Reviews"
+    >
       <template #buttons>
-        <gokb-select-field
+        <gokb-state-field
           class="mr-4"
+          url="refdata/categories/ReviewRequest.StdDesc"
           label="Typ"
-        />
-        <gokb-search-user-field
-          v-model="reviewsRaisedBy"
-          label="Ersteller"
         />
       </template>
       <gokb-table
@@ -33,7 +38,9 @@
         @paginate="paginateReviews"
       />
     </gokb-section>
-    <gokb-section sub-title="Pflege">
+    <!-- <gokb-section
+      sub-title="Pflege"
+    >
       <template #buttons>
         <gokb-select-field
           class="mr-4"
@@ -50,52 +57,38 @@
         :options.sync="maintenancesOptions"
         :show-select="false"
       />
-    </gokb-section>
-    <gokb-section sub-title="KBART Import">
-      <gokb-table
-        :items="kbartImports"
-        :headers="kbartImportsHeader"
-        :total-number-of-items="totalNumberOfKbartImports"
-        :options.sync="kbartImportsOptions"
-        :show-select="false"
-      />
-    </gokb-section>
+    </gokb-section> -->
+    <gokb-jobs-section
+      v-model="groupId"
+    />
   </gokb-page>
 </template>
 
 <script>
   import baseComponent from '@/shared/components/base-component'
   import reviewServices from '@/shared/services/review-services'
-  import GokbSearchUserField from '@/shared/components/simple/gokb-search-user-field'
-  import GokbDateField from '@/shared/components/complex/gokb-date-field'
   import account from '@/shared/models/account-model'
 
   const ROWS_PER_PAGE = 5
 
   const REVIEWS_HEADER = [
     {
-      text: 'Name',
+      text: 'Komponente',
       align: 'left',
       sortable: false,
       value: 'link'
     },
-    // {
-    //   text: 'Typ',
-    //   align: 'left',
-    //   sortable: false,
-    //   value: 'type'
-    // },
+    {
+      text: 'Typ',
+      align: 'left',
+      sortable: false,
+      value: 'type'
+    },
     {
       text: 'Erstellt am',
       align: 'left',
       sortable: false,
       value: 'dateCreated'
-    },
-    {
-      text: 'Ersteller',
-      align: 'left',
-      sortable: false,
-      value: 'raisedBy'
     },
   ]
   const MAINTENANCES_HEADER = [
@@ -118,24 +111,9 @@
       value: 'dueDate'
     },
   ]
-  const KBARTIMPORTS_HEADER = [
-    {
-      text: 'Dateiname',
-      align: 'left',
-      sortable: false,
-      value: 'filename'
-    },
-    {
-      text: 'Importiert am',
-      align: 'left',
-      sortable: false,
-      value: 'importDate'
-    },
-  ]
 
   export default {
     name: 'HomeView',
-    components: { GokbSearchUserField, GokbDateField },
     extends: baseComponent,
     data () {
       return {
@@ -152,13 +130,7 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
-
-        kbartImports: [],
-        totalNumberOfKbartImports: 0,
-        kbartImportsOptions: {
-          page: 1,
-          itemsPerPage: ROWS_PER_PAGE
-        },
+        groupId: -1
       }
     },
     computed: {
@@ -170,15 +142,19 @@
         return reviews?.map(entry => {
           const id = entry?.id
           const name = entry?.componentToReview?.name
-          const dateCreated = entry?.dateCreated
-          const raisedBy = entry?.raisedBy?.name
+          const type = entry?.componentToReview?.type ? this.$i18n.t('component.' + entry?.componentToReview?.type.toLowerCase() + '.label') : undefined
+          const dateCreated = new Date(entry?.dateCreated).toLocaleString(this.$i18n.locale)
+          const stdDesc = entry?.stdDesc?.name
           // todo: the type of the review specifies the dialog to open on click
           const link = { value: name, route: 'EDIT_TYPE_ROUTE', id: 'id' }
-          return { id, name, dateCreated, raisedBy, link }
+          return { id, name, dateCreated, type, stdDesc, link }
         })
       },
       totalNumberOfReviews () {
         return this.rawReviews?.data?._pagination?.total || 0
+      },
+      isContrib () {
+        return this.loggedIn && account.hasRole('ROLE_CONTRIBUTOR')
       }
     },
     watch: {
@@ -196,23 +172,18 @@
     created () {
       this.reviewsHeader = REVIEWS_HEADER
       this.maintenancesHeader = MAINTENANCES_HEADER
-      this.kbartImportsHeader = KBARTIMPORTS_HEADER
 
       // todo: replace dummy data with backend requests
       this.maintenances = [
         { name: 'American Science Journal', type: 'Einzeltitel', dueDate: '01.12.2018' },
         { name: 'Springer Best Journals', type: 'Paket', dueDate: '06.01.2019' },
       ]
-      this.kbartImports = [
-        { filename: 'American Science Journal.tsv', importDate: '01.12.2018 12:43' },
-      ]
       this.totalNumberOfMaintenances = 2
-      this.totalNumberOfKbartImports = 2
     },
     methods: {
       async paginateReviews () {
         const parameters = {
-          raisedBy: this.reviewsRaisedBy,
+          raisedBy: account.id(),
           offset: this.reviewsOptions.page ? (this.reviewsOptions.page - 1) * this.reviewsOptions.itemsPerPage : 0,
           limit: this.reviewsOptions.itemsPerPage
         }

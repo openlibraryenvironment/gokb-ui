@@ -4,7 +4,7 @@
     @submit="search"
   >
     <gokb-error-component :value="error" />
-    <gokb-section sub-title="Suche">
+    <gokb-section :sub-title="searchHeader">
       <template v-for="(row, rowIndex) of searchInputFields">
         <v-row :key="`${title}_${rowIndex}`">
           <v-col
@@ -16,6 +16,7 @@
               :is="column.type"
               :key="`${title}_${rowIndex}_${columnIndex}`"
               v-model="column.value"
+              :items="column.items"
               clearable
               v-bind="column.properties"
             />
@@ -33,17 +34,17 @@
             class="mr-4"
             @click="resetSearch"
           >
-            Zurücksetzen
+            {{ $i18n.t('btn.reset') }}
           </gokb-button>
           <gokb-button
             default
           >
-            Suchen
+            {{ $i18n.t('btn.search') }}
           </gokb-button>
         </v-col>
       </v-row>
     </gokb-section>
-    <gokb-section sub-title="Ergebnisse">
+    <gokb-section :sub-title="resultHeader">
       <template #buttons>
         <template v-for="button of resultActionButtons">
           <component
@@ -115,12 +116,18 @@
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: undefined,
+        messageToConfirm: undefined
       }
     },
     computed: {
       isNothingSelected () {
         return this.selectedItems.length === 0
+      },
+      searchHeader () {
+        return this.$i18n.t('header.search')
+      },
+      resultHeader () {
+        return this.$i18n.t('header.results')
       }
     },
     watch: {
@@ -187,6 +194,7 @@
           promise: this.searchServices.search({
             ...searchParameters,
             ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
+            ...((this.searchServiceEmbeds && { _embed: this.searchServiceEmbeds }) || {}),
             offset: page ? (page - 1) * this.resultOptions.itemsPerPage : 0,
             limit: this.resultOptions.itemsPerPage
           }, this.cancelToken.token),
