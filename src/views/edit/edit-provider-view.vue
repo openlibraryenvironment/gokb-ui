@@ -10,7 +10,7 @@
         Update erfolgreich
       </v-alert>
     </span>
-    <gokb-section sub-title="Allgemein">
+    <gokb-section :sub-title="$t('component.general.general')">
       <v-row>
         <v-col md="12">
           <gokb-name-field
@@ -27,11 +27,11 @@
             :readonly="isReadonly"
           />
         </v-col>
-        <v-col md="4">
+        <v-col md="8">
           <gokb-text-field
             v-model="reference"
-            label="Homepage"
-            :readonly="isReadonly"
+            :label="$t('component.provider.homepage')"
+            :disabled="isReadonly"
           />
         </v-col>
       </v-row>
@@ -46,25 +46,25 @@
     />
     <gokb-platform-section
       v-model="allPlatforms"
-      sub-title="Plattformen"
+      :sub-title="$tc('component.platform.label', 2)"
       :disabled="isReadonly"
     />
     <gokb-curatory-group-section
       v-model="allCuratoryGroups"
-      sub-title="Kuratoren"
+      :sub-title="$tc('component.curatoryGroup.label', 2)"
       :disabled="isReadonly"
     />
     <template #buttons>
       <v-spacer />
       <gokb-button
-        v-if="updateUrl"
+        v-if="!isReadonly"
         text
         @click="reload"
       >
-        Abbrechen
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
-        v-if="updateUrl"
+        v-if="!isReadonly"
         default
       >
         {{ updateButtonText }}
@@ -112,13 +112,13 @@
         return !!this.id
       },
       title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.t('component.provider.label')])
+        return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.provider.label')])
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
       },
       updateButtonText () {
-        return this.id ? 'Aktualisieren' : 'Hinzufügen'
+        return this.id ? this.$i18n.t('btn.update') : this.$i18n.t('btn.create')
       },
       isReadonly () {
         return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))

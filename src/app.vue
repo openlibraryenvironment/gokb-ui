@@ -157,16 +157,16 @@
     computed: {
       visibleItems () {
         const menuItems = [
-          { icon: 'create_new_folder', text: this.$i18n.t('header.create.label', [this.$i18n.t('component.package.label')]), route: CREATE_PACKAGE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'library_add', text: this.$i18n.t('header.create.label', [this.$i18n.t('component.title.label')]), route: CREATE_TITLE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'domain', text: this.$i18n.t('header.create.label', [this.$i18n.t('component.provider.label')]), route: ADD_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'create_new_folder', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.package.label')]), route: CREATE_PACKAGE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'library_add', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.title.label')]), route: CREATE_TITLE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'domain', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.provider.label')]), route: ADD_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
           {},
-          { icon: 'folder', text: this.$i18n.t('component.package.plural'), route: SEARCH_PACKAGE_ROUTE },
-          { icon: 'library_books', text: this.$i18n.t('component.title.plural'), route: SEARCH_TITLE_ROUTE },
-          { icon: 'domain', text: this.$i18n.t('component.provider.plural'), route: SEARCH_PROVIDER_ROUTE },
-          { icon: 'rate_review', text: this.$i18n.t('component.review.plural'), route: SEARCH_REVIEW_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'keyboard', text: this.$i18n.t('component.maintenance.plural'), route: SEARCH_MAINTENANCE_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'people', text: this.$i18n.t('component.user.plural'), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
+          { icon: 'folder', text: this.$i18n.tc('component.package.label', 2), route: SEARCH_PACKAGE_ROUTE },
+          { icon: 'library_books', text: this.$i18n.tc('component.title.label', 2), route: SEARCH_TITLE_ROUTE },
+          { icon: 'domain', text: this.$i18n.tc('component.provider.label', 2), route: SEARCH_PROVIDER_ROUTE },
+          { icon: 'rate_review', text: this.$i18n.tc('component.review.label', 2), route: SEARCH_REVIEW_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'keyboard', text: this.$i18n.tc('component.maintenance.label', 2), route: SEARCH_MAINTENANCE_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'people', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
         ]
 
         return menuItems.filter(item => (!accountModel.loggedIn && !item.needsLogin) || (accountModel.loggedIn && (!item.needsRole || accountModel.hasRole(item.needsRole))))
@@ -199,6 +199,7 @@
         try {
           this.typeRoutes = [
             { type: 'Organization', path: '/provider/' },
+            { type: 'Org', path: '/provider/' },
             { type: 'Package', path: '/package/' },
             { type: 'Journal', path: '/title/' },
             { type: 'Book', path: '/title/' },
@@ -206,12 +207,13 @@
           ]
 
           const result = await this.searchServices.search({
-            name: this.globalSearchField,
+            q: this.globalSearchField,
+            es: 'true',
             max: 20
           }, this.cancelToken.token)
 
           if (result?.data?.data) {
-            this.globalSearchItems = result.data.data.map(res => ({ ...res, path: this.typeRoutes.find(({ type: atype }) => atype === res.type)?.path })).filter(path => !!path)
+            this.globalSearchItems = result.data.data.map(res => ({ ...res, path: this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.path })).filter(path => !!path)
           }
         } catch (exception) {
           this.globalSearchItems = []

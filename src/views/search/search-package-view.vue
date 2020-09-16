@@ -25,23 +25,24 @@
       }
     },
     async created () {
-      this.title = 'Pakete'
+      this.title = this.$i18n.tc('component.package.label', 2)
       this.resultActionButtons = [
         {
           component: GokbPackageExportMenu,
           properties: {
             disabled: this.isExportSelectedDisabled,
+            items: this.selectedItems
           }
         },
         {
           icon: 'clear',
-          label: 'Archivieren',
+          label: this.$i18n.t('btn.retire'),
           disabled: 'isDeleteSelectedDisabled',
           action: '_confirmRetireSelectedItems',
         },
         {
           icon: 'delete',
-          label: 'Löschen',
+          label: this.$i18n.t('btn.delete'),
           disabled: 'isDeleteSelectedDisabled',
           action: '_confirmDeleteSelectedItems',
         }
@@ -53,7 +54,7 @@
             name: 'name',
             value: this.name,
             properties: {
-              label: 'Name',
+              label: this.$i18n.t('component.general.name'),
             }
           },
           {
@@ -61,7 +62,7 @@
             name: 'curatoryGroups',
             value: this.curatoryGroupIds,
             properties: {
-              label: 'Kuratoren',
+              label: this.$i18n.tc('component.curatoryGroup.label'),
               multiple: true,
               returnObject: false
             }
@@ -73,7 +74,7 @@
             name: 'provider',
             value: this.providerId,
             properties: {
-              label: 'Provider',
+              label: this.$i18n.tc('component.provider.label'),
 
             }
           },
@@ -82,7 +83,7 @@
             name: 'ids',
             value: this.identifierIds,
             properties: {
-              label: 'Identifikator',
+              label: this.$i18n.tc('component.identifier.label'),
             }
           }
         ],
@@ -96,19 +97,19 @@
       ]
       this.resultHeaders = [
         {
-          text: 'Name',
+          text: this.$i18n.t('component.general.name'),
           align: 'left',
           sortable: false,
           value: 'link'
         },
         {
-          text: 'Provider',
+          text: this.$i18n.tc('component.provider.label'),
           align: 'left',
           sortable: false,
           value: 'providerName'
         },
         {
-          text: 'Plattform',
+          text: this.$i18n.tc('component.platform.label'),
           align: 'left',
           sortable: false,
           value: 'nominalPlatformName'
@@ -123,10 +124,12 @@
           id,
           name,
           provider,
+          uuid,
           nominalPlatform,
           _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
         }) => ({
           id,
+          uuid,
           link: { value: name, route: EDIT_PACKAGE_ROUTE, id: 'id' },
           providerName: provider?.name,
           nominalPlatformName: nominalPlatform?.name,

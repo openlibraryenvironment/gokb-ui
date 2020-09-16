@@ -1,13 +1,13 @@
 <template>
   <gokb-section
     expandable
-    :sub-title="$t('component.general.ids')"
+    :sub-title="$tc('component.identifier.label', 2)"
     :items-total="totalNumberOfItems"
   >
     <gokb-add-item-popup
       v-if="addIdentifierPopupVisible"
       v-model="addIdentifierPopupVisible"
-      :component="{ type: 'GokbIdentifierField', name: 'Identifikator' }"
+      :component="{ type: 'GokbIdentifierField', name: $tc('component.identifier.label') }"
       @add="addNewIdentifier"
     />
     <template #buttons>
@@ -82,7 +82,7 @@
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: undefined,
+        messageToConfirm: { text: undefined, vars: undefined },
       }
     },
     computed: {
@@ -110,7 +110,7 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.t('component.identifier.namespace'), align: 'left', value: 'namespace', sortable: false, width: '15%' },
+          { text: this.$i18n.tc('component.identifier.namespace'), align: 'left', value: 'namespace', sortable: false, width: '15%' },
           { text: this.$i18n.t('component.identifier.value'), align: 'left', value: 'value', sortable: false, width: '100%' },
         ]
       }
@@ -119,15 +119,18 @@
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
+      tempId () {
+        return 'tempId' + Math.random().toString(36).substr(2, 5)
+      },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Jobs wirklich abbrechen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.identifier.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      confirmDeleteItem ({ id }) {
+      confirmDeleteItem ({ id, value }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = 'Wollen Sie diesen Job wirklich abbrechen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.identifier.label'), value] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -143,8 +146,8 @@
       showAddIdentifierPopup () {
         this.addIdentifierPopupVisible = true
       },
-      addNewIdentifier (value) {
-        this.localValue.push(value)
+      addNewIdentifier (id) {
+        this.localValue.push({ id: this.tempId(), value: id.value, namespace: id.namespace.name, isDeletable: true })
       },
       deleteIdentifier (value) {
         this.localValue = this.localValue.filter(v => v !== value)

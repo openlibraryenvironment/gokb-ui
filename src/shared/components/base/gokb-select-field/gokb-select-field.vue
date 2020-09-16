@@ -2,7 +2,8 @@
   <gokb-text-field
     v-if="readonly"
     v-model="localLabel"
-    readonly
+    :label="label"
+    disabled
   />
   <v-select
     v-else
@@ -12,6 +13,7 @@
     :placeholder="placeholder"
     item-text="name"
     item-value="id"
+    min-width="250"
     clearable
     :return-object="returnObject"
   />
@@ -24,6 +26,7 @@
   export default {
     name: 'GokbSelectField',
     extends: BaseComponent,
+    label: '',
     entityName: undefined,
     props: {
       value: {
@@ -39,7 +42,7 @@
       label: {
         type: String,
         required: false,
-        default: '',
+        default: ''
       },
       multiple: {
         type: Boolean,

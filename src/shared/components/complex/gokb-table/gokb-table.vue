@@ -7,7 +7,7 @@
       :options="options"
       :server-items-length="totalNumberOfItems"
       hide-default-footer
-      item-key="id"
+      :item-key="itemKey"
       :show-select="showSelect"
       dense
     >
@@ -28,26 +28,28 @@
       <template #item.link="{ item }">
         <router-link
           :style="{ color: '#f2994a' }"
-          :to="{ name: item.link.route, params: { [item.link.id]: item[item.link.id] } }"
+          :to="{ name: item.link.route, params: { 'id': item[item.link.id] } }"
         >
           {{ item.link.value }}
         </router-link>
       </template>
       <template #item.popup="{ item }">
         <a
-          href="#"
-          @click="editItemPopupVisible = true"
+          :href="$route.query.page"
+          @click="editItemPopupVisible = item.id"
         >
           {{ item.popup.value }}
         </a>
 
         <component
           :is="item.popup.type"
-          v-if="editItemPopupVisible"
+          v-if="editItemPopupVisible == item.id"
           :key="`${item.popup.label}_${item.id}`"
           v-model="editItemPopupVisible"
           :items="items"
+          :pprops="item.popup.otherProps"
           :selected="item"
+          @edit="editItem(item)"
         />
       </template>
       <template #item.action="{ item }">
@@ -55,6 +57,7 @@
           v-if="showSelect && item.isRetireable !== undefined"
           class="mr-2"
           :disabled="disabled || !item.isRetireable"
+          :title="$t('btn.retire')"
           small
           @click="retireItem(item)"
         >
@@ -63,6 +66,7 @@
         <v-icon
           v-if="showSelect && item.isDeletable !== undefined"
           :disabled="disabled || !item.isDeletable"
+          :title="$t('btn.delete')"
           small
           @click="deleteItem(item)"
         >
@@ -84,10 +88,11 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
+  import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
 
   export default {
     name: 'GokbTable',
-    components: { GokbEditJobPopup },
+    components: { GokbEditJobPopup, GokbAddTitlePopup },
     extends: BaseComponent,
     props: {
       disabled: {
@@ -107,6 +112,10 @@
       items: {
         type: Array,
         default: undefined
+      },
+      itemKey: {
+        type: String,
+        default: 'id'
       },
       label: {
         type: String,
@@ -162,8 +171,14 @@
       retireItem (item) {
         this.$emit('retire-item', item)
       },
+      editItem (item) {
+        this.$emit('edit', item)
+      },
       closeEdit () {
         this.editItemPopupVisible = false
+      },
+      checkEditItemPopupVisible (oid) {
+        return this.editItemPopupVisible === oid
       }
     }
   }

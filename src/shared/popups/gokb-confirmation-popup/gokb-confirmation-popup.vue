@@ -1,12 +1,23 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    title="Bestätigung"
+    :title="$t('popups.confirm.label')"
     persistent
     @submit="submit"
   >
     <v-sheet>
-      {{ message }}
+      <i18n
+        v-if="message.vars"
+        :path="message.text"
+      >
+        <template v-slot:0>
+          <b>{{ message.vars[0] }}</b>
+        </template>
+        <template v-slot:1>
+          <b>{{ message.vars[1] }}</b>
+        </template>
+      </i18n>
+      <span v-else> {{ message.text }} </span>
     </v-sheet>
     <template #buttons>
       <v-spacer />
@@ -14,12 +25,12 @@
         text
         @click="close"
       >
-        Abbrechen
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         default
       >
-        Ok
+        {{ $t('btn.confirm') }}
       </gokb-button>
     </template>
   </gokb-dialog>
@@ -38,7 +49,7 @@
         default: false
       },
       message: {
-        type: String,
+        type: [Object, String],
         required: true,
         default: ''
       },

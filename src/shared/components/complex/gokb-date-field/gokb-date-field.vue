@@ -24,8 +24,9 @@
   <v-text-field
     v-else
     v-model="localDate"
+    class="gokb-date-field-disabled"
     v-bind="$props"
-    readonly
+    disabled
   />
 </template>
 

@@ -22,7 +22,7 @@
       this.resultActionButtons = [
         {
           icon: 'clear',
-          label: 'Schließen',
+          label: this.$i18n.t('btn.close'),
           disabled: 'isNothingSelected',
           action: '_confirmCloseSelectedItems',
         }
@@ -34,47 +34,32 @@
             type: 'GokbTextField',
             name: 'cause',
             properties: {
-              label: 'Ursache'
+              label: this.$i18n.t('component.review.cause')
             }
           },
           {
-            type: 'GokbSearchUserField',
-            name: 'raisedby',
+            type: 'GokbCuratoryGroupField',
+            name: 'curatoryGroups',
             properties: {
-              label: 'Ersteller',
-              multiple: true,
-            },
+              label: this.$i18n.tc('component.curatoryGroup.label'),
+              returnObject: false
+            }
           }
         ],
         [
           {
             type: 'GokbSelectField',
             properties: {
-              label: 'Komponente'
+              label: this.$i18n.t('component.review.componentToReview')
             }
-          },
-          {
-            type: 'GokbSearchUserField',
-            name: 'allocatedto',
-            properties: {
-              label: 'Reviewer',
-              multiple: true,
-            },
           }
         ],
         [
           {
-            type: 'GokbCuratoryGroupField',
-            name: 'curatoryGroups',
-            properties: {
-              returnObject: false
-            }
-          },
-          {
             type: 'GokbCheckboxField',
             name: 'status',
             properties: {
-              label: 'Abgeschlossene Anzeigen',
+              label: this.$i18n.t('component.review.showClosed'),
               items: this.allItems
             }
           }
@@ -82,28 +67,16 @@
       ]
       this.resultHeaders = [
         {
-          text: 'Titel/Name',
+          text: this.$i18n.t('component.review.request'),
           align: 'left',
           sortable: false,
           value: 'link'
         },
-        // {
-        //   text: 'Typ',
-        //   align: 'left',
-        //   sortable: false,
-        //   value: 'Typ'
-        // },
         {
-          text: 'Ersteller',
+          text: this.$i18n.t('component.review.type'),
           align: 'left',
           sortable: false,
-          value: 'raisedBy'
-        },
-        {
-          text: 'Reviewer',
-          align: 'left',
-          sortable: false,
-          value: 'allocatedTo'
+          value: 'stdDesc'
         },
       ]
       this.searchServicesUrl = 'rest/reviews'
@@ -111,10 +84,11 @@
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({ id, reviewRequest, raisedBy, allocatedTo, _links: { update: { href: updateUrl } } }) => ({
+        return data.map(({ id, reviewRequest, raisedBy, allocatedTo, stdDesc, _links: { update: { href: updateUrl } } }) => ({
           id,
           link: { value: reviewRequest, /* route: EDIT_USER_ROUTE , */ id: 'id' },
           raisedBy: raisedBy?.name,
+          stdDesc: stdDesc?.value,
           allocatedTo: allocatedTo?.name,
           updateUrl
         }))

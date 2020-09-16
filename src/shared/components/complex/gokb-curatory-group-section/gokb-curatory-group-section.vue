@@ -7,7 +7,7 @@
     <gokb-add-item-popup
       v-if="addCuratoryGroupPopupVisible"
       v-model="addCuratoryGroupPopupVisible"
-      :component="{ type: 'GokbCuratoryGroupField', name: 'Kuratorengruppe', properties: { returnObject: true } }"
+      :component="{ type: 'GokbCuratoryGroupField', name: $tc('component.curatoryGroup.label'), properties: { returnObject: true } }"
       @add="addNewCuratoryGroup"
     />
     <template #buttons>
@@ -16,7 +16,7 @@
         icon-id="add"
         @click="showAddNewCuratoryGroup"
       >
-        Hinzufügen
+        {{ $t('btn.add') }}
       </gokb-button>
       <gokb-button
         v-if="isEditable"
@@ -25,7 +25,7 @@
         :disabled="isDeleteSelectedDisabled"
         @click="confirmDeleteSelectedItems"
       >
-        Löschen
+        {{ $t('btn.delete') }}
       </gokb-button>
     </template>
     <gokb-confirmation-popup
@@ -51,10 +51,6 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
 
   const ROWS_PER_PAGE = 10
-
-  const CURATORY_GROUPS_TABLE_HEADERS = [
-    { text: 'Gruppe', align: 'left', value: 'name', sortable: false, width: '100%' },
-  ]
 
   export default {
     name: 'GokbCuratoryGroupSection',
@@ -95,7 +91,7 @@
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: undefined,
+        messageToConfirm: { text: undefined, vars: undefined },
       }
     },
     computed: {
@@ -120,10 +116,10 @@
       },
       isEditable () {
         return !this.disabled
+      },
+      curatoryGroupsTableHeaders () {
+        return [{ text: this.$i18n.t('component.general.name'), align: 'left', value: 'name', sortable: false, width: '100%' }]
       }
-    },
-    created () {
-      this.curatoryGroupsTableHeaders = CURATORY_GROUPS_TABLE_HEADERS
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -131,13 +127,13 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedCuratoryGroups'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedCuratoryGroups.length, this.$i18n.tc('component.curatoryGroup.label', this.selectedCuratoryGroups.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      confirmDeleteItem ({ id }) {
+      confirmDeleteItem ({ id, name }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: ['', name] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },

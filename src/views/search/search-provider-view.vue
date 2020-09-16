@@ -1,7 +1,7 @@
 <script>
   import BaseSearch from './base-search-view'
   import GokbIdentifierField from '@/shared/components/simple/gokb-search-identifier-field'
-  import { EDIT_PROVIDER_ROUTE, ADD_PROVIDER_ROUTE } from '@/router/route-paths'
+  import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
   import providerServices from '@/shared/services/provider-services'
 
   export default {
@@ -16,22 +16,17 @@
       }
     },
     async created () {
-      this.title = this.$i18n.t('component.provider.plural')
+      this.title = this.$i18n.tc('component.provider.label', 2)
       this.resultActionButtons = [
         {
-          icon: 'add',
-          label: 'Hinzufügen',
-          route: ADD_PROVIDER_ROUTE,
-        },
-        {
           icon: 'clear',
-          label: 'Archivieren',
+          label: this.$i18n.t('btn.retire'),
           disabled: 'isNothingSelected',
           action: '_confirmArchiveSelectedItems',
         },
         {
           icon: 'delete',
-          label: 'Löschen',
+          label: this.$i18n.t('btn.delete'),
           disabled: 'isNothingSelected',
           action: '_confirmDeleteSelectedItems',
         },
@@ -43,7 +38,7 @@
             name: 'name',
             value: this.name,
             properties: {
-              label: 'Name'
+              label: this.$i18n.t('component.general.name')
             }
           },
           {
@@ -52,7 +47,7 @@
             value: this.identifier,
             properties: {
               entity: 'Org', // means Provider ;-)
-              label: 'Identifikator'
+              label: this.$i18n.tc('component.identifier.label')
             }
           }
         ],
@@ -62,7 +57,7 @@
             name: 'curatoryGroups',
             value: this.curatoryGroupIds,
             properties: {
-              label: 'Kuratoren',
+              label: this.$i18n.tc('component.curatoryGroup.label'),
               multiple: true,
               returnObject: false
             }
@@ -71,7 +66,7 @@
       ]
       this.resultHeaders = [
         {
-          text: 'Name',
+          text: this.$i18n.t('component.general.name'),
           align: 'left',
           sortable: false,
           value: 'link'
@@ -97,13 +92,13 @@
       },
       _confirmArchiveSelectedItems () {
         this.actionToConfirm = '_archiveSelectedItems'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich archivieren?'
+        this.messageToConfirm = this.$i18n.t('popups.confirm.retire')
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       _confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.messageToConfirm = this.$i18n.t('popups.confirm.delete')
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

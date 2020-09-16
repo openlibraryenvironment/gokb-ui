@@ -20,41 +20,39 @@
           editable
           :step="1"
         >
-          Allgemein
+          {{ $t('component.package.navigation.step1') }}
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
           editable
           :step="2"
         >
-          Organisation und Plattform
+          {{ $t('component.package.navigation.step2') }}
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
           editable
           :step="3"
         >
-          Titel im Paket
+          {{ $t('component.package.navigation.step3') }}
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
           editable
           :step="4"
         >
-          Zusammenfassung
+          {{ $t('component.package.navigation.step4') }}
         </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
         <v-stepper-content :step="1">
           <gokb-section
-            title="Allgemein"
-            sub-title="Paket"
+            :title="$t('component.general.general')"
           >
             <gokb-name-field
               v-model="allNames"
               :disabled="isReadonly"
-              label="Titel"
             />
             <gokb-search-source-field
               v-model="packageItem.source"
@@ -62,36 +60,37 @@
             />
             <gokb-url-field
               v-model="packageItem.descriptionUrl"
-              :readonly="isReadonly"
+              :disabled="isReadonly"
             />
             <gokb-textarea-field
               v-model="packageItem.description"
-              label="Beschreibung"
-              :readonly="isReadonly"
+              :label="$t('component.package.description')"
+              :disabled="isReadonly"
             />
             <gokb-scope-field
               v-model="packageItem.scope"
+              :label="$t('component.package.scope')"
               :readonly="isReadonly"
             />
             <gokb-radiobutton-group v-model="packageItem.global">
               <gokb-radiobutton-field
                 value="Consortium"
-                label="Konsortial"
+                :label="$t('component.package.global.Consortial')"
                 :readonly="isReadonly"
               />
               <gokb-radiobutton-field
                 value="Global"
-                label="Global"
+                :label="$t('component.package.global.Global')"
                 :readonly="isReadonly"
               />
               <gokb-radiobutton-field
                 value="Regional"
-                label="Regional"
+                :label="$t('component.package.global.Regional')"
                 :readonly="isReadonly"
               />
               <gokb-radiobutton-field
                 value="Other"
-                label="Unbekannt"
+                :label="$t('component.package.global.Unknown')"
                 :readonly="isReadonly"
               />
             </gokb-radiobutton-group>
@@ -99,22 +98,43 @@
               <gokb-checkbox-field
                 v-model="packageItem.consistent"
                 class="ml-3"
-                label="Paketinhalt ist konsistent"
+                :label="$t('component.package.consistent')"
                 :readonly="isReadonly"
               />
               <gokb-checkbox-field
                 v-model="packageItem.breakable"
                 class="ml-3"
-                label="Teilbar für Lizenznehmer"
+                :label="$t('component.package.breakable')"
                 :readonly="isReadonly"
               />
               <gokb-checkbox-field
                 v-model="packageItem.fixed"
                 class="ml-3"
-                label="Paket ist unveränderbar"
+                :label="$t('component.package.fixed')"
                 :readonly="isReadonly"
               />
             </v-row>
+          </gokb-section>
+        </v-stepper-content>
+
+        <v-stepper-content :step="2">
+          <gokb-section
+            :sub-title="$t('component.package.provider')"
+          >
+            <gokb-search-organisation-field
+              v-model="packageItem.provider"
+              :items="providerSelection"
+              :readonly="isReadonly"
+              return-object
+            />
+          </gokb-section>
+          <gokb-section :sub-title="$t('component.package.platform')">
+            <gokb-search-platform-field
+              v-model="packageItem.nominalPlatform"
+              :items="platformSelection"
+              :readonly="isReadonly"
+              return-object
+            />
           </gokb-section>
           <gokb-identifier-section
             v-model="packageItem.ids"
@@ -126,112 +146,21 @@
           />
         </v-stepper-content>
 
-        <v-stepper-content :step="2">
-          <gokb-section
-            sub-title="Provider"
-          >
-            <gokb-search-organisation-field
-              v-model="packageItem.provider"
-              :items="providerSelection"
-              :readonly="isReadonly"
-              label="Name"
-              return-object
-            />
-          </gokb-section>
-          <gokb-section sub-title="Plattform">
-            <gokb-search-platform-field
-              v-model="packageItem.nominalPlatform"
-              :items="platformSelection"
-              :readonly="isReadonly"
-              label="Name"
-              return-object
-            />
-          </gokb-section>
-        </v-stepper-content>
-
         <v-stepper-content :step="3">
-          <gokb-kbart-import-popup
-            v-if="kbartImportPopupVisible"
-            v-model="kbartImportPopupVisible"
-            @add="addNewTitle"
+          <gokb-tipps-section
+            :pkg="parseInt(id)"
+            :platform="packageItem.nominalPlatform"
+            :disabled="isReadonly"
+            @kbart="setKbart"
           />
-          <gokb-add-title-popup
-            v-if="addTitlePopupVisible"
-            v-model="addTitlePopupVisible"
-            :title-type="addTitleType"
-            @add="addNewTitle"
-          />
-          <gokb-section sub-title="Titel">
-            <template
-              v-if="!isReadonly"
-              #buttons
-            >
-              <gokb-button
-                class="mr-4"
-                @click="showKbartImportPopup"
-              >
-                KBart Import
-              </gokb-button>
-              <v-menu
-                offset-y
-                open-on-hover
-              >
-                <template #activator="{ on }">
-                  <v-btn
-                    class="mr-4"
-                    color="primary"
-                    v-on="on"
-                  >
-                    <v-icon>add</v-icon>
-                    Hinzufügen
-                    <v-icon>keyboard_arrow_down</v-icon>
-                  </v-btn>
-                </template>
-                <v-list>
-                  <template v-for="type in packageTypes">
-                    <v-list-item
-                      :key="type.text"
-                      @click="showAddNewTitlePopup(type)"
-                    >
-                      <v-list-item-title>
-                        {{ type.text }}
-                      </v-list-item-title>
-                    </v-list-item>
-                  </template>
-                </v-list>
-              </v-menu>
-
-              <gokb-button
-                icon-id="delete"
-                @click="confirmDeleteSelectedItems"
-              >
-                Löschen
-              </gokb-button>
-            </template>
-            <gokb-confirmation-popup
-              v-model="confirmationPopUpVisible"
-              :message="messageToConfirm"
-              @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-            />
-            <gokb-table
-              :headers="titlesHeader"
-              :items="titles"
-              :selected-items="selectedTitles"
-              :total-number-of-items="totalNumberOfTitles"
-              :options.sync="titlesOptions"
-              @selected-items="selectedTitles = $event"
-              @delete-item="confirmDeleteItem"
-            />
-          </gokb-section>
         </v-stepper-content>
 
         <v-stepper-content :step="4">
-          <gokb-section sub-title="Zusammenfassung">
+          <gokb-section :sub-title="$t('component.package.navigation.step4')">
             <v-row>
               <v-col>
                 <gokb-name-field
                   v-model="allNames"
-                  label="Titel"
                   readonly
                 />
               </v-col>
@@ -240,8 +169,8 @@
               <v-col>
                 <gokb-text-field
                   v-model="packageItem.description"
-                  label="Beschreibung"
-                  readonly
+                  :label="$t('component.package.description')"
+                  disabled
                 />
               </v-col>
             </v-row>
@@ -249,27 +178,27 @@
               <v-col>
                 <gokb-text-field
                   v-model="platformName"
-                  label="Plattform"
-                  readonly
+                  :label="$t('component.package.platform')"
+                  disabled
                 />
               </v-col>
               <v-col>
                 <gokb-number-field
                   :value="totalNumberOfTitles"
-                  label="Anzahl Titel im Paket"
-                  readonly
+                  :label="$tc('component.tipp.label', 2)"
+                  disabled
                 />
               </v-col>
             </v-row>
             <gokb-text-field
               v-model="providerName"
-              label="Organisation"
-              readonly
+              :label="$t('component.package.provider')"
+              disabled
             />
           </gokb-section>
           <gokb-section
             v-if="maintenance"
-            sub-title="Pflege"
+            :sub-title="$tc('component.maintenance.label', 2)"
           >
             <gokb-maintenance-cycle-field v-model="maintenanceCycle" />
             <gokb-date-field
@@ -281,7 +210,7 @@
           <gokb-curatory-group-section
             v-model="allCuratoryGroups"
             :disabled="isReadonly"
-            sub-title="Kuratorengruppen"
+            :sub-title="$tc('component.curatoryGroup.label', 2)"
           />
         </v-stepper-content>
       </v-stepper-items>
@@ -293,13 +222,13 @@
         text
         @click="reload"
       >
-        Abbrechen
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         v-show="step !== 1"
         @click="go2PreviousStep"
       >
-        Zurück
+        {{ $t('btn.back') }}
       </gokb-button>
       <v-spacer />
       <gokb-button
@@ -308,11 +237,11 @@
         :disabled="!valid"
         @click="go2NextStep"
       >
-        Weiter
+        {{ $t('btn.next') }}
       </gokb-button>
       <!-- without key, submit is executed on previous page -->
       <gokb-button
-        v-else
+        v-else-if="!isReadonly"
         key="add"
         :disabled="!valid"
         default
@@ -333,15 +262,14 @@
   import GokbUrlField from '@/shared/components/simple/gokb-url-field'
   import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
   import GokbMaintenanceCycleField from '@/shared/components/simple/gokb-maintenance-cycle-field'
-  import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
-  import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
   import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
-  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
   import { HOME_ROUTE } from '@/router/route-paths'
   import packageServices from '@/shared/services/package-services'
+  import kbartServices from '@/shared/services/kbart-services'
+  import tokenModel from '@/shared/models/token-model'
 
   const ROWS_PER_PAGE = 10
 
@@ -370,9 +298,6 @@
       GokbScopeField,
       GokbUrlField,
       GokbSearchSourceField,
-      GokbAddTitlePopup,
-      GokbKbartImportPopup,
-      GokbConfirmationPopup,
       GokbCuratoryGroupSection,
       GokbMaintenanceCycleField,
       GokbAlternateNamesSection
@@ -380,7 +305,7 @@
     extends: BaseComponent,
     props: {
       id: {
-        type: String,
+        type: [Number, String],
         required: false,
         default: undefined
       },
@@ -393,7 +318,6 @@
     data () {
       return {
         valid: undefined,
-        kbartImportPopupVisible: false,
         step: 1,
         version: undefined,
         packageItem: {
@@ -417,8 +341,7 @@
           { id: 'journal', text: 'Journal' },
           { id: 'mixed', text: 'Gemischt' },
         ],
-        addTitlePopupVisible: false,
-        successMsg: false,
+        successMsg: undefined,
         titlesHeader: TITLES_HEADER,
         titlesOptions: {
           page: 1,
@@ -429,19 +352,15 @@
         selectedTitles: [],
         allAlternateNames: [],
         allNames: { name: undefined, alts: [] },
-        titles: [],
         titleCount: 0,
         maintenanceCycle: undefined,
-        confirmationPopUpVisible: false,
-        actionToConfirm: undefined,
-        parameterToConfirm: undefined,
-        messageToConfirm: undefined,
         updateUrl: undefined,
+        kbart: undefined
       }
     },
     computed: {
       title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.t('component.package.label')])
+        return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.package.label')])
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
@@ -497,40 +416,11 @@
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
-      confirmDeleteSelectedItems () {
-        this.actionToConfirm = '_deleteSelectedCuratoryGroups'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
-        this.parameterToConfirm = undefined
-        this.confirmationPopUpVisible = true
-      },
-      confirmDeleteItem ({ id }) {
-        this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = 'Wollen Sie das ausgewählte Element wirklich löschen?'
-        this.parameterToConfirm = id
-        this.confirmationPopUpVisible = true
-      },
-      _deleteSelectedTitles () {
-        this.titles = this.titles.filter(({ id }) => !this.selectedTitles
-          .find(({ id: selectedId }) => id === selectedId))
-        this.selectedTitles = []
-      },
-      _deleteItem (idToDelete) {
-        this.titles = this.titles.filter(({ id }) => id !== idToDelete)
-        this.selectedTitles = this.selectedTitles.filter(({ id }) => id !== idToDelete)
-      },
-      showAddNewTitlePopup (titleType) {
-        this.addTitleType = titleType
-        this.addTitlePopupVisible = true
-      },
-      showKbartImportPopup () {
-        this.kbartImportPopupVisible = true
-      },
-      addNewTitle (title) {
-        !this.titles.find(({ id: idInAll }) => title.id === idInAll) &&
-          this.titles.push(title)
-      },
       cancelPackage () {
         this.$router.push(HOME_ROUTE)
+      },
+      setKbart (options) {
+        this.kbart = options
       },
       async createPackage (form) {
         const valid = form.validate()
@@ -546,14 +436,43 @@
             provider: this.packageItem.provider?.id,
             ids: this.packageItem.ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace }))
           }
-          await this.catchError({
+          const response = await this.catchError({
             promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
             instance: this
           })
 
-          if (newPackage.status === 200) {
-            this.successMsg = true
-            this.reload()
+          if (response.status < 400) {
+            if (this.kbart && response.data.pkgId) {
+              const pars = {
+                addOnly: this.kbart.addOnly,
+                authToken: tokenModel.getToken(),
+                processOption: 'kbart',
+                titleIdNamespace: this.kbart.selectedNamespace,
+                pkgNominalPlatform: this.packageItem.nominalPlatform.id,
+                pkgId: response.data.pkgId,
+                pkgTitle: this.packageItem.name
+              }
+
+              if (response.data.updateToken) {
+                pars.updateToken = response.data.updateToken
+              }
+
+              const ygorResponse = await this.catchError({
+                promise: kbartServices.upload(this.kbart.selectedFile, pars, this.cancelToken.token),
+                instance: this
+              })
+
+              if (ygorResponse.status === 200) {
+                this.successMsg = this.isEdit
+                  ? (this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart'))
+                  : (this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart'))
+              }
+            } else {
+              this.successMsg = this.isEdit
+                ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name])
+                : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
+              this.reload()
+            }
           }
         }
       },

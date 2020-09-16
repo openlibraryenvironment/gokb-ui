@@ -15,16 +15,16 @@
       }
     },
     created () {
-      this.title = 'Benutzer'
+      this.title = this.$i18n.tc('component.user.label', 2)
       this.resultActionButtons = [
         {
           icon: 'add',
-          label: 'Hinzufügen',
+          label: this.$i18n.t('btn.add'),
           route: ADD_USER_ROUTE,
         },
         {
           icon: 'cancel',
-          label: 'Deaktivieren',
+          label: this.$i18n.t('btn.deactivate'),
           disabled: 'isNothingSelected',
           action: '_confirmDeactivateSelectedItems',
         }
@@ -38,6 +38,7 @@
             value: this.name,
             properties: {
               hideIcon: true,
+              label: this.$i18n.t('component.user.username'),
               rules: []
             }
           },
@@ -46,7 +47,7 @@
             name: 'curatoryGroupId',
             value: this.curatoryGroupIds,
             properties: {
-              label: 'Gruppen',
+              label: this.$i18n.tc('component.curatoryGroup.label', 2),
               multiple: true,
             }
           }
@@ -57,7 +58,7 @@
             name: 'roleId',
             value: this.roleIds,
             properties: {
-              label: 'Rollen',
+              label: this.$i18n.tc('component.user.role.label', 2),
               multiple: true,
             }
           },
@@ -70,27 +71,48 @@
       ]
       this.resultHeaders = [
         {
-          text: 'Benutzername',
+          text: this.$i18n.t('component.user.username'),
           align: 'left',
           sortable: false,
           value: 'link'
         },
         {
-          text: 'E-Mail',
+          text: 'Enabled',
           align: 'left',
           sortable: false,
-          value: 'email'
+          value: 'enabled'
         },
+        {
+          text: 'Contributor',
+          align: 'left',
+          sortable: false,
+          value: 'contributor'
+        },
+        {
+          text: 'Editor',
+          align: 'left',
+          sortable: false,
+          value: 'editor'
+        },
+        {
+          text: 'Admin',
+          align: 'left',
+          sortable: false,
+          value: 'admin'
+        }
       ]
       this.searchServicesUrl = 'rest/users'
-      this.searchServiceIncludes = 'id,username,email'
+      this.searchServiceIncludes = 'id,username'
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({ id, username, email, _links: { update: { href: updateUrl } } }) => ({
+        return data.map(({ id, username, roles, enabled, _links: { update: { href: updateUrl } } }) => ({
           id,
           link: { value: username, route: EDIT_USER_ROUTE, id: 'id' },
-          email,
+          enabled: this.$i18n.t('default.' + enabled),
+          contributor: roles.filter(role => role.authority === 'ROLE_CONTRIBUTOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
+          editor: roles.filter(role => role.authority === 'ROLE_EDITOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
+          admin: roles.filter(role => role.authority === 'ROLE_ADMIN').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
           updateUrl
         }))
       },

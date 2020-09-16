@@ -4,27 +4,28 @@
     title="KBART Import"
     @submit="importKbart"
   >
-    <gokb-section sub-title="Optionen">
+    <gokb-section>
       <gokb-file-input-field
-        v-model="selectedFile"
+        v-model="options.selectedFile"
+        :label="$t('kbart.file.label')"
         :disabled="importRunning"
       />
       <gokb-namespace-field
-        v-model="selectedNamespace"
-        label="Titel-ID Namensraum"
+        v-model="options.selectedNamespace"
+        :label="$t('kbart.propId.label')"
       />
       <gokb-checkbox-field
-        v-model="considerAdditionalIdentifier"
-        label="Weitere Identifier sind zu beachten"
+        v-model="options.addOnly"
+        :label="$t('kbart.addOnly')"
       />
-      <v-progress-linear
+      <!-- <v-progress-linear
         height="25"
         :value="completion"
       >
         <template #default="{ value: v }">
           <strong>{{ v }}%</strong>
         </template>
-      </v-progress-linear>
+      </v-progress-linear> -->
     </gokb-section>
     <template #buttons>
       <v-spacer />
@@ -32,14 +33,13 @@
         text
         @click="close"
       >
-        Abbrechen
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         default
-        :disabled="!selectedFile || importRunning"
-        @click="doImport"
+        :disabled="!options.selectedFile || importRunning"
       >
-        Import
+        {{ $t('btn.confirm') }}
       </gokb-button>
     </template>
   </gokb-dialog>
@@ -65,10 +65,15 @@
       return {
         error: undefined,
         selectedNamespace: undefined,
-        considerAdditionalIdentifier: undefined,
+        useProprietaryNamespace: false,
         importRunning: undefined,
         selectedFile: undefined,
         completion: undefined,
+        options: {
+          selectedFile: undefined,
+          selectedNamespace: undefined,
+          addOnly: false
+        }
       }
     },
     computed: {
@@ -86,7 +91,7 @@
         this.localValue = false
       },
       importKbart () {
-        console.log('do import')
+        this.$emit('kbart', this.options)
         this.close()
       },
       doImport () {
@@ -96,7 +101,6 @@
         this.readerForImport = new FileReader()
         this.readerForImport.onload = this._importCompleted
         this.readerForImport.onprogress = this._importProgress
-        this.readerForImport.readAsText(this.selectedFile)
       },
       async _importCompleted () {
         const csvDataRows = this.readerForImport.result.split(/\r?\n/)

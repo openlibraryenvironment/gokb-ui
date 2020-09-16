@@ -6,7 +6,7 @@
     extends: GokbSearchField,
     computed: {
       label () {
-        return this.$i18n.t('component.general.source')
+        return this.$i18n.tc('component.source.label')
       }
     },
     created () {

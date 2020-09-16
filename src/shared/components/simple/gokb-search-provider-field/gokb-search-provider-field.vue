@@ -8,7 +8,7 @@
       label: {
         type: String,
         required: false,
-        default: 'Provider'
+        default: ''
       }
     },
     created () {

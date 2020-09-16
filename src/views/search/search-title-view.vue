@@ -20,7 +20,7 @@
       }
     },
     async created () {
-      this.title = this.$i18n.t('component.title.plural')
+      this.title = this.$i18n.tc('component.title.label', 2)
       this.resultActionButtons = [
         {
           icon: 'clear',
@@ -51,7 +51,7 @@
             name: 'ids',
             value: this.identifierIds,
             properties: {
-              label: this.$i18n.t('component.identifier.label')
+              label: this.$i18n.tc('component.identifier.label')
             }
           }
         ],
@@ -68,10 +68,10 @@
               label: this.$i18n.t('component.title.type.label'),
             },
             items: [
-              { name: this.$i18n.t('component.title.type.Journal'), id: 'journal' },
-              { name: this.$i18n.t('component.title.type.Book'), id: 'book' },
-              { name: this.$i18n.t('component.title.type.Database'), id: 'database' },
-              { name: this.$i18n.t('component.title.type.Other'), id: 'other' },
+              { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
+              { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
+              { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
+              { name: this.$i18n.tc('component.title.type.Other'), id: 'other' },
             ]
           }
         ],
@@ -118,7 +118,7 @@
           _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
         }) => ({
           id,
-          type: this.$i18n.t('component.title.type.' + type),
+          type: this.$i18n.tc('component.title.type.' + type),
           startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
           isDeletable: !!deleteUrl,

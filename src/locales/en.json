@@ -1,0 +1,243 @@
+{
+  "btn": {
+    "edit": "Edit",
+    "submit": "Submit",
+    "update": "Update",
+    "add": "Add New",
+    "create": "Create",
+    "close": "Close",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "retire": "Retire",
+    "deactivate": "Deactivate",
+    "delete": "Delete",
+    "search": "Search",
+    "reset": "Reset",
+    "back": "Back",
+    "next": "Next",
+    "prev": "Previous"
+  },
+  "default": {
+    "true": "Yes",
+    "false": "No"
+  },
+  "popups": {
+    "name": {
+      "keepCurrent": "Keep current name as variant"
+    },
+    "confirm": {
+      "label": "Confirm",
+      "retire": {
+        "generic": "Are you sure you want to ARCHIVE the selected items?",
+        "specific": "Are you sure you want to archive {0} {1}?",
+        "list": "Are you sure you want to archive {0} {1} for this list?"
+      },
+      "delete": {
+        "generic": "Are you sure you want to DELETE the selected items?",
+        "specific": "Are you sure you want to delete {0} {1}?",
+        "list": "Are you sure you want to remove {0} {1} from this list?"
+      }
+    },
+    "login": {
+      "automatic": "Stay logged in"
+    }
+  },
+  "job": {
+    "finished": "Finished",
+    "description": "Description",
+    "waiting": "Waiting",
+    "messages": "Messages",
+    "status": "Status",
+    "startTime": "Start",
+    "endTime": "End"
+  },
+  "kbart": {
+    "file": {
+      "label": "File"
+    },
+    "propId": {
+      "label": "Namespace for title_id values"
+    },
+    "addOnly": "Partial Update"
+  },
+  "profile": {
+    "label": "Profile",
+    "currentPass": {
+      "label": "Current Password",
+      "missing": "Please enter your current password"
+    },
+    "newPass": {
+      "label": "New Password",
+      "missing": "Please enter the new password"
+    },
+    "newPassConfirm": {
+      "label": "New Password (Confirmation)",
+      "nomatch": "The new passwords do not match"
+    },
+    "delete": {
+      "label": "Delete Profile",
+      "confirm": "Are you sure you want to delete your profile? This can not be reverted!"
+    }
+  },
+  "success": {
+    "add": "Successfully added {0} {1}!",
+    "create": "Successfully created {0} {1}!",
+    "kbart": "The KBART Import has started. You may check its status via your dashboard.",
+    "update": "Successfully edited {0} {1}!",
+    "retire": "Successfully archived {0} {1}!",
+    "delete": "Successfully deleted {0} {1}!"
+  },
+  "header": {
+    "edit": {
+      "label": "Edit {0}"
+    },
+    "create": {
+      "label": "Create {0}"
+    },
+    "show": {
+      "label": "{0} details"
+    },
+    "add": {
+      "label": "Add {0}"
+    },
+    "welcome": "Welcome to GOKb",
+    "dashboard": "Dashboard",
+    "search": "Search",
+    "results": "Results"
+  },
+  "welcome": {
+    "title": "Welcome to GOKb",
+    "p1": ""
+  },
+  "search": {
+    "label": "Search",
+    "global": {
+      "placeholder": "Titles, Packages, Providers"
+    },
+    "results": {
+      "label": "Results",
+      "empty": "No Results"
+    }
+  },
+  "component": {
+    "label": "Component",
+    "title": {
+      "label": "Title | Titles",
+      "type": {
+        "label": "Type",
+        "Journal": "Journal | Journals",
+        "Book": "Monograph | Monographs",
+        "Database": "Database | Databases",
+        "Other": "Other | Other"
+      },
+      "publishStart": "Publishing start",
+      "publishedPeriod": "Publishing Period",
+      "publishedFrom": "Published From",
+      "publishedTo": "Published To",
+      "volumeNumber": "Volume no.",
+      "editionNumber": "Edition no.",
+      "editionStatement": "Edition Statement",
+      "firstPublishedInPrint": "First Published (Print)",
+      "firstPublishedOnline": "First Published (Online)"
+    },
+    "package": {
+      "label": "Package | Packages",
+      "navigation": {
+        "step1": "General",
+        "step2": "Linked Objects",
+        "step3": "Package Titles",
+        "step4": "Summary"
+      },
+      "description": "Description",
+      "scope": "Scope",
+      "consistent": "Content is consistent",
+      "breakable": "Content may be split",
+      "fixed": "Content is fixed",
+      "provider": "Provider",
+      "platform": "Platform",
+      "global": {
+        "Global": "Global",
+        "Consortial": "Consortial",
+        "Regional": "Regional",
+        "Unknown": "Unknown"
+      }
+    },
+    "tipp": {
+      "label": "Package Title | Package Titles",
+      "url": "Access URL",
+      "access": "Access",
+      "accessPeriod": "Access Period",
+      "accessStartDate": "Access Start Date",
+      "accessEndDate": "Access End Date",
+      "coverage": {
+        "label": "Coverage",
+        "depth": "Coverage Depth",
+        "note": "Note",
+        "period": "Coverage Period",
+        "startDate": "Start Date",
+        "startIssue": "Start Issue",
+        "startVolume": "Start Volume",
+        "endDate": "End Date",
+        "endIssue": "End Issue",
+        "endVolume": "End Volume"
+      },
+      "embargo": {
+        "type": "Type",
+        "duration": "Duration",
+        "unit": "Unit"
+      }
+    },
+    "org": {
+      "label": "Organization | Organizations"
+    },
+    "platform": {
+      "label": "Platform | Platforms"
+    },
+    "provider": {
+      "label": "Provider | Providers"
+    },
+    "identifier": {
+      "label": "Identifier | Identifiers",
+      "value": "Value",
+      "namespace": "Namespace | Namespaces"
+    },
+    "user": {
+      "label": "User | Users",
+      "username": "Username",
+      "password": "Password",
+      "email": "Email",
+      "role": {
+        "label": "Role | Roles",
+        "contributor": "Contributor",
+        "editor": "Editor",
+        "admin": "Admin"
+      }
+    },
+    "review": {
+      "label": "Review | Reviews",
+      "request": "Title",
+      "type": "Type",
+      "cause": "Cause",
+      "componentToReview": "Component",
+      "showClosed": "Show closed requests"
+    },
+    "maintenance": {
+      "label": "Maintenance | Maintenance"
+    },
+    "curatoryGroup": {
+      "label": "Curatory Group | Curatory Groups"
+    },
+    "variantName": {
+      "label": "Name Variant | Name Variants"
+    },
+    "source": {
+      "label": "Source | Sources"
+    },
+    "general": {
+      "name": "Name",
+      "general": "General",
+      "dateCreated":"Date Created",
+      "lastUpdated": "Last Updated"
+    }
+  }
+}

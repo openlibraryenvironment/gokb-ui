@@ -2,13 +2,13 @@
   <gokb-section
     expandable
     :expanded="expanded"
-    sub-title="Platformen"
+    :sub-title="$tc('component.platform.label', 2)"
     :items-total="totalNumberOfItems"
   >
     <gokb-add-item-popup
       v-if="addPlatformPopupVisible"
       v-model="addPlatformPopupVisible"
-      :component="{ type: 'GokbPlatformField', name: 'Platform' }"
+      :component="{ type: 'GokbPlatformField', name: $tc('component.platform.label') }"
       @add="addNewPlatform"
     />
     <template #buttons>
@@ -17,7 +17,7 @@
         icon-id="add"
         @click="showAddPlatformPopup"
       >
-        Platform hinzufügen
+        {{ $t('btn.add') }}
       </gokb-button>
       <gokb-button
         v-if="isEditable"
@@ -26,7 +26,7 @@
         :disabled="isDeleteSelectedDisabled"
         @click="confirmDeleteSelectedItems"
       >
-        Löschen
+        {{ $t('btn.delete') }}
       </gokb-button>
     </template>
 
@@ -129,13 +129,13 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.platform.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      confirmDeleteItem ({ id }) {
+      confirmDeleteItem ({ id, name }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: ['', name] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },

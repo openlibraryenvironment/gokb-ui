@@ -1,10 +1,35 @@
 <template>
-  <gokb-text-field
+  <div
     v-if="readonly"
-    v-model="localLabel"
-    :label="label"
-    readonly
-  />
+    class="mt-2 pt-4"
+  >
+    <div
+      v-if="localLabel"
+      style="font-size:0.8rem"
+    >
+      {{ label }}
+    </div>
+    <div
+      v-else
+      style="font-size:1.1rem"
+    >
+      {{ label }}
+    </div>
+    <router-link
+      v-if="componentRoute"
+      :style="{ color: '#f2994a', fontSize: '1.1rem'}"
+      :to="{ name: componentRoute, params: { 'id': value.id } }"
+    >
+      {{ localLabel }}
+    </router-link>
+    <span
+      v-else
+      style="font-size:1.1rem"
+    >
+      {{ localLabel }}
+    </span>
+    <v-divider />
+  </div>
   <v-combobox
     v-else-if="allowNewValues"
     v-model="localValue"
@@ -48,6 +73,7 @@
     name: 'GokbSearchField',
     extends: BaseComponent,
     searchServicesResourceUrl: undefined,
+    searchParams: {},
     props: {
       value: {
         required: true,
@@ -88,6 +114,14 @@
         loading: false,
         items: [],
         search: null,
+        knownRoutes: {
+          Organization: '/provider',
+          Title: '/title',
+          Journal: '/title',
+          Book: '/title',
+          Database: '/title',
+          Package: '/package'
+        }
       }
     },
     computed: {
@@ -103,6 +137,9 @@
           // console.log('set', this.label, localValue, this.items)
           this.$emit('input', localValue)
         }
+      },
+      componentRoute () {
+        return this.knownRoutes?.[this.value?.type] || null
       }
     },
     watch: {
@@ -120,9 +157,9 @@
         this.loading = true
         const result = await this.catchError({
           promise: this.searchServices.search({
+            ...this.searchParams,
             [this.itemText]: text,
             [this.itemValue]: id,
-            _include: [this.itemValue, this.itemText],
           }, this.cancelToken.token),
           instance: this
         })

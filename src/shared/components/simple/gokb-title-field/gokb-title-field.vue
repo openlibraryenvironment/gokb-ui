@@ -13,7 +13,17 @@
       allowNewValues: {
         type: Boolean,
         required: false,
-        default: true
+        default: false
+      },
+      typeFilter: {
+        type: String,
+        required: false,
+        default: undefined
+      }
+    },
+    computed: {
+      searchParams () {
+        return (this.typeFilter ? { type: this.typeFilter } : {})
       }
     },
     created () {

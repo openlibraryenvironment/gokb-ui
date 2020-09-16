@@ -7,15 +7,17 @@
   >
     <gokb-username-field
       v-model="username"
+      :label="$t('component.user.username')"
       :rules="rules"
     />
     <gokb-password-field
       v-model="password"
+      :label="$t('component.user.password')"
       :rules="rules"
     />
     <v-checkbox
       v-model="save"
-      label="automatisch einloggen"
+      :label="$t('popups.login.automatic')"
       prepend-icon="cached"
     />
     <template #buttons>
@@ -24,10 +26,10 @@
         text
         @click="close"
       >
-        Abbrechen
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button default>
-        Login
+        {{ $t('btn.submit') }}
       </gokb-button>
     </template>
   </gokb-dialog>

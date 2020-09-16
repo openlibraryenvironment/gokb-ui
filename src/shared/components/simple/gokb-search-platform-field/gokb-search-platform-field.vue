@@ -8,7 +8,7 @@
       label: {
         type: String,
         required: false,
-        default: 'Plattform'
+        default: ''
       }
     },
     created () {

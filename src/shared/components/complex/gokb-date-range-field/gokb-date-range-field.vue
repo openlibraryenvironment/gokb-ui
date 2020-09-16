@@ -4,18 +4,20 @@
     :close-on-content-click="false"
     transition="scale-transition"
     offset-y
+    min-width="290px"
   >
     <template v-slot:activator="{ on }">
       <v-text-field
         v-model="dateRangeText"
         :label="label"
         readonly
-        clearable
+        :clearable="!disabled"
         v-on="on"
       />
     </template>
     <v-date-picker
       v-model="dates"
+      :disabled="disabled"
       range
     />
   </v-menu>
@@ -33,6 +35,11 @@
       value: {
         type: Array,
         required: true
+      },
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

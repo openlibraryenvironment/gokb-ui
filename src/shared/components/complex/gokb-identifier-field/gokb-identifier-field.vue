@@ -7,7 +7,7 @@
       <gokb-text-field
         v-model="localValue"
         :disabled="disabled"
-        :label="namespaceFixed ? localNamespace.name : 'Identifikator'"
+        :label="namespaceFixed ? localNamespace.name : $tc('component.identifier.label')"
         :append-icon="deleteIcon"
         @click:append="$emit('delete', value)"
       />

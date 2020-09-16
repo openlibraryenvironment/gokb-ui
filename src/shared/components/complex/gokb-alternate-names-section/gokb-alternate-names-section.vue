@@ -2,13 +2,13 @@
   <gokb-section
     expandable
     expanded="false"
-    :sub-title="headerLabel"
+    :sub-title="$tc('component.variantName.label', 2)"
     :items-total="totalNumberOfItems"
   >
     <gokb-add-item-popup
       v-if="addItemPopupVisible"
       v-model="addItemPopupVisible"
-      :component="{ type: 'GokbTextField', name: 'Namen' }"
+      :component="{ type: 'GokbTextField', name: $t('component.general.name') }"
       @add="addItem"
     />
     <template #buttons>
@@ -53,10 +53,6 @@
 
   const ROWS_PER_PAGE = 10
 
-  const TABLE_HEADERS = [
-    { text: 'Name', align: 'left', value: 'variantName', sortable: false, width: '100%' },
-  ]
-
   export default {
     name: 'GokbAlternateNamesSection',
     components: { GokbAddItemPopup, GokbConfirmationPopup },
@@ -87,7 +83,7 @@
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: undefined
+        messageToConfirm: { text: undefined, vars: undefined }
       }
     },
     computed: {
@@ -115,10 +111,12 @@
       },
       headerLabel () {
         return this.$i18n.t('component.general.variantNames')
+      },
+      tableHeaders () {
+        return [
+          { text: this.$i18n.t('component.general.name'), align: 'left', value: 'variantName', sortable: false, width: '100%' },
+        ]
       }
-    },
-    created () {
-      this.tableHeaders = TABLE_HEADERS
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -129,13 +127,13 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedVariantNames.length, this.$i18n.tc('component.variantName.label', this.selectedVariantNames.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      confirmDeleteItem ({ id }) {
+      confirmDeleteItem ({ id, variantName }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: ['', variantName] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -152,9 +150,9 @@
       showAddVariantName () {
         this.addItemPopupVisible = true
       },
-      addItem ({ id, name }) {
-        !this.localValue.find(({ variantName }) => variantName === name) &&
-          this.localValue.push({ id: id || this.tempId(), variantName: name, isDeletable: true })
+      addItem (item) {
+        !this.localValue.find(({ variantName }) => variantName === item) &&
+          this.localValue.push({ id: this.tempId(), variantName: item, isDeletable: true })
       },
     }
   }

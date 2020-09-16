@@ -20,13 +20,13 @@
   >
     <gokb-section
       v-if="isContrib"
-      sub-title="Reviews"
+      :sub-title="$tc('component.review.label', 2)"
     >
       <template #buttons>
         <gokb-state-field
           class="mr-4"
           url="refdata/categories/ReviewRequest.StdDesc"
-          label="Typ"
+          :label="$t('component.review.type')"
         />
       </template>
       <gokb-table
@@ -71,26 +71,6 @@
 
   const ROWS_PER_PAGE = 5
 
-  const REVIEWS_HEADER = [
-    {
-      text: 'Komponente',
-      align: 'left',
-      sortable: false,
-      value: 'link'
-    },
-    {
-      text: 'Typ',
-      align: 'left',
-      sortable: false,
-      value: 'type'
-    },
-    {
-      text: 'Erstellt am',
-      align: 'left',
-      sortable: false,
-      value: 'dateCreated'
-    },
-  ]
   const MAINTENANCES_HEADER = [
     {
       text: 'Name',
@@ -142,7 +122,7 @@
         return reviews?.map(entry => {
           const id = entry?.id
           const name = entry?.componentToReview?.name
-          const type = entry?.componentToReview?.type ? this.$i18n.t('component.' + entry?.componentToReview?.type.toLowerCase() + '.label') : undefined
+          const type = entry?.componentToReview?.type ? this.$i18n.tc('component.' + entry?.componentToReview?.type.toLowerCase() + '.label') : undefined
           const dateCreated = new Date(entry?.dateCreated).toLocaleString(this.$i18n.locale)
           const stdDesc = entry?.stdDesc?.name
           // todo: the type of the review specifies the dialog to open on click
@@ -155,6 +135,28 @@
       },
       isContrib () {
         return this.loggedIn && account.hasRole('ROLE_CONTRIBUTOR')
+      },
+      localizedReviewHeaders () {
+        return [
+          {
+            text: this.$i18n.t('component.general.name'),
+            align: 'left',
+            sortable: false,
+            value: 'link'
+          },
+          {
+            text: this.$i18n.t('component.title.type.label'),
+            align: 'left',
+            sortable: false,
+            value: 'type'
+          },
+          {
+            text: this.$i18n.t('component.general.dateCreated'),
+            align: 'left',
+            sortable: false,
+            value: 'dateCreated'
+          },
+        ]
       }
     },
     watch: {
@@ -170,7 +172,7 @@
       this.paginateReviews()
     },
     created () {
-      this.reviewsHeader = REVIEWS_HEADER
+      this.reviewsHeader = this.localizedReviewHeaders
       this.maintenancesHeader = MAINTENANCES_HEADER
 
       // todo: replace dummy data with backend requests

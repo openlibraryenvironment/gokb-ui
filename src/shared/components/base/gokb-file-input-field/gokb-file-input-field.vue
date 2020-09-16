@@ -4,8 +4,7 @@
     :label="label"
     prepend-icon="mdi-file-delimited"
     :disabled="disabled"
-    counter
-    accept=".txt"
+    accept=".txt,.tsv"
     show-size
   />
 </template>

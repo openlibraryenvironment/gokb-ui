@@ -7,28 +7,29 @@
     <gokb-error-component :value="error" />
     <span v-if="successMsgShown">
       <v-alert type="success">
-        Update erfolgreich
+        {{ $t('success.update', [$t('profile.label'),'']) }}
       </v-alert>
     </span>
-    <gokb-section title="Allgemein">
+    <gokb-section :title="$t('component.general.general')">
       <gokb-email-field
         v-model="email"
+        :label="$t('component.user.email')"
         :disabled="updateProfileAvailable"
       />
     </gokb-section>
-    <gokb-section title="Kennwort">
+    <gokb-section :title="$t('component.user.password')">
       <gokb-password-field
         ref="passwordField"
         v-model="origpass"
         :disabled="updateProfileAvailable"
-        label="Bisheriges Kennwort"
+        :label="$t('profile.currentPass.label')"
         :rules="[isOldPasswordEmpty, isPasswordWrong]"
       />
       <gokb-password-field
         ref="newpass"
         v-model="newpass"
         :disabled="updateProfileAvailable"
-        label="Neues Kennwort"
+        :label="$t('profile.newPass.label')"
         autocomplete="new-password"
         :rules="[checkNewPassword, isPasswordEmpty]"
       />
@@ -36,7 +37,7 @@
         ref="repeatpass"
         v-model="repeatpass"
         :disabled="updateProfileAvailable"
-        label="Neues Kennwort (Wiederholung)"
+        :label="$t('profile.newPassConfirm.label')"
         autocomplete="new-password"
         :rules="[checkNewPassword, isPasswordEmpty]"
       />
@@ -44,7 +45,7 @@
     <gokb-curatory-group-section
       v-model="allCuratoryGroups"
       :disabled="!isAdmin"
-      title="Kuratorengruppen"
+      :title="$tc('component.curatoryGroup.label', 2)"
     />
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
@@ -56,14 +57,14 @@
         :disabled="removeProfileAvailable"
         @click="confirmRemoveProfile"
       >
-        Konto löschen
+        {{ $t('profile.delete.label') }}
       </gokb-button>
       <v-spacer />
       <gokb-button
         :disabled="updateProfileAvailable || !valid"
         default
       >
-        Aktualisieren
+        {{ $t('btn.update') }}
       </gokb-button>
     </template>
   </gokb-page>
@@ -109,7 +110,7 @@
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: undefined,
+        messageToConfirm: { text: undefined, vars: undefined },
 
         passwordWrongMessage: undefined,
       }
@@ -161,23 +162,23 @@
     },
     methods: {
       isOldPasswordEmpty () {
-        return (this.newpass || this.repeatpass) && !this.origpass ? 'Bitte erfassen Sie das alte Passwort' : true
+        return (this.newpass || this.repeatpass) && !this.origpass ? this.$i18n.t('profile.currentPass.missing') : true
       },
       isPasswordEmpty () {
-        return (this.newpass && !this.repeatpass) || (!this.newpass && this.repeatpass) ? 'Bitte erfassen Sie das neue Passwort zweimal.' : true
+        return (this.newpass && !this.repeatpass) || (!this.newpass && this.repeatpass) ? this.$i18n.t('profile.newPass.missing') : true
       },
       isPasswordWrong () {
         return (this.origpass && this.passwordWrongMessage) || true
       },
       checkNewPassword () {
-        return this.newpass && this.repeatpass && this.newpass !== this.repeatpass ? 'Das neue Passwort ist nicht identisch.' : true
+        return this.newpass && this.repeatpass && this.newpass !== this.repeatpass ? this.$i18n.t('profile.newPassConfirm.nomatch') : true
       },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
       confirmRemoveProfile () {
         this.actionToConfirm = '_removeProfile'
-        this.messageToConfirm = 'Wollen Sie das Profil wirklich löschen?'
+        this.messageToConfirm = { text: this.$i18n.t('profile.delete.confirm') }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

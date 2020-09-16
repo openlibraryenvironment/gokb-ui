@@ -1,7 +1,7 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    :title="`${component.name} hinzufügen`"
+    :title="$t('header.add.label', [component.name])"
     @submit="addItem"
   >
     <component
@@ -15,13 +15,13 @@
         text
         @click="close"
       >
-        Abbrechen
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         :disabled="!item"
         default
       >
-        Hinzufügen
+        {{ $t('btn.add') }}
       </gokb-button>
     </template>
   </gokb-dialog>

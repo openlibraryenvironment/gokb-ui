@@ -5,16 +5,16 @@
     name: 'GokbNamespaceField',
     extends: GokbSelectField,
     props: {
-      label: {
-        type: String,
-        required: false,
-        default: 'Namensraum',
-      },
       returnObject: {
         type: Boolean,
         required: false,
         default: true
       },
+    },
+    computed: {
+      label () {
+        return this.$i18n.tc('component.identifier.namespace')
+      }
     },
     created () {
       this.entityName = 'identifier-namespaces'

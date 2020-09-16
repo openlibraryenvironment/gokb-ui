@@ -86,6 +86,7 @@
         <v-col md="4">
           <gokb-search-source-field
             v-model="source"
+            :label="$t('component.general.source')"
             :readonly="isReadonly"
           />
         </v-col>
@@ -102,14 +103,14 @@
     <template #buttons>
       <v-spacer />
       <gokb-button
-        v-if="updateUrl"
+        v-if="!isReadonly"
         text
-        @click="forceUpdate"
+        @click="reload"
       >
-        Abbrechen
+        {{ $i18n.t('btn.cancel') }}
       </gokb-button>
       <gokb-button
-        v-if="updateUrl"
+        v-if="!isReadonly"
         default
       >
         {{ $i18n.t('btn.submit') }}
@@ -131,7 +132,7 @@
     extends: BaseComponent,
     props: {
       id: {
-        type: String,
+        type: [Number, String],
         required: false,
         default: undefined
       },
@@ -156,9 +157,9 @@
         updateUrl: undefined,
         successMsg: false,
         allTypes: [
-          { name: this.$i18n.t('component.title.type.Journal'), id: 'Journal' },
-          { name: this.$i18n.t('component.title.type.Book'), id: 'Book' },
-          { name: this.$i18n.t('component.title.type.Database'), id: 'Database' }
+          { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
+          { name: this.$i18n.tc('component.title.type.Book'), id: 'Book' },
+          { name: this.$i18n.tc('component.title.type.Database'), id: 'Database' }
         ]
       }
     },
@@ -167,7 +168,7 @@
         return !!this.id
       },
       title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.t('component.title.label')])
+        return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.title.label')])
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
@@ -213,8 +214,8 @@
         })
         // todo: check error code
         if (response.status === 200) {
-          this.forceUpdate()
           this.successMsg = true
+          this.reload()
         }
 
         window.scrollTo(0, 0)
@@ -256,8 +257,8 @@
           this.publishedFrom = publishedFrom && publishedFrom.substr(0, 10)
           this.publishedTo = publishedTo && publishedTo.substr(0, 10)
           this.publishers = publisher.map(name => ({ ...name, isDeletable: !!updateUrl }))
-          this.ids = ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace, isDeletable: !!updateUrl }))
-          this.allAlternateNames = variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!updateUrl }))
+          this.ids = ids.map(({ id, value, namespace: { name: namespace } }) => ({ id, value, namespace, isDeletable: !!updateUrl }))
+          this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
           this.editionStatement = editionStatement
           this.editionNumber = editionNumber
           this.firstPublishedInPrint = firstPublishedInPrint

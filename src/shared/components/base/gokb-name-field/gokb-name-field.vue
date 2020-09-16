@@ -126,6 +126,7 @@
       },
       showEditName () {
         this.editNamePopupVisible = true
+        this.currentName = this.localValue.name
         this.editedVal = this.localValue.name
       },
       close () {
@@ -133,15 +134,13 @@
         this.editNamePopupVisible = false
       },
       selectNewName () {
-        if (this.localValue.name !== this.editedVal) {
-          if (this.localValue.name && this.keepCurrent && !this.localValue.alts.find(({ variantName }) => variantName === this.editedVal)) {
-            this.localValue.alts.push({ id: this.tempId(), variantName: this.oldVal, isDeletable: true })
+        if (this.currentName !== this.editedVal) {
+          if (this.currentName && this.keepCurrent && !this.localValue.alts.find(({ variantName }) => variantName === this.editedVal)) {
+            this.localValue.alts.push({ id: this.tempId(), variantName: this.currentName, isDeletable: true })
           }
+          this.currentName = this.editedVal
           this.localValue.name = this.editedVal
-          console.log(this.editedVal)
-          this.currentName = this.localValue.name
           this.editNamePopupVisible = false
-          this.editedVal = undefined
         } else {
           this.$refs.nameTextField.error = true
         }
