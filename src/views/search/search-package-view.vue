@@ -140,7 +140,7 @@
       },
       _confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.package.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
@@ -150,7 +150,7 @@
       },
       _confirmRetireSelectedItems () {
         this.actionToConfirm = '_retireSelectedItems'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich archivieren?'
+        this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.package.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

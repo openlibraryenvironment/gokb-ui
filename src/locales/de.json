@@ -118,14 +118,13 @@
   },
   "component": {
     "title": {
-      "label": "Einzeltitel",
-      "plural": "Einzeltitel",
+      "label": "Einzeltitel | Einzeltitel",
       "type": {
         "label": "Typ",
-        "Journal": "Journal",
-        "Book": "Monographie",
-        "Database": "Datenbank",
-        "Other": "Andere"
+        "Journal": "Journal | Journals",
+        "Book": "Monographie | Monographien",
+        "Database": "Datenbank | Datenbanken",
+        "Other": "Andere | Andere"
       },
       "publishStart": "Erscheinungsbeginn",
       "publishedPeriod": "Erscheinungsperiode",

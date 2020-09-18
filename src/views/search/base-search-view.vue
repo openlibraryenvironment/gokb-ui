@@ -149,7 +149,7 @@
       },
       confirmDeleteItem ({ deleteUrl }) {
         this.actionToConfirm = 'deleteItem'
-        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)] }
         this.parameterToConfirm = deleteUrl
         this.confirmationPopUpVisible = true
       },
@@ -159,7 +159,7 @@
       },
       confirmRetireItem ({ retireUrl }) {
         this.actionToConfirm = 'retireItem'
-        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich archivieren?'
+        this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)] }
         this.parameterToConfirm = retireUrl
         this.confirmationPopUpVisible = true
       },
