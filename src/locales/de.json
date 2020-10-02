@@ -37,6 +37,9 @@
         "specific": "Möchten Sie {0} {1} wirklich löschen?",
         "list": "Möchten Sie {0} {1} wirklich von dieser Liste entfernen?"
       }
+    },
+    "login": {
+      "automatic": "Eingeloggt bleiben"
     }
   },
   "job": {
@@ -117,6 +120,7 @@
     "p1": ""
   },
   "component": {
+    "label": "Komponente | Komponenten",
     "title": {
       "label": "Einzeltitel | Einzeltitel",
       "type": {
@@ -136,6 +140,15 @@
       "firstPublishedInPrint": "Veröffentlichungsdatum (Print)",
       "firstPublishedOnline": "Veröffentlichungsdatum (Online)"
     },
+    "journal": {
+      "label": "Journal | Journals"
+    },
+    "book": {
+      "label": "Monographie | Monographien"
+    },
+    "database": {
+      "label": "Datenbank | Datenbanken"
+    },
     "package": {
       "label": "Paket | Pakete",
       "navigation": {
@@ -145,8 +158,21 @@
         "step4": "Zusammenfassung"
       },
       "description": "Beschreibung",
-      "scope": "Umfang",
+      "scope": {
+        "label": "Umfang",
+        "Front File": "Front File",
+        "Back File": "Back File",
+        "Aggregator": "Aggregator",
+        "Master File": "Master File"
+      },
       "consistent": "Paketinhalt ist konsistent",
+      "contentType": {
+        "label": "Inhaltstyp",
+        "Journal": "Journals",
+        "Book": "Monographien",
+        "Database": "Datenbank(en)",
+        "Mixed": "Gemischt"
+      },
       "breakable": "Teilbahr für Lizenznehmer",
       "fixed": "Paket ist unveränderbar",
       "provider": "Anbieter",
@@ -180,7 +206,12 @@
       "embargo": {
         "type": "Typ",
         "duration": "Dauer",
-        "unit": "Einheit"
+        "unit": { 
+          "label": "Einheit",
+          "day": "Tag(e)",
+          "month": "Monat(e)",
+          "year": "Jahr(e)"
+        }
       }
     },
     "org": {
@@ -190,7 +221,8 @@
       "label": "Plattform | Plattformen"
     },
     "provider": {
-      "label": "Anbieter | Anbieter"
+      "label": "Anbieter | Anbieter",
+      "homepage": "Homepage"
     },
     "identifier": {
       "label": "Identifikator | Identifikatoren",
@@ -215,7 +247,30 @@
       "type": "Typ",
       "cause": "Ursache",
       "componentToReview": "Komponente",
-      "showClosed": "Abgeschlossene anzeigen"
+      "showClosed": "Abgeschlossene anzeigen",
+      "status": {
+        "Open": "Offen",
+        "Closed": "Geschlossen",
+        "Deleted": "Gelöscht"
+      },
+      "stdDesc": {
+        "label": "Kategorie | Kategorien",
+        "Invalid TIPPs": "Invalide TIPPs",
+        "Major Identifier Mismatch": "Kritischer Identifikator-Konflikt",
+        "Minor Identifier Mismatch": "Kleiner Identifikator-Konflikt",
+        "Multiple Matches": "Mehrere Treffer",
+        "Name Mismatch": "Gleicher Name",
+        "Name Similarity": "Ähnlicher Name",
+        "Namespace Mismatch": "Unterschiedliche Namensräume",
+        "New Org": "Neue Organisation",
+        "New Platform": "Neue Platform",
+        "Platform Noncurrent": "Inaktive Platform",
+        "Removed Identifier": "Gelöschter Idetnifikator",
+        "Status Deleted": "Gelöscht",
+        "Status Retired": "Archiviert",
+        "TIPPs Retired": "Gelöschte TIPPs",
+        "Type Mismatch": "Falscher Titeltyp"
+      }
     },
     "maintenance": {
       "label": "Pflege | Pflege"
@@ -227,11 +282,13 @@
       "label": "Weitere Namensform | Weitere Namensformen"
     },
     "source": {
-      "label": "Quelle | Quellen"
+      "label": "Quelle | Quellen",
+      "url": "URL"
     },
     "general": {
       "name": "Name",
       "general": "Allgemein",
+      "status": "Status",
       "dateCreated":"Erstellt am",
       "lastUpdated": "Zuletzt verändert am"
     }

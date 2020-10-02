@@ -10,11 +10,21 @@ const api = (baseServices) => ({
     }, cancelToken)
   },
 
+  createOrUpdateReview (data, cancelToken) {
+    const { id } = data
+    const url = id ? process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/${id}` : process.env.VUE_APP_API_BASE_URL + REVIEW_PATH
+    return baseServices.request({
+      method: id ? 'PUT' : 'POST',
+      url,
+      data,
+    }, cancelToken)
+  },
+
   closeReview (url, cancelToken) {
     return baseServices.request({
       method: 'PATCH',
       url: baseServices.relativeUrl(url),
-      data: { enabled: false },
+      data: { status: 'Closed' },
     }, cancelToken)
   }
 })

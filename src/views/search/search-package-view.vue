@@ -9,11 +9,13 @@
     extends: BaseSearch,
     data () {
       return {
-        name: undefined,
-        curatoryGroupIds: undefined,
-        providerId: undefined,
-        identifierIds: undefined,
-        status: undefined,
+        searchFilters: {
+          curatoryGroupIds: [],
+          providerId: undefined,
+          identifierValue: undefined,
+          status: undefined,
+          name: undefined,
+        }
       }
     },
     computed: {
@@ -52,7 +54,7 @@
           {
             type: 'GokbTextField',
             name: 'name',
-            value: this.name,
+            value: 'name',
             properties: {
               label: this.$i18n.t('component.general.name'),
             }
@@ -60,7 +62,7 @@
           {
             type: 'GokbCuratoryGroupField',
             name: 'curatoryGroups',
-            value: this.curatoryGroupIds,
+            value: 'curatoryGroupIds',
             properties: {
               label: this.$i18n.tc('component.curatoryGroup.label'),
               multiple: true,
@@ -72,7 +74,7 @@
           {
             type: 'GokbSearchProviderField',
             name: 'provider',
-            value: this.providerId,
+            value: 'providerId',
             properties: {
               label: this.$i18n.tc('component.provider.label'),
 
@@ -81,7 +83,7 @@
           {
             type: 'GokbTextField',
             name: 'ids',
-            value: this.identifierIds,
+            value: 'identifierValue',
             properties: {
               label: this.$i18n.tc('component.identifier.label'),
             }
@@ -91,7 +93,7 @@
           {
             type: 'GokbStateField',
             name: 'status',
-            value: this.status,
+            value: 'status',
           },
         ]
       ]

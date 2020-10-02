@@ -17,20 +17,22 @@
       },
     },
     created () {
-      this.items = [
-        {
-          id: 'D',
-          name: 'Tag(e)'
-        },
-        {
-          id: 'M',
-          name: 'Monat(e)'
-        },
-        {
-          id: 'Y',
-          name: 'Jahr(e)',
-        }
-      ]
+      if (!this.items) {
+        this.items = [
+          {
+            id: 'D',
+            name: this.$i18n.t('component.tipp.embargo.unit.day')
+          },
+          {
+            id: 'M',
+            name: this.$i18n.t('component.tipp.embargo.unit.month')
+          },
+          {
+            id: 'Y',
+            name: this.$i18n.t('component.tipp.embargo.unit.year')
+          }
+        ]
+      }
     }
   }
 </script>

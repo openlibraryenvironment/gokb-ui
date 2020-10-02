@@ -7,7 +7,7 @@
     <gokb-error-component :value="error" />
     <span v-if="successMsg">
       <v-alert type="success">
-        Update erfolgreich
+        {{ isEdit ? $t('success.update', [$tc('component.provider.label'), name]) : $t('success.create', [$tc('component.provider.label'), name]) }}
       </v-alert>
     </span>
     <gokb-section :sub-title="$t('component.general.general')">
@@ -21,13 +21,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col md="4">
-          <gokb-search-source-field
-            v-model="source"
-            :readonly="isReadonly"
-          />
-        </v-col>
-        <v-col md="8">
+        <v-col md="12">
           <gokb-text-field
             v-model="reference"
             :label="$t('component.provider.homepage')"
@@ -38,19 +32,23 @@
     </gokb-section>
     <gokb-identifier-section
       v-model="ids"
+      :expanded="false"
       :disabled="isReadonly"
     />
     <gokb-alternate-names-section
       v-model="allAlternateNames"
+      :expanded="false"
       :disabled="isReadonly"
     />
     <gokb-platform-section
       v-model="allPlatforms"
+      :expanded="false"
       :sub-title="$tc('component.platform.label', 2)"
       :disabled="isReadonly"
     />
     <gokb-curatory-group-section
       v-model="allCuratoryGroups"
+      :expanded="false"
       :sub-title="$tc('component.curatoryGroup.label', 2)"
       :disabled="isReadonly"
     />

@@ -72,14 +72,14 @@
           icon-id="add"
           @click="showAddNewRole"
         >
-          Hinzufügen
+          {{ $t('btn.add') }}
         </gokb-button>
         <gokb-button
           icon-id="delete"
           :disabled="isDeleteSelectedRolesDisabled"
           @click="confirmDeleteSelectedRoles"
         >
-          Löschen
+          {{ $t('btn.delete') }}
         </gokb-button>
       </template>
       <gokb-confirmation-popup
@@ -100,7 +100,7 @@
     </gokb-section>
     <gokb-curatory-group-section
       v-model="allCuratoryGroups"
-      sub-title="Kuratorengruppen"
+      :sub-title="$tc('component.curatoryGroup.label', 2)"
     />
     <template #buttons>
       <v-spacer />
@@ -108,7 +108,7 @@
         text
         @click="pageBack"
       >
-        Abbrechen
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         default
@@ -192,10 +192,10 @@
         return !!this.id
       },
       title () {
-        return this.isEdit ? 'Benutzer bearbeiten' : 'Benutzer hinzufügen'
+        return this.isEdit ? this.$i18n.t('header.edit.label', [this.$i18n.tc('component.user.label')]) : this.$i18n.t('header.add.label', [this.$i18n.tc('component.user.label')])
       },
       updateButtonText () {
-        return this.id ? 'Aktualisieren' : 'Hinzufügen'
+        return this.id ? this.$i18n.t('btn.update') : this.$i18n.t('btn.add')
       }
     },
     async created () {
@@ -269,9 +269,9 @@
       pageBack () {
         this.$router.go(-1)
       },
-      confirmDeleteRole ({ id }) {
+      confirmDeleteRole ({ id, value }) {
         this.actionToConfirm = '_deleteRole'
-        this.messageToConfirm = 'Wollen Sie das ausgewählte Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.user.role.label'), value] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -282,7 +282,7 @@
       },
       confirmDeleteSelectedRoles () {
         this.actionToConfirm = '_deleteSelectedRoles'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.user.role.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

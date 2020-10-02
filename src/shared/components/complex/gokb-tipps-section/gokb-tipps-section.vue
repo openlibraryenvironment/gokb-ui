@@ -1,6 +1,7 @@
 <template>
   <gokb-section
     expandable
+    :hide-default="!expanded"
     sub-title="Tipps"
     :items-total="totalNumberOfItems"
   >
@@ -118,6 +119,11 @@
         required: false,
         default: undefined
       },
+      expanded: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
       platform: {
         type: Object,
         required: false,
@@ -169,7 +175,10 @@
         { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
         { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
       ]
-      this.fetchTipps(this.page)
+
+      if (this.pkg) {
+        this.fetchTipps(this.page)
+      }
 
       // this.interval = setInterval(function () {
       //   this.fetchTipps(this.page)
@@ -231,7 +240,7 @@
           instance: this
         })
 
-        if (result.status === 200) {
+        if (result?.status === 200) {
           this.items = result.data?.data?.map(
             ({ id, url, accessStartDate, accessEndDate, title, hostPlatform, _embedded, pkg, _links }) => (
               {
@@ -255,7 +264,7 @@
               }
             )
           )
-          this.itemCount = result.data?._pagination?.total
+          this.itemCount = result?.data?._pagination?.total
         }
       }
     }

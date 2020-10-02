@@ -72,7 +72,7 @@
         solo
       />
       <v-select
-        v-model="$i18n.locale"
+        v-model="currentLocale"
         offset-y
         :items="locales"
         class="pt-2 ma-2"
@@ -177,6 +177,10 @@
         },
         set (locale) {
           this.$i18n.locale = locale
+
+          if (accountModel.loggedIn && locale !== accountModel.userLocale()) {
+            accountModel.setLocale(locale)
+          }
         }
       },
       canCreate () {
@@ -230,6 +234,13 @@
     },
     mounted () {
       this.searchServices = searchServices('rest/entities')
+
+      if (accountModel.loggedIn() && accountModel.userLocale()) {
+        console.log(accountModel.userLocale())
+        this.currentLocale = accountModel.userLocale()
+      } else {
+        console.log(accountModel.userLocale())
+      }
     },
     created () {
       this.HOME_ROUTE = HOME_ROUTE

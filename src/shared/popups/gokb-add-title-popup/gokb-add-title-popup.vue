@@ -151,6 +151,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      titleType: {
+        type: Object,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -164,10 +169,6 @@
           publisher: undefined,
           publishedFrom: undefined,
           publishedTo: undefined
-        },
-        titleType: {
-          id: undefined,
-          text: undefined
         },
         selectedTitle: undefined,
         selectedItem: undefined,
@@ -308,12 +309,7 @@
         })
 
         if (response.status === 200) {
-          if (this.id) {
-            this.$emit('edit', this.packageTitleItem)
-          } else {
-            this.$emit('add', this.packageTitleItem)
-          }
-
+          this.$emit('edit', this.packageTitleItem)
           this.close()
         } else {
           console.log(newTipp.status)

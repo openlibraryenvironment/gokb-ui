@@ -7,9 +7,13 @@
     extends: BaseSearch,
     data () {
       return {
-        name: undefined,
-        identifier: undefined,
-        curatoryGroupIds: undefined,
+        searchFilters: {
+          curatoryGroupIds: [],
+          identifierValue: undefined,
+          componentToReview: undefined,
+          status: undefined,
+          name: undefined,
+        },
         allStates: [
           { name: this.$i18n.t(), id: 'Open' },
           { name: this.$i18n.t(), id: 'Closed' }
@@ -39,7 +43,8 @@
           },
           {
             type: 'GokbCuratoryGroupField',
-            name: 'curatoryGroups',
+            name: 'allocatedGroups',
+            value: 'curatoryGroupIds',
             properties: {
               label: this.$i18n.tc('component.curatoryGroup.label'),
               returnObject: false
@@ -49,6 +54,8 @@
         [
           {
             type: 'GokbSelectField',
+            name: 'componentToReview',
+            value: 'componentToReview',
             properties: {
               label: this.$i18n.t('component.review.componentToReview')
             }
@@ -56,11 +63,24 @@
         ],
         [
           {
-            type: 'GokbCheckboxField',
-            name: 'status',
+            type: 'GokbStateField',
+            name: 'stdDesc',
+            value: 'stdDesc',
             properties: {
-              label: this.$i18n.t('component.review.showClosed'),
-              items: this.allItems
+              label: this.$i18n.tc('component.review.stdDesc.label'),
+              messagePath: 'component.review.stdDesc',
+              url: 'refdata/categories/ReviewRequest.StdDesc'
+            }
+          },
+          {
+            type: 'GokbStateField',
+            name: 'status',
+            value: 'status',
+            properties: {
+              label: this.$i18n.tc('component.general.status'),
+              initItem: 'Open',
+              messagePath: 'component.review.status',
+              url: 'refdata/categories/ReviewRequest.Status'
             }
           }
         ]
@@ -70,13 +90,19 @@
           text: this.$i18n.t('component.review.request'),
           align: 'left',
           sortable: false,
-          value: 'link'
+          value: 'popup'
         },
         {
           text: this.$i18n.t('component.review.type'),
           align: 'left',
           sortable: false,
-          value: 'stdDesc'
+          value: 'type'
+        },
+        {
+          text: this.$i18n.tc('component.review.stdDesc.label'),
+          align: 'left',
+          sortable: false,
+          value: 'stdDesc.name'
         },
       ]
       this.searchServicesUrl = 'rest/reviews'
@@ -84,13 +110,30 @@
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({ id, reviewRequest, raisedBy, allocatedTo, stdDesc, _links: { update: { href: updateUrl } } }) => ({
+        const componentRoutes = {
+          package: '/package',
+          org: '/provider',
+          title: '/title',
+          journal: '/title',
+          book: '/title',
+          database: '/title'
+        }
+
+        return data.map(({ id, reviewRequest, dateCreated, _embedded: { allocatedGroups }, componentToReview, descriptionOfCause, status, stdDesc, _links: { update: { href: updateUrl } }, _links: { delete: { href: deleteUrl } } }) => ({
           id,
-          link: { value: reviewRequest, /* route: EDIT_USER_ROUTE , */ id: 'id' },
-          raisedBy: raisedBy?.name,
-          stdDesc: stdDesc?.value,
-          allocatedTo: allocatedTo?.name,
-          updateUrl
+          component: componentToReview,
+          componentId: componentToReview.id,
+          type: this.$i18n.tc('component.' + componentToReview.type.toLowerCase() + '.label'),
+          dateCreated: new Date(dateCreated).toLocaleString(this.$i18n.locale),
+          allocatedGroups,
+          request: reviewRequest,
+          description: descriptionOfCause,
+          status,
+          stdDesc,
+          popup: { value: (componentToReview.name || componentToReview.type + ' ' + componentToReview.id), label: 'review', type: 'GokbAddReviewPopup' },
+          link: { value: componentToReview.name, route: componentRoutes[componentToReview.type.toLowerCase()], id: 'componentId' },
+          updateUrl,
+          deleteUrl
         }))
       },
       _confirmCloseSelectedItems () {

@@ -3,6 +3,7 @@ const api = (vue, accountServices) => {
     initialized: false,
     loggedIn: false,
     username: undefined,
+    userLocale: undefined,
     id: undefined,
     roles: undefined,
   })
@@ -24,6 +25,10 @@ const api = (vue, accountServices) => {
       return state.id
     },
 
+    userLocale () {
+      return state.userLocale
+    },
+
     async initialize (cancelToken) {
       const result = await accountServices.initialize(cancelToken)
       state.initialized = true
@@ -32,6 +37,10 @@ const api = (vue, accountServices) => {
         state.roles = result.roles
         state.username = result.username
       }
+    },
+
+    setLocale (lcl) {
+      state.userLocale = lcl
     },
 
     loggedIn () {

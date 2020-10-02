@@ -1,7 +1,7 @@
 <template>
   <gokb-section
     expandable
-    :expanded="expanded"
+    :hide-default="!expanded"
     :sub-title="$tc('component.platform.label', 2)"
     :items-total="totalNumberOfItems"
   >
@@ -78,7 +78,7 @@
       expanded: {
         type: Boolean,
         required: false,
-        default: false
+        default: true
       }
     },
     data () {

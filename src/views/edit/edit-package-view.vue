@@ -2,13 +2,14 @@
   <gokb-page
     :key="version"
     :title="title"
+    :sub-title="subTitle"
     @valid="valid = $event"
     @submit="createPackage"
   >
     <gokb-error-component :value="error" />
     <span v-if="successMsg">
       <v-alert type="success">
-        Update erfolgreich
+        {{ isEdit ? $t('success.update', [$tc('component.package.label'), packageItem.name]) : $t('success.create', [$tc('component.package.label'), packageItem.name]) }}
       </v-alert>
     </span>
     <v-stepper
@@ -20,43 +21,39 @@
           editable
           :step="1"
         >
-          {{ $t('component.package.navigation.step1') }}
+          {{ isEdit ? $t('component.package.navigation.step4') : $t('component.package.navigation.step1') }}
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
           editable
           :step="2"
         >
-          {{ $t('component.package.navigation.step2') }}
+          {{ isEdit ? $t('component.package.navigation.step1') : $t('component.package.navigation.step2') }}
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
           editable
           :step="3"
         >
-          {{ $t('component.package.navigation.step3') }}
+          {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
           editable
           :step="4"
         >
-          {{ $t('component.package.navigation.step4') }}
+          {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
         </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
-        <v-stepper-content :step="1">
+        <v-stepper-content :step="isEdit ? 2 : 1">
           <gokb-section
             :title="$t('component.general.general')"
           >
             <gokb-name-field
               v-model="allNames"
               :disabled="isReadonly"
-            />
-            <gokb-search-source-field
-              v-model="packageItem.source"
-              :readonly="isReadonly"
             />
             <gokb-url-field
               v-model="packageItem.descriptionUrl"
@@ -67,9 +64,20 @@
               :label="$t('component.package.description')"
               :disabled="isReadonly"
             />
-            <gokb-scope-field
+            <gokb-state-field
               v-model="packageItem.scope"
-              :label="$t('component.package.scope')"
+              :init-item="packageItem.scope"
+              message-path="component.package.scope"
+              url="refdata/categories/Package.Scope"
+              :label="$t('component.package.scope.label')"
+              :readonly="isReadonly"
+            />
+            <gokb-state-field
+              v-model="packageItem.contentType"
+              :init-item="packageItem.contentType"
+              message-path="component.package.contentType"
+              url="refdata/categories/Package.ContentType"
+              :label="$t('component.package.contentType.label')"
               :readonly="isReadonly"
             />
             <gokb-radiobutton-group v-model="packageItem.global">
@@ -117,7 +125,7 @@
           </gokb-section>
         </v-stepper-content>
 
-        <v-stepper-content :step="2">
+        <v-stepper-content :step="isEdit ? 3 : 2">
           <gokb-section
             :sub-title="$t('component.package.provider')"
           >
@@ -146,16 +154,24 @@
           />
         </v-stepper-content>
 
-        <v-stepper-content :step="3">
+        <v-stepper-content :step="isEdit ? 4 : 3">
           <gokb-tipps-section
             :pkg="parseInt(id)"
             :platform="packageItem.nominalPlatform"
             :disabled="isReadonly"
             @kbart="setKbart"
           />
+          <gokb-section
+            :sub-title="$tc('component.source.label')"
+          >
+            <gokb-source-field
+              v-model="sourceItem"
+              :readonly="isReadonly"
+            />
+          </gokb-section>
         </v-stepper-content>
 
-        <v-stepper-content :step="4">
+        <v-stepper-content :step="isEdit ? 1 : 4">
           <gokb-section :sub-title="$t('component.package.navigation.step4')">
             <v-row>
               <v-col>
@@ -180,6 +196,16 @@
                   v-model="platformName"
                   :label="$t('component.package.platform')"
                   disabled
+                />
+              </v-col>
+              <v-col>
+                <gokb-state-field
+                  v-model="packageItem.contentType"
+                  :init-item="packageItem.contentType"
+                  message-path="component.package.contentType"
+                  url="refdata/categories/Package.ContentType"
+                  :label="$t('component.package.contentType.label')"
+                  readonly
                 />
               </v-col>
               <v-col>
@@ -258,9 +284,8 @@
   import BaseComponent from '@/shared/components/base-component'
   import GokbSearchOrganisationField from '@/shared/components/simple/gokb-search-organisation-field'
   import GokbSearchPlatformField from '@/shared/components/simple/gokb-search-platform-field'
-  import GokbScopeField from '@/shared/components/simple/gokb-scope-field'
   import GokbUrlField from '@/shared/components/simple/gokb-url-field'
-  import GokbSearchSourceField from '@/shared/components/simple/gokb-search-source-field'
+  import GokbSourceField from '@/shared/components/complex/gokb-source-field'
   import GokbMaintenanceCycleField from '@/shared/components/simple/gokb-maintenance-cycle-field'
   import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
@@ -268,6 +293,7 @@
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
   import { HOME_ROUTE } from '@/router/route-paths'
   import packageServices from '@/shared/services/package-services'
+  import sourceServices from '@/shared/services/source-services'
   import kbartServices from '@/shared/services/kbart-services'
   import tokenModel from '@/shared/models/token-model'
 
@@ -295,9 +321,8 @@
       GokbIdentifierSection,
       GokbSearchOrganisationField,
       GokbSearchPlatformField,
-      GokbScopeField,
       GokbUrlField,
-      GokbSearchSourceField,
+      GokbSourceField,
       GokbCuratoryGroupSection,
       GokbMaintenanceCycleField,
       GokbAlternateNamesSection
@@ -320,6 +345,7 @@
         valid: undefined,
         step: 1,
         version: undefined,
+        currentName: undefined,
         packageItem: {
           name: undefined,
           source: undefined,
@@ -327,6 +353,7 @@
           description: undefined,
           scope: undefined,
           global: undefined,
+          contentType: undefined,
           consistent: undefined,
           breakable: undefined,
           fixed: undefined,
@@ -335,6 +362,7 @@
           nominalPlatform: undefined,
         },
         allCuratoryGroups: [],
+        sourceItem: undefined,
         packageTypes: [
           { id: 'book', text: 'Buch' },
           { id: 'database', text: 'Datenbank' },
@@ -361,6 +389,9 @@
     computed: {
       title () {
         return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.package.label')])
+      },
+      subTitle () {
+        return this.currentName
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
@@ -426,6 +457,25 @@
         const valid = form.validate()
 
         if (valid) {
+          if (this.packageItem.source) {
+            var sourceItem = this.sourceItem
+
+            if (!sourceItem.name) {
+              sourceItem.name = this.packageItem.name
+            }
+
+            const sourceReponse = await this.catchError({
+              promise: sourceServices.createOrUpdateSource(sourceItem, this.cancelToken.token),
+              instance: this
+            })
+
+            if (sourceReponse.status < 400) {
+              this.packageItem.source = sourceReponse.data
+            } else {
+              console.log('Source update failed!')
+            }
+          }
+
           const newPackage = {
             ...this.packageItem,
             id: this.id,
@@ -434,7 +484,7 @@
             fixed: utils.asYesNo(this.packageItem.fixed),
             nominalPlatform: this.packageItem.nominalPlatform?.id,
             provider: this.packageItem.provider?.id,
-            ids: this.packageItem.ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace }))
+            ids: this.packageItem.ids
           }
           const response = await this.catchError({
             promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
@@ -483,6 +533,7 @@
               name,
               source,
               descriptionUrl,
+              contentType,
               description,
               scope,
               global,
@@ -506,6 +557,7 @@
             promise: packageServices.getPackage(this.id, this.cancelToken.token),
             instance: this
           })
+          this.currentName = name
           this.packageItem.name = name
           this.packageItem.source = source
           this.packageItem.descriptionUrl = descriptionUrl
@@ -517,6 +569,7 @@
           this.packageItem.fixed = fixed?.name === 'Yes'
           this.packageItem.provider = provider
           this.packageItem.nominalPlatform = nominalPlatform
+          this.packageItem.contentType = contentType
           this.version = version
           this.packageItem.ids = ids.map(({ value, namespace: { name: namespace } }) => ({ value, namespace, isDeletable: !!updateUrl }))
           this.allAlternateNames = variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!updateUrl }))
@@ -526,6 +579,7 @@
           this.platformSelect = nominalPlatform
           this.titleCount = _tippCount
           this.allNames = { name: name, alts: this.allAlternateNames }
+          this.sourceItem = source
         }
       }
     }

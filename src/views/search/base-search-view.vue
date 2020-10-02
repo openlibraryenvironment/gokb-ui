@@ -15,7 +15,7 @@
             <component
               :is="column.type"
               :key="`${title}_${rowIndex}_${columnIndex}`"
-              v-model="column.value"
+              v-model="searchFilters[column.value]"
               :items="column.items"
               clearable
               v-bind="column.properties"
@@ -184,9 +184,9 @@
         const searchParameters = this.searchInputFields
           .flat()
           .map(field => ([field.name, field.value]))
-          .filter(([name, value]) => name && value !== undefined && value !== null)
+          .filter(([name, value]) => name && this.searchFilters[value] !== undefined && this.searchFilters[value] !== null)
           .reduce((result, [name, value]) => {
-            result[name] = value
+            result[name] = ((typeof this.searchFilters[value] === 'string' || typeof this.searchFilters[value] === 'number') ? this.searchFilters[value] : this.searchFilters[value].id)
             return result
           }, {})
         // console.log(this.searchInputFields, this.searchParameters)

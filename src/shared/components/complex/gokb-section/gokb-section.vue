@@ -41,7 +41,7 @@
           {{ subTitle }}
         </span>
         <v-chip
-          v-if="itemsTotal"
+          v-if="itemsTotal !== undefined"
           class="ma-2"
         >
           {{ itemsTotal }}
@@ -81,6 +81,11 @@
         required: false,
         default: undefined,
       },
+      hideDefault: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
       subTitle: {
         type: String,
         required: false,
@@ -101,6 +106,9 @@
       expansionIcon () {
         return this.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
       }
+    },
+    created () {
+      this.expanded = !this.hideDefault
     },
     methods: {
       doExpandCollapse () {

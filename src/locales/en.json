@@ -105,10 +105,6 @@
     "search": "Search",
     "results": "Results"
   },
-  "welcome": {
-    "title": "Welcome to GOKb",
-    "p1": ""
-  },
   "search": {
     "label": "Search",
     "global": {
@@ -118,6 +114,10 @@
       "label": "Results",
       "empty": "No Results"
     }
+  },
+  "welcome": {
+    "title": "Welcome to GOKb",
+    "p1": ""
   },
   "component": {
     "label": "Component | Components",
@@ -140,6 +140,15 @@
       "firstPublishedInPrint": "First Published (Print)",
       "firstPublishedOnline": "First Published (Online)"
     },
+    "journal": {
+      "label": "Journal | Journals"
+    },
+    "book": {
+      "label": "Monograph | Monographs"
+    },
+    "database": {
+      "label": "Database | Databases"
+    },
     "package": {
       "label": "Package | Packages",
       "navigation": {
@@ -149,8 +158,21 @@
         "step4": "Summary"
       },
       "description": "Description",
-      "scope": "Scope",
+      "scope": {
+        "label": "Scope",
+        "Front File": "Front File",
+        "Back File": "Back File",
+        "Aggregator": "Aggregator",
+        "Master File": "Master File"
+      },
       "consistent": "Content is consistent",
+      "contentType": {
+        "label": "Content Type",
+        "Journal": "Journal",
+        "Book": "Book",
+        "Database": "Database",
+        "Mixed": "Mixed"
+      },
       "breakable": "Content may be split",
       "fixed": "Content is fixed",
       "provider": "Provider",
@@ -184,7 +206,12 @@
       "embargo": {
         "type": "Type",
         "duration": "Duration",
-        "unit": "Unit"
+        "unit": { 
+          "label": "Unit",
+          "day": "Day(s)",
+          "month": "Month(s)",
+          "year": "Year(s)"
+        }
       }
     },
     "org": {
@@ -194,7 +221,8 @@
       "label": "Platform | Platforms"
     },
     "provider": {
-      "label": "Provider | Providers"
+      "label": "Provider | Providers",
+      "homepage": "Homepage"
     },
     "identifier": {
       "label": "Identifier | Identifiers",
@@ -219,7 +247,30 @@
       "type": "Type",
       "cause": "Cause",
       "componentToReview": "Component",
-      "showClosed": "Show closed requests"
+      "showClosed": "Show closed requests",
+      "status": {
+        "Open": "Open",
+        "Closed": "Closed",
+        "Deleted": "Deleted"
+      },
+      "stdDesc": {
+        "label": "Category | Categories",
+        "Invalid TIPPs": "Invalid TIPPs",
+        "Major Identifier Mismatch": "Major Identifier Mismatch",
+        "Minor Identifier Mismatch": "Minor Identifier Mismatch",
+        "Multiple Matches": "Name Mismatch",
+        "Name Mismatch": "Name Mismatch",
+        "Name Similarity": "Name Similarity",
+        "Namespace Mismatch": "Namespace Mismatch",
+        "New Org": "New Org",
+        "New Platform": "New Platform",
+        "Platform Noncurrent": "Platform Noncurrent",
+        "Removed Identifier": "Removed Identifier",
+        "Status Deleted": "Status Deleted",
+        "Status Retired": "Status Retired",
+        "TIPPs Retired": "TIPPs Retired",
+        "Type Mismatch": "Type Mismatch"
+      }
     },
     "maintenance": {
       "label": "Maintenance | Maintenance"
@@ -231,11 +282,13 @@
       "label": "Name Variant | Name Variants"
     },
     "source": {
-      "label": "Source | Sources"
+      "label": "Source | Sources",
+      "url": "URL"
     },
     "general": {
       "name": "Name",
       "general": "General",
+      "status": "Status",
       "dateCreated":"Date Created",
       "lastUpdated": "Last Updated"
     }

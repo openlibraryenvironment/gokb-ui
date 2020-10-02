@@ -89,10 +89,11 @@
   import BaseComponent from '@/shared/components/base-component'
   import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
+  import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
 
   export default {
     name: 'GokbTable',
-    components: { GokbEditJobPopup, GokbAddTitlePopup },
+    components: { GokbEditJobPopup, GokbAddTitlePopup, GokbAddReviewPopup },
     extends: BaseComponent,
     props: {
       disabled: {
@@ -172,7 +173,7 @@
         this.$emit('retire-item', item)
       },
       editItem (item) {
-        this.$emit('edit', item)
+        this.$emit('paginate', item)
       },
       closeEdit () {
         this.editItemPopupVisible = false

@@ -1,7 +1,7 @@
 <template>
   <gokb-section
     expandable
-    expanded="false"
+    :hide-default="!expanded"
     :sub-title="$tc('component.variantName.label', 2)"
     :items-total="totalNumberOfItems"
   >
@@ -69,7 +69,7 @@
       expanded: {
         type: Boolean,
         required: false,
-        default: false
+        default: true
       }
     },
     data () {

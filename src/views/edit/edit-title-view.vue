@@ -7,13 +7,14 @@
     <gokb-error-component :value="error" />
     <span v-if="successMsg">
       <v-alert type="success">
-        Update erfolgreich
+        {{ isEdit ? $t('success.create', [typeDisplay, allNames.name]) : $t('success.update', [typeDisplay, allNames.name]) }}
       </v-alert>
     </span>
     <gokb-select-field
       v-if="!isEdit"
       v-model="currentType"
       :readonly="isReadonly"
+      :label="$t('component.title.type.label')"
       class="ml-4"
       :items="allTypes"
     />
@@ -82,15 +83,6 @@
           />
         </v-col>
       </v-row>
-      <v-row>
-        <v-col md="4">
-          <gokb-search-source-field
-            v-model="source"
-            :label="$t('component.general.source')"
-            :readonly="isReadonly"
-          />
-        </v-col>
-      </v-row>
     </gokb-section>
     <gokb-identifier-section
       v-model="ids"
@@ -143,6 +135,7 @@
         source: undefined,
         publishedFrom: undefined,
         publishedTo: undefined,
+        reviewRequests: [],
         firstPublishedOnline: undefined,
         firstPublishedInPrint: undefined,
         editionNumber: undefined,
@@ -172,6 +165,9 @@
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
+      },
+      typeDisplay () {
+        return this.$i18n.tc('component.title.type.' + this.currentType)
       },
       updateButtonText () {
         return this.id ? 'Aktualisieren' : 'Hinzufügen'
@@ -239,7 +235,8 @@
               _embedded: {
                 publisher,
                 ids,
-                variantNames
+                variantNames,
+                reviewRequests
               },
               _links: {
                 update: { href: updateUrl }
@@ -259,6 +256,7 @@
           this.publishers = publisher.map(name => ({ ...name, isDeletable: !!updateUrl }))
           this.ids = ids.map(({ id, value, namespace: { name: namespace } }) => ({ id, value, namespace, isDeletable: !!updateUrl }))
           this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
+          this.reviewRequests = reviewRequests
           this.editionStatement = editionStatement
           this.editionNumber = editionNumber
           this.firstPublishedInPrint = firstPublishedInPrint

@@ -14,6 +14,11 @@
         type: String,
         required: false,
         default: 'refdata/categories/KBComponent.Status'
+      },
+      messagePath: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     created () {
@@ -22,7 +27,7 @@
     methods: {
       transform (result) {
         const { data: { _embedded: { values } } } = result
-        return values.map(({ id, value }) => ({ id, name: value }))
+        return values.map(({ id, value, type }) => ({ id, name: (this.messagePath ? this.$i18n.t(this.messagePath + '.' + value) : value), type: 'Refdata Value' }))
       }
     }
   }
