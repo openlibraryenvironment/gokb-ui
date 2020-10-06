@@ -21,7 +21,8 @@
       <v-col>
         <gokb-time-period-field
           v-model="embargoUnit"
-          :label="$t('component.tipp.embargo.unit')"
+          :label="$t('component.tipp.embargo.unit.label')"
+          :items="allUnits"
           :rules="[unitRules]"
           :readonly="readonly"
         />
@@ -100,6 +101,22 @@
           const { type, duration } = this.decodeEmbargo()
           this.localValue = `${type || ''}${duration || ''}${unit || ''}`
         }
+      },
+      allUnits () {
+        return [
+          {
+            id: 'D',
+            name: this.$i18n.t('component.tipp.embargo.unit.day')
+          },
+          {
+            id: 'M',
+            name: this.$i18n.t('component.tipp.embargo.unit.month')
+          },
+          {
+            id: 'Y',
+            name: this.$i18n.t('component.tipp.embargo.unit.year')
+          }
+        ]
       }
     },
     methods: {

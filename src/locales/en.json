@@ -79,6 +79,10 @@
       "confirm": "Are you sure you want to delete your profile? This can not be reverted!"
     }
   },
+  "register": {
+    "register": "Registration",
+    "confirmPass": "Password (Confirmation)"
+  },
   "success": {
     "add": "Successfully added {0} {1}!",
     "create": "Successfully created {0} {1}!",
@@ -155,7 +159,8 @@
         "step1": "General",
         "step2": "Linked Objects",
         "step3": "Package Titles",
-        "step4": "Summary"
+        "step4": "Summary",
+        "newTitles": "Newly Added"
       },
       "description": "Description",
       "scope": {
@@ -239,7 +244,8 @@
         "contributor": "Contributor",
         "editor": "Editor",
         "admin": "Admin"
-      }
+      },
+      "register": "Registration"
     },
     "review": {
       "label": "Review | Reviews",

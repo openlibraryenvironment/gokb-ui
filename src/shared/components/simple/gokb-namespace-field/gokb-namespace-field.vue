@@ -11,11 +11,6 @@
         default: true
       },
     },
-    computed: {
-      label () {
-        return this.$i18n.tc('component.identifier.namespace')
-      }
-    },
     created () {
       this.entityName = 'identifier-namespaces'
     },

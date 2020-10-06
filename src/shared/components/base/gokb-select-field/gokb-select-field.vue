@@ -65,7 +65,7 @@
         default: false
       },
       initItem: {
-        type: [Object, String],
+        type: [Object, String, Number],
         required: false,
         default: undefined
       }
@@ -115,6 +115,8 @@
         if (this.initItem) {
           if (typeof this.initItem === 'string') {
             selected = this.items.filter(item => (item.name === this.initItem))
+          } else if (typeof this.initItem === 'number') {
+            selected = this.items.filter(item => (item.id === this.initItem))
           } else if (this.initItem instanceof Object) {
             if (this.initItem.id) {
               selected = this.items.filter(item => item.id === this.initItem.id)

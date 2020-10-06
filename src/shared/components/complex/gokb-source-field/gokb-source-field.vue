@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <gokb-section
+    expandable
+    :hide-default="!expanded"
+    :sub-title="$tc('component.source.label')"
+    :items-total="totalNumberOfItems"
+  >
     <gokb-url-field
       v-model="url"
       :label="$t('component.source.url')"
@@ -25,7 +30,7 @@
         />
       </v-col>
     </v-row>
-  </div>
+  </gokb-section>
 </template>
 
 <script>
@@ -45,6 +50,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      expanded: {
+        type: Boolean,
+        required: false,
+        default: true
       },
       value: {
         type: Object,

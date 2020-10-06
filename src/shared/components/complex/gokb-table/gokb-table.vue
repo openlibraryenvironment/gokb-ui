@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div
+      v-if="label"
+      class="title"
+    >
+      {{ label }}
+    </div>
     <v-data-table
       v-model="localSelectedItems"
       :headers="localHeaders"

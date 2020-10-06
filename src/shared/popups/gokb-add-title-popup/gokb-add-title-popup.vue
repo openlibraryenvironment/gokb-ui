@@ -117,7 +117,7 @@
         {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button default>
-        {{ $t('btn.update') }}
+        {{ selected ? $t('btn.update') : $t('btn.add') }}
       </gokb-button>
     </template>
   </gokb-dialog>
@@ -127,6 +127,7 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import tippServices from '@/shared/services/tipp-services'
+  import { EDIT_TITLE_ROUTE } from '@/router/route-paths'
 
   export default {
     name: 'GokbAddTitlePopup',
@@ -249,19 +250,18 @@
 
       if (this.selected) {
         this.packageTitleItem.hostPlatform = this.selectedItem.hostPlatform
-        this.packageTitleItem.pkg = this.selectedItem.pkg.id
+        this.packageTitleItem.pkg = this.selectedItem.pkg
         this.packageTitleItem.title = this.selectedItem.title
         this.packageTitleItem.url = this.selectedItem.url
+        this.status = this.selectedItem.status
         this.packageTitleItem.accessStartDate = this.selectedItem.accessStartDate
         this.packageTitleItem.accessEndDate = this.selectedItem.accessEndDate
         this.updateUrl = this.selectedItem.updateUrl
         this.deleteUrl = this.selectedItem.deleteUrl
         this.platformSelection.push(this.selectedItem.hostPlatform)
 
-        if (this.selectedItem?.coverage?.length) {
-          console.log(this.selectedItem.coverage)
-
-          this.packageTitleItem.coverageStatements = this.selectedItem.coverage.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
+        if (this.selectedItem?.coverageStatements?.length) {
+          this.packageTitleItem.coverageStatements = this.selectedItem.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
             startDate: startDate?.substr(0, 10),
             endDate: endDate?.substr(0, 10),
             coverageDepth,
@@ -282,38 +282,59 @@
     },
     methods: {
       async submitTipp () {
-        const newTipp = {
-          pkg: this.packageTitleItem.pkg,
-          title: this.packageTitleItem.title,
-          hostPlatform: this.packageTitleItem.hostPlatform,
-          accessStartDate: this.packageTitleItem.accessStartDate,
-          accessEndDate: this.packageTitleItem.accessEndDate,
-          url: this.packageTitleItem.url,
-          coverage: this.packageTitleItem.coverageStatements.map(({ startDate, endDate, startIssue, endIssue, startVolume, endVolume, embargo, coverageNote, coverageDepth }) => ({
-            startDate,
-            endDate,
-            coverageDepth: coverageDepth.name,
-            startIssue,
-            endIssue,
-            startVolume,
-            endVolume,
-            embargo,
-            coverageNote
-          })),
-          id: this.id
-        }
+        if (this.selected) {
+          const newTipp = {
+            pkg: this.packageTitleItem.pkg,
+            title: this.packageTitleItem.title,
+            hostPlatform: this.packageTitleItem.hostPlatform,
+            accessStartDate: this.packageTitleItem.accessStartDate,
+            accessEndDate: this.packageTitleItem.accessEndDate,
+            url: this.packageTitleItem.url,
+            coverageStatements: this.packageTitleItem.coverageStatements.map(({ startDate, endDate, startIssue, endIssue, startVolume, endVolume, embargo, coverageNote, coverageDepth }) => ({
+              startDate,
+              endDate,
+              coverageDepth: coverageDepth.name,
+              startIssue,
+              endIssue,
+              startVolume,
+              endVolume,
+              embargo,
+              coverageNote
+            })),
+            id: this.id
+          }
 
-        const response = await this.catchError({
-          promise: tippServices.createOrUpdateTipp(newTipp, this.cancelToken.token),
-          instance: this
-        })
+          const response = await this.catchError({
+            promise: tippServices.createOrUpdateTipp(newTipp, this.cancelToken.token),
+            instance: this
+          })
 
-        if (response.status === 200) {
-          this.$emit('edit', this.packageTitleItem)
-          this.close()
+          if (response.status === 200) {
+            this.$emit('edit', this.packageTitleItem)
+            this.close()
+          } else {
+            console.log(response.status)
+          }
         } else {
-          console.log(newTipp.status)
+          console.log('Adding new TIPP!')
+          const newTipp = {
+            ...this.packageTitleItem,
+            id: this.tempId(),
+            titleType: this.titleType.text,
+            titleId: this.packageTitleItem.title.id,
+            popup: { value: 'Show Info', label: 'tipp', type: 'GokbAddTitlePopup' },
+            link: { value: this.packageTitleItem.title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },
+            hostPlatformName: this.packageTitleItem.hostPlatform?.name,
+            updateUrl: null,
+            deleteUrl: null
+          }
+
+          this.$emit('add', newTipp)
+          this.close()
         }
+      },
+      tempId () {
+        return 'tempTippId' + Math.random().toString(36).substr(2, 5)
       },
       close () {
         this.localValue = false

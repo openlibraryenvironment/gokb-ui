@@ -27,7 +27,7 @@
     />
     <gokb-table
       :items="reviews"
-      :headers="reviewsHeader"
+      :headers="reviewHeaders"
       :total-number-of-items="totalNumberOfReviews"
       :options.sync="reviewsOptions"
       :show-select="false"
@@ -94,6 +94,15 @@
           { text: this.$i18n.t('component.review.status.Open'), value: 'Open' },
           { text: this.$i18n.t('component.review.status.Closed'), value: 'Closed' },
           { text: this.$i18n.t('component.review.status.Deleted'), value: 'Deleted' }
+        ]
+      },
+      reviewHeaders () {
+        return [
+          { text: this.$i18n.t('component.review.componentToReview'), align: 'left', value: 'popup', sortable: false },
+          { text: this.$i18n.t('component.general.status'), align: 'left', value: 'status.name', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.review.stdDesc.label'), align: 'left', value: 'stdDesc.name', sortable: false, width: '10%' },
+          { text: this.$i18n.t('component.review.type'), align: 'left', value: 'type', sortable: false, width: '10%' },
+          { text: this.$i18n.t('component.general.dateCreated'), align: 'left', value: 'dateCreated', sortable: false },
         ]
       },
       reviews () {
@@ -175,16 +184,6 @@
     },
     activated () {
       this.retrieveReviews()
-    },
-    created () {
-      this.tableHeaders = [
-        { text: 'ID', align: 'left', value: 'id', sortable: false, width: '10%' },
-        { text: this.$i18n.t('job.description'), align: 'left', value: 'popup', sortable: false, width: '40%' },
-        { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '20%' },
-        { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '15%' },
-        { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '15%' },
-      ]
-      this.reviewsHeader = this.localizedReviewHeaders
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

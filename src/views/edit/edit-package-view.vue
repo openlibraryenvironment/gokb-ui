@@ -160,15 +160,12 @@
             :platform="packageItem.nominalPlatform"
             :disabled="isReadonly"
             @kbart="setKbart"
+            @update="updateNewTipps"
           />
-          <gokb-section
-            :sub-title="$tc('component.source.label')"
-          >
-            <gokb-source-field
-              v-model="sourceItem"
-              :readonly="isReadonly"
-            />
-          </gokb-section>
+          <gokb-source-field
+            v-model="sourceItem"
+            :readonly="isReadonly"
+          />
         </v-stepper-content>
 
         <v-stepper-content :step="isEdit ? 1 : 4">
@@ -346,6 +343,7 @@
         step: 1,
         version: undefined,
         currentName: undefined,
+        newTipps: [],
         packageItem: {
           name: undefined,
           source: undefined,
@@ -450,6 +448,9 @@
       cancelPackage () {
         this.$router.push(HOME_ROUTE)
       },
+      updateNewTipps (tipps) {
+        this.newTipps = tipps
+      },
       setKbart (options) {
         this.kbart = options
       },
@@ -479,12 +480,15 @@
           const newPackage = {
             ...this.packageItem,
             id: this.id,
+            ...(this.newTipps.length > 0 ? { tipps: this.newTipps } : {}),
+            name: this.allNames.name,
+            variantNames: this.allAlternateNames,
+            curatoryGroups: this.allCuratoryGroups,
             breakable: utils.asYesNo(this.packageItem.breakable),
             consistent: utils.asYesNo(this.packageItem.consistent),
             fixed: utils.asYesNo(this.packageItem.fixed),
             nominalPlatform: this.packageItem.nominalPlatform?.id,
             provider: this.packageItem.provider?.id,
-            ids: this.packageItem.ids
           }
           const response = await this.catchError({
             promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),

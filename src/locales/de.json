@@ -79,6 +79,10 @@
       "confirm": "Sind Sie sicher, dass Sie das Profil löschen möchten? Die Löschung kann nicht rückgängig gemacht werden!"
     }
   },
+  "register": {
+    "register": "Registrierung",
+    "confirmPass": "Passwort (Bestätigung)"
+  },
   "success": {
     "add": "{0} {1} erfolgreiche hinzugefügt!",
     "create": "{0} {1} erfolgreich erstellt!",
@@ -155,7 +159,8 @@
         "step1": "Allgemein",
         "step2": "Verknüpfte Objekte",
         "step3": "Titel im Paket",
-        "step4": "Zusammenfassung"
+        "step4": "Zusammenfassung",
+        "newTitles": "Neu Hinzugefügt"
       },
       "description": "Beschreibung",
       "scope": {

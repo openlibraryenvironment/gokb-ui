@@ -2,7 +2,7 @@
   <gokb-section
     expandable
     :hide-default="!expanded"
-    sub-title="Tipps"
+    :sub-title="$tc('component.tipp.label', 2)"
     :items-total="totalNumberOfItems"
   >
     <span v-if="successMessage">
@@ -64,6 +64,14 @@
 
       <gokb-button
         :disabled="selectedItems.length == 0"
+        class="mr-4"
+        icon-id="close"
+        @click="confirmRetireSelectedItems"
+      >
+        {{ $t('btn.retire') }}
+      </gokb-button>
+      <gokb-button
+        :disabled="selectedItems.length == 0"
         icon-id="delete"
         @click="confirmDeleteSelectedItems"
       >
@@ -76,6 +84,22 @@
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
     <gokb-table
+      v-if="!pkg || newTipps.length > 0"
+      :headers="tableHeaders"
+      :items="newTipps"
+      :label="$t('component.package.navigation.newTitles')"
+      :editable="isEditable"
+      :selected-items="selectedNewItems"
+      :total-number-of-items="totalNumberOfNewItems"
+      :options.sync="newOptions"
+      @selected-items="selectedNewItems = $event"
+      @delete-item="confirmDeleteNew"
+      @paginate="resultNewPaginate"
+      @edit="editTitle"
+    />
+    <v-divider />
+    <gokb-table
+      v-if="pkg"
       :headers="tableHeaders"
       :items="items"
       :editable="isEditable"
@@ -84,6 +108,7 @@
       :options.sync="options"
       @selected-items="selectedItems = $event"
       @delete-item="confirmDeleteItem"
+      @retire-item="confirmRetireItem"
       @paginate="resultPaginate"
       @edit="editTitle"
     />
@@ -136,7 +161,13 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
+        newOptions: {
+          page: 1,
+          itemsPerPage: ROWS_PER_PAGE
+        },
         selectedItems: [],
+        selectedNewItems: [],
+        newTipps: [],
         successMessage: undefined,
         items: [],
         addTitleType: undefined,
@@ -147,6 +178,7 @@
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
         itemCount: 0,
+        newItemCount: 0,
         interval: null
       }
     },
@@ -156,6 +188,9 @@
       },
       totalNumberOfItems () {
         return this.itemCount
+      },
+      totalNumberOfNewItems () {
+        return this.newTipps.length
       },
       isEditable () {
         return !this.disabled
@@ -170,7 +205,7 @@
     },
     async created () {
       this.tableHeaders = [
-        { text: 'ID', align: 'left', value: 'popup', sortable: false, width: '10%' },
+        { text: 'Details', align: 'left', value: 'popup', sortable: false, width: '10%' },
         { text: this.$i18n.tc('component.title.label'), align: 'left', value: 'link', sortable: false, width: '60%' },
         { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
         { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
@@ -190,13 +225,31 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedTitles'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Elemente wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.tipp.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       confirmDeleteItem ({ id }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = 'Wollen Sie das ausgewählte Element wirklich löschen?'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.tipp.label'), id] }
+        this.parameterToConfirm = id
+        this.confirmationPopUpVisible = true
+      },
+      confirmRetireelectedItems () {
+        this.actionToConfirm = '_retireSelectedTitles'
+        this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.tipp.label', this.selectedItems.length)] }
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      confirmRetireItem ({ id }) {
+        this.actionToConfirm = '_retireItem'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.tipp.label'), id] }
+        this.parameterToConfirm = id
+        this.confirmationPopUpVisible = true
+      },
+      confirmDeleteNew ({ id }) {
+        this.actionToConfirm = '_deleteItem'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.tipp.label'), id] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -205,7 +258,15 @@
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedTitles = []
       },
+      _retireSelectedTitles () {
+        this.titles = this.titles.filter(({ id }) => !this.selectedTitles
+          .find(({ id: selectedId }) => id === selectedId))
+        this.selectedTitles = []
+      },
       _deleteItem (idToDelete) {
+      },
+      _retireItem (idToRetire) {
+        this.fetchTipps()
       },
       showAddNewTitlePopup (titleType) {
         this.addTitleType = titleType
@@ -222,7 +283,8 @@
       },
       addNewTitle (tipp) {
         this.successMessage = this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), tipp.title.name])
-        this.fetchTipps()
+        this.newTipps.push(tipp)
+        this.$emit('update', this.newTipps)
       },
       addKbartFile (options) {
         this.$emit('kbart', options)
@@ -231,40 +293,46 @@
         this.successMessage = undefined
         this.fetchTipps({ page })
       },
+      resultNewPaginate (page) {
+        this.successMessage = undefined
+      },
       async fetchTipps ({ page } = { page: undefined }) {
-        const result = await this.catchError({
-          promise: packageServices.getTipps(this.pkg, {
-            offset: page ? (page - 1) * this.options.itemsPerPage : 0,
-            limit: this.options.itemsPerPage
-          }, this.cancelToken.token),
-          instance: this
-        })
+        if (this.pkg) {
+          const result = await this.catchError({
+            promise: packageServices.getTipps(this.pkg, {
+              offset: page ? (page - 1) * this.options.itemsPerPage : 0,
+              limit: this.options.itemsPerPage
+            }, this.cancelToken.token),
+            instance: this
+          })
 
-        if (result?.status === 200) {
-          this.items = result.data?.data?.map(
-            ({ id, url, accessStartDate, accessEndDate, title, hostPlatform, _embedded, pkg, _links }) => (
-              {
-                id,
-                coverage: _embedded.coverageStatements,
-                url,
-                accessStartDate,
-                accessEndDate,
-                pkg,
-                title,
-                hostPlatform,
-                titleType: title.type,
-                titleId: title.id,
-                popup: { value: id, label: 'tipp', type: 'GokbAddTitlePopup' },
-                link: { value: title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },
-                hostPlatformName: hostPlatform?.name,
-                updateUrl: _links.update.href,
-                deleteUrl: _links.delete.href,
-                isDeletable: !!_links.delete.href,
-                isRetireable: !!_links.update.href
-              }
+          if (result?.status === 200) {
+            this.items = result.data?.data?.map(
+              ({ id, url, accessStartDate, accessEndDate, title, hostPlatform, _embedded, pkg, _links }) => (
+                {
+                  id,
+                  coverageStatements: _embedded.coverageStatements,
+                  status,
+                  url,
+                  accessStartDate,
+                  accessEndDate,
+                  pkg,
+                  title,
+                  hostPlatform,
+                  titleType: title.type,
+                  titleId: title.id,
+                  popup: { value: id, label: 'tipp', type: 'GokbAddTitlePopup' },
+                  link: { value: title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },
+                  hostPlatformName: hostPlatform?.name,
+                  updateUrl: _links.update.href,
+                  deleteUrl: _links.delete.href,
+                  isDeletable: !!_links.delete.href,
+                  isRetireable: !!_links.update.href
+                }
+              )
             )
-          )
-          this.itemCount = result?.data?._pagination?.total
+            this.itemCount = result?.data?._pagination?.total
+          }
         }
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    title="Registrierung"
+    :title="$t('component.user.register')"
     @submit="register"
   >
     <gokb-username-field v-model="username" />
@@ -9,7 +9,7 @@
     <gokb-password-field v-model="password" />
     <gokb-password-field
       v-model="password2"
-      label="Kennwort (Wiederholung)"
+      :label="$t('register.confirmPass')"
     />
     <template #buttons>
       <v-spacer />
@@ -17,10 +17,10 @@
         text
         @click="close"
       >
-        Abbrechen
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button default>
-        Registrieren
+        {{ $t('btn.submit') }}
       </gokb-button>
     </template>
   </gokb-dialog>
