@@ -30,25 +30,25 @@
         </v-col>
       </v-row>
     </gokb-section>
-    <gokb-identifier-section
-      v-model="ids"
-      :expanded="false"
-      :disabled="isReadonly"
-    />
     <gokb-alternate-names-section
       v-model="allAlternateNames"
-      :expanded="false"
+      :expanded="allAlternateNames.length > 0"
+      :disabled="isReadonly"
+    />
+    <gokb-identifier-section
+      v-model="ids"
+      :expanded="ids.length > 0"
       :disabled="isReadonly"
     />
     <gokb-platform-section
       v-model="allPlatforms"
-      :expanded="false"
+      :expanded="allPlatforms.length > 0"
       :sub-title="$tc('component.platform.label', 2)"
       :disabled="isReadonly"
     />
     <gokb-curatory-group-section
       v-model="allCuratoryGroups"
-      :expanded="false"
+      :expanded="allCuratoryGroups.length > 0"
       :sub-title="$tc('component.curatoryGroup.label', 2)"
       :disabled="isReadonly"
     />

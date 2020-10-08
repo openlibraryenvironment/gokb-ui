@@ -13,7 +13,7 @@
       <gokb-state-field
         v-model="searchFilters.status"
         class="mr-4"
-        :init-item="'Open'"
+        :init-item="$t('component.review.status.Open')"
         message-path="component.review.status"
         url="refdata/categories/ReviewRequest.Status"
         :label="$t('component.general.status')"
@@ -99,8 +99,8 @@
       reviewHeaders () {
         return [
           { text: this.$i18n.t('component.review.componentToReview'), align: 'left', value: 'popup', sortable: false },
-          { text: this.$i18n.t('component.general.status'), align: 'left', value: 'status.name', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.review.stdDesc.label'), align: 'left', value: 'stdDesc.name', sortable: false, width: '10%' },
+          { text: this.$i18n.t('component.general.status'), align: 'left', value: 'statusLabel', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.review.stdDesc.label'), align: 'left', value: 'stdDescLabel', sortable: false, width: '10%' },
           { text: this.$i18n.t('component.review.type'), align: 'left', value: 'type', sortable: false, width: '10%' },
           { text: this.$i18n.t('component.general.dateCreated'), align: 'left', value: 'dateCreated', sortable: false },
         ]
@@ -124,12 +124,14 @@
           const request = entry?.reviewRequest
           const description = entry?.descriptionOfCause
           const status = entry?.status
+          const statusLabel = entry?.status && this.$i18n.t('component.review.status.' + entry?.status.name)
           const stdDesc = entry?.stdDesc
+          const stdDescLabel = entry?.stdDesc && this.$i18n.t('component.review.stdDesc.' + entry?.stdDesc.name)
           const updateUrl = entry?._links.update.href
           const deleteUrl = entry?._links.delete.href
           const popup = { value: (component.name || type + ' ' + component.id), label: 'review', type: 'GokbAddReviewPopup' }
           const link = { value: component.name, route: componentRoutes[entry?.componentToReview?.type?.toLowerCase()], id: 'componentId' }
-          return { id, name, status, dateCreated, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl }
+          return { id, name, status, dateCreated, statusLabel, stdDescLabel, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl }
         })
       },
       totalNumberOfReviews () {

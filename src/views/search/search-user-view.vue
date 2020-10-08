@@ -8,10 +8,12 @@
     extends: BaseSearch,
     data () {
       return {
-        name: undefined,
-        curatoryGroupIds: undefined,
-        roleIds: undefined,
-        status: undefined,
+        searchFilters: {
+          name: undefined,
+          curatoryGroupIds: [],
+          roleIds: [],
+          status: undefined,
+        }
       }
     },
     created () {
@@ -33,19 +35,17 @@
       this.searchInputFields = [
         [
           {
-            type: 'GokbUsernameField',
+            type: 'GokbTextField',
             name: 'name',
-            value: this.name,
             properties: {
               hideIcon: true,
-              label: this.$i18n.t('component.user.username'),
-              rules: []
+              label: this.$i18n.t('component.user.username')
             }
           },
           {
             type: 'GokbCuratoryGroupField',
             name: 'curatoryGroupId',
-            value: this.curatoryGroupIds,
+            value: 'curatoryGroupIds',
             properties: {
               label: this.$i18n.tc('component.curatoryGroup.label', 2),
               multiple: true,
@@ -56,16 +56,16 @@
           {
             type: 'GokbRoleField',
             name: 'roleId',
-            value: this.roleIds,
+            value: 'roleIds',
             properties: {
               label: this.$i18n.tc('component.user.role.label', 2),
-              multiple: true,
+              multiple: true
             }
           },
           {
             type: 'GokbActiveField',
             name: 'status',
-            value: this.status,
+            value: 'status',
           }
         ]
       ]

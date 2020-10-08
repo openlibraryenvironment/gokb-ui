@@ -138,7 +138,7 @@
       },
       _confirmCloseSelectedItems () {
         this.actionToConfirm = '_closeSelectedItems'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Reviews wirklich schließen?'
+        this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.selectedItems.length, this.$i18n.tc('component.review.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

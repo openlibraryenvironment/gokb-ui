@@ -10,9 +10,11 @@
     extends: BaseSearch,
     data () {
       return {
-        name: undefined,
-        identifier: undefined,
-        curatoryGroupIds: undefined
+        searchFilters: {
+          name: undefined,
+          identifier: undefined,
+          curatoryGroupIds: undefined
+        }
       }
     },
     async created () {
@@ -36,7 +38,6 @@
           {
             type: 'GokbTextField',
             name: 'name',
-            value: this.name,
             properties: {
               label: this.$i18n.t('component.general.name')
             }
@@ -44,7 +45,7 @@
           {
             type: 'GokbTextField',
             name: 'ids',
-            value: this.identifier,
+            value: 'identifier',
             properties: {
               entity: 'Org', // means Provider ;-)
               label: this.$i18n.tc('component.identifier.label')
@@ -55,7 +56,7 @@
           {
             type: 'GokbCuratoryGroupField',
             name: 'curatoryGroups',
-            value: this.curatoryGroupIds,
+            value: 'curatoryGroupIds',
             properties: {
               label: this.$i18n.tc('component.curatoryGroup.label'),
               multiple: true,

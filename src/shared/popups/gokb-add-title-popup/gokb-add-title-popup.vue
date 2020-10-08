@@ -31,7 +31,7 @@
       <gokb-url-field
         v-model="packageTitleItem.url"
         :disabled="isReadonly"
-        :label="$t('component.tipp.url')"
+        :label="$tc('component.tipp.url.label')"
       />
     </gokb-section>
     <div class="title ml-4">

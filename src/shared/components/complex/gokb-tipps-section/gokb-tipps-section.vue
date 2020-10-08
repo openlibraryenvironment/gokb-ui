@@ -44,7 +44,7 @@
             v-on="on"
           >
             <v-icon>add</v-icon>
-            {{ $t('btn.add') }}
+            {{ $t('btn.new') }}
             <v-icon>keyboard_arrow_down</v-icon>
           </v-btn>
         </template>
@@ -97,11 +97,11 @@
       @paginate="resultNewPaginate"
       @edit="editTitle"
     />
-    <v-divider />
     <gokb-table
       v-if="pkg"
       :headers="tableHeaders"
       :items="items"
+      :label="$t('component.package.navigation.currentTitles')"
       :editable="isEditable"
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
@@ -121,7 +121,7 @@
   import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
   import packageServices from '@/shared/services/package-services'
   import BaseComponent from '@/shared/components/base-component'
-  import { EDIT_TITLE_ROUTE } from '@/router/route-paths'
+  import accountModel from '@/shared/models/account-model'
 
   const ROWS_PER_PAGE = 10
 
@@ -201,18 +201,27 @@
           { id: 'database', text: this.$i18n.tc('component.title.type.Database') },
           { id: 'journal', text: this.$i18n.tc('component.title.type.Journal') },
         ]
+      },
+      loggedIn () {
+        return accountModel.loggedIn()
+      },
+    },
+    watch: {
+      loggedIn (value) {
+        if (value) {
+          this.fetchTipps(this.options.page)
+        }
       }
     },
     async created () {
       this.tableHeaders = [
-        { text: 'Details', align: 'left', value: 'popup', sortable: false, width: '10%' },
-        { text: this.$i18n.tc('component.title.label'), align: 'left', value: 'link', sortable: false, width: '60%' },
+        { text: 'Details', align: 'left', value: 'popup', sortable: false },
         { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
         { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
       ]
 
       if (this.pkg) {
-        this.fetchTipps(this.page)
+        this.fetchTipps()
       }
 
       // this.interval = setInterval(function () {
@@ -235,7 +244,7 @@
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
-      confirmRetireelectedItems () {
+      confirmRetireSelectedItems () {
         this.actionToConfirm = '_retireSelectedTitles'
         this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.tipp.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
@@ -321,8 +330,7 @@
                   hostPlatform,
                   titleType: title.type,
                   titleId: title.id,
-                  popup: { value: id, label: 'tipp', type: 'GokbAddTitlePopup' },
-                  link: { value: title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },
+                  popup: { value: title.name, label: 'tipp', type: 'GokbAddTitlePopup' },
                   hostPlatformName: hostPlatform?.name,
                   updateUrl: _links.update.href,
                   deleteUrl: _links.delete.href,

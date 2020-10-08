@@ -13,10 +13,9 @@
           :width="dialogWidth"
           @submit="selectNewName"
         >
-          <component
-            :is="'GokbTextField'"
-            ref="nameTextField"
+          <gokb-text-field
             v-model="editedVal"
+            :rules="rules"
           />
           <template #buttons>
             <v-spacer />
@@ -34,7 +33,7 @@
             </gokb-button>
 
             <gokb-button
-              :disabled="!value"
+              :disabled="!valid"
               default
             >
               {{ $i18n.t('btn.confirm') }}
@@ -66,10 +65,8 @@
     props: {
       value: {
         required: true,
-        default: '',
-        validator: function (value) {
-          return value.name === undefined || value.name === null || typeof value.name === 'string'
-        }
+        default: undefined,
+        type: [Object, String]
       },
       disabled: {
         type: Boolean,
@@ -112,11 +109,21 @@
       },
       editNamePopupLabel () {
         return this.$i18n.t('header.edit.label', [this.$i18n.t('component.general.name')])
+      },
+      rules () {
+        return [
+          value => value?.length > 0 || this.$i18n.t('validation.missingName')
+        ]
+      },
+      valid () {
+        return !!this.editedVal
       }
     },
     methods: {
-      validate () {
-        this.$refs.nameTextField.validate(true)
+      validate ({ def }) {
+        if (this.$refs.nameTextField) {
+          this.$refs.nameTextField.validate({ def })
+        }
       },
       tempId () {
         return 'tempId' + Math.random().toString(36).substr(2, 5)
@@ -142,7 +149,7 @@
           this.localValue.name = this.editedVal
           this.editNamePopupVisible = false
         } else {
-          this.$refs.nameTextField.error = true
+          this.validate(false)
         }
       },
     }

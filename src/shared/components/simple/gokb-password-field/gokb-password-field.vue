@@ -24,14 +24,12 @@
         type: String,
         required: false,
         default: 'current-password',
-      },
-      rules: {
-        type: Array,
-        required: false,
-        default: () => [
-          value => !!value || 'Bitte erfassen Sie ein Kennwort.'
-        ]
-      },
+      }
     },
+    computed: {
+      rules () {
+        return [value => !!value || 'Bitte erfassen Sie ein Kennwort.']
+      }
+    }
   }
 </script>

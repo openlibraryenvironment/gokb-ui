@@ -422,7 +422,7 @@
         return this.maintenanceCycle ? this.maintenanceCycle.createMaintenanceDate(new Date()) : null
       },
       loggedIn () {
-        return accountModel.loggedIn
+        return accountModel.loggedIn()
       },
     },
     watch: {

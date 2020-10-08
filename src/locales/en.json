@@ -3,7 +3,8 @@
     "edit": "Edit",
     "submit": "Submit",
     "update": "Update",
-    "add": "Add New",
+    "add": "Add",
+    "new": "Add New",
     "create": "Create",
     "close": "Close",
     "cancel": "Cancel",
@@ -36,11 +37,20 @@
         "generic": "Are you sure you want to DELETE the selected items?",
         "specific": "Are you sure you want to delete {0} {1}?",
         "list": "Are you sure you want to remove {0} {1} from this list?"
+      },
+      "close": {
+        "generic": "Are you sure you want to close the selected items?",
+        "specific": "Are you sure you want to close {0} {1}?",
+        "list": "Are you sure you want to close {0} {1}?"
       }
     },
     "login": {
       "automatic": "Stay logged in"
     }
+  },
+  "validation": {
+    "missingName": "Please provide a name.",
+    "urlForm": "Please provide a valid URL."
   },
   "job": {
     "finished": "Finished",
@@ -160,7 +170,8 @@
         "step2": "Linked Objects",
         "step3": "Package Titles",
         "step4": "Summary",
-        "newTitles": "Newly Added"
+        "newTitles": "Newly Added",
+        "currentTitles": "Current Titles"
       },
       "description": "Description",
       "scope": {
@@ -191,7 +202,10 @@
     },
     "tipp": {
       "label": "Package Title | Package Titles",
-      "url": "Access URL",
+      "url": {
+        "label": "Access URL | Access URLs",
+        "error": "Please provide a valid URL."
+      },
       "access": "Access",
       "accessPeriod": "Access Period",
       "accessStartDate": "Access Start Date",
@@ -242,8 +256,14 @@
       "role": {
         "label": "Role | Roles",
         "contributor": "Contributor",
+        "ROLE_CONTRIBUTOR": "Contributor",
         "editor": "Editor",
-        "admin": "Admin"
+        "ROLE_EDITOR": "Editor",
+        "admin": "Admin",
+        "ROLE_ADMIN": "Admin",
+        "ROLE_USER": "User",
+        "ROLE_SUPERUSER": "System",
+        "ROLE_API": "API"
       },
       "register": "Registration"
     },

@@ -42,6 +42,7 @@
       <template #item.popup="{ item }">
         <a
           :href="$route.query.page"
+          :style="{ color: '#f2994a', textDecoration: 'underline' }"
           @click="editItemPopupVisible = item.id"
         >
           {{ item.popup.value }}
@@ -179,7 +180,7 @@
         this.$emit('retire-item', item)
       },
       editItem (item) {
-        this.$emit('paginate', item)
+        this.$emit('paginate', this.options.page)
       },
       closeEdit () {
         this.editItemPopupVisible = false

@@ -70,7 +70,19 @@
         prepend-inner-icon="search"
         return-object
         solo
-      />
+      >
+        <template v-slot:item="{ item }">
+          <v-icon
+            v-title="item.title"
+            class="mr-2"
+          >
+            {{ item.icon }}
+          </v-icon>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.name" />
+          </v-list-item-content>
+        </template>
+      </v-autocomplete>
       <v-select
         v-model="currentLocale"
         offset-y
@@ -202,12 +214,15 @@
 
         try {
           this.typeRoutes = [
-            { type: 'Organization', path: '/provider/' },
-            { type: 'Org', path: '/provider/' },
-            { type: 'Package', path: '/package/' },
-            { type: 'Journal', path: '/title/' },
-            { type: 'Book', path: '/title/' },
-            { type: 'Database', path: '/title/' },
+            { type: 'Organization', path: '/provider/', icon: 'domain', title: this.$i18n.tc('component.provider.label') },
+            { type: 'Org', path: '/provider/', icon: 'domain', title: this.$i18n.tc('component.provider.label') },
+            { type: 'Package', path: '/package/', icon: 'folder', title: this.$i18n.tc('component.package.label') },
+            { type: 'Journal', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Journal') },
+            { type: 'JournalInstance', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Journal') },
+            { type: 'Book', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Book') },
+            { type: 'BookInstance', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Book') },
+            { type: 'Database', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Database') },
+            { type: 'DatabaseInstance', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Database') },
           ]
 
           const result = await this.searchServices.search({
@@ -217,7 +232,11 @@
           }, this.cancelToken.token)
 
           if (result?.data?.data) {
-            this.globalSearchItems = result.data.data.map(res => ({ ...res, path: this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.path })).filter(path => !!path)
+            this.globalSearchItems = result.data.data.map(res => ({
+              ...res,
+              icon: this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.icon,
+              path: this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.path
+            })).filter(path => !!path)
           }
         } catch (exception) {
           this.globalSearchItems = []

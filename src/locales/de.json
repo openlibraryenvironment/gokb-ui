@@ -4,6 +4,7 @@
     "update": "Aktualisieren",
     "submit": "Abschicken",
     "add": "Hinzufügen",
+    "new": "Neu",
     "confirm": "Bestätigen",
     "create": "Erstellen",
     "close": "Schließen",
@@ -36,11 +37,20 @@
         "generic": "Möchten Sie die ausgewählten Elemente wirklich LÖSCHEN?",
         "specific": "Möchten Sie {0} {1} wirklich löschen?",
         "list": "Möchten Sie {0} {1} wirklich von dieser Liste entfernen?"
+      },
+      "close": {
+        "generic": "Möchten Sie die ausgewählten Elemente wirklich schließen?",
+        "specific": "Möchten Sie {0} {1} wirklich schließen?",
+        "list": "Möchten Sie {0} {1} wirklich schließen?"
       }
     },
     "login": {
       "automatic": "Eingeloggt bleiben"
     }
+  },
+  "validation": {
+    "missingName": "Bitte geben Sie einen Namen an.",
+    "urlForm": "Bitte geben Sie eine gültige URL an."
   },
   "job": {
     "finished": "Fertig",
@@ -160,7 +170,8 @@
         "step2": "Verknüpfte Objekte",
         "step3": "Titel im Paket",
         "step4": "Zusammenfassung",
-        "newTitles": "Neu Hinzugefügt"
+        "newTitles": "Neu hinzugefügt",
+        "currentTitles": "Aktueller Bestand"
       },
       "description": "Beschreibung",
       "scope": {
@@ -190,8 +201,11 @@
       }
     },
     "tipp": {
-      "label": "Titel im Paket | Titel im Paket",
-      "url": "Zugriffs-URL",
+      "label": "Paket-Titel | Paket-Titel",
+      "url": {
+        "label": "Zugriffs-URL | Zugriffs-URLs",
+        "error": "Bitte erfassen Sie eine gültige Url."
+      },
       "access": "Zugriff",
       "accessPeriod": "Zugriffszeitraum",
       "accessStartDate": "Zugriffsanfang",
@@ -242,8 +256,14 @@
       "role": {
         "label": "Rolle | Rollen",
         "contributor": "Bearbeiter",
+        "ROLE_CONTRIBUTOR": "Bearbeiter",
         "editor": "Editor",
-        "admin": "Admin"
+        "ROLE_EDITOR": "Editor",
+        "admin": "Admin",
+        "ROLE_ADMIN": "Admin",
+        "ROLE_USER": "Benutzer",
+        "ROLE_SUPERUSER": "System",
+        "ROLE_API": "API"
       }
     },
     "review": {

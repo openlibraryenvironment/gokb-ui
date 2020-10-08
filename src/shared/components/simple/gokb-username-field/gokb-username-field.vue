@@ -24,14 +24,14 @@
         type: String,
         required: false,
         default: 'username',
-      },
-      rules: {
-        type: Array,
-        required: false,
-        default: () => [
+      }
+    },
+    computed: {
+      rules () {
+        return [
           value => !!value || 'Bitte erfassen Sie einen Benutzernamen.'
         ]
-      },
-    },
+      }
+    }
   }
 </script>

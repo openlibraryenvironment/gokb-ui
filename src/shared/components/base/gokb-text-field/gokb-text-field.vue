@@ -6,7 +6,6 @@
     :readonly="readonly"
     :autocomplete="autocomplete"
     :full-width="fw"
-    :error="error"
     :label="label"
     :prepend-icon="hideIcon ? '' : prependIcon"
     :required="required"
@@ -80,16 +79,6 @@
         required: false,
         default: undefined,
       },
-      error: {
-        type: Boolean,
-        required: false,
-        default: false
-      },
-      rules: {
-        type: Array,
-        required: false,
-        default: undefined,
-      },
       fw: {
         type: Boolean,
         required: false,
@@ -105,10 +94,13 @@
           this.$emit('input', localValue)
         }
       },
+      rules () {
+        return []
+      }
     },
     methods: {
-      validate () {
-        this.$refs.textField.validate(true)
+      validate ({ def }) {
+        this.$refs.textField.validate({ def })
       }
     }
   }

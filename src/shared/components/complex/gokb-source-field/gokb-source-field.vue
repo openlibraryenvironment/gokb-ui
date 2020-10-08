@@ -3,7 +3,6 @@
     expandable
     :hide-default="!expanded"
     :sub-title="$tc('component.source.label')"
-    :items-total="totalNumberOfItems"
   >
     <gokb-url-field
       v-model="url"

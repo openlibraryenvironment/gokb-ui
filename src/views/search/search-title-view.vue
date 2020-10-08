@@ -7,11 +7,13 @@
     extends: BaseSearch,
     data () {
       return {
-        name: undefined,
-        identifierIds: undefined,
-        publisherId: undefined,
-        type: undefined,
-        status: undefined,
+        searchFilters: {
+          name: undefined,
+          identifierIds: undefined,
+          publisherId: undefined,
+          type: undefined,
+          status: undefined,
+        }
       }
     },
     computed: {
@@ -41,7 +43,6 @@
           {
             type: 'GokbTextField',
             name: 'name',
-            value: this.name,
             properties: {
               label: this.$i18n.t('component.general.name')
             }
@@ -49,7 +50,7 @@
           {
             type: 'GokbTextField',
             name: 'ids',
-            value: this.identifierIds,
+            value: 'identifierIds',
             properties: {
               label: this.$i18n.tc('component.identifier.label')
             }
@@ -59,11 +60,12 @@
           {
             type: 'GokbSearchPublisherField',
             name: 'publisher',
-            value: this.publisherId
+            value: 'publisherId'
           },
           {
             type: 'GokbSelectField',
             name: 'type',
+            value: 'type',
             properties: {
               label: this.$i18n.t('component.title.type.label'),
             },
@@ -79,6 +81,7 @@
           {
             type: 'GokbStateField',
             name: 'status',
+            value: 'status'
           }
         ]
       ]
