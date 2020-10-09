@@ -53,11 +53,11 @@
         ],
         [
           {
-            type: 'GokbSelectField',
+            type: 'GokbSearchEntityField',
             name: 'componentToReview',
             value: 'componentToReview',
             properties: {
-              label: this.$i18n.t('component.review.componentToReview')
+              label: this.$i18n.t('component.review.componentToReview'),
             }
           }
         ],
@@ -77,7 +77,7 @@
             name: 'status',
             value: 'status',
             properties: {
-              label: this.$i18n.tc('component.general.status'),
+              label: this.$i18n.t('component.general.status.label'),
               initItem: 'Open',
               messagePath: 'component.review.status',
               url: 'refdata/categories/ReviewRequest.Status'

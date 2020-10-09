@@ -81,7 +81,10 @@
           {
             type: 'GokbStateField',
             name: 'status',
-            value: 'status'
+            value: 'status',
+            properties: {
+              messagePath: 'component.general.status'
+            }
           }
         ]
       ]

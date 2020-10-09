@@ -99,6 +99,7 @@
         ids: [],
         allAlternateNames: [],
         allCuratoryGroups: [],
+        allPackages: [],
         allNames: { name: undefined, alts: [] },
         allPlatforms: [],
         updateUrl: undefined,
@@ -175,7 +176,8 @@
                 curatoryGroups,
                 ids,
                 variantNames,
-                providedPlatforms
+                providedPlatforms,
+                providedPackages
               },
               _links: {
                 update: { href: updateUrl },
@@ -194,6 +196,7 @@
           this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
           this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: !!updateUrl }))
           this.allPlatforms = providedPlatforms.map(platform => ({ ...platform, isDeletable: !!updateUrl }))
+          this.allPackages = providedPackages
           this.allNames = { name: name, alts: this.allAlternateNames }
           this.updateUrl = updateUrl
           this.successMsg = false

@@ -7,11 +7,22 @@
   >
     <gokb-error-component :value="error" />
     <gokb-section :sub-title="$t('component.general.general')">
+      <gokb-state-select-field
+        v-model="status"
+        :deletable="!!deleteUrl"
+        :editable="!!updateUrl"
+      />
       <gokb-title-field
         v-model="packageTitleItem.title"
-        :type-filter="titleType.id"
+        :type-filter="title.type.id"
         :label="$tc('component.title.label')"
         :readonly="isEdit || isReadonly"
+        return-object
+      />
+      <gokb-search-package-field
+        v-model="packageTitleItem.pkg"
+        :label="$tc('component.package.label')"
+        :readonly="true"
         return-object
       />
     </gokb-section>
@@ -34,79 +45,83 @@
         :label="$tc('component.tipp.url.label')"
       />
     </gokb-section>
-    <div class="title ml-4">
-      {{ $t('component.tipp.coverage.label') }}
-    </div>
     <gokb-section
-      v-for="statement in packageTitleItem.coverageStatements"
-      :key="statement.id"
+      expandable
+      :hide-default="true"
+      :sub-title="$t('component.tipp.coverage.label')"
+      :items-total="packageTitleItem.coverageStatements.length"
     >
-      <v-row>
-        <v-col>
-          <gokb-coverage-field
-            v-model="statement.coverageDepth"
-            :readonly="isReadonly"
-            :label="$t('component.tipp.coverage.depth')"
-          />
-          <v-row v-if="isJournal">
-            <v-col>
-              <gokb-date-field
-                v-model="statement.startDate"
-                :readonly="isReadonly"
-                :label="$t('component.tipp.coverage.startDate')"
-              />
-            </v-col>
-            <v-col>
-              <gokb-date-field
-                v-model="statement.endDate"
-                :readonly="isReadonly"
-                :label="$t('component.tipp.coverage.endDate')"
-              />
-            </v-col>
-          </v-row>
-          <v-row v-if="isJournal">
-            <v-col>
-              <gokb-text-field
-                v-model="statement.startIssue"
-                :disabled="isReadonly"
-                :label="$t('component.tipp.coverage.startIssue')"
-              />
-            </v-col>
-            <v-col>
-              <gokb-text-field
-                v-model="statement.endIssue"
-                :disabled="isReadonly"
-                :label="$t('component.tipp.coverage.endIssue')"
-              />
-            </v-col>
-          </v-row>
-          <v-row v-if="isJournal">
-            <v-col>
-              <gokb-text-field
-                v-model="statement.startVolume"
-                :disabled="isReadonly"
-                :label="$t('component.tipp.coverage.startVolume')"
-              />
-            </v-col>
-            <v-col>
-              <gokb-text-field
-                v-model="statement.endVolume"
-                :disabled="isReadonly"
-                :label="$t('component.tipp.coverage.endVolume')"
-              />
-            </v-col>
-          </v-row>
-          <gokb-textarea-field
-            v-model="statement.coverageNote"
-            :disabled="isReadonly"
-            :label="$t('component.tipp.coverage.note')"
-          />
-          <gokb-embargo-field
-            v-model="statement.embargo"
-            :readonly="isReadonly"
-          />
-        </v-col>
-      </v-row>
+      <div
+        v-for="statement in packageTitleItem.coverageStatements"
+        :key="statement.id"
+      >
+        <v-row>
+          <v-col>
+            <gokb-coverage-field
+              v-model="statement.coverageDepth"
+              :readonly="isReadonly"
+              :label="$t('component.tipp.coverage.depth')"
+            />
+            <v-row v-if="isJournal">
+              <v-col>
+                <gokb-date-field
+                  v-model="statement.startDate"
+                  :readonly="isReadonly"
+                  :label="$t('component.tipp.coverage.startDate')"
+                />
+              </v-col>
+              <v-col>
+                <gokb-date-field
+                  v-model="statement.endDate"
+                  :readonly="isReadonly"
+                  :label="$t('component.tipp.coverage.endDate')"
+                />
+              </v-col>
+            </v-row>
+            <v-row v-if="isJournal">
+              <v-col>
+                <gokb-text-field
+                  v-model="statement.startIssue"
+                  :disabled="isReadonly"
+                  :label="$t('component.tipp.coverage.startIssue')"
+                />
+              </v-col>
+              <v-col>
+                <gokb-text-field
+                  v-model="statement.endIssue"
+                  :disabled="isReadonly"
+                  :label="$t('component.tipp.coverage.endIssue')"
+                />
+              </v-col>
+            </v-row>
+            <v-row v-if="isJournal">
+              <v-col>
+                <gokb-text-field
+                  v-model="statement.startVolume"
+                  :disabled="isReadonly"
+                  :label="$t('component.tipp.coverage.startVolume')"
+                />
+              </v-col>
+              <v-col>
+                <gokb-text-field
+                  v-model="statement.endVolume"
+                  :disabled="isReadonly"
+                  :label="$t('component.tipp.coverage.endVolume')"
+                />
+              </v-col>
+            </v-row>
+            <gokb-textarea-field
+              v-model="statement.coverageNote"
+              :disabled="isReadonly"
+              :label="$t('component.tipp.coverage.note')"
+            />
+            <gokb-embargo-field
+              v-model="statement.embargo"
+              :readonly="isReadonly"
+            />
+          </v-col>
+        </v-row>
+      </div>
     </gokb-section>
     <template #buttons>
       <v-spacer />
@@ -114,9 +129,12 @@
         text
         @click="close"
       >
-        {{ $t('btn.cancel') }}
+        {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
       </gokb-button>
-      <gokb-button default>
+      <gokb-button
+        v-if="updateUrl"
+        default
+      >
         {{ selected ? $t('btn.update') : $t('btn.add') }}
       </gokb-button>
     </template>
@@ -166,6 +184,7 @@
         title: {
           id: undefined,
           title: undefined,
+          type: undefined,
           ids: [],
           publisher: undefined,
           publishedFrom: undefined,
@@ -186,6 +205,7 @@
         },
         updateUrl: undefined,
         deleteUrl: undefined,
+        status: undefined,
         items: [],
         id: undefined,
         packageTitleItem: {
@@ -216,7 +236,7 @@
         return this.isEdit ? (this.id ? (this.$i18n.t('header.edit.label', [this.typeLabel]) + ' ' + this.$i18n.t('component.tipp.access')) : (this.$i18n.t('header.add.label', [this.typeLabel]) + ' ' + this.$i18n.t('component.tipp.access'))) : (this.typeLabel + ' ' + this.$i18n.t('component.tipp.access'))
       },
       typeLabel () {
-        return this.titleType.text || this.$i18n.tc('component.title.label')
+        return this.title.type.text || this.$i18n.tc('component.title.label')
       },
       isEdit () {
         return !!this.id
@@ -225,7 +245,7 @@
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isJournal () {
-        return this.titleType.id === 'journal'
+        return this.title.type.id === 'journal'
       },
       localValue: {
         get () {
@@ -275,8 +295,9 @@
         }
         this.id = this.selectedItem.id
         this.packageTitleItem.id = this.id
-        this.titleType = { id: this.selectedItem.title.type.toLowerCase(), text: this.$i18n.tc('component.title.type.' + this.selectedItem.title.type) }
+        this.title.type = { id: this.selectedItem.title.type.toLowerCase(), text: this.$i18n.tc('component.title.type.' + this.selectedItem.title.type) }
       } else {
+        this.title.type = this.titleType
         this.packageTitleItem.hostPlatform = this.parentPlatform
       }
     },
@@ -288,12 +309,13 @@
             title: this.packageTitleItem.title,
             hostPlatform: this.packageTitleItem.hostPlatform,
             accessStartDate: this.packageTitleItem.accessStartDate,
+            status: this.status,
             accessEndDate: this.packageTitleItem.accessEndDate,
             url: this.packageTitleItem.url,
             coverageStatements: this.packageTitleItem.coverageStatements.map(({ startDate, endDate, startIssue, endIssue, startVolume, endVolume, embargo, coverageNote, coverageDepth }) => ({
               startDate,
               endDate,
-              coverageDepth: coverageDepth.name,
+              coverageDepth,
               startIssue,
               endIssue,
               startVolume,
@@ -320,7 +342,7 @@
           const newTipp = {
             ...this.packageTitleItem,
             id: this.tempId(),
-            titleType: this.titleType.text,
+            title: { type: this.title.type },
             titleId: this.packageTitleItem.title.id,
             popup: { value: 'Show Info', label: 'tipp', type: 'GokbAddTitlePopup' },
             link: { value: this.packageTitleItem.title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },

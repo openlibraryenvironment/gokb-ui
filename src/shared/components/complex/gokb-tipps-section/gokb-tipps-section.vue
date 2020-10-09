@@ -24,7 +24,7 @@
       @add="addNewTitle"
     />
     <template
-      v-if="!disabled"
+      v-if="isEditable"
       #buttons
     >
       <gokb-button
@@ -84,7 +84,7 @@
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
     <gokb-table
-      v-if="!pkg || newTipps.length > 0"
+      v-if="(!pkg && !ttl) || newTipps.length > 0"
       :headers="tableHeaders"
       :items="newTipps"
       :label="$t('component.package.navigation.newTitles')"
@@ -98,10 +98,9 @@
       @edit="editTitle"
     />
     <gokb-table
-      v-if="pkg"
+      v-if="ttl || pkg"
       :headers="tableHeaders"
       :items="items"
-      :label="$t('component.package.navigation.currentTitles')"
       :editable="isEditable"
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
@@ -120,6 +119,7 @@
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
   import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
   import packageServices from '@/shared/services/package-services'
+  import titleServices from '@/shared/services/title-services'
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
 
@@ -140,6 +140,11 @@
         default: false
       },
       pkg: {
+        type: Number,
+        required: false,
+        default: undefined
+      },
+      ttl: {
         type: Number,
         required: false,
         default: undefined
@@ -193,7 +198,7 @@
         return this.newTipps.length
       },
       isEditable () {
-        return !this.disabled
+        return !this.disabled && !this.title
       },
       packageTypes () {
         return [
@@ -216,11 +221,12 @@
     async created () {
       this.tableHeaders = [
         { text: 'Details', align: 'left', value: 'popup', sortable: false },
+        { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'status.name', sortable: false, width: '10%' },
         { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
         { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
       ]
 
-      if (this.pkg) {
+      if (this.pkg || this.ttl) {
         this.fetchTipps()
       }
 
@@ -306,9 +312,12 @@
         this.successMessage = undefined
       },
       async fetchTipps ({ page } = { page: undefined }) {
-        if (this.pkg) {
+        if (this.pkg || this.ttl) {
+          const reqId = this.pkg || this.ttl
+          const searchService = this.pkg ? packageServices : titleServices
+
           const result = await this.catchError({
-            promise: packageServices.getTipps(this.pkg, {
+            promise: searchService.getTipps(reqId, {
               offset: page ? (page - 1) * this.options.itemsPerPage : 0,
               limit: this.options.itemsPerPage
             }, this.cancelToken.token),
@@ -317,25 +326,23 @@
 
           if (result?.status === 200) {
             this.items = result.data?.data?.map(
-              ({ id, url, accessStartDate, accessEndDate, title, hostPlatform, _embedded, pkg, _links }) => (
+              ({ id, url, accessStartDate, status, accessEndDate, title, hostPlatform, _embedded, pkg, _links }) => (
                 {
                   id,
                   coverageStatements: _embedded.coverageStatements,
-                  status,
+                  status: { name: this.$i18n.t('component.general.status.' + status.name), id: status.id },
                   url,
                   accessStartDate,
                   accessEndDate,
                   pkg,
                   title,
                   hostPlatform,
-                  titleType: title.type,
-                  titleId: title.id,
-                  popup: { value: title.name, label: 'tipp', type: 'GokbAddTitlePopup' },
-                  hostPlatformName: hostPlatform?.name,
                   updateUrl: _links.update.href,
                   deleteUrl: _links.delete.href,
-                  isDeletable: !!_links.delete.href,
-                  isRetireable: !!_links.update.href
+                  titleType: title.type,
+                  titleId: title.id,
+                  popup: { value: (this.ttl ? pkg.name : title.name), label: 'tipp', type: 'GokbAddTitlePopup' },
+                  hostPlatformName: hostPlatform?.name
                 }
               )
             )

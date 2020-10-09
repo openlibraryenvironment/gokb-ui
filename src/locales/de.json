@@ -290,11 +290,12 @@
         "New Org": "Neue Organisation",
         "New Platform": "Neue Platform",
         "Platform Noncurrent": "Inaktive Platform",
-        "Removed Identifier": "Gelöschter Idetnifikator",
+        "Removed Identifier": "Gelöschter Identifikator",
         "Status Deleted": "Gelöscht",
         "Status Retired": "Archiviert",
         "TIPPs Retired": "Gelöschte TIPPs",
-        "Type Mismatch": "Falscher Titeltyp"
+        "Type Mismatch": "Falscher Titeltyp",
+        "Ambiguous Matches": "Uneindeutige Titeltreffer"
       }
     },
     "maintenance": {
@@ -313,7 +314,13 @@
     "general": {
       "name": "Name",
       "general": "Allgemein",
-      "status": "Status",
+      "status": {
+        "label": "Status",
+        "Current": "Aktuell",
+        "Expected": "Erwartet",
+        "Retired": "Archiviert",
+        "Deleted": "Gelöscht"
+      },
       "dateCreated":"Erstellt am",
       "lastUpdated": "Zuletzt verändert am"
     }

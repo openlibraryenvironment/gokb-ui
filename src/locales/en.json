@@ -295,7 +295,8 @@
         "Status Deleted": "Status Deleted",
         "Status Retired": "Status Retired",
         "TIPPs Retired": "TIPPs Retired",
-        "Type Mismatch": "Type Mismatch"
+        "Type Mismatch": "Type Mismatch",
+        "Ambiguous Matches": "Ambiguous Matches"
       }
     },
     "maintenance": {
@@ -314,7 +315,13 @@
     "general": {
       "name": "Name",
       "general": "General",
-      "status": "Status",
+      "status": {
+        "label": "Status",
+        "Current": "Current",
+        "Expected": "Expected",
+        "Retired": "Retired",
+        "Deleted": "Deleted"
+      },
       "dateCreated":"Date Created",
       "lastUpdated": "Last Updated"
     }

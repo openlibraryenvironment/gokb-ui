@@ -92,6 +92,10 @@
       v-model="allNames.alts"
       :disabled="isReadonly"
     />
+    <gokb-tipps-section
+      :ttl="parseInt(id)"
+      :disabled="true"
+    />
     <template #buttons>
       <v-spacer />
       <gokb-button
