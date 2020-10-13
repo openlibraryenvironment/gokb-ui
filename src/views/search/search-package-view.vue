@@ -100,19 +100,19 @@
       this.resultHeaders = [
         {
           text: this.$i18n.t('component.general.name'),
-          align: 'left',
+          align: 'start',
           sortable: false,
           value: 'link'
         },
         {
           text: this.$i18n.tc('component.provider.label'),
-          align: 'left',
+          align: 'start',
           sortable: false,
           value: 'providerName'
         },
         {
           text: this.$i18n.tc('component.platform.label'),
-          align: 'left',
+          align: 'start',
           sortable: false,
           value: 'nominalPlatformName'
         },
@@ -136,6 +136,7 @@
           providerName: provider?.name,
           nominalPlatformName: nominalPlatform?.name,
           isDeletable: !!deleteUrl,
+          isRetireable: !!retireUrl,
           deleteUrl: deleteUrl,
           retireUrl: retireUrl,
         }))

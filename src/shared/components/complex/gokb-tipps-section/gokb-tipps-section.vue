@@ -2,6 +2,7 @@
   <gokb-section
     expandable
     :hide-default="!expanded"
+    filters
     :sub-title="$tc('component.tipp.label', 2)"
     :items-total="totalNumberOfItems"
   >
@@ -83,6 +84,27 @@
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <template #search>
+      <gokb-title-field
+        v-if="pkg"
+        v-model="searchFilters.title"
+        :label="$tc('component.title.label')"
+      />
+      <gokb-search-package-field
+        v-else
+        v-model="searchFilters.pkg"
+        :label="$tc('component.package.label')"
+      />
+      <v-spacer class="ms-4" />
+      <gokb-state-field
+        v-model="searchFilters.status"
+        width="150px"
+        :init-item="$t('component.general.status.Current')"
+        message-path="component.general.status"
+        :label="$t('component.general.status.label')"
+        return-object
+      />
+    </template>
     <gokb-table
       v-if="(!pkg && !ttl) || newTipps.length > 0"
       :headers="tableHeaders"
@@ -96,6 +118,10 @@
       @delete-item="confirmDeleteNew"
       @paginate="resultNewPaginate"
       @edit="editTitle"
+    />
+    <v-divider
+      v-if="newTipps.length > 0"
+      class="mb-5"
     />
     <gokb-table
       v-if="ttl || pkg"
@@ -172,6 +198,11 @@
         },
         selectedItems: [],
         selectedNewItems: [],
+        searchFilters: {
+          status: undefined,
+          title: undefined,
+          pkg: undefined
+        },
         newTipps: [],
         successMessage: undefined,
         items: [],
@@ -216,12 +247,19 @@
         if (value) {
           this.fetchTipps(this.options.page)
         }
+      },
+      searchFilters: {
+        handler (val) {
+          this.options.page = 1
+          this.fetchTipps()
+        },
+        deep: true
       }
     },
     async created () {
       this.tableHeaders = [
         { text: 'Details', align: 'left', value: 'popup', sortable: false },
-        { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'status.name', sortable: false, width: '10%' },
+        { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
         { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
         { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
       ]
@@ -315,9 +353,23 @@
         if (this.pkg || this.ttl) {
           const reqId = this.pkg || this.ttl
           const searchService = this.pkg ? packageServices : titleServices
+          const searchParams = {}
+
+          Object.keys(this.searchFilters).forEach(key => {
+            if (this.searchFilters[key] instanceof String || typeof this.searchFilters[key] === 'number') {
+              searchParams[key] = this.searchFilters[key]
+            } else if (this.searchFilters[key] instanceof Object) {
+              if (this.searchFilters[key].id) {
+                searchParams[key] = this.searchFilters[key].id
+              } else if (this.searchFilters[key].value) {
+                searchParams[key] = this.searchFilters[key].value
+              }
+            }
+          })
 
           const result = await this.catchError({
             promise: searchService.getTipps(reqId, {
+              ...(searchParams || {}),
               offset: page ? (page - 1) * this.options.itemsPerPage : 0,
               limit: this.options.itemsPerPage
             }, this.cancelToken.token),
@@ -330,7 +382,8 @@
                 {
                   id,
                   coverageStatements: _embedded.coverageStatements,
-                  status: { name: this.$i18n.t('component.general.status.' + status.name), id: status.id },
+                  statusLocal: this.$i18n.t('component.general.status.' + status.name),
+                  status: status,
                   url,
                   accessStartDate,
                   accessEndDate,

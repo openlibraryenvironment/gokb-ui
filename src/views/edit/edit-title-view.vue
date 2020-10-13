@@ -28,6 +28,15 @@
           />
         </v-col>
       </v-row>
+      <v-row>
+        <v-col md="12">
+          <gokb-state-select-field
+            v-model="status"
+            :deletable="!!deleteUrl"
+            :editable="!!updateUrl"
+          />
+        </v-col>
+      </v-row>
       <v-row v-if="currentType == 'Book'">
         <v-col>
           <gokb-number-field
@@ -91,6 +100,7 @@
     <gokb-alternate-names-section
       v-model="allNames.alts"
       :disabled="isReadonly"
+      :expanded="allNames.alts.length > 0"
     />
     <gokb-tipps-section
       :ttl="parseInt(id)"
@@ -139,6 +149,8 @@
         source: undefined,
         publishedFrom: undefined,
         publishedTo: undefined,
+        status: undefined,
+        allNames: { name: undefined, alts: [] },
         reviewRequests: [],
         firstPublishedOnline: undefined,
         firstPublishedInPrint: undefined,
@@ -152,6 +164,7 @@
         allCuratoryGroups: [],
         currentType: undefined,
         updateUrl: undefined,
+        deleteUrl: undefined,
         successMsg: false,
         allTypes: [
           { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
@@ -178,9 +191,6 @@
       },
       isReadonly () {
         return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
-      },
-      allNames () {
-        return { name: this.name, alts: this.allAlternateNames }
       },
       loggedIn () {
         return accountModel.loggedIn()
@@ -228,6 +238,7 @@
               name,
               source,
               type,
+              status,
               publishedFrom,
               publishedTo,
               editionStatement,
@@ -243,7 +254,8 @@
                 reviewRequests
               },
               _links: {
-                update: { href: updateUrl }
+                update: { href: updateUrl },
+                delete: { href: deleteUrl }
               },
               //  }
             }
@@ -260,6 +272,7 @@
           this.publishers = publisher.map(name => ({ ...name, isDeletable: !!updateUrl }))
           this.ids = ids.map(({ id, value, namespace: { name: namespace } }) => ({ id, value, namespace, isDeletable: !!updateUrl }))
           this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
+          this.allNames = { name: name, alts: this.allAlternateNames }
           this.reviewRequests = reviewRequests
           this.editionStatement = editionStatement
           this.editionNumber = editionNumber
@@ -267,7 +280,9 @@
           this.firstPublishedOnline = firstPublishedOnline
           this.volumeNumber = volumeNumber
           this.updateUrl = updateUrl
+          this.deleteUrl = deleteUrl
           this.successMsg = false
+          this.status = status
         }
       }
     },

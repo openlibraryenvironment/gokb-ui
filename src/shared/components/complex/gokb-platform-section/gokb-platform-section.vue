@@ -55,8 +55,8 @@
   const ROWS_PER_PAGE = 10
 
   const TABLE_HEADERS = [
-    { text: 'Name', align: 'left', value: 'name', sortable: false, width: '40%' },
-    { text: 'URL', align: 'left', value: 'primaryUrl', sortable: false, width: '60%' },
+    { text: 'Name', align: 'start', value: 'name', sortable: false, width: '40%' },
+    { text: 'URL', align: 'start', value: 'primaryUrl', sortable: false, width: '60%' },
   ]
 
   export default {

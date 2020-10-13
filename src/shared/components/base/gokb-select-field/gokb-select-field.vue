@@ -13,7 +13,7 @@
     :placeholder="placeholder"
     item-text="name"
     item-value="id"
-    min-width="240"
+    :style="{width: width}"
     :clearable="clearable"
     :return-object="returnObject"
   />
@@ -53,6 +53,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      width: {
+        type: String,
+        required: false,
+        default: '250px'
       },
       clearable: {
         type: Boolean,

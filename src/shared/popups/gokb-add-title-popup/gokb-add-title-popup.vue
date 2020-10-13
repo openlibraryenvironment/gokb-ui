@@ -8,6 +8,7 @@
     <gokb-error-component :value="error" />
     <gokb-section :sub-title="$t('component.general.general')">
       <gokb-state-select-field
+        v-if="status"
         v-model="status"
         :deletable="!!deleteUrl"
         :editable="!!updateUrl"
@@ -20,6 +21,7 @@
         return-object
       />
       <gokb-search-package-field
+        v-if="packageTitleItem.title"
         v-model="packageTitleItem.pkg"
         :label="$tc('component.package.label')"
         :readonly="true"
@@ -132,7 +134,7 @@
         {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
       </gokb-button>
       <gokb-button
-        v-if="updateUrl"
+        v-if="updateUrl || !id"
         default
       >
         {{ selected ? $t('btn.update') : $t('btn.add') }}

@@ -21,6 +21,20 @@
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>
+      <v-toolbar
+        v-if="title && !subTitle && filters && expanded"
+        color="white"
+        class="mt-5"
+        dense
+        align="end"
+        flat
+        height="32"
+      >
+        <v-spacer />
+        <v-toolbar-items>
+          <slot name="search" />
+        </v-toolbar-items>
+      </v-toolbar>
       <span
         v-else-if="title"
         class="headline ml-4"
@@ -58,6 +72,20 @@
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>
+      <v-toolbar
+        v-if="subTitle && filters && expanded"
+        color="white"
+        class="mt-5"
+        dense
+        align="end"
+        flat
+        height="32"
+      >
+        <v-spacer />
+        <v-toolbar-items>
+          <slot name="search" />
+        </v-toolbar-items>
+      </v-toolbar>
       <v-card-text v-show="expanded">
         <div class="controls pa-2">
           <slot />
@@ -85,6 +113,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      filters: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
       subTitle: {
         type: String,

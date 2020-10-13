@@ -170,6 +170,7 @@
               //  data: {
               name,
               source,
+              status,
               version,
               homepage,
               _embedded: {
@@ -181,6 +182,7 @@
               },
               _links: {
                 update: { href: updateUrl },
+                delete: { href: deleteUrl }
               },
               //  }
             }
@@ -199,6 +201,8 @@
           this.allPackages = providedPackages
           this.allNames = { name: name, alts: this.allAlternateNames }
           this.updateUrl = updateUrl
+          this.deleteUrl = deleteUrl
+          this.status = status
           this.successMsg = false
         }
       }

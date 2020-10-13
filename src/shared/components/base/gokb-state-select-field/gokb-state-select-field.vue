@@ -1,6 +1,6 @@
 <template>
   <v-radio-group
-    v-model="currentState"
+    v-model="localValue"
     row
   >
     <v-radio
@@ -63,16 +63,10 @@
         default: false
       }
     },
-    data () {
-      return {
-        currentState: undefined,
-        allStates: ['Current', 'Retired', 'Deleted', 'Expected']
-      }
-    },
     computed: {
       localValue: {
         get () {
-          return this.value
+          return (typeof this.value === 'string' ? this.value : this.value.name)
         },
         set (localValue) {
           this.$emit('input', localValue)
@@ -84,12 +78,5 @@
         this.localValue = this.currentState
       }
     },
-    mounted () {
-      if (typeof this.value === 'string') {
-        this.currentState = this.value
-      } else {
-        this.currentState = this.value.name || this.value.text
-      }
-    }
   }
 </script>

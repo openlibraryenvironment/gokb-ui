@@ -163,6 +163,7 @@
             @update="updateNewTipps"
           />
           <gokb-source-field
+            v-if="loggedIn"
             v-model="sourceItem"
             :readonly="isReadonly"
           />
@@ -175,6 +176,15 @@
                 <gokb-name-field
                   v-model="allNames"
                   readonly
+                />
+              </v-col>
+            </v-row>
+            <v-row v-if="status">
+              <v-col>
+                <gokb-state-select-field
+                  v-model="status"
+                  :deletable="!!deleteUrl"
+                  :editable="!!updateUrl"
                 />
               </v-col>
             </v-row>
@@ -205,10 +215,19 @@
                   readonly
                 />
               </v-col>
-              <v-col>
+              <v-col v-if="status">
                 <gokb-number-field
                   :value="totalNumberOfTitles"
                   :label="$tc('component.tipp.label', 2)"
+                  disabled
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col v-if="kbart && !status">
+                <gokb-text-field
+                  v-model="kbart.selectedFile.name"
+                  label="KBART"
                   disabled
                 />
               </v-col>
@@ -341,7 +360,9 @@
       return {
         valid: undefined,
         step: 1,
+        status: undefined,
         version: undefined,
+        urlUpdate: false,
         currentName: undefined,
         newTipps: [],
         packageItem: {
@@ -381,6 +402,7 @@
         titleCount: 0,
         maintenanceCycle: undefined,
         updateUrl: undefined,
+        deleteUrl: undefined,
         kbart: undefined
       }
     },
@@ -490,13 +512,18 @@
             nominalPlatform: this.packageItem.nominalPlatform?.id,
             provider: this.packageItem.provider?.id,
           }
+
+          if (this.kbart || this.urlUpdate) {
+            newPackage.generateToken = true
+          }
+
           const response = await this.catchError({
             promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
             instance: this
           })
 
           if (response.status < 400) {
-            if (this.kbart && response.data.pkgId) {
+            if ((this.kbart || this.urlUpdate) && response.data.pkgId) {
               const pars = {
                 addOnly: this.kbart.addOnly,
                 authToken: tokenModel.getToken(),
@@ -505,6 +532,10 @@
                 pkgNominalPlatform: this.packageItem.nominalPlatform.id,
                 pkgId: response.data.pkgId,
                 pkgTitle: this.packageItem.name
+              }
+
+              if (this.urlUpdate) {
+                pars.urlUpdate = 'true'
               }
 
               if (response.data.updateToken) {
@@ -541,6 +572,7 @@
               description,
               scope,
               global,
+              status,
               consistent,
               breakable,
               fixed,
@@ -554,7 +586,8 @@
                 curatoryGroups
               },
               _links: {
-                update: { href: updateUrl }
+                update: { href: updateUrl },
+                delete: { href: deleteUrl }
               }
             }
           } = await this.catchError({
@@ -579,11 +612,13 @@
           this.allAlternateNames = variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!updateUrl }))
           this.allCuratoryGroups = curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!updateUrl }))
           this.updateUrl = updateUrl
+          this.deleteUrl = deleteUrl
           this.providerSelect = provider
           this.platformSelect = nominalPlatform
           this.titleCount = _tippCount
           this.allNames = { name: name, alts: this.allAlternateNames }
           this.sourceItem = source
+          this.status = status
         }
       }
     }

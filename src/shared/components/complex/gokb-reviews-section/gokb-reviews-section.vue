@@ -184,9 +184,6 @@
         deep: true
       }
     },
-    activated () {
-      this.retrieveReviews()
-    },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
