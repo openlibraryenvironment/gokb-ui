@@ -254,7 +254,7 @@
     },
     computed: {
       header () {
-        return this.isEdit ? (this.id ? (this.$i18n.t('header.edit.label', [this.typeLabel]) + ' ' + this.$i18n.t('component.tipp.access')) : (this.$i18n.t('header.add.label', [this.typeLabel]) + ' ' + this.$i18n.t('component.tipp.access'))) : (this.typeLabel + ' ' + this.$i18n.t('component.tipp.access'))
+        return !this.isReadonly ? (this.id ? (this.$i18n.t('header.edit.label', [this.$i18n.t('component.tipp.access')]) + ' – ' + this.typeLabel) : (this.$i18n.t('header.add.label', [this.$i18n.t('component.tipp.access')]) + ' – ' + this.typeLabel)) : (this.typeLabel + ' – ' + this.$i18n.t('component.tipp.access'))
       },
       typeLabel () {
         return this.title.type.text || this.$i18n.tc('component.title.label')

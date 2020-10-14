@@ -1,6 +1,6 @@
 <template>
   <v-row v-if="!readonly">
-    <v-col cols="11">
+    <v-col cols="10">
       <v-text-field
         v-model="localDate"
         :clearable="clearable"
@@ -13,7 +13,7 @@
     </v-col>
     <v-col
       align-self="center"
-      cols="1"
+      cols="2"
     >
       <v-menu
         v-model="menu"
