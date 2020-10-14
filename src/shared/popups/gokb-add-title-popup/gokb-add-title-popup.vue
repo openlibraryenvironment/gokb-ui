@@ -29,23 +29,42 @@
       />
     </gokb-section>
     <gokb-section :sub-title="$t('component.tipp.access')">
-      <gokb-search-platform-field
-        v-model="packageTitleItem.hostPlatform"
-        :items="platformSelection"
-        :label="$tc('component.platform.label')"
-        :readonly="isEdit || isReadonly"
-        return-object
-      />
-      <gokb-date-range-field
-        v-model="accessInterval"
-        :disabled="isReadonly"
-        :label="$t('component.tipp.accessPeriod')"
-      />
-      <gokb-url-field
-        v-model="packageTitleItem.url"
-        :disabled="isReadonly"
-        :label="$tc('component.tipp.url.label')"
-      />
+      <v-row>
+        <v-col>
+          <gokb-search-platform-field
+            v-model="packageTitleItem.hostPlatform"
+            :items="platformSelection"
+            :label="$tc('component.platform.label')"
+            :readonly="isEdit || isReadonly"
+            return-object
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <gokb-date-field
+            v-model="packageTitleItem.accessStartDate"
+            :readonly="isReadonly"
+            :label="$t('component.tipp.accessStartDate')"
+          />
+        </v-col>
+        <v-col>
+          <gokb-date-field
+            v-model="packageTitleItem.accessEndDate"
+            :readonly="isReadonly"
+            :label="$t('component.tipp.accessEndDate')"
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <gokb-url-field
+            v-model="packageTitleItem.url"
+            :disabled="isReadonly"
+            :label="$tc('component.tipp.url.label')"
+          />
+        </v-col>
+      </v-row>
     </gokb-section>
     <gokb-section
       expandable

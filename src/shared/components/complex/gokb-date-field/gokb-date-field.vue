@@ -10,6 +10,7 @@
     <template v-slot:activator="{ on }">
       <v-text-field
         v-model="localDate"
+        :clearable="clearable"
         readonly
         v-bind="$props"
         v-on="on"
@@ -43,6 +44,11 @@
         type: Boolean,
         required: false,
         default: false,
+      },
+      clearable: {
+        type: Boolean,
+        required: false,
+        default: true,
       },
       value: {
         type: String,

@@ -78,7 +78,7 @@
             value: 'status',
             properties: {
               label: this.$i18n.t('component.general.status.label'),
-              initItem: 'Open',
+              initItem: this.$i18n.t('component.review.status.Open'),
               messagePath: 'component.review.status',
               url: 'refdata/categories/ReviewRequest.Status'
             }

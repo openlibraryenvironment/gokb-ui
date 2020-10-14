@@ -311,7 +311,6 @@
   import packageServices from '@/shared/services/package-services'
   import sourceServices from '@/shared/services/source-services'
   import kbartServices from '@/shared/services/kbart-services'
-  import tokenModel from '@/shared/models/token-model'
 
   const ROWS_PER_PAGE = 10
 
@@ -523,14 +522,13 @@
           })
 
           if (response.status < 400) {
-            if ((this.kbart || this.urlUpdate) && response.data.pkgId) {
+            if ((this.kbart || this.urlUpdate) && response.data.id) {
               const pars = {
                 addOnly: this.kbart.addOnly,
-                authToken: tokenModel.getToken(),
                 processOption: 'kbart',
                 titleIdNamespace: this.kbart.selectedNamespace,
-                pkgNominalPlatform: this.packageItem.nominalPlatform.id,
-                pkgId: response.data.pkgId,
+                pkgNominalPlatformId: this.packageItem.nominalPlatform.id,
+                pkgId: response.data.id,
                 pkgTitle: this.packageItem.name
               }
 
