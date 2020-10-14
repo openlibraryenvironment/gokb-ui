@@ -20,7 +20,8 @@
   },
   "default": {
     "true": "Ja",
-    "false": "Nein"
+    "false": "Nein",
+    "ISOdateHint": "JJJJ-MM-TT"
   },
   "popups": {
     "name": {
@@ -50,7 +51,8 @@
   },
   "validation": {
     "missingName": "Bitte geben Sie einen Namen an.",
-    "urlForm": "Bitte geben Sie eine gültige URL an."
+    "urlForm": "Bitte geben Sie eine gültige URL an.",
+    "dateFormat": "Ungültiges Datum"
   },
   "job": {
     "finished": "Fertig",

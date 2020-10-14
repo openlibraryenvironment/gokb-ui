@@ -1,27 +1,42 @@
 <template>
-  <v-menu
-    v-if="!readonly"
-    v-model="menu"
-    :close-on-content-click="false"
-    transition="scale-transition"
-    offset-y
-    min-width="290px"
-  >
-    <template v-slot:activator="{ on }">
+  <v-row v-if="!readonly">
+    <v-col cols="11">
       <v-text-field
         v-model="localDate"
         :clearable="clearable"
-        readonly
-        v-bind="$props"
-        v-on="on"
+        :label="label"
+        dense
+        validate-on-blur
+        :hint="$t('default.ISOdateHint')"
+        :rules="rules"
       />
-    </template>
-    <v-date-picker
-      v-if="!readonly"
-      v-model="localDate"
-      @input="menu = false"
-    />
-  </v-menu>
+    </v-col>
+    <v-col
+      align-self="center"
+      cols="1"
+    >
+      <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        transition="scale-transition"
+      >
+        <template v-slot:activator="{ on }">
+          <v-icon
+            v-bind="$props"
+            class="pb-2"
+            v-on="on"
+          >
+            mdi-calendar
+          </v-icon>
+        </template>
+        <v-date-picker
+          v-if="!readonly"
+          v-model="localDate"
+          @input="menu = false"
+        />
+      </v-menu>
+    </v-col>
+  </v-row>
   <v-text-field
     v-else
     v-model="localDate"
@@ -69,6 +84,11 @@
         set (localDate) {
           this.$emit('input', localDate)
         }
+      },
+      rules () {
+        return [
+          value => !value || (/^([12][0-9]{3})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$/.test(value) && !isNaN(new Date(value))) || this.$i18n.t('validation.dateFormat')
+        ]
       }
     }
   }
