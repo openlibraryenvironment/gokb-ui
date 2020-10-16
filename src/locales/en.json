@@ -282,50 +282,50 @@
       "stdDesc": {
         "label": "Category | Categories",
         "Invalid TIPPs": {
-          "label": "Invalid TIPPs",
-          "info": "An update for this package failed because of invalid TIPP information",
-          "action": "The package as not been updated",
-          "toDo": "Check records for erroneous or missing information"
+          "label": "Invalid Package Titles",
+          "info": "An update for this package failed because of invalid package title information.",
+          "action": "Package not updated",
+          "toDo": "Check records for erroneous or missing information."
         },
         "Major Identifier Mismatch": {
           "label": "Major Identifier Mismatch",
-          "info": "title was matched on one identifier, but at least one other ingest identifier differs from existing ones in the same namespace",
+          "info": "Title {0} was matched on one identifier, but at least one other ingest identifier differs from existing ones in the same namespace.",
           "action": "New title created",
-          "toDo": "Check if the new title with the same identifier is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
+          "toDo": "Check if the new title is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
         },
         "Minor Identifier Mismatch": {
           "label": "Minor Identifier Mismatch",
-          "info": "Title matched, but ingest identifiers differ from existing ones in the same namespaces.",
-          "action": "None",
-          "toDo": "CCheck identifiers and delete them if they are incorrect."
+          "info": "Title {0} matched, but ingest identifiers differ from existing ones in the same namespaces.",
+          "action": "Existing title selected",
+          "toDo": "Check identifiers and delete the incorrect identifiers if necessary."
         },
         "Multiple Matches": {
           "label": "Multiple Matches",
-          "info": "Multiple titles were matched on one identifier, but none matched for all given identifiers.",
+          "info": "Multiple titles ({0}) were matched on one identifier, but none matched for all given identifiers.",
           "action": "New title created",
-          "toDo": "Check if the new title with the same identifier is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
+          "toDo": "Check if the new title is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
         },
         "Name Mismatch": {
           "label": "Name Mismatch",
-          "info": "Title was matched via secondary id, but had a different name.",
+          "info": "Title {0} was matched via secondary id, but had a different name.",
           "action": "New title name added as variant of existing title name",
           "toDo": "Check if the title name is a valid alternative."
         },
         "Name Similarity": {
           "label": "Name Similarity",
-          "info": "No matched components via identifiers, but a title with a similar name already exists.",
-          "action": "",
-          "toDo": "Check if the title name is a valid alternative.\""
+          "info": "No matched title via identifiers, but a title with a similar name already exists.",
+          "action": "New title created",
+          "toDo": "Check if the new title is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
         },
         "Namespace Mismatch": {
           "label": "Namespace Mismatch",
           "info": "Ingest file issn matched an existing eissn or vice versa.",
-          "action": "Identifier type mismatch",
+          "action": "",
           "toDo": "Check if an issn is erroneously marked as eissn or vice versa and correct those identifiers if necessary."
         },
         "New Org": {
           "label": "New Org",
-          "info": "",
+          "info": "A title with an unknown publisher has been imported.",
           "action": "New organisation created",
           "toDo": ""
         },
@@ -337,44 +337,44 @@
         },
         "Platform Noncurrent": {
           "label": "Platform Noncurrent",
-          "info": "The existing platform matched for this TIPP is marked as [Platform Status]! ",
-          "action": "",
-          "toDo": "Review the URL/Platform for validity."
+          "info": "The existing platform {0} matched for this package title is marked as {1}.",
+          "action": "Package title {0}",
+          "toDo": "Review the URL/platform for validity. Link the package title to the correct platform if necessary."
         },
         "Removed Identifier": {
           "label": "Removed Identifier",
-          "info": "An identifier has been removed due to...",
-          "action": "",
+          "info": "Identifier {0} was previously connected to {1}, but has since been manually removed.",
+          "action": "Identifier ignored",
           "toDo": ""
         },
         "Status Deleted": {
           "label": "Status Deleted",
-          "info": "",
-          "action": "",
+          "info": "This {0} was previously marked as 'Deleted', but has now been set back to 'Current' again.",
+          "action": "Deleted {0} reenabled",
           "toDo": ""
         },
         "Status Retired": {
           "label": "Status Retired",
-          "info": "",
-          "action": "",
+          "info": "This {0} was previously marked as 'Retired', but has now been set back to 'Current' again.",
+          "action": "Retired {0} reenabled",
           "toDo": ""
         },
         "TIPPs Retired": {
-          "label": "TIPPs Retired",
-          "info": "An update to package [PKG-ID] did not contain [Number of missing TIPPs] previously existing TIPPs.",
-          "action": "TIPPs retired",
+          "label": "Package Titles Retired",
+          "info": "An update to package {0} did not contain {1} previously existing package titles.",
+          "action": "Package titles have been retired",
           "toDo": ""
         },
         "Type Mismatch": {
           "label": "Type Mismatch",
-          "info": "A provided identifier matched an existing component of another type.",
-          "action": "",
-          "toDo": ""
+          "info": "A provided identifier matched an existing title of another type (i.e. a book identifier matched a journal or vice versa).",
+          "action": "New title created.",
+          "toDo": "Check if the title has the correct type (book, journal etc.) and change it if necessary."
         },
         "Ambiguous Matches": {
           "label": "Ambiguous Matches",
-          "info": "",
-          "action": "Multiple titles were matched on all identifiers as well as the provided title name.",
+          "info": "Multiple titles were matched on all identifiers.",
+          "action": "Oldest title selected",
           "toDo": "Check titles for duplicates. Merge titles if necessary. Check identifier duplicates and delete them if they are incorrect."
         }
       }
