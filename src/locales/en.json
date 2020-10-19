@@ -362,13 +362,13 @@
         "TIPPs Retired": {
           "label": "Package Titles Retired",
           "info": "An update to package {0} did not contain {1} previously existing package titles.",
-          "action": "Package titles have been retired",
+          "action": "Package titles retired",
           "toDo": ""
         },
         "Type Mismatch": {
           "label": "Type Mismatch",
           "info": "A provided identifier matched an existing title of another type (i.e. a book identifier matched a journal or vice versa).",
-          "action": "New title created.",
+          "action": "New title created",
           "toDo": "Check if the title has the correct type (book, journal etc.) and change it if necessary."
         },
         "Ambiguous Matches": {
