@@ -49,7 +49,7 @@
       <v-stepper-items>
         <v-stepper-content :step="isEdit ? 2 : 1">
           <gokb-section
-            :title="$t('component.general.general')"
+            :sub-title="$t('component.general.general')"
           >
             <gokb-name-field
               v-model="allNames"

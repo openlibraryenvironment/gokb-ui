@@ -36,7 +36,7 @@
         </v-toolbar-items>
       </v-toolbar>
       <span
-        v-else-if="title"
+        v-else-if="title && subTitle"
         class="headline ml-4"
       >
         {{ title }}
