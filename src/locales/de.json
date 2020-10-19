@@ -360,7 +360,7 @@
         },
         "TIPPs Retired": {
           "label": "Pakettitel archiviert",
-          "info": "Ein Update für Paket {0} enthielt nicht {1} zuvor vorhandene Pakettitel nicht.",
+          "info": "Ein Update für Paket {0} enthielt nicht {1} zuvor vorhandene Pakettitel.",
           "action": "Pakettitel archiviert",
           "toDo": ""
         },
