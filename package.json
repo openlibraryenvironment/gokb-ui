@@ -10,9 +10,11 @@
     "lint": "vue-cli-service lint",
     "build4Dev": "vue-cli-service build --modern --mode dev",
     "build4Qa": "vue-cli-service build --modern --mode qa",
+    "build4PhaetonQa": "vue-cli-service build --modern --mode phaetonqa",
     "build4Prod": "vue-cli-service build --modern --mode prod",
     "buildDeploy4Dev": "vue-cli-service build --modern --mode dev && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
     "buildDeploy4Qa": "vue-cli-service build --modern --mode qa && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
+    "buildDeploy4PhaetonQa": "vue-cli-service build --modern --mode phaetonqa && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
     "buildDeploy4Prod": "vue-cli-service build --modern --mode prod && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test"
   },
   "dependencies": {
