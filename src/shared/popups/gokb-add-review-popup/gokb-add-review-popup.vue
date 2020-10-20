@@ -32,7 +32,7 @@
           return-object
           url="refdata/categories/ReviewRequest.StdDesc"
           message-path="component.review.stdDesc"
-          :label="$i18n.t('component.review.type')"
+          :label="$i18n.tc('component.review.stdDesc.label')"
         />
       </v-col>
       <v-col md="4">
@@ -44,26 +44,99 @@
           return-object
           message-path="component.review.status"
           url="refdata/categories/ReviewRequest.Status"
-          :label="$t('component.general.status')"
+          :label="$t('component.general.status.label')"
         />
       </v-col>
     </v-row>
     <v-row>
       <v-col md="12">
-        <gokb-text-field
-          v-model="reviewItem.request"
-          :disabled="isEdit"
-          :label="$i18n.t('component.review.cause')"
-        />
+        <template>
+          <div v-if="reviewItem.stdDesc">
+            <label
+              class="v-label v-label--active theme--light"
+              style="display:block;font-size:0.9em;"
+              for="todo"
+            >
+              {{ $t('component.review.cause') }}
+            </label>
+            <i18n
+              :style="{ fontSize: '1.2em'}"
+              :path="'component.review.stdDesc.' + reviewItem.stdDesc.name + '.info'"
+            >
+              <template v-slot:0>
+                <router-link
+                  v-if="reviewItem.otherComponents && reviewItem.otherComponents > 0"
+                  :style="{ color: '#f2994a' }"
+                  :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
+                >
+                  {{ reviewItem.otherComponents[0].name }}
+                </router-link>
+                <router-link
+                  v-else-if="reviewItem.component"
+                  :style="{ color: '#f2994a' }"
+                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
+                >
+                  {{ reviewItem.component.name }}
+                </router-link>
+              </template>
+              <template v-slot:1>
+                <b>{{ message.vars[1] }}</b>
+              </template>
+            </i18n>
+          </div>
+          <gokb-text-field
+            v-else
+            v-model="reviewItem.request"
+            :disabled="isEdit"
+            :label="$i18n.t('component.review.cause')"
+          />
+        </template>
       </v-col>
     </v-row>
     <v-row>
       <v-col md="12">
-        <gokb-textarea-field
-          v-model="reviewItem.description"
-          :disabled="isEdit"
-          :label="$i18n.t('component.review.request')"
-        />
+        <template>
+          <div v-if="reviewItem.stdDesc">
+            <label
+              class="v-label v-label--active theme--light"
+              style="display:block;font-size:0.9em;"
+              for="todo"
+            >
+              To Do
+            </label>
+            <i18n
+              id="todo"
+              :style="{ fontSize: '1.2em'}"
+              :path="'component.review.stdDesc.' + reviewItem.stdDesc.name + '.toDo'"
+            >
+              <template v-slot:0>
+                <router-link
+                  v-if="reviewItem.otherComponents && reviewItem.otherComponents > 0"
+                  :style="{ color: '#f2994a' }"
+                  :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
+                >
+                  {{ reviewItem.otherComponents[0].name }}
+                </router-link>
+                <router-link
+                  v-else-if="reviewItem.component"
+                  :style="{ color: '#f2994a' }"
+                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
+                >
+                  {{ reviewItem.component.name }}
+                </router-link>
+              </template>
+              <template v-slot:1>
+                <b>{{ message.vars[1] }}</b>
+              </template>
+            </i18n>
+          </div>
+          <gokb-textarea-field
+            v-else
+            v-model="reviewItem.description"
+            :disabled="isEdit"
+            :label="$i18n.t('component.review.request')"
+          />
+        </template>
       </v-col>
     </v-row>
 
@@ -108,18 +181,28 @@
       return {
         config: [],
         id: undefined,
-        descName: undefined,
         selectedItem: undefined,
+        additionalInfo: undefined,
         updateUrl: undefined,
+        deleteUrl: undefined,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,
           request: undefined,
           description: undefined,
           dateCreated: undefined,
-          component: undefined
+          component: undefined,
+          otherComponents: undefined
         },
-        items: []
+        items: [],
+        componentRoutes: {
+          package: '/package',
+          org: '/provider',
+          title: '/title',
+          journal: '/title',
+          book: '/title',
+          database: '/title'
+        }
       }
     },
     computed: {
@@ -143,15 +226,40 @@
 
       if (this.selected) {
         this.id = this.selected.id
-        this.reviewItem.status = this.selectedItem.status
-        this.reviewItem.stdDesc = this.selectedItem.stdDesc
-        this.reviewItem.request = this.selectedItem.request
-        this.reviewItem.description = this.selectedItem.description
-        this.reviewItem.dateCreated = this.selectedItem.dateCreated
-        this.reviewItem.component = this.selectedItem.component
-        this.updateUrl = this.selectedItem.updateUrl
 
-        this.descName = this.selectedItem.stdDesc?.name
+        const {
+          data: {
+            status,
+            stdDesc,
+            reviewRequest,
+            descriptionOfCause,
+            dateCreated,
+            componentToReview,
+            additionalInfo,
+            _links: {
+              update: { href: updateUrl },
+              delete: { href: deleteUrl }
+            }
+          }
+        } = await this.catchError({
+          promise: reviewServices.getReview(this.id, this.cancelToken.token),
+          instance: this
+        })
+        this.additionalInfo = additionalInfo
+
+        this.reviewItem.status = status
+        this.reviewItem.stdDesc = stdDesc
+        this.reviewItem.request = reviewRequest
+        this.reviewItem.description = descriptionOfCause
+        this.reviewItem.dateCreated = dateCreated
+        this.reviewItem.component = componentToReview
+        this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(({ oid, name }) => ({
+          name,
+          id: oid.split(':')[1],
+          route: this.componentRoutes[componentToReview?.type?.toLowerCase()]
+        })) : []
+        this.updateUrl = updateUrl
+        this.deleteUrl = deleteUrl
       }
     },
     methods: {

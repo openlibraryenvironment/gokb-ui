@@ -1,8 +1,10 @@
 <template>
   <v-row>
-    <v-col v-if="!namespaceFixed">
+    <v-col>
       <gokb-namespace-field
         v-model="localNamespace"
+        :readonly="namespaceFixed"
+        width="140px"
         :label="$tc('component.identifier.namespace')"
       />
     </v-col>

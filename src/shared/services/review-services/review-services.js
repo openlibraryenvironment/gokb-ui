@@ -10,6 +10,13 @@ const api = (baseServices) => ({
     }, cancelToken)
   },
 
+  getReview (id, cancelToken) {
+    return baseServices.request({
+      method: 'GET',
+      url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/${id}`,
+    }, cancelToken)
+  },
+
   createOrUpdateReview (data, cancelToken) {
     const { id } = data
     const url = id ? process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/${id}` : process.env.VUE_APP_API_BASE_URL + REVIEW_PATH

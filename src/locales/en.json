@@ -176,28 +176,53 @@
       "description": "Description",
       "scope": {
         "label": "Scope",
-        "Front File": "Front File",
-        "Back File": "Back File",
-        "Aggregator": "Aggregator",
-        "Master File": "Master File"
+        "Front File": {
+          "label": "Front File"
+        },
+        "Back File": {
+          "label": "Back File"
+        },
+        "Aggregator": {
+          "label": "Aggregator"
+        },
+        "Master File": {
+          "label": "Master File"
+        }
       },
       "consistent": "Content is consistent",
       "contentType": {
         "label": "Content Type",
-        "Journal": "Journal",
-        "Book": "Book",
-        "Database": "Database",
-        "Mixed": "Mixed"
+        "Journal": {
+          "label": "Journal"
+        },
+        "Book": {
+          "label": "Book"
+        },
+        "Database": {
+          "label": "Database"
+        },
+        "Mixed": {
+          "label": "Mixed"
+        }
       },
       "breakable": "Content may be split",
       "fixed": "Content is fixed",
       "provider": "Provider",
       "platform": "Platform",
       "global": {
-        "Global": "Global",
-        "Consortial": "Consortial",
-        "Regional": "Regional",
-        "Unknown": "Unknown"
+        "label": "Validity",
+        "Global": {
+          "label": "Global"
+        },
+        "Consortial": {
+          "label": "Consortial"
+        },
+        "Regional": {
+          "label": "Regional"
+        },
+        "Unknown": {
+          "label": "Unknown"
+        }
       }
     },
     "tipp": {
@@ -275,9 +300,16 @@
       "componentToReview": "Component",
       "showClosed": "Show closed requests",
       "status": {
-        "Open": "Open",
-        "Closed": "Closed",
-        "Deleted": "Deleted"
+        "label": "Status",
+        "Open": {
+          "label": "Open"
+        },
+        "Closed": {
+          "label": "Closed"
+        },
+        "Deleted": {
+          "label": "Deleted"
+        }
       },
       "stdDesc": {
         "label": "Category | Categories",
@@ -397,10 +429,18 @@
       "general": "General",
       "status": {
         "label": "Status",
-        "Current": "Current",
-        "Expected": "Expected",
-        "Retired": "Retired",
-        "Deleted": "Deleted"
+        "Current": {
+          "label": "Current"
+        },
+        "Expected": {
+          "label": "Expected"
+        },
+        "Retired": {
+          "label": "Retired"
+        },
+        "Deleted": {
+          "label": "Deleted"
+        }
       },
       "dateCreated":"Date Created",
       "lastUpdated": "Last Updated"

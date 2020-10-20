@@ -176,28 +176,53 @@
       "description": "Beschreibung",
       "scope": {
         "label": "Umfang",
-        "Front File": "Front File",
-        "Back File": "Back File",
-        "Aggregator": "Aggregator",
-        "Master File": "Master File"
+        "Front File": {
+          "label": "Front File"
+        },
+        "Back File": {
+          "label": "Back File"
+        },
+        "Aggregator": {
+          "label": "Aggregator"
+        },
+        "Master File": {
+          "label": "Master File"
+        }
       },
       "consistent": "Paketinhalt ist konsistent",
       "contentType": {
         "label": "Inhaltstyp",
-        "Journal": "Journals",
-        "Book": "Monographien",
-        "Database": "Datenbank(en)",
-        "Mixed": "Gemischt"
+        "Journal": {
+          "label": "Journals"
+        },
+        "Book": {
+          "label": "Monographien"
+        },
+        "Database": {
+          "label": "Datenbank(en)"
+        },
+        "Mixed": {
+          "label": "Gemischt"
+        }
       },
       "breakable": "Teilbahr für Lizenznehmer",
       "fixed": "Paket ist unveränderbar",
       "provider": "Anbieter",
       "platform": "Plattform",
       "global": {
-        "Global": "Global",
-        "Consortial": "Konsortial",
-        "Regional": "Regional",
-        "Unknown": "Unbekannt"
+        "label": "Gültigkeit",
+        "Global": {
+          "label": "Global"
+        },
+        "Consortial": {
+          "label": "Konsortial"
+        },
+        "Regional": {
+          "label": "Regional"
+        },
+        "Unknown": {
+          "label": "Unbekannt"
+        }
       }
     },
     "tipp": {
@@ -274,9 +299,16 @@
       "componentToReview": "Komponente",
       "showClosed": "Abgeschlossene anzeigen",
       "status": {
-        "Open": "Offen",
-        "Closed": "Geschlossen",
-        "Deleted": "Gelöscht"
+        "label": "Status",
+        "Open": {
+          "label": "Offen"
+        },
+        "Closed": {
+          "label": "Geschlossen"
+        },
+        "Deleted": {
+          "label": "Gelöscht"
+        }
       },
       "stdDesc": {
         "label": "Kategorie | Kategorien",
@@ -396,10 +428,18 @@
       "general": "Allgemein",
       "status": {
         "label": "Status",
-        "Current": "Aktuell",
-        "Expected": "Erwartet",
-        "Retired": "Archiviert",
-        "Deleted": "Gelöscht"
+        "Current": {
+          "label": "Aktuell"
+        },
+        "Expected": {
+          "label": "Erwartet"
+        },
+        "Retired": {
+          "label": "Archiviert"
+        },
+        "Deleted": {
+          "label": "Gelöscht"
+        }
       },
       "dateCreated":"Erstellt am",
       "lastUpdated": "Zuletzt verändert am"

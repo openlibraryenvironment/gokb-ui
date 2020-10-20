@@ -49,7 +49,7 @@
       <v-stepper-items>
         <v-stepper-content :step="isEdit ? 2 : 1">
           <gokb-section
-            :title="$t('component.general.general')"
+            :sub-title="$t('component.general.general')"
           >
             <gokb-name-field
               v-model="allNames"
@@ -83,22 +83,22 @@
             <gokb-radiobutton-group v-model="packageItem.global">
               <gokb-radiobutton-field
                 value="Consortium"
-                :label="$t('component.package.global.Consortial')"
+                :label="$t('component.package.global.Consortial.label')"
                 :readonly="isReadonly"
               />
               <gokb-radiobutton-field
                 value="Global"
-                :label="$t('component.package.global.Global')"
+                :label="$t('component.package.global.Global.label')"
                 :readonly="isReadonly"
               />
               <gokb-radiobutton-field
                 value="Regional"
-                :label="$t('component.package.global.Regional')"
+                :label="$t('component.package.global.Regional.label')"
                 :readonly="isReadonly"
               />
               <gokb-radiobutton-field
                 value="Other"
-                :label="$t('component.package.global.Unknown')"
+                :label="$t('component.package.global.Unknown.label')"
                 :readonly="isReadonly"
               />
             </gokb-radiobutton-group>
