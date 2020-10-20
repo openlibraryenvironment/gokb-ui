@@ -315,7 +315,7 @@
         "Invalid TIPPs": {
           "label": "Ungültige Pakettitel",
           "info": "Ein Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
-          "action": "Paket wurde nicht aktualisiert.",
+          "action": "Paket nicht aktualisiert",
           "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
         },
         "Major Identifier Mismatch": {
@@ -340,7 +340,7 @@
           "label": "Gleicher Name",
           "info": "Titel {0} stimmt anhand eines nachrangigen Identifikators überein, hat aber einen anderen Namen.",
           "action": "Neuer Titelname als Variante hinzugefügt",
-          "toDo": "Überprüfen Sie, ob der neue Titelname ein korrekter Alternativname ist. "
+          "toDo": "Überprüfen Sie, ob der neue Titelname ein korrekter Alternativname ist."
         },
         "Name Similarity": {
           "label": "Ähnlicher Name",
@@ -370,7 +370,7 @@
           "label": "Inaktive Plattform",
           "info": "Die Plattform {0}, die für diesen Pakettitel angegeben ist, ist als {1} gekennzeichnet.",
           "action": "Pakettitel {0} angelegt",
-          "toDo": "Überprüfen Sie die Plattform bzw. deren URL auf die Gültigkeit. Verknüpfen Sie den Pakettitel gegebenenfalls mit der korrekten Plattform,"
+          "toDo": "Überprüfen Sie die Plattform bzw. deren URL auf die Gültigkeit. Verknüpfen Sie den Pakettitel gegebenenfalls mit der korrekten Plattform."
         },
         "Removed Identifier": {
           "label": "Gelöschter Identifikator",
@@ -392,8 +392,8 @@
         },
         "TIPPs Retired": {
           "label": "Pakettitel archiviert",
-          "info": "Ein Update für Paket {0} enthielt {1} zuvor vorhandene Pakettitel nicht. ",
-          "action": "Pakettitel wurden archiviert.",
+          "info": "Ein Update für Paket {0} enthielt nicht {1} zuvor vorhandene Pakettitel.",
+          "action": "Pakettitel archiviert",
           "toDo": ""
         },
         "Type Mismatch": {
@@ -405,7 +405,7 @@
         "Ambiguous Matches": {
           "label": "Uneindeutige Titeltreffer",
           "info": "Mehrere Titel stimmen anhand der vorliegenden Identifikatoren überein.",
-          "action": "Ältester Titel ausgewählt.",
+          "action": "Ältester Titel ausgewählt",
           "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt. Falls ja, führen Sie die Titel zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diesen, falls sie falsch sind."
         }
       }
