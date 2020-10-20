@@ -637,10 +637,13 @@
 
         axios.post(url, data)
           .then(response => {
-            console.log('POST successful')
+            this.successMsg = this.isEdit
+              ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
+              : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
+            this.reload()
           })
-          .catch(function (error) {
-            console.log(error)
+          .catch(error => {
+            this.error = error
           })
       }
 

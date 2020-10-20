@@ -257,8 +257,6 @@
       if (accountModel.loggedIn() && accountModel.userLocale()) {
         console.log(accountModel.userLocale())
         this.currentLocale = accountModel.userLocale()
-      } else {
-        console.log(accountModel.userLocale())
       }
     },
     created () {

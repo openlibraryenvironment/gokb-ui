@@ -141,8 +141,6 @@
 
           console.log(this.value)
         }
-      } else {
-        console.log('No Source')
       }
     },
     methods: {
