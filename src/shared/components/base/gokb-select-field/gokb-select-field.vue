@@ -100,10 +100,15 @@
           promise: entityService.get({ parameters }, this.cancelToken.token),
           instance: this
         })
-        this.items = this.transform(result)
 
-        if (this.initItem) {
-          this.setInit()
+        if (result) {
+          this.items = this.transform(result)
+
+          if (this.initItem) {
+            this.setInit()
+          }
+        } else {
+          console.log('No RDV result! for ' + this.entityName)
         }
       } else if (this.$attrs.items) {
         this.items = this.$attrs.items

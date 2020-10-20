@@ -310,7 +310,8 @@
   import { HOME_ROUTE } from '@/router/route-paths'
   import packageServices from '@/shared/services/package-services'
   import sourceServices from '@/shared/services/source-services'
-  import kbartServices from '@/shared/services/kbart-services'
+  import baseServices from '@/shared/services/base-services'
+  import axios from 'axios'
 
   const ROWS_PER_PAGE = 10
 
@@ -526,10 +527,9 @@
               const pars = {
                 addOnly: this.kbart.addOnly,
                 processOption: 'kbart',
-                titleIdNamespace: this.kbart.selectedNamespace,
+                titleIdNamespace: this.kbart.selectedNamespace.name,
                 pkgNominalPlatformId: this.packageItem.nominalPlatform.id,
-                pkgId: response.data.id,
-                pkgTitle: this.packageItem.name
+                pkgId: response.data.id
               }
 
               if (this.urlUpdate) {
@@ -541,11 +541,11 @@
               }
 
               const ygorResponse = await this.catchError({
-                promise: kbartServices.upload(this.kbart.selectedFile, pars, this.cancelToken.token),
+                promise: this.sendKbart(this.kbart.selectedFile, pars),
                 instance: this
               })
 
-              if (ygorResponse.status === 200) {
+              if (ygorResponse?.status < 400) {
                 this.successMsg = this.isEdit
                   ? (this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart'))
                   : (this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart'))
@@ -556,6 +556,8 @@
                 : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
               this.reload()
             }
+          } else {
+            console.log('GOKb status: ' + response.status)
           }
         }
       },
@@ -618,7 +620,30 @@
           this.sourceItem = source
           this.status = status
         }
+      },
+      async sendKbart (file, parameters) {
+        const urlParameters = baseServices.createQueryParameters(parameters)
+        const data = new FormData()
+        console.log(data)
+
+        data.append('uploadFile', file)
+
+        for (var pair of data.entries()) {
+          console.log(pair[0])
+          console.log(pair[1])
+        }
+
+        const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/processCompleteWithToken?${urlParameters}`
+
+        axios.post(url, data)
+          .then(response => {
+            console.log('POST successful')
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
       }
+
     }
   }
 </script>
