@@ -178,28 +178,53 @@
       "description": "Description",
       "scope": {
         "label": "Scope",
-        "Front File": "Front File",
-        "Back File": "Back File",
-        "Aggregator": "Aggregator",
-        "Master File": "Master File"
+        "Front File": {
+          "label": "Front File"
+        },
+        "Back File": {
+          "label": "Back File"
+        },
+        "Aggregator": {
+          "label": "Aggregator"
+        },
+        "Master File": {
+          "label": "Master File"
+        }
       },
       "consistent": "Content is consistent",
       "contentType": {
         "label": "Content Type",
-        "Journal": "Journal",
-        "Book": "Book",
-        "Database": "Database",
-        "Mixed": "Mixed"
+        "Journal": {
+          "label": "Journal"
+        },
+        "Book": {
+          "label": "Book"
+        },
+        "Database": {
+          "label": "Database"
+        },
+        "Mixed": {
+          "label": "Mixed"
+        }
       },
       "breakable": "Content may be split",
       "fixed": "Content is fixed",
       "provider": "Provider",
       "platform": "Platform",
       "global": {
-        "Global": "Global",
-        "Consortial": "Consortial",
-        "Regional": "Regional",
-        "Unknown": "Unknown"
+        "label": "Validity",
+        "Global": {
+          "label": "Global"
+        },
+        "Consortial": {
+          "label": "Consortial"
+        },
+        "Regional": {
+          "label": "Regional"
+        },
+        "Unknown": {
+          "label": "Unknown"
+        }
       }
     },
     "tipp": {
@@ -227,7 +252,7 @@
       "embargo": {
         "type": "Type",
         "duration": "Duration",
-        "unit": { 
+        "unit": {
           "label": "Unit",
           "day": "Day(s)",
           "month": "Month(s)",
@@ -277,28 +302,115 @@
       "componentToReview": "Component",
       "showClosed": "Show closed requests",
       "status": {
-        "Open": "Open",
-        "Closed": "Closed",
-        "Deleted": "Deleted"
+        "label": "Status",
+        "Open": {
+          "label": "Open"
+        },
+        "Closed": {
+          "label": "Closed"
+        },
+        "Deleted": {
+          "label": "Deleted"
+        }
       },
       "stdDesc": {
         "label": "Category | Categories",
-        "Invalid TIPPs": "Invalid TIPPs",
-        "Major Identifier Mismatch": "Major Identifier Mismatch",
-        "Minor Identifier Mismatch": "Minor Identifier Mismatch",
-        "Multiple Matches": "Name Mismatch",
-        "Name Mismatch": "Name Mismatch",
-        "Name Similarity": "Name Similarity",
-        "Namespace Mismatch": "Namespace Mismatch",
-        "New Org": "New Org",
-        "New Platform": "New Platform",
-        "Platform Noncurrent": "Platform Noncurrent",
-        "Removed Identifier": "Removed Identifier",
-        "Status Deleted": "Status Deleted",
-        "Status Retired": "Status Retired",
-        "TIPPs Retired": "TIPPs Retired",
-        "Type Mismatch": "Type Mismatch",
-        "Ambiguous Matches": "Ambiguous Matches"
+        "Invalid TIPPs": {
+          "label": "Invalid Package Titles",
+          "info": "An update for this package failed because of invalid package title information.",
+          "action": "Package not updated",
+          "toDo": "Check records for erroneous or missing information."
+        },
+        "Major Identifier Mismatch": {
+          "label": "Major Identifier Mismatch",
+          "info": "Title {0} was matched on one identifier, but at least one other ingest identifier differs from existing ones in the same namespace.",
+          "action": "New title created",
+          "toDo": "Check if the new title is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
+        },
+        "Minor Identifier Mismatch": {
+          "label": "Minor Identifier Mismatch",
+          "info": "Title {0} matched, but ingest identifiers differ from existing ones in the same namespaces.",
+          "action": "Existing title selected",
+          "toDo": "Check identifiers and delete the incorrect identifiers if necessary."
+        },
+        "Multiple Matches": {
+          "label": "Multiple Matches",
+          "info": "Multiple titles ({0}) were matched on one identifier, but none matched for all given identifiers.",
+          "action": "New title created",
+          "toDo": "Check if the new title is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
+        },
+        "Name Mismatch": {
+          "label": "Name Mismatch",
+          "info": "Title {0} was matched via secondary id, but had a different name.",
+          "action": "New title name added as variant of existing title name",
+          "toDo": "Check if the title name is a valid alternative."
+        },
+        "Name Similarity": {
+          "label": "Name Similarity",
+          "info": "No matched title via identifiers, but a title with a similar name already exists.",
+          "action": "New title created",
+          "toDo": "Check if the new title is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
+        },
+        "Namespace Mismatch": {
+          "label": "Namespace Mismatch",
+          "info": "Ingest file issn matched an existing eissn or vice versa.",
+          "action": "",
+          "toDo": "Check if an issn is erroneously marked as eissn or vice versa and correct those identifiers if necessary."
+        },
+        "New Org": {
+          "label": "New Org",
+          "info": "A title with an unknown publisher has been imported.",
+          "action": "New organisation created",
+          "toDo": ""
+        },
+        "New Platform": {
+          "label": "New Platform",
+          "info": "The platform did not exist and was newly created.",
+          "action": "New platform created",
+          "toDo": ""
+        },
+        "Platform Noncurrent": {
+          "label": "Platform Noncurrent",
+          "info": "The existing platform {0} matched for this package title is marked as {1}.",
+          "action": "Package title {0}",
+          "toDo": "Review the URL/platform for validity. Link the package title to the correct platform if necessary."
+        },
+        "Removed Identifier": {
+          "label": "Removed Identifier",
+          "info": "Identifier {0} was previously connected to {1}, but has since been manually removed.",
+          "action": "Identifier ignored",
+          "toDo": ""
+        },
+        "Status Deleted": {
+          "label": "Status Deleted",
+          "info": "This {0} was previously marked as 'Deleted', but has now been set back to 'Current' again.",
+          "action": "Deleted {0} reenabled",
+          "toDo": ""
+        },
+        "Status Retired": {
+          "label": "Status Retired",
+          "info": "This {0} was previously marked as 'Retired', but has now been set back to 'Current' again.",
+          "action": "Retired {0} reenabled",
+          "toDo": ""
+        },
+        "TIPPs Retired": {
+          "label": "Package Titles Retired",
+          "info": "An update to package {0} did not contain {1} previously existing package titles.",
+          "action": "Package titles retired",
+          "toDo": ""
+        },
+        "Type Mismatch": {
+          "label": "Type Mismatch",
+          "info": "A provided identifier matched an existing title of another type (i.e. a book identifier matched a journal or vice versa).",
+          "action": "New title created",
+          "toDo": "Check if the title has the correct type (book, journal etc.) and change it if necessary."
+        },
+        "Ambiguous Matches": {
+          "label": "Ambiguous Matches",
+          "info": "Multiple titles were matched on all identifiers.",
+          "action": "Oldest title selected",
+          "toDo": "Check titles for duplicates. Merge titles if necessary. Check identifier duplicates and delete them if they are incorrect."
+        }
       }
     },
     "maintenance": {
@@ -319,10 +431,18 @@
       "general": "General",
       "status": {
         "label": "Status",
-        "Current": "Current",
-        "Expected": "Expected",
-        "Retired": "Retired",
-        "Deleted": "Deleted"
+        "Current": {
+          "label": "Current"
+        },
+        "Expected": {
+          "label": "Expected"
+        },
+        "Retired": {
+          "label": "Retired"
+        },
+        "Deleted": {
+          "label": "Deleted"
+        }
       },
       "dateCreated":"Date Created",
       "lastUpdated": "Last Updated"

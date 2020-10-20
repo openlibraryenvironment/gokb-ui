@@ -7,7 +7,7 @@
       value="Current"
       on-icon="check_circle"
       color="success"
-      :label="$t('component.general.status.Current')"
+      :label="$t('component.general.status.Current.label')"
       off-icon="check_circle_outline"
       :readonly="!editable"
     />
@@ -15,7 +15,7 @@
       value="Retired"
       on-icon="cancel"
       color="amber"
-      :label="$t('component.general.status.Retired')"
+      :label="$t('component.general.status.Retired.label')"
       :readonly="!editable"
       off-icon="close"
     />
@@ -23,7 +23,7 @@
       value="Expected"
       on-icon="watch_later"
       color="info"
-      :label="$t('component.general.status.Expected')"
+      :label="$t('component.general.status.Expected.label')"
       :readonly="!editable"
       off-icon="schedule"
     />
@@ -31,7 +31,7 @@
       value="Deleted"
       on-icon="delete"
       color="red"
-      :label="$t('component.general.status.Deleted')"
+      :label="$t('component.general.status.Deleted.label')"
       :readonly="!deletable"
       off-icon="delete_outline"
     />

@@ -178,28 +178,53 @@
       "description": "Beschreibung",
       "scope": {
         "label": "Umfang",
-        "Front File": "Front File",
-        "Back File": "Back File",
-        "Aggregator": "Aggregator",
-        "Master File": "Master File"
+        "Front File": {
+          "label": "Front File"
+        },
+        "Back File": {
+          "label": "Back File"
+        },
+        "Aggregator": {
+          "label": "Aggregator"
+        },
+        "Master File": {
+          "label": "Master File"
+        }
       },
       "consistent": "Paketinhalt ist konsistent",
       "contentType": {
         "label": "Inhaltstyp",
-        "Journal": "Journals",
-        "Book": "Monographien",
-        "Database": "Datenbank(en)",
-        "Mixed": "Gemischt"
+        "Journal": {
+          "label": "Journals"
+        },
+        "Book": {
+          "label": "Monographien"
+        },
+        "Database": {
+          "label": "Datenbank(en)"
+        },
+        "Mixed": {
+          "label": "Gemischt"
+        }
       },
       "breakable": "Teilbahr für Lizenznehmer",
       "fixed": "Paket ist unveränderbar",
       "provider": "Anbieter",
       "platform": "Plattform",
       "global": {
-        "Global": "Global",
-        "Consortial": "Konsortial",
-        "Regional": "Regional",
-        "Unknown": "Unbekannt"
+        "label": "Gültigkeit",
+        "Global": {
+          "label": "Global"
+        },
+        "Consortial": {
+          "label": "Konsortial"
+        },
+        "Regional": {
+          "label": "Regional"
+        },
+        "Unknown": {
+          "label": "Unbekannt"
+        }
       }
     },
     "tipp": {
@@ -227,7 +252,7 @@
       "embargo": {
         "type": "Typ",
         "duration": "Dauer",
-        "unit": { 
+        "unit": {
           "label": "Einheit",
           "day": "Tag(e)",
           "month": "Monat(e)",
@@ -276,28 +301,115 @@
       "componentToReview": "Komponente",
       "showClosed": "Abgeschlossene anzeigen",
       "status": {
-        "Open": "Offen",
-        "Closed": "Geschlossen",
-        "Deleted": "Gelöscht"
+        "label": "Status",
+        "Open": {
+          "label": "Offen"
+        },
+        "Closed": {
+          "label": "Geschlossen"
+        },
+        "Deleted": {
+          "label": "Gelöscht"
+        }
       },
       "stdDesc": {
         "label": "Kategorie | Kategorien",
-        "Invalid TIPPs": "Invalide TIPPs",
-        "Major Identifier Mismatch": "Kritischer Identifikator-Konflikt",
-        "Minor Identifier Mismatch": "Kleiner Identifikator-Konflikt",
-        "Multiple Matches": "Mehrere Treffer",
-        "Name Mismatch": "Gleicher Name",
-        "Name Similarity": "Ähnlicher Name",
-        "Namespace Mismatch": "Unterschiedliche Namensräume",
-        "New Org": "Neue Organisation",
-        "New Platform": "Neue Platform",
-        "Platform Noncurrent": "Inaktive Platform",
-        "Removed Identifier": "Gelöschter Identifikator",
-        "Status Deleted": "Gelöscht",
-        "Status Retired": "Archiviert",
-        "TIPPs Retired": "Gelöschte TIPPs",
-        "Type Mismatch": "Falscher Titeltyp",
-        "Ambiguous Matches": "Uneindeutige Titeltreffer"
+        "Invalid TIPPs": {
+          "label": "Ungültige Pakettitel",
+          "info": "Ein Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
+          "action": "Paket nicht aktualisiert",
+          "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
+        },
+        "Major Identifier Mismatch": {
+          "label": "Kritischer Identifikator-Konflikt",
+          "info": "Titel {0] stimmt anhand eines Identifikators mit einem vorhandenen Titel überein, aber andere Identifikatoren desselben Namensraumes stimmen nicht überein.",
+          "action": "Neuer Titel angelegt",
+          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Titel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diese, falls sie falsch sind."
+        },
+        "Minor Identifier Mismatch": {
+          "label": "Kleiner Identifikator-Konflikt",
+          "info": "Titel {0} stimmt überein, aber manche Identifikatoren desselben Namensraums stimmen nicht überein.",
+          "action": "Titel ausgewählt",
+          "toDo": "Überprüfen Sie die Identifikatoren und löschen Sie diese, falls sie falsch sind."
+        },
+        "Multiple Matches": {
+          "label": "Mehrere Treffer",
+          "info": "Mehrere Titel ({0}) stimmen anhand eines Identifikators überein, aber keiner stimmt anhand aller Identifikatoren überein.",
+          "action": "Neuer Titel angelegt",
+          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Titel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diese, falls sie falsch sind."
+        },
+        "Name Mismatch": {
+          "label": "Gleicher Name",
+          "info": "Titel {0} stimmt anhand eines nachrangigen Identifikators überein, hat aber einen anderen Namen.",
+          "action": "Neuer Titelname als Variante hinzugefügt",
+          "toDo": "Überprüfen Sie, ob der neue Titelname ein korrekter Alternativname ist."
+        },
+        "Name Similarity": {
+          "label": "Ähnlicher Name",
+          "info": "Es wurde keine Übereinstimmung anhand von Identifikatoren gefunden, aber ein Titel mit einem ähnlichen Namen existiert bereits.",
+          "action": "Neuer Titel angelegt",
+          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Titel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen."
+        },
+        "Namespace Mismatch": {
+          "label": "Unterschiedliche Namensräume",
+          "info": "Der neue Titel besitzt eine eISSN, die einer bestehenden Print-ISSN entspricht, oder umgekehrt.",
+          "action": "",
+          "toDo": "Überprüfen Sie, ob hier ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde."
+        },
+        "New Org": {
+          "label": "Neue Organisation",
+          "info": "Ein Titel mit einem unbekannten Verlag wurde importiert.",
+          "action": "Neue Organisation angelegt",
+          "toDo": ""
+        },
+        "New Platform": {
+          "label": "Neue Plattform",
+          "info": "Die Plattform existierte nicht und wurde angelegt.",
+          "action": "Neue Plattform angelegt",
+          "toDo": ""
+        },
+        "Platform Noncurrent": {
+          "label": "Inaktive Plattform",
+          "info": "Die Plattform {0}, die für diesen Pakettitel angegeben ist, ist als {1} gekennzeichnet.",
+          "action": "Pakettitel {0} angelegt",
+          "toDo": "Überprüfen Sie die Plattform bzw. deren URL auf die Gültigkeit. Verknüpfen Sie den Pakettitel gegebenenfalls mit der korrekten Plattform."
+        },
+        "Removed Identifier": {
+          "label": "Gelöschter Identifikator",
+          "info": "Identifikator {0} war ursprünglich mit {1} verknüpft, wurde aber manuell entfernt.",
+          "action": "Identifikator ignoriert",
+          "toDo": ""
+        },
+        "Status Deleted": {
+          "label": "Gelöscht",
+          "info": "Diese/-r {0} war zuvor als 'Gelöscht' gekennzeichnet, wurde jetzt aber wieder auf 'Aktuell' gesetzt.",
+          "action": "Gelöschte/-r {0} reaktiviert",
+          "toDo": ""
+        },
+        "Status Retired": {
+          "label": "Archiviert",
+          "info": "Diese/-r {0} war zuvor als 'Archiviert' gekennzeichnet, wurde jetzt aber wieder auf 'Aktuell' gesetzt.",
+          "action": "Archivierte/-r {0} reaktiviert",
+          "toDo": ""
+        },
+        "TIPPs Retired": {
+          "label": "Pakettitel archiviert",
+          "info": "Ein Update für Paket {0} enthielt nicht {1} zuvor vorhandene Pakettitel.",
+          "action": "Pakettitel archiviert",
+          "toDo": ""
+        },
+        "Type Mismatch": {
+          "label": "Falscher Titeltyp",
+          "info": "Anhand eines Identifikators stimmt mit ein Titel mit dem Titel eines anderen Typs überein (z.B. ein Buch-Identifikator mit einem Zeitschriften-Identifikator oder umgekehrt).",
+          "action": "Neuer Titel angelegt",
+          "toDo": "Überprüfen Sie, ob der Titel den korrekten Typ besitzt (Buch, Zeitschrift etc.) und ändern Sie den Typ gegebenenfalls."
+        },
+        "Ambiguous Matches": {
+          "label": "Uneindeutige Titeltreffer",
+          "info": "Mehrere Titel stimmen anhand der vorliegenden Identifikatoren überein.",
+          "action": "Ältester Titel ausgewählt",
+          "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt. Falls ja, führen Sie die Titel zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diesen, falls sie falsch sind."
+        }
       }
     },
     "maintenance": {
@@ -318,10 +430,18 @@
       "general": "Allgemein",
       "status": {
         "label": "Status",
-        "Current": "Aktuell",
-        "Expected": "Erwartet",
-        "Retired": "Archiviert",
-        "Deleted": "Gelöscht"
+        "Current": {
+          "label": "Aktuell"
+        },
+        "Expected": {
+          "label": "Erwartet"
+        },
+        "Retired": {
+          "label": "Archiviert"
+        },
+        "Deleted": {
+          "label": "Gelöscht"
+        }
       },
       "dateCreated":"Erstellt am",
       "lastUpdated": "Zuletzt verändert am"
