@@ -49,7 +49,7 @@
       },
       value: {
         type: [String, Object],
-        required: true,
+        required: false,
         default: undefined
       },
       deletable: {
@@ -66,7 +66,7 @@
     computed: {
       localValue: {
         get () {
-          return (typeof this.value === 'string' ? this.value : this.value.name)
+          return (typeof this.value === 'object' ? this.value.name : this.value)
         },
         set (localValue) {
           this.$emit('input', localValue)

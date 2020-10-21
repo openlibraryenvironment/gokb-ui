@@ -91,9 +91,9 @@
       },
       reviewStates () {
         return [
-          { text: this.$i18n.t('component.review.status.Open'), value: 'Open' },
-          { text: this.$i18n.t('component.review.status.Closed'), value: 'Closed' },
-          { text: this.$i18n.t('component.review.status.Deleted'), value: 'Deleted' }
+          { text: this.$i18n.t('component.review.status.Open.label'), value: 'Open' },
+          { text: this.$i18n.t('component.review.status.Closed.label'), value: 'Closed' },
+          { text: this.$i18n.t('component.review.status.Deleted.label'), value: 'Deleted' }
         ]
       },
       reviewHeaders () {
@@ -124,9 +124,9 @@
           const request = entry?.reviewRequest
           const description = entry?.descriptionOfCause
           const status = entry?.status
-          const statusLabel = entry?.status && this.$i18n.t('component.review.status.' + entry?.status.name)
+          const statusLabel = entry?.status && this.$i18n.t('component.review.status.' + entry?.status.name + '.label')
           const stdDesc = entry?.stdDesc
-          const stdDescLabel = entry?.stdDesc && this.$i18n.t('component.review.stdDesc.' + entry?.stdDesc.name)
+          const stdDescLabel = entry?.stdDesc && this.$i18n.t('component.review.stdDesc.' + entry?.stdDesc.name + '.label')
           const updateUrl = entry?._links.update.href
           const deleteUrl = entry?._links.delete.href
           const popup = { value: (component.name || type + ' ' + component.id), label: 'review', type: 'GokbAddReviewPopup' }

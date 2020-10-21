@@ -18,7 +18,7 @@
       messagePath: {
         type: String,
         required: false,
-        default: undefined
+        default: 'component.general.status'
       }
     },
     created () {

@@ -99,7 +99,7 @@
       <gokb-state-field
         v-model="searchFilters.status"
         width="150px"
-        :init-item="$t('component.general.status.Current')"
+        :init-item="$t('component.general.status.Current.label')"
         message-path="component.general.status"
         :label="$t('component.general.status.label')"
         return-object
@@ -382,7 +382,7 @@
                 {
                   id,
                   coverageStatements: _embedded.coverageStatements,
-                  statusLocal: this.$i18n.t('component.general.status.' + status.name),
+                  statusLocal: this.$i18n.t('component.general.status.' + status.name + '.label'),
                   status: status,
                   url,
                   accessStartDate: accessStartDate && accessStartDate.substr(0, 10),

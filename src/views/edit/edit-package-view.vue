@@ -155,6 +155,17 @@
         </v-stepper-content>
 
         <v-stepper-content :step="isEdit ? 4 : 3">
+          <v-row v-if="kbart && kbart.selectedFile">
+            <v-col>
+              <v-chip
+                class="ml-6"
+                close
+                @click:close="kbart = undefined"
+              >
+                {{ kbart.selectedFile.name }}
+              </v-chip>
+            </v-col>
+          </v-row>
           <gokb-tipps-section
             :pkg="parseInt(id)"
             :platform="packageItem.nominalPlatform"
