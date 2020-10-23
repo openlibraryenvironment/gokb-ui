@@ -28,6 +28,10 @@
         return-object
       />
     </gokb-section>
+    <gokb-identifier-section
+      v-model="packageTitleItem.ids"
+      :disabled="isReadonly"
+    />
     <gokb-section :sub-title="$t('component.tipp.access')">
       <v-row>
         <v-col>
@@ -236,6 +240,7 @@
           url: undefined,
           accessStartDate: undefined,
           accessEndDate: undefined,
+          ids: undefined,
           coverageStatements: [
             {
               coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
@@ -297,6 +302,7 @@
         this.status = this.selectedItem.status
         this.packageTitleItem.accessStartDate = this.selectedItem.accessStartDate
         this.packageTitleItem.accessEndDate = this.selectedItem.accessEndDate
+        this.packageTitleItem.ids = this.selectedItem.ids
         this.updateUrl = this.selectedItem.updateUrl
         this.deleteUrl = this.selectedItem.deleteUrl
         this.platformSelection.push(this.selectedItem.hostPlatform)

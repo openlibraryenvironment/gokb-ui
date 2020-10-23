@@ -100,7 +100,7 @@
         return [
           { text: this.$i18n.t('component.review.componentToReview'), align: 'left', value: 'popup', sortable: false },
           { text: this.$i18n.t('component.general.status.label'), align: 'left', value: 'statusLabel', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.review.stdDesc.label'), align: 'left', value: 'stdDescLabel', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.review.stdDesc.label'), align: 'left', value: 'stdDescLabel', sortable: false, width: '20%' },
           { text: this.$i18n.t('component.review.type'), align: 'left', value: 'type', sortable: false, width: '10%' },
           { text: this.$i18n.t('component.general.dateCreated'), align: 'left', value: 'dateCreated', sortable: false },
         ]

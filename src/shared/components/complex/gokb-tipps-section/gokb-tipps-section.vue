@@ -394,6 +394,7 @@
                   deleteUrl: _links.delete.href,
                   titleType: title.type,
                   titleId: title.id,
+                  ids: _embedded.ids.map(({ id, value, namespace: { name: namespace } }) => ({ id, value, namespace, isDeletable: !!_links.delete.href })),
                   popup: { value: (this.ttl ? pkg.name : title.name), label: 'tipp', type: 'GokbAddTitlePopup' },
                   hostPlatformName: hostPlatform?.name
                 }

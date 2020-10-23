@@ -214,7 +214,6 @@
         const data = {
           id: this.id,
           name: this.allNames.name,
-          source: this.source || null,
           ids: this.ids,
           variantNames: this.allNames.alts,
         }
