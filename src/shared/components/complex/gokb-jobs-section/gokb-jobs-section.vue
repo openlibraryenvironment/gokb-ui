@@ -17,7 +17,7 @@
       :total-number-of-items="totalNumberOfItems"
       :options.sync="options"
       @selected-items="selectedItems = $event"
-      @delete-item="cancelJob"
+      @retire-item="confirmCancelJob"
       @paginate="resultPaginate"
     />
   </gokb-section>
@@ -56,7 +56,7 @@
         },
         selectedItems: [],
         jobs: [],
-
+        totalNumberOfItems: 0,
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -68,9 +68,6 @@
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
       },
-      totalNumberOfItems () {
-        return this.jobs.length
-      },
       isEditable () {
         return !this.disabled
       }
@@ -81,7 +78,7 @@
           clearInterval(this.interval)
         } else {
           this.interval = setInterval(function () {
-            this.fetchJobs(this.page)
+            this.fetchJobs(this.options.page)
           }.bind(this), 2000)
         }
       }
@@ -94,10 +91,10 @@
         { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '15%' },
         { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '15%' },
       ]
-      this.fetchJobs(this.page)
+      this.fetchJobs()
 
       this.interval = setInterval(function () {
-        this.fetchJobs(this.page)
+        this.fetchJobs()
       }.bind(this), 2000)
     },
     preDestroy () {
@@ -113,30 +110,41 @@
       async fetchJobs ({ page } = { page: undefined }) {
         const result = await this.catchError({
           promise: profileServices.getJobs({
-            offset: page ? (page - 1) * this.options.itemsPerPage : 0,
+            offset: this.options.page ? (this.options.page - 1) * this.options.itemsPerPage : 0,
             limit: this.options.itemsPerPage
           }, this.cancelToken.token),
           instance: this
         })
 
         if (result.status === 200) {
-          this.jobs = result.data?.data?.map(
-            ({ id, description, startTime, begun, progress, endTime, messages }) => (
+          this.jobs = result.data?.records?.map(
+            ({ id, description, startTime, begun, progress, endTime, messages, cancelled }) => (
               {
                 id,
                 popup: { value: description, label: 'job', type: 'GokbEditJobPopup' },
                 progress,
                 messages,
                 startTime: new Date(startTime).toLocaleString(this.$i18n.locale),
-                endTime: new Date(endTime).toLocaleString(this.$i18n.locale),
-                status: (begun ? (endTime ? this.$i18n.t('job.finished') : progress + '%') : this.$i18n.t('job.waiting'))
+                endTime: endTime ? new Date(endTime).toLocaleString(this.$i18n.locale) : '',
+                status: (begun ? (endTime ? (cancelled ? (this.$i18n.t('job.cancelled') + ' (' + progress + '%)') : this.$i18n.t('job.finished')) : progress + '%') : this.$i18n.t('job.waiting')),
+                isRetireable: true
               }
             )
           )
+          this.totalNumberOfItems = result.data?.total
         }
       },
-      cancelJob () {
-
+      confirmCancelJob ({ id }) {
+        this.actionToConfirm = '_cancelJob'
+        this.messageToConfirm = { text: 'popups.confirm.cancel.list', vars: [this.$i18n.tc('job.label'), id] }
+        this.parameterToConfirm = id
+        this.confirmationPopUpVisible = true
+      },
+      async _cancelJob (id) {
+        this.catchError({
+          promise: profileServices.cancelJob(id, this.cancelToken.token),
+          instance: this
+        })
       }
     }
   }

@@ -14,6 +14,23 @@
         />
       </v-col>
     </v-row>
+    <v-row v-if="selectedItem.result">
+      <v-col>
+        <div
+          v-if="selectedItem.result.pkgId"
+          class="primary--text"
+        >
+          {{ $i18n.tc('component.package.label') }}
+        </div>
+        <router-link
+          v-if="selectedItem.result.pkgId"
+          :style="{ color: '#f2994a' }"
+          :to="{ name: '/package', params: { 'id': selectedItem.result.pkgId } }"
+        >
+          {{ selectedItem.result.name || $i18n.tc('component.package.label') + ' ' + selectedItem.result.pkgId }}
+        </router-link>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col md="4">
         <gokb-text-field
@@ -77,6 +94,7 @@
           description: undefined,
           startDate: undefined,
           endDate: undefined,
+          results: undefined,
           messages: []
         },
         items: []
