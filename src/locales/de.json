@@ -225,6 +225,9 @@
         "Unknown": {
           "label": "Unbekannt"
         }
+      },
+      "globalNote": {
+        "label": "Region/Konsortium"
       }
     },
     "tipp": {

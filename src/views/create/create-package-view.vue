@@ -64,12 +64,12 @@
             />
             <gokb-radiobutton-group v-model="packageItem.global">
               <gokb-radiobutton-field
-                value="Consortium"
-                label="Konsortial"
-              />
-              <gokb-radiobutton-field
                 value="Global"
                 label="Global"
+              />
+              <gokb-radiobutton-field
+                value="Consortium"
+                label="Konsortial"
               />
               <gokb-radiobutton-field
                 value="Regional"
@@ -80,6 +80,13 @@
                 label="Unbekannt"
               />
             </gokb-radiobutton-group>
+            <v-span v-show="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'">
+              <gokb-text-field
+                v-model="packageItem.globalNote"
+                :label="$t('component.package.globalNote.label')"
+                :disabled="isReadonly"
+              />
+            </v-span>
             <v-row>
               <gokb-checkbox-field
                 v-model="packageItem.consistent"
@@ -350,6 +357,7 @@
           description: undefined,
           scope: undefined,
           global: undefined,
+          globalNote: undefined,
           consistent: undefined,
           breakable: undefined,
           fixed: undefined,
