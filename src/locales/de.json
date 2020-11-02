@@ -43,6 +43,11 @@
         "generic": "Möchten Sie die ausgewählten Elemente wirklich schließen?",
         "specific": "Möchten Sie {0} {1} wirklich schließen?",
         "list": "Möchten Sie {0} {1} wirklich schließen?"
+      },
+      "cancel": {
+        "generic": "Möchten Sie die ausgewählten Elemente wirklich abbrechen?",
+        "specific": "Möchten Sie {0} {1} wirklich abbrechen?",
+        "list": "Möchten Sie {0} {1} wirklich abbrechen?"
       }
     },
     "login": {
@@ -55,7 +60,9 @@
     "dateFormat": "Ungültiges Datum"
   },
   "job": {
+    "label": "Import | Imports",
     "finished": "Fertig",
+    "cancelled": "Abgebrochen",
     "waiting": "Warten",
     "description": "Beschreibung",
     "messages": "Ereignisse",
@@ -207,7 +214,7 @@
           "label": "Gemischt"
         }
       },
-      "breakable": "Teilbahr für Lizenznehmer",
+      "breakable": "Teilbar für Lizenznehmer",
       "fixed": "Paket ist unveränderbar",
       "provider": "Anbieter",
       "platform": "Plattform",

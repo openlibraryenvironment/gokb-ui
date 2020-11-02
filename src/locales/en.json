@@ -43,6 +43,11 @@
         "generic": "Are you sure you want to close the selected items?",
         "specific": "Are you sure you want to close {0} {1}?",
         "list": "Are you sure you want to close {0} {1}?"
+      },
+      "cancel": {
+        "generic": "Are you sure you want to cancel the selected items?",
+        "specific": "Are you sure you want to cancel {0} {1}?",
+        "list": "Are you sure you want to cancel {0} {1}?"
       }
     },
     "login": {
@@ -55,7 +60,9 @@
     "dateFormat": "Invalid Date"
   },
   "job": {
+    "label": "Job | Jobs",
     "finished": "Finished",
+    "cancelled": "Cancelled",
     "description": "Description",
     "waiting": "Waiting",
     "messages": "Messages",

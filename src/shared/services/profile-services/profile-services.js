@@ -28,6 +28,13 @@ const api = (baseServices) => ({
       method: 'DELETE',
       url,
     }, cancelToken)
+  },
+  cancelJob (id, cancelToken) {
+    const url = process.env.VUE_APP_API_BASE_URL + `/rest/jobs/${id}/cancel`
+    return baseServices.request({
+      method: 'PATCH',
+      url,
+    }, cancelToken)
   }
 })
 
