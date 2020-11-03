@@ -82,13 +82,13 @@
             />
             <gokb-radiobutton-group v-model="packageItem.global">
               <gokb-radiobutton-field
-                value="Consortium"
-                :label="$t('component.package.global.Consortial.label')"
+                value="Global"
+                :label="$t('component.package.global.Global.label')"
                 :readonly="isReadonly"
               />
               <gokb-radiobutton-field
-                value="Global"
-                :label="$t('component.package.global.Global.label')"
+                value="Consortium"
+                :label="$t('component.package.global.Consortial.label')"
                 :readonly="isReadonly"
               />
               <gokb-radiobutton-field
@@ -102,6 +102,13 @@
                 :readonly="isReadonly"
               />
             </gokb-radiobutton-group>
+            <v-span v-show="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'">
+              <gokb-text-field
+                v-model="packageItem.globalNote"
+                :label="$t('component.package.globalNote.label')"
+                :disabled="isReadonly"
+              />
+            </v-span>
             <v-row>
               <gokb-checkbox-field
                 v-model="packageItem.consistent"
@@ -385,6 +392,7 @@
           description: undefined,
           scope: undefined,
           global: undefined,
+          globalNote: undefined,
           contentType: undefined,
           consistent: undefined,
           breakable: undefined,
@@ -587,6 +595,7 @@
               description,
               scope,
               global,
+              globalNote,
               status,
               consistent,
               breakable,
@@ -616,6 +625,7 @@
           this.packageItem.description = description
           this.packageItem.scope = scope
           this.packageItem.global = global?.name
+          this.packageItem.globalNote = globalNote
           this.packageItem.consistent = consistent?.name === 'Yes'
           this.packageItem.breakable = breakable?.name === 'Yes'
           this.packageItem.fixed = fixed?.name === 'Yes'
