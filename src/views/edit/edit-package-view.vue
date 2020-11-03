@@ -162,7 +162,7 @@
                 close
                 @click:close="kbart = undefined"
               >
-                {{ kbart.selectedFile.name }}
+                {{ kbart.selectedFile.name }} ({{ kbart.lineCount }} {{ $tc('kbart.row.label', kbart.lineCount) }})
               </v-chip>
             </v-col>
           </v-row>
@@ -177,6 +177,7 @@
             v-if="loggedIn"
             v-model="sourceItem"
             :readonly="isReadonly"
+            @enable="triggerUpdate"
           />
         </v-stepper-content>
 
@@ -235,7 +236,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col v-if="kbart && !status">
+              <v-col v-if="kbart && kbart.selectedFile">
                 <gokb-text-field
                   v-model="kbart.selectedFile.name"
                   label="KBART"
@@ -322,6 +323,7 @@
   import packageServices from '@/shared/services/package-services'
   import sourceServices from '@/shared/services/source-services'
   import baseServices from '@/shared/services/base-services'
+  import loading from '@/shared/models/loading'
   import axios from 'axios'
 
   const ROWS_PER_PAGE = 10
@@ -491,10 +493,10 @@
         const valid = form.validate()
 
         if (valid) {
-          if (this.packageItem.source) {
+          if (this.sourceItem) {
             var sourceItem = this.sourceItem
 
-            if (!sourceItem.name) {
+            if (!sourceItem.name || sourceItem.name !== this.packageItem.name) {
               sourceItem.name = this.packageItem.name
             }
 
@@ -535,10 +537,11 @@
 
           if (response.status < 400) {
             if ((this.kbart || this.urlUpdate) && response.data.id) {
+              const namespace = (this.kbart?.selectedNamespace?.name ? { titleIdNamespace: this.kbart?.selectedNamespace?.name } : {})
               const pars = {
                 addOnly: this.kbart.addOnly,
                 processOption: 'kbart',
-                titleIdNamespace: this.kbart.selectedNamespace.name,
+                ...namespace,
                 pkgNominalPlatformId: this.packageItem.nominalPlatform.id,
                 pkgId: response.data.id
               }
@@ -574,6 +577,7 @@
       },
       async reload () {
         if (this.isEdit) {
+          loading.startLoading()
           const {
             data: {
               name,
@@ -631,6 +635,7 @@
           this.sourceItem = source
           this.status = status
         }
+        loading.stopLoading()
       },
       async sendKbart (file, parameters) {
         const urlParameters = baseServices.createQueryParameters(parameters)
@@ -656,8 +661,10 @@
           .catch(error => {
             this.error = error
           })
+      },
+      triggerUpdate (checked) {
+        this.urlUpdate = checked
       }
-
     }
   }
 </script>

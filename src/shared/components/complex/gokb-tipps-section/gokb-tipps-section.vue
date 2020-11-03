@@ -107,7 +107,7 @@
     </template>
     <gokb-table
       v-if="(!pkg && !ttl) || newTipps.length > 0"
-      :headers="tableHeaders"
+      :headers="newTableHeaders"
       :items="newTipps"
       :label="$t('component.package.navigation.newTitles')"
       :editable="isEditable"
@@ -127,6 +127,7 @@
       v-if="ttl || pkg"
       :headers="tableHeaders"
       :items="items"
+      :label="(newTipps.length ? $t('component.package.navigation.currentTitles') : undefined)"
       :editable="isEditable"
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
@@ -231,6 +232,21 @@
       isEditable () {
         return !this.disabled && !this.title
       },
+      tableHeaders () {
+        return [
+          { text: this.$i18n.tc('component.title.label'), align: 'left', value: 'popup', sortable: false },
+          { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
+        ]
+      },
+      newTableHeaders () {
+        return [
+          { text: this.$i18n.tc('component.title.label'), align: 'left', value: 'popup', sortable: false },
+          { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'title.type.text', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
+        ]
+      },
       packageTypes () {
         return [
           { id: 'book', text: this.$i18n.tc('component.title.type.Book') },
@@ -257,13 +273,6 @@
       }
     },
     async created () {
-      this.tableHeaders = [
-        { text: 'Details', align: 'left', value: 'popup', sortable: false },
-        { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
-        { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
-        { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
-      ]
-
       if (this.pkg || this.ttl) {
         this.fetchTipps()
       }
@@ -301,8 +310,8 @@
         this.confirmationPopUpVisible = true
       },
       confirmDeleteNew ({ id }) {
-        this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.tipp.label'), id] }
+        this.actionToConfirm = '_deleteNewItem'
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.tipp.label'), ''] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -318,16 +327,19 @@
       },
       _deleteItem (idToDelete) {
       },
+      _deleteNewItem (idToDelete) {
+        this.newTipps = this.newTipps.filter(({ id }) => id !== idToDelete)
+      },
       _retireItem (idToRetire) {
         this.fetchTipps()
       },
       showAddNewTitlePopup (titleType) {
         this.addTitleType = titleType
-        this.successMessage = undefined
+        this.successMessage = false
         this.addTitlePopupVisible = 1
       },
       showKbartImportPopup () {
-        this.successMessage = undefined
+        this.successMessage = false
         this.kbartImportPopupVisible = true
       },
       editTitle (tipp) {
@@ -343,11 +355,11 @@
         this.$emit('kbart', options)
       },
       resultPaginate (page) {
-        this.successMessage = undefined
+        this.successMessage = false
         this.fetchTipps({ page })
       },
       resultNewPaginate (page) {
-        this.successMessage = undefined
+        this.successMessage = false
       },
       async fetchTipps ({ page } = { page: undefined }) {
         if (this.pkg || this.ttl) {

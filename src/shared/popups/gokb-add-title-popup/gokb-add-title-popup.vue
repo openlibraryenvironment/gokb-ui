@@ -32,7 +32,10 @@
       v-model="packageTitleItem.ids"
       :disabled="isReadonly"
     />
-    <gokb-section :sub-title="$t('component.tipp.access')">
+    <gokb-section
+      expandable
+      :sub-title="$t('component.tipp.access')"
+    >
       <v-row>
         <v-col>
           <gokb-search-platform-field
@@ -152,12 +155,15 @@
       <v-spacer />
       <gokb-button
         text
+        class="mr-6"
         @click="close"
       >
         {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
       </gokb-button>
       <gokb-button
         v-if="updateUrl || !id"
+        :disabled="!packageTitleItem.title"
+        class="mr-6"
         default
       >
         {{ selected ? $t('btn.update') : $t('btn.add') }}
@@ -177,7 +183,7 @@
     extends: BaseComponent,
     props: {
       value: {
-        type: Number,
+        type: [Number, String],
         required: true,
         default: undefined
       },
@@ -240,7 +246,7 @@
           url: undefined,
           accessStartDate: undefined,
           accessEndDate: undefined,
-          ids: undefined,
+          ids: [],
           coverageStatements: [
             {
               coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
@@ -262,7 +268,7 @@
         return !this.isReadonly ? (this.id ? (this.$i18n.t('header.edit.label', [this.$i18n.t('component.tipp.access')]) + ' – ' + this.typeLabel) : (this.$i18n.t('header.add.label', [this.$i18n.t('component.tipp.access')]) + ' – ' + this.typeLabel)) : (this.typeLabel + ' – ' + this.$i18n.t('component.tipp.access'))
       },
       typeLabel () {
-        return this.title.type.text || this.$i18n.tc('component.title.label')
+        return this.title?.type ? (typeof this.title.type === 'object' ? this.title.type.text : this.title.type) : this.$i18n.tc('component.title.label')
       },
       isEdit () {
         return !!this.id
@@ -322,7 +328,11 @@
         }
         this.id = this.selectedItem.id
         this.packageTitleItem.id = this.id
-        this.title.type = { id: this.selectedItem.title.type.toLowerCase(), text: this.$i18n.tc('component.title.type.' + this.selectedItem.title.type) }
+        if (this.selectedItem.title?.type) {
+          this.title.type = this.selectedItem.title.type
+        } else {
+          this.title.type = this.titleType
+        }
       } else {
         this.title.type = this.titleType
         this.packageTitleItem.hostPlatform = this.parentPlatform
@@ -330,7 +340,7 @@
     },
     methods: {
       async submitTipp () {
-        if (this.selected) {
+        if (this.selected && typeof this.selected.id === 'number') {
           const newTipp = {
             pkg: this.packageTitleItem.pkg,
             title: this.packageTitleItem.title,
@@ -366,16 +376,18 @@
           }
         } else {
           console.log('Adding new TIPP!')
+          this.packageTitleItem.title.type = this.title.type
+
           const newTipp = {
             ...this.packageTitleItem,
             id: this.tempId(),
-            title: { type: this.title.type },
             titleId: this.packageTitleItem.title.id,
-            popup: { value: 'Show Info', label: 'tipp', type: 'GokbAddTitlePopup' },
+            popup: { value: this.packageTitleItem.title.name, label: 'tipp', type: 'GokbAddTitlePopup' },
             link: { value: this.packageTitleItem.title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },
             hostPlatformName: this.packageTitleItem.hostPlatform?.name,
-            updateUrl: null,
-            deleteUrl: null
+            updateUrl: '',
+            deleteUrl: '',
+            isDeletable: true
           }
 
           this.$emit('add', newTipp)

@@ -29,6 +29,15 @@
           />
         </v-col>
       </v-row>
+      <v-row>
+        <v-col>
+          <gokb-namespace-field
+            v-model="titleNamespace"
+            target-type="Title"
+            :label="$t('component.provider.titleNamespace')"
+          />
+        </v-col>
+      </v-row>
     </gokb-section>
     <gokb-alternate-names-section
       v-model="allAlternateNames"
@@ -78,6 +87,7 @@
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import providerServices from '@/shared/services/provider-services'
   import accountModel from '@/shared/models/account-model'
+  import loading from '@/shared/models/loading'
 
   export default {
     name: 'EditProviderView',
@@ -95,6 +105,8 @@
         name: undefined,
         source: undefined,
         version: undefined,
+        titleNamespace: undefined,
+        packageNamespace: undefined,
         reference: undefined,
         ids: [],
         allAlternateNames: [],
@@ -165,12 +177,15 @@
       },
       async reload () {
         if (this.isEdit) {
+          loading.startLoading()
           const {
             data: {
               //  data: {
               name,
               source,
               status,
+              titleNamespace,
+              packageNamespace,
               version,
               homepage,
               _embedded: {
@@ -198,12 +213,15 @@
           this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
           this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: !!updateUrl }))
           this.allPlatforms = providedPlatforms.map(platform => ({ ...platform, isDeletable: !!updateUrl }))
+          this.titleNamespace = titleNamespace
+          this.packageNamespace = packageNamespace
           this.allPackages = providedPackages
           this.allNames = { name: name, alts: this.allAlternateNames }
           this.updateUrl = updateUrl
           this.deleteUrl = deleteUrl
           this.status = status
           this.successMsg = false
+          loading.stopLoading()
         }
       }
     }

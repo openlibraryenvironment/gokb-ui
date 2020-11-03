@@ -28,6 +28,22 @@
           :readonly="readonly"
         />
       </v-col>
+      <v-col>
+        <gokb-namespace-field
+          v-model="titleIdNamespace"
+          target-type="Title"
+          :label="$t('kbart.propId.label')"
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col class="d-flex flex-row-reverse">
+        <v-checkbox
+          v-model="updateStatus"
+          class="mr-5"
+          :label="$t('component.source.updateNow')"
+        />
+      </v-col>
     </v-row>
   </gokb-section>
 </template>
@@ -66,7 +82,9 @@
         id: undefined,
         name: undefined,
         menu: false,
+        update: false,
         url: undefined,
+        titleIdNamespace: undefined,
         duration: undefined,
         unit: undefined,
         cycleUnitField: undefined,
@@ -89,8 +107,11 @@
           return parseInt(duration, 10) || duration
         },
         set (duration) {
-          const unit = this.unit.id
-          this.localValue = { url: this.url, id: this.id, name: this.name, frequency: `${duration || ''}${unit || ''}` }
+          this.duration = duration
+          const unit = this.unit?.id
+          if (unit) {
+            this.localValue = { url: this.url, id: this.id, name: this.name, frequency: `${duration || ''}${unit.id || ''}` }
+          }
         }
       },
       cycleUnit: {
@@ -99,8 +120,21 @@
           return unit
         },
         set (unit) {
+          this.unit = unit.id
           const duration = this.duration
-          this.localValue = { url: this.url, id: this.id, name: this.name, frequency: `${duration || ''}${unit || ''}` }
+
+          if (duration) {
+            this.localValue = { url: this.url, id: this.id, name: this.name, frequency: `${duration || ''}${unit.id || ''}` }
+          }
+        }
+      },
+      updateStatus: {
+        get () {
+          return this.update
+        },
+        set (update) {
+          this.update = update
+          this.$emit('enable', update)
         }
       },
       allUnits () {
@@ -133,13 +167,12 @@
 
           this.id = result.data.id
           this.duration = duration
+          this.titleIdNamespace = result.titleIdNamespace
           this.unit = unit ? { id: unit, name: this.allUnits.find(unit => unit.id === unit) } : undefined
           this.name = result.data.name
           this.url = result.data.url
 
           this.localValue = { url: this.url, id: this.id, name: this.name, frequency: `${this.duration || ''}${this.unit?.id || ''}` }
-
-          console.log(this.value)
         }
       }
     },

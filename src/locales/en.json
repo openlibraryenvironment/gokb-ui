@@ -77,7 +77,10 @@
     "propId": {
       "label": "Namespace for title_id values"
     },
-    "addOnly": "Partial Update"
+    "addOnly": "Partial Update",
+    "row": {
+      "label": "Row | Rows"
+    }
   },
   "profile": {
     "label": "Profile",
@@ -179,7 +182,7 @@
         "step2": "Linked Objects",
         "step3": "Package Titles",
         "step4": "Summary",
-        "newTitles": "Newly Added",
+        "newTitles": "To be added",
         "currentTitles": "Current Titles"
       },
       "description": "Description",
@@ -275,7 +278,9 @@
     },
     "provider": {
       "label": "Provider | Providers",
-      "homepage": "Homepage"
+      "homepage": "Homepage",
+      "titleNamespace": "Title Namespace",
+      "packageNamespace": "Package Namespace"
     },
     "identifier": {
       "label": "Identifier | Identifiers",
@@ -431,6 +436,7 @@
     },
     "source": {
       "label": "Settings for Automated Updating |  Settings for Automated Updates",
+      "updateNow": "Update Now",
       "url": "URL"
     },
     "general": {

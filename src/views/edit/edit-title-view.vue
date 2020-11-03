@@ -131,6 +131,7 @@
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import titleServices from '@/shared/services/title-services'
   import accountModel from '@/shared/models/account-model'
+  import loading from '@/shared/models/loading'
 
   export default {
     name: 'EditTitleView',
@@ -231,6 +232,7 @@
       },
       async reload () {
         if (this.isEdit) {
+          loading.startLoading()
           const {
             data: {
               //  data: {
@@ -282,6 +284,7 @@
           this.deleteUrl = deleteUrl
           this.successMsg = false
           this.status = status
+          loading.stopLoading()
         }
       }
     },

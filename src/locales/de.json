@@ -75,9 +75,12 @@
       "label": "Datei"
     },
     "propId": {
-      "label": "Namensraum für Werte in title_id"
+      "label": "Namensraum für title_id"
     },
-    "addOnly": "Teil-Update"
+    "addOnly": "Teil-Update",
+    "row": {
+      "label": "Zeile | Zeilen"
+    }
   },
   "profile": {
     "label": "Profil",
@@ -103,7 +106,7 @@
     "confirmPass": "Passwort (Bestätigung)"
   },
   "success": {
-    "add": "{0} {1} erfolgreiche hinzugefügt!",
+    "add": "{0} {1} erfolgreich hinzugefügt!",
     "create": "{0} {1} erfolgreich erstellt!",
     "kbart": "Der KBART-Import wurde gestartet. Den Status können Sie über Ihr Dashboard verfolgen.",
     "update": "{0} {1} erfolgreich bearbeitet!",
@@ -179,7 +182,7 @@
         "step2": "Verknüpfte Objekte",
         "step3": "Titel im Paket",
         "step4": "Zusammenfassung",
-        "newTitles": "Neu hinzugefügt",
+        "newTitles": "Werden hinzugefügt",
         "currentTitles": "Aktueller Bestand"
       },
       "description": "Beschreibung",
@@ -275,7 +278,9 @@
     },
     "provider": {
       "label": "Anbieter | Anbieter",
-      "homepage": "Homepage"
+      "homepage": "Homepage",
+      "titleNamespace": "Titel-Namensraum",
+      "packageNamespace": "Paket-Namensraum"
     },
     "identifier": {
       "label": "Identifikator | Identifikatoren",
@@ -430,6 +435,7 @@
     },
     "source": {
       "label": "Automatisches Update | Automatische Updates",
+      "updateNow": "Jetzt Updaten",
       "url": "URL"
     },
     "general": {

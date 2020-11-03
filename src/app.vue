@@ -226,7 +226,7 @@
           ]
 
           const result = await this.searchServices.search({
-            q: this.globalSearchField,
+            suggest: this.globalSearchField,
             es: 'true',
             max: 20
           }, this.cancelToken.token)

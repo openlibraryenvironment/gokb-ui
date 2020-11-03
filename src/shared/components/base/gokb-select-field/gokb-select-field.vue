@@ -28,6 +28,7 @@
     extends: BaseComponent,
     label: '',
     entityName: undefined,
+    searchParams: {},
     props: {
       value: {
         type: [Object, String, Number, Array, Boolean],
@@ -95,7 +96,7 @@
     async mounted () {
       if (this.entityName) {
         const entityService = genericEntityServices(this.entityName)
-        const parameters = { _select: 'id, name', _sort: 'name', _order: 'asc' }
+        const parameters = { _include: 'id, name', _sort: 'name', _order: 'asc', ...this.searchParams }
         const result = await this.catchError({
           promise: entityService.get({ parameters }, this.cancelToken.token),
           instance: this
