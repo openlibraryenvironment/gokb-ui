@@ -177,9 +177,10 @@
     },
     "package": {
       "label": "Package | Packages",
+      "properties": "Package properties",
       "navigation": {
         "step1": "General",
-        "step2": "Linked Objects",
+        "step2": "Package Properties",
         "step3": "Package Titles",
         "step4": "Summary",
         "newTitles": "To be added",
@@ -238,7 +239,8 @@
       },
       "globalNote": {
         "label": "Region/Consortium"
-      }
+      },
+      "descriptionUrl": "URL to package description"
     },
     "tipp": {
       "label": "Package Title | Package Titles",
@@ -283,7 +285,8 @@
       "label": "Provider | Providers",
       "homepage": "Homepage",
       "titleNamespace": "Title Namespace",
-      "packageNamespace": "Package Namespace"
+      "packageNamespace": "Package Namespace",
+      "technicalSupport": "Technical Support"
     },
     "identifier": {
       "label": "Identifier | Identifiers",
@@ -438,8 +441,8 @@
       "label": "Name Variant | Name Variants"
     },
     "source": {
-      "label": "Settings for Automated Updating |  Settings for Automated Updates",
-      "updateNow": "Update Now",
+      "label": "Settings for Automated Import and Update |  Settings for Automated Imports and Updates",
+      "updateNow": "Import Now",
       "url": "URL"
     },
     "general": {
