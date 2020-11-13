@@ -221,8 +221,18 @@
         const data = {
           id: this.id,
           name: this.allNames.name,
-          ids: this.ids,
+          ids: this.ids.map(id => ({ value: id.value, type: id.namespace })),
           variantNames: this.allNames.alts,
+          publishedFrom: this.publishedFrom,
+          publishedTo: this.publishedTo,
+          firstPublishedInPrint: this.firstPublishedInPrint,
+          firstPublishedOnline: this.firstPublishedOnline,
+          type: this.currentType,
+          volumeNumber: this.volumeNumber,
+          editionNumber: this.editionNumber,
+          editionStatement: this.editionStatement,
+          status: this.status,
+          publisher: this.publishers.map(pub => pub.id)
         }
         const response = await this.catchError({
           promise: titleServices.createOrUpdateTitle(data, this.cancelToken.token),
@@ -231,6 +241,7 @@
         // todo: check error code
         if (response.status === 200) {
           this.successMsg = true
+          this.id = response.data.id
           this.reload()
         }
 
@@ -242,6 +253,7 @@
           const {
             data: {
               //  data: {
+              id,
               name,
               source,
               type,
@@ -270,6 +282,7 @@
             promise: titleServices.getTitle(this.id, this.cancelToken.token),
             instance: this
           })
+          this.id = id
           this.name = name
           this.source = source
           this.version = version
@@ -277,7 +290,7 @@
           this.publishedFrom = publishedFrom && publishedFrom.substr(0, 10)
           this.publishedTo = publishedTo && publishedTo.substr(0, 10)
           this.publishers = publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!updateUrl }))
-          this.ids = ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!updateUrl }))
+          this.ids = ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!updateUrl }))
           this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
           this.allNames = { name: name, alts: this.allAlternateNames }
           this.reviewRequests = reviewRequests

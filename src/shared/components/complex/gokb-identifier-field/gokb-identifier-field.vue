@@ -43,7 +43,7 @@
       value: {
         type: Object,
         required: true,
-        default: () => ({ value: undefined, namespace: { id: undefined, name: undefined } })
+        default: () => ({ value: undefined, namespace: { id: undefined, name: undefined, value: undefined } })
       },
     },
     computed: {

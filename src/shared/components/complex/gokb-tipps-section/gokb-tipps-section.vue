@@ -191,7 +191,9 @@
       return {
         options: {
           page: 1,
-          itemsPerPage: ROWS_PER_PAGE
+          itemsPerPage: ROWS_PER_PAGE,
+          sortBy: ['popup'],
+          desc: [false]
         },
         newOptions: {
           page: 1,
@@ -216,7 +218,8 @@
         messageToConfirm: undefined,
         itemCount: 0,
         newItemCount: 0,
-        interval: null
+        interval: null,
+        linkValue: 'title'
       }
     },
     computed: {
@@ -354,7 +357,15 @@
       addKbartFile (options) {
         this.$emit('kbart', options)
       },
-      resultPaginate (page) {
+      resultPaginate (options) {
+        const page = options.page
+        if (options.sortBy) {
+          this.options.sortBy = options.sortBy
+        }
+
+        if (options.desc) {
+          this.options.desc = options.desc
+        }
         this.successMessage = false
         this.fetchTipps({ page })
       },

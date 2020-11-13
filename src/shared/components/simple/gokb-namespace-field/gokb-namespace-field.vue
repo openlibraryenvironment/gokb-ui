@@ -24,7 +24,7 @@
     methods: {
       transform (result) {
         const { data: { data: values } } = result
-        return values.map(({ id, value }) => ({ id, name: value }))
+        return values.map(ns => ({ id: ns.id, name: (ns.name || ns.value), value: ns.value }))
       }
     }
   }

@@ -447,6 +447,8 @@
     "source": {
       "label": "Settings for Automated Import and Update |  Settings for Automated Imports and Updates",
       "updateNow": "Import Now",
+      "ezbMatch": "Match EZB",
+      "zdbMatch": "Match ZDB",
       "url": "URL"
     },
     "general": {

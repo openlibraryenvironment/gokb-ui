@@ -37,8 +37,25 @@
       </v-col>
     </v-row>
     <v-row>
+      <v-col>
+        <v-checkbox
+          v-if="url && duration && unit"
+          v-model="ezbMatch"
+          class="mr-5"
+          :label="$t('component.source.ezbMatch')"
+        />
+      </v-col>
+      <v-col>
+        <v-checkbox
+          v-if="url && duration && unit"
+          v-model="zdbMatch"
+          class="mr-5"
+          :label="$t('component.source.zdbMatch')"
+        />
+      </v-col>
       <v-col class="d-flex flex-row-reverse">
         <v-checkbox
+          v-if="url && duration && unit"
           v-model="updateStatus"
           class="mr-5"
           :label="$t('component.source.updateNow')"

@@ -128,13 +128,13 @@
                 :readonly="isReadonly"
               />
             </gokb-radiobutton-group>
-            <v-span v-show="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'">
+            <v-row v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'">
               <gokb-text-field
                 v-model="packageItem.globalNote"
                 :label="$t('component.package.globalNote.label')"
                 :disabled="isReadonly"
               />
-            </v-span>
+            </v-row>
             <v-row>
               <gokb-checkbox-field
                 v-model="packageItem.consistent"
@@ -536,6 +536,7 @@
             name: this.allNames.name,
             variantNames: this.allAlternateNames,
             curatoryGroups: this.allCuratoryGroups,
+            ids: this.packageItem.ids.map(id => ({ value: id.value, type: id.namespace })),
             breakable: utils.asYesNo(this.packageItem.breakable),
             consistent: utils.asYesNo(this.packageItem.consistent),
             fixed: utils.asYesNo(this.packageItem.fixed),
@@ -553,7 +554,9 @@
           })
 
           if (response.status < 400) {
-            if ((this.kbart || this.urlUpdate) && response.data.id) {
+            this.id = response.data?.id
+
+            if ((this.kbart || this.urlUpdate) && response.data?.id) {
               const namespace = (this.kbart?.selectedNamespace?.name ? { titleIdNamespace: this.kbart?.selectedNamespace?.name } : {})
               const pars = {
                 addOnly: this.kbart.addOnly,
