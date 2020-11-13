@@ -188,7 +188,7 @@
       },
       "description": "Beschreibung",
       "scope": {
-        "label": "Umfang",
+        "label": "Pakettyp",
         "Front File": {
           "label": "Laufendes Paket (Frontfile)"
         },
