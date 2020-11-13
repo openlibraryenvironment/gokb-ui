@@ -30,6 +30,7 @@
     </gokb-section>
     <gokb-identifier-section
       v-model="packageTitleItem.ids"
+      :expanded="!!packageTitleItem.ids"
       :disabled="isReadonly"
     />
     <gokb-section

@@ -13,6 +13,7 @@
           curatoryGroupIds: [],
           providerId: undefined,
           identifierValue: undefined,
+          contentType: undefined,
           status: undefined,
           name: undefined,
         }
@@ -95,26 +96,42 @@
             name: 'status',
             value: 'status',
           },
+          {
+            type: 'GokbStateField',
+            name: 'contentType',
+            value: 'contentType',
+            properties: {
+              label: this.$i18n.t('component.package.contentType.label'),
+              url: 'refdata/categories/Package.ContentType',
+              messagePath: 'component.package.contentType'
+            }
+          },
         ]
       ]
       this.resultHeaders = [
         {
           text: this.$i18n.t('component.general.name'),
           align: 'start',
-          sortable: false,
+          sortable: true,
           value: 'link'
         },
         {
           text: this.$i18n.tc('component.provider.label'),
           align: 'start',
-          sortable: false,
+          sortable: true,
           value: 'providerName'
         },
         {
           text: this.$i18n.tc('component.platform.label'),
           align: 'start',
-          sortable: false,
+          sortable: true,
           value: 'nominalPlatformName'
+        },
+        {
+          text: this.$i18n.tc('component.package.contentType.label'),
+          align: 'start',
+          sortable: true,
+          value: 'contentType.value'
         },
       ]
       this.searchServicesUrl = 'rest/packages'

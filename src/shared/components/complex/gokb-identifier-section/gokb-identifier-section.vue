@@ -116,7 +116,7 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.identifier.namespace'), align: 'left', value: 'namespace', sortable: false, width: '15%' },
+          { text: this.$i18n.tc('component.identifier.namespace'), align: 'left', value: 'nslabel', sortable: false, width: '15%' },
           { text: this.$i18n.t('component.identifier.value'), align: 'left', value: 'value', sortable: false, width: '100%' },
         ]
       }
@@ -153,7 +153,7 @@
         this.addIdentifierPopupVisible = true
       },
       addNewIdentifier (id) {
-        this.localValue.push({ id: this.tempId(), value: id.value, namespace: id.namespace.name, isDeletable: true })
+        this.localValue.push({ id: this.tempId(), value: id.value, namespace: id.namespace.value, nslabel: id.namespace.name, isDeletable: true })
       },
       deleteIdentifier (value) {
         this.localValue = this.localValue.filter(v => v !== value)
