@@ -180,9 +180,10 @@
     },
     "package": {
       "label": "Paket | Pakete",
+      "properties": "Paketeigenschaften",
       "navigation": {
         "step1": "Allgemein",
-        "step2": "Verknüpfte Objekte",
+        "step2": "Paketeigenschaften",
         "step3": "Titel im Paket",
         "step4": "Zusammenfassung",
         "newTitles": "Werden hinzugefügt",
@@ -190,21 +191,21 @@
       },
       "description": "Beschreibung",
       "scope": {
-        "label": "Umfang",
+        "label": "Pakettyp",
         "Front File": {
-          "label": "Front File"
+          "label": "Laufendes Paket (Frontfile)"
         },
         "Back File": {
-          "label": "Back File"
+          "label": "Archivpaket (Backfile)"
         },
         "Aggregator": {
-          "label": "Aggregator"
+          "label": "Aggregatorpaket"
         },
         "Master File": {
-          "label": "Master File"
+          "label": "Gesamttitelliste"
         }
       },
-      "consistent": "Paketinhalt ist konsistent",
+      "consistent": "Paketinhalt ist einheitlich",
       "contentType": {
         "label": "Inhaltstyp",
         "Journal": {
@@ -220,7 +221,7 @@
           "label": "Gemischt"
         }
       },
-      "breakable": "Teilbar für Lizenznehmer",
+      "breakable": "Einzeltitelauswahl möglich",
       "fixed": "Paket ist unveränderbar",
       "provider": "Anbieter",
       "platform": "Plattform",
@@ -241,13 +242,14 @@
       },
       "globalNote": {
         "label": "Region/Konsortium"
-      }
+      },
+      "descriptionUrl": "URL zur Beschreibung des Pakets"
     },
     "tipp": {
       "label": "Paket-Titel | Paket-Titel",
       "url": {
         "label": "Zugriffs-URL | Zugriffs-URLs",
-        "error": "Bitte erfassen Sie eine gültige Url."
+        "error": "Bitte erfassen Sie eine gültige URL."
       },
       "access": "Zugriff",
       "accessPeriod": "Zugriffszeitraum",
@@ -286,7 +288,8 @@
       "label": "Anbieter | Anbieter",
       "homepage": "Homepage",
       "titleNamespace": "Titel-Namensraum",
-      "packageNamespace": "Paket-Namensraum"
+      "packageNamespace": "Paket-Namensraum",
+      "technicalSupport": "Technischer Support"
     },
     "identifier": {
       "label": "Identifikator | Identifikatoren",
@@ -440,8 +443,8 @@
       "label": "Weitere Namensform | Weitere Namensformen"
     },
     "source": {
-      "label": "Automatisches Update | Automatische Updates",
-      "updateNow": "Jetzt Updaten",
+      "label": "Automatischer Import und Update | Automatische Imports und Updates",
+      "updateNow": "Jetzt Importieren",
       "url": "URL"
     },
     "general": {

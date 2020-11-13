@@ -58,12 +58,38 @@
             <gokb-url-field
               v-model="packageItem.descriptionUrl"
               :disabled="isReadonly"
+              :label="$t('component.package.descriptionUrl')"
             />
             <gokb-textarea-field
               v-model="packageItem.description"
               :label="$t('component.package.description')"
               :disabled="isReadonly"
             />
+          </gokb-section>
+          <gokb-section
+            :sub-title="$t('component.package.provider')"
+          >
+            <gokb-search-organisation-field
+              v-model="packageItem.provider"
+              :items="providerSelection"
+              :readonly="isReadonly"
+              return-object
+            />
+          </gokb-section>
+          <gokb-section :sub-title="$t('component.package.platform')">
+            <gokb-search-platform-field
+              v-model="packageItem.nominalPlatform"
+              :items="platformSelection"
+              :readonly="isReadonly"
+              return-object
+            />
+          </gokb-section>
+        </v-stepper-content>
+
+        <v-stepper-content :step="isEdit ? 3 : 2">
+          <gokb-section
+            :sub-title="$t('component.package.properties')"
+          >
             <gokb-state-field
               v-model="packageItem.scope"
               :init-item="packageItem.scope"
@@ -130,27 +156,6 @@
               />
             </v-row>
           </gokb-section>
-        </v-stepper-content>
-
-        <v-stepper-content :step="isEdit ? 3 : 2">
-          <gokb-section
-            :sub-title="$t('component.package.provider')"
-          >
-            <gokb-search-organisation-field
-              v-model="packageItem.provider"
-              :items="providerSelection"
-              :readonly="isReadonly"
-              return-object
-            />
-          </gokb-section>
-          <gokb-section :sub-title="$t('component.package.platform')">
-            <gokb-search-platform-field
-              v-model="packageItem.nominalPlatform"
-              :items="platformSelection"
-              :readonly="isReadonly"
-              return-object
-            />
-          </gokb-section>
           <gokb-identifier-section
             v-model="packageItem.ids"
             :disabled="isReadonly"
@@ -195,6 +200,15 @@
                 <gokb-name-field
                   v-model="allNames"
                   readonly
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <gokb-text-field
+                  v-model="providerName"
+                  :label="$t('component.package.provider')"
+                  disabled
                 />
               </v-col>
             </v-row>
@@ -251,11 +265,6 @@
                 />
               </v-col>
             </v-row>
-            <gokb-text-field
-              v-model="providerName"
-              :label="$t('component.package.provider')"
-              disabled
-            />
           </gokb-section>
           <gokb-section
             v-if="maintenance"
