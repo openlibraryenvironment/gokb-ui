@@ -5,17 +5,18 @@
     name: 'GokbNumberField',
     extends: GokbTextField,
     props: {
-      type: {
-        type: String,
-        required: false,
-        default: 'number'
-      },
       value: {
-        type: Number,
-        required: true,
-        default: 0,
+        type: [Number, String],
+        required: false,
+        default: undefined
       },
-
     },
+    computed: {
+      rules () {
+        return [
+          value => (!value || /^[\d]+$/.test(value)) || this.$i18n.t('validation.numberFormat')
+        ]
+      }
+    }
   }
 </script>

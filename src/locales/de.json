@@ -57,6 +57,7 @@
   "validation": {
     "missingName": "Bitte geben Sie einen Namen an.",
     "urlForm": "Bitte geben Sie eine gültige URL an.",
+    "numberFormat": "Dieses Feld erwartet eine Zahl.",
     "dateFormat": "Ungültiges Datum"
   },
   "job": {

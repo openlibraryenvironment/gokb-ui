@@ -376,7 +376,6 @@
             console.log(response.status)
           }
         } else {
-          console.log('Adding new TIPP!')
           this.packageTitleItem.title.type = this.title.type
 
           const newTipp = {

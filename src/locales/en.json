@@ -57,6 +57,7 @@
   "validation": {
     "missingName": "Please provide a name.",
     "urlForm": "Please provide a valid URL.",
+    "numberFormat": "Please enter a number.",
     "dateFormat": "Invalid Date"
   },
   "job": {

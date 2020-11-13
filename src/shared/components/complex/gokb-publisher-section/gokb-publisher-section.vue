@@ -150,7 +150,6 @@
         this.addPublisherPopupVisible = true
       },
       addNewPublisher (item) {
-        console.log(item)
         this.localValue.push({ id: item.id, name: item.name, link: { id: 'id', route: EDIT_PROVIDER_ROUTE, value: item.name }, isDeletable: true })
       },
       deleteItem (value) {

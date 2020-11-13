@@ -177,11 +177,9 @@
         this.$emit('paginate', this.options)
       },
       changeSortBy (sb) {
-        console.log('SortBy: ' + sb)
         this.$emit('paginate', { page: this.options.page, sortBy: sb })
       },
       changeSortOrder (desc) {
-        console.log('SortDesc: ' + desc)
         this.$emit('paginate', { page: this.options.page, desc: desc })
       },
       deleteItem (item) {
