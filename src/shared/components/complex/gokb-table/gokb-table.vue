@@ -15,7 +15,10 @@
       hide-default-footer
       :item-key="itemKey"
       :show-select="showSelect"
+      :must-sort="true"
       dense
+      @update:sort-by="changeSortBy"
+      @update:sort-desc="changeSortOrder"
     >
       <template #no-data>
         <v-row justify="center">
@@ -167,11 +170,19 @@
     watch: {
       'options.page' () {
         this.handlePaging()
-      },
+      }
     },
     methods: {
       handlePaging () {
-        this.$emit('paginate', this.options.page)
+        this.$emit('paginate', this.options)
+      },
+      changeSortBy (sb) {
+        console.log('SortBy: ' + sb)
+        this.$emit('paginate', { page: this.options.page, sortBy: sb })
+      },
+      changeSortOrder (desc) {
+        console.log('SortDesc: ' + desc)
+        this.$emit('paginate', { page: this.options.page, desc: desc })
       },
       deleteItem (item) {
         this.$emit('delete-item', item)

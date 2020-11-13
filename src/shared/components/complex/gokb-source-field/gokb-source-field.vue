@@ -84,6 +84,9 @@
         menu: false,
         update: false,
         url: undefined,
+        ezbMatch: false,
+        zdbMatch: false,
+        automaticUpdates: false,
         titleIdNamespace: undefined,
         duration: undefined,
         unit: undefined,
@@ -110,7 +113,16 @@
           this.duration = duration
           const unit = this.unit?.id
           if (unit) {
-            this.localValue = { url: this.url, id: this.id, name: this.name, frequency: `${duration || ''}${unit.id || ''}` }
+            this.localValue = {
+              url: this.url,
+              automaticUpdates: this.automaticUpdates,
+              lastRun: this.lastRun,
+              ezbMatch: this.ezbMatch,
+              zdbMatch: this.zdbMatch,
+              id: this.id,
+              name: this.name,
+              frequency: `${duration || ''}${unit.id || ''}`
+            }
           }
         }
       },
@@ -124,7 +136,16 @@
           const duration = this.duration
 
           if (duration) {
-            this.localValue = { url: this.url, id: this.id, name: this.name, frequency: `${duration || ''}${unit.id || ''}` }
+            this.localValue = {
+              url: this.url,
+              automaticUpdates: this.automaticUpdates,
+              lastRun: this.lastRun,
+              ezbMatch: this.ezbMatch,
+              zdbMatch: this.zdbMatch,
+              id: this.id,
+              name: this.name,
+              frequency: `${duration || ''}${unit.id || ''}`
+            }
           }
         }
       },
@@ -171,8 +192,21 @@
           this.unit = unit ? { id: unit, name: this.allUnits.find(unit => unit.id === unit) } : undefined
           this.name = result.data.name
           this.url = result.data.url
+          this.automaticUpdates = result.data.automaticUpdates
+          this.lastRun = result.data.lastRun ? new Date(result.data.lastRun).toLocaleString(this.$i18n.locale) : ''
+          this.zdbMatch = result.data.zdbMatch
+          this.ezbMatch = result.data.ezbMatch
 
-          this.localValue = { url: this.url, id: this.id, name: this.name, frequency: `${this.duration || ''}${this.unit?.id || ''}` }
+          this.localValue = {
+            url: this.url,
+            automaticUpdates: this.automaticUpdates,
+            lastRun: this.lastRun,
+            ezbMatch: this.ezbMatch,
+            zdbMatch: this.zdbMatch,
+            id: this.id,
+            name: this.name,
+            frequency: `${this.duration || ''}${this.unit?.id || ''}`
+          }
         }
       }
     },

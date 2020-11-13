@@ -101,15 +101,12 @@
     extends: BaseComponent,
     data () {
       return {
-        title: undefined,
-        searchInputFields: undefined,
-        resultActionButtons: undefined,
-
-        resultHeaders: [],
         resultItems: [],
         selectedItems: [],
         resultOptions: {
           page: 1,
+          sortBy: ['link'],
+          desc: [false],
           itemsPerPage: ROWS_PER_PAGE
         },
         totalNumberOfItems: -1,
@@ -144,7 +141,15 @@
           .flat()
           .forEach(field => { field.value = undefined })
       },
-      resultPaginate (page) {
+      resultPaginate (options) {
+        const page = options.page
+        if (options.sortBy) {
+          this.resultOptions.sortBy = options.sortBy
+        }
+
+        if (options.desc) {
+          this.resultOptions.desc = options.desc
+        }
         this.search({ page })
       },
       confirmDeleteItem ({ deleteUrl }) {
@@ -190,9 +195,13 @@
             return result
           }, {})
         // console.log(this.searchInputFields, this.searchParameters)
+        const sort = this.resultOptions.sortBy ? (this.resultOptions.sortBy.includes('link') || this.resultOptions.sortBy.includes('popup') ? this.linkValue : this.resultOptions.sortBy[0]) : undefined
+        const desc = this.resultOptions.desc[0] ? 'desc' : 'asc'
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...searchParameters,
+            ...((sort && { _sort: sort }) || {}),
+            ...({ _order: desc }),
             ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
             ...((this.searchServiceEmbeds && { _embed: this.searchServiceEmbeds }) || {}),
             offset: page ? (page - 1) * this.resultOptions.itemsPerPage : 0,

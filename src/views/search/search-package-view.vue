@@ -12,6 +12,7 @@
         searchFilters: {
           curatoryGroupIds: [],
           providerId: undefined,
+          platformId: undefined,
           identifierValue: undefined,
           contentType: undefined,
           status: undefined,
@@ -25,117 +26,130 @@
       },
       isExportSelectedDisabled () {
         return this.selectedItems.length !== 1
+      },
+      title () {
+        return this.$i18n.tc('component.package.label', 2)
+      },
+      resultActionButtons () {
+        return [
+          {
+            component: GokbPackageExportMenu,
+            properties: {
+              disabled: this.isExportSelectedDisabled,
+              items: this.selectedItems
+            }
+          },
+          {
+            icon: 'clear',
+            label: this.$i18n.t('btn.retire'),
+            disabled: 'isDeleteSelectedDisabled',
+            action: '_confirmRetireSelectedItems',
+          },
+          {
+            icon: 'delete',
+            label: this.$i18n.t('btn.delete'),
+            disabled: 'isDeleteSelectedDisabled',
+            action: '_confirmDeleteSelectedItems',
+          }
+        ]
+      },
+      searchInputFields () {
+        return [
+          [
+            {
+              type: 'GokbTextField',
+              name: 'name',
+              value: 'name',
+              properties: {
+                label: this.$i18n.t('component.general.name'),
+              }
+            },
+            {
+              type: 'GokbCuratoryGroupField',
+              name: 'curatoryGroups',
+              value: 'curatoryGroupIds',
+              properties: {
+                label: this.$i18n.tc('component.curatoryGroup.label'),
+                multiple: true,
+                returnObject: false
+              }
+            }
+          ],
+          [
+            {
+              type: 'GokbSearchProviderField',
+              name: 'provider',
+              value: 'providerId',
+              properties: {
+                label: this.$i18n.tc('component.provider.label'),
+
+              }
+            },
+            {
+              type: 'GokbSearchPlatformField',
+              name: 'nominalPlatform',
+              value: 'platformId',
+              properties: {
+                label: this.$i18n.tc('component.platform.label'),
+
+              }
+            },
+            {
+              type: 'GokbTextField',
+              name: 'ids',
+              value: 'identifierValue',
+              properties: {
+                label: this.$i18n.tc('component.identifier.label'),
+              }
+            }
+          ],
+          [
+            {
+              type: 'GokbStateField',
+              name: 'status',
+              value: 'status',
+            },
+            {
+              type: 'GokbStateField',
+              name: 'contentType',
+              value: 'contentType',
+              properties: {
+                label: this.$i18n.t('component.package.contentType.label'),
+                url: 'refdata/categories/Package.ContentType',
+                messagePath: 'component.package.contentType'
+              }
+            },
+          ]
+        ]
+      },
+      resultHeaders () {
+        return [
+          {
+            text: this.$i18n.t('component.general.name'),
+            align: 'start',
+            sortable: true,
+            value: 'link'
+          },
+          {
+            text: this.$i18n.tc('component.provider.label'),
+            align: 'start',
+            sortable: true,
+            value: 'provider'
+          },
+          {
+            text: this.$i18n.tc('component.package.contentType.label'),
+            align: 'start',
+            sortable: true,
+            width: '15%',
+            value: 'contentType'
+          }
+        ]
       }
     },
     async created () {
-      this.title = this.$i18n.tc('component.package.label', 2)
-      this.resultActionButtons = [
-        {
-          component: GokbPackageExportMenu,
-          properties: {
-            disabled: this.isExportSelectedDisabled,
-            items: this.selectedItems
-          }
-        },
-        {
-          icon: 'clear',
-          label: this.$i18n.t('btn.retire'),
-          disabled: 'isDeleteSelectedDisabled',
-          action: '_confirmRetireSelectedItems',
-        },
-        {
-          icon: 'delete',
-          label: this.$i18n.t('btn.delete'),
-          disabled: 'isDeleteSelectedDisabled',
-          action: '_confirmDeleteSelectedItems',
-        }
-      ]
-      this.searchInputFields = [
-        [
-          {
-            type: 'GokbTextField',
-            name: 'name',
-            value: 'name',
-            properties: {
-              label: this.$i18n.t('component.general.name'),
-            }
-          },
-          {
-            type: 'GokbCuratoryGroupField',
-            name: 'curatoryGroups',
-            value: 'curatoryGroupIds',
-            properties: {
-              label: this.$i18n.tc('component.curatoryGroup.label'),
-              multiple: true,
-              returnObject: false
-            }
-          }
-        ],
-        [
-          {
-            type: 'GokbSearchProviderField',
-            name: 'provider',
-            value: 'providerId',
-            properties: {
-              label: this.$i18n.tc('component.provider.label'),
-
-            }
-          },
-          {
-            type: 'GokbTextField',
-            name: 'ids',
-            value: 'identifierValue',
-            properties: {
-              label: this.$i18n.tc('component.identifier.label'),
-            }
-          }
-        ],
-        [
-          {
-            type: 'GokbStateField',
-            name: 'status',
-            value: 'status',
-          },
-          {
-            type: 'GokbStateField',
-            name: 'contentType',
-            value: 'contentType',
-            properties: {
-              label: this.$i18n.t('component.package.contentType.label'),
-              url: 'refdata/categories/Package.ContentType',
-              messagePath: 'component.package.contentType'
-            }
-          },
-        ]
-      ]
-      this.resultHeaders = [
-        {
-          text: this.$i18n.t('component.general.name'),
-          align: 'start',
-          sortable: true,
-          value: 'link'
-        },
-        {
-          text: this.$i18n.tc('component.provider.label'),
-          align: 'start',
-          sortable: true,
-          value: 'providerName'
-        },
-        {
-          text: this.$i18n.tc('component.platform.label'),
-          align: 'start',
-          sortable: true,
-          value: 'nominalPlatformName'
-        },
-        {
-          text: this.$i18n.tc('component.package.contentType.label'),
-          align: 'start',
-          sortable: true,
-          value: 'contentType.value'
-        },
-      ]
       this.searchServicesUrl = 'rest/packages'
-      this.searchServiceIncludes = 'id,uuid,name,provider,nominalPlatform,_links'
+      this.searchServiceIncludes = 'id,uuid,name,provider,nominalPlatform,_links,contentType'
+      this.linkValue = 'name'
     },
     methods: {
       _transformForTable (data) {
@@ -144,14 +158,16 @@
           name,
           provider,
           uuid,
+          contentType,
           nominalPlatform,
           _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
         }) => ({
           id,
           uuid,
           link: { value: name, route: EDIT_PACKAGE_ROUTE, id: 'id' },
-          providerName: provider?.name,
-          nominalPlatformName: nominalPlatform?.name,
+          provider: provider?.name,
+          nominalPlatform: nominalPlatform?.name,
+          contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
           isDeletable: !!deleteUrl,
           isRetireable: !!retireUrl,
           deleteUrl: deleteUrl,

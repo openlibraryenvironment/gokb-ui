@@ -160,6 +160,9 @@
       "publishedPeriod": "Publishing Period",
       "publishedFrom": "Published From",
       "publishedTo": "Published To",
+      "publisher": {
+        "label": "Publisher | Publishers"
+      },
       "volumeNumber": "Volume no.",
       "editionNumber": "Edition no.",
       "editionStatement": "Edition Statement",

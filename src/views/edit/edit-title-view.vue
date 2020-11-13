@@ -97,6 +97,10 @@
       v-model="ids"
       :disabled="isReadonly"
     />
+    <gokb-publisher-section
+      v-model="publishers"
+      :disabled="isReadonly"
+    />
     <gokb-alternate-names-section
       v-model="allNames.alts"
       :disabled="isReadonly"
@@ -131,6 +135,7 @@
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import titleServices from '@/shared/services/title-services'
   import accountModel from '@/shared/models/account-model'
+  import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
   import loading from '@/shared/models/loading'
 
   export default {
@@ -150,6 +155,7 @@
         source: undefined,
         publishedFrom: undefined,
         publishedTo: undefined,
+        publishers: [],
         status: undefined,
         allNames: { name: undefined, alts: [] },
         reviewRequests: [],
@@ -270,8 +276,8 @@
           this.currentType = type
           this.publishedFrom = publishedFrom && publishedFrom.substr(0, 10)
           this.publishedTo = publishedTo && publishedTo.substr(0, 10)
-          this.publishers = publisher.map(name => ({ ...name, isDeletable: !!updateUrl }))
-          this.ids = ids.map(({ id, value, namespace: { name: namespace } }) => ({ id, value, namespace, isDeletable: !!updateUrl }))
+          this.publishers = publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!updateUrl }))
+          this.ids = ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!updateUrl }))
           this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
           this.allNames = { name: name, alts: this.allAlternateNames }
           this.reviewRequests = reviewRequests

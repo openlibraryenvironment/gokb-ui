@@ -103,6 +103,7 @@
       ]
       this.searchServicesUrl = 'rest/users'
       this.searchServiceIncludes = 'id,username'
+      this.linkValue = 'username'
     },
     methods: {
       _transformForTable (data) {

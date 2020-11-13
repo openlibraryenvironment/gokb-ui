@@ -20,92 +20,106 @@
         ]
       }
     },
+    computed: {
+      resultActionButtons () {
+        return [
+          {
+            icon: 'clear',
+            label: this.$i18n.t('btn.close'),
+            disabled: 'isNothingSelected',
+            action: '_confirmCloseSelectedItems',
+          }
+        ]
+      },
+      resultHeaders () {
+        return [
+          {
+            text: this.$i18n.t('component.review.componentToReview'),
+            align: 'left',
+            sortable: true,
+            value: 'popup'
+          },
+          {
+            text: this.$i18n.t('component.review.type'),
+            align: 'left',
+            sortable: false,
+            value: 'type'
+          },
+          {
+            text: this.$i18n.tc('component.review.stdDesc.label'),
+            align: 'left',
+            sortable: false,
+            value: 'stdDesc.name'
+          },
+          {
+            text: this.$i18n.t('component.general.dateCreated'),
+            align: 'left',
+            sortable: true,
+            value: 'dateCreated'
+          }
+        ]
+      },
+      searchInputFields () {
+        return [
+          [
+            {
+              type: 'GokbTextField',
+              name: 'cause',
+              properties: {
+                label: this.$i18n.t('component.review.cause')
+              }
+            },
+            {
+              type: 'GokbCuratoryGroupField',
+              name: 'allocatedGroups',
+              value: 'curatoryGroupIds',
+              properties: {
+                label: this.$i18n.tc('component.curatoryGroup.label'),
+                returnObject: false
+              }
+            }
+          ],
+          [
+            {
+              type: 'GokbSearchEntityField',
+              name: 'componentToReview',
+              value: 'componentToReview',
+              properties: {
+                label: this.$i18n.t('component.review.componentToReview'),
+              }
+            }
+          ],
+          [
+            {
+              type: 'GokbStateField',
+              name: 'stdDesc',
+              value: 'stdDesc',
+              properties: {
+                label: this.$i18n.tc('component.review.stdDesc.label'),
+                messagePath: 'component.review.stdDesc',
+                url: 'refdata/categories/ReviewRequest.StdDesc'
+              }
+            },
+            {
+              type: 'GokbStateField',
+              name: 'status',
+              value: 'status',
+              properties: {
+                label: this.$i18n.t('component.general.status.label'),
+                initItem: this.$i18n.t('component.review.status.Open.label'),
+                messagePath: 'component.review.status',
+                url: 'refdata/categories/ReviewRequest.Status'
+              }
+            }
+          ]
+        ]
+      }
+    },
     created () {
       this.title = 'Reviews'
       this.component = 'g:reviewRequests'
-      this.resultActionButtons = [
-        {
-          icon: 'clear',
-          label: this.$i18n.t('btn.close'),
-          disabled: 'isNothingSelected',
-          action: '_confirmCloseSelectedItems',
-        }
-      ]
-
-      this.searchInputFields = [
-        [
-          {
-            type: 'GokbTextField',
-            name: 'cause',
-            properties: {
-              label: this.$i18n.t('component.review.cause')
-            }
-          },
-          {
-            type: 'GokbCuratoryGroupField',
-            name: 'allocatedGroups',
-            value: 'curatoryGroupIds',
-            properties: {
-              label: this.$i18n.tc('component.curatoryGroup.label'),
-              returnObject: false
-            }
-          }
-        ],
-        [
-          {
-            type: 'GokbSearchEntityField',
-            name: 'componentToReview',
-            value: 'componentToReview',
-            properties: {
-              label: this.$i18n.t('component.review.componentToReview'),
-            }
-          }
-        ],
-        [
-          {
-            type: 'GokbStateField',
-            name: 'stdDesc',
-            value: 'stdDesc',
-            properties: {
-              label: this.$i18n.tc('component.review.stdDesc.label'),
-              messagePath: 'component.review.stdDesc',
-              url: 'refdata/categories/ReviewRequest.StdDesc'
-            }
-          },
-          {
-            type: 'GokbStateField',
-            name: 'status',
-            value: 'status',
-            properties: {
-              label: this.$i18n.t('component.general.status.label'),
-              initItem: this.$i18n.t('component.review.status.Open'),
-              messagePath: 'component.review.status',
-              url: 'refdata/categories/ReviewRequest.Status'
-            }
-          }
-        ]
-      ]
-      this.resultHeaders = [
-        {
-          text: this.$i18n.t('component.review.request'),
-          align: 'left',
-          sortable: false,
-          value: 'popup'
-        },
-        {
-          text: this.$i18n.t('component.review.type'),
-          align: 'left',
-          sortable: false,
-          value: 'type'
-        },
-        {
-          text: this.$i18n.tc('component.review.stdDesc.label'),
-          align: 'left',
-          sortable: false,
-          value: 'stdDesc.name'
-        },
-      ]
       this.searchServicesUrl = 'rest/reviews'
+      this.linkValue = 'componentToReview'
       // this.searchServiceIncludes = 'id,'
     },
     methods: {

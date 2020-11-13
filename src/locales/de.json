@@ -160,6 +160,9 @@
       "publishedPeriod": "Erscheinungsperiode",
       "publishedFrom": "Erscheinungsbeginn",
       "publishedTo": "Erscheinungsende",
+      "publisher": {
+        "label": "Verlag | Verlage"
+      },
       "volumeNumber": "Bandnr.",
       "editionNumber": "Ausgabenr.",
       "editionStatement": "Ausgabebezeichnung",
@@ -459,7 +462,7 @@
           "label": "Gelöscht"
         }
       },
-      "dateCreated":"Erstellt am",
+      "dateCreated": "Erstellt am",
       "lastUpdated": "Zuletzt verändert am"
     }
   }

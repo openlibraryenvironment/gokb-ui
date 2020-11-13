@@ -75,6 +75,7 @@
       ]
       this.searchServicesUrl = 'rest/provider'
       this.searchServiceIncludes = 'id,name'
+      this.linkValue = 'name'
     },
     methods: {
       _transformForTable (data) {

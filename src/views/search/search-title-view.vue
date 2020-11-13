@@ -19,98 +19,107 @@
     computed: {
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
+      },
+      title () {
+        return this.$i18n.tc('component.title.label', 2)
+      },
+      resultActionButtons () {
+        return [
+          {
+            icon: 'clear',
+            label: this.$i18n.t('btn.retire'),
+            disabled: 'isDeleteSelectedDisabled',
+            action: '_confirmRetireSelectedItems'
+          },
+          {
+            icon: 'delete',
+            label: this.$i18n.t('btn.delete'),
+            disabled: 'isDeleteSelectedDisabled',
+            action: '_confirmDeleteSelectedItems',
+          }
+        ]
+      },
+      searchInputFields () {
+        return [
+          [
+            {
+              type: 'GokbTextField',
+              name: 'name',
+              properties: {
+                label: this.$i18n.t('component.general.name')
+              }
+            },
+            {
+              type: 'GokbTextField',
+              name: 'ids',
+              value: 'identifierIds',
+              properties: {
+                label: this.$i18n.tc('component.identifier.label')
+              }
+            }
+          ],
+          [
+            {
+              type: 'GokbSearchPublisherField',
+              name: 'publisher',
+              value: 'publisherId'
+            },
+            {
+              type: 'GokbSelectField',
+              name: 'type',
+              value: 'type',
+              properties: {
+                label: this.$i18n.t('component.title.type.label'),
+              },
+              items: [
+                { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
+                { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
+                { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
+                { name: this.$i18n.tc('component.title.type.Other'), id: 'other' },
+              ]
+            }
+          ],
+          [
+            {
+              type: 'GokbStateField',
+              name: 'status',
+              value: 'status',
+              properties: {
+                messagePath: 'component.general.status'
+              }
+            }
+          ]
+        ]
+      },
+      resultHeaders () {
+        return [
+          {
+            text: this.$i18n.t('component.general.name'),
+            align: 'left',
+            sortable: true,
+            value: 'link'
+          },
+          {
+            text: this.$i18n.t('component.title.type.label'),
+            align: 'left',
+            sortable: false,
+            value: 'type'
+          },
+          {
+            text: this.$i18n.t('component.title.publishStart'),
+            algin: 'left',
+            width: '15%',
+            sortable: false,
+            value: 'startDate'
+          }
+        ]
       }
     },
     async created () {
-      this.title = this.$i18n.tc('component.title.label', 2)
-      this.resultActionButtons = [
-        {
-          icon: 'clear',
-          label: this.$i18n.t('btn.retire'),
-          disabled: 'isDeleteSelectedDisabled',
-          action: '_confirmRetireSelectedItems'
-        },
-        {
-          icon: 'delete',
-          label: this.$i18n.t('btn.delete'),
-          disabled: 'isDeleteSelectedDisabled',
-          action: '_confirmDeleteSelectedItems',
-        }
-      ]
-
-      this.searchInputFields = [
-        [
-          {
-            type: 'GokbTextField',
-            name: 'name',
-            properties: {
-              label: this.$i18n.t('component.general.name')
-            }
-          },
-          {
-            type: 'GokbTextField',
-            name: 'ids',
-            value: 'identifierIds',
-            properties: {
-              label: this.$i18n.tc('component.identifier.label')
-            }
-          }
-        ],
-        [
-          {
-            type: 'GokbSearchPublisherField',
-            name: 'publisher',
-            value: 'publisherId'
-          },
-          {
-            type: 'GokbSelectField',
-            name: 'type',
-            value: 'type',
-            properties: {
-              label: this.$i18n.t('component.title.type.label'),
-            },
-            items: [
-              { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
-              { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
-              { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
-              { name: this.$i18n.tc('component.title.type.Other'), id: 'other' },
-            ]
-          }
-        ],
-        [
-          {
-            type: 'GokbStateField',
-            name: 'status',
-            value: 'status',
-            properties: {
-              messagePath: 'component.general.status'
-            }
-          }
-        ]
-      ]
-      this.resultHeaders = [
-        {
-          text: this.$i18n.t('component.general.name'),
-          align: 'left',
-          sortable: false,
-          value: 'link'
-        },
-        {
-          text: this.$i18n.t('component.title.type.label'),
-          align: 'left',
-          sortable: false,
-          value: 'type'
-        },
-        {
-          text: this.$i18n.t('component.title.publishStart'),
-          algin: 'left',
-          sortable: false,
-          value: 'startDate'
-        }
-      ]
       this.searchServicesUrl = 'rest/titles'
-      this.searchServiceIncludes = 'id,name,_links,publishedFrom,dateFirstInPrint,dateFiirstOnline'
+      this.searchServiceIncludes = 'id,name,_links,publishedFrom,dateFirstInPrint,dateFirstOnline'
       this.searchServiceEmbeds = 'ids'
+      this.linkValue = 'name'
     },
     methods: {
       _transformForTable (data) {
