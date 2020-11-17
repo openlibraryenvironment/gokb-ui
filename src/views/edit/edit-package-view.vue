@@ -129,11 +129,13 @@
               />
             </gokb-radiobutton-group>
             <v-row v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'">
-              <gokb-text-field
-                v-model="packageItem.globalNote"
-                :label="$t('component.package.globalNote.label')"
-                :disabled="isReadonly"
-              />
+              <v-col>
+                <gokb-text-field
+                  v-model="packageItem.globalNote"
+                  :label="$t('component.package.globalNote.label')"
+                  :disabled="isReadonly"
+                />
+              </v-col>
             </v-row>
             <v-row>
               <gokb-checkbox-field

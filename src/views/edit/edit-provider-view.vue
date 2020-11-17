@@ -30,11 +30,20 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col md="4">
           <gokb-namespace-field
             v-model="titleNamespace"
             target-type="Title"
+            :readonly="isReadonly"
             :label="$t('component.provider.titleNamespace')"
+          />
+        </v-col>
+        <v-col md="4">
+          <gokb-namespace-field
+            v-model="packageNamespace"
+            target-type="Package"
+            :readonly="isReadonly"
+            :label="$t('component.provider.packageNamespace')"
           />
         </v-col>
       </v-row>

@@ -65,17 +65,26 @@
               }
             },
             {
+              type: 'GokbTextField',
+              name: 'ids',
+              value: 'identifierValue',
+              properties: {
+                label: this.$i18n.tc('component.identifier.label'),
+              }
+            }
+          ],
+          [
+            {
               type: 'GokbCuratoryGroupField',
               name: 'curatoryGroups',
               value: 'curatoryGroupIds',
               properties: {
                 label: this.$i18n.tc('component.curatoryGroup.label'),
+                width: '100%',
                 multiple: true,
                 returnObject: false
               }
-            }
-          ],
-          [
+            },
             {
               type: 'GokbSearchProviderField',
               name: 'provider',
@@ -93,14 +102,6 @@
                 label: this.$i18n.tc('component.platform.label'),
 
               }
-            },
-            {
-              type: 'GokbTextField',
-              name: 'ids',
-              value: 'identifierValue',
-              properties: {
-                label: this.$i18n.tc('component.identifier.label'),
-              }
             }
           ],
           [
@@ -108,6 +109,9 @@
               type: 'GokbStateField',
               name: 'status',
               value: 'status',
+              properties: {
+                width: '100%'
+              }
             },
             {
               type: 'GokbStateField',
@@ -115,6 +119,7 @@
               value: 'contentType',
               properties: {
                 label: this.$i18n.t('component.package.contentType.label'),
+                width: '100%',
                 url: 'refdata/categories/Package.ContentType',
                 messagePath: 'component.package.contentType'
               }

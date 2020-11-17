@@ -63,25 +63,27 @@
         />
       </template>
       <template #item.action="{ item }">
-        <v-icon
-          v-if="showSelect && item.isRetireable !== undefined"
-          class="mr-2"
-          :disabled="disabled || !item.isRetireable"
-          :title="$t('btn.retire')"
-          small
-          @click="retireItem(item)"
-        >
-          close
-        </v-icon>
-        <v-icon
-          v-if="showSelect && item.isDeletable !== undefined"
-          :disabled="disabled || !item.isDeletable"
-          :title="$t('btn.delete')"
-          small
-          @click="deleteItem(item)"
-        >
-          delete
-        </v-icon>
+        <div style="white-space:nowrap">
+          <v-icon
+            v-if="showSelect && item.isRetireable !== undefined"
+            class="mr-2"
+            :disabled="disabled || !item.isRetireable"
+            :title="$t('btn.retire')"
+            small
+            @click="retireItem(item)"
+          >
+            close
+          </v-icon>
+          <v-icon
+            v-if="showSelect && item.isDeletable !== undefined"
+            :disabled="disabled || !item.isDeletable"
+            :title="$t('btn.delete')"
+            small
+            @click="deleteItem(item)"
+          >
+            delete
+          </v-icon>
+        </div>
       </template>
     </v-data-table>
     <div class="text-center pt-2">
