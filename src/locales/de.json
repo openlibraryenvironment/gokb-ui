@@ -68,7 +68,36 @@
     "messages": "Ereignisse",
     "status": "Status",
     "startTime": "Start",
-    "endTime": "Ende"
+    "endTime": "Ende",
+    "type": "Job",
+    "linkedComponent": "Komponente",
+    "jobTypes": {
+      "Unknown": "Unbekannt",
+      "Undefined": "Undefiniert",
+      "PackageCrossRef": "Paketimport" ,
+      "TitleCrossRef": "Titelimport" ,
+      "BootstrapIdentifierCleanup": "Startup Identifier Cleanup",
+      "DepositDatafile": "Deposit Datafile",
+      "RegenerateLicenseSummaries": "Regenerate License Summaries",
+      "TidyOrgsData": "Tidy Orgs data",
+      "EnsureUUIDs": "Ensure UUIDs for components",
+      "EnsureTIPLs": "Ensure TIPLs for all TIPPs",
+      "GenerateTIPPCoverage": "Generate missing TIPP Coverage Statements",
+      "MarkInconsDateRanges": "Mark insonsistent date ranges",
+      "UpdateFreeTextIndexes": "Update Free Text Indexes" ,
+      "ResetFreeTextIndexes": "Reset Free Text Indexes",
+      "MasterListUpdate": "Master List Update",
+      "EnrichmentService": "Enrichment Service",
+      "GeneratePackageTypes":  "Generate Missing Package Content Types",
+      "Housekeeping": "Housekeeping",
+      "CleanupDeletedComponents": "Cleanup Deleted Components",
+      "CleanupRejectedComponents": "Cleanup Rejected Components",
+      "TIPPCleanup": "Cleanup Deleted Components",
+      "DeleteTIWithoutHistory": "Delete Titles without Packages",
+      "RejectTIWithoutIdentifier": "Reject Titles without Identifier",
+      "PlatformCleanup": "Platform Cleanup",
+      "RecalculateStatistics": "Recalculate Statistics"
+    }
   },
   "kbart": {
     "file": {
