@@ -70,6 +70,17 @@
       },
       isEditable () {
         return !this.disabled
+      },
+      tableHeaders () {
+        return [
+          { text: 'ID', align: 'left', value: 'id', sortable: false, width: '5%' },
+          // { text: this.$i18n.t('job.description'), align: 'left', value: 'popup', sortable: false, width: '40%' },
+          { text: this.$i18n.t('job.type'), align: 'left', value: 'popup', sortable: false, width: '25%' },
+          { text: this.$i18n.t('job.linkedComponent'), align: 'left', value: 'link', sortable: false, width: '40%' },
+          { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '10%' },
+          { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '10%' },
+          { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '10%' },
+        ]
       }
     },
     watch: {
@@ -84,15 +95,6 @@
       }
     },
     created () {
-      this.tableHeaders = [
-        { text: 'ID', align: 'left', value: 'id', sortable: false, width: '5%' },
-        // { text: this.$i18n.t('job.description'), align: 'left', value: 'popup', sortable: false, width: '40%' },
-        { text: this.$i18n.t('job.type'), align: 'left', value: 'popup', sortable: false, width: '25%' },
-        { text: this.$i18n.t('job.linkedComponent'), align: 'left', value: 'link', sortable: false, width: '40%' },
-        { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '10%' },
-        { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '10%' },
-        { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '10%' },
-      ]
       this.fetchJobs()
 
       this.interval = setInterval(function () {
@@ -132,17 +134,16 @@
             ({ id, type, linkedItem, startTime, begun, progress, endTime, messages, cancelled }) => (
               {
                 id,
-                name: linkedItem.name,
+                type,
                 popup: { value: (type ? this.$i18n.t('job.jobTypes.' + type.name) : this.$i18n.t('job.jobTypes.Unknown')), label: 'job', type: 'GokbEditJobPopup' },
-                componentId: linkedItem.id,
+                componentId: linkedItem?.id || null,
                 componentType: this.$i18n.tc('component.' + linkedItem.type.toLowerCase() + '.label'),
-                link: { value: linkedItem.name, route: componentRoutes[linkedItem.type.toLowerCase()], id: 'componentId' },
+                link: linkedItem ? { value: linkedItem?.name, route: componentRoutes[linkedItem.type.toLowerCase()], id: 'componentId' } : {},
                 progress,
                 messages,
                 startTime: new Date(startTime).toLocaleString(this.$i18n.locale),
                 endTime: endTime ? new Date(endTime).toLocaleString(this.$i18n.locale) : '',
-                status: (begun ? (endTime ? (cancelled ? (this.$i18n.t('job.cancelled') + ' (' + progress + '%)') : this.$i18n.t('job.finished')) : progress + '%') : this.$i18n.t('job.waiting')),
-                isRetireable: true
+                status: (begun ? (endTime ? (cancelled ? (this.$i18n.t('job.cancelled') + ' (' + progress + '%)') : this.$i18n.t('job.finished')) : progress + '%') : this.$i18n.t('job.waiting'))
               }
             )
           )

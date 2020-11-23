@@ -6,11 +6,11 @@
     @submit="close"
   >
     <v-row>
-      <v-col md="12">
-        <gokb-textarea-field
-          v-model="selectedItem.popup.value"
-          readonly
-          :label="$i18n.t('job.description')"
+      <v-col md="4">
+        <gokb-text-field
+          v-model="localType"
+          disabled
+          :label="$i18n.t('job.type')"
         />
       </v-col>
     </v-row>
@@ -35,14 +35,14 @@
       <v-col md="4">
         <gokb-text-field
           v-model="selectedItem.startTime"
-          readonly
+          disabled
           :label="$i18n.t('job.startTime')"
         />
       </v-col>
       <v-col md="4">
         <gokb-text-field
           v-model="selectedItem.endTime"
-          readonly
+          disabled
           :label="$i18n.t('job.endTime')"
         />
       </v-col>
@@ -109,6 +109,9 @@
           this.$emit('input', localValue)
         }
       },
+      localType () {
+        return this.$i18n.t('job.jobTypes.' + this.selectedItem.type.name)
+      }
     },
     async created () {
       this.selectedItem = this.selected
