@@ -446,6 +446,7 @@
     "source": {
       "label": "Automatischer Import und Update | Automatische Imports und Updates",
       "updateNow": "Jetzt Importieren",
+      "enableUpdate": "Aktiviert",
       "ezbMatch": "EZB-Abgleich",
       "zdbMatch": "ZDB-Abgleich",
       "url": "URL"

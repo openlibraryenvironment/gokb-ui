@@ -449,6 +449,7 @@
       "updateNow": "Import Now",
       "ezbMatch": "Match EZB",
       "zdbMatch": "Match ZDB",
+      "enableUpdate": "Activated",
       "url": "URL"
     },
     "general": {

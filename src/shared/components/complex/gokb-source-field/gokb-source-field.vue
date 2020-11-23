@@ -56,6 +56,14 @@
       <v-col class="d-flex flex-row-reverse">
         <v-checkbox
           v-if="url && duration && unit"
+          v-model="automaticUpdates"
+          class="mr-5"
+          :label="$t('component.source.enableUpdate')"
+        />
+      </v-col>
+      <v-col class="d-flex flex-row-reverse">
+        <v-checkbox
+          v-if="url && duration && unit"
           v-model="updateStatus"
           class="mr-5"
           :label="$t('component.source.updateNow')"
@@ -107,8 +115,6 @@
         titleIdNamespace: undefined,
         duration: undefined,
         unit: undefined,
-        cycleUnitField: undefined,
-        cycleDurationField: undefined,
         errors: []
       }
     },
@@ -200,13 +206,19 @@
         })
 
         if (result?.status === 200) {
-          const duration = result.data.frequency ? parseInt(result.data.frequency?.match(/[0-9]/)[0]) : undefined
-          const unit = result.data.frequency?.match(/[D,M,Y]/)[0]
+          console.log('Frequency: ' + result.data.frequency)
+
+          const apiDuration = result.data.frequency ? parseInt(result.data.frequency?.match(/[0-9]/)[0]) : undefined
+          const apiUnit = result.data.frequency?.match(/[D,M,Y]/)[0]
+
+          console.log('Duration: ' + apiDuration + 'Unit: ' + apiUnit)
 
           this.id = result.data.id
-          this.duration = duration
+          this.duration = apiDuration
+          this.durationCycle = apiDuration
           this.titleIdNamespace = result.titleIdNamespace
-          this.unit = unit ? { id: unit, name: this.allUnits.find(unit => unit.id === unit) } : undefined
+          this.unit = apiUnit ? { id: apiUnit, name: this.allUnits.find(u => u.id === apiUnit) } : undefined
+          this.unitCycle = this.unit
           this.name = result.data.name
           this.url = result.data.url
           this.automaticUpdates = result.data.automaticUpdates

@@ -558,7 +558,7 @@
           if (response.status < 400) {
             this.id = response.data?.id
 
-            if ((this.kbart || this.urlUpdate) && response.data?.id) {
+            if (this.kbart && response.data?.id) {
               const namespace = (this.kbart?.selectedNamespace?.name ? { titleIdNamespace: this.kbart?.selectedNamespace?.name } : {})
               const pars = {
                 addOnly: this.kbart.addOnly,
@@ -578,6 +578,17 @@
 
               const ygorResponse = await this.catchError({
                 promise: this.sendKbart(this.kbart.selectedFile, pars),
+                instance: this
+              })
+
+              console.log(ygorResponse)
+
+              this.successMsg = this.isEdit
+                ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
+                : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
+            } else if (this.urlUpdate && response.data?.id) {
+              const ygorResponse = await this.catchError({
+                promise: this.sendUrlUpdateRquest(response.data.id, response.data.updateToken),
                 instance: this
               })
 
@@ -662,6 +673,7 @@
         loading.stopLoading()
       },
       async sendKbart (file, parameters) {
+        loading.startLoading()
         const urlParameters = baseServices.createQueryParameters(parameters)
         const data = new FormData()
         console.log(data)
@@ -680,11 +692,26 @@
             this.successMsg = this.isEdit
               ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
               : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
-            this.reload()
           })
           .catch(error => {
             this.error = error
           })
+        loading.stopLoading()
+      },
+      async sendUrlUpdateRquest (pkgId, updateToken) {
+        loading.startLoading()
+        const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/processGokbPackage?pkgId=${pkgId}&updateToken=${updateToken}`
+
+        axios.get(url)
+          .then(response => {
+            this.successMsg = this.isEdit
+              ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
+              : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
+          })
+          .catch(error => {
+            this.error = error
+          })
+        loading.stopLoading()
       },
       triggerUpdate (checked) {
         this.urlUpdate = checked
