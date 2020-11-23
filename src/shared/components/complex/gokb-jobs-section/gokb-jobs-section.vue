@@ -85,11 +85,13 @@
     },
     created () {
       this.tableHeaders = [
-        { text: 'ID', align: 'left', value: 'id', sortable: false, width: '10%' },
-        { text: this.$i18n.t('job.description'), align: 'left', value: 'popup', sortable: false, width: '40%' },
-        { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '20%' },
-        { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '15%' },
-        { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '15%' },
+        { text: 'ID', align: 'left', value: 'id', sortable: false, width: '5%' },
+        // { text: this.$i18n.t('job.description'), align: 'left', value: 'popup', sortable: false, width: '40%' },
+        { text: this.$i18n.t('job.type'), align: 'left', value: 'popup', sortable: false, width: '25%' },
+        { text: this.$i18n.t('job.linkedComponent'), align: 'left', value: 'link', sortable: false, width: '40%' },
+        { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '10%' },
+        { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '10%' },
+        { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '10%' },
       ]
       this.fetchJobs()
 
@@ -116,12 +118,25 @@
           instance: this
         })
 
+        const componentRoutes = {
+          package: '/package',
+          org: '/provider',
+          title: '/title',
+          journal: '/title',
+          book: '/title',
+          database: '/title'
+        }
+
         if (result.status === 200) {
           this.jobs = result.data?.records?.map(
-            ({ id, description, startTime, begun, progress, endTime, messages, cancelled }) => (
+            ({ id, type, linkedItem, startTime, begun, progress, endTime, messages, cancelled }) => (
               {
                 id,
-                popup: { value: description, label: 'job', type: 'GokbEditJobPopup' },
+                name: linkedItem.name,
+                popup: { value: (type ? this.$i18n.t('job.jobTypes.' + type.name) : this.$i18n.t('job.jobTypes.Unknown')), label: 'job', type: 'GokbEditJobPopup' },
+                componentId: linkedItem.id,
+                componentType: this.$i18n.tc('component.' + linkedItem.type.toLowerCase() + '.label'),
+                link: { value: linkedItem.name, route: componentRoutes[linkedItem.type.toLowerCase()], id: 'componentId' },
                 progress,
                 messages,
                 startTime: new Date(startTime).toLocaleString(this.$i18n.locale),
