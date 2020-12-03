@@ -237,7 +237,7 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.title.label'), align: 'left', value: 'popup', sortable: false },
+          { text: (this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.title.label')), align: 'left', value: 'popup', sortable: false },
           { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
           { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
           { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
@@ -401,7 +401,7 @@
 
           if (result?.status === 200) {
             this.items = result.data?.data?.map(
-              ({ id, url, accessStartDate, status, accessEndDate, title, hostPlatform, _embedded, pkg, _links }) => (
+              ({ id, url, name, accessStartDate, status, accessEndDate, title, hostPlatform, _embedded, pkg, _links }) => (
                 {
                   id,
                   coverageStatements: _embedded.coverageStatements,
@@ -415,9 +415,9 @@
                   hostPlatform,
                   updateUrl: _links.update.href,
                   deleteUrl: _links.delete.href,
-                  titleType: title.type,
+                  titleType: this.$i18n.tc('component.title.type.' + title.type),
                   titleId: title.id,
-                  ids: _embedded.ids.map(({ id, value, namespace: { name: namespace } }) => ({ id, value, namespace, isDeletable: !!_links.delete.href })),
+                  ids: _embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!_links.delete.href })),
                   popup: { value: (this.ttl ? pkg.name : title.name), label: 'tipp', type: 'GokbAddTitlePopup' },
                   hostPlatformName: hostPlatform?.name
                 }

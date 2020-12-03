@@ -22,7 +22,7 @@
     },
     computed: {
       isDeleteSelectedDisabled () {
-        return !this.selectedItems.length
+        return this.isReadonly || !this.selectedItems.length
       },
       isExportSelectedDisabled () {
         return this.selectedItems.length !== 1
@@ -173,8 +173,8 @@
           provider: provider?.name,
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
-          isDeletable: !!deleteUrl,
-          isRetireable: !!retireUrl,
+          isDeletable: deleteUrl !== null,
+          isRetireable: retireUrl !== null,
           deleteUrl: deleteUrl,
           retireUrl: retireUrl,
         }))

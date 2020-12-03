@@ -23,6 +23,7 @@
     "false": "No",
     "ISOdateHint": "YYYY-MM-DD"
   },
+  "direction": "ltr",
   "popups": {
     "name": {
       "keepCurrent": "Keep current name as variant"

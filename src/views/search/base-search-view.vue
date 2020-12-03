@@ -31,13 +31,14 @@
         <v-spacer />
         <v-col md="4">
           <gokb-button
-            class="mr-4"
+            class="ms-4"
             @click="resetSearch"
           >
             {{ $i18n.t('btn.reset') }}
           </gokb-button>
           <gokb-button
             default
+            class="ms-4"
           >
             {{ $i18n.t('btn.search') }}
           </gokb-button>
@@ -56,7 +57,7 @@
           <gokb-button
             v-else
             :key="button.label"
-            class="ml-4"
+            class="ms-4"
             :icon-id="button.icon"
             :to="button.route"
             :disabled="isButtonDisabled(button.disabled)"
@@ -92,6 +93,7 @@
   import searchServices from '@/shared/services/search-services'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import selection from '@/shared/models/selection'
+  import accountModel from '@/shared/models/account-model'
 
   const ROWS_PER_PAGE = 10
 
@@ -125,6 +127,9 @@
       },
       resultHeader () {
         return this.$i18n.t('header.results')
+      },
+      isReadonly () {
+        return !accountModel.loggedIn || !accountModel.hasRole('ROLE_ADMIN')
       }
     },
     watch: {

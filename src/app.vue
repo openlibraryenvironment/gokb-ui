@@ -190,6 +190,12 @@
         set (locale) {
           this.$i18n.locale = locale
 
+          if (this.$i18n.t('direction') === 'rtl') {
+            this.$vuetify.rtl = true
+          } else {
+            this.$vuetify.rtl = false
+          }
+
           if (accountModel.loggedIn && locale !== accountModel.userLocale()) {
             accountModel.setLocale(locale)
           }
@@ -253,6 +259,12 @@
     },
     mounted () {
       this.searchServices = searchServices('rest/entities')
+
+      if (this.$i18n.t('direction') === 'rtl') {
+        this.$vuetify.rtl = true
+      } else {
+        this.$vuetify.rtl = false
+      }
 
       if (accountModel.loggedIn() && accountModel.userLocale()) {
         console.log(accountModel.userLocale())

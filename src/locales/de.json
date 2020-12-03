@@ -18,6 +18,7 @@
     "next": "Weiter",
     "prev": "Zurück"
   },
+  "direction": "ltr",
   "default": {
     "true": "Ja",
     "false": "Nein",
