@@ -4,6 +4,7 @@ const api = (vue, accountServices) => {
     loggedIn: false,
     username: undefined,
     userLocale: undefined,
+    tabbedView: false,
     id: undefined,
     roles: undefined,
   })
@@ -25,6 +26,10 @@ const api = (vue, accountServices) => {
       return state.id
     },
 
+    tabbedView () {
+      return state.tabbedView
+    },
+
     userLocale () {
       return state.userLocale
     },
@@ -41,6 +46,10 @@ const api = (vue, accountServices) => {
 
     setLocale (lcl) {
       state.userLocale = lcl
+    },
+
+    useTabbedView (val) {
+      state.tabbedView = val
     },
 
     loggedIn () {

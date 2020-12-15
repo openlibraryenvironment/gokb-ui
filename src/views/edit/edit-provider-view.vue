@@ -10,13 +10,31 @@
         {{ isEdit ? $t('success.update', [$tc('component.provider.label'), name]) : $t('success.create', [$tc('component.provider.label'), name]) }}
       </v-alert>
     </span>
-    <gokb-section :sub-title="$t('component.general.general')">
+    <v-row>
+      <v-spacer />
+      <v-col cols="3">
+        <v-switch
+          v-model="tabsView"
+          :label="$t('component.title.tabsView')"
+        />
+      </v-col>
+    </v-row>
+    <gokb-section :no-tool-bar="true">
       <v-row>
         <v-col md="12">
           <gokb-name-field
             v-model="allNames"
             :disabled="isReadonly"
             label="Titel"
+          />
+        </v-col>
+      </v-row>
+      <v-row v-if="id">
+        <v-col>
+          <gokb-state-select-field
+            v-model="status"
+            :deletable="!!deleteUrl"
+            :editable="!!updateUrl"
           />
         </v-col>
       </v-row>
@@ -48,29 +66,141 @@
         </v-col>
       </v-row>
     </gokb-section>
-    <gokb-alternate-names-section
-      v-model="allAlternateNames"
-      :expanded="allAlternateNames.length > 0"
-      :disabled="isReadonly"
-    />
-    <gokb-identifier-section
-      v-model="ids"
-      :expanded="ids.length > 0"
-      :disabled="isReadonly"
-    />
-    <gokb-platform-section
-      v-model="allPlatforms"
-      :expanded="allPlatforms.length > 0"
-      :sub-title="$tc('component.platform.label', 2)"
-      :disabled="isReadonly"
-    />
-    <gokb-curatory-group-section
-      v-model="allCuratoryGroups"
-      :expanded="allCuratoryGroups.length > 0"
-      :sub-title="$tc('component.curatoryGroup.label', 2)"
-      :disabled="isReadonly"
-    />
+    <v-row
+      v-if="tabsView"
+      style="min-height:400px"
+    >
+      <v-col>
+        <v-tabs
+          v-model="tab"
+          class="mx-4"
+        >
+          <v-tabs-slider color="black" />
+
+          <v-tab
+            key="variants"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.variantName.label', 2) }}
+          </v-tab>
+          <v-tab
+            key="identifiers"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.identifier.label', 2) }}
+          </v-tab>
+          <v-tab
+            key="platforms"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.platform.label', 2) }}
+          </v-tab>
+          <v-tab
+            key="curators"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.curatoryGroup.label', 2) }}
+          </v-tab>
+        </v-tabs>
+        <v-tabs-items
+          v-model="tab"
+        >
+          <v-tab-item
+            key="variants"
+            class="mt-4"
+          >
+            <gokb-alternate-names-section
+              v-model="allNames.alts"
+              :show-title="false"
+              :disabled="isReadonly"
+            />
+          </v-tab-item>
+          <v-tab-item
+            key="identifiers"
+            class="mt-4"
+          >
+            <gokb-identifier-section
+              v-model="ids"
+              :show-title="false"
+              :disabled="isReadonly"
+            />
+          </v-tab-item>
+          <v-tab-item
+            key="platforms"
+            class="mt-4"
+          >
+            <gokb-platform-section
+              v-model="allPlatforms"
+              :show-title="false"
+              :disabled="isReadonly"
+            />
+          </v-tab-item>
+          <v-tab-item
+            key="curators"
+            class="mt-4"
+          >
+            <gokb-curatory-group-section
+              v-model="allCuratoryGroups"
+              :show-title="false"
+              :disabled="isReadonly"
+            />
+          </v-tab-item>
+        </v-tabs-items>
+      </v-col>
+    </v-row>
+    <div v-else>
+      <gokb-alternate-names-section
+        v-model="allAlternateNames"
+        :expanded="allAlternateNames.length > 0"
+        :disabled="isReadonly"
+      />
+      <gokb-identifier-section
+        v-model="ids"
+        :expanded="ids.length > 0"
+        :disabled="isReadonly"
+      />
+      <gokb-platform-section
+        v-model="allPlatforms"
+        :expanded="allPlatforms.length > 0"
+        :sub-title="$tc('component.platform.label', 2)"
+        :disabled="isReadonly"
+      />
+      <gokb-curatory-group-section
+        v-model="allCuratoryGroups"
+        :expanded="allCuratoryGroups.length > 0"
+        :sub-title="$tc('component.curatoryGroup.label', 2)"
+        :disabled="isReadonly"
+      />
+    </div>
     <template #buttons>
+      <v-spacer />
+      <div v-if="id">
+        <v-chip
+          class="ma-2"
+          label
+        >
+          <v-icon
+            :title="$t('component.general.dateCreated')"
+            medium
+          >
+            mdi-file-plus-outline
+          </v-icon>
+          <span class="ml-1">{{ localDateCreated }}</span>
+        </v-chip>
+        <v-chip
+          class="mr-2"
+          label
+        >
+          <v-icon
+            :title="$t('component.general.lastUpdated')"
+            label
+            medium
+          >
+            mdi-refresh
+          </v-icon>
+          <span class="ml-1">{{ localLastUpdated }}</span>
+        </v-chip>
+      </div>
       <v-spacer />
       <gokb-button
         v-if="!isReadonly"
@@ -111,9 +241,15 @@
     },
     data () {
       return {
+        tab: null,
         name: undefined,
         source: undefined,
         version: undefined,
+        tabsView: false,
+        status: undefined,
+        dateCreated: undefined,
+        lastUpdated: undefined,
+        deleteUrl: undefined,
         titleNamespace: undefined,
         packageNamespace: undefined,
         reference: undefined,
@@ -145,6 +281,15 @@
       },
       loggedIn () {
         return accountModel.loggedIn()
+      },
+      localDateCreated () {
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale) : ''
+      },
+      localLastUpdated () {
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale) : ''
+      },
+      tabClass () {
+        return this.$vuetify.theme.dark ? 'tab-dark' : ''
       }
     },
     watch: {
@@ -166,6 +311,7 @@
           id: this.id,
           name: this.username,
           source: this.source || null,
+          status: typeof this.status === 'number' ? this.status : this.status.id,
           reference: this.reference,
           ids: this.ids,
           variantNames: this.allAlternateNames.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
@@ -196,6 +342,8 @@
               titleNamespace,
               packageNamespace,
               version,
+              dateCreated,
+              lastUpdated,
               homepage,
               _embedded: {
                 curatoryGroups,
@@ -226,6 +374,8 @@
           this.packageNamespace = packageNamespace
           this.allPackages = providedPackages
           this.allNames = { name: name, alts: this.allAlternateNames }
+          this.dateCreated = dateCreated
+          this.lastUpdated = lastUpdated
           this.updateUrl = updateUrl
           this.deleteUrl = deleteUrl
           this.status = status
@@ -236,3 +386,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .tab-dark {
+    color: rgba(255, 255, 255, 0.6);
+  }
+</style>

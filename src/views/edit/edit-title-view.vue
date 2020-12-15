@@ -10,17 +10,28 @@
         {{ isEdit ? $t('success.create', [typeDisplay, allNames.name]) : $t('success.update', [typeDisplay, allNames.name]) }}
       </v-alert>
     </span>
-    <gokb-select-field
-      v-if="!isEdit"
-      v-model="currentType"
-      :readonly="isReadonly"
-      :label="$t('component.title.type.label')"
-      class="ml-4"
-      :items="allTypes"
-    />
-    <gokb-section :sub-title="$t('component.general.general')">
+    <v-row>
+      <v-col>
+        <gokb-select-field
+          v-if="!isEdit"
+          v-model="currentType"
+          :readonly="isReadonly"
+          :label="$t('component.title.type.label')"
+          class="ml-4"
+          :items="allTypes"
+        />
+      </v-col>
+      <v-spacer />
+      <v-col cols="3">
+        <v-switch
+          v-model="tabsView"
+          :label="$t('component.title.tabsView')"
+        />
+      </v-col>
+    </v-row>
+    <gokb-section :no-tool-bar="true">
       <v-row>
-        <v-col md="12">
+        <v-col col="7">
           <gokb-name-field
             v-model="allNames"
             :label="$t('component.general.name')"
@@ -28,8 +39,8 @@
           />
         </v-col>
       </v-row>
-      <v-row>
-        <v-col md="12">
+      <v-row v-if="id">
+        <v-col>
           <gokb-state-select-field
             v-model="status"
             :deletable="!!deleteUrl"
@@ -37,18 +48,58 @@
           />
         </v-col>
       </v-row>
+      <v-row>
+        <v-col cols="4">
+          <gokb-state-field
+            v-model="OAStatus"
+            message-path="component.title.OAStatus"
+            width="100%"
+            url="refdata/categories/TitleInstance.OAStatus"
+            :label="$t('component.title.OAStatus.label')"
+            :readonly="isReadonly"
+          />
+        </v-col>
+        <v-col v-if="currentType == 'Book'">
+          <gokb-text-field
+            v-model="firstAuthor"
+            :label="$t('component.title.firstAuthor.label')"
+            :disabled="isReadonly"
+          />
+        </v-col>
+        <v-col v-if="currentType == 'Book'">
+          <gokb-text-field
+            v-model="firstEditor"
+            :label="$t('component.title.firstEditor.label')"
+            :disabled="isReadonly"
+          />
+        </v-col>
+        <v-col v-if="currentType == 'Journal'">
+          <gokb-date-field
+            v-model="publishedFrom"
+            :readonly="isReadonly"
+            :label="$t('component.title.publishedFrom')"
+          />
+        </v-col>
+        <v-col v-if="currentType == 'Journal'">
+          <gokb-date-field
+            v-model="publishedTo"
+            :readonly="isReadonly"
+            :label="$t('component.title.publishedTo')"
+          />
+        </v-col>
+      </v-row>
       <v-row v-if="currentType == 'Book'">
         <v-col>
           <gokb-number-field
             v-model="volumeNumber"
-            :readonly="isReadonly"
+            :disabled="isReadonly"
             :label="$t('component.title.volumeNumber')"
           />
         </v-col>
         <v-col>
           <gokb-number-field
             v-model="editionNumber"
-            :readonly="isReadonly"
+            :disabled="isReadonly"
             :label="$t('component.title.editionNumber')"
           />
         </v-col>
@@ -56,7 +107,7 @@
           <gokb-text-field
             v-model="editionStatement"
             :label="$t('component.title.editionStatement')"
-            :readonly="isReadonly"
+            :disabled="isReadonly"
           />
         </v-col>
       </v-row>
@@ -76,45 +127,139 @@
           />
         </v-col>
       </v-row>
-      <v-row v-if="currentType == 'Journal'">
-        <v-col>
-          <gokb-date-field
-            v-model="publishedFrom"
-            :readonly="isReadonly"
-            :label="$t('component.title.publishedFrom')"
-          />
-        </v-col>
-        <v-col>
-          <gokb-date-field
-            v-model="publishedTo"
-            :readonly="isReadonly"
-            :label="$t('component.title.publishedTo')"
-          />
-        </v-col>
-      </v-row>
     </gokb-section>
-    <gokb-identifier-section
-      v-model="ids"
-      :disabled="isReadonly"
-    />
-    <gokb-publisher-section
-      v-model="publishers"
-      :disabled="isReadonly"
-    />
-    <gokb-alternate-names-section
-      v-model="allNames.alts"
-      :disabled="isReadonly"
-      :expanded="allNames.alts.length > 0"
-    />
-    <gokb-tipps-section
-      :ttl="parseInt(id)"
-      :disabled="true"
-    />
+    <v-row
+      v-if="tabsView"
+      style="min-height:400px"
+    >
+      <v-col>
+        <v-tabs
+          v-model="tab"
+          class="mx-4"
+        >
+          <v-tabs-slider color="black" />
+
+          <v-tab
+            key="identifiers"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.identifier.label', 2) }}
+          </v-tab>
+          <v-tab
+            key="publisher"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.title.publisher.label', 2) }}
+          </v-tab>
+          <v-tab
+            key="variants"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.variantName.label', 2) }}
+          </v-tab>
+          <v-tab
+            key="tipps"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.tipp.label', 2) }}
+          </v-tab>
+        </v-tabs>
+        <v-tabs-items
+          v-model="tab"
+        >
+          <v-tab-item
+            key="identifiers"
+            class="mt-4"
+          >
+            <gokb-identifier-section
+              v-model="ids"
+              :show-title="false"
+              :disabled="isReadonly"
+            />
+          </v-tab-item>
+          <v-tab-item
+            key="publishers"
+            class="mt-4"
+          >
+            <gokb-publisher-section
+              v-model="publishers"
+              :show-title="false"
+              :disabled="isReadonly"
+            />
+          </v-tab-item>
+          <v-tab-item
+            key="variants"
+            class="mt-4"
+          >
+            <gokb-alternate-names-section
+              v-model="allNames.alts"
+              :show-title="false"
+              :disabled="isReadonly"
+            />
+          </v-tab-item>
+          <v-tab-item
+            key="tipps"
+            class="mt-4"
+          >
+            <gokb-tipps-section
+              :ttl="parseInt(id)"
+              :show-title="false"
+              :disabled="true"
+            />
+          </v-tab-item>
+        </v-tabs-items>
+      </v-col>
+    </v-row>
+    <div v-else>
+      <gokb-identifier-section
+        v-model="ids"
+        :disabled="isReadonly"
+      />
+      <gokb-publisher-section
+        v-model="publishers"
+        :disabled="isReadonly"
+      />
+      <gokb-alternate-names-section
+        v-model="allNames.alts"
+        :disabled="isReadonly"
+      />
+      <gokb-tipps-section
+        :ttl="parseInt(id)"
+        :disabled="true"
+      />
+    </div>
     <template #buttons>
+      <v-spacer />
+      <div v-if="id">
+        <v-chip
+          class="mr-2"
+          label
+        >
+          <v-icon
+            :title="$t('component.general.dateCreated')"
+            medium
+          >
+            mdi-file-plus-outline
+          </v-icon>
+          <span class="ml-1">{{ localDateCreated }}</span>
+        </v-chip>
+        <v-chip
+          class="mr-2"
+          label
+        >
+          <v-icon
+            :title="$t('component.general.lastUpdated')"
+            label
+            medium
+          >
+            mdi-refresh
+          </v-icon>
+          <span class="ml-1">{{ localLastUpdated }}</span>
+        </v-chip>
+      </div>
       <v-spacer />
       <gokb-button
         v-if="!isReadonly"
-        text
         @click="reload"
       >
         {{ $i18n.t('btn.cancel') }}
@@ -151,22 +296,31 @@
     },
     data () {
       return {
+        tab: null,
         name: undefined,
         source: undefined,
+        dateCreated: undefined,
+        lastUpdated: undefined,
         publishedFrom: undefined,
         publishedTo: undefined,
         publishers: [],
         status: undefined,
+        tabsView: false,
         allNames: { name: undefined, alts: [] },
         reviewRequests: [],
         firstPublishedOnline: undefined,
         firstPublishedInPrint: undefined,
+        firstAuthor: undefined,
+        firstEditor: undefined,
         editionNumber: undefined,
         editionStatement: undefined,
         volumeNumber: undefined,
+        OAStatus: undefined,
+        medium: undefined,
         version: undefined,
         reference: undefined,
         ids: [],
+        tipps: [],
         allAlternateNames: [],
         allCuratoryGroups: [],
         currentType: undefined,
@@ -201,6 +355,15 @@
       },
       loggedIn () {
         return accountModel.loggedIn()
+      },
+      localDateCreated () {
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale) : ''
+      },
+      localLastUpdated () {
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale) : ''
+      },
+      tabClass () {
+        return this.$vuetify.theme.dark ? 'tab-dark' : ''
       }
     },
     watch: {
@@ -208,9 +371,18 @@
         if (value) {
           this.reload()
         }
+      },
+      tabsView (value) {
+        if (this.loggedIn) {
+          accountModel.useTabbedView(value)
+        }
       }
     },
     async created () {
+      if (this.loggedIn) {
+        this.tabsView = accountModel.tabbedView()
+      }
+
       this.reload()
     },
     methods: {
@@ -227,11 +399,14 @@
           publishedTo: this.publishedTo,
           firstPublishedInPrint: this.firstPublishedInPrint,
           firstPublishedOnline: this.firstPublishedOnline,
+          firstAuthor: this.firstAuthor,
+          firstEditor: this.firstEditor,
           type: this.currentType,
           volumeNumber: this.volumeNumber,
           editionNumber: this.editionNumber,
           editionStatement: this.editionStatement,
-          status: this.status,
+          OAStatus: (!this.OAStatus || typeof this.OAStatus === 'number') ? this.OAStatus : this.OAStatus.id,
+          status: typeof this.status === 'number' ? this.status : this.status.id,
           publisher: this.publishers.map(pub => pub.id)
         }
         const response = await this.catchError({
@@ -258,17 +433,24 @@
               source,
               type,
               status,
+              medium,
               publishedFrom,
               publishedTo,
+              OAStatus,
               editionStatement,
               editionNumber,
               firstPublishedInPrint,
               firstPublishedOnline,
+              firstAuthor,
+              firstEditor,
+              dateCreated,
+              lastUpdated,
               volumeNumber,
               version,
               _embedded: {
                 publisher,
                 ids,
+                tipps,
                 variantNames,
                 reviewRequests
               },
@@ -291,10 +473,17 @@
           this.publishedTo = publishedTo && publishedTo.substr(0, 10)
           this.publishers = publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!updateUrl }))
           this.ids = ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!updateUrl }))
+          this.tipps = tipps || []
           this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
           this.allNames = { name: name, alts: this.allAlternateNames }
           this.reviewRequests = reviewRequests
           this.editionStatement = editionStatement
+          this.dateCreated = dateCreated
+          this.lastUpdated = lastUpdated
+          this.firstAuthor = firstAuthor
+          this.firstEditor = firstEditor
+          this.medium = medium
+          this.OAStatus = OAStatus
           this.editionNumber = editionNumber
           this.firstPublishedInPrint = firstPublishedInPrint
           this.firstPublishedOnline = firstPublishedOnline
@@ -309,3 +498,9 @@
     },
   }
 </script>
+
+<style scoped>
+  .tab-dark {
+    color: rgba(255, 255, 255, 0.6);
+  }
+</style>

@@ -1,11 +1,13 @@
 <template>
   <v-row v-if="!readonly">
-    <v-col cols="10">
+    <v-col
+      cols="10"
+      class="pa-0"
+    >
       <v-text-field
         v-model="localDate"
         :clearable="clearable"
         :label="label"
-        dense
         validate-on-blur
         :hint="$t('default.ISOdateHint')"
         :rules="rules"

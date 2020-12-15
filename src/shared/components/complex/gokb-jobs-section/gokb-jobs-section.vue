@@ -4,6 +4,37 @@
     sub-title="Jobs"
     :items-total="totalNumberOfItems"
   >
+    <template #buttons>
+      <v-btn
+        icon
+        :title="$t('btn.refresh')"
+        @click="fetchJobs"
+      >
+        <v-icon>
+          mdi-refresh
+        </v-icon>
+      </v-btn>
+      <v-btn
+        v-if="!autoJobRefresh"
+        icon
+        :title="$t('btn.enableSync')"
+        @click="startAutoUpdate"
+      >
+        <v-icon>
+          mdi-sync
+        </v-icon>
+      </v-btn>
+      <v-btn
+        v-else
+        icon
+        :title="$t('btn.disableSync')"
+        @click="stopAutoUpdate"
+      >
+        <v-icon>
+          sync_disabled
+        </v-icon>
+      </v-btn>
+    </template>
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
       :message="messageToConfirm"
@@ -61,7 +92,8 @@
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
-        interval: null
+        interval: null,
+        autoJobRefresh: false
       }
     },
     computed: {
@@ -96,10 +128,6 @@
     },
     created () {
       this.fetchJobs()
-
-      this.interval = setInterval(function () {
-        this.fetchJobs()
-      }.bind(this), 2000)
     },
     preDestroy () {
       clearInterval(this.interval)
@@ -161,6 +189,18 @@
           promise: profileServices.cancelJob(id, this.cancelToken.token),
           instance: this
         })
+      },
+      startAutoUpdate () {
+        this.autoJobRefresh = true
+        this.fetchJobs()
+
+        this.interval = setInterval(function () {
+          this.fetchJobs()
+        }.bind(this), 1000)
+      },
+      stopAutoUpdate () {
+        this.autoJobRefresh = false
+        clearInterval(this.interval)
       }
     }
   }

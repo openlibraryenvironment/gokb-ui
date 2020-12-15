@@ -11,20 +11,20 @@
         <gokb-entity-field
           v-model="reviewItem.component"
           :readonly="isEdit || isReadonly"
-          :label="$i18n.t('component.review.componentToReview')"
+          :label="$t('component.review.componentToReview')"
           return-object
         />
       </v-col>
     </v-row>
     <v-row>
-      <v-col md="4">
+      <v-col cols="3">
         <gokb-text-field
           v-model="reviewItem.dateCreated"
           disabled
-          :label="$i18n.t('component.general.dateCreated')"
+          :label="$t('component.general.dateCreated')"
         />
       </v-col>
-      <v-col md="4">
+      <v-col cols="3">
         <gokb-state-field
           v-model="reviewItem.stdDesc"
           :init-item="selectedItem.stdDesc"
@@ -32,10 +32,10 @@
           return-object
           url="refdata/categories/ReviewRequest.StdDesc"
           message-path="component.review.stdDesc"
-          :label="$i18n.tc('component.review.stdDesc.label')"
+          :label="$tc('component.review.stdDesc.label')"
         />
       </v-col>
-      <v-col md="4">
+      <v-col cols="3">
         <gokb-state-field
           v-model="reviewItem.status"
           :init-item="reviewItem.status"
@@ -53,19 +53,27 @@
         <template>
           <div v-if="reviewItem.stdDesc">
             <label
-              class="v-label v-label--active theme--light"
+              class="v-label"
               style="display:block;font-size:0.9em;"
-              for="todo"
+              for="stdDesc"
             >
               {{ $t('component.review.cause') }}
             </label>
             <i18n
-              :style="{ fontSize: '1.2em'}"
+              id="stdDesc"
+              :style="{ fontSize: '1.2em' }"
               :path="'component.review.stdDesc.' + reviewItem.stdDesc.name + '.info'"
             >
               <template v-slot:0>
                 <router-link
-                  v-if="reviewItem.otherComponents && reviewItem.otherComponents > 0"
+                  v-if="numMessageVars > 0"
+                  :style="{ color: '#f2994a' }"
+                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
+                >
+                  {{ reviewItem.component.name }}
+                </router-link>
+                <router-link
+                  v-else-if="reviewItem.otherComponents && reviewItem.otherComponents > 0"
                   :style="{ color: '#f2994a' }"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
                 >
@@ -80,7 +88,10 @@
                 </router-link>
               </template>
               <template v-slot:1>
-                <b>{{ message.vars[1] }}</b>
+                <b v-if="numMessageVars > 1">{{ additionalInfo.vars[1] }}</b>
+              </template>
+              <template v-slot:2>
+                <b v-if="numMessageVars > 2">{{ additionalInfo.vars[2] }}</b>
               </template>
             </i18n>
           </div>
@@ -90,6 +101,29 @@
             :disabled="isEdit"
             :label="$i18n.t('component.review.cause')"
           />
+          <div
+            v-if="reviewItem.otherComponents.length > 0"
+            class="pt-3"
+          >
+            <label
+              class="v-label"
+              style="display:block;font-size:0.9em;"
+              for="otherComponents"
+            >
+              {{ $tc('component.review.otherComponents') }}
+            </label>
+            <span
+              v-for="(oc, idx) in reviewItem.otherComponents"
+              :key="idx"
+            >
+              <router-link
+                :style="{ color: '#f2994a', fontSize: '1.2em', marginRight: '4px' }"
+                :to="{ name: oc.route, params: { 'id': oc.id } }"
+              >
+                {{ oc.name }}
+              </router-link>
+            </span>
+          </div>
         </template>
       </v-col>
     </v-row>
@@ -98,7 +132,7 @@
         <template>
           <div v-if="reviewItem.stdDesc">
             <label
-              class="v-label v-label--active theme--light"
+              class="v-label"
               style="display:block;font-size:0.9em;"
               for="todo"
             >
@@ -125,9 +159,6 @@
                   {{ reviewItem.component.name }}
                 </router-link>
               </template>
-              <template v-slot:1>
-                <b>{{ message.vars[1] }}</b>
-              </template>
             </i18n>
           </div>
           <gokb-textarea-field
@@ -151,7 +182,7 @@
         :disabled="isReadonly"
         default
       >
-        {{ $t('btn.submit') }}
+        {{ $t('btn.update') }}
       </gokb-button>
     </template>
   </gokb-dialog>
@@ -219,6 +250,9 @@
       },
       isEdit () {
         return !!this.id
+      },
+      numMessageVars () {
+        return this.additionalInfo ? this.additionalInfo.vars.length : 0
       }
     },
     async created () {

@@ -48,9 +48,7 @@
 
       <v-stepper-items>
         <v-stepper-content :step="isEdit ? 2 : 1">
-          <gokb-section
-            :sub-title="$t('component.general.general')"
-          >
+          <gokb-section :no-tool-bar="true">
             <gokb-name-field
               v-model="allNames"
               :disabled="isReadonly"
@@ -87,50 +85,92 @@
         </v-stepper-content>
 
         <v-stepper-content :step="isEdit ? 3 : 2">
-          <gokb-section
-            :sub-title="$t('component.package.properties')"
-          >
-            <gokb-state-field
-              v-model="packageItem.scope"
-              :init-item="packageItem.scope"
-              message-path="component.package.scope"
-              url="refdata/categories/Package.Scope"
-              :label="$t('component.package.scope.label')"
-              :readonly="isReadonly"
-            />
-            <gokb-state-field
-              v-model="packageItem.contentType"
-              :init-item="packageItem.contentType"
-              message-path="component.package.contentType"
-              url="refdata/categories/Package.ContentType"
-              :label="$t('component.package.contentType.label')"
-              :readonly="isReadonly"
-            />
-            <gokb-radiobutton-group v-model="packageItem.global">
-              <gokb-radiobutton-field
-                value="Global"
-                :label="$t('component.package.global.Global.label')"
-                :readonly="isReadonly"
-              />
-              <gokb-radiobutton-field
-                value="Consortium"
-                :label="$t('component.package.global.Consortial.label')"
-                :readonly="isReadonly"
-              />
-              <gokb-radiobutton-field
-                value="Regional"
-                :label="$t('component.package.global.Regional.label')"
-                :readonly="isReadonly"
-              />
-              <gokb-radiobutton-field
-                value="Other"
-                :label="$t('component.package.global.Unknown.label')"
-                :readonly="isReadonly"
-              />
-            </gokb-radiobutton-group>
-            <v-row v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'">
+          <gokb-section :no-tool-bar="true">
+            <v-row>
               <v-col>
+                <gokb-state-field
+                  v-model="packageItem.scope"
+                  :init-item="packageItem.scope"
+                  width="100%"
+                  message-path="component.package.scope"
+                  url="refdata/categories/Package.Scope"
+                  :label="$t('component.package.scope.label')"
+                  :readonly="isReadonly"
+                />
+              </v-col>
+              <v-col>
+                <gokb-state-field
+                  v-model="packageItem.contentType"
+                  :init-item="packageItem.contentType"
+                  width="100%"
+                  message-path="component.package.contentType"
+                  url="refdata/categories/Package.ContentType"
+                  :label="$t('component.package.contentType.label')"
+                  :readonly="isReadonly"
+                />
+              </v-col>
+              <v-col>
+                <gokb-state-field
+                  v-model="packageItem.editStatus"
+                  :init-item="packageItem.editStatus"
+                  message-path="component.general.editStatus"
+                  url="refdata/categories/KBComponent.EditStatus"
+                  width="100%"
+                  :label="$t('component.general.editStatus.label')"
+                  :readonly="isReadonly"
+                />
+              </v-col>
+              <v-col>
+                <gokb-state-field
+                  v-model="packageItem.listStatus"
+                  :init-item="packageItem.listStatus"
+                  message-path="component.package.listStatus"
+                  url="refdata/categories/Package.ListStatus"
+                  width="100%"
+                  :label="$t('component.package.listStatus.label')"
+                  :readonly="isReadonly"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="7">
+                <gokb-radiobutton-group
+                  v-model="packageItem.global"
+                  class="mt-4"
+                >
+                  <gokb-radiobutton-field
+                    value="Global"
+                    :label="$t('component.package.global.Global.label')"
+                    :readonly="isReadonly"
+                  />
+                  <gokb-radiobutton-field
+                    value="Consortium"
+                    :label="$t('component.package.global.Consortial.label')"
+                    :readonly="isReadonly"
+                  />
+                  <gokb-radiobutton-field
+                    value="Regional"
+                    :label="$t('component.package.global.Regional.label')"
+                    :readonly="isReadonly"
+                  />
+                  <gokb-radiobutton-field
+                    value="Other"
+                    :label="$t('component.package.global.Unknown.label')"
+                    :readonly="isReadonly"
+                  />
+                </gokb-radiobutton-group>
+              </v-col>
+              <v-col cols="1">
+                <v-icon
+                  v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'"
+                  class="mt-4"
+                >
+                  mdi-chevron-triple-right
+                </v-icon>
+              </v-col>
+              <v-col cols="4">
                 <gokb-text-field
+                  v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'"
                   v-model="packageItem.globalNote"
                   :label="$t('component.package.globalNote.label')"
                   :disabled="isReadonly"
@@ -190,18 +230,29 @@
           <gokb-source-field
             v-if="loggedIn"
             v-model="sourceItem"
+            :expanded="false"
             :readonly="isReadonly"
             @enable="triggerUpdate"
           />
         </v-stepper-content>
 
         <v-stepper-content :step="isEdit ? 1 : 4">
-          <gokb-section :sub-title="$t('component.package.navigation.step4')">
+          <gokb-section :no-tool-bar="true">
             <v-row>
               <v-col>
                 <gokb-name-field
                   v-model="allNames"
                   readonly
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <gokb-state-select-field
+                  v-if="packageItem.status"
+                  v-model="packageItem.status"
+                  :deletable="!!deleteUrl"
+                  :editable="!!updateUrl"
                 />
               </v-col>
             </v-row>
@@ -213,26 +264,6 @@
                   disabled
                 />
               </v-col>
-            </v-row>
-            <v-row v-if="status">
-              <v-col>
-                <gokb-state-select-field
-                  v-model="status"
-                  :deletable="!!deleteUrl"
-                  :editable="!!updateUrl"
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <gokb-text-field
-                  v-model="packageItem.description"
-                  :label="$t('component.package.description')"
-                  disabled
-                />
-              </v-col>
-            </v-row>
-            <v-row>
               <v-col>
                 <gokb-text-field
                   v-model="platformName"
@@ -240,7 +271,18 @@
                   disabled
                 />
               </v-col>
+            </v-row>
+            <v-row v-if="packageItem.description">
               <v-col>
+                <gokb-textarea-field
+                  v-model="packageItem.description"
+                  :label="$t('component.package.description')"
+                  disabled
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="3">
                 <gokb-state-field
                   v-model="packageItem.contentType"
                   :init-item="packageItem.contentType"
@@ -250,10 +292,31 @@
                   readonly
                 />
               </v-col>
-              <v-col v-if="status">
+              <v-col
+                v-if="packageItem.status"
+                cols="2"
+              >
                 <gokb-number-field
                   :value="totalNumberOfTitles"
                   :label="$tc('component.tipp.label', 2)"
+                  disabled
+                />
+              </v-col>
+              <v-col cols="3">
+                <gokb-state-field
+                  v-model="packageItem.listStatus"
+                  :init-item="packageItem.listStatus"
+                  message-path="component.package.listStatus"
+                  url="refdata/categories/Package.ListStatus"
+                  :label="$t('component.package.listStatus.label')"
+                  readonly
+                />
+              </v-col>
+              <v-col>
+                <gokb-text-field
+                  v-if="listVerifiedDate"
+                  v-model="localListVerifiedDate"
+                  :label="$t('component.package.listVerifiedDate.label')"
                   disabled
                 />
               </v-col>
@@ -291,7 +354,6 @@
     <template #buttons>
       <gokb-button
         v-if="!isReadonly"
-        text
         @click="reload"
       >
         {{ $t('btn.cancel') }}
@@ -302,6 +364,34 @@
       >
         {{ $t('btn.back') }}
       </gokb-button>
+      <v-spacer />
+      <div v-if="id">
+        <v-chip
+          class="ma-1"
+          label
+        >
+          <v-icon
+            :title="$t('component.general.dateCreated')"
+            medium
+          >
+            mdi-file-plus-outline
+          </v-icon>
+          <span class="ml-1">{{ localDateCreated }}</span>
+        </v-chip>
+        <v-chip
+          class="ma-1"
+          label
+        >
+          <v-icon
+            :title="$t('component.general.lastUpdated')"
+            label
+            medium
+          >
+            mdi-refresh
+          </v-icon>
+          <span class="ml-1">{{ localLastUpdated }}</span>
+        </v-chip>
+      </div>
       <v-spacer />
       <gokb-button
         v-if="!isInLastStep"
@@ -391,14 +481,18 @@
       return {
         valid: undefined,
         step: 1,
-        status: undefined,
         version: undefined,
+        isCurator: false,
         urlUpdate: false,
         currentName: undefined,
+        lastUpdated: undefined,
+        listVerifiedDate: undefined,
+        dateCreated: undefined,
         newTipps: [],
         packageItem: {
           name: undefined,
           source: undefined,
+          status: undefined,
           descriptionUrl: undefined,
           description: undefined,
           scope: undefined,
@@ -408,11 +502,14 @@
           consistent: undefined,
           breakable: undefined,
           fixed: undefined,
+          listStatus: undefined,
+          editStatus: undefined,
           ids: [],
           provider: undefined, // organisation
           nominalPlatform: undefined,
         },
         allCuratoryGroups: [],
+        userCuratoryGroups: [],
         sourceItem: undefined,
         packageTypes: [
           { id: 'book', text: 'Buch' },
@@ -452,7 +549,7 @@
         return !!this.id
       },
       isReadonly () {
-        return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
+        return !this.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
       },
       isInLastStep () {
         return this.step === 4
@@ -478,6 +575,15 @@
       loggedIn () {
         return accountModel.loggedIn()
       },
+      localDateCreated () {
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale) : ''
+      },
+      localLastUpdated () {
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale) : ''
+      },
+      localListVerifiedDate () {
+        return this.listVerifiedDate ? new Date(this.listVerifiedDate).toLocaleString(this.$i18n.locale) : ''
+      }
     },
     watch: {
       loggedIn (value) {
@@ -597,11 +703,14 @@
                   ? (this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart'))
                   : (this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart'))
               }
+              this.reload()
+              this.step = 1
             } else {
               this.successMsg = this.isEdit
                 ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name])
                 : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
               this.reload()
+              this.step = 1
             }
           } else {
             console.log('GOKb status: ' + response.status)
@@ -618,6 +727,11 @@
               descriptionUrl,
               contentType,
               description,
+              lastUpdated,
+              listStatus,
+              listVerifiedDate,
+              editStatus,
+              dateCreated,
               scope,
               global,
               globalNote,
@@ -646,6 +760,7 @@
           this.currentName = name
           this.packageItem.name = name
           this.packageItem.source = source
+          this.packageItem.status = status
           this.packageItem.descriptionUrl = descriptionUrl
           this.packageItem.description = description
           this.packageItem.scope = scope
@@ -657,6 +772,8 @@
           this.packageItem.provider = provider
           this.packageItem.nominalPlatform = nominalPlatform
           this.packageItem.contentType = contentType
+          this.packageItem.listStatus = listStatus
+          this.packageItem.editStatus = editStatus
           this.version = version
           this.packageItem.ids = ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!updateUrl }))
           this.allAlternateNames = variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!updateUrl }))
@@ -668,7 +785,9 @@
           this.titleCount = _tippCount
           this.allNames = { name: name, alts: this.allAlternateNames }
           this.sourceItem = source
-          this.status = status
+          this.listVerifiedDate = listVerifiedDate
+          this.lastUpdated = lastUpdated
+          this.dateCreated = dateCreated
         }
         loading.stopLoading()
       },

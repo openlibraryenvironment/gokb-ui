@@ -2,6 +2,7 @@
   "btn": {
     "edit": "Bearbeiten",
     "update": "Aktualisieren",
+    "refresh": "Aktualisieren",
     "submit": "Abschicken",
     "add": "Hinzufügen",
     "new": "Neu",
@@ -10,13 +11,17 @@
     "close": "Schließen",
     "cancel": "Abbrechen",
     "retire": "Archivieren",
+    "activate": "Aktivieren",
     "deactivate": "Deaktivieren",
     "delete": "Löschen",
     "search": "Suchen",
     "reset": "Zurücksetzen",
     "back": "Zurück",
     "next": "Weiter",
-    "prev": "Zurück"
+    "prev": "Zurück",
+    "enableSync": "Automatisch aktualisieren",
+    "disableSync": "Aktualisierung stoppen",
+    "darkMode": "Dunkle Ansicht"
   },
   "direction": "ltr",
   "default": {
@@ -180,12 +185,29 @@
     "label": "Komponente | Komponenten",
     "title": {
       "label": "Einzeltitel | Einzeltitel",
+      "tabsView": "Kompakte Ansicht",
       "type": {
         "label": "Typ",
         "Journal": "Journal | Journals",
         "Book": "Monographie | Monographien",
         "Database": "Datenbank | Datenbanken",
-        "Other": "Andere | Andere"
+        "Other": "Andere | Andere",
+        "Title": "Andere | Andere"
+      },
+      "OAStatus": {
+        "label": "OA-Status",
+        "Unknown": {
+          "label": "Unbekannt"
+        },
+        "Full OA": {
+          "label": "Volles OA"
+        },
+        "Hybrid OA": {
+          "label": "Hybrides OA"
+        },
+        "No OA": {
+          "label": "Kein OA"
+        }
       },
       "publishStart": "Erscheinungsbeginn",
       "publishedPeriod": "Erscheinungsperiode",
@@ -198,7 +220,13 @@
       "editionNumber": "Ausgabenr.",
       "editionStatement": "Ausgabebezeichnung",
       "firstPublishedInPrint": "Veröffentlichungsdatum (Print)",
-      "firstPublishedOnline": "Veröffentlichungsdatum (Online)"
+      "firstPublishedOnline": "Veröffentlichungsdatum (Online)",
+      "firstAuthor": {
+        "label": "Erster Autor"
+      },
+      "firstEditor": {
+        "label": "Erster Hrsg."
+      }
     },
     "journal": {
       "label": "Journal | Journals"
@@ -221,6 +249,10 @@
         "currentTitles": "Aktueller Bestand"
       },
       "description": "Beschreibung",
+      "listVerifiedDate": {
+        "label": "Zuletzt verifiziert am",
+        "info": "Zeitpunkt der letzten Verifizierung"
+      },
       "scope": {
         "label": "Pakettyp",
         "Front File": {
@@ -250,6 +282,15 @@
         },
         "Mixed": {
           "label": "Gemischt"
+        }
+      },
+      "listStatus": {
+        "label": "Listenstatus",
+        "Checked": {
+          "label": "Geprüft"
+        },
+        "In Progress": {
+          "label": "In Bearbeitung"
         }
       },
       "breakable": "Einzeltitelauswahl möglich",
@@ -284,6 +325,9 @@
       },
       "access": "Zugriff",
       "accessPeriod": "Zugriffszeitraum",
+      "identifier": {
+        "label": "Paketspezifischer Identifikator | Paketspezifische Identifikatoren"
+      },
       "accessStartDate": "Zugriffsanfang",
       "accessEndDate": "Zugriffsende",
       "coverage": {
@@ -330,6 +374,7 @@
     "user": {
       "label": "Benutzer | Benutzer",
       "username": "Benutzername",
+      "register": "Registrierung",
       "password": "Kennwort",
       "email": "E-Mail",
       "role": {
@@ -351,6 +396,7 @@
       "type": "Typ",
       "cause": "Ursache",
       "componentToReview": "Komponente",
+      "otherComponents": "Weitere Komponenten",
       "showClosed": "Abgeschlossene anzeigen",
       "status": {
         "label": "Status",
@@ -374,7 +420,7 @@
         },
         "Major Identifier Mismatch": {
           "label": "Kritischer Identifikator-Konflikt",
-          "info": "Titel {0] stimmt anhand eines Identifikators mit einem vorhandenen Titel überein, aber andere Identifikatoren desselben Namensraumes stimmen nicht überein.",
+          "info": "Titel {0} stimmt anhand eines Identifikators mit einem vorhandenen Titel überein, aber andere Identifikatoren desselben Namensraumes stimmen nicht überein.",
           "action": "Neuer Titel angelegt",
           "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Titel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diese, falls sie falsch sind."
         },
@@ -461,6 +507,18 @@
           "info": "Mehrere Titel stimmen anhand der vorliegenden Identifikatoren überein.",
           "action": "Ältester Titel ausgewählt",
           "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt. Falls ja, führen Sie die Titel zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diesen, falls sie falsch sind."
+        },
+        "Package Titles Retired": {
+          "label": "Pakettitel archiviert",
+          "info": "Ein Update für Paket {0} enthielt nicht {1} zuvor vorhandene Pakettitel.",
+          "action": "Pakettitel archiviert",
+          "toDo": ""
+        },
+        "Invalid Package Titles": {
+          "label": "Ungültige Pakettitel",
+          "info": "Ein Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
+          "action": "Paket nicht aktualisiert",
+          "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
         }
       }
     },
@@ -497,6 +555,18 @@
         },
         "Deleted": {
           "label": "Gelöscht"
+        }
+      },
+      "editStatus": {
+        "label": "Bearbeitungs-Status",
+        "In Progress": {
+          "label": "In Arbeit"
+        },
+        "Approved": {
+          "label": "Bestätigt"
+        },
+        "Rejected": {
+          "label": "Abgewiesen"
         }
       },
       "dateCreated": "Erstellt am",

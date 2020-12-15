@@ -35,7 +35,7 @@
 
   const EXPORT_VARIANTS = {
     KBART: { url: `${process.env.VUE_APP_API_BASE_URL}/packages/kbart/`, type: 'text/comma-separated-values' },
-    GOKb: { url: `${process.env.VUE_APP_API_BASE_URL}/packageTSVExport/`, type: 'text/tab-separated-values' },
+    GOKb: { url: `${process.env.VUE_APP_API_BASE_URL}/packages/packageTSVExport/`, type: 'text/tab-separated-values' },
   }
   export default {
     name: 'GokbPackageExportMenu',

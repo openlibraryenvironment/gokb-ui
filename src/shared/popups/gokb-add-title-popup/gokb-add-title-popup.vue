@@ -30,6 +30,7 @@
     </gokb-section>
     <gokb-identifier-section
       v-model="packageTitleItem.ids"
+      :title="$tc('component.tipp.identifier.label')"
       :expanded="!!packageTitleItem.ids"
       :disabled="isReadonly"
     />

@@ -83,6 +83,15 @@
           </v-list-item-content>
         </template>
       </v-autocomplete>
+      <v-btn
+        class="mr-2"
+        :title="$t('btn.darkMode')"
+        @click="toggleDarkMode"
+      >
+        <v-icon>
+          {{ $vuetify.theme.dark ? 'invert_colors_off' : 'invert_colors' }}
+        </v-icon>
+      </v-btn>
       <v-select
         v-model="currentLocale"
         offset-y
@@ -233,6 +242,7 @@
 
           const result = await this.searchServices.search({
             suggest: this.globalSearchField,
+            status: 'Current',
             es: 'true',
             max: 20
           }, this.cancelToken.token)
@@ -274,6 +284,11 @@
     created () {
       this.HOME_ROUTE = HOME_ROUTE
     },
+    methods: {
+      toggleDarkMode () {
+        this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      }
+    }
   }
 </script>
 

@@ -3,7 +3,7 @@
     expandable
     :hide-default="!expanded"
     filters
-    :sub-title="$tc('component.tipp.label', 2)"
+    :sub-title="title"
     :items-total="totalNumberOfItems"
   >
     <span v-if="successMessage">
@@ -185,6 +185,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      showTitle: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     data () {
@@ -233,7 +238,7 @@
         return this.newTipps.length
       },
       isEditable () {
-        return !this.disabled && !this.title
+        return !this.disabled && !this.ttl
       },
       tableHeaders () {
         return [
@@ -260,6 +265,9 @@
       loggedIn () {
         return accountModel.loggedIn()
       },
+      title () {
+        return this.showTitle ? this.$i18n.tc('component.tipp.label', 2) : undefined
+      }
     },
     watch: {
       loggedIn (value) {

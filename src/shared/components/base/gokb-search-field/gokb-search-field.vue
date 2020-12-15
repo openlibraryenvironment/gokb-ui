@@ -7,26 +7,26 @@
       v-if="localLabel"
       style="font-size:0.8rem"
     >
-      {{ label }}
+      <label class="v-label">{{ label }}</label>
     </div>
     <div
       v-else
       style="font-size:1.1rem"
     >
-      {{ label }}
+      <label class="v-label">{{ label }}</label>
     </div>
     <router-link
       v-if="componentRoute"
       :style="{ color: '#f2994a', fontSize: '1.1rem'}"
       :to="{ name: componentRoute, params: { 'id': value.id } }"
     >
-      {{ localLabel }}
+      <label class="v-label">{{ localLabel }}</label>
     </router-link>
     <span
       v-else
       style="font-size:1.1rem"
     >
-      {{ localLabel }}
+      <label class="v-label">{{ localLabel }}</label>
     </span>
     <v-divider />
   </div>

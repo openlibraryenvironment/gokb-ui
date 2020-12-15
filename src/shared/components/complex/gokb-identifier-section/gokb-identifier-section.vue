@@ -2,7 +2,7 @@
   <gokb-section
     expandable
     :hide-default="!expanded"
-    :sub-title="$tc('component.identifier.label', 2)"
+    :sub-title="title"
     :items-total="totalNumberOfItems"
   >
     <gokb-add-item-popup
@@ -70,6 +70,11 @@
         required: false,
         default: false
       },
+      showTitle: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
       expanded: {
         type: Boolean,
         required: false,
@@ -119,6 +124,9 @@
           { text: this.$i18n.tc('component.identifier.namespace'), align: 'left', value: 'nslabel', sortable: false, width: '15%' },
           { text: this.$i18n.t('component.identifier.value'), align: 'left', value: 'value', sortable: false, width: '100%' },
         ]
+      },
+      title () {
+        return this.showTitle ? this.$i18n.tc('component.identifier.label', 2) : undefined
       }
     },
     methods: {

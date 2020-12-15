@@ -1,8 +1,12 @@
 <template>
   <v-radio-group
     v-model="localValue"
+    dense
     row
   >
+    <template v-slot:label>
+      <span>{{ label }}:</span>
+    </template>
     <v-radio
       value="Current"
       on-icon="check_circle"
@@ -45,7 +49,7 @@
       label: {
         type: String,
         required: false,
-        default: undefined,
+        default: 'Status',
       },
       value: {
         type: [String, Object],

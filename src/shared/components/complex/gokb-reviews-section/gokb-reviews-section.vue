@@ -13,12 +13,21 @@
       <gokb-state-field
         v-model="searchFilters.status"
         class="mr-4"
-        :init-item="$t('component.review.status.Open')"
+        :init-item="$t('component.review.status.Open.label')"
         message-path="component.review.status"
         url="refdata/categories/ReviewRequest.Status"
         :label="$t('component.general.status.label')"
         return-object
       />
+      <v-btn
+        icon
+        :title="$t('btn.refresh')"
+        @click="retrieveReviews"
+      >
+        <v-icon>
+          mdi-refresh
+        </v-icon>
+      </v-btn>
     </template>
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"

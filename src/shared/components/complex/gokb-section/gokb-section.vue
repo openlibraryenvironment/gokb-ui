@@ -6,10 +6,8 @@
     >
       <v-toolbar
         v-if="title && !subTitle"
-        color="white"
         dense
         flat
-        height="32"
       >
         <span
           class="headline"
@@ -17,36 +15,20 @@
           {{ title }}
         </span>
         <v-spacer />
-        <v-toolbar-items>
+        <v-toolbar-items class="pa-2">
           <slot name="buttons" />
-        </v-toolbar-items>
-      </v-toolbar>
-      <v-toolbar
-        v-if="title && !subTitle && filters && expanded"
-        color="white"
-        class="mt-5"
-        dense
-        align="end"
-        flat
-        height="32"
-      >
-        <v-spacer />
-        <v-toolbar-items>
-          <slot name="search" />
         </v-toolbar-items>
       </v-toolbar>
       <span
         v-else-if="title && subTitle"
         class="headline ml-4"
       >
-        {{ title }}
+        {{ subTitle }}
       </span>
       <v-toolbar
-        v-if="subTitle"
-        color="white"
+        v-else-if="!title && subTitle"
         dense
         flat
-        height="32"
       >
         <span
           v-if="subTitle"
@@ -68,26 +50,36 @@
           <v-icon>{{ expansionIcon }}</v-icon>
         </v-btn>
         <v-spacer />
-        <v-toolbar-items>
+        <v-toolbar-items class="pa-2">
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>
       <v-toolbar
-        v-if="subTitle && filters && expanded"
-        color="white"
-        class="mt-5"
-        dense
+        v-if="filters && expanded"
+        class="pt-1"
         align="end"
         flat
-        height="32"
       >
         <v-spacer />
-        <v-toolbar-items>
+        <v-toolbar-items class="pa-2">
           <slot name="search" />
         </v-toolbar-items>
       </v-toolbar>
+      <v-toolbar
+        v-else-if="!subTitle && !title && !noToolBar"
+        dense
+        flat
+      >
+        <v-spacer />
+        <v-toolbar-items class="pa-2">
+          <slot name="buttons" />
+        </v-toolbar-items>
+      </v-toolbar>
       <v-card-text v-show="expanded">
-        <div class="controls pa-2">
+        <div
+          class="pa-2"
+          :class="[darkMode ? 'controls-dark' : 'controls' ]"
+        >
           <slot />
         </div>
       </v-card-text>
@@ -128,6 +120,11 @@
         type: Number,
         required: false,
         default: undefined,
+      },
+      noToolBar: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -138,6 +135,9 @@
     computed: {
       expansionIcon () {
         return this.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
+      },
+      darkMode () {
+        return this.$vuetify.theme.dark
       }
     },
     created () {
@@ -154,5 +154,8 @@
 <style scoped>
   /deep/ .controls {
     background-color: #f2f2f2;
+  }
+  /deep/ .controls-dark {
+    background-color: #1e1e1e;
   }
 </style>

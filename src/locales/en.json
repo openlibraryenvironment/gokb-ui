@@ -3,6 +3,7 @@
     "edit": "Edit",
     "submit": "Submit",
     "update": "Update",
+    "refresh": "Refresh",
     "add": "Add",
     "new": "Add New",
     "create": "Create",
@@ -16,7 +17,10 @@
     "reset": "Reset",
     "back": "Back",
     "next": "Next",
-    "prev": "Previous"
+    "prev": "Previous",
+    "enableSync": "Enable Auto-Refresh",
+    "disableSync": "Stop Auto-Refresh",
+    "darkMode": "Dark Mode"
   },
   "default": {
     "true": "Yes",
@@ -180,12 +184,29 @@
     "label": "Component | Components",
     "title": {
       "label": "Title | Titles",
+      "tabsView": "Tabbed View",
       "type": {
         "label": "Type",
         "Journal": "Journal | Journals",
         "Book": "Monograph | Monographs",
         "Database": "Database | Databases",
-        "Other": "Other | Other"
+        "Other": "Other | Other",
+        "Title": "Other | Other"
+      },
+      "OAStatus": {
+        "label": "OA Status",
+        "Unknown": {
+          "label": "Unknown"
+        },
+        "Full OA": {
+          "label": "Full OA"
+        },
+        "Hybrid OA": {
+          "label": "Hybrid OA"
+        },
+        "No OA": {
+          "label": "No OA"
+        }
       },
       "publishStart": "Publishing start",
       "publishedPeriod": "Publishing Period",
@@ -198,7 +219,13 @@
       "editionNumber": "Edition no.",
       "editionStatement": "Edition Statement",
       "firstPublishedInPrint": "First Published (Print)",
-      "firstPublishedOnline": "First Published (Online)"
+      "firstPublishedOnline": "First Published (Online)",
+      "firstAuthor": {
+        "label": "First Autor"
+      },
+      "firstEditor": {
+        "label": "First Editor"
+      }
     },
     "journal": {
       "label": "Journal | Journals"
@@ -221,6 +248,10 @@
         "currentTitles": "Current Titles"
       },
       "description": "Description",
+      "listVerifiedDate": {
+        "label": "Last list verification",
+        "info": "Timestamp of the last verification"
+      },
       "scope": {
         "label": "Scope",
         "Front File": {
@@ -250,6 +281,15 @@
         },
         "Mixed": {
           "label": "Mixed"
+        }
+      },
+      "listStatus": {
+        "label": "List Status",
+        "Checked": {
+          "label": "Checked"
+        },
+        "In Progress": {
+          "label": "In Progress"
         }
       },
       "breakable": "Content may be split",
@@ -284,6 +324,9 @@
       },
       "access": "Access",
       "accessPeriod": "Access Period",
+      "identifier": {
+        "label": "Package-specific Identifier | Package-specific Identifiers"
+      },
       "accessStartDate": "Access Start Date",
       "accessEndDate": "Access End Date",
       "coverage": {
@@ -352,6 +395,7 @@
       "type": "Type",
       "cause": "Cause",
       "componentToReview": "Component",
+      "otherComponents": "Other Components",
       "showClosed": "Show closed requests",
       "status": {
         "label": "Status",
@@ -462,6 +506,18 @@
           "info": "Multiple titles were matched on all identifiers.",
           "action": "Oldest title selected",
           "toDo": "Check titles for duplicates. Merge titles if necessary. Check identifier duplicates and delete them if they are incorrect."
+        },
+        "Package Titles Retired": {
+          "label": "Package Titles Retired",
+          "info": "An update to package {0} did not contain {1} previously existing package titles.",
+          "action": "Package titles retired",
+          "toDo": ""
+        },
+        "Invalid Package Titles": {
+          "label": "Invalid Package Titles",
+          "info": "An update for this package failed because of invalid package title information.",
+          "action": "Package not updated",
+          "toDo": "Check records for erroneous or missing information."
         }
       }
     },
@@ -498,6 +554,18 @@
         },
         "Deleted": {
           "label": "Deleted"
+        }
+      },
+      "editStatus": {
+        "label": "Editing Status",
+        "In Progress": {
+          "label": "In Progress"
+        },
+        "Approved": {
+          "label": "Approved"
+        },
+        "Rejected": {
+          "label": "Rejected"
         }
       },
       "dateCreated":"Date Created",

@@ -7,10 +7,7 @@
     >
       <v-card flat>
         <v-toolbar
-          color="white"
-          dense
           flat
-          height="32"
         >
           <div class="ml-3">
             <v-toolbar-title class="display-1">

@@ -92,6 +92,7 @@
         config: [],
         selectedItem: {
           description: undefined,
+          status: undefined,
           startDate: undefined,
           endDate: undefined,
           results: undefined,
