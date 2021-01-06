@@ -20,7 +20,7 @@
     "buildDeploy4Prod": "vue-cli-service build --modern --mode prod && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
