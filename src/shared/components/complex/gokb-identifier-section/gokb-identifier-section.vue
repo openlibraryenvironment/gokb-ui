@@ -8,7 +8,7 @@
     <gokb-add-item-popup
       v-if="addIdentifierPopupVisible"
       v-model="addIdentifierPopupVisible"
-      :component="{ type: 'GokbIdentifierField', name: $tc('component.identifier.label') }"
+      :component="{ type: 'GokbIdentifierField', name: $tc('component.identifier.label'), properties: { targetType: targetType } }"
       @add="addNewIdentifier"
     />
     <template #buttons>
@@ -79,6 +79,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      targetType: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {

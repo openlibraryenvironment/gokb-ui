@@ -19,7 +19,9 @@
     },
     created () {
       this.entityName = 'identifier-namespaces'
-      this.searchParams = { targetType: this.targetType || '' }
+      if (this.targetType) {
+        this.searchParams = { targetType: this.targetType }
+      }
     },
     methods: {
       transform (result) {

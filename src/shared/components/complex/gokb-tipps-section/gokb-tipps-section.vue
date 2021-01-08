@@ -375,7 +375,10 @@
           this.options.desc = options.desc
         }
         this.successMessage = false
-        this.fetchTipps({ page })
+
+        if (this.ttl || this.pkg) {
+          this.fetchTipps({ page })
+        }
       },
       resultNewPaginate (page) {
         this.successMessage = false

@@ -200,6 +200,7 @@
           </gokb-section>
           <gokb-identifier-section
             v-model="packageItem.ids"
+            target-type="Package"
             :disabled="isReadonly"
           />
           <gokb-alternate-names-section
@@ -346,6 +347,10 @@
             v-model="allCuratoryGroups"
             :disabled="isReadonly"
             :sub-title="$tc('component.curatoryGroup.label', 2)"
+          />
+          <gokb-reviews-section
+            v-if="id"
+            :review-component="id"
           />
         </v-stepper-content>
       </v-stepper-items>

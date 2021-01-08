@@ -18,30 +18,22 @@
     v-else
     title="Dashboard"
   >
-    <gokb-reviews-section
-      v-if="isContrib"
-      :user="true"
-    />
-    <!-- <gokb-section
-      sub-title="Pflege"
-    >
-      <template #buttons>
-        <gokb-select-field
-          class="mr-4"
-          label="Typ"
-        />
-        <gokb-date-field
-          label="Fällig am"
-        />
+    <div v-if="isContrib">
+      <template v-for="group in groups">
+        <v-row :key="group.id">
+          <v-col>
+            <div class="text-h4 ml-3  ">
+              {{ group.name }}
+            </div>
+            <gokb-reviews-section
+              :key="group.id"
+              :group="group.id"
+              :user="true"
+            />
+          </v-col>
+        </v-row>
       </template>
-      <gokb-table
-        :items="maintenances"
-        :headers="maintenancesHeader"
-        :total-number-of-items="totalNumberOfMaintenances"
-        :options.sync="maintenancesOptions"
-        :show-select="false"
-      />
-    </gokb-section> -->
+    </div>
     <gokb-jobs-section
       v-model="groupId"
     />
@@ -52,29 +44,7 @@
   import baseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
   import GokbReviewsSection from '@/shared/components/complex/gokb-reviews-section'
-
-  const ROWS_PER_PAGE = 5
-
-  const MAINTENANCES_HEADER = [
-    {
-      text: 'Name',
-      align: 'left',
-      sortable: false,
-      value: 'name'
-    },
-    {
-      text: 'Typ',
-      align: 'left',
-      sortable: false,
-      value: 'type'
-    },
-    {
-      text: 'Fällig am',
-      align: 'left',
-      sortable: false,
-      value: 'dueDate'
-    },
-  ]
+  import profileServices from '@/shared/services/profile-services'
 
   export default {
     name: 'HomeView',
@@ -84,12 +54,7 @@
     extends: baseComponent,
     data () {
       return {
-        maintenances: [],
-        totalNumberOfMaintenances: 0,
-        maintenancesOptions: {
-          page: 1,
-          itemsPerPage: ROWS_PER_PAGE
-        },
+        groups: [],
         groupId: -1
       }
     },
@@ -101,16 +66,34 @@
         return this.loggedIn && account.hasRole('ROLE_CONTRIBUTOR')
       }
     },
-    created () {
-      this.reviewsHeader = this.localizedReviewHeaders
-      this.maintenancesHeader = MAINTENANCES_HEADER
-
-      // todo: replace dummy data with backend requests
-      this.maintenances = [
-        { name: 'American Science Journal', type: 'Einzeltitel', dueDate: '01.12.2018' },
-        { name: 'Springer Best Journals', type: 'Paket', dueDate: '06.01.2019' },
-      ]
-      this.totalNumberOfMaintenances = 2
+    watch: {
+      loggedIn (value) {
+        if (value) {
+          this.loadGroups()
+        } else {
+          this.groups = []
+        }
+      }
+    },
+    async created () {
+      if (this.loggedIn) {
+        this.loadGroups()
+      }
+    },
+    methods: {
+      async loadGroups () {
+        const {
+          data: {
+            data: {
+              curatoryGroups
+            }
+          }
+        } = await this.catchError({
+          promise: profileServices.getProfile(this.cancelToken.token),
+          instance: this
+        })
+        this.groups = curatoryGroups
+      }
     }
   }
 </script>

@@ -158,6 +158,12 @@
             {{ $tc('component.variantName.label', 2) }}
           </v-tab>
           <v-tab
+            key="reviews"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.review.label', 2) }}
+          </v-tab>
+          <v-tab
             key="tipps"
             :active-class="tabClass"
           >
@@ -198,6 +204,14 @@
             />
           </v-tab-item>
           <v-tab-item
+            key="reviews"
+            class="mt-4"
+          >
+            <gokb-reviews-section
+              :review-component="id"
+            />
+          </v-tab-item>
+          <v-tab-item
             key="tipps"
             class="mt-4"
           >
@@ -222,6 +236,10 @@
       <gokb-alternate-names-section
         v-model="allNames.alts"
         :disabled="isReadonly"
+      />
+      <gokb-reviews-section
+        v-if="id"
+        review-component="id"
       />
       <gokb-tipps-section
         :ttl="parseInt(id)"
@@ -464,34 +482,37 @@
             promise: titleServices.getTitle(this.id, this.cancelToken.token),
             instance: this
           })
-          this.id = id
-          this.name = name
-          this.source = source
-          this.version = version
-          this.currentType = type
-          this.publishedFrom = publishedFrom && publishedFrom.substr(0, 10)
-          this.publishedTo = publishedTo && publishedTo.substr(0, 10)
-          this.publishers = publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!updateUrl }))
-          this.ids = ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!updateUrl }))
-          this.tipps = tipps || []
-          this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
-          this.allNames = { name: name, alts: this.allAlternateNames }
-          this.reviewRequests = reviewRequests
-          this.editionStatement = editionStatement
-          this.dateCreated = dateCreated
-          this.lastUpdated = lastUpdated
-          this.firstAuthor = firstAuthor
-          this.firstEditor = firstEditor
-          this.medium = medium
-          this.OAStatus = OAStatus
-          this.editionNumber = editionNumber
-          this.firstPublishedInPrint = firstPublishedInPrint
-          this.firstPublishedOnline = firstPublishedOnline
-          this.volumeNumber = volumeNumber
-          this.updateUrl = updateUrl
-          this.deleteUrl = deleteUrl
-          this.successMsg = false
-          this.status = status
+
+          if (id) {
+            this.id = id
+            this.name = name
+            this.source = source
+            this.version = version
+            this.currentType = type
+            this.publishedFrom = publishedFrom && publishedFrom.substr(0, 10)
+            this.publishedTo = publishedTo && publishedTo.substr(0, 10)
+            this.publishers = publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!updateUrl }))
+            this.ids = ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!updateUrl }))
+            this.tipps = tipps || []
+            this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
+            this.allNames = { name: name, alts: this.allAlternateNames }
+            this.reviewRequests = reviewRequests
+            this.editionStatement = editionStatement
+            this.dateCreated = dateCreated
+            this.lastUpdated = lastUpdated
+            this.firstAuthor = firstAuthor
+            this.firstEditor = firstEditor
+            this.medium = medium
+            this.OAStatus = OAStatus
+            this.editionNumber = editionNumber
+            this.firstPublishedInPrint = firstPublishedInPrint
+            this.firstPublishedOnline = firstPublishedOnline
+            this.volumeNumber = volumeNumber
+            this.updateUrl = updateUrl
+            this.deleteUrl = deleteUrl
+            this.successMsg = false
+            this.status = status
+          }
           loading.stopLoading()
         }
       }

@@ -4,6 +4,7 @@
       <gokb-namespace-field
         v-model="localNamespace"
         :readonly="namespaceFixed"
+        :target-type="targetType"
         width="140px"
         :label="$tc('component.identifier.namespace')"
       />
@@ -30,6 +31,11 @@
       namespaceFixed: {
         type: Boolean,
         required: false
+      },
+      targetType: {
+        type: String,
+        required: false,
+        default: undefined
       },
       disabled: {
         type: Boolean,

@@ -70,6 +70,11 @@
         required: false,
         default: undefined
       },
+      reviewComponent: {
+        type: Number,
+        required: false,
+        default: undefined
+      },
       disabled: {
         type: Boolean,
         required: false,
@@ -211,6 +216,14 @@
             }
           }
         })
+
+        if (this.group) {
+          searchParams.allocatedGroups = this.group
+        }
+
+        if (this.reviewComponent) {
+          searchParams.componentToReview = this.reviewComponent
+        }
 
         const parameters = {
           ...(searchParams || {}),

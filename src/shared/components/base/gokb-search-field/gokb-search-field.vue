@@ -158,8 +158,7 @@
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...this.searchParams,
-            [this.itemText]: text,
-            [this.itemValue]: id,
+            q: text || this.value?.id,
           }, this.cancelToken.token),
           instance: this
         })

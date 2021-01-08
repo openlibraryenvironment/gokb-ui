@@ -13,7 +13,7 @@ const api = (baseServices) => ({
   getReview (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/${id}?_include=id,reviewRequest,componentToReview,descriptionOfCause,stdDesc,status,dateCreated,additionalInfo`,
+      url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/${id}?_include=id,reviewRequest,componentToReview,descriptionOfCause,stdDesc,status,dateCreated,additionalInfo&_embed=allocatedGroups`,
     }, cancelToken)
   },
 

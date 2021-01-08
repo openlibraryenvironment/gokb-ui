@@ -16,7 +16,7 @@
         />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row align="center">
       <v-col cols="3">
         <gokb-text-field
           v-model="reviewItem.dateCreated"
@@ -47,6 +47,18 @@
           :label="$t('component.general.status.label')"
         />
       </v-col>
+      <v-col
+        v-if="reviewItem.allocatedGroups.length > 0"
+        align-self="center"
+      >
+        <label class="v-label"> {{ $tc('component.curatoryGroup.label', 2) }}: </label>
+        <v-chip
+          v-for="group in reviewItem.allocatedGroups"
+          :key="group.name"
+        >
+          {{ group.name }}
+        </v-chip>
+      </v-col>
     </v-row>
     <v-row>
       <v-col md="12">
@@ -73,7 +85,7 @@
                   {{ reviewItem.component.name }}
                 </router-link>
                 <router-link
-                  v-else-if="reviewItem.otherComponents && reviewItem.otherComponents > 0"
+                  v-else-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
                   :style="{ color: '#f2994a' }"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
                 >
@@ -102,7 +114,7 @@
             :label="$i18n.t('component.review.cause')"
           />
           <div
-            v-if="reviewItem.otherComponents.length > 0"
+            v-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
             class="pt-3"
           >
             <label
@@ -112,7 +124,7 @@
             >
               {{ $tc('component.review.otherComponents') }}
             </label>
-            <span
+            <div
               v-for="(oc, idx) in reviewItem.otherComponents"
               :key="idx"
             >
@@ -122,7 +134,7 @@
               >
                 {{ oc.name }}
               </router-link>
-            </span>
+            </div>
           </div>
         </template>
       </v-col>
@@ -145,7 +157,7 @@
             >
               <template v-slot:0>
                 <router-link
-                  v-if="reviewItem.otherComponents && reviewItem.otherComponents > 0"
+                  v-if="reviewItem.otherComponents && reviewItem.otherComponents.size > 0"
                   :style="{ color: '#f2994a' }"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
                 >
@@ -220,6 +232,7 @@
           status: undefined,
           stdDesc: undefined,
           request: undefined,
+          allocatedGroups: [],
           description: undefined,
           dateCreated: undefined,
           component: undefined,
@@ -269,6 +282,7 @@
             descriptionOfCause,
             dateCreated,
             componentToReview,
+            allocatedGroups,
             additionalInfo,
             _links: {
               update: { href: updateUrl },
@@ -287,6 +301,7 @@
         this.reviewItem.description = descriptionOfCause
         this.reviewItem.dateCreated = dateCreated
         this.reviewItem.component = componentToReview
+        this.reviewItem.allocatedGroups = allocatedGroups
         this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(({ oid, name }) => ({
           name,
           id: oid.split(':')[1],
