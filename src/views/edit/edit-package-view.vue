@@ -349,7 +349,7 @@
             :sub-title="$tc('component.curatoryGroup.label', 2)"
           />
           <gokb-reviews-section
-            v-if="id"
+            v-if="id && loggedIn"
             :review-component="id"
           />
         </v-stepper-content>

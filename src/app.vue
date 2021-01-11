@@ -154,8 +154,9 @@
   import UserMenu from '@/shared/user-menu'
   import {
     HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
-    SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
-    SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_PROVIDER_ROUTE
+    SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
+    SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_PROVIDER_ROUTE,
+    // SEARCH_MAINTENANCE_ROUTE
   } from '@/router/route-paths'
   import { createCancelToken } from '@/shared/services/http'
   import searchServices from '@/shared/services/search-services'
@@ -186,7 +187,7 @@
           { icon: 'library_books', text: this.$i18n.tc('component.title.label', 2), route: SEARCH_TITLE_ROUTE },
           { icon: 'domain', text: this.$i18n.tc('component.provider.label', 2), route: SEARCH_PROVIDER_ROUTE },
           { icon: 'rate_review', text: this.$i18n.tc('component.review.label', 2), route: SEARCH_REVIEW_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'keyboard', text: this.$i18n.tc('component.maintenance.label', 2), route: SEARCH_MAINTENANCE_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
+          // { icon: 'keyboard', text: this.$i18n.tc('component.maintenance.label', 2), route: SEARCH_MAINTENANCE_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
           { icon: 'people', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
         ]
 

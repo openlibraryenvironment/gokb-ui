@@ -204,6 +204,7 @@
             />
           </v-tab-item>
           <v-tab-item
+            v-if="loggedIn"
             key="reviews"
             class="mt-4"
           >
@@ -238,8 +239,8 @@
         :disabled="isReadonly"
       />
       <gokb-reviews-section
-        v-if="id"
-        review-component="id"
+        v-if="id && loggedIn"
+        :review-component="id"
       />
       <gokb-tipps-section
         :ttl="parseInt(id)"
