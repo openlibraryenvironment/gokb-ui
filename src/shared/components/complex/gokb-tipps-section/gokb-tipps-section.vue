@@ -284,7 +284,7 @@
       }
     },
     async created () {
-      if (this.pkg || this.ttl) {
+      if (this.pkg || this.ttl || this.platform) {
         this.fetchTipps()
       }
 

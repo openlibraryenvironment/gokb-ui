@@ -188,6 +188,7 @@
       "type": {
         "label": "Type",
         "Journal": "Journal | Journals",
+        "Monograph": "Monograph | Monographs",
         "Book": "Monograph | Monographs",
         "Database": "Database | Databases",
         "Other": "Other | Other",
@@ -541,6 +542,7 @@
     "general": {
       "name": "Name",
       "general": "General",
+      "notFound": "{0} not found!",
       "status": {
         "label": "Status",
         "Current": {

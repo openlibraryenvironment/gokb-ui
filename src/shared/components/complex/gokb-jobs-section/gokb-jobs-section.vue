@@ -105,8 +105,6 @@
       },
       tableHeaders () {
         return [
-          { text: 'ID', align: 'left', value: 'id', sortable: false, width: '5%' },
-          // { text: this.$i18n.t('job.description'), align: 'left', value: 'popup', sortable: false, width: '40%' },
           { text: this.$i18n.t('job.type'), align: 'left', value: 'popup', sortable: false, width: '25%' },
           { text: this.$i18n.t('job.linkedComponent'), align: 'left', value: 'link', sortable: false, width: '40%' },
           { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '10%' },

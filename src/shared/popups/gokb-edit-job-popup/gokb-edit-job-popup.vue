@@ -70,7 +70,7 @@
       <gokb-button
         default
       >
-        Schließen
+        {{ $t('btn.close') }}
       </gokb-button>
     </template>
   </gokb-dialog>

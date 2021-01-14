@@ -1,5 +1,6 @@
 <template>
   <gokb-page
+    v-if="!notFound"
     :key="version"
     :title="title"
     :sub-title="subTitle"
@@ -370,7 +371,7 @@
         {{ $t('btn.back') }}
       </gokb-button>
       <v-spacer />
-      <div v-if="id">
+      <div v-if="id && !notFound">
         <v-chip
           class="ma-1"
           label
@@ -416,6 +417,18 @@
         {{ $i18n.t('btn.submit') }}
       </gokb-button>
     </template>
+  </gokb-page>
+  <gokb-page
+    v-else
+    title=""
+  >
+    <v-card>
+      <v-card-text>
+        <div class="display-1 primary--text">
+          {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
+        </div>
+      </v-card-text>
+    </v-card>
   </gokb-page>
 </template>
 
@@ -486,6 +499,7 @@
       return {
         valid: undefined,
         step: 1,
+        notFound: false,
         version: undefined,
         isCurator: false,
         urlUpdate: false,
@@ -725,74 +739,52 @@
       async reload () {
         if (this.isEdit) {
           loading.startLoading()
-          const {
-            data: {
-              name,
-              source,
-              descriptionUrl,
-              contentType,
-              description,
-              lastUpdated,
-              listStatus,
-              listVerifiedDate,
-              editStatus,
-              dateCreated,
-              scope,
-              global,
-              globalNote,
-              status,
-              consistent,
-              breakable,
-              fixed,
-              provider,
-              nominalPlatform,
-              _tippCount,
-              version,
-              _embedded: {
-                ids,
-                variantNames,
-                curatoryGroups
-              },
-              _links: {
-                update: { href: updateUrl },
-                delete: { href: deleteUrl }
-              }
-            }
-          } = await this.catchError({
+          const result = await this.catchError({
             promise: packageServices.getPackage(this.id, this.cancelToken.token),
             instance: this
           })
-          this.currentName = name
-          this.packageItem.name = name
-          this.packageItem.source = source
-          this.packageItem.status = status
-          this.packageItem.descriptionUrl = descriptionUrl
-          this.packageItem.description = description
-          this.packageItem.scope = scope
-          this.packageItem.global = global?.name
-          this.packageItem.globalNote = globalNote
-          this.packageItem.consistent = consistent?.name === 'Yes'
-          this.packageItem.breakable = breakable?.name === 'Yes'
-          this.packageItem.fixed = fixed?.name === 'Yes'
-          this.packageItem.provider = provider
-          this.packageItem.nominalPlatform = nominalPlatform
-          this.packageItem.contentType = contentType
-          this.packageItem.listStatus = listStatus
-          this.packageItem.editStatus = editStatus
-          this.version = version
-          this.packageItem.ids = ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!updateUrl }))
-          this.allAlternateNames = variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!updateUrl }))
-          this.allCuratoryGroups = curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!updateUrl }))
-          this.updateUrl = updateUrl
-          this.deleteUrl = deleteUrl
-          this.providerSelect = provider
-          this.platformSelect = nominalPlatform
-          this.titleCount = _tippCount
-          this.allNames = { name: name, alts: this.allAlternateNames }
-          this.sourceItem = source
-          this.listVerifiedDate = listVerifiedDate
-          this.lastUpdated = lastUpdated
-          this.dateCreated = dateCreated
+
+          if (result.status === 200) {
+            const data = result.data.data
+
+            if (!this.id) {
+              this.id = data.id
+            }
+            this.currentName = data.name
+            this.packageItem.name = data.name
+            this.packageItem.source = data.source
+            this.packageItem.status = data.status
+            this.packageItem.descriptionUrl = data.descriptionUrl
+            this.packageItem.description = data.description
+            this.packageItem.scope = data.scope
+            this.packageItem.global = data.global?.name
+            this.packageItem.globalNote = data.globalNote
+            this.packageItem.consistent = data.consistent?.name === 'Yes'
+            this.packageItem.breakable = data.breakable?.name === 'Yes'
+            this.packageItem.fixed = data.fixed?.name === 'Yes'
+            this.packageItem.provider = data.provider
+            this.packageItem.nominalPlatform = data.nominalPlatform
+            this.packageItem.contentType = data.contentType
+            this.packageItem.listStatus = data.listStatus
+            this.packageItem.editStatus = data.editStatus
+            this.version = data.version
+            this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
+            this.allAlternateNames = data._embedded.variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!this.updateUrl }))
+            this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!this.updateUrl }))
+            this.reviewRequests = data._embedded.reviewRequests
+            this.updateUrl = data._links?.update?.href || null
+            this.deleteUrl = data._links?.delete?.href || null
+            this.providerSelect = data.provider
+            this.platformSelect = data.nominalPlatform
+            this.titleCount = data._tippCount
+            this.allNames = { name: this.name, alts: this.allAlternateNames }
+            this.sourceItem = data.source
+            this.listVerifiedDate = data.listVerifiedDate
+            this.lastUpdated = data.lastUpdated
+            this.dateCreated = data.dateCreated
+          } else {
+            this.notFound = true
+          }
         }
         loading.stopLoading()
       },

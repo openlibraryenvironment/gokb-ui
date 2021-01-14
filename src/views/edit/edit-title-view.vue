@@ -1,5 +1,6 @@
 <template>
   <gokb-page
+    v-if="!notFound"
     :key="version"
     :title="title"
     @submit="update"
@@ -158,6 +159,7 @@
             {{ $tc('component.variantName.label', 2) }}
           </v-tab>
           <v-tab
+            v-if="loggedIn"
             key="reviews"
             :active-class="tabClass"
           >
@@ -249,7 +251,7 @@
     </div>
     <template #buttons>
       <v-spacer />
-      <div v-if="id">
+      <div v-if="id && !notFound">
         <v-chip
           class="mr-2"
           label
@@ -291,6 +293,18 @@
       </gokb-button>
     </template>
   </gokb-page>
+  <gokb-page
+    v-else
+    title=""
+  >
+    <v-card>
+      <v-card-text>
+        <div class="display-1 primary--text">
+          {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
+        </div>
+      </v-card-text>
+    </v-card>
+  </gokb-page>
 </template>
 
 <script>
@@ -317,6 +331,7 @@
       return {
         tab: null,
         name: undefined,
+        notFound: false,
         source: undefined,
         dateCreated: undefined,
         lastUpdated: undefined,
@@ -444,78 +459,49 @@
       async reload () {
         if (this.isEdit) {
           loading.startLoading()
-          const {
-            data: {
-              //  data: {
-              id,
-              name,
-              source,
-              type,
-              status,
-              medium,
-              publishedFrom,
-              publishedTo,
-              OAStatus,
-              editionStatement,
-              editionNumber,
-              firstPublishedInPrint,
-              firstPublishedOnline,
-              firstAuthor,
-              firstEditor,
-              dateCreated,
-              lastUpdated,
-              volumeNumber,
-              version,
-              _embedded: {
-                publisher,
-                ids,
-                tipps,
-                variantNames,
-                reviewRequests
-              },
-              _links: {
-                update: { href: updateUrl },
-                delete: { href: deleteUrl }
-              },
-              //  }
-            }
-          } = await this.catchError({
+          const result = await this.catchError({
             promise: titleServices.getTitle(this.id, this.cancelToken.token),
             instance: this
           })
 
-          if (id) {
-            this.id = id
-            this.name = name
-            this.source = source
-            this.version = version
-            this.currentType = type
-            this.publishedFrom = publishedFrom && publishedFrom.substr(0, 10)
-            this.publishedTo = publishedTo && publishedTo.substr(0, 10)
-            this.publishers = publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!updateUrl }))
-            this.ids = ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!updateUrl }))
-            this.tipps = tipps || []
-            this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
-            this.allNames = { name: name, alts: this.allAlternateNames }
-            this.reviewRequests = reviewRequests
-            this.editionStatement = editionStatement
-            this.dateCreated = dateCreated
-            this.lastUpdated = lastUpdated
-            this.firstAuthor = firstAuthor
-            this.firstEditor = firstEditor
-            this.medium = medium
-            this.OAStatus = OAStatus
-            this.editionNumber = editionNumber
-            this.firstPublishedInPrint = firstPublishedInPrint
-            this.firstPublishedOnline = firstPublishedOnline
-            this.volumeNumber = volumeNumber
-            this.updateUrl = updateUrl
-            this.deleteUrl = deleteUrl
+          if (result.status === 200) {
+            const data = result.data
+
+            if (!this.id) {
+              this.id = data.id
+            }
+            this.updateUrl = data._links?.update?.href || null
+            this.deleteUrl = data._links?.delete?.href || null
+            this.name = data.name
+            this.source = data.source
+            this.version = data.version
+            this.currentType = data.type
+            this.publishedFrom = data.publishedFrom && data.publishedFrom.substr(0, 10)
+            this.publishedTo = data.publishedTo && data.publishedTo.substr(0, 10)
+            this.publishers = data._embedded.publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!this.updateUrl }))
+            this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
+            this.tipps = data._embedded.tipps || []
+            this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
+            this.allNames = { name: this.name, alts: this.allAlternateNames }
+            this.reviewRequests = data._embedded.reviewRequests
+            this.editionStatement = data.editionStatement
+            this.dateCreated = data.dateCreated
+            this.lastUpdated = data.lastUpdated
+            this.firstAuthor = data.firstAuthor
+            this.firstEditor = data.firstEditor
+            this.medium = data.medium
+            this.OAStatus = data.OAStatus
+            this.editionNumber = data.editionNumber
+            this.firstPublishedInPrint = data.firstPublishedInPrint
+            this.firstPublishedOnline = data.firstPublishedOnline
+            this.volumeNumber = data.volumeNumber
             this.successMsg = false
-            this.status = status
+            this.status = data.status
+          } else {
+            this.notFound = true
           }
-          loading.stopLoading()
         }
+        loading.stopLoading()
       }
     },
   }
