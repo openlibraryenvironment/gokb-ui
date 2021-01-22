@@ -112,6 +112,7 @@
               </v-col>
               <v-col>
                 <gokb-state-field
+                  v-if="id"
                   v-model="packageItem.editStatus"
                   :init-item="packageItem.editStatus"
                   message-path="component.general.editStatus"
@@ -123,6 +124,7 @@
               </v-col>
               <v-col>
                 <gokb-state-field
+                  v-if="id"
                   v-model="packageItem.listStatus"
                   :init-item="packageItem.listStatus"
                   message-path="component.package.listStatus"
@@ -283,7 +285,7 @@
                 />
               </v-col>
             </v-row>
-            <v-row>
+            <v-row v-if="id">
               <v-col cols="3">
                 <gokb-state-field
                   v-model="packageItem.contentType"
@@ -294,10 +296,7 @@
                   readonly
                 />
               </v-col>
-              <v-col
-                v-if="packageItem.status"
-                cols="2"
-              >
+              <v-col cols="2">
                 <gokb-number-field
                   :value="totalNumberOfTitles"
                   :label="$tc('component.tipp.label', 2)"
@@ -595,13 +594,13 @@
         return accountModel.loggedIn()
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
       },
       localListVerifiedDate () {
-        return this.listVerifiedDate ? new Date(this.listVerifiedDate).toLocaleString(this.$i18n.locale) : ''
+        return this.listVerifiedDate ? new Date(this.listVerifiedDate).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
       }
     },
     watch: {
@@ -631,7 +630,26 @@
         this.newTipps = tipps
       },
       setKbart (options) {
+        console.log('Setting attached KBART.')
         this.kbart = options
+
+        if (!this.sourceItem) {
+          this.sourceItem = {
+            id: undefined,
+            name: undefined,
+            menu: false,
+            update: false,
+            url: undefined,
+            ezbMatch: true,
+            zdbMatch: true,
+            automaticUpdates: false,
+            titleIdNamespace: options.selectedNamespace,
+            duration: undefined,
+            unit: undefined,
+          }
+        } else {
+          console.log('Existing source!')
+        }
       },
       async createPackage (form) {
         const valid = form.validate()
@@ -650,7 +668,8 @@
             })
 
             if (sourceReponse.status < 400) {
-              this.packageItem.source = sourceReponse.data
+              this.packageItem.source = sourceReponse.data?.id
+              this.sourceItem = { id: sourceReponse.data?.id }
             } else {
               console.log('Source update failed!')
             }
@@ -688,8 +707,8 @@
               const pars = {
                 addOnly: this.kbart.addOnly,
                 processOption: 'kbart',
+                localFile: 'true',
                 ...namespace,
-                pkgNominalPlatformId: this.packageItem.nominalPlatform.id,
                 pkgId: response.data.id
               }
 
@@ -709,8 +728,8 @@
               console.log(ygorResponse)
 
               this.successMsg = this.isEdit
-                ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
-                : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
+                ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.$i18n.t('success.kbart')
+                : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.$i18n.t('success.kbart')
             } else if (this.urlUpdate && response.data?.id) {
               const ygorResponse = await this.catchError({
                 promise: this.sendUrlUpdateRquest(response.data.id, response.data.updateToken),
@@ -745,7 +764,7 @@
           })
 
           if (result.status === 200) {
-            const data = result.data.data
+            const data = result.data
 
             if (!this.id) {
               this.id = data.id
@@ -777,9 +796,9 @@
             this.providerSelect = data.provider
             this.platformSelect = data.nominalPlatform
             this.titleCount = data._tippCount
-            this.allNames = { name: this.name, alts: this.allAlternateNames }
-            this.sourceItem = data.source
+            this.allNames = { name: data.name, alts: this.allAlternateNames }
             this.listVerifiedDate = data.listVerifiedDate
+            this.sourceItem = data.source
             this.lastUpdated = data.lastUpdated
             this.dateCreated = data.dateCreated
           } else {
@@ -801,7 +820,7 @@
           console.log(pair[1])
         }
 
-        const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/processCompleteWithToken?${urlParameters}`
+        const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/processGokbPackage?${urlParameters}`
 
         axios.post(url, data)
           .then(response => {

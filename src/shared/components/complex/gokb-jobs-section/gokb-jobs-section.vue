@@ -117,10 +117,6 @@
       $route (to, from) {
         if (to.path !== '/home') {
           clearInterval(this.interval)
-        } else {
-          this.interval = setInterval(function () {
-            this.fetchJobs(this.options.page)
-          }.bind(this), 2000)
         }
       }
     },

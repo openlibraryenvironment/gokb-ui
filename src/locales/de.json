@@ -116,6 +116,31 @@
     "addOnly": "Teil-Update",
     "row": {
       "label": "Zeile | Zeilen"
+    },
+    "errors": {
+      "missingVal": "Fehlender Wert in Spalte '{0}'!",
+      "illegalVal": "Wert {0} ist fehlerhaft!",
+      "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
+      "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
+      "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format."
+    },
+    "processing": {
+      "cancelled": "KBART-Prozessierung wurde nach {0} Reihen abgebrochen!",
+      "summary": "Zusammenfassung",
+      "rowStats": "Zeilenstatistik",
+      "total": {
+        "label": "Insgesamt"
+      },
+      "warning": {
+        "label": "Warnung | Warnungen",
+        "fields": "Spaltenstatistik - Warnungen"
+      },
+      "error": {
+        "label": "Fehler | Fehler",
+        "empty": "Fehlender Wert",
+        "invalid": "Fehlerhafter Wert",
+        "fields": "Spaltenstatistik - Fehler"
+      }
     }
   },
   "profile": {

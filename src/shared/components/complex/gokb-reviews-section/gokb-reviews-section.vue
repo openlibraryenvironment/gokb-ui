@@ -71,7 +71,7 @@
         default: undefined
       },
       reviewComponent: {
-        type: Number,
+        type: [Number, String],
         required: false,
         default: undefined
       },
@@ -134,7 +134,7 @@
           const component = entry?.componentToReview
           const componentId = entry?.componentToReview.id
           const type = entry?.componentToReview?.type ? this.$i18n.tc('component.' + entry?.componentToReview?.type.toLowerCase() + '.label') : undefined
-          const dateCreated = new Date(entry?.dateCreated).toLocaleString(this.$i18n.locale)
+          const dateCreated = new Date(entry?.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
           const request = entry?.reviewRequest
           const description = entry?.descriptionOfCause
           const status = entry?.status

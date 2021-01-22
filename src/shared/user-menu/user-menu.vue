@@ -113,12 +113,7 @@
                 title: 'Login',
                 icon: 'mdi-login-variant',
                 method: 'login'
-              },
-              {
-                title: 'Registrieren',
-                icon: 'mdi-account-plus',
-                method: 'register'
-              },
+              }
             ],
             last: true,
           },

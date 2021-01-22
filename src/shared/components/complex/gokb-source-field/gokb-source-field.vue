@@ -39,7 +39,6 @@
     <v-row>
       <v-col>
         <v-checkbox
-          v-if="url && duration && unit"
           v-model="ezbMatch"
           class="mr-5"
           :label="$t('component.source.ezbMatch')"
@@ -47,7 +46,6 @@
       </v-col>
       <v-col>
         <v-checkbox
-          v-if="url && duration && unit"
           v-model="zdbMatch"
           class="mr-5"
           :label="$t('component.source.zdbMatch')"
@@ -55,7 +53,6 @@
       </v-col>
       <v-col class="d-flex flex-row-reverse">
         <v-checkbox
-          v-if="url && duration && unit"
           v-model="automaticUpdates"
           class="mr-5"
           :label="$t('component.source.enableUpdate')"
@@ -63,7 +60,6 @@
       </v-col>
       <v-col class="d-flex flex-row-reverse">
         <v-checkbox
-          v-if="url && duration && unit"
           v-model="updateStatus"
           class="mr-5"
           :label="$t('component.source.updateNow')"
@@ -109,8 +105,8 @@
         menu: false,
         update: false,
         url: undefined,
-        ezbMatch: false,
-        zdbMatch: false,
+        ezbMatch: true,
+        zdbMatch: true,
         automaticUpdates: false,
         titleIdNamespace: undefined,
         duration: undefined,
@@ -199,7 +195,24 @@
       }
     },
     async mounted () {
+      console.log(this.value)
       if (this.value?.id) {
+        this.fetch()
+      }
+    },
+    methods: {
+      decodeCycle () {
+        const matches = this.value?.frequency?.match(/^([0-9]*)([D,M,Y]?)$/)
+        const [, duration, unit] = matches || []
+        return { duration, unit }
+      },
+      durationRules () {
+        return !!this.cycleDuration || (!this.cycleDuration && !this.cycleUnit)
+      },
+      unitRules () {
+        return !!this.cycleUnit || (!this.cycleUnit && !this.cycleDuration)
+      },
+      async fetch () {
         const result = await this.catchError({
           promise: sourceServices.getSource(this.value.id, this.cancelToken.token),
           instance: this
@@ -209,7 +222,7 @@
           console.log('Frequency: ' + result.data.frequency)
 
           const apiDuration = result.data.frequency ? parseInt(result.data.frequency?.match(/[0-9]/)[0]) : undefined
-          const apiUnit = result.data.frequency?.match(/[D,M,Y]/)[0]
+          const apiUnit = result.data.frequency ? result.data.frequency?.match(/[D,M,Y]/)[0] : undefined
 
           console.log('Duration: ' + apiDuration + 'Unit: ' + apiUnit)
 
@@ -237,19 +250,6 @@
             frequency: `${this.duration || ''}${this.unit?.id || ''}`
           }
         }
-      }
-    },
-    methods: {
-      decodeCycle () {
-        const matches = this.value?.frequency?.match(/^([0-9]*)([D,M,Y]?)$/)
-        const [, duration, unit] = matches || []
-        return { duration, unit }
-      },
-      durationRules () {
-        return !!this.cycleDuration || (!this.cycleDuration && !this.cycleUnit)
-      },
-      unitRules () {
-        return !!this.cycleUnit || (!this.cycleUnit && !this.cycleDuration)
       }
     }
   }
