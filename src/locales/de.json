@@ -141,6 +141,10 @@
         "invalid": "Fehlerhafter Wert",
         "fields": "Spaltenstatistik - Fehler"
       }
+    },
+    "transmission": {
+      "started": "Der KBART-Import wurde gestartet. Den Status können Sie über Ihr Dashboard verfolgen.",
+      "failure": "KBART-Prozessierung fehlgeschlagen!"
     }
   },
   "profile": {
@@ -169,7 +173,6 @@
   "success": {
     "add": "{0} {1} erfolgreich hinzugefügt!",
     "create": "{0} {1} erfolgreich erstellt!",
-    "kbart": "Der KBART-Import wurde gestartet. Den Status können Sie über Ihr Dashboard verfolgen.",
     "update": "{0} {1} erfolgreich bearbeitet!",
     "retire": "{0} {1} wurde archiviert!",
     "delete": "{0} {1} wurde gelöscht!"

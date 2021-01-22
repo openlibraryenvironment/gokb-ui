@@ -140,6 +140,10 @@
         "invalid": "Invalid Value",
         "fields": "Column Statistics - Errors"
       }
+    },
+    "transmission": {
+      "started": "The KBART Import has started. You may check its status via your dashboard.",
+      "failure": "Something went wrong with the KBART Upload!"
     }
   },
   "profile": {
@@ -168,7 +172,6 @@
   "success": {
     "add": "Successfully added {0} {1}!",
     "create": "Successfully created {0} {1}!",
-    "kbart": "The KBART Import has started. You may check its status via your dashboard.",
     "update": "Successfully edited {0} {1}!",
     "retire": "Successfully archived {0} {1}!",
     "delete": "Successfully deleted {0} {1}!"

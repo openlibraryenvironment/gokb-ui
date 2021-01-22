@@ -97,13 +97,13 @@
       if (this.entityName) {
         const entityService = genericEntityServices(this.entityName)
         const parameters = { _sort: 'name', _order: 'asc', ...this.searchParams }
-        const result = await this.catchError({
+        const response = await this.catchError({
           promise: entityService.get({ parameters }, this.cancelToken.token),
           instance: this
         })
 
-        if (result) {
-          this.items = this.transform(result)
+        if (response) {
+          this.items = this.transform(response)
 
           if (this.initItem) {
             this.setInit()

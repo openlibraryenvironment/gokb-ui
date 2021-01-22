@@ -10,7 +10,12 @@
     <gokb-error-component :value="error" />
     <span v-if="successMsg">
       <v-alert type="success">
-        {{ isEdit ? $t('success.update', [$tc('component.package.label'), packageItem.name]) : $t('success.create', [$tc('component.package.label'), packageItem.name]) }}
+        {{ successMsg }}
+      </v-alert>
+    </span>
+    <span v-if="kbartResult">
+      <v-alert type="success">
+        {{ kbartResult }}
       </v-alert>
     </span>
     <v-stepper
@@ -536,6 +541,7 @@
           { id: 'mixed', text: 'Gemischt' },
         ],
         successMsg: undefined,
+        kbartResult: undefined,
         titlesHeader: TITLES_HEADER,
         titlesOptions: {
           page: 1,
@@ -653,6 +659,8 @@
       },
       async createPackage (form) {
         const valid = form.validate()
+        this.successMsg = undefined
+        this.kbartResult = undefined
 
         if (valid) {
           if (this.sourceItem) {
@@ -701,6 +709,9 @@
 
           if (response.status < 400) {
             this.id = response.data?.id
+            this.successMsg = this.isEdit
+              ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name])
+              : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
 
             if (this.kbart && response.data?.id) {
               const namespace = (this.kbart?.selectedNamespace?.name ? { titleIdNamespace: this.kbart?.selectedNamespace?.name } : {})
@@ -726,27 +737,14 @@
               })
 
               console.log(ygorResponse)
-
-              this.successMsg = this.isEdit
-                ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.$i18n.t('success.kbart')
-                : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.$i18n.t('success.kbart')
             } else if (this.urlUpdate && response.data?.id) {
               const ygorResponse = await this.catchError({
                 promise: this.sendUrlUpdateRquest(response.data.id, response.data.updateToken),
                 instance: this
               })
 
-              if (ygorResponse?.status < 400) {
-                this.successMsg = this.isEdit
-                  ? (this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart'))
-                  : (this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart'))
-              }
-              this.reload()
-              this.step = 1
+              console.log(ygorResponse)
             } else {
-              this.successMsg = this.isEdit
-                ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name])
-                : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
               this.reload()
               this.step = 1
             }
@@ -824,12 +822,14 @@
 
         axios.post(url, data)
           .then(response => {
-            this.successMsg = this.isEdit
-              ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
-              : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
-          })
-          .catch(error => {
-            this.error = error
+            if (response.status < 400) {
+              this.kbartResult = this.$i18n.t('kbart.transmittion.started')
+              this.kbart = undefined
+              this.reload()
+              this.step = 1
+            } else {
+              this.kbartResult = this.$i18n.t('kbart.transmittion.failure')
+            }
           })
         loading.stopLoading()
       },
@@ -839,12 +839,13 @@
 
         axios.get(url)
           .then(response => {
-            this.successMsg = this.isEdit
-              ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
-              : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name]) + ' ' + this.i18n.t('success.kbart')
-          })
-          .catch(error => {
-            this.error = error
+            if (response.status < 400) {
+              this.kbartResult = this.$i18n.t('kbart.transmittion.started')
+              this.reload()
+              this.step = 1
+            } else {
+              this.kbartResult = this.$i18n.t('kbart.transmittion.failure')
+            }
           })
         loading.stopLoading()
       },
