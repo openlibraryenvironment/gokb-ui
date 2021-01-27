@@ -2,13 +2,12 @@
   <gokb-section
     expandable
     sub-title="Jobs"
-    :items-total="totalNumberOfItems"
   >
     <template #buttons>
       <v-btn
         icon
         :title="$t('btn.refresh')"
-        @click="fetchJobs"
+        @click="refreshAllJobs"
       >
         <v-icon>
           mdi-refresh
@@ -40,17 +39,43 @@
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
-    <gokb-table
-      :headers="tableHeaders"
-      :items="jobs"
-      :editable="isEditable"
-      :selected-items="selectedItems"
-      :total-number-of-items="totalNumberOfItems"
-      :options.sync="options"
-      @selected-items="selectedItems = $event"
-      @retire-item="confirmCancelJob"
-      @paginate="resultPaginate"
-    />
+    <v-expansion-panels v-model="jobPanel">
+      <v-expansion-panel>
+        <v-expansion-panel-header>
+          <h4>{{ $t('job.active.label') }}</h4>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <gokb-table
+            :headers="tableHeaders"
+            :items="jobs"
+            :editable="isEditable"
+            :selected-items="selectedItems"
+            :total-number-of-items="totalNumberOfItems"
+            :options.sync="options"
+            @selected-items="selectedItems = $event"
+            @retire-item="confirmCancelJob"
+            @paginate="resultPaginate"
+          />
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <v-expansion-panel>
+        <v-expansion-panel-header click="toggleOldResults">
+          <h4>{{ $t('job.archived.label') }}</h4>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <gokb-table
+            :headers="tableHeaders"
+            :items="oldResults"
+            :editable="isEditable"
+            :selected-items="selectedOldResults"
+            :total-number-of-items="totalOldResults"
+            :options.sync="optionsOldResults"
+            @selected-items="selectedOldResults = $event"
+            @paginate="oldResultPaginate"
+          />
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
   </gokb-section>
 </template>
 
@@ -85,9 +110,17 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
+        optionsOldResults: {
+          page: 1,
+          itemsPerPage: ROWS_PER_PAGE
+        },
         selectedItems: [],
+        selectedOldResults: [],
+        jobPanel: 0,
         jobs: [],
+        oldResults: [],
         totalNumberOfItems: 0,
+        totalOldResults: 0,
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -118,10 +151,15 @@
         if (to.path !== '/home') {
           clearInterval(this.interval)
         }
+      },
+      '$i18n.locale' (l) {
+        this.fetchJobs()
+        this.fetchOldResults()
       }
     },
     created () {
       this.fetchJobs()
+      this.fetchOldResults()
     },
     preDestroy () {
       clearInterval(this.interval)
@@ -132,6 +170,13 @@
       },
       resultPaginate (page) {
         this.fetchJobs({ page })
+      },
+      oldResultPaginate (page) {
+        this.fetchOldResults({ page })
+      },
+      refreshAllJobs () {
+        this.fetchJobs()
+        this.fetchOldResults()
       },
       async fetchJobs ({ page } = { page: undefined }) {
         const result = await this.catchError({
@@ -152,10 +197,10 @@
         }
 
         if (result.status === 200) {
-          this.jobs = result.data?.records?.map(
-            ({ id, type, linkedItem, startTime, begun, progress, endTime, messages, cancelled }) => (
+          this.jobs = result.data?.data?.map(
+            ({ uuid, type, linkedItem, startTime, begun, progress, endTime, messages, cancelled }) => (
               {
-                id,
+                id: uuid,
                 type,
                 popup: { value: (type ? this.$i18n.t('job.jobTypes.' + type.name) : this.$i18n.t('job.jobTypes.Unknown')), label: 'job', type: 'GokbEditJobPopup' },
                 componentId: linkedItem?.id || null,
@@ -169,7 +214,46 @@
               }
             )
           )
-          this.totalNumberOfItems = result.data?.total
+          this.totalNumberOfItems = result.data?._pagination?.total
+        }
+      },
+      async fetchOldResults ({ page } = { page: undefined }) {
+        const result = await this.catchError({
+          promise: profileServices.getJobs({
+            archived: true,
+            offset: this.optionsOldResults.page ? (this.optionsOldResults.page - 1) * this.optionsOldResults.itemsPerPage : 0,
+            limit: this.optionsOldResults.itemsPerPage
+          }, this.cancelToken.token),
+          instance: this
+        })
+
+        const componentRoutes = {
+          package: '/package',
+          org: '/provider',
+          title: '/title',
+          journal: '/title',
+          book: '/title',
+          database: '/title'
+        }
+
+        if (result.status === 200) {
+          this.oldResults = result.data?.data?.map(
+            ({ uuid, type, linkedItem, startTime, endTime, status }) => (
+              {
+                id: uuid,
+                type,
+                archived: true,
+                popup: { value: (type ? this.$i18n.t('job.jobTypes.' + type.name) : this.$i18n.t('job.jobTypes.Unknown')), label: 'job', type: 'GokbEditJobPopup' },
+                componentId: linkedItem?.id || null,
+                componentType: this.$i18n.tc('component.' + linkedItem.type.toLowerCase() + '.label'),
+                link: linkedItem ? { value: linkedItem?.name, route: componentRoutes[linkedItem.type.toLowerCase()], id: 'componentId' } : {},
+                startTime: new Date(startTime).toLocaleString(this.$i18n.locale),
+                endTime: new Date(endTime).toLocaleString(this.$i18n.locale),
+                status: this.$i18n.t('job.' + status.toLowerCase())
+              }
+            )
+          )
+          this.totalOldResults = result.data?._pagination?.total
         }
       },
       confirmCancelJob ({ id }) {
@@ -187,9 +271,11 @@
       startAutoUpdate () {
         this.autoJobRefresh = true
         this.fetchJobs()
+        this.fetchOldResults()
 
         this.interval = setInterval(function () {
           this.fetchJobs()
+          this.fetchOldResults()
         }.bind(this), 1000)
       },
       stopAutoUpdate () {

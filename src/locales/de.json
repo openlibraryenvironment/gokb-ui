@@ -70,6 +70,14 @@
     "label": "Import | Imports",
     "finished": "Fertig",
     "cancelled": "Abgebrochen",
+    "active": {
+      "label": "Aktive Jobs"
+    },
+    "archived": {
+      "label": "Archivierte Ergebnisse"
+    },
+    "ok": "Erfolgreich",
+    "error": "Fehlerhaft",
     "waiting": "Warten",
     "description": "Beschreibung",
     "messages": "Ereignisse",

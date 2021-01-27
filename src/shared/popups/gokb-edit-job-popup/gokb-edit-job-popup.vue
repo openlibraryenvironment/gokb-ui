@@ -14,20 +14,20 @@
         />
       </v-col>
     </v-row>
-    <v-row v-if="selectedItem.result">
+    <v-row v-if="selectedItem.componentId">
       <v-col>
         <div
-          v-if="selectedItem.result.pkgId"
+          v-if="selectedItem.link"
           class="primary--text"
         >
           {{ $i18n.tc('component.package.label') }}
         </div>
         <router-link
-          v-if="selectedItem.result.pkgId"
+          v-if="selectedItem.link"
           :style="{ color: '#f2994a' }"
-          :to="{ name: '/package', params: { 'id': selectedItem.result.pkgId } }"
+          :to="{ name: '/package', params: { 'id': selectedItem.componentId } }"
         >
-          {{ selectedItem.result.name || $i18n.tc('component.package.label') + ' ' + selectedItem.result.pkgId }}
+          {{ selectedItem.link.value || $i18n.tc('component.package.label') + ' ' + selectedItem.componentId }}
         </router-link>
       </v-col>
     </v-row>
@@ -47,7 +47,7 @@
         />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="selectedItem.messages">
       <v-col>
         <div
           class="primary--text"
@@ -77,9 +77,12 @@
 </template>
 
 <script>
+  import BaseComponent from '@/shared/components/base-component'
+  import jobServices from '@/shared/services/job-services'
 
   export default {
     name: 'GokbEditJobPopup',
+    extends: BaseComponent,
     props: {
       selected: {
         type: Object,
@@ -90,8 +93,12 @@
     data () {
       return {
         config: [],
+        id: undefined,
         selectedItem: {
           description: undefined,
+          componentId: undefined,
+          componentType: undefined,
+          type: undefined,
           status: undefined,
           startDate: undefined,
           endDate: undefined,
@@ -111,11 +118,42 @@
         }
       },
       localType () {
-        return this.$i18n.t('job.jobTypes.' + this.selectedItem.type.name)
+        return this.selectedItem.type ? this.$i18n.t('job.jobTypes.' + this.selectedItem.type.name) : null
       }
     },
     async created () {
-      this.selectedItem = this.selected
+      if (this.selected.archived) {
+        const componentRoutes = {
+          package: '/package',
+          org: '/provider',
+          title: '/title',
+          journal: '/title',
+          book: '/title',
+          database: '/title'
+        }
+
+        this.id = this.selected.id
+
+        const result = await this.catchError({
+          promise: jobServices.getJob(this.id, this.cancelToken.token),
+          instance: this
+        })
+
+        const record = result?.data
+
+        this.selectedItem.componentId = record.linkedItem?.id
+        this.selectedItem.componentType = this.$i18n.tc('component.' + record.linkedItem.type.toLowerCase() + '.label')
+        this.selectedItem.link = record.linkedItem ? { value: record.linkedItem?.name, route: componentRoutes[record.linkedItem.type.toLowerCase()], id: 'componentId' } : {}
+        this.selectedItem.type = record.type
+        this.selectedItem.description = record.description
+        this.selectedItem.status = record.status
+        this.selectedItem.startTime = new Date(record.startTime).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
+        this.selectedItem.endTime = new Date(record.endTime).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
+        this.selectedItem.results = record.job_result
+        this.selectedItem.messages = [{ message: record.job_result.message }]
+      } else {
+        this.selectedItem = this.selected
+      }
     },
     methods: {
       close () {

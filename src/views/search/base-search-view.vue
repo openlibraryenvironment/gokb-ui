@@ -45,7 +45,10 @@
         </v-col>
       </v-row>
     </gokb-section>
-    <gokb-section :sub-title="resultHeader">
+    <gokb-section
+      :sub-title="resultHeader"
+      :items-total="totalNumberOfItems"
+    >
       <template #buttons>
         <template v-for="button of resultActionButtons">
           <component

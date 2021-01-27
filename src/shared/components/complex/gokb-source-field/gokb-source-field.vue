@@ -5,7 +5,7 @@
     :sub-title="$tc('component.source.label')"
   >
     <gokb-url-field
-      v-model="url"
+      v-model="currentUrl"
       :label="$t('component.source.url')"
       :readonly="readonly"
     />
@@ -105,6 +105,7 @@
         menu: false,
         update: false,
         url: undefined,
+        lastRun: undefined,
         ezbMatch: true,
         zdbMatch: true,
         automaticUpdates: false,
@@ -140,7 +141,7 @@
               zdbMatch: this.zdbMatch,
               id: this.id,
               name: this.name,
-              frequency: `${duration || ''}${unit.id || ''}`
+              frequency: `${duration || ''}${unit || ''}`
             }
           }
         }
@@ -164,6 +165,29 @@
               id: this.id,
               name: this.name,
               frequency: `${duration || ''}${unit.id || ''}`
+            }
+          }
+        }
+      },
+      currentUrl: {
+        get () {
+          const url = this.url
+          return url
+        },
+        set (url) {
+          this.url = url
+          const unit = this.unit?.id
+
+          if (url) {
+            this.localValue = {
+              url: this.url,
+              automaticUpdates: this.automaticUpdates,
+              lastRun: this.lastRun,
+              ezbMatch: this.ezbMatch,
+              zdbMatch: this.zdbMatch,
+              id: this.id,
+              name: this.name,
+              frequency: `${this.duration || ''}${unit || ''}`
             }
           }
         }
@@ -235,7 +259,7 @@
           this.name = result.data.name
           this.url = result.data.url
           this.automaticUpdates = result.data.automaticUpdates
-          this.lastRun = result.data.lastRun ? new Date(result.data.lastRun).toLocaleString(this.$i18n.locale) : ''
+          this.lastRun = result.data.lastRun ? new Date(result.data.lastRun).toLocaleString(this.$i18n.locale) : undefined
           this.zdbMatch = result.data.zdbMatch
           this.ezbMatch = result.data.ezbMatch
 

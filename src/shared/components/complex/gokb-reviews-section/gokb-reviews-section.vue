@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    expandable
     :sub-title="$tc('component.review.label', 2)"
   >
     <template #buttons>

@@ -69,6 +69,14 @@
     "label": "Job | Jobs",
     "finished": "Finished",
     "cancelled": "Cancelled",
+    "active": {
+      "label": "Active Jobs"
+    },
+    "archived": {
+      "label": "Archived Results"
+    },
+    "ok": "Successful",
+    "error": "Errors",
     "description": "Description",
     "waiting": "Waiting",
     "messages": "Messages",

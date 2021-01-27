@@ -659,6 +659,7 @@
       },
       async createPackage (form) {
         const valid = form.validate()
+        var isUpdate = !!this.id
         this.successMsg = undefined
         this.kbartResult = undefined
 
@@ -708,22 +709,22 @@
           })
 
           if (response.status < 400) {
-            this.id = response.data?.id
             this.successMsg = this.isEdit
               ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name])
               : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
 
-            if (this.kbart && response.data?.id) {
+            if (response.data?.id && (this.kbart || this.urlUpdate)) {
               const namespace = (this.kbart?.selectedNamespace?.name ? { titleIdNamespace: this.kbart?.selectedNamespace?.name } : {})
               const pars = {
-                addOnly: this.kbart.addOnly,
                 processOption: 'kbart',
-                localFile: 'true',
                 ...namespace,
                 pkgId: response.data.id
               }
 
-              if (this.urlUpdate) {
+              if (this.kbart) {
+                pars.addOnly = this.kbart.addOnly
+                pars.localFile = 'true'
+              } else if (this.urlUpdate) {
                 pars.urlUpdate = 'true'
               }
 
@@ -731,22 +732,33 @@
                 pars.updateToken = response.data.updateToken
               }
 
+              const file = this.kbart?.selectedFile || null
+
               const ygorResponse = await this.catchError({
-                promise: this.sendKbart(this.kbart.selectedFile, pars),
+                promise: this.sendKbartUpdateRquest(pars, file),
                 instance: this
               })
 
-              console.log(ygorResponse)
-            } else if (this.urlUpdate && response.data?.id) {
-              const ygorResponse = await this.catchError({
-                promise: this.sendUrlUpdateRquest(response.data.id, response.data.updateToken),
-                instance: this
-              })
+              if (ygorResponse < 400) {
+                this.kbartResult = this.$i18n.t('kbart.transmission.started')
+                this.kbart = undefined
 
-              console.log(ygorResponse)
+                if (isUpdate) {
+                  this.step = 1
+                  this.reload()
+                } else {
+                  this.$router.push('/package/' + response.data?.id)
+                }
+              } else {
+                this.kbartResult = this.$i18n.t('kbart.transmission.failure')
+              }
             } else {
-              this.reload()
-              this.step = 1
+              if (isUpdate) {
+                this.step = 1
+                this.reload()
+              } else {
+                this.$router.push('/package/' + response.data?.id)
+              }
             }
           } else {
             console.log('GOKb status: ' + response.status)
@@ -796,7 +808,9 @@
             this.titleCount = data._tippCount
             this.allNames = { name: data.name, alts: this.allAlternateNames }
             this.listVerifiedDate = data.listVerifiedDate
-            this.sourceItem = data.source
+            if (data.source) {
+              this.sourceItem = data.source
+            }
             this.lastUpdated = data.lastUpdated
             this.dateCreated = data.dateCreated
           } else {
@@ -805,49 +819,25 @@
         }
         loading.stopLoading()
       },
-      async sendKbart (file, parameters) {
+      async sendKbartUpdateRquest (parameters, file) {
         loading.startLoading()
         const urlParameters = baseServices.createQueryParameters(parameters)
         const data = new FormData()
-        console.log(data)
+        var status = null
 
-        data.append('uploadFile', file)
-
-        for (var pair of data.entries()) {
-          console.log(pair[0])
-          console.log(pair[1])
+        if (file) {
+          data.append('uploadFile', file)
         }
 
         const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/processGokbPackage?${urlParameters}`
 
         axios.post(url, data)
           .then(response => {
-            if (response.status < 400) {
-              this.kbartResult = this.$i18n.t('kbart.transmittion.started')
-              this.kbart = undefined
-              this.reload()
-              this.step = 1
-            } else {
-              this.kbartResult = this.$i18n.t('kbart.transmittion.failure')
-            }
+            status = response.status
           })
-        loading.stopLoading()
-      },
-      async sendUrlUpdateRquest (pkgId, updateToken) {
-        loading.startLoading()
-        const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/processGokbPackage?pkgId=${pkgId}&updateToken=${updateToken}`
 
-        axios.get(url)
-          .then(response => {
-            if (response.status < 400) {
-              this.kbartResult = this.$i18n.t('kbart.transmittion.started')
-              this.reload()
-              this.step = 1
-            } else {
-              this.kbartResult = this.$i18n.t('kbart.transmittion.failure')
-            }
-          })
         loading.stopLoading()
+        return status
       },
       triggerUpdate (checked) {
         this.urlUpdate = checked

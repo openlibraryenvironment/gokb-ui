@@ -37,7 +37,7 @@
           {{ subTitle }}
         </span>
         <v-chip
-          v-if="itemsTotal !== undefined"
+          v-if="itemsTotal !== undefined && itemsTotal !== -1"
           class="ma-2"
         >
           {{ itemsTotal }}
