@@ -119,7 +119,7 @@
       },
       _confirmDeactivateSelectedItems () {
         this.actionToConfirm = '_deactivateSelectedItems'
-        this.messageToConfirm = 'Wollen Sie die ausgewählten Benutzer wirklich deaktivieren?'
+        this.messageToConfirm = this.$i18n.t('confirm.deactivate.generic')
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

@@ -25,14 +25,6 @@ const api = (baseServices) => ({
       url,
       data,
     }, cancelToken)
-  },
-
-  closeReview (url, cancelToken) {
-    return baseServices.request({
-      method: 'PATCH',
-      url: url,
-      data: { status: 'Closed' },
-    }, cancelToken)
   }
 })
 

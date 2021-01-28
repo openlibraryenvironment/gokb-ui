@@ -2,7 +2,7 @@
   <v-row v-if="!readonly">
     <v-col
       cols="10"
-      class="pa-0"
+      class="pr-0"
     >
       <v-text-field
         v-model="localDate"
@@ -25,7 +25,7 @@
         <template v-slot:activator="{ on }">
           <v-icon
             v-bind="$props"
-            class="pb-2"
+            class="pb-1"
             v-on="on"
           >
             mdi-calendar

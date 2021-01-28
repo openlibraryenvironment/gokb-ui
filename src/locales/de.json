@@ -54,6 +54,11 @@
         "generic": "Möchten Sie die ausgewählten Elemente wirklich abbrechen?",
         "specific": "Möchten Sie {0} {1} wirklich abbrechen?",
         "list": "Möchten Sie {0} {1} wirklich abbrechen?"
+      },
+      "deactivate": {
+        "generic": "Möchten Sie die ausgewählten Benutzerkonten deaktivieren?",
+        "specific": "Möchten Sie {0} {1} wirklich deaktivieren?",
+        "list": "Möchten Sie {0} {1} wirklich deaktivieren?"
       }
     },
     "login": {
@@ -252,6 +257,12 @@
       "publishedTo": "Erscheinungsende",
       "publisher": {
         "label": "Verlag | Verlage"
+      },
+      "ids": {
+        "label": "Titel-ID | Titel-IDs"
+      },
+      "name": {
+        "label": "Titelname | Titelnamen"
       },
       "volumeNumber": "Bandnr.",
       "editionNumber": "Ausgabenr.",

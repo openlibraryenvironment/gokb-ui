@@ -13,6 +13,7 @@
     },
     created () {
       this.searchServicesResourceUrl = 'rest/provider'
+      this.searchParams = { limit: 20 }
     },
   }
 </script>

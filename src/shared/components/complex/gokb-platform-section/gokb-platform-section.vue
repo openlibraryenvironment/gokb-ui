@@ -127,6 +127,9 @@
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
+      tempId () {
+        return 'tempId' + Math.random().toString(36).substr(2, 5)
+      },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
         this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.platform.label', this.selectedItems.length)] }
@@ -152,7 +155,7 @@
         this.addPlatformPopupVisible = true
       },
       addNewPlatform (value) {
-        this.localValue.push(value)
+        this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: this.tempId(), isDeletable: true, unsaved: true })
       },
       deletePlatform (value) {
         this.localValue = this.localValue.filter(v => v !== value)

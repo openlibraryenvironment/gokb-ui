@@ -20,6 +20,13 @@
         :label="$t('component.general.status.label')"
         return-object
       />
+      <gokb-button
+        :disabled="selectedItems.length == 0"
+        icon-id="delete"
+        @click="confirmCloseSelectedItems"
+      >
+        {{ $t('btn.close') }}
+      </gokb-button>
       <v-btn
         icon
         :title="$t('btn.refresh')"
@@ -40,7 +47,7 @@
       :headers="reviewHeaders"
       :total-number-of-items="totalNumberOfReviews"
       :options.sync="reviewsOptions"
-      :show-select="false"
+      @selected-items="selectedItems = $event"
       @paginate="retrieveReviews"
     />
   </gokb-section>
@@ -86,6 +93,7 @@
       return {
         rawReviews: undefined,
         confirmationPopUpVisible: false,
+        selectedItems: [],
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
@@ -235,7 +243,23 @@
           promise: reviewServices.get({ parameters }, this.cancelToken.token),
           instance: this
         })
-      }
+      },
+      confirmCloseSelectedItems () {
+        this.actionToConfirm = '_closeSelectedItems'
+        this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.selectedItems.length, this.$i18n.tc('component.review.label', this.selectedItems.length)] }
+        this.parameterToConfirm = undefined
+        this.confirmationPopUpVisible = true
+      },
+      async _closeSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ id }) =>
+          this.catchError({
+            promise: reviewServices.closeReview(id, this.cancelToken.token),
+            instance: this
+          })
+        ))
+        this.retrieveReviews()
+        this.reviewsOptions.page = 1
+      },
     }
   }
 </script>

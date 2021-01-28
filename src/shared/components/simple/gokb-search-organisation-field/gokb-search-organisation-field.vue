@@ -12,7 +12,8 @@
       }
     },
     created () {
-      this.searchServicesResourceUrl = 'rest/organizations'
+      this.searchServicesResourceUrl = 'rest/orgs'
+      this.searchParams = { limit: 20 }
     },
   }
 </script>

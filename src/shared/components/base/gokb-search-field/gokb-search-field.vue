@@ -17,10 +17,10 @@
     </div>
     <router-link
       v-if="componentRoute"
-      :style="{ color: '#f2994a', fontSize: '1.1rem'}"
+      :style="{ color: '#f2994a', fontSize: '1.1rem' }"
       :to="{ name: componentRoute, params: { 'id': value.id } }"
     >
-      <label class="v-label">{{ localLabel }}</label>
+      {{ localLabel }}
     </router-link>
     <span
       v-else
@@ -112,6 +112,7 @@
         placeholder: undefined,
         rules: undefined,
         loading: false,
+        mainParam: 'q',
         items: [],
         search: null,
         knownRoutes: {
@@ -155,10 +156,13 @@
     methods: {
       async query ({ id, text }) {
         this.loading = true
+        var primaryParam = {}
+        primaryParam[this.mainParam] = text || this.value?.id
+
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...this.searchParams,
-            q: text || this.value?.id,
+            ...primaryParam,
           }, this.cancelToken.token),
           instance: this
         })

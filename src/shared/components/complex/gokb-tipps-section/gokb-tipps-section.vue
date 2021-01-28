@@ -88,7 +88,13 @@
       <gokb-title-field
         v-if="pkg"
         v-model="searchFilters.title"
-        :label="$tc('component.title.label')"
+        :label="$tc('component.title.name.label')"
+      />
+      <v-spacer class="ms-4" />
+      <gokb-title-ids-field
+        v-if="pkg"
+        v-model="searchFilters.title"
+        :label="$tc('component.title.ids.label')"
       />
       <gokb-search-package-field
         v-else

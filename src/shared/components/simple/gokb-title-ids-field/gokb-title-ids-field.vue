@@ -2,7 +2,7 @@
   import GokbSearchField from '@/shared/components/base/gokb-search-field'
 
   export default {
-    name: 'GokbTitleField',
+    name: 'GokbTitleIdsField',
     extends: GokbSearchField,
     props: {
       label: {
@@ -28,7 +28,7 @@
     },
     created () {
       this.searchServicesResourceUrl = 'rest/titles'
-      this.mainParam = 'label'
+      this.mainParam = 'ids'
     }
   }
 </script>

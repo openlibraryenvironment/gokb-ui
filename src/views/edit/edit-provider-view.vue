@@ -7,7 +7,7 @@
     <gokb-error-component :value="error" />
     <span v-if="successMsg">
       <v-alert type="success">
-        {{ isEdit ? $t('success.update', [$tc('component.provider.label'), name]) : $t('success.create', [$tc('component.provider.label'), name]) }}
+        {{ successMsg }}
       </v-alert>
     </span>
     <v-row>
@@ -260,7 +260,7 @@
         allNames: { name: undefined, alts: [] },
         allPlatforms: [],
         updateUrl: undefined,
-        successMsg: false
+        successMsg: undefined
       }
     },
     computed: {
@@ -309,14 +309,14 @@
       async update () {
         const data = {
           id: this.id,
-          name: this.username,
+          name: this.name,
           source: this.source || null,
           status: typeof this.status === 'number' ? this.status : this.status.id,
           reference: this.reference,
           ids: this.ids,
           variantNames: this.allAlternateNames.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
-          providedPlatforms: this.allPlatforms.map(({ id }) => id)
+          providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null }))
         }
         const response = await this.catchError({
           promise: providerServices.createOrUpdateProvider(data, this.cancelToken.token),
@@ -324,8 +324,11 @@
         })
         // todo: check error code
         if (response.status === 200) {
+          this.successMsg = this.isEdit
+            ? this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.name])
+            : this.$i18n.t('success.create', [this.$i18n.tc('component.provider.label'), this.name])
+
           this.reload()
-          this.successMsg = true
         }
 
         window.scrollTo(0, 0)
