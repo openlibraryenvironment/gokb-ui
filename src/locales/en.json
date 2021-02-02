@@ -66,6 +66,7 @@
   },
   "validation": {
     "missingName": "Please provide a name.",
+    "missingEmail": "Please provide a valid email address.",
     "urlForm": "Please provide a valid URL.",
     "numberFormat": "Please enter a number.",
     "dateFormat": "Invalid Date"
@@ -435,7 +436,10 @@
         "ROLE_SUPERUSER": "System",
         "ROLE_API": "API"
       },
-      "register": "Registration"
+      "register": "Registration",
+      "enabled": "Enabled",
+      "locked": "Locked",
+      "passwordExpired": "Password Expired"
     },
     "review": {
       "label": "Review | Reviews",

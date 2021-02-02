@@ -4,11 +4,12 @@
     @submit="update"
   >
     <gokb-error-component :value="error" />
-    <gokb-section sub-title="Allgemein">
+    <gokb-section :sub-title="$t('component.general.general')">
       <v-row>
         <v-col md="4">
           <gokb-username-field
             v-model="username"
+            :label="$t('component.user.username')"
             hide-icon
             autocomplete="off"
           />
@@ -18,7 +19,7 @@
         <v-col md="4">
           <gokb-password-field
             v-model="password"
-            label="Kennwort"
+            :label="$t('component.user.password')"
             hide-icon
             autocomplete="off"
             :rules="[]"
@@ -27,7 +28,7 @@
         <v-col md="3">
           <gokb-checkbox-field
             v-model="passwordExpired"
-            label="Kennwort abgelaufen"
+            :label="$t('component.user.passwordExpired')"
           />
         </v-col>
       </v-row>
@@ -45,16 +46,16 @@
         <!--        </v-col>-->
       </v-row>
       <v-row>
-        <v-col md="1">
+        <v-col cols="2">
           <gokb-checkbox-field
             v-model="enabled"
-            label="Aktiv"
+            :label="$t('component.user.enabled')"
           />
         </v-col>
-        <v-col md="1">
+        <v-col cols="2">
           <gokb-checkbox-field
             v-model="accountLocked"
-            label="Gesperrt"
+            :label="$t('component.user.locked')"
           />
         </v-col>
       </v-row>
@@ -65,7 +66,7 @@
       :component="{ type: 'GokbRoleField', name: 'Rolle', properties: { returnObject: true } }"
       @add="addNewRole"
     />
-    <gokb-section sub-title="Rollen">
+    <gokb-section :sub-title="$tc('component.user.role.label', 2)">
       <template #buttons>
         <gokb-button
           class="mr-4"
@@ -130,10 +131,6 @@
 
   const ROWS_PER_PAGE = 10
 
-  const ROLES_TABLE_HEADERS = [
-    { text: 'Rolle', align: 'left', value: 'name', sortable: false, width: '100%' },
-  ]
-
   export default {
     name: 'EditUserView',
     components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent, GokbCuratoryGroupSection },
@@ -177,6 +174,11 @@
       updateUserAvailable () {
         return !this.updateUserUrl
       },
+      rolesTableHeaders () {
+        return [
+          { text: this.$i18n.tc('component.user.role.label'), align: 'left', value: 'name', sortable: false, width: '100%' },
+        ]
+      },
       isDeleteSelectedRolesDisabled () {
         return !this.selectedRoles.length
       },
@@ -199,7 +201,6 @@
       }
     },
     async created () {
-      this.rolesTableHeaders = ROLES_TABLE_HEADERS
       if (this.isEdit) {
         const {
           data: {

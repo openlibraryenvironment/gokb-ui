@@ -76,6 +76,7 @@
             <gokb-search-organisation-field
               v-model="packageItem.provider"
               :items="providerSelection"
+              :show-link="true"
               :readonly="isReadonly"
               return-object
             />
@@ -641,7 +642,6 @@
 
         if (!this.sourceItem) {
           this.sourceItem = {
-            id: undefined,
             name: undefined,
             menu: false,
             update: false,
@@ -653,8 +653,6 @@
             duration: undefined,
             unit: undefined,
           }
-        } else {
-          console.log('Existing source!')
         }
       },
       async createPackage (form) {
@@ -667,8 +665,8 @@
           if (this.sourceItem) {
             var sourceItem = this.sourceItem
 
-            if (!sourceItem.name || sourceItem.name !== this.packageItem.name) {
-              sourceItem.name = this.packageItem.name
+            if (sourceItem.name !== this.allNames.name) {
+              sourceItem.name = this.allNames.name
             }
 
             const sourceReponse = await this.catchError({
@@ -679,8 +677,6 @@
             if (sourceReponse.status < 400) {
               this.packageItem.source = sourceReponse.data?.id
               this.sourceItem = { id: sourceReponse.data?.id }
-            } else {
-              console.log('Source update failed!')
             }
           }
 
@@ -713,16 +709,16 @@
               ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name])
               : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
 
-            if (response.data?.id && (this.kbart || this.urlUpdate)) {
+            if (this.kbart || this.urlUpdate) {
               const namespace = (this.kbart?.selectedNamespace?.name ? { titleIdNamespace: this.kbart?.selectedNamespace?.name } : {})
-              const pars = {
+              var pars = {
                 processOption: 'kbart',
                 ...namespace,
                 pkgId: response.data.id
               }
 
               if (this.kbart) {
-                pars.addOnly = this.kbart.addOnly
+                pars.addOnly = this.kbart.addOnly ? 'true' : 'false'
                 pars.localFile = 'true'
               } else if (this.urlUpdate) {
                 pars.urlUpdate = 'true'

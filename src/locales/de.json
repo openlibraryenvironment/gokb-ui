@@ -67,6 +67,7 @@
   },
   "validation": {
     "missingName": "Bitte geben Sie einen Namen an.",
+    "missingEmail": "Bitte geben Sie eine gültige E-Mail-Adresse an.",
     "urlForm": "Bitte geben Sie eine gültige URL an.",
     "numberFormat": "Dieses Feld erwartet eine Zahl.",
     "dateFormat": "Ungültiges Datum"
@@ -436,7 +437,10 @@
         "ROLE_USER": "Benutzer",
         "ROLE_SUPERUSER": "System",
         "ROLE_API": "API"
-      }
+      },
+      "enabled": "Aktiv",
+      "locked": "Gesperrt",
+      "passwordExpired": "Password abgelaufen"
     },
     "review": {
       "label": "Review | Reviews",

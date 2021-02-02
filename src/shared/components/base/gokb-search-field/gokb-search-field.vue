@@ -61,8 +61,20 @@
     :return-object="returnObject"
     clearable
     hide-no-data
-    no-filter
-  />
+  >
+    <template v-slot:selection="data">
+      <router-link
+        v-if="showLink"
+        :style="{ color: '#f2994a', fontSize: '1.1rem' }"
+        :to="{ name: knownRoutes[data.item.type], params: { 'id': value.id } }"
+      >
+        {{ data.item[itemText] }}
+      </router-link>
+      <span v-else>
+        {{ data.item[itemText] }}
+      </span>
+    </template>
+  </v-autocomplete>
 </template>
 
 <script>
@@ -102,6 +114,11 @@
         default: false
       },
       readonly: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      showLink: {
         type: Boolean,
         required: false,
         default: false

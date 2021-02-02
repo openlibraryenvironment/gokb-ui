@@ -18,7 +18,7 @@
       required: {
         type: Boolean,
         required: false,
-        default: true,
+        default: false,
       },
       prependIcon: {
         type: String,
@@ -29,17 +29,12 @@
         type: String,
         required: false,
         default: 'email',
-      },
-      rules: {
-        type: Array,
-        required: false,
-        default: () => [
-          value => {
-            const valid = !value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)
-            return valid || 'Bitte erfassen Sie eine gültige E-Mail Adresse.'
-          }
-        ]
-      },
+      }
     },
+    computed: {
+      rules () {
+        return [((this.required && this.value) || (!this.required && !this.value) || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.value) || this.$i18n.t('validation.missingEmail'))]
+      }
+    }
   }
 </script>

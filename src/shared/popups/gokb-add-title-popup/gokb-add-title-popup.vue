@@ -246,6 +246,7 @@
           pkg: undefined,
           hostPlatform: undefined,
           url: undefined,
+          name: undefined,
           accessStartDate: undefined,
           accessEndDate: undefined,
           ids: [],
@@ -279,7 +280,7 @@
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isJournal () {
-        return this.title.type.id === 'journal'
+        return this.title.type === 'Journal' || this.title.type.id === 'journal'
       },
       localValue: {
         get () {
@@ -304,6 +305,7 @@
 
       if (this.selected) {
         this.packageTitleItem.hostPlatform = this.selectedItem.hostPlatform
+        this.packageTitleItem.name = this.selectedItem.name
         this.packageTitleItem.pkg = this.selectedItem.pkg
         this.packageTitleItem.title = this.selectedItem.title
         this.packageTitleItem.url = this.selectedItem.url
@@ -347,6 +349,7 @@
             pkg: this.packageTitleItem.pkg,
             title: this.packageTitleItem.title,
             hostPlatform: this.packageTitleItem.hostPlatform,
+            name: this.packageTitleItem.name,
             accessStartDate: this.packageTitleItem.accessStartDate,
             status: this.status,
             accessEndDate: this.packageTitleItem.accessEndDate,
