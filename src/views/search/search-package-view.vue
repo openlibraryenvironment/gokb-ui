@@ -71,7 +71,18 @@
               properties: {
                 label: this.$i18n.tc('component.identifier.label'),
               }
-            }
+            },
+            {
+              type: 'GokbStateField',
+              name: 'contentType',
+              value: 'contentType',
+              properties: {
+                label: this.$i18n.t('component.package.contentType.label'),
+                width: '100%',
+                url: 'refdata/categories/Package.ContentType',
+                messagePath: 'component.package.contentType'
+              }
+            },
           ],
           [
             {
@@ -115,13 +126,24 @@
             },
             {
               type: 'GokbStateField',
-              name: 'contentType',
-              value: 'contentType',
+              name: 'listStatus',
+              value: 'listStatus',
               properties: {
-                label: this.$i18n.t('component.package.contentType.label'),
+                label: this.$i18n.t('component.package.listStatus.label'),
                 width: '100%',
-                url: 'refdata/categories/Package.ContentType',
-                messagePath: 'component.package.contentType'
+                url: 'refdata/categories/Package.ListStatus',
+                messagePath: 'component.package.listStatus'
+              }
+            },
+            {
+              type: 'GokbStateField',
+              name: 'editStatus',
+              value: 'editStatus',
+              properties: {
+                label: this.$i18n.t('component.general.editStatus.label'),
+                width: '100%',
+                url: 'refdata/categories/KBComponent.EditStatus',
+                messagePath: 'component.general.editStatus'
               }
             },
           ]
