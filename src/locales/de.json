@@ -371,7 +371,18 @@
         "step3": "Titel im Paket",
         "step4": "Zusammenfassung",
         "newTitles": "Veränderungen",
-        "currentTitles": "Aktueller Bestand"
+        "currentTitles": "Aktueller Bestand",
+        "confirm": {
+          "kbartLocal": {
+            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}."
+          },
+          "sourceUpdate": {
+            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei unter der Adresse {1}."
+          },
+          "noTipps": {
+            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0}."
+          }
+        }
       },
       "description": "Beschreibung",
       "listVerifiedDate": {

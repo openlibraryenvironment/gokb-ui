@@ -6,7 +6,10 @@
   >
     <gokb-error-component :value="error" />
     <span v-if="successMsg">
-      <v-alert type="success">
+      <v-alert
+        type="success"
+        dismissible
+      >
         {{ successMsg }}
       </v-alert>
     </span>

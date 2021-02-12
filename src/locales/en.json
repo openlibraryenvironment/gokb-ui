@@ -373,7 +373,18 @@
         "step3": "Package Titles",
         "step4": "Summary",
         "newTitles": "Changes",
-        "currentTitles": "Current Titles"
+        "currentTitles": "Current Titles",
+        "confirm": {
+          "kbartLocal": {
+            "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'."
+          },
+          "sourceUpdate": {
+            "label": "Please confirm your changes to the package {0} and the processing of the KBART file located at '{1}'."
+          },
+          "noTipps": {
+            "label": "Please confirm your changes to the package {0}."
+          }
+        }
       },
       "description": "Description",
       "listVerifiedDate": {

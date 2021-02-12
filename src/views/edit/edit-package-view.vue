@@ -5,16 +5,22 @@
     :title="title"
     :sub-title="subTitle"
     @valid="valid = $event"
-    @submit="createPackage"
+    @submit="showCreatePackageConfirm"
   >
     <gokb-error-component :value="error" />
     <span v-if="successMsg">
-      <v-alert type="success">
+      <v-alert
+        type="success"
+        dismissible
+      >
         {{ successMsg }}
       </v-alert>
     </span>
     <span v-if="kbartResult">
-      <v-alert type="success">
+      <v-alert
+        type="success"
+        dismissible
+      >
         {{ kbartResult }}
       </v-alert>
     </span>
@@ -363,6 +369,11 @@
     </v-stepper>
 
     <template #buttons>
+      <gokb-confirmation-popup
+        v-model="showSubmitConfirm"
+        :message="submitConfirmationMessage"
+        @confirmed="createPackage"
+      />
       <gokb-button
         v-if="!isReadonly"
         @click="reload"
@@ -450,6 +461,7 @@
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
+  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import { HOME_ROUTE } from '@/router/route-paths'
   import packageServices from '@/shared/services/package-services'
   import sourceServices from '@/shared/services/source-services'
@@ -485,7 +497,8 @@
       GokbSourceField,
       GokbCuratoryGroupSection,
       GokbMaintenanceCycleField,
-      GokbAlternateNamesSection
+      GokbAlternateNamesSection,
+      GokbConfirmationPopup
     },
     extends: BaseComponent,
     props: {
@@ -507,6 +520,8 @@
         notFound: false,
         version: undefined,
         isCurator: false,
+        showSubmitConfirm: false,
+        submitConfirmationMessage: undefined,
         urlUpdate: false,
         currentName: undefined,
         lastUpdated: undefined,
@@ -655,13 +670,28 @@
           }
         }
       },
-      async createPackage (form) {
-        const valid = form.validate()
+      showCreatePackageConfirm (form) {
+        this.valid = form.validate()
+
+        if (this.valid) {
+          if (this.kbart?.selectedFile) {
+            this.submitConfirmationMessage = { text: 'component.package.navigation.confirm.kbartLocal.label', vars: [this.allNames.name, this.kbart.selectedFile.name] }
+          } else if (this.urlUpdate) {
+            this.submitConfirmationMessage = { text: 'component.package.navigation.confirm.sourceUpdate.label', vars: [this.allNames.name, this.sourceItem.url] }
+          } else {
+            this.submitConfirmationMessage = { text: 'component.package.navigation.confirm.noTipps.label', vars: [this.allNames.name] }
+          }
+          this.showSubmitConfirm = true
+        } else {
+          this.error = 'Invalid info!'
+        }
+      },
+      async createPackage () {
         var isUpdate = !!this.id
         this.successMsg = undefined
         this.kbartResult = undefined
 
-        if (valid) {
+        if (this.valid) {
           if (this.sourceItem) {
             var sourceItem = this.sourceItem
 
