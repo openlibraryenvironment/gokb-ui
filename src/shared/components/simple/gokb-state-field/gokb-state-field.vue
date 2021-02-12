@@ -21,6 +21,11 @@
         default: 'component.general.status'
       }
     },
+    watch: {
+      '$i18n.locale' (l) {
+        this.fetch()
+      }
+    },
     created () {
       this.entityName = this.url
     },

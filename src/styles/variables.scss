@@ -1,6 +1,11 @@
 $material-light: (
-    'text': (
-        'disabled': 'black'
+    text: (
+        disabled: 'black'
     )
 );
+.table-row-nohover {
+    &:hover {
+        background-color:'inherit';
+    }
+};
 $input-top-spacing: '0px';

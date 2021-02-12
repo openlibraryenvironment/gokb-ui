@@ -56,13 +56,6 @@
               properties: {
                 label: this.$i18n.tc('component.identifier.label')
               }
-            }
-          ],
-          [
-            {
-              type: 'GokbSearchPublisherField',
-              name: 'publisher',
-              value: 'publisherId'
             },
             {
               type: 'GokbSelectField',
@@ -70,6 +63,7 @@
               value: 'type',
               properties: {
                 label: this.$i18n.t('component.title.type.label'),
+                width: '100%'
               },
               items: [
                 { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
@@ -81,11 +75,17 @@
           ],
           [
             {
+              type: 'GokbSearchPublisherField',
+              name: 'publisher',
+              value: 'publisherId'
+            },
+            {
               type: 'GokbStateField',
               name: 'status',
               value: 'status',
               properties: {
-                messagePath: 'component.general.status'
+                initItem: this.$i18n.t('component.general.status.Current.label'),
+                width: '100%'
               }
             }
           ]
@@ -136,7 +136,6 @@
           type: this.$i18n.tc('component.title.type.' + type),
           startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
-          isDeletable: !!deleteUrl,
           deleteUrl: deleteUrl,
           retireUrl: retireUrl,
         }))

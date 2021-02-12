@@ -65,7 +65,7 @@
       <template #item.action="{ item }">
         <div style="white-space:nowrap">
           <v-icon
-            v-if="showSelect && item.isRetireable !== undefined"
+            v-if="editable && item.isRetireable !== undefined"
             class="mr-2"
             :disabled="disabled || !item.isRetireable"
             :title="$t('btn.retire')"
@@ -75,7 +75,7 @@
             close
           </v-icon>
           <v-icon
-            v-if="showSelect && item.isDeletable !== undefined"
+            v-if="editable && item.isDeletable !== undefined"
             :disabled="disabled || !item.isDeletable"
             :title="$t('btn.delete')"
             small
@@ -140,6 +140,11 @@
         required: false,
         default: () => []
       },
+      hideSelect: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
       totalNumberOfItems: {
         type: Number,
         required: true,
@@ -166,7 +171,7 @@
         return Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage)
       },
       showSelect () {
-        return this.editable
+        return !this.hideSelect && this.editable
       }
     },
     watch: {

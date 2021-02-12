@@ -11,14 +11,14 @@ const api = (baseServices) => ({
     const { id } = data
     const url = id ? process.env.VUE_APP_API_BASE_URL + `${USER_URL}/${id}` : process.env.VUE_APP_API_BASE_URL + USER_URL
     return baseServices.request({
-      method: id ? 'PATCH' : 'POST',
+      method: id ? 'PUT' : 'POST',
       url,
       data,
     }, cancelToken)
   },
   deactivateUser (url, cancelToken) {
     return baseServices.request({
-      method: 'PATCH',
+      method: 'PUT',
       url,
       data: { enabled: false },
     }, cancelToken)

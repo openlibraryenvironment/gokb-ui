@@ -94,26 +94,7 @@
       }
     },
     async mounted () {
-      if (this.entityName) {
-        const entityService = genericEntityServices(this.entityName)
-        const parameters = { _sort: 'name', _order: 'asc', ...this.searchParams }
-        const response = await this.catchError({
-          promise: entityService.get({ parameters }, this.cancelToken.token),
-          instance: this
-        })
-
-        if (response) {
-          this.items = this.transform(response)
-
-          if (this.initItem) {
-            this.setInit()
-          }
-        } else {
-          console.log('No RDV result! for ' + this.entityName)
-        }
-      } else if (this.$attrs.items) {
-        this.items = this.$attrs.items
-      }
+      this.fetch()
     },
     methods: {
       transform (result) {
@@ -145,7 +126,29 @@
             this.selectedName = selected[0].name
           }
         }
-      }
+      },
+      async fetch () {
+        if (this.entityName) {
+          const entityService = genericEntityServices(this.entityName)
+          const parameters = { _sort: 'name', _order: 'asc', ...this.searchParams }
+          const response = await this.catchError({
+            promise: entityService.get({ parameters }, this.cancelToken.token),
+            instance: this
+          })
+
+          if (response) {
+            this.items = this.transform(response)
+
+            if (this.initItem) {
+              this.setInit()
+            }
+          } else {
+            console.log('No RDV result! for ' + this.entityName)
+          }
+        } else if (this.$attrs.items) {
+          this.items = this.$attrs.items
+        }
+      },
     }
   }
 </script>

@@ -4,7 +4,7 @@ const api = (vue, accountServices) => {
     loggedIn: false,
     username: undefined,
     userLocale: undefined,
-    tabbedView: false,
+    tabbedView: true,
     id: undefined,
     roles: undefined,
   })

@@ -2,7 +2,10 @@
   <div>
     <span>{{ $i18n.t('component.general.name') }}</span>
     <v-banner>
-      <span style="font-size:1.1rem">
+      <span
+        style="font-size:1.1rem"
+        class="font-weight-bold"
+      >
         {{ currentName || value.name }}
       </span>
       <template v-slot:actions>

@@ -16,91 +16,99 @@
         }
       }
     },
-    created () {
-      this.title = this.$i18n.tc('component.user.label', 2)
-      this.resultActionButtons = [
-        {
-          icon: 'add',
-          label: this.$i18n.t('btn.add'),
-          route: ADD_USER_ROUTE,
-        },
-        {
-          icon: 'cancel',
-          label: this.$i18n.t('btn.deactivate'),
-          disabled: 'isNothingSelected',
-          action: '_confirmDeactivateSelectedItems',
-        }
-      ]
-
-      this.searchInputFields = [
-        [
-          {
-            type: 'GokbTextField',
-            name: 'name',
-            properties: {
-              hideIcon: true,
-              label: this.$i18n.t('component.user.username')
+    computed: {
+      searchInputFields () {
+        return [
+          [
+            {
+              type: 'GokbTextField',
+              name: 'name',
+              properties: {
+                hideIcon: true,
+                label: this.$i18n.t('component.user.username')
+              }
+            },
+            {
+              type: 'GokbCuratoryGroupField',
+              name: 'curatoryGroupId',
+              value: 'curatoryGroupIds',
+              properties: {
+                label: this.$i18n.tc('component.curatoryGroup.label', 2),
+                multiple: true,
+              }
             }
+          ],
+          [
+            {
+              type: 'GokbRoleField',
+              name: 'roleId',
+              value: 'roleIds',
+              properties: {
+                label: this.$i18n.tc('component.user.role.label', 2),
+                width: '100%',
+                multiple: true
+              }
+            },
+            {
+              type: 'GokbActiveField',
+              name: 'enabled',
+              value: 'enabled'
+            }
+          ]
+        ]
+      },
+      resultHeaders () {
+        return [
+          {
+            text: this.$i18n.t('component.user.username'),
+            align: 'left',
+            sortable: false,
+            value: 'link'
           },
           {
-            type: 'GokbCuratoryGroupField',
-            name: 'curatoryGroupId',
-            value: 'curatoryGroupIds',
-            properties: {
-              label: this.$i18n.tc('component.curatoryGroup.label', 2),
-              multiple: true,
-            }
-          }
-        ],
-        [
-          {
-            type: 'GokbRoleField',
-            name: 'roleId',
-            value: 'roleIds',
-            properties: {
-              label: this.$i18n.tc('component.user.role.label', 2),
-              multiple: true
-            }
+            text: 'Enabled',
+            align: 'left',
+            sortable: false,
+            value: 'enabled'
           },
           {
-            type: 'GokbActiveField',
-            name: 'status',
-            value: 'status',
+            text: 'Contributor',
+            align: 'left',
+            sortable: false,
+            value: 'contributor'
+          },
+          {
+            text: 'Editor',
+            align: 'left',
+            sortable: false,
+            value: 'editor'
+          },
+          {
+            text: 'Admin',
+            align: 'left',
+            sortable: false,
+            value: 'admin'
           }
         ]
-      ]
-      this.resultHeaders = [
-        {
-          text: this.$i18n.t('component.user.username'),
-          align: 'left',
-          sortable: false,
-          value: 'link'
-        },
-        {
-          text: 'Enabled',
-          align: 'left',
-          sortable: false,
-          value: 'enabled'
-        },
-        {
-          text: 'Contributor',
-          align: 'left',
-          sortable: false,
-          value: 'contributor'
-        },
-        {
-          text: 'Editor',
-          align: 'left',
-          sortable: false,
-          value: 'editor'
-        },
-        {
-          text: 'Admin',
-          align: 'left',
-          sortable: false,
-          value: 'admin'
-        }
-      ]
+      },
+      resultActionButtons () {
+        return [
+          {
+            icon: 'add',
+            label: this.$i18n.t('btn.add'),
+            route: ADD_USER_ROUTE,
+          },
+          {
+            icon: 'cancel',
+            label: this.$i18n.t('btn.deactivate'),
+            disabled: 'isNothingSelected',
+            action: '_confirmDeactivateSelectedItems',
+          }
+        ]
+      }
+    },
+    created () {
+      this.title = this.$i18n.tc('component.user.label', 2)
       this.searchServicesUrl = 'rest/users'
       this.searchServiceIncludes = 'id,username'
       this.linkValue = 'username'
@@ -110,7 +118,7 @@
         return data.map(({ id, username, roles, enabled, _links: { update: { href: updateUrl } } }) => ({
           id,
           link: { value: username, route: EDIT_USER_ROUTE, id: 'id' },
-          enabled: this.$i18n.t('default.' + enabled),
+          enabled: this.$i18n.t('component.user.enabled.' + (enabled ? 'active' : 'inactive') + '.label'),
           contributor: roles.filter(role => role.authority === 'ROLE_CONTRIBUTOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
           editor: roles.filter(role => role.authority === 'ROLE_EDITOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
           admin: roles.filter(role => role.authority === 'ROLE_ADMIN').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),

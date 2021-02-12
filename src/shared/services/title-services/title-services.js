@@ -4,7 +4,7 @@ const api = (baseServices) => ({
   getTitle (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}`,
+      url: process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}?history=true`,
     }, cancelToken)
   },
   getTipps (id, parameter, cancelToken) {
@@ -20,6 +20,14 @@ const api = (baseServices) => ({
     const url = id ? process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}` : process.env.VUE_APP_API_BASE_URL + PROVIDER_URL
     return baseServices.request({
       method: id ? 'PUT' : 'POST',
+      url,
+      data,
+    }, cancelToken)
+  },
+  updateHistory (id, data, cancelToken) {
+    const url = process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}/history`
+    return baseServices.request({
+      method: 'PUT',
       url,
       data,
     }, cancelToken)

@@ -7,7 +7,10 @@
   >
     <gokb-error-component :value="error" />
     <span v-if="successMsg">
-      <v-alert type="success">
+      <v-alert
+        type="success"
+        dismissible
+      >
         {{ isEdit ? $t('success.create', [typeDisplay, allNames.name]) : $t('success.update', [typeDisplay, allNames.name]) }}
       </v-alert>
     </span>
@@ -23,12 +26,6 @@
         />
       </v-col>
       <v-spacer />
-      <v-col cols="3">
-        <v-switch
-          v-model="tabsView"
-          :label="$t('component.title.tabsView')"
-        />
-      </v-col>
     </v-row>
     <gokb-section :no-tool-bar="true">
       <v-row>
@@ -50,13 +47,24 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="4">
+        <v-col cols="3">
           <gokb-state-field
             v-model="OAStatus"
             message-path="component.title.OAStatus"
             width="100%"
             url="refdata/categories/TitleInstance.OAStatus"
             :label="$t('component.title.OAStatus.label')"
+            :readonly="isReadonly"
+          />
+        </v-col>
+        <v-col cols="3">
+          <gokb-state-field
+            v-if="currentType == 'Other'"
+            v-model="OAStatus"
+            message-path="component.title.Medium"
+            width="100%"
+            url="refdata/categories/TitleInstance.Medium"
+            :label="$t('component.title.Medium.label')"
             :readonly="isReadonly"
           />
         </v-col>
@@ -159,17 +167,25 @@
             {{ $tc('component.variantName.label', 2) }}
           </v-tab>
           <v-tab
-            v-if="loggedIn"
+            v-if="loggedIn && id"
             key="reviews"
             :active-class="tabClass"
           >
             {{ $tc('component.review.label', 2) }}
           </v-tab>
           <v-tab
+            v-if="id"
             key="tipps"
             :active-class="tabClass"
           >
             {{ $tc('component.tipp.label', 2) }}
+          </v-tab>
+          <v-tab
+            v-if="isEdit"
+            key="history"
+            :active-class="tabClass"
+          >
+            {{ $t('component.title.history.label') }}
           </v-tab>
         </v-tabs>
         <v-tabs-items
@@ -224,6 +240,17 @@
               :disabled="true"
             />
           </v-tab-item>
+          <v-tab-item
+            key="history"
+            class="mt-4"
+          >
+            <gokb-title-history-section
+              v-model="history"
+              :title-info="shortTitleMap"
+              :show-title="false"
+              :disabled="isReadonly"
+            />
+          </v-tab-item>
         </v-tabs-items>
       </v-col>
     </v-row>
@@ -245,11 +272,32 @@
         :review-component="id"
       />
       <gokb-tipps-section
+        v-if="id"
         :ttl="parseInt(id)"
         :disabled="true"
       />
+      <gokb-title-history-section
+        v-if="currentType === 'Journal'"
+        v-model="history"
+        :title-info="shortTitleMap"
+        :disabled="isReadonly"
+      />
     </div>
+    <v-row justify="end">
+      <v-col cols="3">
+        <v-switch
+          v-model="tabsView"
+          :label="$t('component.title.tabsView')"
+        />
+      </v-col>
+    </v-row>
     <template #buttons>
+      <gokb-button
+        v-if="!isReadonly"
+        @click="reload"
+      >
+        {{ $i18n.t('btn.cancel') }}
+      </gokb-button>
       <v-spacer />
       <div v-if="id && !notFound">
         <v-chip
@@ -279,12 +327,6 @@
         </v-chip>
       </div>
       <v-spacer />
-      <gokb-button
-        v-if="!isReadonly"
-        @click="reload"
-      >
-        {{ $i18n.t('btn.cancel') }}
-      </gokb-button>
       <gokb-button
         v-if="!isReadonly"
         default
@@ -330,6 +372,7 @@
     data () {
       return {
         tab: null,
+        shortTitleMap: { name: undefined, id: undefined, uuid: undefined, type: undefined },
         name: undefined,
         notFound: false,
         source: undefined,
@@ -339,7 +382,8 @@
         publishedTo: undefined,
         publishers: [],
         status: undefined,
-        tabsView: false,
+        tabsView: true,
+        history: [],
         allNames: { name: undefined, alts: [] },
         reviewRequests: [],
         firstPublishedOnline: undefined,
@@ -364,7 +408,8 @@
         allTypes: [
           { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
           { name: this.$i18n.tc('component.title.type.Book'), id: 'Book' },
-          { name: this.$i18n.tc('component.title.type.Database'), id: 'Database' }
+          { name: this.$i18n.tc('component.title.type.Database'), id: 'Database' },
+          { name: this.$i18n.tc('component.title.type.Title'), id: 'Other' }
         ]
       }
     },
@@ -380,9 +425,6 @@
       },
       typeDisplay () {
         return this.$i18n.tc('component.title.type.' + this.currentType)
-      },
-      updateButtonText () {
-        return this.id ? 'Aktualisieren' : 'Hinzufügen'
       },
       isReadonly () {
         return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
@@ -424,6 +466,8 @@
         this[actionMethodName](actionMethodParameter)
       },
       async update () {
+        this.successMsg = false
+
         const data = {
           id: this.id,
           name: this.allNames.name,
@@ -450,7 +494,18 @@
         // todo: check error code
         if (response.status === 200) {
           this.successMsg = true
-          this.id = response.data.id
+
+          const mappedHistory = this.history.map(({ date, from, to, id }) => ({ date, from, to, id: (typeof id === 'number' ? id : null) }))
+
+          const hresp = await this.catchError({
+            promise: titleServices.updateHistory(response.data.id, mappedHistory, this.cancelToken.token),
+            instance: this
+          })
+
+          if (hresp.status !== 200) {
+            console.log('history error')
+          }
+
           this.reload()
         }
 
@@ -495,8 +550,10 @@
             this.firstPublishedInPrint = data.firstPublishedInPrint
             this.firstPublishedOnline = data.firstPublishedOnline
             this.volumeNumber = data.volumeNumber
-            this.successMsg = false
             this.status = data.status
+            this.history = data.history
+
+            this.shortTitleMap = { name: data.name, id: data.id, uuid: data.uuid, type: data.type }
           } else {
             this.notFound = true
           }

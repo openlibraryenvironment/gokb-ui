@@ -3,8 +3,10 @@
     v-model="localValue"
     v-bind="$props"
     :readonly="readonly"
+    rows="1"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
     validate-on-blur
+    auto-grow
     clearable
   />
 </template>

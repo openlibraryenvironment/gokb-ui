@@ -50,9 +50,7 @@
               entity: 'Org', // means Provider ;-)
               label: this.$i18n.tc('component.identifier.label')
             }
-          }
-        ],
-        [
+          },
           {
             type: 'GokbCuratoryGroupField',
             name: 'curatoryGroups',
@@ -62,7 +60,18 @@
               multiple: true,
               returnObject: false
             }
-          },
+          }
+        ],
+        [
+          {
+            type: 'GokbStateField',
+            name: 'status',
+            value: 'status',
+            properties: {
+              initItem: this.$i18n.t('component.general.status.Current.label'),
+              width: '100%'
+            }
+          }
         ],
       ]
       this.resultHeaders = [
@@ -87,8 +96,6 @@
         }) => ({
           id,
           link: { value: name, route: EDIT_PROVIDER_ROUTE, id: 'id' },
-          isDeletable: !!deleteUrl,
-          isRetireable: !!retireUrl,
           deleteUrl,
           retireUrl
         }))

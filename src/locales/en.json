@@ -61,7 +61,11 @@
       }
     },
     "login": {
-      "automatic": "Stay logged in"
+      "automatic": "Stay logged in",
+      "error": {
+        "401": "The entered login information is not valid.",
+        "500": "There was an error processing the login request. Please try again later."
+      }
     }
   },
   "validation": {
@@ -251,6 +255,66 @@
           "label": "No OA"
         }
       },
+      "Medium": {
+        "label": "Medium Type",
+        "A & I Database": {
+          "label": "A & I Database"
+        },
+        "Audio": {
+          "label": "Audio"
+        },
+        "Book": {
+          "label": "Book"
+        },
+        "Database": {
+          "label":"Database"
+        },
+        "Dataset": {
+          "label": "Dataset"
+        },
+        "Film": {
+          "label": "Film"
+        },
+        "Image": {
+          "label": "Image"
+        },
+        "Journal": {
+          "label": "Journal"
+        },
+        "Other": {
+          "label": "Other"
+        },
+        "Published Score": {
+          "label": "Published Score"
+        },
+        "Article": {
+          "label": "Article"
+        },
+        "Software": {
+          "label": "Software"
+        },
+        "Statistics": {
+          "label": "Statistics"
+        },
+        "Market Data": {
+          "label": "Market Data"
+        },
+        "Standards": {
+          "label": "Standards"
+        },
+        "Biography": {
+          "label": "Biography"
+        },
+        "Legal Text": {
+          "label": "Legal Text"
+        },
+        "Cartography": {
+          "label": "Cartography"
+        },
+        "Miscellaneous": {
+          "label": "Miscellaneous"
+        }
+      },
       "publishStart": "Publishing start",
       "publishedPeriod": "Publishing Period",
       "publishedFrom": "Published From",
@@ -270,10 +334,25 @@
       "firstPublishedInPrint": "First Published (Print)",
       "firstPublishedOnline": "First Published (Online)",
       "firstAuthor": {
-        "label": "First Autor"
+        "label": "First Author"
       },
       "firstEditor": {
         "label": "First Editor"
+      },
+      "history": {
+        "label": "Title History",
+        "date": {
+          "label": "Date"
+        },
+        "add": {
+          "warnings": {
+            "dupes": "One of the titles in this event is already present in an existing event!",
+            "noDate": "The added event has no date!"
+          },
+          "changedTo": {
+            "label": "changed to"
+          }
+        }
       }
     },
     "journal": {
@@ -293,7 +372,7 @@
         "step2": "Package Properties",
         "step3": "Package Titles",
         "step4": "Summary",
-        "newTitles": "To be added",
+        "newTitles": "Changes",
         "currentTitles": "Current Titles"
       },
       "description": "Description",
@@ -437,7 +516,15 @@
         "ROLE_API": "API"
       },
       "register": "Registration",
-      "enabled": "Enabled",
+      "enabled": {
+        "label": "Enabled",
+        "active": {
+          "label": "Active"
+        },
+        "inactive": {
+          "label": "Not Active"
+        }
+      },
       "locked": "Locked",
       "passwordExpired": "Password Expired"
     },

@@ -21,12 +21,15 @@
       }
     },
     computed: {
+      isCloseSelectedDisabled () {
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.updateUrl === false)).length > 0
+      },
       resultActionButtons () {
         return [
           {
             icon: 'clear',
             label: this.$i18n.t('btn.close'),
-            disabled: 'isNothingSelected',
+            disabled: 'isCloseSelectedDisabled',
             action: '_confirmCloseSelectedItems',
           }
         ]
@@ -75,6 +78,7 @@
               value: 'curatoryGroupIds',
               properties: {
                 label: this.$i18n.tc('component.curatoryGroup.label'),
+                width: '100%',
                 returnObject: false
               }
             }
@@ -87,9 +91,7 @@
               properties: {
                 label: this.$i18n.t('component.review.componentToReview'),
               }
-            }
-          ],
-          [
+            },
             {
               type: 'GokbStateField',
               name: 'stdDesc',
@@ -97,9 +99,12 @@
               properties: {
                 label: this.$i18n.tc('component.review.stdDesc.label'),
                 messagePath: 'component.review.stdDesc',
-                url: 'refdata/categories/ReviewRequest.StdDesc'
+                url: 'refdata/categories/ReviewRequest.StdDesc',
+                width: '100%'
               }
-            },
+            }
+          ],
+          [
             {
               type: 'GokbStateField',
               name: 'status',
@@ -108,7 +113,8 @@
                 label: this.$i18n.t('component.general.status.label'),
                 initItem: this.$i18n.t('component.review.status.Open.label'),
                 messagePath: 'component.review.status',
-                url: 'refdata/categories/ReviewRequest.Status'
+                url: 'refdata/categories/ReviewRequest.Status',
+                width: '100%'
               }
             }
           ]
@@ -157,9 +163,9 @@
         this.confirmationPopUpVisible = true
       },
       async _closeSelectedItems () {
-        await Promise.all(this.selectedItems.map(({ updateUrl }) =>
+        await Promise.all(this.selectedItems.map(({ id }) =>
           this.catchError({
-            promise: reviewServices.closeReview(updateUrl, this.cancelToken.token),
+            promise: reviewServices.closeReview(id, this.cancelToken.token),
             instance: this
           })
         ))

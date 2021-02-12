@@ -1,150 +1,151 @@
 <template>
-  <gokb-section
-    expandable
-    :hide-default="!expanded"
-    filters
-    :sub-title="title"
-    :items-total="totalNumberOfItems"
-  >
-    <span v-if="successMessage">
-      <v-alert type="success">
-        {{ successMessage }}
-      </v-alert>
-    </span>
-    <gokb-kbart-import-popup
-      v-if="kbartImportPopupVisible"
-      v-model="kbartImportPopupVisible"
-      @kbart="addKbartFile"
-    />
-    <gokb-add-title-popup
-      v-if="addTitlePopupVisible"
-      v-model="addTitlePopupVisible"
-      :title-type="addTitleType"
-      :pkg="pkg"
-      :parent-platform="platform"
-      @add="addNewTitle"
-    />
-    <template
-      v-if="isEditable"
-      #buttons
+  <div>
+    <gokb-section
+      expandable
+      :hide-default="!expanded"
+      filters
+      :sub-title="title"
+      :items-total="totalNumberOfItems"
     >
-      <gokb-button
-        class="mr-4"
-        @click="showKbartImportPopup"
+      <span v-if="successMessage">
+        <v-alert type="success">
+          {{ successMessage }}
+        </v-alert>
+      </span>
+      <gokb-kbart-import-popup
+        v-if="kbartImportPopupVisible"
+        v-model="kbartImportPopupVisible"
+        @kbart="addKbartFile"
+      />
+      <gokb-add-title-popup
+        v-if="addTitlePopupVisible"
+        v-model="addTitlePopupVisible"
+        :title-type="addTitleType"
+        :pkg="pkg"
+        :parent-platform="platform"
+        @add="addNewTitle"
+      />
+      <template
+        v-if="isEditable"
+        #buttons
       >
-        KBART Import
-      </gokb-button>
-      <v-menu
-        offset-y
-        open-on-hover
-      >
-        <template #activator="{ on }">
-          <v-btn
-            class="mr-4"
-            color="primary"
-            v-on="on"
-          >
-            <v-icon>add</v-icon>
-            {{ $t('btn.new') }}
-            <v-icon>keyboard_arrow_down</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <template v-for="type in packageTypes">
-            <v-list-item
-              :key="type.text"
-              @click="showAddNewTitlePopup(type)"
+        <gokb-button
+          class="mr-4"
+          @click="showKbartImportPopup"
+        >
+          KBART Import
+        </gokb-button>
+        <v-menu
+          offset-y
+          open-on-hover
+        >
+          <template #activator="{ on }">
+            <v-btn
+              class="mr-4"
+              color="primary"
+              v-on="on"
             >
-              <v-list-item-title>
-                {{ type.text }}
-              </v-list-item-title>
-            </v-list-item>
+              <v-icon>add</v-icon>
+              {{ $t('btn.new') }}
+              <v-icon>keyboard_arrow_down</v-icon>
+            </v-btn>
           </template>
-        </v-list>
-      </v-menu>
+          <v-list>
+            <template v-for="type in packageTypes">
+              <v-list-item
+                :key="type.text"
+                @click="showAddNewTitlePopup(type)"
+              >
+                <v-list-item-title>
+                  {{ type.text }}
+                </v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
 
-      <gokb-button
-        :disabled="selectedItems.length == 0"
-        class="mr-4"
-        icon-id="close"
-        @click="confirmRetireSelectedItems"
-      >
-        {{ $t('btn.retire') }}
-      </gokb-button>
-      <gokb-button
-        :disabled="selectedItems.length == 0"
-        icon-id="delete"
-        @click="confirmDeleteSelectedItems"
-      >
-        {{ $t('btn.delete') }}
-      </gokb-button>
-    </template>
-    <gokb-confirmation-popup
-      v-model="confirmationPopUpVisible"
-      :message="messageToConfirm"
-      @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-    />
-    <template #search>
-      <gokb-title-field
-        v-if="pkg"
-        v-model="searchFilters.title"
-        :label="$tc('component.title.name.label')"
+        <gokb-button
+          :disabled="selectedItems.length == 0"
+          class="mr-4"
+          icon-id="close"
+          @click="confirmRetireSelectedItems"
+        >
+          {{ $t('btn.retire') }}
+        </gokb-button>
+        <gokb-button
+          :disabled="selectedItems.length == 0"
+          icon-id="delete"
+          @click="confirmDeleteSelectedItems"
+        >
+          {{ $t('btn.delete') }}
+        </gokb-button>
+      </template>
+      <gokb-confirmation-popup
+        v-model="confirmationPopUpVisible"
+        :message="messageToConfirm"
+        @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
       />
-      <v-spacer class="ms-4" />
-      <gokb-title-ids-field
-        v-if="pkg"
-        v-model="searchFilters.title"
-        :label="$tc('component.title.ids.label')"
+      <template #search>
+        <gokb-title-field
+          v-if="pkg"
+          v-model="searchFilters.title"
+          :label="$tc('component.title.name.label')"
+        />
+        <v-spacer class="ms-4" />
+        <gokb-title-ids-field
+          v-if="pkg"
+          v-model="searchFilters.title"
+          :label="$tc('component.title.ids.label')"
+        />
+        <gokb-search-package-field
+          v-else
+          v-model="searchFilters.pkg"
+          :label="$tc('component.package.label')"
+        />
+        <v-spacer class="ms-4" />
+        <gokb-state-field
+          v-model="searchFilters.status"
+          width="150px"
+          :init-item="$t('component.general.status.Current.label')"
+          message-path="component.general.status"
+          :label="$t('component.general.status.label')"
+          return-object
+        />
+      </template>
+      <gokb-table
+        v-if="ttl || pkg"
+        :headers="tableHeaders"
+        :items="items"
+        :label="(newTipps.length ? $t('component.package.navigation.currentTitles') : undefined)"
+        :editable="isEditable"
+        :selected-items="selectedItems"
+        :total-number-of-items="totalNumberOfItems"
+        :options.sync="options"
+        @selected-items="selectedItems = $event"
+        @delete-item="confirmDeleteItem"
+        @retire-item="confirmRetireItem"
+        @paginate="resultPaginate"
+        @edit="editTitle"
       />
-      <gokb-search-package-field
-        v-else
-        v-model="searchFilters.pkg"
-        :label="$tc('component.package.label')"
-      />
-      <v-spacer class="ms-4" />
-      <gokb-state-field
-        v-model="searchFilters.status"
-        width="150px"
-        :init-item="$t('component.general.status.Current.label')"
-        message-path="component.general.status"
-        :label="$t('component.general.status.label')"
-        return-object
-      />
-    </template>
-    <gokb-table
+    </gokb-section>
+    <gokb-section
       v-if="(!pkg && !ttl) || newTipps.length > 0"
-      :headers="newTableHeaders"
-      :items="newTipps"
-      :label="$t('component.package.navigation.newTitles')"
-      :editable="isEditable"
-      :selected-items="selectedNewItems"
-      :total-number-of-items="totalNumberOfNewItems"
-      :options.sync="newOptions"
-      @selected-items="selectedNewItems = $event"
-      @delete-item="confirmDeleteNew"
-      @paginate="resultNewPaginate"
-      @edit="editTitle"
-    />
-    <v-divider
-      v-if="newTipps.length > 0"
-      class="mb-5"
-    />
-    <gokb-table
-      v-if="ttl || pkg"
-      :headers="tableHeaders"
-      :items="items"
-      :label="(newTipps.length ? $t('component.package.navigation.currentTitles') : undefined)"
-      :editable="isEditable"
-      :selected-items="selectedItems"
-      :total-number-of-items="totalNumberOfItems"
-      :options.sync="options"
-      @selected-items="selectedItems = $event"
-      @delete-item="confirmDeleteItem"
-      @retire-item="confirmRetireItem"
-      @paginate="resultPaginate"
-      @edit="editTitle"
-    />
-  </gokb-section>
+      no-tool-bar
+    >
+      <gokb-table
+        :headers="newTableHeaders"
+        :items="newTipps"
+        :label="$t('component.package.navigation.newTitles')"
+        :editable="isEditable"
+        :total-number-of-items="totalNumberOfNewItems"
+        :options.sync="newOptions"
+        hide-select
+        @delete-item="confirmDeleteNew"
+        @paginate="resultNewPaginate"
+        @edit="editTitle"
+      />
+    </gokb-section>
+  </div>
 </template>
 
 <script>
@@ -257,6 +258,7 @@
       newTableHeaders () {
         return [
           { text: this.$i18n.tc('component.title.label'), align: 'left', value: 'popup', sortable: false },
+          { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
           { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'title.type.text', sortable: false, width: '10%' },
           { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
         ]
@@ -266,6 +268,7 @@
           { id: 'book', text: this.$i18n.tc('component.title.type.Book') },
           { id: 'database', text: this.$i18n.tc('component.title.type.Database') },
           { id: 'journal', text: this.$i18n.tc('component.title.type.Journal') },
+          { id: 'other', text: this.$i18n.tc('component.title.type.Other') },
         ]
       },
       loggedIn () {
@@ -290,10 +293,6 @@
       }
     },
     async created () {
-      if (this.pkg || this.ttl || this.platform) {
-        this.fetchTipps()
-      }
-
       // this.interval = setInterval(function () {
       //   this.fetchTipps(this.page)
       // }.bind(this), 2000)
@@ -333,14 +332,12 @@
         this.confirmationPopUpVisible = true
       },
       _deleteSelectedTitles () {
-        this.titles = this.titles.filter(({ id }) => !this.selectedTitles
-          .find(({ id: selectedId }) => id === selectedId))
-        this.selectedTitles = []
+        this.newTipps = this.newTipps.concat(this.selectedItems.map(item => ({ ...item, isDeletable: true })))
+        this.selectedItems = []
       },
       _retireSelectedTitles () {
-        this.titles = this.titles.filter(({ id }) => !this.selectedTitles
-          .find(({ id: selectedId }) => id === selectedId))
-        this.selectedTitles = []
+        this.newTipps = this.newTipps.concat(this.selectedItems.map(item => ({ ...item, isDeletable: true })))
+        this.selectedItems = []
       },
       _deleteItem (idToDelete) {
       },

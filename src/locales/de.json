@@ -62,7 +62,11 @@
       }
     },
     "login": {
-      "automatic": "Eingeloggt bleiben"
+      "automatic": "Eingeloggt bleiben",
+      "error": {
+        "401": "Die eingebebenen Informationen sind nicht korrekt.",
+        "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
+      }
     }
   },
   "validation": {
@@ -252,6 +256,63 @@
           "label": "Kein OA"
         }
       },
+      "Medium": {
+        "label": "Medientyp",
+        "A & I Database": {
+          "label": "Abstract- & Indexdatenbank"
+        },
+        "Audio": {
+          "label": "Audio"
+        },
+        "Book": {
+          "label": "Buch"
+        },
+        "Database": {
+          "label":"Volltextdatenbank"
+        },
+        "Dataset": {
+          "label": "Datenbestand"
+        },
+        "Film": {
+          "label": "Film"
+        },
+        "Image": {
+          "label": "Bild"
+        },
+        "Journal": {
+          "label": "Zeitschrift"
+        },
+        "Published Score": {
+          "label": "Musiknoten"
+        },
+        "Article": {
+          "label": "Aufsatz"
+        },
+        "Software": {
+          "label": "Software"
+        },
+        "Statistics": {
+          "label": "Statistiken"
+        },
+        "Market Data": {
+          "label": "Marktdaten"
+        },
+        "Standards": {
+          "label": "Normen"
+        },
+        "Biography": {
+          "label": "Biografie"
+        },
+        "Legal Text": {
+          "label": "Gesetzestext/Urteil"
+        },
+        "Cartography": {
+          "label": "Kartenwerk"
+        },
+        "Miscellaneous": {
+          "label": "Sonstiges"
+        }
+      },
       "publishStart": "Erscheinungsbeginn",
       "publishedPeriod": "Erscheinungsperiode",
       "publishedFrom": "Erscheinungsbeginn",
@@ -275,6 +336,21 @@
       },
       "firstEditor": {
         "label": "Erster Hrsg."
+      },
+      "history": {
+        "label": "Titelverlauf",
+        "date": {
+          "label": "Datum"
+        },
+        "add": {
+          "warnings": {
+            "dupes": "Einer der Titel in diesem Ereignis ist bereits in einer bestehenden Verknüpfung vorhanden!",
+            "noDate": "Das hinzugefügte Ereignis hat kein Datum!"
+          },
+          "changedTo": {
+            "label": "wurde zu"
+          }
+        }
       }
     },
     "journal": {
@@ -294,7 +370,7 @@
         "step2": "Paketeigenschaften",
         "step3": "Titel im Paket",
         "step4": "Zusammenfassung",
-        "newTitles": "Werden hinzugefügt",
+        "newTitles": "Veränderungen",
         "currentTitles": "Aktueller Bestand"
       },
       "description": "Beschreibung",
@@ -438,7 +514,15 @@
         "ROLE_SUPERUSER": "System",
         "ROLE_API": "API"
       },
-      "enabled": "Aktiv",
+      "enabled": {
+        "label": "Status",
+        "active": {
+          "label": "Aktiv"
+        },
+        "inactive": {
+          "label": "Nicht Aktiv"
+        }
+      },
       "locked": "Gesperrt",
       "passwordExpired": "Password abgelaufen"
     },

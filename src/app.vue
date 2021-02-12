@@ -50,7 +50,16 @@
           color="#4f4f4f"
           :to="{ name: HOME_ROUTE }"
         >
-          <span class="application-title title">GOKb Client</span>
+          <v-icon
+            color="white"
+            class="mr-5"
+            style="vertical-align:text-top"
+          >
+            home
+          </v-icon>
+          <span class="application-title title">
+            GOKb Client
+          </span>
         </v-btn>
       </v-toolbar-title>
       <v-autocomplete

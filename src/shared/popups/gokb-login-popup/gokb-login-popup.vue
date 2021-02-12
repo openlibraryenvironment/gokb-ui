@@ -20,6 +20,12 @@
       :label="$t('popups.login.automatic')"
       prepend-icon="cached"
     />
+    <span
+      v-if="error"
+      class="error--text"
+    >
+      {{ $t('popups.login.error.' + error.toString()) }}
+    </span>
     <template #buttons>
       <v-spacer />
       <gokb-button

@@ -28,7 +28,6 @@
     },
     created () {
       this.searchServicesResourceUrl = 'rest/titles'
-      this.mainParam = 'label'
     }
   }
 </script>

@@ -59,19 +59,23 @@
     :item-text="itemText"
     :item-value="itemValue"
     :return-object="returnObject"
+    no-filter
     clearable
     hide-no-data
   >
     <template v-slot:selection="data">
       <router-link
         v-if="showLink"
-        :style="{ color: '#f2994a', fontSize: '1.1rem' }"
-        :to="{ name: knownRoutes[data.item.type], params: { 'id': value.id } }"
+        :style="{ color: '#f2994a', fontSize: '1.1rem', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', maxWidth: '75%' }"
+        :to="{ name: knownRoutes[data.item.type], params: { 'id': data.item.id } }"
       >
-        {{ data.item[itemText] }}
+        <span :title="data.item[itemText]">{{ data.item[itemText] }}</span>
       </router-link>
-      <span v-else>
-        {{ data.item[itemText] }}
+      <span
+        v-else
+        style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:75%;"
+      >
+        <span :title="data.item[itemText]">{{ data.item[itemText] }}</span>
       </span>
     </template>
   </v-autocomplete>

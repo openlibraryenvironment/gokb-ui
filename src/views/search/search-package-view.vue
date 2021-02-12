@@ -22,7 +22,10 @@
     },
     computed: {
       isDeleteSelectedDisabled () {
-        return this.isReadonly || !this.selectedItems.length
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.deleteUrl === false)).length > 0
+      },
+      isRetiredSelectedDisabled () {
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.retireUrl === false)).length > 0
       },
       isExportSelectedDisabled () {
         return this.selectedItems.length !== 1
@@ -121,6 +124,7 @@
               name: 'status',
               value: 'status',
               properties: {
+                initItem: this.$i18n.t('component.general.status.Current.label'),
                 width: '100%'
               }
             },
@@ -195,8 +199,6 @@
           provider: provider?.name,
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
-          isDeletable: deleteUrl !== null,
-          isRetireable: retireUrl !== null,
           deleteUrl: deleteUrl,
           retireUrl: retireUrl,
         }))
