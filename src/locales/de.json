@@ -681,6 +681,24 @@
     "source": {
       "label": "Automatischer Import und Update | Automatische Imports und Updates",
       "updateNow": "Jetzt Importieren",
+      "frequency": {
+        "label": "Update-Zyklus",
+        "Daily": {
+          "label": "Täglich"
+        },
+        "Weekly": {
+          "label": "Wöchentlich"
+        },
+        "Monthly": {
+          "label": "Monatlich"
+        },
+        "Quarterly": {
+          "label": "Quartalsweise"
+        },
+        "Yearly": {
+          "label": "Jährlich"
+        }
+      },
       "enableUpdate": "Aktiviert",
       "ezbMatch": "EZB-Abgleich",
       "zdbMatch": "ZDB-Abgleich",

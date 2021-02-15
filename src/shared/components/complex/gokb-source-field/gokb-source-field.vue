@@ -10,28 +10,20 @@
       :readonly="readonly"
     />
     <v-row>
-      <v-col>
-        <gokb-number-field
-          v-model="cycleDuration"
-          :disabled="readonly"
-          :rules="[durationRules]"
-          :label="$t('component.tipp.embargo.duration')"
-        />
-      </v-col>
-      <v-col>
-        <gokb-time-period-field
-          v-model="cycleUnit"
-          :label="$t('component.tipp.embargo.unit.label')"
-          :items="allUnits"
-          return-object
-          :rules="[unitRules]"
+      <v-col cols="3">
+        <gokb-state-field
+          v-model="currentFreq"
+          message-path="component.source.frequency"
+          url="refdata/categories/Source.Frequency"
+          :label="$t('component.source.frequency.label')"
           :readonly="readonly"
         />
       </v-col>
-      <v-col>
+      <v-col cols="3">
         <gokb-namespace-field
           v-model="titleIdNamespace"
           target-type="Title"
+          :readonly="readonly"
           :label="$t('kbart.propId.label')"
         />
       </v-col>
@@ -41,6 +33,7 @@
         <v-checkbox
           v-model="ezbMatch"
           class="mr-5"
+          :readonly="readonly"
           :label="$t('component.source.ezbMatch')"
         />
       </v-col>
@@ -48,6 +41,7 @@
         <v-checkbox
           v-model="zdbMatch"
           class="mr-5"
+          :readonly="readonly"
           :label="$t('component.source.zdbMatch')"
         />
       </v-col>
@@ -55,6 +49,7 @@
         <v-checkbox
           v-model="automaticUpdates"
           class="mr-5"
+          :readonly="readonly"
           :label="$t('component.source.enableUpdate')"
         />
       </v-col>
@@ -62,6 +57,7 @@
         <v-checkbox
           v-model="updateStatus"
           class="mr-5"
+          :readonly="readonly"
           :label="$t('component.source.updateNow')"
         />
       </v-col>
@@ -110,8 +106,7 @@
         zdbMatch: true,
         automaticUpdates: false,
         titleIdNamespace: undefined,
-        duration: undefined,
-        unit: undefined,
+        frequency: undefined,
         errors: []
       }
     },
@@ -124,48 +119,24 @@
           this.$emit('input', localValue)
         }
       },
-      cycleDuration: {
+      currentFreq: {
         get () {
-          const duration = this.duration
-          return parseInt(duration, 10) || duration
+          const freq = this.frequency
+          return freq
         },
-        set (duration) {
-          this.duration = duration
-          const unit = this.unit?.id
-          if (unit) {
-            this.localValue = {
-              url: this.url,
-              automaticUpdates: this.automaticUpdates,
-              lastRun: this.lastRun,
-              ezbMatch: this.ezbMatch,
-              zdbMatch: this.zdbMatch,
-              id: this.id,
-              name: this.name,
-              frequency: `${duration || ''}${unit || ''}`
-            }
-          }
-        }
-      },
-      cycleUnit: {
-        get () {
-          const unit = this.unit
-          return unit
-        },
-        set (unit) {
-          this.unit = unit.id
-          const duration = this.duration
+        set (freq) {
+          this.frequency = freq
 
-          if (duration) {
-            this.localValue = {
-              url: this.url,
-              automaticUpdates: this.automaticUpdates,
-              lastRun: this.lastRun,
-              ezbMatch: this.ezbMatch,
-              zdbMatch: this.zdbMatch,
-              id: this.id,
-              name: this.name,
-              frequency: `${duration || ''}${unit.id || ''}`
-            }
+          this.localValue = {
+            url: this.url,
+            automaticUpdates: this.automaticUpdates,
+            titleIdNamespace: this.titleIdNamespace,
+            lastRun: this.lastRun,
+            ezbMatch: this.ezbMatch,
+            zdbMatch: this.zdbMatch,
+            id: this.id,
+            name: this.name,
+            frequency: this.frequency
           }
         }
       },
@@ -176,19 +147,17 @@
         },
         set (url) {
           this.url = url
-          const unit = this.unit?.id
 
-          if (url) {
-            this.localValue = {
-              url: this.url,
-              automaticUpdates: this.automaticUpdates,
-              lastRun: this.lastRun,
-              ezbMatch: this.ezbMatch,
-              zdbMatch: this.zdbMatch,
-              id: this.id,
-              name: this.name,
-              frequency: `${this.duration || ''}${unit || ''}`
-            }
+          this.localValue = {
+            url: this.url,
+            automaticUpdates: this.automaticUpdates,
+            titleIdNamespace: this.titleIdNamespace,
+            lastRun: this.lastRun,
+            ezbMatch: this.ezbMatch,
+            zdbMatch: this.zdbMatch,
+            id: this.id,
+            name: this.name,
+            frequency: this.frequency
           }
         }
       },
@@ -200,22 +169,6 @@
           this.update = update
           this.$emit('enable', update)
         }
-      },
-      allUnits () {
-        return [
-          {
-            id: 'D',
-            name: this.$i18n.t('component.tipp.embargo.unit.day')
-          },
-          {
-            id: 'M',
-            name: this.$i18n.t('component.tipp.embargo.unit.month')
-          },
-          {
-            id: 'Y',
-            name: this.$i18n.t('component.tipp.embargo.unit.year')
-          }
-        ]
       }
     },
     async mounted () {
@@ -225,17 +178,6 @@
       }
     },
     methods: {
-      decodeCycle () {
-        const matches = this.value?.frequency?.match(/^([0-9]*)([D,M,Y]?)$/)
-        const [, duration, unit] = matches || []
-        return { duration, unit }
-      },
-      durationRules () {
-        return !!this.cycleDuration || (!this.cycleDuration && !this.cycleUnit)
-      },
-      unitRules () {
-        return !!this.cycleUnit || (!this.cycleUnit && !this.cycleDuration)
-      },
       async fetch () {
         const result = await this.catchError({
           promise: sourceServices.getSource(this.value.id, this.cancelToken.token),
@@ -245,17 +187,9 @@
         if (result?.status === 200) {
           console.log('Frequency: ' + result.data.frequency)
 
-          const apiDuration = result.data.frequency ? parseInt(result.data.frequency?.match(/[0-9]/)[0]) : undefined
-          const apiUnit = result.data.frequency ? result.data.frequency?.match(/[D,M,Y]/)[0] : undefined
-
-          console.log('Duration: ' + apiDuration + 'Unit: ' + apiUnit)
-
           this.id = result.data.id
-          this.duration = apiDuration
-          this.durationCycle = apiDuration
           this.titleIdNamespace = result.titleIdNamespace
-          this.unit = apiUnit ? { id: apiUnit, name: this.allUnits.find(u => u.id === apiUnit) } : undefined
-          this.unitCycle = this.unit
+          this.frequency = result.frequency
           this.name = result.data.name
           this.url = result.data.url
           this.automaticUpdates = result.data.automaticUpdates
@@ -266,12 +200,13 @@
           this.localValue = {
             url: this.url,
             automaticUpdates: this.automaticUpdates,
+            titleIdNamespace: this.titleIdNamespace,
             lastRun: this.lastRun,
             ezbMatch: this.ezbMatch,
             zdbMatch: this.zdbMatch,
             id: this.id,
             name: this.name,
-            frequency: `${this.duration || ''}${this.unit?.id || ''}`
+            frequency: this.frequency
           }
         }
       }
