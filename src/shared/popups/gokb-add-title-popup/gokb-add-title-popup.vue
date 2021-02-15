@@ -31,6 +31,7 @@
     <gokb-identifier-section
       v-model="packageTitleItem.ids"
       :title="$tc('component.tipp.identifier.label')"
+      :target-type="titleTypeString"
       :expanded="!!packageTitleItem.ids"
       :disabled="isReadonly"
     />
@@ -281,6 +282,9 @@
       },
       isJournal () {
         return this.title.type === 'Journal' || this.title.type.id === 'journal'
+      },
+      titleTypeString () {
+        return this.title.type
       },
       localValue: {
         get () {
