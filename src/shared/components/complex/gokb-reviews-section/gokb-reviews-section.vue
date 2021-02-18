@@ -258,6 +258,7 @@
           })
         ))
         this.retrieveReviews()
+        this.selectedItems = []
         this.reviewsOptions.page = 1
       },
     }
