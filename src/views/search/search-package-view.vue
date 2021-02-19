@@ -191,7 +191,7 @@
           uuid,
           contentType,
           nominalPlatform,
-          _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
+          _links
         }) => ({
           id,
           uuid,
@@ -199,8 +199,8 @@
           provider: provider?.name,
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
-          deleteUrl: deleteUrl,
-          retireUrl: retireUrl,
+          deleteUrl: _links?.delete?.href || undefined,
+          retireUrl: _links?.update?.href || undefined
         }))
       },
       _confirmDeleteSelectedItems () {

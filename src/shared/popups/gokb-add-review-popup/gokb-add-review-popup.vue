@@ -11,6 +11,8 @@
         <gokb-entity-field
           v-model="reviewItem.component"
           :readonly="isEdit || isReadonly"
+          :type-filter="cmpType"
+          :show-link="true"
           :label="$t('component.review.componentToReview')"
           return-object
         />
@@ -78,9 +80,9 @@
             >
               <template v-slot:0>
                 <router-link
-                  v-if="numMessageVars > 0 && firstVarId"
+                  v-if="numMessageVars > 0 && typeof additionalInfo.vars[0] === 'number'"
                   :style="{ color: '#f2994a' }"
-                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
+                  :to="{ name: additionalInfo.vars[0], params: { 'id': additionalInfo.vars[0] } }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
@@ -268,8 +270,8 @@
       numMessageVars () {
         return this.additionalInfo ? this.additionalInfo.vars.length : 0
       },
-      firstVarId () {
-        return typeof this.additionalInfo.vars[0] === 'number'
+      cmpType () {
+        return this.reviewItem?.component?.type || undefined
       }
     },
     async created () {
@@ -277,7 +279,14 @@
 
       if (this.selected) {
         this.id = this.selected.id
-
+        this.fetch(this.id)
+      }
+    },
+    methods: {
+      close () {
+        this.localValue = false
+      },
+      async fetch (rid) {
         const {
           data: {
             status,
@@ -288,17 +297,13 @@
             componentToReview,
             allocatedGroups,
             additionalInfo,
-            _links: {
-              update: { href: updateUrl },
-              delete: { href: deleteUrl }
-            }
+            _links
           }
         } = await this.catchError({
-          promise: reviewServices.getReview(this.id, this.cancelToken.token),
+          promise: reviewServices.getReview(rid, this.cancelToken.token),
           instance: this
         })
         this.additionalInfo = additionalInfo
-
         this.reviewItem.status = status
         this.reviewItem.stdDesc = stdDesc
         this.reviewItem.request = reviewRequest
@@ -311,13 +316,8 @@
           id: oid.split(':')[1],
           route: this.componentRoutes[componentToReview?.type?.toLowerCase()]
         })) : []
-        this.updateUrl = updateUrl
-        this.deleteUrl = deleteUrl
-      }
-    },
-    methods: {
-      close () {
-        this.localValue = false
+        this.updateUrl = _links?.update?.href || undefined
+        this.deleteUrl = _links?.delete?.href || undefined
       },
       async save () {
         const newReview = {

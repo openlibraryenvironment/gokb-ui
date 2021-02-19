@@ -52,7 +52,7 @@
             text: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'left',
             sortable: false,
-            value: 'stdDesc.name'
+            value: 'localDesc'
           },
           {
             text: this.$i18n.t('component.general.dateCreated'),
@@ -139,7 +139,7 @@
           database: '/title'
         }
 
-        return data.map(({ id, reviewRequest, dateCreated, _embedded: { allocatedGroups }, componentToReview, descriptionOfCause, status, stdDesc, _links: { update: { href: updateUrl } }, _links: { delete: { href: deleteUrl } } }) => ({
+        return data.map(({ id, reviewRequest, dateCreated, _embedded: { allocatedGroups }, componentToReview, descriptionOfCause, status, stdDesc, _links }) => ({
           id,
           component: componentToReview,
           componentId: componentToReview.id,
@@ -150,10 +150,11 @@
           description: descriptionOfCause,
           status,
           stdDesc,
+          localDesc: stdDesc?.name ? this.$i18n.tc('component.review.stdDesc.' + stdDesc.name + '.label') : undefined,
           popup: { value: (componentToReview.name || componentToReview.type + ' ' + componentToReview.id), label: 'review', type: 'GokbAddReviewPopup' },
           link: { value: componentToReview.name, route: componentRoutes[componentToReview.type.toLowerCase()], id: 'componentId' },
-          updateUrl,
-          deleteUrl
+          updateUrl: _links?.update?.href,
+          deleteUrl: _links?.delete?.href
         }))
       },
       _confirmCloseSelectedItems () {

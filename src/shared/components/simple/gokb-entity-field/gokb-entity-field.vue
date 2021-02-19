@@ -2,7 +2,7 @@
   import GokbSearchField from '@/shared/components/base/gokb-search-field'
 
   export default {
-    name: 'GokbTitleField',
+    name: 'GokbEntityField',
     extends: GokbSearchField,
     props: {
       label: {
