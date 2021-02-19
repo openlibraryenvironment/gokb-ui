@@ -74,10 +74,17 @@
             <i18n
               id="stdDesc"
               :style="{ fontSize: '1.2em' }"
-              :path="'component.review.stdDesc.' + reviewItem.stdDesc.name + '.info'"
+              :path="'component.review.stdDesc.' + (reviewItem.stdDesc.value || reviewItem.stdDesc.name) + '.info'"
             >
               <template v-slot:0>
-                <b v-if="numMessageVars > 0">{{ additionalInfo.vars[0] }}</b>
+                <router-link
+                  v-if="numMessageVars > 0 && firstVarId"
+                  :style="{ color: '#f2994a' }"
+                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
+                >
+                  {{ reviewItem.component.name }}
+                </router-link>
+                <b v-else-if="numMessageVars > 0">{{ additionalInfo.vars[0] }}</b>
                 <router-link
                   v-else-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
                   :style="{ color: '#f2994a' }"
@@ -147,7 +154,7 @@
             <i18n
               id="todo"
               :style="{ fontSize: '1.2em'}"
-              :path="'component.review.stdDesc.' + reviewItem.stdDesc.name + '.toDo'"
+              :path="'component.review.stdDesc.' + (reviewItem.stdDesc.value || reviewItem.stdDesc.name) + '.toDo'"
             >
               <template v-slot:0>
                 <router-link
@@ -260,6 +267,9 @@
       },
       numMessageVars () {
         return this.additionalInfo ? this.additionalInfo.vars.length : 0
+      },
+      firstVarId () {
+        return typeof this.additionalInfo.vars[0] === 'number'
       }
     },
     async created () {

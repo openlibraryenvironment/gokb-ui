@@ -32,7 +32,7 @@
     methods: {
       transform (result) {
         const { data: { _embedded: { values } } } = result
-        return values.map(({ id, value, type }) => ({ id, name: (this.messagePath ? this.$i18n.t(this.messagePath + '.' + value + '.label') : value), type: 'Refdata Value' }))
+        return values.map(({ id, value, type }) => ({ id, name: (this.messagePath ? this.$i18n.t(this.messagePath + '.' + value + '.label') : value), value, type: 'Refdata Value' }))
       }
     }
   }
