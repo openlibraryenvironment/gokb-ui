@@ -77,13 +77,7 @@
               :path="'component.review.stdDesc.' + reviewItem.stdDesc.name + '.info'"
             >
               <template v-slot:0>
-                <router-link
-                  v-if="numMessageVars > 0"
-                  :style="{ color: '#f2994a' }"
-                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
-                >
-                  {{ reviewItem.component.name }}
-                </router-link>
+                <b v-if="numMessageVars > 0">{{ additionalInfo.vars[0] }}</b>
                 <router-link
                   v-else-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
                   :style="{ color: '#f2994a' }"
