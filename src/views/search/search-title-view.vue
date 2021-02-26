@@ -1,6 +1,6 @@
 <script>
   import BaseSearch from './base-search-view'
-  import { EDIT_TITLE_ROUTE } from '@/router/route-paths'
+  import { EDIT_TITLE_ROUTE, EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
 
   export default {
     name: 'SearchTitle',
@@ -13,6 +13,10 @@
           publisherId: undefined,
           type: undefined,
           status: undefined,
+        },
+        sortMappings: {
+          link: 'name',
+          linkTwo: 'publisher'
         }
       }
     },
@@ -117,7 +121,7 @@
     },
     async created () {
       this.searchServicesUrl = 'rest/titles'
-      this.searchServiceIncludes = 'id,name,_links,publishedFrom,dateFirstInPrint,dateFirstOnline'
+      this.searchServiceIncludes = 'id,name,_links,publishedFrom,dateFirstInPrint,dateFirstOnline,publisher'
       this.searchServiceEmbeds = 'ids'
       this.linkValue = 'name'
     },
@@ -128,6 +132,7 @@
           name,
           type,
           publishedFrom,
+          publisher,
           dateFirstInPrint,
           dateFirstOnline,
           _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
@@ -136,6 +141,8 @@
           type: this.$i18n.tc('component.title.type.' + type),
           startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
+          linkTwo: publisher ? { value: publisher.name, route: EDIT_PROVIDER_ROUTE, id: 'publisherId' } : undefined,
+          publisherId: publisher?.id || undefined,
           deleteUrl: deleteUrl,
           retireUrl: retireUrl,
         }))

@@ -110,7 +110,7 @@
         selectedItems: [],
         resultOptions: {
           page: 1,
-          sortBy: ['link'],
+          sortBy: [],
           desc: [false],
           itemsPerPage: ROWS_PER_PAGE
         },
@@ -157,6 +157,12 @@
         const page = options.page
         if (options.sortBy) {
           this.resultOptions.sortBy = options.sortBy
+        }
+
+        if (this.sortMappings?.link && this.resultOptions.sortBy.includes('link')) {
+          this.resultOptions.sortBy = [this.sortMappings.link]
+        } else if (this.sortMappings?.linkTwo && this.resultOptions.sortBy.includes('linkTwo')) {
+          this.resultOptions.sortBy = [this.sortMappings.linkTwo]
         }
 
         if (options.desc) {

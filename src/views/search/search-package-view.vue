@@ -1,6 +1,6 @@
 <script>
   import BaseSearch from './base-search-view'
-  import { EDIT_PACKAGE_ROUTE } from '@/router/route-paths'
+  import { EDIT_PACKAGE_ROUTE, EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
   import GokbPackageExportMenu from '@/shared/components/gokb-package-export-menu'
 
   export default {
@@ -13,10 +13,15 @@
           curatoryGroupIds: [],
           providerId: undefined,
           platformId: undefined,
+          lastUpdated: undefined,
           identifierValue: undefined,
           contentType: undefined,
           status: undefined,
           name: undefined,
+        },
+        sortMappings: {
+          link: 'name',
+          linkTwo: 'provider'
         }
       }
     },
@@ -165,21 +170,28 @@
             text: this.$i18n.tc('component.provider.label'),
             align: 'start',
             sortable: true,
-            value: 'provider'
+            value: 'linkTwo'
           },
           {
             text: this.$i18n.tc('component.package.contentType.label'),
             align: 'start',
             sortable: true,
-            width: '15%',
+            width: '10%',
             value: 'contentType'
+          },
+          {
+            text: this.$i18n.tc('component.general.lastUpdated'),
+            align: 'end',
+            sortable: true,
+            width: '15%',
+            value: 'lastUpdated'
           }
         ]
       }
     },
     async created () {
       this.searchServicesUrl = 'rest/packages'
-      this.searchServiceIncludes = 'id,uuid,name,provider,nominalPlatform,_links,contentType'
+      this.searchServiceIncludes = 'id,uuid,name,provider,nominalPlatform,_links,contentType,lastUpdated'
       this.linkValue = 'name'
     },
     methods: {
@@ -188,6 +200,7 @@
           id,
           name,
           provider,
+          lastUpdated,
           uuid,
           contentType,
           nominalPlatform,
@@ -196,7 +209,9 @@
           id,
           uuid,
           link: { value: name, route: EDIT_PACKAGE_ROUTE, id: 'id' },
-          provider: provider?.name,
+          linkTwo: provider ? { value: provider.name, route: EDIT_PROVIDER_ROUTE, id: 'providerId' } : undefined,
+          providerId: provider?.id || undefined,
+          lastUpdated: new Date(lastUpdated).toLocaleString(this.$i18n.locale),
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
           deleteUrl: _links?.delete?.href || undefined,

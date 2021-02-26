@@ -42,6 +42,15 @@
           {{ item.link.value }}
         </router-link>
       </template>
+      <template #item.linkTwo="{ item }">
+        <router-link
+          v-if="item.linkTwo"
+          :style="{ color: '#f2994a' }"
+          :to="{ name: item.linkTwo.route, params: { 'id': item[item.linkTwo.id] } }"
+        >
+          {{ item.linkTwo.value }}
+        </router-link>
+      </template>
       <template #item.popup="{ item }">
         <a
           :href="$route.query.page"
