@@ -5,11 +5,17 @@
   >
     <v-card>
       <v-card-text>
-        <div class="display-1 primary--text">
+        <div class="display-1 primary--text text-center">
           {{ $i18n.t('welcome.title') }}
         </div>
         <p class="primary--text">
           {{ $i18n.t('welcome.p1') }}
+        </p>
+        <p class="primary--text">
+          {{ $i18n.t('welcome.p2') }}
+        </p>
+        <p class="primary--text">
+          {{ $i18n.t('welcome.p3') }}
         </p>
       </v-card-text>
     </v-card>

@@ -228,12 +228,12 @@
           this.addedItemWarning.push(this.$i18n.t('component.title.history.add.warning.noDate'))
         }
 
-        if (item.type === 'from') {
-          newItem.from = item.item
-          newItem.to = this.titleInfo
+        if (item.successor) {
+          newItem.from = [this.titleInfo]
+          newItem.to = [item.item]
         } else {
-          newItem.from = this.titleInfo
-          newItem.to = item.item
+          newItem.from = [item.item]
+          newItem.to = [this.titleInfo]
         }
 
         this.localValue.push(newItem)

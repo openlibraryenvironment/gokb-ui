@@ -44,6 +44,7 @@
           :show-link="true"
           :required="true"
           :label="$tc('component.title.label')"
+          return-object
           type-filter="serial"
           @click:append="$emit('delete', value)"
         />
@@ -91,7 +92,7 @@
       value: {
         type: Object,
         required: true,
-        default: () => ({ date: undefined, item: undefined })
+        default: () => ({ date: undefined, item: undefined, successor: undefined })
       },
       sourceItem: {
         type: Object,
@@ -117,7 +118,7 @@
           return this.value.item
         },
         set (item) {
-          this.$emit('input', { name: this.value.date, successor: this.successor, item })
+          this.$emit('input', { date: this.value.date, successor: this.successor, item })
         }
       },
     },

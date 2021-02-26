@@ -29,7 +29,7 @@
     computed: {
       rules () {
         return [
-          value => !!value || 'Bitte erfassen Sie einen Benutzernamen.'
+          value => !!value || this.$i18n.t('component.user.error.missing.username')
         ]
       }
     }

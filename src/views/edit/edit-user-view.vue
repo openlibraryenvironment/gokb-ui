@@ -25,12 +25,6 @@
             :rules="[]"
           />
         </v-col>
-        <v-col md="3">
-          <gokb-checkbox-field
-            v-model="passwordExpired"
-            :label="$t('component.user.passwordExpired')"
-          />
-        </v-col>
       </v-row>
       <v-row>
         <v-col md="4">
@@ -49,13 +43,19 @@
         <v-col cols="2">
           <gokb-checkbox-field
             v-model="enabled"
-            :label="$t('component.user.enabled')"
+            :label="$t('component.user.enabled.label')"
           />
         </v-col>
         <v-col cols="2">
           <gokb-checkbox-field
             v-model="accountLocked"
-            :label="$t('component.user.locked')"
+            :label="$t('component.user.locked.label')"
+          />
+        </v-col>
+        <v-col md="3">
+          <gokb-checkbox-field
+            v-model="passwordExpired"
+            :label="$t('component.user.passwordExpired')"
           />
         </v-col>
       </v-row>

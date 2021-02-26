@@ -208,7 +208,7 @@
     "add": {
       "label": "{0} hinzufügen"
     },
-    "welcome": "Willkommen zur GOKb",
+    "welcome": "Willkommen zur Global Open Knowledgebase!",
     "dashboard": "Dashboard",
     "search": "Suche",
     "results": "Ergebnisse"
@@ -224,8 +224,10 @@
     }
   },
   "welcome": {
-    "title": "Willkommen zur GOKb",
-    "p1": ""
+    "title": "Willkommen zur Global Open Knowledgebase!",
+    "p1": "",
+    "p2": "",
+    "p3": ""
   },
   "component": {
     "label": "Komponente | Komponenten",
@@ -534,8 +536,16 @@
           "label": "Nicht Aktiv"
         }
       },
-      "locked": "Gesperrt",
-      "passwordExpired": "Password abgelaufen"
+      "locked": {
+        "label": "Gesperrt"
+      },
+      "passwordExpired": "Password abgelaufen",
+      "error": {
+        "missing": {
+          "username": "Bitte geben Sie einen Benutzernamen an.",
+          "password": "Bitte geben Sie ein Passwort an."
+        }
+      }
     },
     "review": {
       "label": "Review | Reviews",

@@ -145,9 +145,13 @@
     },
     methods: {
       resetSearch () {
-        this.searchInputFields
-          .flat()
-          .forEach(field => { field.value = undefined })
+        Object.keys(this.searchFilters).forEach(filter => {
+          if (Array.isArray(this.searchFilters[filter])) {
+            this.searchFilters[filter] = []
+          } else {
+            this.searchFilters[filter] = undefined
+          }
+        })
       },
       resultPaginate (options) {
         const page = options.page

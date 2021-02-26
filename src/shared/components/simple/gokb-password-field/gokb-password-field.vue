@@ -28,7 +28,9 @@
     },
     computed: {
       rules () {
-        return [value => !!value || 'Bitte erfassen Sie ein Kennwort.']
+        return [
+          value => !!value || this.$i18n.t('component.user.error.missing.password')
+        ]
       }
     }
   }

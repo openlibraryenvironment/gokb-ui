@@ -268,7 +268,7 @@
         return !!this.id
       },
       numMessageVars () {
-        return this.additionalInfo ? this.additionalInfo.vars.length : 0
+        return this.additionalInfo?.vars ? this.additionalInfo.vars.length : 0
       },
       cmpType () {
         return this.reviewItem?.component?.type || undefined
