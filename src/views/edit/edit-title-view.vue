@@ -11,7 +11,7 @@
         type="success"
         dismissible
       >
-        {{ isEdit ? $t('success.create', [typeDisplay, allNames.name]) : $t('success.update', [typeDisplay, allNames.name]) }}
+        {{ isEdit ? $t('success.update', [typeDisplay, allNames.name]) : $t('success.create', [typeDisplay, allNames.name]) }}
       </v-alert>
     </span>
     <v-row>
@@ -484,7 +484,7 @@
           editionNumber: this.editionNumber,
           editionStatement: this.editionStatement,
           OAStatus: (!this.OAStatus || typeof this.OAStatus === 'number') ? this.OAStatus : this.OAStatus.id,
-          status: typeof this.status === 'number' ? this.status : this.status.id,
+          status: this.status,
           publisher: this.publishers.map(pub => pub.id)
         }
         const response = await this.catchError({
