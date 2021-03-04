@@ -11,7 +11,7 @@
         type="success"
         dismissible
       >
-        {{ isEdit ? $t('success.update', [typeDisplay, allNames.name]) : $t('success.create', [typeDisplay, allNames.name]) }}
+        {{ successMsg }}
       </v-alert>
     </span>
     <v-row>
@@ -404,7 +404,7 @@
         currentType: undefined,
         updateUrl: undefined,
         deleteUrl: undefined,
-        successMsg: false,
+        successMsg: undefined,
         allTypes: [
           { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
           { name: this.$i18n.tc('component.title.type.Book'), id: 'Book' },
@@ -418,7 +418,7 @@
         return !!this.id
       },
       title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.title.label')])
+        return this.currentType ? this.$i18n.t(this.titleCode, [this.typeDisplay]) : this.$i18n.t(this.titleCode, [this.$i18n.tc('component.title.label')])
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
@@ -466,7 +466,7 @@
         this[actionMethodName](actionMethodParameter)
       },
       async update () {
-        this.successMsg = false
+        var isUpdate = !!this.id
 
         const data = {
           id: this.id,
@@ -492,9 +492,7 @@
           instance: this
         })
         // todo: check error code
-        if (response.status === 200) {
-          this.successMsg = true
-
+        if (response.status < 400) {
           const mappedHistory = this.history.map(({ date, from, to, id }) => ({ date, from, to, id: (typeof id === 'number' ? id : null) }))
 
           const hresp = await this.catchError({
@@ -504,9 +502,15 @@
 
           if (hresp.status !== 200) {
             console.log('history error')
-          }
+          } else {
+            if (isUpdate) {
+              this.reload()
+            } else {
+              this.$router.push('/title/' + response.data?.id)
+            }
 
-          this.reload()
+            this.successMsg = this.isEdit ? this.$i18n.t('success.update', [this.typeDisplay, this.allNames.name]) : this.$i18n.t('success.create', [this.typeDisplay, this.allNames.name])
+          }
         }
 
         window.scrollTo(0, 0)

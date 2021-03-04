@@ -310,6 +310,8 @@
         this[actionMethodName](actionMethodParameter)
       },
       async update () {
+        var isUpdate = !!this.id
+
         const data = {
           id: this.id,
           name: this.name,
@@ -327,11 +329,15 @@
         })
         // todo: check error code
         if (response.status === 200) {
+          if (isUpdate) {
+            this.reload()
+          } else {
+            this.$router.push('/provider/' + response.data?.id)
+          }
+
           this.successMsg = this.isEdit
             ? this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.name])
             : this.$i18n.t('success.create', [this.$i18n.tc('component.provider.label'), this.name])
-
-          this.reload()
         }
 
         window.scrollTo(0, 0)

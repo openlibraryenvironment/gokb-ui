@@ -65,6 +65,16 @@
             :label="$t('component.tipp.accessEndDate')"
           />
         </v-col>
+        <v-col>
+          <gokb-state-field
+            v-model="packageTitleItem.paymentType"
+            :init-item="packageTitleItem.paymentType"
+            message-path="component.tipp.paymentType"
+            url="refdata/categories/TitleInstancePackagePlatform.PaymentType"
+            :label="$t('component.tipp.paymentType.label')"
+            :readonly="isReadonly"
+          />
+        </v-col>
       </v-row>
       <v-row>
         <v-col>
@@ -246,6 +256,7 @@
           title: undefined,
           pkg: undefined,
           hostPlatform: undefined,
+          paymentType: undefined,
           url: undefined,
           name: undefined,
           accessStartDate: undefined,
@@ -272,7 +283,7 @@
         return !this.isReadonly ? (this.id ? (this.$i18n.t('header.edit.label', [this.$i18n.t('component.tipp.access')]) + ' – ' + this.typeLabel) : (this.$i18n.t('header.add.label', [this.$i18n.t('component.tipp.access')]) + ' – ' + this.typeLabel)) : (this.typeLabel + ' – ' + this.$i18n.t('component.tipp.access'))
       },
       typeLabel () {
-        return this.title?.type ? this.$i18n.tc('component.title.type.' + (typeof this.title.type === 'object' ? this.title.type.text : this.title.type)) : this.$i18n.tc('component.title.label')
+        return this.title?.type ? this.$i18n.tc('component.title.type.' + (typeof this.title.type === 'object' ? this.title.type.id : this.title.type)) : this.$i18n.tc('component.title.label')
       },
       isEdit () {
         return !!this.id
@@ -314,6 +325,7 @@
         this.packageTitleItem.title = this.selectedItem.title
         this.packageTitleItem.url = this.selectedItem.url
         this.status = this.selectedItem.status
+        this.packageTitleItem.paymentType = this.selectedItem.paymentType
         this.packageTitleItem.accessStartDate = this.selectedItem.accessStartDate
         this.packageTitleItem.accessEndDate = this.selectedItem.accessEndDate
         this.packageTitleItem.ids = this.selectedItem.ids
@@ -354,6 +366,7 @@
             title: this.packageTitleItem.title,
             hostPlatform: this.packageTitleItem.hostPlatform,
             name: this.packageTitleItem.name,
+            paymentType: this.packageTitleItem.paymentType,
             accessStartDate: this.packageTitleItem.accessStartDate,
             status: this.status,
             accessEndDate: this.packageTitleItem.accessEndDate,

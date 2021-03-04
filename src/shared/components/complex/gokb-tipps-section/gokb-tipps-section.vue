@@ -415,10 +415,11 @@
 
           if (result?.status === 200) {
             this.items = result.data?.data?.map(
-              ({ id, url, name, accessStartDate, status, accessEndDate, title, hostPlatform, _embedded, pkg, _links }) => (
+              ({ id, url, name, accessStartDate, status, paymentType, accessEndDate, title, hostPlatform, _embedded, pkg, _links }) => (
                 {
                   id,
                   coverageStatements: _embedded.coverageStatements,
+                  paymentType: paymentType,
                   statusLocal: this.$i18n.t('component.general.status.' + status.name + '.label'),
                   status: status,
                   url,

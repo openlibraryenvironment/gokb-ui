@@ -489,6 +489,30 @@
           "month": "Monat(e)",
           "year": "Jahr(e)"
         }
+      },
+      "paymentType": {
+        "label": "Access Type",
+        "Complimentary": {
+          "label": "Complimentary"
+        },
+        "OA": {
+          "label": "Open Access"
+        },
+        "Paid": {
+          "label": "Paid"
+        },
+        "Limited Promotion": {
+          "label": "Limited Promotion"
+        },
+        "Opt Out Promotion": {
+          "label": "Opt Out Promotion"
+        },
+        "Uncharged": {
+          "label": "Uncharged"
+        },
+        "Unknown": {
+          "label": "Unknown"
+        }
       }
     },
     "org": {
