@@ -21,18 +21,24 @@
       title () {
         return this.$i18n.tc('component.provider.label', 2)
       },
+      isDeleteSelectedDisabled () {
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.deleteUrl === false)).length > 0
+      },
+      isRetiredSelectedDisabled () {
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.retireUrl === false)).length > 0
+      },
       resultActionButtons () {
         return [
           {
             icon: 'clear',
             label: this.$i18n.t('btn.retire'),
-            disabled: 'isNothingSelected',
+            disabled: 'isRetiredSelectedDisabled',
             action: '_confirmArchiveSelectedItems',
           },
           {
             icon: 'delete',
             label: this.$i18n.t('btn.delete'),
-            disabled: 'isNothingSelected',
+            disabled: 'isDeleteSelectedDisabled',
             action: '_confirmDeleteSelectedItems',
           },
         ]

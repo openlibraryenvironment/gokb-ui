@@ -183,7 +183,7 @@
             text: this.$i18n.tc('component.general.lastUpdated'),
             align: 'end',
             sortable: true,
-            width: '15%',
+            width: '18%',
             value: 'lastUpdated'
           }
         ]

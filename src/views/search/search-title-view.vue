@@ -22,7 +22,10 @@
     },
     computed: {
       isDeleteSelectedDisabled () {
-        return !this.selectedItems.length
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.deleteUrl === false)).length > 0
+      },
+      isRetiredSelectedDisabled () {
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.retireUrl === false)).length > 0
       },
       title () {
         return this.$i18n.tc('component.title.label', 2)
@@ -32,7 +35,7 @@
           {
             icon: 'clear',
             label: this.$i18n.t('btn.retire'),
-            disabled: 'isDeleteSelectedDisabled',
+            disabled: 'isRetiredSelectedDisabled',
             action: '_confirmRetireSelectedItems'
           },
           {

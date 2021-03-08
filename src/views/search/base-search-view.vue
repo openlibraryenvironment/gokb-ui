@@ -58,7 +58,7 @@
             v-bind="button.properties"
           />
           <gokb-button
-            v-else
+            v-else-if="!isReadonly"
             :key="button.label"
             class="ms-4"
             :icon-id="button.icon"
@@ -132,12 +132,15 @@
         return this.$i18n.t('header.results')
       },
       isReadonly () {
-        return !accountModel.loggedIn || !accountModel.hasRole('ROLE_ADMIN')
+        return !accountModel.loggedIn || !accountModel.hasRole('ROLE_CONTRIBUTOR')
       }
     },
     watch: {
       selectedItems (value) {
         selection.set(value)
+      },
+      '$i18n.locale' (loc) {
+        this.search()
       }
     },
     mounted () {
