@@ -277,6 +277,13 @@
           this.globalSearchField = undefined
         }
       },
+      $route (to, from) {
+        console.log(to)
+        document.title = this.$i18n.t(to.meta.code)
+      },
+      '$i18n.locale' (l) {
+        document.title = this.$i18n.t(this.$route.meta.code)
+      }
     },
     mounted () {
       this.searchServices = searchServices('rest/entities')

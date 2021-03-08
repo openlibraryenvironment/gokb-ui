@@ -24,6 +24,38 @@
     "darkMode": "Dunkle Ansicht"
   },
   "direction": "ltr",
+  "route": {
+    "package": {
+      "edit": "Paket bearbeiten",
+      "create": "Paket anlegen",
+      "search": "Pakete"
+    },
+    "title": {
+      "edit": "Einzeltitel bearbeiten",
+      "create": "Einzeltitel anlegen",
+      "search": "Einzeltitel"
+    },
+    "provider": {
+      "edit": "Anbieter bearbeiten",
+      "create": "Anbieter anlegen",
+      "search": "Anbieter"
+    },
+    "review": {
+      "edit": "Review bearbeiten",
+      "create": "Review beantragen",
+      "search": "Reviews"
+    },
+    "user": {
+      "edit": "Benutzer bearbeiten",
+      "create": "Benutzer anlegen",
+      "search": "Benutzer"
+    },
+    "maintenance": {
+      "edit": "Pflegeauftrag bearbeiten",
+      "create": "Pflegeauftrag beantragen",
+      "search": "Pflegeauftrag"
+    }
+  },
   "default": {
     "true": "Ja",
     "false": "Nein",

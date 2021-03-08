@@ -17,72 +17,82 @@
         }
       }
     },
+    computed: {
+      title () {
+        return this.$i18n.tc('component.provider.label', 2)
+      },
+      resultActionButtons () {
+        return [
+          {
+            icon: 'clear',
+            label: this.$i18n.t('btn.retire'),
+            disabled: 'isNothingSelected',
+            action: '_confirmArchiveSelectedItems',
+          },
+          {
+            icon: 'delete',
+            label: this.$i18n.t('btn.delete'),
+            disabled: 'isNothingSelected',
+            action: '_confirmDeleteSelectedItems',
+          },
+        ]
+      },
+      searchInputFields () {
+        return [
+          [
+            {
+              type: 'GokbTextField',
+              name: 'name',
+              properties: {
+                label: this.$i18n.t('component.general.name')
+              }
+            },
+            {
+              type: 'GokbTextField',
+              name: 'ids',
+              value: 'identifier',
+              properties: {
+                entity: 'Org', // means Provider ;-)
+                label: this.$i18n.tc('component.identifier.label')
+              }
+            },
+            {
+              type: 'GokbCuratoryGroupField',
+              name: 'curatoryGroups',
+              value: 'curatoryGroupIds',
+              properties: {
+                label: this.$i18n.tc('component.curatoryGroup.label'),
+                multiple: true,
+                returnObject: false
+              }
+            }
+          ],
+          [
+            {
+              type: 'GokbStateField',
+              name: 'status',
+              value: 'status',
+              properties: {
+                initItem: this.$i18n.t('component.general.status.Current.label'),
+                width: '100%'
+              }
+            }
+          ],
+        ]
+      },
+      resultHeaders () {
+        return [
+          {
+            text: this.$i18n.t('component.general.name'),
+            align: 'left',
+            width: '100%',
+            sortable: false,
+            value: 'link'
+          },
+        ]
+      }
+    },
     async created () {
-      this.title = this.$i18n.tc('component.provider.label', 2)
-      this.resultActionButtons = [
-        {
-          icon: 'clear',
-          label: this.$i18n.t('btn.retire'),
-          disabled: 'isNothingSelected',
-          action: '_confirmArchiveSelectedItems',
-        },
-        {
-          icon: 'delete',
-          label: this.$i18n.t('btn.delete'),
-          disabled: 'isNothingSelected',
-          action: '_confirmDeleteSelectedItems',
-        },
-      ]
-      this.searchInputFields = [
-        [
-          {
-            type: 'GokbTextField',
-            name: 'name',
-            properties: {
-              label: this.$i18n.t('component.general.name')
-            }
-          },
-          {
-            type: 'GokbTextField',
-            name: 'ids',
-            value: 'identifier',
-            properties: {
-              entity: 'Org', // means Provider ;-)
-              label: this.$i18n.tc('component.identifier.label')
-            }
-          },
-          {
-            type: 'GokbCuratoryGroupField',
-            name: 'curatoryGroups',
-            value: 'curatoryGroupIds',
-            properties: {
-              label: this.$i18n.tc('component.curatoryGroup.label'),
-              multiple: true,
-              returnObject: false
-            }
-          }
-        ],
-        [
-          {
-            type: 'GokbStateField',
-            name: 'status',
-            value: 'status',
-            properties: {
-              initItem: this.$i18n.t('component.general.status.Current.label'),
-              width: '100%'
-            }
-          }
-        ],
-      ]
-      this.resultHeaders = [
-        {
-          text: this.$i18n.t('component.general.name'),
-          align: 'left',
-          width: '100%',
-          sortable: false,
-          value: 'link'
-        },
-      ]
       this.searchServicesUrl = 'rest/provider'
       this.searchServiceIncludes = 'id,name'
       this.linkValue = 'name'

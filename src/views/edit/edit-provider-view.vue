@@ -300,6 +300,11 @@
         if (value) {
           this.reload()
         }
+      },
+      '$i18n.locale' (l) {
+        if (this.isEdit) {
+          document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
+        }
       }
     },
     async created () {
@@ -392,6 +397,9 @@
           this.deleteUrl = deleteUrl
           this.status = status
           this.successMsg = false
+
+          document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
+
           loading.stopLoading()
         }
       }

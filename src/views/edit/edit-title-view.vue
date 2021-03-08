@@ -452,6 +452,11 @@
         if (this.loggedIn) {
           accountModel.useTabbedView(value)
         }
+      },
+      '$i18n.locale' (l) {
+        if (this.isEdit) {
+          document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
+        }
       }
     },
     async created () {
@@ -558,6 +563,8 @@
             this.history = data.history
 
             this.shortTitleMap = { name: data.name, id: data.id, uuid: data.uuid, type: data.type }
+
+            document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
           } else {
             this.notFound = true
           }

@@ -27,6 +27,38 @@
     "false": "No",
     "ISOdateHint": "YYYY-MM-DD"
   },
+  "route": {
+    "package": {
+      "edit": "Edit Package",
+      "create": "Create Package",
+      "search": "Packages"
+    },
+    "title": {
+      "edit": "Edit Title",
+      "create": "Create Title",
+      "search": "Titles"
+    },
+    "provider": {
+      "edit": "Edit Provider",
+      "create": "Create Provider",
+      "search": "Providers"
+    },
+    "review": {
+      "edit": "Edit Review",
+      "create": "Create Review",
+      "search": "Reviews"
+    },
+    "user": {
+      "edit": "Edit User",
+      "create": "Create User",
+      "search": "Users"
+    },
+    "maintenance": {
+      "edit": "Edit Maintenance",
+      "create": "Create Maintenance",
+      "search": "Maintenance"
+    }
+  },
   "direction": "ltr",
   "popups": {
     "name": {

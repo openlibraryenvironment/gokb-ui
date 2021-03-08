@@ -630,6 +630,11 @@
         if (value) {
           this.reload()
         }
+      },
+      '$i18n.locale' (l) {
+        if (this.isEdit) {
+          document.title = this.$i18n.tc('component.package.label') + ' – ' + this.allNames.name
+        }
       }
     },
     async created () {
@@ -839,11 +844,13 @@
             }
             this.lastUpdated = data.lastUpdated
             this.dateCreated = data.dateCreated
+
+            document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
           } else {
             this.notFound = true
           }
+          loading.stopLoading()
         }
-        loading.stopLoading()
       },
       async sendKbartUpdateRquest (parameters, file) {
         loading.startLoading()
