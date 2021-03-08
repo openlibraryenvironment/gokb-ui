@@ -752,7 +752,25 @@
       "ezbMatch": "Match EZB",
       "zdbMatch": "Match ZDB",
       "enableUpdate": "Activated",
-      "url": "URL"
+      "url": "URL",
+      "frequency": {
+        "label": "Update Cycle",
+        "Daily": {
+          "label": "Daily"
+        },
+        "Weekly": {
+          "label": "Weekly"
+        },
+        "Monthly": {
+          "label": "Monthly"
+        },
+        "Quarterly": {
+          "label": "Quarterly"
+        },
+        "Yearly": {
+          "label": "Yearly"
+        }
+      }
     },
     "general": {
       "name": "Name",
