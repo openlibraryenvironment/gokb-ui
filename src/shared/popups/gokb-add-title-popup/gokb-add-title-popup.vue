@@ -9,7 +9,7 @@
     <gokb-section :sub-title="$t('component.general.general')">
       <gokb-state-select-field
         v-if="status"
-        v-model="status"
+        v-model="packageTitleItem.status"
         :deletable="!!deleteUrl"
         :editable="!!updateUrl"
       />
@@ -164,6 +164,103 @@
         </v-row>
       </div>
     </gokb-section>
+    <gokb-section
+      expandable
+      :hide-default="true"
+      :sub-title="$t('component.general.general')"
+    >
+      <v-row>
+        <v-col>
+          <gokb-text-field
+            v-model="packageTitleItem.publisherName"
+            :disabled="isReadonly"
+            :label="$tc('component.title.publisher.label')"
+          />
+        </v-col>
+        <v-col>
+          <gokb-text-field
+            v-model="packageTitleItem.subjectArea"
+            :disabled="isReadonly"
+            :label="$t('component.tipp.subjectArea.label')"
+          />
+        </v-col>
+        <v-col>
+          <gokb-text-field
+            v-model="packageTitleItem.series"
+            :disabled="isReadonly"
+            :label="$t('component.tipp.series.label')"
+          />
+        </v-col>
+      </v-row>
+      <v-row v-if="isBook">
+        <v-col>
+          <gokb-date-field
+            v-model="packageTitleItem.dateFirstInPrint"
+            :readonly="isReadonly"
+            :label="$t('component.title.firstPublishedInPrint')"
+          />
+        </v-col>
+        <v-col>
+          <gokb-date-field
+            v-model="packageTitleItem.dateFirstOnline"
+            :readonly="isReadonly"
+            :label="$t('component.title.firstPublishedOnline')"
+          />
+        </v-col>
+      </v-row>
+      <v-row v-if="isBook">
+        <v-col>
+          <gokb-text-field
+            v-model="packageTitleItem.firstAuthor"
+            :disabled="isReadonly"
+            :label="$t('component.title.firstAuthor.label')"
+          />
+        </v-col>
+        <v-col>
+          <gokb-text-field
+            v-model="packageTitleItem.firstEditor"
+            :disabled="isReadonly"
+            :label="$t('component.title.firstEditor.label')"
+          />
+        </v-col>
+      </v-row>
+      <v-row v-if="isBook">
+        <v-col>
+          <gokb-text-field
+            v-model="packageTitleItem.volumeNumber"
+            :disabled="isReadonly"
+            :label="$t('component.title.volumeNumber')"
+          />
+        </v-col>
+        <v-col>
+          <gokb-text-field
+            v-model="packageTitleItem.editionStatement"
+            :disabled="isReadonly"
+            :label="$t('component.title.editionStatement')"
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <gokb-state-field
+            v-model="packageTitleItem.medium"
+            :init-item="packageTitleItem.medium"
+            width="100%"
+            message-path="component.title.medium"
+            url="refdata/categories/TitleInstancePackagePlatform.Medium"
+            :label="$t('component.title.medium.label')"
+            :readonly="isReadonly"
+          />
+        </v-col>
+        <v-col>
+          <gokb-date-field
+            v-model="packageTitleItem.lastChangedExternal"
+            :readonly="isReadonly"
+            :label="$t('component.tipp.lastChangedExternal')"
+          />
+        </v-col>
+      </v-row>
+    </gokb-section>
     <template #buttons>
       <v-spacer />
       <gokb-button
@@ -256,6 +353,7 @@
           title: undefined,
           pkg: undefined,
           hostPlatform: undefined,
+          status: undefined,
           paymentType: undefined,
           url: undefined,
           name: undefined,
@@ -274,7 +372,19 @@
               coverageNote: undefined, // note
               embargo: undefined
             }
-          ]
+          ],
+          series: undefined,
+          subjectArea: undefined,
+          publisherName: undefined,
+          dateFirstInPrint: undefined,
+          dateFirstOnline: undefined,
+          firstAuthor: undefined,
+          firstEditor: undefined,
+          publicationType: undefined,
+          volumeNumber: undefined,
+          editionStatement: undefined,
+          medium: undefined,
+          lastChangedExternal: undefined
         }
       }
     },
@@ -293,6 +403,9 @@
       },
       isJournal () {
         return this.title.type === 'Journal' || this.title.type.id === 'journal'
+      },
+      isBook () {
+        return this.title.type === 'Book' || this.title.type.id === 'book' || this.title.type === 'Monograph' || this.title.type.id === 'monograph'
       },
       titleTypeString () {
         return this.title.type
@@ -324,14 +437,27 @@
         this.packageTitleItem.pkg = this.selectedItem.pkg
         this.packageTitleItem.title = this.selectedItem.title
         this.packageTitleItem.url = this.selectedItem.url
-        this.status = this.selectedItem.status
         this.packageTitleItem.paymentType = this.selectedItem.paymentType
         this.packageTitleItem.accessStartDate = this.selectedItem.accessStartDate
         this.packageTitleItem.accessEndDate = this.selectedItem.accessEndDate
         this.packageTitleItem.ids = this.selectedItem.ids
+        this.packageTitleItem.series = this.selectedItem.series
+        this.packageTitleItem.subjectArea = this.selectedItem.subjectArea
+        this.packageTitleItem.publisherName = this.selectedItem.publisherName
+        this.packageTitleItem.dateFirstInPrint = this.selectedItem.dateFirstInPrint
+        this.packageTitleItem.dateFirstOnline = this.selectedItem.dateFirstOnline
+        this.packageTitleItem.firstAuthor = this.selectedItem.firstAuthor
+        this.packageTitleItem.firstEditor = this.selectedItem.firstEditor
+        this.packageTitleItem.publicationType = this.selectedItem.publicationType
+        this.packageTitleItem.volumeNumber = this.selectedItem.volumeNumber
+        this.packageTitleItem.editionStatement = this.selectedItem.editionStatement
+        this.packageTitleItem.medium = this.selectedItem.medium
+        this.packageTitleItem.lastChangedExternal = this.selectedItem.lastChangedExternal
+        this.packageTitleItem.status = this.selectedItem.status
         this.updateUrl = this.selectedItem.updateUrl
         this.deleteUrl = this.selectedItem.deleteUrl
         this.platformSelection.push(this.selectedItem.hostPlatform)
+        this.status = this.selectedItem.status
 
         if (this.selectedItem?.coverageStatements?.length) {
           this.packageTitleItem.coverageStatements = this.selectedItem.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
@@ -362,15 +488,7 @@
       async submitTipp () {
         if (this.selected && typeof this.selected.id === 'number') {
           const newTipp = {
-            pkg: this.packageTitleItem.pkg,
-            title: this.packageTitleItem.title,
-            hostPlatform: this.packageTitleItem.hostPlatform,
-            name: this.packageTitleItem.name,
-            paymentType: this.packageTitleItem.paymentType,
-            accessStartDate: this.packageTitleItem.accessStartDate,
-            status: this.status,
-            accessEndDate: this.packageTitleItem.accessEndDate,
-            url: this.packageTitleItem.url,
+            ...this.packageTitleItem,
             coverageStatements: this.packageTitleItem.coverageStatements.map(({ startDate, endDate, startIssue, endIssue, startVolume, endVolume, embargo, coverageNote, coverageDepth }) => ({
               startDate,
               endDate,

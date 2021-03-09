@@ -414,27 +414,39 @@
           })
 
           if (result?.status === 200) {
-            this.items = result.data?.data?.map(
-              ({ id, url, name, accessStartDate, status, paymentType, accessEndDate, title, hostPlatform, _embedded, pkg, _links }) => (
+            this.items = result.data?.data?.map(tipp => (
                 {
-                  id,
-                  coverageStatements: _embedded.coverageStatements,
-                  paymentType: paymentType,
-                  statusLocal: this.$i18n.t('component.general.status.' + status.name + '.label'),
-                  status: status,
-                  url,
-                  accessStartDate: accessStartDate && accessStartDate.substr(0, 10),
-                  accessEndDate: accessEndDate && accessEndDate.substr(0, 10),
-                  pkg,
-                  title,
-                  hostPlatform,
-                  updateUrl: _links.update.href,
-                  deleteUrl: _links.delete.href,
-                  titleType: this.$i18n.tc('component.title.type.' + title.type),
-                  titleId: title.id,
-                  ids: _embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!_links.delete.href })),
-                  popup: { value: (this.ttl ? pkg.name : title.name), label: 'tipp', type: 'GokbAddTitlePopup' },
-                  hostPlatformName: hostPlatform?.name
+                  id: tipp.id,
+                  coverageStatements: tipp._embedded.coverageStatements,
+                  paymentType: tipp.paymentType,
+                  statusLocal: this.$i18n.t('component.general.status.' + tipp.status.name + '.label'),
+                  name: tipp.name,
+                  status: tipp.status,
+                  url: tipp.url,
+                  series: tipp.series,
+                  subjectArea: tipp.subjectArea,
+                  publisherName: tipp.publisherName,
+                  dateFirstInPrint: tipp.dateFirstInPrint && tipp.dateFirstInPrint.substr(0, 10),
+                  dateFirstOnline: tipp.dateFirstOnline && tipp.dateFirstOnline.substr(0, 10),
+                  firstAuthor: tipp.firstAuthor,
+                  firstEditor: tipp.firstEditor,
+                  publicationType: tipp.publicationType,
+                  volumeNumber: tipp.volumeNumber,
+                  editionStatement: tipp.editionStatement,
+                  medium: tipp.medium,
+                  lastChangedExternal: tipp.lastChangedExternal,
+                  accessStartDate: tipp.accessStartDate && tipp.accessStartDate.substr(0, 10),
+                  accessEndDate: tipp.accessEndDate && tipp.accessEndDate.substr(0, 10),
+                  pkg: tipp.pkg,
+                  title: tipp.title,
+                  hostPlatform: tipp.hostPlatform,
+                  updateUrl: tipp._links.update.href,
+                  deleteUrl: tipp._links.delete.href,
+                  titleType: this.$i18n.tc('component.title.type.' + tipp.title.type),
+                  titleId: tipp.title?.id,
+                  ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!tipp._links.delete.href })),
+                  popup: { value: (this.ttl ? tipp.pkg.name : (tipp.title ? tipp.title.name : tipp.name)), label: 'tipp', type: 'GokbAddTitlePopup' },
+                  hostPlatformName: tipp.hostPlatform?.name
                 }
               )
             )

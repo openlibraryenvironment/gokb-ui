@@ -61,10 +61,10 @@
           <gokb-state-field
             v-if="currentType == 'Other'"
             v-model="OAStatus"
-            message-path="component.title.Medium"
+            message-path="component.title.medium"
             width="100%"
             url="refdata/categories/TitleInstance.Medium"
-            :label="$t('component.title.Medium.label')"
+            :label="$t('component.title.medium.label')"
             :readonly="isReadonly"
           />
         </v-col>

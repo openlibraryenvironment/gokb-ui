@@ -289,7 +289,7 @@
           "label": "No OA"
         }
       },
-      "Medium": {
+      "medium": {
         "label": "Medium Type",
         "A & I Database": {
           "label": "A & I Database"
@@ -502,6 +502,13 @@
       },
       "accessStartDate": "Access Start Date",
       "accessEndDate": "Access End Date",
+      "lastChangedExternal": "Last external changes",
+      "series": {
+        "label": "Series"
+      },
+      "subjectArea": {
+        "label": "Subject Area"
+      },
       "coverage": {
         "label": "Coverage",
         "depth": "Coverage Depth",
