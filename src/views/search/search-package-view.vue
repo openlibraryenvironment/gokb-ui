@@ -176,7 +176,7 @@
             text: this.$i18n.tc('component.package.contentType.label'),
             align: 'start',
             sortable: true,
-            width: '10%',
+            width: '15%',
             value: 'contentType'
           },
           {

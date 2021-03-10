@@ -152,6 +152,7 @@
     </gokb-section>
     <v-row
       v-if="tabsView"
+      style="min-height:350px"
     >
       <v-col>
         <v-tabs
