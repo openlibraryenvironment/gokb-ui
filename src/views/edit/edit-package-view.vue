@@ -99,7 +99,7 @@
 
         <v-stepper-content :step="isEdit ? 3 : 2">
           <gokb-section :no-tool-bar="true">
-            <v-row>
+            <v-row class="pt-4">
               <v-col>
                 <gokb-state-field
                   v-model="packageItem.scope"
@@ -109,6 +109,7 @@
                   url="refdata/categories/Package.Scope"
                   :label="$t('component.package.scope.label')"
                   :readonly="isReadonly"
+                  dense
                 />
               </v-col>
               <v-col>
@@ -120,6 +121,7 @@
                   url="refdata/categories/Package.ContentType"
                   :label="$t('component.package.contentType.label')"
                   :readonly="isReadonly"
+                  dense
                 />
               </v-col>
               <v-col>
@@ -132,6 +134,7 @@
                   width="100%"
                   :label="$t('component.general.editStatus.label')"
                   :readonly="isReadonly"
+                  dense
                 />
               </v-col>
               <v-col>
@@ -144,6 +147,7 @@
                   width="100%"
                   :label="$t('component.package.listStatus.label')"
                   :readonly="isReadonly"
+                  dense
                 />
               </v-col>
             </v-row>
@@ -151,7 +155,7 @@
               <v-col cols="7">
                 <gokb-radiobutton-group
                   v-model="packageItem.global"
-                  class="mt-4"
+                  :label="$t('component.package.global.label')"
                 >
                   <gokb-radiobutton-field
                     value="Global"
@@ -178,7 +182,7 @@
               <v-col cols="1">
                 <v-icon
                   v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'"
-                  class="mt-4"
+                  class="mt-1"
                 >
                   mdi-chevron-triple-right
                 </v-icon>
@@ -189,6 +193,7 @@
                   v-model="packageItem.globalNote"
                   :label="$t('component.package.globalNote.label')"
                   :disabled="isReadonly"
+                  dense
                 />
               </v-col>
             </v-row>

@@ -6,23 +6,31 @@
     <gokb-error-component :value="error" />
     <gokb-section :sub-title="$t('component.general.general')">
       <v-row>
-        <v-col md="4">
+        <v-col
+          class="pt-8"
+          md="4"
+        >
           <gokb-username-field
             v-model="username"
             :label="$t('component.user.username')"
             hide-icon
             autocomplete="off"
+            dense
           />
         </v-col>
       </v-row>
       <v-row>
-        <v-col md="4">
+        <v-col
+          v-if="!id"
+          md="4"
+        >
           <gokb-password-field
             v-model="password"
             :label="$t('component.user.password')"
             hide-icon
             autocomplete="off"
             :rules="[]"
+            dense
           />
         </v-col>
       </v-row>
@@ -31,6 +39,7 @@
           <gokb-email-field
             v-model="email"
             hide-icon
+            dense
           />
         </v-col>
         <!--        <v-col md="4">-->
@@ -43,7 +52,7 @@
         <v-col cols="2">
           <gokb-checkbox-field
             v-model="enabled"
-            :label="$t('component.user.enabled.label')"
+            :label="$t('component.user.enabled.active.label')"
           />
         </v-col>
         <v-col cols="2">
@@ -202,36 +211,7 @@
     },
     async created () {
       if (this.isEdit) {
-        const {
-          data: {
-            data: {
-              username,
-              email,
-              accountLocked,
-              enabled,
-              passwordExpired,
-              roles,
-              curatoryGroups,
-              _links: {
-                update: { href: updateUserUrl },
-              },
-              // organisation
-            }
-          }
-        } = await this.catchError({
-          promise: userServices.getUser(this.id, this.cancelToken.token),
-          instance: this
-        })
-        this.username = username
-        this.password = undefined
-        this.email = email
-        this.accountLocked = accountLocked
-        this.enabled = enabled
-        this.passwordExpired = passwordExpired
-        this.allRoles = roles.map(({ authority, ...rest }) => ({ ...rest, name: authority }))
-        this.updateUserUrl = updateUserUrl
-        this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
-        // this.organisation = organisation
+        this.fetch()
       }
     },
     methods: {
@@ -264,11 +244,47 @@
         })
         // todo: check error code
         if (response.status === 200) {
-          this.pageBack()
+          if (this.isEdit) {
+            this.fetch()
+          } else {
+            this.$router.put('/user/' + response.data.id)
+          }
         }
       },
       pageBack () {
         this.$router.go(-1)
+      },
+      async fetch () {
+        const {
+          data: {
+            data: {
+              username,
+              email,
+              accountLocked,
+              enabled,
+              passwordExpired,
+              roles,
+              curatoryGroups,
+              _links: {
+                update: { href: updateUserUrl },
+              },
+              // organisation
+            }
+          }
+        } = await this.catchError({
+          promise: userServices.getUser(this.id, this.cancelToken.token),
+          instance: this
+        })
+        this.username = username
+        this.password = undefined
+        this.email = email
+        this.accountLocked = accountLocked
+        this.enabled = enabled
+        this.passwordExpired = passwordExpired
+        this.allRoles = roles.map(({ authority, ...rest }) => ({ ...rest, name: authority }))
+        this.updateUserUrl = updateUserUrl
+        this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
+        // this.organisation = organisation
       },
       confirmDeleteRole ({ id, value }) {
         this.actionToConfirm = '_deleteRole'

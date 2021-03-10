@@ -632,6 +632,9 @@
         },
         "Deleted": {
           "label": "Deleted"
+        },
+        "Needs Review": {
+          "label": "Needs Review"
         }
       },
       "stdDesc": {

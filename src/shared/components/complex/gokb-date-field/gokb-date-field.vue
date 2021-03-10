@@ -11,6 +11,7 @@
         validate-on-blur
         :hint="$t('default.ISOdateHint')"
         :rules="rules"
+        :dense="dense"
       />
     </v-col>
     <v-col
@@ -44,6 +45,7 @@
     v-model="localDate"
     class="gokb-date-field-disabled"
     v-bind="$props"
+    :dense="dense"
     disabled
   />
 </template>
@@ -71,6 +73,11 @@
         type: String,
         required: false,
         default: undefined
+      },
+      dense: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

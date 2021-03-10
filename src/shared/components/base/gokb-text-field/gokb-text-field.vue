@@ -15,6 +15,7 @@
     :append-icon="appendIcon"
     validate-on-blur
     :clearable="!readonly"
+    :dense="dense"
     @click:append="$emit('click:append', $event)"
   />
 </template>
@@ -80,6 +81,11 @@
         default: undefined,
       },
       fw: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      dense: {
         type: Boolean,
         required: false,
         default: false

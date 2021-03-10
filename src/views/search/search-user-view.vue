@@ -127,7 +127,7 @@
       },
       _confirmDeactivateSelectedItems () {
         this.actionToConfirm = '_deactivateSelectedItems'
-        this.messageToConfirm = this.$i18n.t('confirm.deactivate.generic')
+        this.messageToConfirm = { text: this.$i18n.t('popups.confirm.deactivate.generic'), vars: [] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

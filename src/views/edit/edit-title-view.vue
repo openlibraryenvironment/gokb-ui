@@ -55,17 +55,21 @@
             url="refdata/categories/TitleInstance.OAStatus"
             :label="$t('component.title.OAStatus.label')"
             :readonly="isReadonly"
+            dense
           />
         </v-col>
-        <v-col cols="3">
+        <v-col
+          v-if="currentType == 'Other'"
+          cols="3"
+        >
           <gokb-state-field
-            v-if="currentType == 'Other'"
-            v-model="OAStatus"
+            v-model="medium"
             message-path="component.title.medium"
             width="100%"
             url="refdata/categories/TitleInstance.Medium"
             :label="$t('component.title.medium.label')"
             :readonly="isReadonly"
+            dense
           />
         </v-col>
         <v-col v-if="currentType == 'Book'">
@@ -73,6 +77,7 @@
             v-model="firstAuthor"
             :label="$t('component.title.firstAuthor.label')"
             :disabled="isReadonly"
+            dense
           />
         </v-col>
         <v-col v-if="currentType == 'Book'">
@@ -80,6 +85,7 @@
             v-model="firstEditor"
             :label="$t('component.title.firstEditor.label')"
             :disabled="isReadonly"
+            dense
           />
         </v-col>
         <v-col v-if="currentType == 'Journal'">
@@ -87,6 +93,7 @@
             v-model="publishedFrom"
             :readonly="isReadonly"
             :label="$t('component.title.publishedFrom')"
+            dense
           />
         </v-col>
         <v-col v-if="currentType == 'Journal'">
@@ -94,22 +101,25 @@
             v-model="publishedTo"
             :readonly="isReadonly"
             :label="$t('component.title.publishedTo')"
+            dense
           />
         </v-col>
       </v-row>
       <v-row v-if="currentType == 'Book'">
-        <v-col>
+        <v-col cols="3">
           <gokb-number-field
             v-model="volumeNumber"
             :disabled="isReadonly"
             :label="$t('component.title.volumeNumber')"
+            dense
           />
         </v-col>
-        <v-col>
+        <v-col cols="3">
           <gokb-number-field
             v-model="editionNumber"
             :disabled="isReadonly"
             :label="$t('component.title.editionNumber')"
+            dense
           />
         </v-col>
         <v-col>
@@ -117,6 +127,7 @@
             v-model="editionStatement"
             :label="$t('component.title.editionStatement')"
             :disabled="isReadonly"
+            dense
           />
         </v-col>
       </v-row>
@@ -126,6 +137,7 @@
             v-model="firstPublishedInPrint"
             :readonly="isReadonly"
             :label="$t('component.title.firstPublishedInPrint')"
+            dense
           />
         </v-col>
         <v-col>
@@ -133,13 +145,13 @@
             v-model="firstPublishedOnline"
             :readonly="isReadonly"
             :label="$t('component.title.firstPublishedOnline')"
+            dense
           />
         </v-col>
       </v-row>
     </gokb-section>
     <v-row
       v-if="tabsView"
-      style="min-height:400px"
     >
       <v-col>
         <v-tabs

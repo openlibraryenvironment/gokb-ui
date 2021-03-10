@@ -3,6 +3,7 @@
     v-if="readonly"
     v-model="selectedName"
     :label="label"
+    :dense="dense"
     disabled
   />
   <v-select
@@ -16,6 +17,7 @@
     :style="{width: width}"
     :clearable="clearable"
     :return-object="returnObject"
+    :dense="dense"
   />
 </template>
 
@@ -74,6 +76,11 @@
         type: [Object, String, Number],
         required: false,
         default: undefined
+      },
+      dense: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

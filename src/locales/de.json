@@ -630,6 +630,9 @@
         },
         "Deleted": {
           "label": "Gelöscht"
+        },
+        "Needs Review": {
+          "label": "Entscheidung benötigt"
         }
       },
       "stdDesc": {

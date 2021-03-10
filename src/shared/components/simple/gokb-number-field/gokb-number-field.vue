@@ -10,6 +10,11 @@
         required: false,
         default: undefined
       },
+      dense: {
+        type: Boolean,
+        required: false,
+        default: false
+      }
     },
     computed: {
       rules () {
