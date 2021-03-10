@@ -278,7 +278,6 @@
         }
       },
       $route (to, from) {
-        console.log(to)
         document.title = this.$i18n.t(to.meta.code)
       },
       '$i18n.locale' (l) {
@@ -295,7 +294,6 @@
       }
 
       if (accountModel.loggedIn() && accountModel.userLocale()) {
-        console.log(accountModel.userLocale())
         this.currentLocale = accountModel.userLocale()
       }
     },

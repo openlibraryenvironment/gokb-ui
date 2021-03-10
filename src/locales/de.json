@@ -54,7 +54,9 @@
       "edit": "Pflegeauftrag bearbeiten",
       "create": "Pflegeauftrag beantragen",
       "search": "Pflegeauftrag"
-    }
+    },
+    "home": "GOKb",
+    "profile": "Profil"
   },
   "default": {
     "true": "Ja",

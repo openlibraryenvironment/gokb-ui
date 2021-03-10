@@ -57,7 +57,9 @@
       "edit": "Edit Maintenance",
       "create": "Create Maintenance",
       "search": "Maintenance"
-    }
+    },
+    "home": "GOKb",
+    "profile": "Profile"
   },
   "direction": "ltr",
   "popups": {

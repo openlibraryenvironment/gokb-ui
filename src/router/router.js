@@ -29,7 +29,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         path: PROFILE_ROUTE,
         name: PROFILE_ROUTE,
         meta: {
-          code: 'route.home'
+          code: 'route.profile'
         },
         component: () => import('@/views/profile-view.vue')
       },

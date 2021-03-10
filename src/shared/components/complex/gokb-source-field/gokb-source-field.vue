@@ -185,8 +185,6 @@
         })
 
         if (result?.status === 200) {
-          console.log('Frequency: ' + result.data.frequency)
-
           this.id = result.data.id
           this.titleIdNamespace = result.titleIdNamespace
           this.frequency = result.frequency
