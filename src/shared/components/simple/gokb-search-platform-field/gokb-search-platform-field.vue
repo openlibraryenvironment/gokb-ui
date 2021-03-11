@@ -13,6 +13,7 @@
     },
     created () {
       this.searchServicesResourceUrl = 'rest/platforms'
+      this.searchParams = { max: 20, es: true }
     },
   }
 </script>

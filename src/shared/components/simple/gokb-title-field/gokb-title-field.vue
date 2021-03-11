@@ -23,7 +23,7 @@
     },
     computed: {
       searchParams () {
-        return (this.typeFilter ? { type: this.typeFilter, es: 'true' } : { es: 'true' })
+        return (this.typeFilter ? { type: this.typeFilter, es: 'true', max: 20 } : { es: 'true', max: 20 })
       }
     },
     created () {

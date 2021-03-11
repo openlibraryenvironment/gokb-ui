@@ -13,7 +13,7 @@
     },
     created () {
       this.searchServicesResourceUrl = 'rest/publisher'
-      this.searchParams = { limit: 20 }
+      this.searchParams = { max: 20, es: true }
     },
   }
 </script>

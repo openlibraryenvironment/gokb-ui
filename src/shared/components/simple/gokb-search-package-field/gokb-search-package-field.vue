@@ -13,6 +13,7 @@
     },
     created () {
       this.searchServicesResourceUrl = 'rest/packages'
+      this.searchParams = { max: 20, es: true }
     },
   }
 </script>
