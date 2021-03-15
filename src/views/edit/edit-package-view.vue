@@ -663,7 +663,6 @@
         this.newTipps = tipps
       },
       setKbart (options) {
-        console.log('Setting attached KBART.')
         this.kbart = options
 
         if (!this.sourceItem) {

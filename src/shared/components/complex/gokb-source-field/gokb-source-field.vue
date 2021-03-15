@@ -172,7 +172,6 @@
       }
     },
     async mounted () {
-      console.log(this.value)
       if (this.value?.id) {
         this.fetch()
       }

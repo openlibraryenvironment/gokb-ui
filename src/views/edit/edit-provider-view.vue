@@ -237,7 +237,7 @@
     extends: BaseComponent,
     props: {
       id: {
-        type: String,
+        type: [String, Number],
         required: false,
         default: undefined
       }

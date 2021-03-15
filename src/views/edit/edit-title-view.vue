@@ -519,7 +519,7 @@
           })
 
           if (hresp.status !== 200) {
-            console.log('history error')
+            console.log('history update error')
           } else {
             if (isUpdate) {
               this.reload()
