@@ -103,6 +103,8 @@
     }
   },
   "validation": {
+    "missingValue": "Please fill this field.",
+    "missingSelection": "Please select a value from the list.",
     "missingName": "Please provide a name.",
     "missingEmail": "Please provide a valid email address.",
     "urlForm": "Please provide a valid URL.",
@@ -566,10 +568,27 @@
     },
     "provider": {
       "label": "Provider | Providers",
-      "homepage": "Homepage",
+      "homepage": "Website",
       "titleNamespace": "Title Namespace",
       "packageNamespace": "Package Namespace",
       "technicalSupport": "Technical Support"
+    },
+    "office": {
+      "label": "Contact | Contacts",
+      "name": "Label",
+      "email": "Email",
+      "country": "Country",
+      "phoneNumber": "Phone",
+      "website": "Website",
+      "type": {
+        "label": "Type",
+        "Technical Support": {
+          "label": "Technical Support"
+        },
+        "Other": {
+          "label": "Other"
+        }
+      }
     },
     "identifier": {
       "label": "Identifier | Identifiers",
@@ -816,7 +835,10 @@
         }
       },
       "dateCreated":"Date Created",
-      "lastUpdated": "Last Updated"
+      "lastUpdated": "Last Updated",
+      "language": {
+        "label": "Language"
+      }
     }
   }
 }

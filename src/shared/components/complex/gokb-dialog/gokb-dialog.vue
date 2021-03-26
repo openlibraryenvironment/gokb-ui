@@ -48,6 +48,9 @@
       },
       resetValidation () {
         this.$refs.form.resetValidation()
+      },
+      validate () {
+        this.$refs.form.validate()
       }
     }
   }

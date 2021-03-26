@@ -101,7 +101,7 @@
         }
       },
       rules () {
-        return []
+        return [((this.required && this.value !== null && this.value.length > 0) || !this.required || this.$i18n.t('validation.missingValue'))]
       }
     },
     methods: {

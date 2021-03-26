@@ -1,5 +1,6 @@
 <template>
   <gokb-dialog
+    ref="comp"
     v-model="localValue"
     :title="$t('header.add.label', [component.name])"
     @submit="addItem"
@@ -18,7 +19,7 @@
         {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
-        :disabled="!item"
+        :disabled="!isValid"
         default
       >
         {{ $t('btn.add') }}
@@ -47,6 +48,7 @@
     data () {
       return {
         item: undefined,
+        isValid: false
       }
     },
     computed: {
@@ -58,6 +60,15 @@
           this.$emit('input', localValue)
         }
       },
+    },
+    watch: {
+      item: {
+        deep: true,
+        handler () {
+          this.$refs.comp.$refs.form.resetValidation()
+          this.isValid = this.$refs.comp.$refs.form.validate()
+        }
+      }
     },
     methods: {
       addItem () {

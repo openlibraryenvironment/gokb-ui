@@ -174,6 +174,12 @@
         :sub-title="$tc('component.curatoryGroup.label', 2)"
         :disabled="isReadonly"
       />
+      <gokb-offices-section
+        v-model="offices"
+        :expanded="offices.length > 0"
+        :sub-title="$tc('component.office.label', 2)"
+        :disabled="isReadonly"
+      />
     </div>
     <template #buttons>
       <v-spacer />
@@ -259,6 +265,7 @@
         ids: [],
         allAlternateNames: [],
         allCuratoryGroups: [],
+        offices: [],
         allPackages: [],
         allNames: { name: undefined, alts: [] },
         allPlatforms: [],
@@ -325,6 +332,7 @@
           reference: this.reference,
           ids: this.ids,
           variantNames: this.allAlternateNames.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
+          offices: this.offices,
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
           providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null }))
         }
@@ -367,7 +375,8 @@
                 ids,
                 variantNames,
                 providedPlatforms,
-                providedPackages
+                providedPackages,
+                offices
               },
               _links: {
                 update: { href: updateUrl },
@@ -391,6 +400,7 @@
           this.packageNamespace = packageNamespace
           this.allPackages = providedPackages
           this.allNames = { name: name, alts: this.allAlternateNames }
+          this.offices = offices?.map(office => ({ ...office, typeLocal: (office.type ? this.$i18n.t('component.office.type.label') : undefined), isDeletable: !!updateUrl })) || []
           this.dateCreated = dateCreated
           this.lastUpdated = lastUpdated
           this.updateUrl = updateUrl

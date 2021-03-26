@@ -33,7 +33,7 @@
     },
     computed: {
       rules () {
-        return [((this.required && this.value) || (!this.required && !this.value) || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.value) || this.$i18n.t('validation.missingEmail'))]
+        return [((this.required && this.value !== null) || (!this.required && !this.value) || this.$i18n.t('validation.missingEmail')), (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.value) || this.$i18n.t('validation.missingEmail'))]
       }
     }
   }

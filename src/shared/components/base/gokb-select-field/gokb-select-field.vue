@@ -14,6 +14,8 @@
     :placeholder="placeholder"
     item-text="name"
     item-value="id"
+    :rules="rules"
+    :no-data-text="$t('search.results.empty')"
     :style="{width: width}"
     :clearable="clearable"
     :return-object="returnObject"
@@ -72,6 +74,11 @@
         required: false,
         default: false
       },
+      required: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
       initItem: {
         type: [Object, String, Number],
         required: false,
@@ -98,6 +105,9 @@
           // console.log('select field', value)
           this.$emit('input', value)
         }
+      },
+      rules () {
+        return [((this.required && this.value) || !this.required || this.$i18n.t('validation.missingSelection'))]
       }
     },
     async mounted () {

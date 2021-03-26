@@ -18,7 +18,7 @@
       messagePath: {
         type: String,
         required: false,
-        default: 'component.general.status'
+        default: undefined
       },
       dense: {
         type: Boolean,
@@ -36,8 +36,12 @@
     },
     methods: {
       transform (result) {
-        const { data: { _embedded: { values } } } = result
-        return values.map(({ id, value, type }) => ({ id, name: (this.messagePath ? this.$i18n.t(this.messagePath + '.' + value + '.label') : value), value, type: 'Refdata Value' }))
+        if (result?.data?._embedded) {
+          const { data: { _embedded: { values } } } = result
+          return values.map(({ id, value, type }) => ({ id, name: (this.messagePath ? this.$i18n.t(this.messagePath + '.' + value + '.label') : value), value, type: 'Refdata Value' }))
+        } else {
+          return []
+        }
       }
     }
   }

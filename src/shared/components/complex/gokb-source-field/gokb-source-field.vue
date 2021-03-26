@@ -169,7 +169,43 @@
           this.update = update
           this.$emit('enable', update)
         }
-      }
+      },
+      enabledZdb: {
+        get () {
+          return this.zdbMatch
+        },
+        set (update) {
+          this.localValue = {
+            url: this.url,
+            automaticUpdates: this.automaticUpdates,
+            titleIdNamespace: this.titleIdNamespace,
+            lastRun: this.lastRun,
+            ezbMatch: this.ezbMatch,
+            zdbMatch: update,
+            id: this.id,
+            name: this.name,
+            frequency: this.frequency
+          }
+        }
+      },
+      enabledEzb: {
+        get () {
+          return this.ezbMatch
+        },
+        set (update) {
+          this.localValue = {
+            url: this.url,
+            automaticUpdates: this.automaticUpdates,
+            titleIdNamespace: this.titleIdNamespace,
+            lastRun: this.lastRun,
+            ezbMatch: update,
+            zdbMatch: this.zdbMatch,
+            id: this.id,
+            name: this.name,
+            frequency: this.frequency
+          }
+        }
+      },
     },
     async mounted () {
       if (this.value?.id) {
