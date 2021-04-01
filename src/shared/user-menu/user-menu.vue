@@ -94,7 +94,7 @@
                   path: PROFILE_ROUTE,
                 },
                 {
-                  title: 'Logout',
+                  title: this.$i18n.t('popups.logout.label'),
                   icon: 'mdi-logout-variant',
                   method: 'logout',
                   path: HOME_ROUTE,
@@ -110,10 +110,15 @@
             id: 0,
             items: [
               {
-                title: 'Login',
+                title: this.$i18n.t('popups.login.label'),
                 icon: 'mdi-login-variant',
                 method: 'login'
-              }
+              },
+              {
+                title: this.$i18n.t('register.register'),
+                icon: 'mdi-account-plus',
+                method: 'register'
+              },
             ],
             last: true,
           },
