@@ -5,7 +5,7 @@
   >
     <v-card>
       <v-card-text>
-        <div class="display-1 primary--text text-center">
+        <div class="text-h4 primary--text text-center">
           {{ $i18n.t('welcome.title') }}
         </div>
         <p class="primary--text">

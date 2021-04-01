@@ -10,7 +10,7 @@
           flat
         >
           <div class="ml-3">
-            <v-toolbar-title class="display-1">
+            <v-toolbar-title class="text-h4">
               {{ title }}
             </v-toolbar-title>
           </div>

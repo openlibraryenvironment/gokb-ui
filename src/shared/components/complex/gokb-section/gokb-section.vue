@@ -10,7 +10,7 @@
         flat
       >
         <span
-          class="headline"
+          class="text-h5"
         >
           {{ title }}
         </span>
@@ -21,7 +21,7 @@
       </v-toolbar>
       <span
         v-else-if="title && subTitle"
-        class="headline ml-4"
+        class="text-h5 ml-4"
       >
         {{ subTitle }}
       </span>
@@ -32,7 +32,7 @@
       >
         <span
           v-if="subTitle"
-          class="title"
+          class="text-h6"
         >
           {{ subTitle }}
         </span>

@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="label"
-      class="title"
+      class="text-h6"
     >
       {{ label }}
     </div>

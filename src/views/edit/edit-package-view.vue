@@ -445,7 +445,7 @@
   >
     <v-card>
       <v-card-text>
-        <div class="display-1 primary--text">
+        <div class="text-h4 primary--text">
           {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
         </div>
       </v-card-text>

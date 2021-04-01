@@ -19,7 +19,7 @@
           <v-expansion-panels>
             <v-expansion-panel>
               <v-expansion-panel-header>
-                <div class="title">Message</div>
+                <div class="text-h6">Message</div>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <code>{{ message }}</code>
@@ -27,7 +27,7 @@
             </v-expansion-panel>
             <v-expansion-panel>
               <v-expansion-panel-header>
-                <div class="title">Stack</div>
+                <div class="text-h6">Stack</div>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <code>{{ stack }}</code>
@@ -35,7 +35,7 @@
             </v-expansion-panel>
             <v-expansion-panel>
               <v-expansion-panel-header>
-                <div class="title">Config</div>
+                <div class="text-h6">Config</div>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <code>{{ config }}</code>
@@ -43,7 +43,7 @@
             </v-expansion-panel>
             <v-expansion-panel>
               <v-expansion-panel-header>
-                <div class="title">Request</div>
+                <div class="text-h6">Request</div>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <code>{{ request }}</code>
@@ -51,7 +51,7 @@
             </v-expansion-panel>
             <v-expansion-panel>
               <v-expansion-panel-header>
-                <div class="title">Response</div>
+                <div class="text-h6">Response</div>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <code>{{ response }}</code>

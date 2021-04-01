@@ -45,7 +45,7 @@
         <v-card flat>
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">
+              <h3 class="text-h5 mb-0">
                 Allgemein
               </h3>
               <div> {{ card_text }}</div>
@@ -56,7 +56,7 @@
         <v-card flat>
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">
+              <h3 class="text-h5 mb-0">
                 Identifier
               </h3>
               <div> {{ card_text }}</div>
@@ -70,7 +70,7 @@
         <v-card flat>
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">
+              <h3 class="text-h5 mb-0">
                 Alternative Namen
               </h3>
               <div> {{ card_text }}</div>
@@ -81,7 +81,7 @@
         <v-card flat>
           <v-card-title primary-title>
             <div>
-              <h3 class="headline mb-0">
+              <h3 class="text-h5 mb-0">
                 Kuratoren
               </h3>
               <div> {{ card_text }}</div>

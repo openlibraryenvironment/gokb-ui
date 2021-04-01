@@ -57,7 +57,7 @@
           >
             home
           </v-icon>
-          <span class="application-title title">
+          <span class="application-title text-h6">
             GOKb Client
           </span>
         </v-btn>
