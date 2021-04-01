@@ -39,9 +39,12 @@
           </v-col>
         </v-row>
       </template>
+      <gokb-jobs-section v-model="groupId" />
     </div>
-    <gokb-jobs-section
-      v-model="groupId"
+    <gokb-packages-section
+      v-else
+      default-sort-field="lastUpdated"
+      default-sort-order="desc"
     />
   </gokb-page>
 </template>

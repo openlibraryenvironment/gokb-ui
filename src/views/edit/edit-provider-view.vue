@@ -326,13 +326,13 @@
 
         const data = {
           id: this.id,
-          name: this.name,
+          name: this.allNames.name,
           source: this.source || null,
-          status: typeof this.status === 'number' ? this.status : this.status.id,
+          status: status ? (typeof this.status === 'number' ? this.status : this.status.id) : undefined,
           reference: this.reference,
           ids: this.ids,
           variantNames: this.allAlternateNames.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
-          offices: this.offices,
+          offices: this.offices.map(office => ({ ...office, id: (typeof office.id === 'number' ? office.id : null) })),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
           providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null }))
         }
@@ -352,8 +352,6 @@
             ? this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.name])
             : this.$i18n.t('success.create', [this.$i18n.tc('component.provider.label'), this.name])
         }
-
-        window.scrollTo(0, 0)
       },
       async reload () {
         if (this.isEdit) {

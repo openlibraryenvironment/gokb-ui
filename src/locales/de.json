@@ -96,11 +96,15 @@
       }
     },
     "login": {
+      "label": "Anmelden",
       "automatic": "Eingeloggt bleiben",
       "error": {
         "401": "Die eingebebenen Informationen sind nicht korrekt.",
         "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
       }
+    },
+    "logout": {
+      "label": "Ausloggen"
     }
   },
   "validation": {
@@ -513,7 +517,18 @@
       },
       "coverage": {
         "label": "Abdeckung",
-        "depth": "Abdeckungsart",
+        "depth": {
+          "label": "Abdeckungsart",
+          "Fulltext": {
+            "label": "Voltext"
+          },
+          "Abstracts": {
+            "label": "Abstracts"
+          },
+          "Selected Articles": {
+            "label": "Ausgewählte Artikel"
+          }
+        },
         "note": "Notiz",
         "period": "Abdeckungszeitraum",
         "startDate": "Anfangsdatum",

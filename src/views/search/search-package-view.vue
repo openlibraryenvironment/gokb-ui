@@ -192,7 +192,10 @@
     async created () {
       this.searchServicesUrl = 'rest/packages'
       this.searchServiceIncludes = 'id,uuid,name,provider,nominalPlatform,_links,contentType,lastUpdated'
-      this.linkValue = 'name'
+      this.linkSearchParameterValues = {
+        link: 'name',
+        linkTwo: 'provider'
+      }
     },
     methods: {
       _transformForTable (data) {

@@ -366,7 +366,7 @@
             :sub-title="$tc('component.curatoryGroup.label', 2)"
           />
           <gokb-reviews-section
-            v-if="id && loggedIn"
+            v-if="id && isContrib"
             :review-component="id"
           />
         </v-stepper-content>
@@ -596,6 +596,9 @@
       },
       isReadonly () {
         return !this.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
+      },
+      isContrib () {
+        return this.loggedIn && accountModel.hasRole('ROLE_CONTRIBUTOR')
       },
       isInLastStep () {
         return this.step === 4

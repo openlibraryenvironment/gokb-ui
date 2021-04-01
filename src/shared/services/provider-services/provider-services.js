@@ -1,4 +1,4 @@
-const PROVIDER_URL = '/rest/provider'
+const PROVIDER_URL = '/rest/orgs'
 
 const api = (baseServices) => ({
   getProvider (id, cancelToken) {

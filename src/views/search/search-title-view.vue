@@ -126,7 +126,9 @@
       this.searchServicesUrl = 'rest/titles'
       this.searchServiceIncludes = 'id,name,_links,publishedFrom,dateFirstInPrint,dateFirstOnline,publisher'
       this.searchServiceEmbeds = 'ids'
-      this.linkValue = 'name'
+      this.linkSearchParameterValues = {
+        link: 'name'
+      }
     },
     methods: {
       _transformForTable (data) {

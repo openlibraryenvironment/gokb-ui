@@ -186,6 +186,9 @@
     watch: {
       'options.page' () {
         this.handlePaging()
+      },
+      '$i18n.locale' () {
+        this.handlePaging()
       }
     },
     methods: {

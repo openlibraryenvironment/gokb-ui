@@ -180,7 +180,7 @@
             {{ $tc('component.variantName.label', 2) }}
           </v-tab>
           <v-tab
-            v-if="loggedIn && id"
+            v-if="id && isContrib"
             key="reviews"
             :active-class="tabClass"
           >
@@ -235,7 +235,7 @@
             />
           </v-tab-item>
           <v-tab-item
-            v-if="loggedIn"
+            v-if="loggedIn && isContrib"
             key="reviews"
             class="mt-4"
           >
@@ -441,6 +441,9 @@
       },
       isReadonly () {
         return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
+      },
+      isContrib () {
+        return this.loggedIn && accountModel.hasRole('ROLE_CONTRIBUTOR')
       },
       loggedIn () {
         return accountModel.loggedIn()

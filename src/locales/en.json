@@ -95,11 +95,15 @@
       }
     },
     "login": {
+      "label": "Login",
       "automatic": "Stay logged in",
       "error": {
         "401": "The entered login information is not valid.",
         "500": "There was an error processing the login request. Please try again later."
       }
+    },
+    "logout": {
+      "label": "Log out"
     }
   },
   "validation": {
@@ -515,7 +519,18 @@
       },
       "coverage": {
         "label": "Coverage",
-        "depth": "Coverage Depth",
+        "depth": {
+          "label": "Coverage Depth",
+          "Fulltext": {
+            "label": "Fulltext"
+          },
+          "Abstracts": {
+            "label": "Abstracts"
+          },
+          "Selected Articles": {
+            "label": "Selected Articles"
+          }
+        },
         "note": "Note",
         "period": "Coverage Period",
         "startDate": "Start Date",

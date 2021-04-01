@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <gokb-state-field
-          v-model="localType"
+          v-model="officeType"
           message-path="component.office.type"
           width="100%"
           return-object
@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="4">
         <gokb-state-field
-          v-model="localLanguage"
+          v-model="language"
           width="100%"
           return-object
           url="refdata/categories/KBComponent.Language"
@@ -24,7 +24,7 @@
     <v-row>
       <v-col>
         <gokb-text-field
-          v-model="localName"
+          v-model="name"
           :disabled="disabled"
           required
           :label="'Name'"
@@ -36,7 +36,7 @@
     <v-row>
       <v-col>
         <gokb-email-field
-          v-model="localEmail"
+          v-model="email"
           :disabled="disabled"
           required
           :label="$t('component.user.email')"
@@ -69,6 +69,18 @@
         default: () => ({ name: undefined, type: undefined, email: undefined, language: undefined })
       },
     },
+    data () {
+      return {
+        localObj: {
+          type: undefined,
+          name: undefined,
+          email: undefined,
+          language: undefined,
+          localType: undefined,
+          localLanguage: undefined
+        }
+      }
+    },
     computed: {
       deleteIcon () {
         return this.deleteable ? 'delete' : undefined
@@ -81,56 +93,47 @@
           this.$emit('input', value)
         }
       },
-      localType: {
+      officeType: {
         get () {
           return this.value.type
         },
         set (type) {
-          this.localValue = {
-            type,
-            name: this.value.name,
-            email: this.value.email,
-            language: this.value.language
+          this.localObj.type = type
+
+          if (type) {
+            this.localObj.localType = this.$i18n.t('component.office.type.' + type.value + '.label')
           }
+          this.localValue = this.localObj
         }
       },
-      localLanguage: {
+      language: {
         get () {
           return this.value.language
         },
         set (language) {
-          this.localValue = {
-            type: this.value.type,
-            name: this.value.name,
-            email: this.value.email,
-            language
+          this.localObj.language = language
+          if (language) {
+            this.localObj.localLanguage = language.value
           }
+          this.localValue = this.localObj
         }
       },
-      localName: {
+      name: {
         get () {
           return this.value.name
         },
         set (name) {
-          this.localValue = {
-            type: this.value.type,
-            name,
-            email: this.value.email,
-            language: this.value.language
-          }
+          this.localObj.name = name
+          this.localValue = this.localObj
         }
       },
-      localEmail: {
+      email: {
         get () {
           return this.value.email
         },
         set (email) {
-          this.localValue = {
-            type: this.value.type,
-            name: this.value.name,
-            email,
-            language: this.value.language
-          }
+          this.localObj.email = email
+          this.localValue = this.localObj
         }
       },
     }

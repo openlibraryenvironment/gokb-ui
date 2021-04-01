@@ -98,10 +98,13 @@
       >
         <v-row>
           <v-col>
-            <gokb-coverage-field
+            <gokb-state-field
               v-model="statement.coverageDepth"
               :readonly="isReadonly"
-              :label="$t('component.tipp.coverage.depth')"
+              :init-item="statement.coverageDepth"
+              :label="$t('component.tipp.coverage.depth.label')"
+              message-path="component.tipp.coverage.depth"
+              url="refdata/categories/TIPPCoverageStatement.CoverageDepth"
             />
             <v-row v-if="isJournal">
               <v-col>

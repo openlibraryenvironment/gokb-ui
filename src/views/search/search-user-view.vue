@@ -66,25 +66,25 @@
             value: 'link'
           },
           {
-            text: 'Enabled',
+            text: this.$i18n.t('component.user.enabled.label'),
             align: 'left',
             sortable: false,
             value: 'enabled'
           },
           {
-            text: 'Contributor',
+            text: this.$i18n.t('component.user.role.contributor'),
             align: 'left',
             sortable: false,
             value: 'contributor'
           },
           {
-            text: 'Editor',
+            text: this.$i18n.t('component.user.role.editor'),
             align: 'left',
             sortable: false,
             value: 'editor'
           },
           {
-            text: 'Admin',
+            text: this.$i18n.t('component.user.role.admin'),
             align: 'left',
             sortable: false,
             value: 'admin'
@@ -111,7 +111,9 @@
       this.title = this.$i18n.tc('component.user.label', 2)
       this.searchServicesUrl = 'rest/users'
       this.searchServiceIncludes = 'id,username'
-      this.linkValue = 'username'
+      this.linkSearchParameterValues = {
+        link: 'username'
+      }
     },
     methods: {
       _transformForTable (data) {

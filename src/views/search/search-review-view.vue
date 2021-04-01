@@ -45,13 +45,13 @@
           {
             text: this.$i18n.t('component.review.type'),
             align: 'left',
-            sortable: false,
+            sortable: true,
             value: 'type'
           },
           {
             text: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'left',
-            sortable: false,
+            sortable: true,
             value: 'localDesc'
           },
           {
@@ -126,6 +126,10 @@
       this.component = 'g:reviewRequests'
       this.searchServicesUrl = 'rest/reviews'
       this.linkValue = 'componentToReview'
+      this.linkSearchParameterValues = {
+        popup: 'componentToReview',
+        localDesc: 'stdDesc'
+      }
       // this.searchServiceIncludes = 'id,'
     },
     methods: {
