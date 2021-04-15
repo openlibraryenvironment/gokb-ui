@@ -6,6 +6,7 @@
       filters
       :sub-title="title"
       :items-total="totalNumberOfItems"
+      :errors="!!apiErrors"
     >
       <span v-if="successMessage">
         <v-alert type="success">
@@ -197,6 +198,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      apiErrors: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -332,12 +338,14 @@
         this.confirmationPopUpVisible = true
       },
       _deleteSelectedTitles () {
-        this.newTipps = this.newTipps.concat(this.selectedItems.map(item => ({ ...item, isDeletable: true })))
+        this.newTipps = this.newTipps.concat(this.selectedItems.map(item => ({ ...item, statusLocal: this.$i18n.t('component.general.status.Deleted.label'), status: 'Deleted', isDeletable: true })))
         this.selectedItems = []
+        this.$emit('update', this.newTipps)
       },
       _retireSelectedTitles () {
-        this.newTipps = this.newTipps.concat(this.selectedItems.map(item => ({ ...item, isDeletable: true })))
+        this.newTipps = this.newTipps.concat(this.selectedItems.map(item => ({ ...item, statusLocal: this.$i18n.t('component.general.status.Retired.label'), status: 'Retired', isDeletable: true })))
         this.selectedItems = []
+        this.$emit('update', this.newTipps)
       },
       _deleteItem (idToDelete) {
       },

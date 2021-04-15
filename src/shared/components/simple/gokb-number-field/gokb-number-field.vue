@@ -14,13 +14,13 @@
         type: Boolean,
         required: false,
         default: false
-      }
-    },
-    computed: {
-      rules () {
-        return [
-          value => (!value || /^[\d]+$/.test(value)) || this.$i18n.t('validation.numberFormat')
-        ]
+      },
+      rules: {
+        type: Array,
+        required: false,
+        default () {
+          return [v => ((/^[\d]+$/.test(v)) || (!this.required && (!v || v.length === 0))) || this.$i18n.t('validation.numberFormat')]
+        }
       }
     }
   }

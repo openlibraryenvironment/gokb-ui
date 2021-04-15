@@ -3,6 +3,7 @@
     expandable
     filters
     :sub-title="$tc('component.package.label', 2)"
+    :errors="!!apiErrors"
   >
     <template #buttons>
       <v-btn
@@ -94,6 +95,11 @@
       },
       title: {
         type: String,
+        required: false,
+        default: undefined
+      },
+      apiErrors: {
+        type: Array,
         required: false,
         default: undefined
       }

@@ -41,9 +41,9 @@
       "search": "Anbieter"
     },
     "review": {
-      "edit": "Review bearbeiten",
-      "create": "Review beantragen",
-      "search": "Reviews"
+      "edit": "Prüfanfrage bearbeiten",
+      "create": "Neue Prüfanfrage",
+      "search": "Prüfanfragen"
     },
     "user": {
       "edit": "Benutzer bearbeiten",
@@ -114,7 +114,8 @@
     "missingEmail": "Bitte geben Sie eine gültige E-Mail-Adresse an.",
     "urlForm": "Bitte geben Sie eine gültige URL an.",
     "numberFormat": "Dieses Feld erwartet eine Zahl.",
-    "dateFormat": "Ungültiges Datum"
+    "dateFormat": "Ungültiges Datum",
+    "passwordLength": "Das Passwort muss zwischen 6 und 64 Zeichen haben."
   },
   "job": {
     "label": "Import | Imports",
@@ -412,7 +413,7 @@
         "step2": "Paketeigenschaften",
         "step3": "Titel im Paket",
         "step4": "Zusammenfassung",
-        "newTitles": "Veränderungen",
+        "newTitles": "Vorgemerkte Veränderungen",
         "currentTitles": "Aktueller Bestand",
         "confirm": {
           "kbartLocal": {

@@ -113,7 +113,8 @@
     "missingEmail": "Please provide a valid email address.",
     "urlForm": "Please provide a valid URL.",
     "numberFormat": "Please enter a number.",
-    "dateFormat": "Invalid Date"
+    "dateFormat": "Invalid Date",
+    "passwordLength": "The password must be between 6 and 64 characters of length."
   },
   "job": {
     "label": "Job | Jobs",
@@ -414,7 +415,7 @@
         "step2": "Package Properties",
         "step3": "Package Titles",
         "step4": "Summary",
-        "newTitles": "Changes",
+        "newTitles": "Pending Changes",
         "currentTitles": "Current Titles",
         "confirm": {
           "kbartLocal": {

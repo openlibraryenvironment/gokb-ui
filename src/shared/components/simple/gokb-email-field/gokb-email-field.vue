@@ -29,11 +29,13 @@
         type: String,
         required: false,
         default: 'email',
-      }
-    },
-    computed: {
-      rules () {
-        return [((this.required && this.value !== null) || (!this.required && !this.value) || this.$i18n.t('validation.missingEmail')), (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.value) || this.$i18n.t('validation.missingEmail'))]
+      },
+      rules: {
+        type: Array,
+        required: false,
+        default () {
+          return [v => (((!this.required && (!v || v.length === 0))) || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) || this.$i18n.t('validation.missingEmail')]
+        }
       }
     }
   }

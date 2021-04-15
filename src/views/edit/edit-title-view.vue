@@ -23,6 +23,7 @@
           :label="$t('component.title.type.label')"
           class="ml-4"
           :items="allTypes"
+          required
         />
       </v-col>
       <v-spacer />
@@ -34,6 +35,7 @@
             v-model="allNames"
             :label="$t('component.general.name')"
             :disabled="isReadonly"
+            :api-errors="errors.name"
           />
         </v-col>
       </v-row>
@@ -43,6 +45,7 @@
             v-model="status"
             :deletable="!!deleteUrl"
             :editable="!!updateUrl"
+            :api-errors="errors.status"
           />
         </v-col>
       </v-row>
@@ -55,6 +58,7 @@
             url="refdata/categories/TitleInstance.OAStatus"
             :label="$t('component.title.OAStatus.label')"
             :readonly="isReadonly"
+            :api-errors="errors.OAStatus"
             dense
           />
         </v-col>
@@ -69,6 +73,7 @@
             url="refdata/categories/TitleInstance.Medium"
             :label="$t('component.title.medium.label')"
             :readonly="isReadonly"
+            :api-errors="errors.medium"
             dense
           />
         </v-col>
@@ -77,6 +82,7 @@
             v-model="firstAuthor"
             :label="$t('component.title.firstAuthor.label')"
             :disabled="isReadonly"
+            :api-errors="errors.firstAuthor"
             dense
           />
         </v-col>
@@ -85,6 +91,7 @@
             v-model="firstEditor"
             :label="$t('component.title.firstEditor.label')"
             :disabled="isReadonly"
+            :api-errors="errors.firstEditor"
             dense
           />
         </v-col>
@@ -93,6 +100,7 @@
             v-model="publishedFrom"
             :readonly="isReadonly"
             :label="$t('component.title.publishedFrom')"
+            :api-errors="errors.publishedFrom"
             dense
           />
         </v-col>
@@ -101,6 +109,7 @@
             v-model="publishedTo"
             :readonly="isReadonly"
             :label="$t('component.title.publishedTo')"
+            :api-errors="errors.publishedTo"
             dense
           />
         </v-col>
@@ -111,6 +120,7 @@
             v-model="volumeNumber"
             :disabled="isReadonly"
             :label="$t('component.title.volumeNumber')"
+            :api-errors="errors.volumeNumber"
             dense
           />
         </v-col>
@@ -119,6 +129,7 @@
             v-model="editionNumber"
             :disabled="isReadonly"
             :label="$t('component.title.editionNumber')"
+            :api-errors="errors.editionNumber"
             dense
           />
         </v-col>
@@ -127,6 +138,7 @@
             v-model="editionStatement"
             :label="$t('component.title.editionStatement')"
             :disabled="isReadonly"
+            :api-errors="errors.editionStatement"
             dense
           />
         </v-col>
@@ -137,6 +149,7 @@
             v-model="firstPublishedInPrint"
             :readonly="isReadonly"
             :label="$t('component.title.firstPublishedInPrint')"
+            :api-errors="errors.firstPublishedInPrint"
             dense
           />
         </v-col>
@@ -145,6 +158,7 @@
             v-model="firstPublishedOnline"
             :readonly="isReadonly"
             :label="$t('component.title.firstPublishedOnline')"
+            :api-errors="errors.firstPublishedOnline"
             dense
           />
         </v-col>
@@ -163,6 +177,7 @@
 
           <v-tab
             key="identifiers"
+            :style="[!!errors.ids ? { border: '1px solid red', borderRadius: '2px' } : {}]"
             :active-class="tabClass"
           >
             {{ $tc('component.identifier.label', 2) }}
@@ -212,6 +227,7 @@
               v-model="ids"
               :show-title="false"
               :disabled="isReadonly"
+              :api-errors="errors.ids"
             />
           </v-tab-item>
           <v-tab-item
@@ -222,6 +238,7 @@
               v-model="publishers"
               :show-title="false"
               :disabled="isReadonly"
+              :api-errors="errors.publisher"
             />
           </v-tab-item>
           <v-tab-item
@@ -232,6 +249,7 @@
               v-model="allNames.alts"
               :show-title="false"
               :disabled="isReadonly"
+              :api-errors="errors.variantNames"
             />
           </v-tab-item>
           <v-tab-item
@@ -241,6 +259,7 @@
           >
             <gokb-reviews-section
               :review-component="id"
+              :api-errors="errors.reviewRequests"
             />
           </v-tab-item>
           <v-tab-item
@@ -251,6 +270,7 @@
               :ttl="parseInt(id)"
               :show-title="false"
               :disabled="true"
+              :api-errors="errors.tipps"
             />
           </v-tab-item>
           <v-tab-item
@@ -262,6 +282,7 @@
               :title-info="shortTitleMap"
               :show-title="false"
               :disabled="isReadonly"
+              :api-errors="errors.history"
             />
           </v-tab-item>
         </v-tabs-items>
@@ -271,29 +292,35 @@
       <gokb-identifier-section
         v-model="ids"
         :disabled="isReadonly"
+        :api-errors="errors.ids"
       />
       <gokb-publisher-section
         v-model="publishers"
         :disabled="isReadonly"
+        :api-errors="errors.publisher"
       />
       <gokb-alternate-names-section
         v-model="allNames.alts"
         :disabled="isReadonly"
+        :api-errors="errors.variantNames"
       />
       <gokb-reviews-section
         v-if="id && loggedIn"
         :review-component="id"
+        :api-errors="errors.reviewRequests"
       />
       <gokb-tipps-section
         v-if="id"
         :ttl="parseInt(id)"
         :disabled="true"
+        :api-errors="errors.tipps"
       />
       <gokb-title-history-section
         v-if="currentType === 'Journal'"
         v-model="history"
         :title-info="shortTitleMap"
         :disabled="isReadonly"
+        :api-errors="errors.history"
       />
     </div>
     <v-row justify="end">
@@ -410,6 +437,7 @@
         medium: undefined,
         version: undefined,
         reference: undefined,
+        errors: {},
         ids: [],
         tipps: [],
         allAlternateNames: [],
@@ -487,6 +515,7 @@
         this[actionMethodName](actionMethodParameter)
       },
       async update () {
+        this.errors = {}
         var isUpdate = !!this.id
 
         const data = {
@@ -521,8 +550,8 @@
             instance: this
           })
 
-          if (hresp.status !== 200) {
-            console.log('history update error')
+          if (hresp.status >= 400) {
+            this.errors.history = hresp.data.error
           } else {
             if (isUpdate) {
               this.reload()
@@ -532,6 +561,9 @@
 
             this.successMsg = this.isEdit ? this.$i18n.t('success.update', [this.typeDisplay, this.allNames.name]) : this.$i18n.t('success.create', [this.typeDisplay, this.allNames.name])
           }
+        } else {
+          console.log(response.data)
+          this.errors = response.data.error
         }
 
         window.scrollTo(0, 0)

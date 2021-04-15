@@ -4,6 +4,7 @@
     :hide-default="!expanded"
     :sub-title="title"
     :items-total="totalNumberOfItems"
+    :errors="!!apiErrors"
   >
     <gokb-add-item-popup
       v-if="addIdentifierPopupVisible"
@@ -82,6 +83,11 @@
       },
       targetType: {
         type: String,
+        required: false,
+        default: undefined
+      },
+      apiErrors: {
+        type: Array,
         required: false,
         default: undefined
       }

@@ -31,7 +31,7 @@
     <v-row>
       <v-col>
         <v-checkbox
-          v-model="ezbMatch"
+          v-model="enabledEzb"
           class="mr-5"
           :readonly="readonly"
           :label="$t('component.source.ezbMatch')"
@@ -39,7 +39,7 @@
       </v-col>
       <v-col>
         <v-checkbox
-          v-model="zdbMatch"
+          v-model="enabledZdb"
           class="mr-5"
           :readonly="readonly"
           :label="$t('component.source.zdbMatch')"

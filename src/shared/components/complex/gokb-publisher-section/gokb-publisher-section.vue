@@ -4,6 +4,7 @@
     :hide-default="!expanded"
     :sub-title="title"
     :items-total="totalNumberOfItems"
+    :errors="!!apiErrors"
   >
     <gokb-add-item-popup
       v-if="addPublisherPopupVisible"
@@ -80,6 +81,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      apiErrors: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {

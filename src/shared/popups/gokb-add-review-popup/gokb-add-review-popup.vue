@@ -13,7 +13,7 @@
           :readonly="isEdit || isReadonly"
           :type-filter="cmpType"
           :show-link="true"
-          :label="$t('component.review.componentToReview')"
+          :label="cmpLabel"
           return-object
         />
       </v-col>
@@ -82,7 +82,7 @@
                 <router-link
                   v-if="numMessageVars > 0 && typeof additionalInfo.vars[0] === 'number'"
                   :style="{ color: '#f2994a' }"
-                  :to="{ name: additionalInfo.vars[0], params: { 'id': additionalInfo.vars[0] } }"
+                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
@@ -272,6 +272,9 @@
       },
       cmpType () {
         return this.reviewItem?.component?.type || undefined
+      },
+      cmpLabel () {
+        return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview'))
       }
     },
     async created () {

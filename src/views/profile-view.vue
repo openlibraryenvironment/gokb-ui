@@ -14,32 +14,33 @@
       <gokb-email-field
         v-model="email"
         :label="$t('component.user.email')"
-        :disabled="updateProfileAvailable"
+        :disabled="!updateProfileAvailable"
+        :api-errors="errors.email"
       />
     </gokb-section>
     <gokb-section :title="$t('component.user.password')">
       <gokb-password-field
         ref="passwordField"
         v-model="origpass"
-        :disabled="updateProfileAvailable"
+        :disabled="!updateProfileAvailable"
         :label="$t('profile.currentPass.label')"
         :rules="[isOldPasswordEmpty, isPasswordWrong]"
       />
       <gokb-password-field
         ref="newpass"
         v-model="newpass"
-        :disabled="updateProfileAvailable"
+        :disabled="!updateProfileAvailable"
         :label="$t('profile.newPass.label')"
         autocomplete="new-password"
-        :rules="[checkNewPassword, isPasswordEmpty]"
+        :rules="[checkNewPassword, isPasswordEmpty, isPasswordConfirmed]"
       />
       <gokb-password-field
         ref="repeatpass"
         v-model="repeatpass"
-        :disabled="updateProfileAvailable"
+        :disabled="!updateProfileAvailable"
         :label="$t('profile.newPassConfirm.label')"
         autocomplete="new-password"
-        :rules="[checkNewPassword, isPasswordEmpty]"
+        :rules="[checkNewPassword, isPasswordEmpty, isPasswordConfirmed]"
       />
     </gokb-section>
     <gokb-curatory-group-section
@@ -54,14 +55,14 @@
     />
     <template #buttons>
       <gokb-button
-        :disabled="removeProfileAvailable"
+        :disabled="!removeProfileAvailable"
         @click="confirmRemoveProfile"
       >
         {{ $t('profile.delete.label') }}
       </gokb-button>
       <v-spacer />
       <gokb-button
-        :disabled="updateProfileAvailable || !valid"
+        :disabled="!updateProfileAvailable || !valid"
         default
       >
         {{ $t('btn.update') }}
@@ -96,8 +97,9 @@
     },
     data () {
       return {
-        valid: undefined,
+        valid: true,
         email: undefined,
+        errors: {},
         origpass: undefined,
         newpass: undefined,
         repeatpass: undefined,
@@ -117,10 +119,10 @@
     },
     computed: {
       removeProfileAvailable () {
-        return !this.deleteProfileUrl
+        return !!this.deleteProfileUrl
       },
       updateProfileAvailable () {
-        return !this.updateProfileUrl
+        return !!this.updateProfileUrl
       },
       isAdmin () {
         return account.hasRole('ROLE_ADMIN')
@@ -162,16 +164,19 @@
     },
     methods: {
       isOldPasswordEmpty () {
-        return (this.newpass || this.repeatpass) && !this.origpass ? this.$i18n.t('profile.currentPass.missing') : true
+        return (!this.newpass && !this.repeatpass) || !!this.origpass || this.$i18n.t('profile.currentPass.missing')
       },
       isPasswordEmpty () {
-        return (this.newpass && !this.repeatpass) || (!this.newpass && this.repeatpass) ? this.$i18n.t('profile.newPass.missing') : true
+        return (!!this.newpass && !!this.repeatpass) || (!this.origpass && !this.newpass && !this.repeatpass) || this.$i18n.t('profile.newPass.missing')
       },
       isPasswordWrong () {
-        return (this.origpass && this.passwordWrongMessage) || true
+        return (!!this.origpass && !!this.passwordWrongMessage) || true
+      },
+      isPasswordConfirmed () {
+        return (!!this.newpass && !!this.repeatpass && this.newpass === this.repeatpass) || (!this.newpass && !this.repeatpass) || this.$i18n.t('profile.newPassConfirm.nomatch')
       },
       checkNewPassword () {
-        return this.newpass && this.repeatpass && this.newpass !== this.repeatpass ? this.$i18n.t('profile.newPassConfirm.nomatch') : true
+        return v => (!v || (v.length >= 6 && v.length <= 64)) || this.$i18n.t('validation.passwordLength')
       },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
@@ -201,6 +206,8 @@
 
         if (result.status === 200) {
           this.successMsgShown = true
+        } else {
+          this.errors = result.data.errors
         }
       },
       async _removeProfile () {

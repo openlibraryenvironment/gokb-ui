@@ -2,6 +2,7 @@
   <gokb-section
     expandable
     :hide-default="!expanded"
+    :errors="!!apiErrors"
     :sub-title="title"
     :items-total="totalNumberOfItems"
   >
@@ -75,6 +76,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      apiErrors: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {

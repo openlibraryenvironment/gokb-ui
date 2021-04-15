@@ -75,6 +75,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      apiErrors: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {

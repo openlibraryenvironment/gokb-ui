@@ -242,6 +242,7 @@
             </v-col>
           </v-row>
           <gokb-tipps-section
+            ref="tipps"
             :pkg="parseInt(id)"
             :platform="packageItem.nominalPlatform"
             :disabled="isReadonly"
@@ -250,6 +251,7 @@
           />
           <gokb-source-field
             v-if="loggedIn"
+            ref="source"
             v-model="sourceItem"
             :expanded="false"
             :readonly="isReadonly"
@@ -807,6 +809,7 @@
       async reload () {
         if (this.isEdit) {
           loading.startLoading()
+          this.newTipps = []
           const result = await this.catchError({
             promise: packageServices.getPackage(this.id, this.cancelToken.token),
             instance: this
@@ -849,6 +852,7 @@
             this.listVerifiedDate = data.listVerifiedDate
             if (data.source) {
               this.sourceItem = data.source
+              this.$refs.source.fetch()
             }
             this.lastUpdated = data.lastUpdated
             this.dateCreated = data.dateCreated
