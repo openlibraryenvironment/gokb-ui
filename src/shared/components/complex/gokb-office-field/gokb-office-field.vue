@@ -95,10 +95,10 @@
       },
       officeType: {
         get () {
-          return this.value.type
+          return this.value.function
         },
         set (type) {
-          this.localObj.type = type
+          this.localObj.function = type
 
           if (type) {
             this.localObj.localType = this.$i18n.t('component.office.type.' + type.value + '.label')

@@ -398,7 +398,7 @@
           this.packageNamespace = packageNamespace
           this.allPackages = providedPackages
           this.allNames = { name: name, alts: this.allAlternateNames }
-          this.offices = offices?.map(office => ({ ...office, typeLocal: (office.type ? this.$i18n.t('component.office.type.label') : undefined), isDeletable: !!updateUrl })) || []
+          this.offices = offices?.map(office => ({ ...office, typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined), localLanguage: (office.language?.value && office.language.value), isDeletable: !!updateUrl })) || []
           this.dateCreated = dateCreated
           this.lastUpdated = lastUpdated
           this.updateUrl = updateUrl

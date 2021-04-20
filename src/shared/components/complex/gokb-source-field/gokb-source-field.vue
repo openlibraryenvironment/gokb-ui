@@ -5,14 +5,14 @@
     :sub-title="$tc('component.source.label')"
   >
     <gokb-url-field
-      v-model="currentUrl"
+      v-model="url"
       :label="$t('component.source.url')"
       :readonly="readonly"
     />
     <v-row>
       <v-col cols="3">
         <gokb-state-field
-          v-model="currentFreq"
+          v-model="frequency"
           message-path="component.source.frequency"
           url="refdata/categories/Source.Frequency"
           :label="$t('component.source.frequency.label')"
@@ -31,7 +31,7 @@
     <v-row>
       <v-col>
         <v-checkbox
-          v-model="enabledEzb"
+          v-model="ezbMatch"
           class="mr-5"
           :readonly="readonly"
           :label="$t('component.source.ezbMatch')"
@@ -39,7 +39,7 @@
       </v-col>
       <v-col>
         <v-checkbox
-          v-model="enabledZdb"
+          v-model="zdbMatch"
           class="mr-5"
           :readonly="readonly"
           :label="$t('component.source.zdbMatch')"
@@ -55,11 +55,19 @@
       </v-col>
       <v-col class="d-flex flex-row-reverse">
         <v-checkbox
-          v-model="updateStatus"
+          v-model="update"
           class="mr-5"
           :readonly="readonly"
           :label="$t('component.source.updateNow')"
         />
+      </v-col>
+      <v-col>
+        <gokb-button
+          v-if="!readonly"
+          @click="submit"
+        >
+          {{ $t('btn.submit') }}
+        </gokb-button>
       </v-col>
     </v-row>
   </gokb-section>
@@ -118,130 +126,47 @@
         set (localValue) {
           this.$emit('input', localValue)
         }
-      },
-      currentFreq: {
-        get () {
-          const freq = this.frequency
-          return freq
-        },
-        set (freq) {
-          this.frequency = freq
-
-          this.localValue = {
-            url: this.url,
-            automaticUpdates: this.automaticUpdates,
-            titleIdNamespace: this.titleIdNamespace,
-            lastRun: this.lastRun,
-            ezbMatch: this.ezbMatch,
-            zdbMatch: this.zdbMatch,
-            id: this.id,
-            name: this.name,
-            frequency: this.frequency
-          }
-        }
-      },
-      currentUrl: {
-        get () {
-          const url = this.url
-          return url
-        },
-        set (url) {
-          this.url = url
-
-          this.localValue = {
-            url: this.url,
-            automaticUpdates: this.automaticUpdates,
-            titleIdNamespace: this.titleIdNamespace,
-            lastRun: this.lastRun,
-            ezbMatch: this.ezbMatch,
-            zdbMatch: this.zdbMatch,
-            id: this.id,
-            name: this.name,
-            frequency: this.frequency
-          }
-        }
-      },
-      updateStatus: {
-        get () {
-          return this.update
-        },
-        set (update) {
-          this.update = update
-          this.$emit('enable', update)
-        }
-      },
-      enabledZdb: {
-        get () {
-          return this.zdbMatch
-        },
-        set (update) {
-          this.localValue = {
-            url: this.url,
-            automaticUpdates: this.automaticUpdates,
-            titleIdNamespace: this.titleIdNamespace,
-            lastRun: this.lastRun,
-            ezbMatch: this.ezbMatch,
-            zdbMatch: update,
-            id: this.id,
-            name: this.name,
-            frequency: this.frequency
-          }
-        }
-      },
-      enabledEzb: {
-        get () {
-          return this.ezbMatch
-        },
-        set (update) {
-          this.localValue = {
-            url: this.url,
-            automaticUpdates: this.automaticUpdates,
-            titleIdNamespace: this.titleIdNamespace,
-            lastRun: this.lastRun,
-            ezbMatch: update,
-            zdbMatch: this.zdbMatch,
-            id: this.id,
-            name: this.name,
-            frequency: this.frequency
-          }
-        }
-      },
+      }
     },
     async mounted () {
       if (this.value?.id) {
-        this.fetch()
+        this.fetch(this.value.id)
       }
     },
     methods: {
-      async fetch () {
-        const result = await this.catchError({
-          promise: sourceServices.getSource(this.value.id, this.cancelToken.token),
-          instance: this
-        })
+      async fetch (sid) {
+        if (sid) {
+          const result = await this.catchError({
+            promise: sourceServices.getSource(sid, this.cancelToken.token),
+            instance: this
+          })
 
-        if (result?.status === 200) {
-          this.id = result.data.id
-          this.titleIdNamespace = result.titleIdNamespace
-          this.frequency = result.frequency
-          this.name = result.data.name
-          this.url = result.data.url
-          this.automaticUpdates = result.data.automaticUpdates
-          this.lastRun = result.data.lastRun ? new Date(result.data.lastRun).toLocaleString(this.$i18n.locale) : undefined
-          this.zdbMatch = result.data.zdbMatch
-          this.ezbMatch = result.data.ezbMatch
-
-          this.localValue = {
-            url: this.url,
-            automaticUpdates: this.automaticUpdates,
-            titleIdNamespace: this.titleIdNamespace,
-            lastRun: this.lastRun,
-            ezbMatch: this.ezbMatch,
-            zdbMatch: this.zdbMatch,
-            id: this.id,
-            name: this.name,
-            frequency: this.frequency
+          if (result?.status === 200) {
+            this.id = result.data.id
+            this.titleIdNamespace = result.titleIdNamespace
+            this.frequency = result.frequency
+            this.name = result.data.name
+            this.url = result.data.url
+            this.automaticUpdates = result.data.automaticUpdates
+            this.lastRun = result.data.lastRun ? new Date(result.data.lastRun).toLocaleString(this.$i18n.locale) : undefined
+            this.zdbMatch = result.data.zdbMatch
+            this.ezbMatch = result.data.ezbMatch
           }
         }
+      },
+      submit () {
+        var sourceItem = {
+          id: this.id,
+          name: this.name,
+          update: this.update,
+          url: this.url,
+          ezbMatch: this.ezbMatch,
+          zdbMatch: this.zdbMatch,
+          automaticUpdates: this.automaticUpdates,
+          titleIdNamespace: this.titleIdNamespace,
+          frequency: this.frequency
+        }
+        this.$emit('input', sourceItem)
       }
     }
   }
