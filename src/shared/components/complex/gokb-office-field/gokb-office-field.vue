@@ -7,7 +7,7 @@
           message-path="component.office.type"
           width="100%"
           return-object
-          url="refdata/categories/Office.Type"
+          url="refdata/categories/Office.Function"
           :label="$t('component.office.type.label')"
         />
       </v-col>
