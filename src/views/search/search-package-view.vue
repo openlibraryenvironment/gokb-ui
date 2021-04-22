@@ -164,6 +164,7 @@
               value: 'global',
               md: 8,
               properties: {
+                label: this.$i18n.t('component.package.global.label'),
                 options: [
                   { key: 'Global', label: this.$i18n.t('component.package.global.Global.label') },
                   { key: 'Consortial', label: this.$i18n.t('component.package.global.Consortial.label') },

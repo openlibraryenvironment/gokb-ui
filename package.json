@@ -1,6 +1,6 @@
 {
   "name": "gokb-client",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --modern --mode local",
@@ -17,7 +17,8 @@
     "buildDeploy4Dev": "vue-cli-service build --modern --mode dev && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
     "buildDeploy4Qa": "vue-cli-service build --modern --mode qa && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
     "buildDeploy4PhaetonQa": "vue-cli-service build --modern --mode phaetonqa && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
-    "buildDeploy4Prod": "vue-cli-service build --modern --mode prod && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test"
+    "buildDeploy4Prod": "vue-cli-service build --modern --mode prod && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
+    "webpack-defaults": "webpack-defaults"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -26,7 +27,8 @@
     "vue": "^2.6.12",
     "vue-i18n": "^8.22.4",
     "vue-router": "^3.5.1",
-    "vuetify": "^2.4.3"
+    "vuetify": "^2.4.3",
+    "webpack": "^4.46.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-export-default-from": "^7.12.1",
@@ -34,9 +36,9 @@
     "@vue/cli-plugin-eslint": "^4.5.11",
     "@vue/cli-plugin-pwa": "^4.5.11",
     "@vue/cli-plugin-router": "^4.5.11",
-    "@vue/cli-service": "^4.5.11",
+    "@vue/cli-service": "^4.5.12",
     "@vue/eslint-config-standard": "^5.1.2",
-    "babel-eslint": "^10.1.0",
+    "@babel/eslint-parser": "^7.13.14",
     "eslint": "^6.8.0",
     "eslint-config-vuetify": "^0.2.0",
     "eslint-plugin-import": "^2.22.1",

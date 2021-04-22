@@ -57,7 +57,10 @@
           >
             home
           </v-icon>
-          <span class="application-title text-h6">
+          <span
+            class="application-title text-h6"
+            :title="currentVersion"
+          >
             GOKb Client
           </span>
         </v-btn>
@@ -82,7 +85,7 @@
       >
         <template v-slot:item="{ item }">
           <v-icon
-            v-title="item.title"
+            :title="item.iconTitle"
             class="mr-2"
           >
             {{ item.icon }}
@@ -161,6 +164,7 @@
   import { ROLE_ADMIN, ROLE_EDITOR } from '@/shared/models/roles'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
+  import { version } from '../package.json'
   import {
     HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
     SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
@@ -226,6 +230,24 @@
       },
       globalSearchPlaceholder () {
         return this.$i18n.t('search.global.placeholder')
+      },
+      currentVersion () {
+        return version
+      },
+      typeRoutes () {
+        return [
+          { type: 'Organization', path: '/provider/', icon: 'domain', label: this.$i18n.tc('component.provider.label') },
+          { type: 'Org', path: '/provider/', icon: 'domain', label: this.$i18n.tc('component.provider.label') },
+          { type: 'Package', path: '/package/', icon: 'folder', label: this.$i18n.tc('component.package.label') },
+          { type: 'Journal', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Journal') },
+          { type: 'JournalInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Journal') },
+          { type: 'Book', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Book') },
+          { type: 'BookInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Book') },
+          { type: 'Database', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Database') },
+          { type: 'DatabaseInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Database') },
+          { type: 'TitleInstancePackagePlatform', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.label') },
+          { type: 'TIPP', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.label') },
+        ]
       }
     },
     watch: {
@@ -239,18 +261,6 @@
         this.isLoading = true
 
         try {
-          this.typeRoutes = [
-            { type: 'Organization', path: '/provider/', icon: 'domain', title: this.$i18n.tc('component.provider.label') },
-            { type: 'Org', path: '/provider/', icon: 'domain', title: this.$i18n.tc('component.provider.label') },
-            { type: 'Package', path: '/package/', icon: 'folder', title: this.$i18n.tc('component.package.label') },
-            { type: 'Journal', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Journal') },
-            { type: 'JournalInstance', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Journal') },
-            { type: 'Book', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Book') },
-            { type: 'BookInstance', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Book') },
-            { type: 'Database', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Database') },
-            { type: 'DatabaseInstance', path: '/title/', icon: 'library_books', title: this.$i18n.tc('component.title.type.Database') },
-          ]
-
           const result = await this.searchServices.search({
             suggest: this.globalSearchField,
             status: 'Current',
@@ -259,11 +269,24 @@
           }, this.cancelToken.token)
 
           if (result?.data?.data) {
-            this.globalSearchItems = result.data.data.map(res => ({
-              ...res,
-              icon: this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.icon,
-              path: this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.path
-            })).filter(path => !!path)
+            this.globalSearchItems = []
+
+            console.log(result.data.data)
+
+            result.data.data.forEach((item, idx) => {
+              var res
+
+              if (this.typeRoutes.find(({ type: atype }) => atype === item.type || atype === item.componentType)) {
+                res = item
+                res.icon = this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.icon
+                res.iconTitle = this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.label
+                res.path = this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.path
+
+                this.globalSearchItems.push(res)
+              } else {
+                console.log('Not Adding item..')
+              }
+            })
           }
         } catch (exception) {
           this.globalSearchItems = []
@@ -273,7 +296,7 @@
       },
       globalSearchSelected () {
         if (this.globalSearchSelected.path) {
-          this.globalSearchSelected && this.$router.push({ path: this.globalSearchSelected.path + this.globalSearchSelected.id })
+          this.globalSearchSelected && this.$router.push({ path: this.globalSearchSelected.path + (this.globalSearchSelected.tippTitleMedium ? this.globalSearchSelected.title.id : this.globalSearchSelected.id) })
           this.globalSearchField = undefined
         }
       },

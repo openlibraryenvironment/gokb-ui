@@ -1,18 +1,23 @@
 <template>
-  <v-row>
-    <v-col
-      v-for="(option, idx) in options"
-      :key="idx"
-    >
-      <v-checkbox
-        v-model="localValue"
-        :label="option.label"
-        :value="option.key"
-        :disabled="disabled"
-        :readonly="readonly"
-      />
-    </v-col>
-  </v-row>
+  <div>
+    <label>
+      {{ label }}
+    </label>
+    <v-row :id="`ms-${label}`">
+      <v-col
+        v-for="(option, idx) in options"
+        :key="idx"
+      >
+        <v-checkbox
+          v-model="localValue"
+          :label="option.label"
+          :value="option.key"
+          :disabled="disabled"
+          :readonly="readonly"
+        />
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
