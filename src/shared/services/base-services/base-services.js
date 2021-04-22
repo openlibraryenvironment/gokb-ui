@@ -23,10 +23,20 @@ const api = (http, utils) => ({
   },
 
   createQueryParameters (parameters) {
-    return Object.entries(parameters)
-      .filter(([, value]) => value)
-      .map(([name, value]) => `${name}=${value}`)
-      .join('&')
+    const pars = []
+
+    Object.entries(parameters)
+      .forEach(([name, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach(val =>
+            pars.push(`${name}=${val}`)
+          )
+        } else if (value !== undefined && value !== null) {
+          pars.push(`${name}=${value}`)
+        }
+      })
+
+    return pars.join('&')
   },
 
   createFormData (parameters) {

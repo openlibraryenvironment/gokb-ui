@@ -153,9 +153,12 @@
             </v-row>
             <v-row>
               <v-col cols="7">
+                <div>
+                  <label for="validity">{{ $t('component.package.global.label') }}</label>
+                </div>
                 <gokb-radiobutton-group
+                  id="validity"
                   v-model="packageItem.global"
-                  :label="$t('component.package.global.label')"
                 >
                   <gokb-radiobutton-field
                     value="Global"
@@ -177,23 +180,27 @@
                     :label="$t('component.package.global.Unknown.label')"
                     :readonly="isReadonly"
                   />
+                  <gokb-radiobutton-field
+                    value="Local"
+                    :label="$t('component.package.global.Local.label')"
+                    :readonly="isReadonly"
+                  />
                 </gokb-radiobutton-group>
               </v-col>
               <v-col cols="1">
                 <v-icon
-                  v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'"
-                  class="mt-1"
+                  v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other' || packageItem.global === 'Local'"
+                  class="mt-6"
                 >
                   mdi-chevron-triple-right
                 </v-icon>
               </v-col>
               <v-col cols="4">
                 <gokb-text-field
-                  v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other'"
+                  v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other' || packageItem.global === 'Local'"
                   v-model="packageItem.globalNote"
                   :label="$t('component.package.globalNote.label')"
                   :disabled="isReadonly"
-                  dense
                 />
               </v-col>
             </v-row>
@@ -627,10 +634,10 @@
         return accountModel.loggedIn()
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toISOString().substr(0, 10) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale) : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toISOString().substr(0, 10) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale) : ''
       },
       localListVerifiedDate () {
         return this.listVerifiedDate ? new Date(this.listVerifiedDate).toISOString().substr(0, 10) : ''

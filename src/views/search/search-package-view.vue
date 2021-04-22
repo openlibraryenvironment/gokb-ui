@@ -17,6 +17,7 @@
           identifierValue: undefined,
           contentType: undefined,
           status: undefined,
+          global: ['Global', 'Consortial', 'Regional', 'Unknown'],
           name: undefined,
         },
         sortMappings: {
@@ -155,6 +156,24 @@
                 messagePath: 'component.general.editStatus'
               }
             },
+          ],
+          [
+            {
+              type: 'GokbSearchMultiselectField',
+              name: 'global',
+              value: 'global',
+              md: 8,
+              properties: {
+                label: this.$i18n.t('component.package.global.label'),
+                options: [
+                  { key: 'Global', label: this.$i18n.t('component.package.global.Global.label') },
+                  { key: 'Consortial', label: this.$i18n.t('component.package.global.Consortial.label') },
+                  { key: 'Regional', label: this.$i18n.t('component.package.global.Regional.label') },
+                  { key: 'Local', label: this.$i18n.t('component.package.global.Local.label') },
+                  { key: 'Unknown', label: this.$i18n.t('component.package.global.Unknown.label') },
+                ]
+              }
+            }
           ]
         ]
       },

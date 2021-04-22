@@ -491,6 +491,9 @@
         },
         "Unknown": {
           "label": "Unknown"
+        },
+        "Local": {
+          "label": "Local"
         }
       },
       "globalNote": {

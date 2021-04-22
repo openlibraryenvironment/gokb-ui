@@ -10,7 +10,7 @@
           <v-col
             v-for="(column, columnIndex) of row"
             :key="`${rowIndex}_${columnIndex}`"
-            md="4"
+            :md="column.md || 4"
           >
             <component
               :is="column.type"
@@ -212,7 +212,7 @@
           .map(field => ([field.name, field.value]))
           .filter(([name, value]) => name && this.searchFilters[value] !== undefined && this.searchFilters[value] !== null)
           .reduce((result, [name, value]) => {
-            result[name] = ((typeof this.searchFilters[value] === 'string' || typeof this.searchFilters[value] === 'number') ? this.searchFilters[value] : this.searchFilters[value].id)
+            result[name] = ((typeof this.searchFilters[value] === 'string' || typeof this.searchFilters[value] === 'number' || Array.isArray(this.searchFilters[value])) ? this.searchFilters[value] : this.searchFilters[value].id)
             return result
           }, {})
         // console.log(this.searchInputFields, this.searchParameters)
