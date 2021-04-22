@@ -36,6 +36,16 @@
           />
         </template>
       </v-list>
+      <template v-slot:append>
+        <v-row class="pa-2">
+          <v-col
+            class="text-caption"
+            align="center"
+          >
+            v{{ currentVersion }}
+          </v-col>
+        </v-row>
+      </template>
     </v-navigation-drawer>
     <v-app-bar
       :clipped-left="$vuetify.breakpoint.mdAndUp"
