@@ -92,7 +92,7 @@
             text: this.$i18n.t('component.general.name'),
             align: 'left',
             width: '100%',
-            sortable: false,
+            sortable: true,
             value: 'link'
           },
         ]

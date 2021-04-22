@@ -242,6 +242,7 @@
             </v-col>
           </v-row>
           <gokb-tipps-section
+            ref="tipps"
             :pkg="parseInt(id)"
             :platform="packageItem.nominalPlatform"
             :disabled="isReadonly"
@@ -250,6 +251,7 @@
           />
           <gokb-source-field
             v-if="loggedIn"
+            ref="source"
             v-model="sourceItem"
             :expanded="false"
             :readonly="isReadonly"
@@ -625,13 +627,13 @@
         return accountModel.loggedIn()
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toISOString().substr(0, 10) : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toISOString().substr(0, 10) : ''
       },
       localListVerifiedDate () {
-        return this.listVerifiedDate ? new Date(this.listVerifiedDate).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.listVerifiedDate ? new Date(this.listVerifiedDate).toISOString().substr(0, 10) : ''
       }
     },
     watch: {
@@ -712,14 +714,18 @@
               sourceItem.name = this.allNames.name
             }
 
+            if (this.sourceItem?.update) {
+              this.urlUpdate = true
+            }
+
             const sourceReponse = await this.catchError({
               promise: sourceServices.createOrUpdateSource(sourceItem, this.cancelToken.token),
               instance: this
             })
 
             if (sourceReponse.status < 400) {
-              this.packageItem.source = sourceReponse.data?.id
-              this.sourceItem = { id: sourceReponse.data?.id }
+              this.packageItem.source = sourceReponse.data
+              this.sourceItem = sourceReponse.data
             }
           }
 
@@ -807,6 +813,7 @@
       async reload () {
         if (this.isEdit) {
           loading.startLoading()
+          this.newTipps = []
           const result = await this.catchError({
             promise: packageServices.getPackage(this.id, this.cancelToken.token),
             instance: this
@@ -847,8 +854,9 @@
             this.titleCount = data._tippCount
             this.allNames = { name: data.name, alts: this.allAlternateNames }
             this.listVerifiedDate = data.listVerifiedDate
-            if (data.source) {
+            if (data.source && this.$refs.source) {
               this.sourceItem = data.source
+              this.$refs.source.fetch(data.source.id)
             }
             this.lastUpdated = data.lastUpdated
             this.dateCreated = data.dateCreated

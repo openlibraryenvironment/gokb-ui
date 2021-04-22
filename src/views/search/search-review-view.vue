@@ -34,6 +34,9 @@
           }
         ]
       },
+      title () {
+        return this.$i18n.tc('component.review.label', 2)
+      },
       resultHeaders () {
         return [
           {
@@ -41,12 +44,6 @@
             align: 'left',
             sortable: true,
             value: 'popup'
-          },
-          {
-            text: this.$i18n.t('component.review.type'),
-            align: 'left',
-            sortable: true,
-            value: 'type'
           },
           {
             text: this.$i18n.tc('component.review.stdDesc.label'),
@@ -122,7 +119,6 @@
       }
     },
     created () {
-      this.title = 'Reviews'
       this.component = 'g:reviewRequests'
       this.searchServicesUrl = 'rest/reviews'
       this.linkValue = 'componentToReview'

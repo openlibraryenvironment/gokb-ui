@@ -24,13 +24,13 @@
         type: String,
         required: false,
         default: 'current-password',
-      }
-    },
-    computed: {
-      rules () {
-        return [
-          value => !!value || this.$i18n.t('component.user.error.missing.password')
-        ]
+      },
+      rules: {
+        type: Array,
+        required: false,
+        default () {
+          return [v => (v?.length > 0 || !this.required) || this.$i18n.t('component.user.error.missing.password')]
+        }
       }
     }
   }

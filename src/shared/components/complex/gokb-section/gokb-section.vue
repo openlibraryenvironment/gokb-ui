@@ -3,6 +3,7 @@
     <v-card
       flat
       class="mb-2"
+      :style="[!!errors ? { border: '1px solid red' } : {}]"
     >
       <v-toolbar
         v-if="title && !subTitle"
@@ -122,6 +123,11 @@
         default: undefined,
       },
       noToolBar: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      errors: {
         type: Boolean,
         required: false,
         default: false

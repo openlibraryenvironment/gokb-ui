@@ -214,7 +214,7 @@
           link: { value: name, route: EDIT_PACKAGE_ROUTE, id: 'id' },
           linkTwo: provider ? { value: provider.name, route: EDIT_PROVIDER_ROUTE, id: 'providerId' } : undefined,
           providerId: provider?.id || undefined,
-          lastUpdated: new Date(lastUpdated).toLocaleString(this.$i18n.locale),
+          lastUpdated: new Date(lastUpdated).toISOString().substr(0, 10),
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
           deleteUrl: _links?.delete?.href || undefined,

@@ -110,7 +110,7 @@
         selectedItems: [],
         resultOptions: {
           page: 1,
-          sortBy: [],
+          sortBy: ['link'],
           desc: [false],
           itemsPerPage: ROWS_PER_PAGE
         },
@@ -216,7 +216,7 @@
             return result
           }, {})
         // console.log(this.searchInputFields, this.searchParameters)
-        const sort = this.resultOptions.sortBy ? (this.linkSearchParameterValues[this.resultOptions.sortBy[0]] || this.resultOptions.sortBy[0]) : undefined
+        const sort = this.resultOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.resultOptions.sortBy[0]] || this.resultOptions.sortBy[0]) : undefined
         const desc = this.resultOptions.desc[0] ? 'desc' : 'asc'
         const result = await this.catchError({
           promise: this.searchServices.search({

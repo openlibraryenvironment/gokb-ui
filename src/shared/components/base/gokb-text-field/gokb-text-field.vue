@@ -11,6 +11,7 @@
     :required="required"
     :rules="rules"
     :type="type"
+    :error="!!apiErrors"
     :placeholder="placeholder"
     :append-icon="appendIcon"
     validate-on-blur
@@ -89,6 +90,18 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      rules: {
+        type: Array,
+        required: false,
+        default () {
+          return [v => (v?.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
+        }
+      },
+      apiErrors: {
+        type: [Object, Array],
+        required: false,
+        default: undefined
       }
     },
     computed: {
@@ -99,14 +112,11 @@
         set (localValue) {
           this.$emit('input', localValue)
         }
-      },
-      rules () {
-        return [((this.required && this.value !== null && this.value.length > 0) || !this.required || this.$i18n.t('validation.missingValue'))]
       }
     },
     methods: {
-      validate ({ def }) {
-        this.$refs.textField.validate({ def })
+      validate () {
+        this.$refs.textField.validate()
       }
     }
   }

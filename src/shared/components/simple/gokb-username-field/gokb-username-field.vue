@@ -24,14 +24,16 @@
         type: String,
         required: false,
         default: 'username',
+      },
+      rules: {
+        type: Array,
+        required: false,
+        default () {
+          return [
+            value => !!value || this.$i18n.t('component.user.error.missing.username')
+          ]
+        }
       }
     },
-    computed: {
-      rules () {
-        return [
-          value => !!value || this.$i18n.t('component.user.error.missing.username')
-        ]
-      }
-    }
   }
 </script>

@@ -4,6 +4,7 @@
     :hide-default="!expanded"
     :sub-title="$tc('component.platform.label', 2)"
     :items-total="totalNumberOfItems"
+    :errors="!!apiErrors"
   >
     <gokb-add-item-popup
       v-if="addPlatformPopupVisible"
@@ -79,6 +80,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      apiErrors: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {
