@@ -42,7 +42,7 @@
         }
       },
       link () {
-        return `${process.env.VUE_APP_API_BASE_URL}/register/index?embed=true&lang=${this.$i18n.locale}`
+        return `${process.env.VUE_APP_API_BASE_URL}/register/start?embed=true&lang=${this.$i18n.locale}`
       }
     },
     methods: {
