@@ -481,7 +481,7 @@
         "Global": {
           "label": "Global"
         },
-        "Consortial": {
+        "Consortium": {
           "label": "Konsortial"
         },
         "Regional": {
@@ -781,6 +781,12 @@
           "info": "Ein Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
           "action": "Paket nicht aktualisiert",
           "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
+        },
+        "Multiple ZDB Results": {
+          "label": "Mehrere ZDB-Kandidaten",
+          "info": "Es gibt mehrere Kandidaten für den Titel.",
+          "action": "ZDB-Anreicherung verhindert",
+          "toDo": "Selektieren Sie die korrekte ZDB-Aufnahme für den Titel."
         }
       }
     },
@@ -851,7 +857,7 @@
         }
       },
       "dateCreated": "Erstellt am",
-      "lastUpdated": "Zuletzt verändert am",
+      "lastUpdated": "Letzte Änderung",
       "language": {
           "label": "Sprache"
       }

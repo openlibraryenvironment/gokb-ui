@@ -1,7 +1,8 @@
 <template>
   <v-dialog
     :value="value"
-    persistent
+    :persistent="persistent"
+    :fullscreen="fullscreen"
     :width="width"
   >
     <v-card class="elevation-12">
@@ -40,6 +41,16 @@
         type: [Number, String],
         required: false,
         default: 400
+      },
+      persistent: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      fullscreen: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     methods: {

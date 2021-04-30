@@ -167,7 +167,7 @@
                 label: this.$i18n.t('component.package.global.label'),
                 options: [
                   { key: 'Global', label: this.$i18n.t('component.package.global.Global.label') },
-                  { key: 'Consortial', label: this.$i18n.t('component.package.global.Consortial.label') },
+                  { key: 'Consortium', label: this.$i18n.t('component.package.global.Consortium.label') },
                   { key: 'Regional', label: this.$i18n.t('component.package.global.Regional.label') },
                   { key: 'Local', label: this.$i18n.t('component.package.global.Local.label') },
                   { key: 'Unknown', label: this.$i18n.t('component.package.global.Unknown.label') },
@@ -202,7 +202,7 @@
             text: this.$i18n.tc('component.general.lastUpdated'),
             align: 'end',
             sortable: true,
-            width: '18%',
+            width: '13%',
             value: 'lastUpdated'
           }
         ]

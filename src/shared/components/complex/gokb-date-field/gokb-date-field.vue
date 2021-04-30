@@ -1,53 +1,55 @@
 <template>
-  <v-row v-if="!readonly">
-    <v-col
-      cols="10"
-      class="pr-0"
-    >
-      <v-text-field
-        v-model="localDate"
-        :clearable="clearable"
-        :label="label"
-        validate-on-blur
-        :hint="$t('default.ISOdateHint')"
-        :rules="rules"
-        :dense="dense"
-      />
-    </v-col>
-    <v-col
-      align-self="center"
-      cols="2"
-    >
-      <v-menu
-        v-model="menu"
-        :close-on-content-click="false"
-        transition="scale-transition"
+  <div style="min-width:250px">
+    <v-row v-if="!readonly">
+      <v-col
+        cols="10"
+        class="pr-0"
       >
-        <template v-slot:activator="{ on }">
-          <v-icon
-            v-bind="$props"
-            class="pb-1"
-            v-on="on"
-          >
-            mdi-calendar
-          </v-icon>
-        </template>
-        <v-date-picker
-          v-if="!readonly"
+        <v-text-field
           v-model="localDate"
-          @input="menu = false"
+          :clearable="clearable"
+          :label="label"
+          validate-on-blur
+          :hint="$t('default.ISOdateHint')"
+          :rules="rules"
+          :dense="dense"
         />
-      </v-menu>
-    </v-col>
-  </v-row>
-  <v-text-field
-    v-else
-    v-model="localDate"
-    class="gokb-date-field-disabled"
-    v-bind="$props"
-    :dense="dense"
-    disabled
-  />
+      </v-col>
+      <v-col
+        align-self="center"
+        cols="2"
+      >
+        <v-menu
+          v-model="menu"
+          :close-on-content-click="false"
+          transition="scale-transition"
+        >
+          <template v-slot:activator="{ on }">
+            <v-icon
+              v-bind="$props"
+              class="pb-1"
+              v-on="on"
+            >
+              mdi-calendar
+            </v-icon>
+          </template>
+          <v-date-picker
+            v-if="!readonly"
+            v-model="localDate"
+            @input="menu = false"
+          />
+        </v-menu>
+      </v-col>
+    </v-row>
+    <v-text-field
+      v-else
+      v-model="localDate"
+      class="gokb-date-field-disabled"
+      v-bind="$props"
+      :dense="dense"
+      disabled
+    />
+  </div>
 </template>
 
 <script>

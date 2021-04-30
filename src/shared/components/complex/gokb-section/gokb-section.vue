@@ -3,7 +3,7 @@
     <v-card
       flat
       class="mb-2"
-      :style="[!!errors ? { border: '1px solid red' } : {}]"
+      :style="styles"
     >
       <v-toolbar
         v-if="title && !subTitle"
@@ -131,6 +131,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      minWidth: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -144,6 +149,19 @@
       },
       darkMode () {
         return this.$vuetify.theme.dark
+      },
+      styles () {
+        var result = {}
+
+        if (this.errors) {
+          result.border = '1px solid red'
+        }
+
+        if (this.minWidth) {
+          result.minWidth = this.minWidth
+        }
+
+        return [result]
       }
     },
     created () {
@@ -153,7 +171,7 @@
       doExpandCollapse () {
         this.expanded = !this.expanded
       }
-    }
+    },
   }
 </script>
 

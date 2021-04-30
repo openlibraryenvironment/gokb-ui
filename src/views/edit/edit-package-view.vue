@@ -167,7 +167,7 @@
                   />
                   <gokb-radiobutton-field
                     value="Consortium"
-                    :label="$t('component.package.global.Consortial.label')"
+                    :label="$t('component.package.global.Consortium.label')"
                     :readonly="isReadonly"
                   />
                   <gokb-radiobutton-field

@@ -483,7 +483,7 @@
         "Global": {
           "label": "Global"
         },
-        "Consortial": {
+        "Consortium": {
           "label": "Consortial"
         },
         "Regional": {
@@ -784,6 +784,12 @@
           "info": "An update for this package failed because of invalid package title information.",
           "action": "Package not updated",
           "toDo": "Check records for erroneous or missing information."
+        },
+        "Multiple ZDB Results": {
+          "label": "Multiple ZDB Results",
+          "info": "There were multiple ZDB results for this title.",
+          "action": "Skipped ZDB enrichment",
+          "toDo": "Select a ZDB entry from the candidates."
         }
       }
     },

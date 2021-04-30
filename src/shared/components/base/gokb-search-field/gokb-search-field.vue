@@ -7,13 +7,13 @@
       v-if="localLabel"
       style="font-size:0.8rem"
     >
-      <label class="v-label">{{ label }}</label>
+      <label class="text-caption">{{ label }}</label>
     </div>
     <div
       v-else
       style="font-size:1.1rem"
     >
-      <label class="v-label">{{ label }}</label>
+      <label class="text-caption">{{ label }}</label>
     </div>
     <router-link
       v-if="componentRoute"
