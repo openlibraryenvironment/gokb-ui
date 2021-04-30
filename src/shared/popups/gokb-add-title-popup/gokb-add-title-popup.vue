@@ -543,7 +543,7 @@
         return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph'
       },
       titleTypeString () {
-        return this.title?.type
+        return (typeof this.title.type === 'object' ? this.title.type.id : this.title.type)
       },
       expansionIcon () {
         return this.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'

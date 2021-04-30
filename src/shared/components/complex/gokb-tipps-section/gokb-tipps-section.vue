@@ -271,10 +271,10 @@
       },
       packageTypes () {
         return [
-          { id: 'book', text: this.$i18n.tc('component.title.type.Book') },
-          { id: 'database', text: this.$i18n.tc('component.title.type.Database') },
-          { id: 'journal', text: this.$i18n.tc('component.title.type.Journal') },
-          { id: 'other', text: this.$i18n.tc('component.title.type.Other') },
+          { id: 'Book', text: this.$i18n.tc('component.title.type.Book') },
+          { id: 'Database', text: this.$i18n.tc('component.title.type.Database') },
+          { id: 'Journal', text: this.$i18n.tc('component.title.type.Journal') },
+          { id: 'Other', text: this.$i18n.tc('component.title.type.Other') },
         ]
       },
       loggedIn () {
