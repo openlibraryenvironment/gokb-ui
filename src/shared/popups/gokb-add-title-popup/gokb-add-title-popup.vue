@@ -546,7 +546,7 @@
         return (typeof this.title.type === 'object' ? this.title.type.id : this.title.type)
       },
       expansionIcon () {
-        return this.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
+        return this.coverageExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
       },
       localValue: {
         get () {

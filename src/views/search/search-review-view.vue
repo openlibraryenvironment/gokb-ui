@@ -144,7 +144,7 @@
           component: componentToReview,
           componentId: componentToReview.id,
           type: this.$i18n.tc('component.' + componentToReview.type.toLowerCase() + '.label'),
-          dateCreated: new Date(dateCreated).toLocaleString(this.$i18n.locale),
+          dateCreated: new Date(dateCreated).toISOString().substr(0, 10),
           allocatedGroups,
           request: reviewRequest,
           description: descriptionOfCause,

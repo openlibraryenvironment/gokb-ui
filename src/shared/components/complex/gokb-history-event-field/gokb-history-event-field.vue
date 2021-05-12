@@ -14,7 +14,7 @@
           :show-link="true"
           :required="true"
           :label="$tc('component.title.label')"
-          type-filter="serial"
+          type-filter="Journal"
           @click:append="$emit('delete', value)"
         />
       </v-col>
@@ -45,7 +45,7 @@
           :required="true"
           :label="$tc('component.title.label')"
           return-object
-          type-filter="serial"
+          type-filter="Journal"
           @click:append="$emit('delete', value)"
         />
         <v-banner v-else>

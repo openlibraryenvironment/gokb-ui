@@ -691,7 +691,7 @@
         },
         "Minor Identifier Mismatch": {
           "label": "Minor Identifier Mismatch",
-          "info": "Title {0} matched, but ingest identifiers differ from existing ones in the same namespaces.",
+          "info": "Title {0} matched, but ingest identifiers {1} differ from existing ones in the same namespaces.",
           "action": "Existing title selected",
           "toDo": "Check identifiers and delete the incorrect identifiers if necessary."
         },

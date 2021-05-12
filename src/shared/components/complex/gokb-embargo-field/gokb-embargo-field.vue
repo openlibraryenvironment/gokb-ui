@@ -3,13 +3,15 @@
     <div class="text-h6">
       Embargo
     </div>
-    <gokb-embargo-type-field
-      v-model="embargoType"
-      :label="$t('component.tipp.embargo.type')"
-      :rules="[typeRules]"
-      :readonly="readonly"
-    />
     <v-row>
+      <v-col>
+        <gokb-embargo-type-field
+          v-model="embargoType"
+          :label="$t('component.tipp.embargo.type')"
+          :rules="[typeRules]"
+          :readonly="readonly"
+        />
+      </v-col>
       <v-col>
         <gokb-number-field
           v-model="embargoDuration"

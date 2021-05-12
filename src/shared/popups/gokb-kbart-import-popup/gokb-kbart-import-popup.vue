@@ -347,14 +347,14 @@
                   this.loadedFile.errors.type.publication_type.invalid++
                   this.loadedFile.errors.single.push({ row: idxr, column: 'publication_type', reason: this.$i18n.t('kbart.errors.illegalType') })
                   hasErrors = true
-                } else if (!type === 'serial') {
+                } else if (type === 'serial') {
                   Object.keys(this.kbartStd.serial).forEach(key => {
                     if (!columns.includes(key)) {
                       this.loadedFile.errors.missingColumns.push(key)
                       hasErrors = true
                     }
                   })
-                } else if (!type === 'monograph') {
+                } else if (type === 'monograph') {
                   Object.keys(this.kbartStd.monograph).forEach(key => {
                     if (!columns.includes(key)) {
                       this.loadedFile.errors.missingColumns.push(key)

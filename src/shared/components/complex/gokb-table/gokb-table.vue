@@ -72,7 +72,7 @@
         />
       </template>
       <template #item.action="{ item }">
-        <div style="white-space:nowrap">
+        <div style="white-space:nowrap;cursor:pointer">
           <v-icon
             v-if="editable && item.isRetireable !== undefined"
             class="mr-2"
@@ -111,10 +111,11 @@
   import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
   import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
+  import GokbCuratoryGroupPopup from '@/shared/popups/gokb-curatory-group-popup'
 
   export default {
     name: 'GokbTable',
-    components: { GokbEditJobPopup, GokbAddTitlePopup, GokbAddReviewPopup },
+    components: { GokbEditJobPopup, GokbAddTitlePopup, GokbAddReviewPopup, GokbCuratoryGroupPopup },
     extends: BaseComponent,
     props: {
       disabled: {

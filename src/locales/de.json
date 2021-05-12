@@ -688,7 +688,7 @@
         },
         "Minor Identifier Mismatch": {
           "label": "Kleiner Identifikator-Konflikt",
-          "info": "Titel {0} stimmt überein, aber manche Identifikatoren desselben Namensraums stimmen nicht überein.",
+          "info": "Titel {0} stimmt überein, aber manche Identifikatoren {1} desselben Namensraums stimmen nicht überein.",
           "action": "Titel ausgewählt",
           "toDo": "Überprüfen Sie die Identifikatoren und löschen Sie diese, falls sie falsch sind."
         },

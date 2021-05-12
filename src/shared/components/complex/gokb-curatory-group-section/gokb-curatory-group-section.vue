@@ -113,6 +113,7 @@
       curatoryGroups () {
         return [...this.value]
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+          .map(group => ({ ...group, popup: { value: group.name, label: 'name', type: 'GokbCuratoryGroupPopup' } }))
           .slice((this.curatoryGroupsOptions.page - 1) * ROWS_PER_PAGE, this.curatoryGroupsOptions.page * ROWS_PER_PAGE)
       },
       isDeleteSelectedDisabled () {
@@ -125,7 +126,9 @@
         return !this.disabled
       },
       curatoryGroupsTableHeaders () {
-        return [{ text: this.$i18n.t('component.general.name'), align: 'left', value: 'name', sortable: false, width: '100%' }]
+        return [
+          { text: this.$i18n.t('component.general.name'), align: 'left', width: '100%', value: 'popup', sortable: false }
+        ]
       }
     },
     methods: {

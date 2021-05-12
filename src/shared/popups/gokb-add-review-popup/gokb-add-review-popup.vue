@@ -2,7 +2,7 @@
   <gokb-dialog
     v-model="localValue"
     title="Review-Details"
-    width="50%"
+    :width="1000"
     @submit="save"
   >
     <gokb-error-component :value="error" />
@@ -103,7 +103,31 @@
                 </router-link>
               </template>
               <template v-slot:1>
-                <b v-if="numMessageVars > 1">{{ additionalInfo.vars[1] }}</b>
+                <b v-if="numMessageVars > 1">
+                  <span v-if="typeof additionalInfo.vars[1] === 'string'">
+                    {{ additionalInfo.vars[1] }}
+                  </span>
+                  <span v-else-if="Array.isArray(additionalInfo.vars[1])">
+                    (
+                    <span
+                      v-for="(entry, idx) in additionalInfo.vars[1]"
+                      :key="idx"
+                    >
+                      <span v-if="typeof entry === 'string'">
+                        {{ entry }}
+                      </span>
+                      <span v-else>
+                        <span
+                          v-for="(value, namespace) in entry"
+                          :key="namespace + '_' + value"
+                        >
+                          {{ namespace }}:{{ value }}
+                        </span>
+                      </span>
+                    </span>
+                    )
+                  </span>
+                </b>
               </template>
               <template v-slot:2>
                 <b v-if="numMessageVars > 2">{{ additionalInfo.vars[2] }}</b>

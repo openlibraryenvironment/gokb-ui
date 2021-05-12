@@ -2,7 +2,7 @@
   <gokb-dialog
     v-model="localValue"
     title="Job-Details"
-    width="50%"
+    width="70%"
     @submit="close"
   >
     <v-row>

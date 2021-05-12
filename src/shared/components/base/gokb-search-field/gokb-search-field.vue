@@ -66,7 +66,8 @@
     <template v-slot:selection="data">
       <router-link
         v-if="showLink"
-        :style="{ color: '#f2994a', fontSize: '1.1rem', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', maxWidth: '75%' }"
+        :style="{ color: '#f2994a', fontSize: '1.1rem', maxWidth: '75%' }"
+        class="text-truncate"
         :to="{ name: knownRoutes[data.item.type], params: { 'id': data.item.id } }"
       >
         <span :title="data.item[itemText]">{{ data.item[itemText] }}</span>
