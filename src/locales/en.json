@@ -168,6 +168,18 @@
     "file": {
       "label": "File"
     },
+    "export": {
+      "type": {
+        "tipp": {
+          "label":"Raw",
+          "description": "Prefers original KBART info for all columns"
+        },
+        "title": {
+          "label":"Processed",
+          "description": "Fields like publication_name are preferably taken from global title records"
+        }
+      }
+    },
     "propId": {
       "label": "Namespace for title_id values"
     },

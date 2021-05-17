@@ -169,6 +169,18 @@
     "file": {
       "label": "Datei"
     },
+    "export": {
+      "type": {
+        "tipp": {
+          "label":"Lokal",
+          "description": "Bevorzugt Informationen aus eingehendem KBART in allen Spalten"
+        },
+        "title": {
+          "label":"Global",
+          "description": "Spalten werden bevorzugt aus Informationen zum Referenztitel erzeugt"
+        }
+      }
+    },
     "propId": {
       "label": "Namensraum für title_id"
     },

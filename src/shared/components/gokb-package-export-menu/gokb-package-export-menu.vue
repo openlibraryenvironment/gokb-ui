@@ -6,7 +6,7 @@
         :disabled="disabled"
         @click="on.click"
       >
-        Export
+        KBART Download
       </gokb-button>
     </template>
     <v-list>
@@ -18,10 +18,11 @@
           <a
             download
             :href="dataUrl"
+            :title="exportType.description"
             :type="type"
             @click="download(exportType)"
           >
-            {{ name }}
+            {{ exportType.label }}
           </a>
         </v-list-item-title>
       </v-list-item>
@@ -33,33 +34,53 @@
   import selection from '@/shared/models/selection'
   import GokbButton from '@/shared/components/base/gokb-button'
 
-  const EXPORT_VARIANTS = {
-    KBART: { url: `${process.env.VUE_APP_API_BASE_URL}/packages/kbart/`, type: 'text/comma-separated-values' },
-    GOKb: { url: `${process.env.VUE_APP_API_BASE_URL}/packages/packageTSVExport/`, type: 'text/tab-separated-values' },
-  }
   export default {
     name: 'GokbPackageExportMenu',
     components: { GokbButton },
     data () {
       return {
-        exportVariants: EXPORT_VARIANTS,
         dataUrl: undefined,
         type: undefined,
       }
     },
     computed: {
       disabled () {
-        return this.selectedItems?.length !== 1
+        return !this.selectedItems || this.selectedItems?.length < 1
       },
       selectedItems () {
         return selection.get()
+      },
+      exportVariants () {
+        return {
+          KBART: {
+            url: `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`,
+            flavour: 'tipp',
+            label: this.$i18n.t('kbart.export.type.tipp.label'),
+            description: this.$i18n.t('kbart.export.type.tipp.description'),
+            type: 'text/tab-separated-values'
+          },
+          KBART_TITLE: {
+            url: `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`,
+            flavour: 'title',
+            label: this.$i18n.t('kbart.export.type.title.label'),
+            description: this.$i18n.t('kbart.export.type.title.description'),
+            type: 'text/tab-separated-values'
+          }
+        }
       }
     },
     methods: {
       download (exportType) {
-        const id = this.selectedItems[0].uuid
         this.type = exportType.type
-        this.dataUrl = `${exportType.url}${id}`
+
+        if (this.selectedItems?.length === 1) {
+          this.dataUrl = `${exportType.url}/${this.selectedItems[0].uuid}?exportType=${exportType.flavour}`
+        } else if (this.selectedItems?.length > 1) {
+          this.dataUrl = `${exportType.url}?exportType=${exportType.flavour}`
+          this.selectedItems.forEach(pkg => {
+            this.dataUrl = this.dataUrl + `&pkg=${pkg.uuid}`
+          })
+        }
       },
     }
   }
