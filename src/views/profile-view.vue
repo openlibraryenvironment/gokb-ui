@@ -142,25 +142,7 @@
       },
     },
     async activated () {
-      const {
-        data: {
-          data: {
-            email,
-            curatoryGroups,
-            _links: {
-              update: { href: updateProfileUrl },
-              delete: { href: deleteProfileUrl }
-            }
-          }
-        }
-      } = await this.catchError({
-        promise: profileServices.getProfile(this.cancelToken.token),
-        instance: this
-      })
-      this.updateProfileUrl = updateProfileUrl
-      this.deleteProfileUrl = deleteProfileUrl
-      this.email = email
-      this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
+      this.fetchProfile()
     },
     methods: {
       isOldPasswordEmpty () {
@@ -187,6 +169,27 @@
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
+      async fetchProfile () {
+        const {
+          data: {
+            data: {
+              email,
+              curatoryGroups,
+              _links: {
+                update: { href: updateProfileUrl },
+                delete: { href: deleteProfileUrl }
+              }
+            }
+          }
+        } = await this.catchError({
+          promise: profileServices.getProfile(this.cancelToken.token),
+          instance: this
+        })
+        this.updateProfileUrl = updateProfileUrl
+        this.deleteProfileUrl = deleteProfileUrl
+        this.email = email
+        this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
+      },
       async updateProfile (form) {
         this.successMsgShown = false
 
@@ -206,6 +209,7 @@
 
         if (result.status === 200) {
           this.successMsgShown = true
+          this.fetchProfile()
         } else {
           this.errors = result.data.errors
         }
