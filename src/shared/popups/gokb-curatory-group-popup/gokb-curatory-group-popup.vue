@@ -16,7 +16,7 @@
     <v-row>
       <v-col>
         <gokb-email-field
-          v-model="selectedItem.startTime"
+          v-model="selectedItem.email"
           disabled
           :label="$i18n.t('component.user.email')"
         />
