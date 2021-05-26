@@ -52,7 +52,12 @@
             {
               type: 'GokbActiveField',
               name: 'enabled',
-              value: 'enabled'
+              value: 'enabled',
+              properties: {
+                label: this.$i18n.tc('component.user.enabled.active.label'),
+                width: '100%',
+                multiple: false
+              }
             }
           ]
         ]

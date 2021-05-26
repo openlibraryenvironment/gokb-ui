@@ -23,6 +23,15 @@
     },
     mounted () {
       this.items = [{ id: true, name: this.$i18n.t('component.user.enabled.active.label') }, { id: false, name: this.$i18n.t('component.user.enabled.inactive.label') }]
+    },
+    created () {
+      this.entityName = 'active'
+    },
+    methods: {
+      transform (result) {
+        const { data: { data: values } } = result
+        return values.map(({ id, status }) => ({ id, name: this.$i18n.t('component.user.enabled.active.' + status) }))
+      }
     }
   }
 </script>
