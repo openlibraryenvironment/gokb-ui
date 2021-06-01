@@ -215,7 +215,7 @@
           { icon: 'people', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
         ]
 
-        return menuItems.filter(item => (!accountModel.loggedIn && !item.needsLogin) || (accountModel.loggedIn && (!item.needsRole || accountModel.hasRole(item.needsRole))))
+        return menuItems.filter(item => (!accountModel.loggedIn() && !item.needsLogin) || (accountModel.loggedIn() && (!item.needsRole || accountModel.hasRole(item.needsRole))))
       },
       currentLocale: {
         get () {
@@ -230,7 +230,7 @@
             this.$vuetify.rtl = false
           }
 
-          if (accountModel.loggedIn && locale !== accountModel.userLocale()) {
+          if (accountModel.loggedIn() && locale !== accountModel.userLocale()) {
             accountModel.setLocale(locale)
           }
         }

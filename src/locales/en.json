@@ -25,7 +25,15 @@
   "default": {
     "true": "Yes",
     "false": "No",
-    "ISOdateHint": "YYYY-MM-DD"
+    "ISOdateHint": "YYYY-MM-DD",
+    "404": {
+      "title": "Unknown Path",
+      "text": "The resource you are looking for cannot be found."
+    },
+    "401": {
+      "title": "No permission",
+      "text": "You have insufficient permissions for viewing this page. If you think this is an error, please contact an admin."
+    }
   },
   "route": {
     "package": {
@@ -37,6 +45,11 @@
       "edit": "Edit Title",
       "create": "Create Title",
       "search": "Titles"
+    },
+    "tipp": {
+      "edit": "Edit Package Title",
+      "create": "Create Package Title",
+      "search": "Package Titles"
     },
     "provider": {
       "edit": "Edit Provider",
@@ -59,7 +72,8 @@
       "search": "Maintenance"
     },
     "home": "GOKb",
-    "profile": "Profile"
+    "profile": "Profile",
+    "noaccess": "No Access"
   },
   "direction": "ltr",
   "popups": {
@@ -515,11 +529,13 @@
     },
     "tipp": {
       "label": "Package Title | Package Titles",
+      "toFullView": "Open Full View",
       "url": {
         "label": "Access URL | Access URLs",
         "error": "Please provide a valid URL."
       },
       "access": "Access",
+      "name": "Package-specific name",
       "accessPeriod": "Access Period",
       "identifier": {
         "label": "Package-specific Identifier | Package-specific Identifiers"
@@ -817,6 +833,7 @@
     "source": {
       "label": "Settings for Automated Import and Update |  Settings for Automated Imports and Updates",
       "updateNow": "Import Now",
+      "lastRun": "Last Run",
       "ezbMatch": "Match EZB",
       "zdbMatch": "Match ZDB",
       "enableUpdate": "Activated",

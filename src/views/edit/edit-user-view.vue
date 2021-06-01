@@ -131,6 +131,8 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
+  import { NO_ACCESS_ROUTE } from '@/router/route-paths'
+  import account from '@/shared/models/account-model'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
@@ -210,8 +212,12 @@
       }
     },
     async created () {
-      if (this.isEdit) {
-        this.fetch()
+      if (account.loggedIn() && account.hasRole('ROLE_ADMIN')) {
+        if (this.isEdit) {
+          this.fetch()
+        }
+      } else {
+        this.$router.push(NO_ACCESS_ROUTE)
       }
     },
     methods: {

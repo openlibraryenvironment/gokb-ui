@@ -40,7 +40,7 @@
         :disabled="!updateProfileAvailable"
         :label="$t('profile.newPassConfirm.label')"
         autocomplete="new-password"
-        :rules="[checkNewPassword, isPasswordEmpty, isPasswordConfirmed]"
+        :rules="[checkNewPasswordConfirm, isPasswordEmpty, isPasswordConfirmed]"
       />
     </gokb-section>
     <gokb-curatory-group-section
@@ -72,7 +72,7 @@
 </template>
 
 <script>
-  import { HOME_ROUTE } from '@/router/route-paths'
+  import { HOME_ROUTE, NO_ACCESS_ROUTE } from '@/router/route-paths'
   import account from '@/shared/models/account-model'
   import profileServices from '@/shared/services/profile-services'
   import BaseComponent from '@/shared/components/base-component'
@@ -142,7 +142,11 @@
       },
     },
     async activated () {
-      this.fetchProfile()
+      if (account.loggedIn()) {
+        this.fetchProfile()
+      } else {
+        this.$router.push(NO_ACCESS_ROUTE)
+      }
     },
     methods: {
       isOldPasswordEmpty () {
@@ -158,7 +162,10 @@
         return (!!this.newpass && !!this.repeatpass && this.newpass === this.repeatpass) || (!this.newpass && !this.repeatpass) || this.$i18n.t('profile.newPassConfirm.nomatch')
       },
       checkNewPassword () {
-        return v => (!v || (v.length >= 6 && v.length <= 64)) || this.$i18n.t('validation.passwordLength')
+        return (!this.newpass || (this.newpass.length >= 6 && this.newpass.length <= 64)) || this.$i18n.t('validation.passwordLength')
+      },
+      checkNewPasswordConfirm () {
+        return (!this.repeatpass || (this.repeatpass.length >= 6 && this.repeatpass.length <= 64)) || this.$i18n.t('validation.passwordLength')
       },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)

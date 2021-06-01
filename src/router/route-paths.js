@@ -20,6 +20,7 @@ export const EDIT_ORG_ROUTE = '/provider'
 export const EDIT_JOURNAL_ROUTE = '/title'
 export const EDIT_BOOK_ROUTE = '/title'
 export const EDIT_DATABASE_ROUTE = '/title'
+export const EDIT_TIPP_ROUTE = '/package-title'
 
 export const ADD_PROVIDER_ROUTE = '/add-provider'
 export const ADD_USER_ROUTE = '/add-user'
@@ -29,3 +30,4 @@ export const CREATE_PACKAGE_ROUTE = '/create-package'
 export const CREATE_TITLE_ROUTE = '/create-title'
 
 export const ERROR_ROUTE = '/error'
+export const NO_ACCESS_ROUTE = '/no-access'

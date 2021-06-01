@@ -1,9 +1,10 @@
 <template>
-  <gokb-dialog
-    v-model="localValue"
-    :title="header"
-    :width="1800"
-    @submit="submitTipp"
+  <gokb-page
+    v-if="!notFound"
+    :key="version"
+    :title="title"
+    width="100%"
+    @submit="update"
   >
     <gokb-error-component :value="error" />
     <v-row dense>
@@ -21,11 +22,18 @@
                   />
                 </v-col>
               </v-row>
+              <v-row>
+                <v-col>
+                  <gokb-name-field
+                    v-model="allNames"
+                    :label="$tc('component.tipp.name')"
+                  />
+                </v-col>
+              </v-row>
               <v-row dense>
                 <v-col>
                   <gokb-title-field
                     v-model="packageTitleItem.title"
-                    :type-filter="title.type.id"
                     :label="$tc('component.title.label')"
                     :readonly="isEdit || isReadonly"
                     return-object
@@ -396,14 +404,14 @@
       </v-col>
     </v-row>
     <template #buttons>
-      <v-btn
-        class="ml-6 btn-default"
-        :to="{ name: '/package-title', params: { id: id} }"
+      <gokb-button
+        v-if="!isReadonly"
+        @click="reload"
       >
-        {{ $t('component.tipp.toFullView') }}
-      </v-btn>
+        {{ $t('btn.cancel') }}
+      </gokb-button>
       <v-spacer />
-      <div v-if="id">
+      <div v-if="id && !notFound">
         <v-chip
           class="ma-1"
           label
@@ -432,56 +440,43 @@
       </div>
       <v-spacer />
       <gokb-button
-        text
-        class="mr-6"
-        @click="close"
-      >
-        {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
-      </gokb-button>
-      <gokb-button
         v-if="updateUrl || !id"
         :disabled="!packageTitleItem.title"
         class="mr-6"
         default
       >
-        {{ selected ? $t('btn.update') : $t('btn.add') }}
+        {{ $t('btn.update') }}
       </gokb-button>
     </template>
-  </gokb-dialog>
+  </gokb-page>
+  <gokb-page
+    v-else
+    title=""
+  >
+    <v-card>
+      <v-card-text>
+        <div class="text-h5 primary--text">
+          {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
+        </div>
+      </v-card-text>
+    </v-card>
+  </gokb-page>
 </template>
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
-  import accountModel from '@/shared/models/account-model'
+  import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import tippServices from '@/shared/services/tipp-services'
-  import { EDIT_TITLE_ROUTE, EDIT_TIPP_ROUTE } from '@/router/route-paths'
+  import accountModel from '@/shared/models/account-model'
+  import loading from '@/shared/models/loading'
 
   export default {
-    name: 'GokbAddTitlePopup',
+    name: 'EditTippView',
+    components: { GokbErrorComponent },
     extends: BaseComponent,
     props: {
-      value: {
+      id: {
         type: [Number, String],
-        required: true,
-        default: undefined
-      },
-      selected: {
-        type: Object,
-        required: false,
-        default: undefined
-      },
-      pkg: {
-        type: Number,
-        required: false,
-        default: undefined
-      },
-      parentPlatform: {
-        type: Object,
-        required: false,
-        default: undefined
-      },
-      titleType: {
-        type: Object,
         required: false,
         default: undefined
       }
@@ -490,16 +485,9 @@
       return {
         pprops: undefined,
         platformSelection: [],
+        version: undefined,
+        notFound: false,
         coverageExpanded: false,
-        title: {
-          id: undefined,
-          title: undefined,
-          type: undefined,
-          ids: [],
-          publisher: undefined,
-          publishedFrom: undefined,
-          publishedTo: undefined
-        },
         selectedTitle: undefined,
         selectedItem: undefined,
         coverageObject: {
@@ -517,7 +505,7 @@
         deleteUrl: undefined,
         status: undefined,
         items: [],
-        id: undefined,
+        allNames: {},
         lastUpdated: undefined,
         dateCreated: undefined,
         packageTitleItem: {
@@ -563,8 +551,11 @@
       header () {
         return !this.isReadonly ? (this.id ? (this.$i18n.t('header.edit.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel) : (this.$i18n.t('header.add.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel)) : (this.typeLabel + ' – ' + this.$i18n.tc('component.tipp.label'))
       },
+      title () {
+        return this.$i18n.tc('component.tipp.label') + ' – ' + this.typeLabel
+      },
       typeLabel () {
-        return this.title?.type ? this.$i18n.tc('component.title.type.' + (typeof this.title.type === 'object' ? this.title.type.id : this.title.type)) : this.$i18n.tc('component.title.label')
+        return this.packageTitleItem.publicationType ? this.$i18n.tc('component.title.type.' + this.packageTitleItem.publicationType) : this.$i18n.tc('component.title.type.' + this.packageTitleItem.title.type)
       },
       isEdit () {
         return !!this.id
@@ -573,13 +564,13 @@
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isJournal () {
-        return this.title?.type === 'Journal' || this.title.type.id === 'journal'
+        return this.packageTitleItem.title?.type === 'Journal' || this.packageTitleItem.title?.type?.id === 'journal'
       },
       isBook () {
-        return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph'
+        return this.packageTitleItem.title?.type === 'Book' || this.packageTitleItem.title?.type?.id === 'book' || this.packageTitleItem.title?.type === 'Monograph' || this.packageTitleItem.title?.type?.id === 'monograph'
       },
       titleTypeString () {
-        return (typeof this.title.type === 'object' ? this.title.type.id : this.title.type)
+        return (typeof this.packageTitleItem.title?.type === 'object' ? this.packageTitleItem.title?.type?.id : this.packageTitleItem.title?.type)
       },
       expansionIcon () {
         return this.coverageExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
@@ -608,108 +599,111 @@
         }
       }
     },
-    async created () {
-      this.selectedItem = this.selected
-
-      if (this.selected) {
-        this.packageTitleItem.hostPlatform = this.selectedItem.hostPlatform
-        this.packageTitleItem.name = this.selectedItem.name
-        this.packageTitleItem.pkg = this.selectedItem.pkg
-        this.packageTitleItem.title = this.selectedItem.title
-        this.packageTitleItem.url = this.selectedItem.url
-        this.packageTitleItem.paymentType = this.selectedItem.paymentType
-        this.packageTitleItem.accessStartDate = this.selectedItem.accessStartDate
-        this.packageTitleItem.accessEndDate = this.selectedItem.accessEndDate
-        this.packageTitleItem.ids = this.selectedItem.ids
-        this.packageTitleItem.series = this.selectedItem.series
-        this.packageTitleItem.subjectArea = this.selectedItem.subjectArea
-        this.packageTitleItem.publisherName = this.selectedItem.publisherName
-        this.packageTitleItem.dateFirstInPrint = this.selectedItem.dateFirstInPrint
-        this.packageTitleItem.dateFirstOnline = this.selectedItem.dateFirstOnline
-        this.packageTitleItem.firstAuthor = this.selectedItem.firstAuthor
-        this.packageTitleItem.firstEditor = this.selectedItem.firstEditor
-        this.packageTitleItem.publicationType = this.selectedItem.publicationType
-        this.packageTitleItem.volumeNumber = this.selectedItem.volumeNumber
-        this.packageTitleItem.editionStatement = this.selectedItem.editionStatement
-        this.packageTitleItem.medium = this.selectedItem.medium
-        this.packageTitleItem.lastChangedExternal = this.selectedItem.lastChangedExternal
-        this.packageTitleItem.status = this.selectedItem.status
-        this.updateUrl = this.selectedItem.updateUrl
-        this.deleteUrl = this.selectedItem.deleteUrl
-        this.platformSelection.push(this.selectedItem.hostPlatform)
-        this.status = this.selectedItem.status
-        this.lastUpdated = this.selectedItem.lastUpdated
-        this.dateCreated = this.selectedItem.dateCreated
-
-        if (this.selectedItem?.coverageStatements?.length) {
-          this.packageTitleItem.coverageStatements = this.selectedItem.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
-            startDate: startDate?.substr(0, 10),
-            endDate: endDate?.substr(0, 10),
-            coverageDepth,
-            coverageNote,
-            startIssue,
-            startVolume,
-            endIssue,
-            endVolume,
-            embargo
-          }))
+    watch: {
+      loggedIn (value) {
+        if (value) {
+          this.reload()
         }
-        this.id = this.selectedItem.id
-        this.packageTitleItem.id = this.id
-        if (this.selectedItem.title?.type) {
-          this.title.type = this.selectedItem.title.type
-        } else {
-          this.title.type = this.titleType
+      },
+      tabsView (value) {
+        if (this.loggedIn) {
+          accountModel.useTabbedView(value)
         }
-      } else {
-        this.title.type = this.titleType
-        this.packageTitleItem.hostPlatform = this.parentPlatform
+      },
+      '$i18n.locale' (l) {
+        document.title = this.$i18n.tc('component.tipp.label') + ' – ' + this.packageTitleItem.name
       }
-      this.coverageExpanded = this.isJournal
+    },
+    async mounted () {
+      this.reload()
     },
     methods: {
-      async submitTipp () {
-        if (this.selected && typeof this.selected.id === 'number') {
-          const newTipp = {
-            ...this.packageTitleItem,
-            id: this.id
-          }
-
-          const response = await this.catchError({
-            promise: tippServices.createOrUpdateTipp(newTipp, this.cancelToken.token),
-            instance: this
-          })
-
-          if (response.status === 200) {
-            this.$emit('edit', this.packageTitleItem)
-            this.close()
-          } else {
-            console.log(response.status)
-          }
-        } else {
-          this.packageTitleItem.title.type = this.title.type
-
-          const newTipp = {
-            ...this.packageTitleItem,
-            id: this.tempId(),
-            titleId: this.packageTitleItem.title.id,
-            popup: { value: this.packageTitleItem.title.name, label: 'tipp', type: 'GokbAddTitlePopup' },
-            link: { value: this.packageTitleItem.title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },
-            hostPlatformName: this.packageTitleItem.hostPlatform?.name,
-            updateUrl: '',
-            deleteUrl: '',
-            isDeletable: true
-          }
-
-          this.$emit('add', newTipp)
-          this.close()
+      executeAction (actionMethodName, actionMethodParameter) {
+        this[actionMethodName](actionMethodParameter)
+      },
+      async update () {
+        const newTipp = {
+          ...this.packageTitleItem,
+          name: this.allNames.name,
+          id: this.id
         }
+
+        const response = await this.catchError({
+          promise: tippServices.createOrUpdateTipp(newTipp, this.cancelToken.token),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.reload()
+        } else {
+          console.log(response.status)
+        }
+      },
+      async reload () {
+        loading.startLoading()
+        const result = await this.catchError({
+          promise: tippServices.getTipp(this.id, this.cancelToken.token),
+          instance: this
+        })
+
+        if (result.status === 200) {
+          const data = result.data
+
+          this.updateUrl = data._links?.update?.href || null
+          this.deleteUrl = data._links?.delete?.href || null
+          this.packageTitleItem.name = data.name
+          this.packageTitleItem.pkg = data.pkg
+          this.packageTitleItem.title = data.title
+          this.packageTitleItem.hostPlatform = data.hostPlatform
+          this.version = data.version
+          this.packageTitleItem.publisherName = data.publisherName
+          this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
+          this.reviewRequests = data._embedded.reviewRequests
+          this.editionStatement = data.editionStatement
+          this.dateCreated = data.dateCreated
+          this.lastUpdated = data.lastUpdated
+          this.packageTitleItem.paymentType = data.paymentType
+          this.packageTitleItem.url = data.url
+          this.packageTitleItem.accessStartDate = data.accessStartDate
+          this.packageTitleItem.accessEndDate = data.accessEndDate
+          this.packageTitleItem.series = data.series
+          this.packageTitleItem.subjectArea = data.subjectArea
+          this.packageTitleItem.publisherName = data.publisherName
+          this.packageTitleItem.dateFirstInPrint = data.dateFirstInPrint?.substr(0, 10)
+          this.packageTitleItem.dateFirstOnline = data.dateFirstOnline?.substr(0, 10)
+          this.packageTitleItem.firstAuthor = data.firstAuthor
+          this.packageTitleItem.firstEditor = data.firstEditor
+          this.packageTitleItem.publicationType = data.publicationType
+          this.packageTitleItem.volumeNumber = data.volumeNumber
+          this.packageTitleItem.editionStatement = data.editionStatement
+          this.packageTitleItem.medium = data.medium
+          this.packageTitleItem.lastChangedExternal = data.lastChangedExternal
+          this.status = data.status
+          this.history = data.history
+          this.allNames = { name: data.name, alts: [] }
+
+          if (data._embedded.coverageStatements?.length) {
+            this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
+              startDate: startDate?.substr(0, 10),
+              endDate: endDate?.substr(0, 10),
+              coverageDepth,
+              coverageNote,
+              startIssue,
+              startVolume,
+              endIssue,
+              endVolume,
+              embargo
+            }))
+          }
+
+          document.title = this.$i18n.tc('component.tipp.label') + ' – ' + data.name
+        } else {
+          this.notFound = true
+        }
+        loading.stopLoading()
       },
       tempId () {
         return 'tempTippId' + Math.random().toString(36).substr(2, 5)
-      },
-      close () {
-        this.localValue = false
       },
       decodeEmbargo () {
         const matches = this.packageTitleItem.coverageStatement.embargo?.match(/^([P,R]?)([0-9]*)([D,M,Y]?)$/)
@@ -718,10 +712,13 @@
       },
       doExpandCoverage () {
         this.coverageExpanded = !this.coverageExpanded
-      },
-      openDetails () {
-        this.$router.push({ name: EDIT_TIPP_ROUTE, params: { id: this.id } })
       }
-    }
+    },
   }
 </script>
+
+<style scoped>
+  .tab-dark {
+    color: rgba(255, 255, 255, 0.6);
+  }
+</style>

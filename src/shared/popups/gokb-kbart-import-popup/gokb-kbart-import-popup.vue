@@ -144,7 +144,7 @@
             },
             title_id: {
               rules: {
-                notEmpty: true
+                notEmpty: 'warn'
               }
             },
             online_identifier: {
@@ -334,6 +334,8 @@
             for (row of csvDataRows) {
               if (idxr > 0) {
                 var hasErrors = false
+                var hasWarnings = false
+
                 this.loadedFile.lineStats.total++
 
                 const orderedVals = row.split(/\t/)
@@ -370,11 +372,18 @@
                 } else {
                   orderedVals.forEach((col, idxc) => {
                     var colName = columns[idxc]
+                    var colRules = this.kbartStd.mandatoryColumns[colName]?.rules
 
-                    if (this.kbartStd.mandatoryColumns[colName]?.rules?.notEmpty && col.length === 0) {
-                      this.loadedFile.errors.type[colName].empty++
-                      this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
-                      hasErrors = true
+                    if (colRules?.notEmpty && col.length === 0) {
+                      if (colRules?.notEmpty === 'warn') {
+                        this.loadedFile.warnings.type[colName].empty++
+                        this.loadedFile.warnings.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
+                        hasWarnings = true
+                      } else {
+                        this.loadedFile.errors.type[colName].empty++
+                        this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
+                        hasErrors = true
+                      }
                     }
 
                     if (colName === 'online_identifier') {
@@ -410,6 +419,10 @@
 
                   if (hasErrors === true) {
                     this.loadedFile.lineStats.error++
+                  }
+
+                  if (hasWarnings === true) {
+                    this.loadedFile.lineStats.warning++
                   }
                 }
               }

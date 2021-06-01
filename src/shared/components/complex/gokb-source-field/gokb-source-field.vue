@@ -27,6 +27,13 @@
           :label="$t('kbart.propId.label')"
         />
       </v-col>
+      <v-col cols="3">
+        <gokb-date-field
+          v-model="lastRun"
+          readonly
+          :label="$t('component.source.lastRun')"
+        />
+      </v-col>
     </v-row>
     <v-row>
       <v-col>
@@ -148,7 +155,7 @@
             this.name = result.data.name
             this.url = result.data.url
             this.automaticUpdates = result.data.automaticUpdates
-            this.lastRun = result.data.lastRun ? new Date(result.data.lastRun).toLocaleString(this.$i18n.locale) : undefined
+            this.lastRun = result.data.lastRun ? new Date(result.data.lastRun).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : undefined
             this.zdbMatch = result.data.zdbMatch
             this.ezbMatch = result.data.ezbMatch
           }

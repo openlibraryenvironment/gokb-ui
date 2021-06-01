@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span>{{ $i18n.t('component.general.name') }}</span>
+    <span>{{ label }}</span>
     <v-banner>
       <span
         style="font-size:1.1rem"
@@ -75,6 +75,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      label: {
+        type: String,
+        required: false,
+        default: 'Name'
       },
       dialogWidth: {
         type: Number,

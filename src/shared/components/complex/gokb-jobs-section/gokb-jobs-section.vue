@@ -126,7 +126,7 @@
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
         interval: null,
-        autoJobRefresh: false
+        autoJobRefresh: true
       }
     },
     computed: {

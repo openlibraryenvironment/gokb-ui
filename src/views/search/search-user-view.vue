@@ -1,6 +1,7 @@
 <script>
   import BaseSearch from './base-search-view'
-  import { EDIT_USER_ROUTE, ADD_USER_ROUTE } from '@/router/route-paths'
+  import { EDIT_USER_ROUTE, ADD_USER_ROUTE, NO_ACCESS_ROUTE } from '@/router/route-paths'
+  import account from '@/shared/models/account-model'
   import userServices from '@/shared/services/user-services'
 
   export default {
@@ -105,14 +106,25 @@
             action: '_confirmDeactivateSelectedItems',
           }
         ]
+      },
+      title () {
+        return this.$i18n.tc('component.user.label', 2)
       }
     },
     created () {
-      this.title = this.$i18n.tc('component.user.label', 2)
       this.searchServicesUrl = 'rest/users'
       this.searchServiceIncludes = 'id,username'
       this.linkSearchParameterValues = {
         link: 'username'
+      }
+
+      if (!account.loggedIn()) {
+        this.$router.push(NO_ACCESS_ROUTE)
+      }
+    },
+    activated () {
+      if (!account.loggedIn()) {
+        this.$router.push(NO_ACCESS_ROUTE)
       }
     },
     methods: {

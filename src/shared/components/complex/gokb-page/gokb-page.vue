@@ -1,5 +1,5 @@
 <template>
-  <v-container style="max-width: 1200px;">
+  <v-container :style="{ maxWidth: width }">
     <v-form
       ref="form"
       @input="$emit('valid', $event)"
@@ -34,6 +34,11 @@
         type: String,
         required: false,
         default: 'missing title for page'
+      },
+      width: {
+        type: String,
+        required: false,
+        default: '1200px'
       }
     },
     methods: {

@@ -634,10 +634,10 @@
         return accountModel.loggedIn()
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
       },
       localListVerifiedDate () {
         return this.listVerifiedDate ? new Date(this.listVerifiedDate).toISOString().substr(0, 10) : ''

@@ -335,7 +335,7 @@
         this.reviewItem.stdDesc = stdDesc
         this.reviewItem.request = reviewRequest
         this.reviewItem.description = descriptionOfCause
-        this.reviewItem.dateCreated = new Date(dateCreated).toLocaleString(this.$i18n.locale)
+        this.reviewItem.dateCreated = new Date(dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
         this.reviewItem.component = componentToReview
         this.reviewItem.allocatedGroups = allocatedGroups
         this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(({ oid, name }) => ({

@@ -35,6 +35,11 @@
       "create": "Einzeltitel anlegen",
       "search": "Einzeltitel"
     },
+    "tipp": {
+      "edit": "Paket-Titel bearbeiten",
+      "create": "Paket-Titel anlegen",
+      "search": "Paket-Titel"
+    },
     "provider": {
       "edit": "Anbieter bearbeiten",
       "create": "Anbieter anlegen",
@@ -56,12 +61,23 @@
       "search": "Pflegeauftrag"
     },
     "home": "GOKb",
-    "profile": "Profil"
+    "profile": "Profil",
+    "noaccess": "Kein Zugang"
   },
   "default": {
     "true": "Ja",
     "false": "Nein",
-    "ISOdateHint": "JJJJ-MM-TT"
+    "ISOdateHint": "JJJJ-MM-TT",
+    "error": {
+      "404": {
+        "title": "Unbekannter Pfad",
+        "text": "Die von Ihnen gesuchte Ressource konnte nicht gefunden werden."
+      },
+      "401": {
+        "title": "Fehlende Berechtigung",
+        "text": "Ihnen fehlt die Berechtigung um diese Seite zu sehen. Falls dies ein Fehler ist, wenden Sie sich bitte an einen Administrator."
+      }
+    }
   },
   "popups": {
     "name": {
@@ -513,11 +529,13 @@
     },
     "tipp": {
       "label": "Paket-Titel | Paket-Titel",
+      "toFullView": "Vollansicht öffnen",
       "url": {
         "label": "Zugriffs-URL | Zugriffs-URLs",
         "error": "Bitte erfassen Sie eine gültige URL."
       },
       "access": "Zugriff",
+      "name": "Paketspezifischer Titel",
       "accessPeriod": "Zugriffszeitraum",
       "identifier": {
         "label": "Paketspezifischer Identifikator | Paketspezifische Identifikatoren"
@@ -536,7 +554,7 @@
         "depth": {
           "label": "Abdeckungsart",
           "Fulltext": {
-            "label": "Voltext"
+            "label": "Volltext"
           },
           "Abstracts": {
             "label": "Abstracts"
@@ -814,6 +832,7 @@
     "source": {
       "label": "Automatischer Import und Update | Automatische Imports und Updates",
       "updateNow": "Jetzt Importieren",
+      "lastRun": "Letzter Durchlauf",
       "frequency": {
         "label": "Update-Zyklus",
         "Daily": {

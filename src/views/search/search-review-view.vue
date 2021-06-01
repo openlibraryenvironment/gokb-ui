@@ -1,5 +1,7 @@
 <script>
   import BaseSearch from './base-search-view'
+  import { NO_ACCESS_ROUTE } from '@/router/route-paths'
+  import account from '@/shared/models/account-model'
   import reviewServices from '@/shared/services/review-services'
 
   export default {
@@ -126,7 +128,12 @@
         popup: 'componentToReview',
         localDesc: 'stdDesc'
       }
-      // this.searchServiceIncludes = 'id,'
+    },
+    activated () {
+      if (!account.loggedIn()) {
+        console.log('Not logged in!')
+        this.$router.replace(NO_ACCESS_ROUTE)
+      }
     },
     methods: {
       _transformForTable (data) {

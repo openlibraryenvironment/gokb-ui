@@ -299,9 +299,9 @@
       }
     },
     async created () {
-      // this.interval = setInterval(function () {
-      //   this.fetchTipps(this.page)
-      // }.bind(this), 2000)
+      if (this.pkg || this.ttl) {
+        this.fetchTipps(this.page)
+      }
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -454,7 +454,9 @@
                   titleId: tipp.title?.id,
                   ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!tipp._links.delete.href })),
                   popup: { value: (this.ttl ? tipp.pkg.name : (tipp.title ? tipp.title.name : tipp.name)), label: 'tipp', type: 'GokbAddTitlePopup' },
-                  hostPlatformName: tipp.hostPlatform?.name
+                  hostPlatformName: tipp.hostPlatform?.name,
+                  lastUpdated: tipp.lastUpdated,
+                  dateCreated: tipp.dateCreated
                 }
               )
             )
