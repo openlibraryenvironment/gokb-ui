@@ -52,8 +52,8 @@
             },
             {
               type: 'GokbActiveField',
-              name: 'enabled',
-              value: 'enabled'
+              name: 'status',
+              value: 'status'
             }
           ]
         ]
@@ -129,10 +129,10 @@
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({ id, username, roles, enabled, _links: { update: { href: updateUrl } } }) => ({
+        return data.map(({ id, username, roles, status, enabled, _links: { update: { href: updateUrl } } }) => ({
           id,
           link: { value: username, route: EDIT_USER_ROUTE, id: 'id' },
-          enabled: this.$i18n.t('component.user.enabled.' + (enabled ? 'active' : 'inactive') + '.label'),
+          enabled: this.$i18n.t('component.user.enabled.' + (status ? 'active' : 'inactive') + '.label'),
           contributor: roles.filter(role => role.authority === 'ROLE_CONTRIBUTOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
           editor: roles.filter(role => role.authority === 'ROLE_EDITOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
           admin: roles.filter(role => role.authority === 'ROLE_ADMIN').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),

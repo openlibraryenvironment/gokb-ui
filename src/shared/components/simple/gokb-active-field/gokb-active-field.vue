@@ -18,11 +18,11 @@
     },
     watch: {
       '$i18n.locale' (l) {
-        this.items = [{ id: true, name: this.$i18n.t('component.user.enabled.active.label') }, { id: false, name: this.$i18n.t('component.user.enabled.inactive.label') }]
+        this.items = [{ id: 'true', name: this.$i18n.t('component.user.enabled.active.label') }, { id: 'false', name: this.$i18n.t('component.user.enabled.inactive.label') }]
       }
     },
     mounted () {
-      this.items = [{ id: true, name: this.$i18n.t('component.user.enabled.active.label') }, { id: false, name: this.$i18n.t('component.user.enabled.inactive.label') }]
+      this.items = [{ id: 'true', name: this.$i18n.t('component.user.enabled.active.label') }, { id: 'false', name: this.$i18n.t('component.user.enabled.inactive.label') }]
     }
   }
 </script>
