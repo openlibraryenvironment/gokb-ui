@@ -15,6 +15,7 @@
     "delete": "Delete",
     "search": "Search",
     "reset": "Reset",
+    "reload": "Neu laden",
     "back": "Back",
     "next": "Next",
     "prev": "Previous",
@@ -76,6 +77,18 @@
     "noaccess": "No Access"
   },
   "direction": "ltr",
+  "pending": {
+    "lists": {
+      "changed": "This list contains unsaved changes.",
+      "added": "",
+      "removed": ""
+    },
+    "item": {
+      "changed": "This value will be changed on save.",
+      "added": "This entry will be newly added when you SUBMIT your changes.",
+      "removed": "This entry will be removed when you SUBMIT your changes."
+    }
+  },
   "popups": {
     "name": {
       "keepCurrent": "Keep current name as variant"

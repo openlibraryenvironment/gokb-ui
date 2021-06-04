@@ -152,19 +152,19 @@
         this.localValue = this.localValue.filter(({ id }) => !this.selectedItems
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedItems = []
+        this.$emit('update', 'platforms')
       },
       _deleteItem (idToDelete) {
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
+        this.$emit('update', 'platforms')
       },
       showAddPlatformPopup () {
         this.addPlatformPopupVisible = true
       },
       addNewPlatform (value) {
         this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: this.tempId(), isDeletable: true, unsaved: true })
-      },
-      deletePlatform (value) {
-        this.localValue = this.localValue.filter(v => v !== value)
+        this.$emit('update', 'platforms')
       }
     }
   }

@@ -181,18 +181,39 @@
             :active-class="tabClass"
           >
             {{ $tc('component.identifier.label', 2) }}
+            <v-icon
+              v-if="pendingChanges.ids"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
           </v-tab>
           <v-tab
             key="publisher"
             :active-class="tabClass"
           >
             {{ $tc('component.title.publisher.label', 2) }}
+            <v-icon
+              v-if="pendingChanges.publisher"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
           </v-tab>
           <v-tab
             key="variants"
             :active-class="tabClass"
           >
             {{ $tc('component.variantName.label', 2) }}
+            <v-icon
+              v-if="pendingChanges.variants"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
           </v-tab>
           <v-tab
             v-if="id && isContrib"
@@ -200,6 +221,13 @@
             :active-class="tabClass"
           >
             {{ $tc('component.review.label', 2) }}
+            <v-icon
+              v-if="pendingChanges.reviews"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
           </v-tab>
           <v-tab
             v-if="id"
@@ -214,6 +242,13 @@
             :active-class="tabClass"
           >
             {{ $t('component.title.history.label') }}
+            <v-icon
+              v-if="pendingChanges.history"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
           </v-tab>
         </v-tabs>
         <v-tabs-items
@@ -228,6 +263,7 @@
               :show-title="false"
               :disabled="isReadonly"
               :api-errors="errors.ids"
+              @update="addPendingChange"
             />
           </v-tab-item>
           <v-tab-item
@@ -239,6 +275,7 @@
               :show-title="false"
               :disabled="isReadonly"
               :api-errors="errors.publisher"
+              @update="addPendingChange"
             />
           </v-tab-item>
           <v-tab-item
@@ -250,6 +287,7 @@
               :show-title="false"
               :disabled="isReadonly"
               :api-errors="errors.variantNames"
+              @update="addPendingChange"
             />
           </v-tab-item>
           <v-tab-item
@@ -260,6 +298,7 @@
             <gokb-reviews-section
               :review-component="id"
               :api-errors="errors.reviewRequests"
+              @update="addPendingChange"
             />
           </v-tab-item>
           <v-tab-item
@@ -283,6 +322,7 @@
               :show-title="false"
               :disabled="isReadonly"
               :api-errors="errors.history"
+              @update="addPendingChange"
             />
           </v-tab-item>
         </v-tabs-items>
@@ -336,7 +376,7 @@
         v-if="!isReadonly"
         @click="reload"
       >
-        {{ $i18n.t('btn.cancel') }}
+        {{ $i18n.t('btn.reset') }}
       </gokb-button>
       <v-spacer />
       <div v-if="id && !notFound">
@@ -412,6 +452,7 @@
     data () {
       return {
         tab: null,
+        pendingChanges: {},
         shortTitleMap: { name: undefined, id: undefined, uuid: undefined, type: undefined },
         name: undefined,
         notFound: false,
@@ -525,8 +566,8 @@
           variantNames: this.allNames.alts,
           publishedFrom: this.publishedFrom,
           publishedTo: this.publishedTo,
-          firstPublishedInPrint: this.firstPublishedInPrint,
-          firstPublishedOnline: this.firstPublishedOnline,
+          dateFirstInPrint: this.firstPublishedInPrint,
+          dateFirstOnline: this.firstPublishedOnline,
           firstAuthor: this.firstAuthor,
           firstEditor: this.firstEditor,
           type: this.currentType,
@@ -554,6 +595,7 @@
             this.errors.history = hresp.data.error
           } else {
             if (isUpdate) {
+              this.pendingChanges = {}
               this.reload()
             } else {
               this.$router.push('/title/' + response.data?.id)
@@ -562,7 +604,6 @@
             this.successMsg = this.isEdit ? this.$i18n.t('success.update', [this.typeDisplay, this.allNames.name]) : this.$i18n.t('success.create', [this.typeDisplay, this.allNames.name])
           }
         } else {
-          console.log(response.data)
           this.errors = response.data.error
         }
 
@@ -618,6 +659,11 @@
           }
         }
         loading.stopLoading()
+      },
+      addPendingChange (prop) {
+        if (!this.pendingChanges[prop]) {
+          this.pendingChanges[prop] = true
+        }
       }
     },
   }

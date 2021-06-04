@@ -155,19 +155,19 @@
         this.localValue = this.localValue.filter(({ id }) => !this.selectedItems
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedItems = []
+        this.$emit('update', 'publisher')
       },
       _deleteItem (idToDelete) {
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
+        this.$emit('update', 'publisher')
       },
       showAddPublisherPopup () {
         this.addPublisherPopupVisible = true
       },
       addNewPublisher (item) {
         this.localValue.push({ id: item.id, name: item.name, link: { id: 'id', route: EDIT_PROVIDER_ROUTE, value: item.name }, isDeletable: true })
-      },
-      deleteItem (value) {
-        this.localValue = this.localValue.filter(v => v !== value)
+        this.$emit('update', 'publisher')
       }
     }
   }

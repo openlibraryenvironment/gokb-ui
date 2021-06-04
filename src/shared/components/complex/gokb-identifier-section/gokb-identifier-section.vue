@@ -163,16 +163,19 @@
         this.localValue = this.localValue.filter(({ id }) => !this.selectedItems
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedItems = []
+        this.$emit('update', 'ids')
       },
       _deleteItem (idToDelete) {
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
+        this.$emit('update', 'ids')
       },
       showAddIdentifierPopup () {
         this.addIdentifierPopupVisible = true
       },
       addNewIdentifier (id) {
-        this.localValue.push({ id: this.tempId(), value: id.value, namespace: id.namespace.value, nslabel: (id.namespace.name || id.namespace.value), isDeletable: true })
+        this.localValue.push({ id: this.tempId(), value: id.value, namespace: id.namespace.value, nslabel: (id.namespace.name || id.namespace.value), isDeletable: true, _pending: 'added' })
+        this.$emit('update', 'ids')
       },
       deleteIdentifier (value) {
         this.localValue = this.localValue.filter(v => v !== value)

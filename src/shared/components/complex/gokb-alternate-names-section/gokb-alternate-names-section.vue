@@ -156,17 +156,21 @@
         this.localValue = this.localValue.filter(({ id }) => !this.selectedVariantNames
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedVariantNames = []
+        this.$emit('update', 'variants')
       },
       _deleteItem (idToDelete) {
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedVariantNames = this.selectedVariantNames.filter(({ id }) => id !== idToDelete)
+        this.$emit('update', 'variants')
       },
       showAddVariantName () {
         this.addItemPopupVisible = true
       },
       addItem (item) {
-        !this.localValue.find(({ variantName }) => variantName === item) &&
-          this.localValue.push({ id: this.tempId(), variantName: item, isDeletable: true })
+        if (!this.localValue.find(({ variantName }) => variantName === item)) {
+          this.localValue.push({ id: this.tempId(), variantName: item, isDeletable: true, _pending: 'added' })
+          this.$emit('update', 'variants')
+        }
       },
     }
   }

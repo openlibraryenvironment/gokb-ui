@@ -157,16 +157,19 @@
         this.localValue = this.localValue.filter(({ id }) => !this.selectedItems
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedItems = []
+        this.$emit('update', 'offices')
       },
       _deleteItem (idToDelete) {
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
+        this.$emit('update', 'offices')
       },
       showAddItem () {
         this.addItemPopupVisible = true
       },
       addItem (item) {
-        this.localValue.push({ ...item, id: this.tempId(), isDeletable: true })
+        this.localValue.push({ ...item, id: this.tempId(), isDeletable: true, _pending: 'added' })
+        this.$emit('update', 'offices')
       }
     }
   }

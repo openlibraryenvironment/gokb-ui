@@ -85,24 +85,52 @@
             :active-class="tabClass"
           >
             {{ $tc('component.variantName.label', 2) }}
+            <v-icon
+              v-if="pendingChanges.variants"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
           </v-tab>
           <v-tab
             key="identifiers"
             :active-class="tabClass"
           >
             {{ $tc('component.identifier.label', 2) }}
+            <v-icon
+              v-if="pendingChanges.ids"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
           </v-tab>
           <v-tab
             key="platforms"
             :active-class="tabClass"
           >
             {{ $tc('component.platform.label', 2) }}
+            <v-icon
+              v-if="pendingChanges.platforms"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
           </v-tab>
           <v-tab
             key="curators"
             :active-class="tabClass"
           >
             {{ $tc('component.curatoryGroup.label', 2) }}
+            <v-icon
+              v-if="pendingChanges.curators"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
           </v-tab>
         </v-tabs>
         <v-tabs-items
@@ -251,6 +279,7 @@
     data () {
       return {
         tab: null,
+        pendingChanges: {},
         name: undefined,
         source: undefined,
         version: undefined,

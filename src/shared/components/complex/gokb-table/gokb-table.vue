@@ -71,12 +71,30 @@
           @edit="editItem(item)"
         />
       </template>
+      <template #item._pending="{ item }">
+        <v-icon
+          v-if="item._pending === 'added'"
+          class="mr-6"
+          color="green"
+          :title="$t('pending.item.added')"
+        >
+          mdi-plus
+        </v-icon>
+        <v-icon
+          v-else-if="item._pending === 'removed'"
+          class="mr-6"
+          small
+        >
+          mdi-minus
+        </v-icon>
+      </template>
       <template #item.action="{ item }">
-        <div style="white-space:nowrap;cursor:pointer">
+        <div style="white-space:nowrap">
           <v-icon
             v-if="editable && item.isRetireable !== undefined"
             class="mr-2"
             :disabled="disabled || !item.isRetireable"
+            style="cursor:pointer"
             :title="$t('btn.retire')"
             small
             @click="retireItem(item)"
@@ -86,6 +104,7 @@
           <v-icon
             v-if="editable && item.isDeletable !== undefined"
             :disabled="disabled || !item.isDeletable"
+            style="cursor:pointer"
             :title="$t('btn.delete')"
             small
             @click="deleteItem(item)"
@@ -175,7 +194,7 @@
         set (value) { this.$emit('selected-items', value) }
       },
       localHeaders () {
-        return [...this.headers, { value: 'action', sortable: false }] // with delete icon
+        return [...this.headers, { value: '_pending', sortable: false }, { value: 'action', sortable: false }] // with delete icon
       },
       pages () {
         return Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage)

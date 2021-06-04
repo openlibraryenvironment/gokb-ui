@@ -5,6 +5,7 @@
     "refresh": "Aktualisieren",
     "submit": "Abschicken",
     "add": "Hinzufügen",
+    "back": "Zurück",
     "new": "Neu",
     "confirm": "Bestätigen",
     "create": "Erstellen",
@@ -16,7 +17,7 @@
     "delete": "Löschen",
     "search": "Suchen",
     "reset": "Zurücksetzen",
-    "back": "Zurück",
+    "reload": "Neu laden",
     "next": "Weiter",
     "prev": "Zurück",
     "enableSync": "Automatisch aktualisieren",
@@ -77,6 +78,18 @@
         "title": "Fehlende Berechtigung",
         "text": "Ihnen fehlt die Berechtigung um diese Seite zu sehen. Falls dies ein Fehler ist, wenden Sie sich bitte an einen Administrator."
       }
+    }
+  },
+  "pending": {
+    "lists": {
+      "changed": "Diese Liste enthält nicht gespeicherte Änderungen.",
+      "added": "",
+      "removed": ""
+    },
+    "item": {
+      "changed": "Dieser Wert wurde geändert, aber noch nicht gespeichert.",
+      "added": "Dieser Eintrag wird angelegt werden, wenn Sie die Änderungen ABSCHICKEN.",
+      "removed": "Dieser Eintrag wird gelöscht werden, wenn Sie die Änderungen ABSCHICKEN."
     }
   },
   "popups": {
