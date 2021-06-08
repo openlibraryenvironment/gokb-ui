@@ -51,7 +51,7 @@
               text
               @click="refreshApp"
             >
-              Update
+              - Update -
             </v-btn>
           </v-col>
         </v-row>

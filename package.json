@@ -1,6 +1,6 @@
 {
   "name": "gokb-client",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --modern --mode local",
@@ -8,6 +8,7 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
+    "build4Local": "vue-cli-service build --modern --mode localProd",
     "build4Dev": "vue-cli-service build --modern --mode dev",
     "build4Qa": "vue-cli-service build --modern --mode qa",
     "build4Prod": "vue-cli-service build --modern --mode prod",
