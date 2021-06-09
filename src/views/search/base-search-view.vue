@@ -155,6 +155,7 @@
             this.searchFilters[filter] = undefined
           }
         })
+        this.resultItems = []
       },
       resultPaginate (options) {
         const page = options.page
