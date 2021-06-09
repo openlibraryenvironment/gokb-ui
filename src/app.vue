@@ -45,6 +45,16 @@
             v{{ currentVersion }}
           </v-col>
         </v-row>
+        <v-row v-if="updateExists">
+          <v-col align="center">
+            <v-btn
+              text
+              @click="refreshApp"
+            >
+              - Update -
+            </v-btn>
+          </v-col>
+        </v-row>
       </template>
     </v-navigation-drawer>
     <v-app-bar
@@ -174,6 +184,7 @@
   import { ROLE_ADMIN, ROLE_EDITOR } from '@/shared/models/roles'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
+  import update from './mixins/update'
   import { version } from '../package.json'
   import {
     HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
@@ -189,6 +200,7 @@
   export default {
     name: 'App',
     components: { UserMenu, ProgressOverlay },
+    mixins: [update],
     data: () => ({
       drawer: null,
       globalSearchSelected: undefined,
