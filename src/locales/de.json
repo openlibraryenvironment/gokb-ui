@@ -314,7 +314,7 @@
   "component": {
     "label": "Komponente | Komponenten",
     "title": {
-      "label": "Einzeltitel | Einzeltitel",
+      "label": "Referenztitel | Referenztitel",
       "tabsView": "Kompakte Ansicht",
       "type": {
         "label": "Typ",

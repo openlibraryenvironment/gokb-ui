@@ -107,7 +107,7 @@
         }
       },
       rules () {
-        return [((this.required && this.value) || !this.required || this.$i18n.t('validation.missingSelection'))]
+        return [((!!this.required && !!this.value) || !this.required || this.$i18n.t('validation.missingSelection'))]
       }
     },
     async mounted () {

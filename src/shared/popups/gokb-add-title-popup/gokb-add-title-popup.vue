@@ -23,10 +23,21 @@
               </v-row>
               <v-row dense>
                 <v-col>
+                  <gokb-name-field
+                    v-model="allNames"
+                    :disabled="isReadonly"
+                    dense
+                    :label="$tc('component.tipp.name')"
+                  />
+                </v-col>
+              </v-row>
+              <v-row dense>
+                <v-col>
                   <gokb-title-field
                     v-model="packageTitleItem.title"
                     :type-filter="title.type.id"
                     :label="$tc('component.title.label')"
+                    dense
                     :readonly="isEdit || isReadonly"
                     return-object
                   />
@@ -38,6 +49,7 @@
                     v-if="packageTitleItem.title"
                     v-model="packageTitleItem.pkg"
                     :label="$tc('component.package.label')"
+                    dense
                     :readonly="true"
                     return-object
                   />
@@ -518,6 +530,7 @@
         status: undefined,
         items: [],
         id: undefined,
+        allNames: { name: undefined, alts: [] },
         lastUpdated: undefined,
         dateCreated: undefined,
         packageTitleItem: {
@@ -640,6 +653,7 @@
         this.status = this.selectedItem.status
         this.lastUpdated = this.selectedItem.lastUpdated
         this.dateCreated = this.selectedItem.dateCreated
+        this.allNames.name = this.selectedItem.name
 
         if (this.selectedItem?.coverageStatements?.length) {
           this.packageTitleItem.coverageStatements = this.selectedItem.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
@@ -688,6 +702,7 @@
           }
         } else {
           this.packageTitleItem.title.type = this.title.type
+          this.packageTitleItem.name = this.allNames.name
 
           const newTipp = {
             ...this.packageTitleItem,
