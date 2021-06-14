@@ -147,11 +147,6 @@
       }
     },
     watch: {
-      $route (to, from) {
-        if (to.path !== '/home') {
-          clearInterval(this.interval)
-        }
-      },
       '$i18n.locale' (l) {
         this.fetchJobs()
         this.fetchOldResults()
@@ -160,6 +155,18 @@
     created () {
       this.fetchJobs()
       this.fetchOldResults()
+    },
+    activated () {
+      clearInterval(this.interval)
+
+      if (this.autoJobRefresh) {
+        this.interval = setInterval(function () {
+          this.fetchJobs()
+        }.bind(this), 1000)
+      }
+    },
+    deactivated () {
+      clearInterval(this.interval)
     },
     preDestroy () {
       clearInterval(this.interval)
@@ -275,7 +282,6 @@
 
         this.interval = setInterval(function () {
           this.fetchJobs()
-          this.fetchOldResults()
         }.bind(this), 1000)
       },
       stopAutoUpdate () {
