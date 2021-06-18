@@ -21,7 +21,8 @@
       </v-col>
       <v-col cols="3">
         <gokb-namespace-field
-          v-model="titleIdNamespace"
+          v-model="targetNamespace"
+          :items="[targetNamespace]"
           target-type="Title"
           :readonly="readonly"
           :label="$t('kbart.propId.label')"
@@ -68,14 +69,6 @@
           :label="$t('component.source.updateNow')"
         />
       </v-col>
-      <v-col>
-        <gokb-button
-          v-if="!readonly"
-          @click="submit"
-        >
-          {{ $t('btn.submit') }}
-        </gokb-button>
-      </v-col>
     </v-row>
   </gokb-section>
 </template>
@@ -111,29 +104,86 @@
     },
     data () {
       return {
-        id: undefined,
-        name: undefined,
         menu: false,
-        update: false,
-        url: undefined,
         lastRun: undefined,
-        ezbMatch: true,
-        zdbMatch: true,
-        automaticUpdates: false,
-        titleIdNamespace: undefined,
-        frequency: undefined,
+        item: {
+          id: undefined,
+          name: undefined,
+          frequency: undefined,
+          url: undefined,
+          targetNamespace: undefined,
+          ezbMatch: undefined,
+          zdbMatch: undefined,
+          automaticUpdates: undefined,
+          update: false
+        },
         errors: []
       }
     },
     computed: {
-      localValue: {
+      frequency: {
         get () {
-          return this.value
+          return this.item.frequency
         },
-        set (localValue) {
-          this.$emit('input', localValue)
+        set (val) {
+          this.item.frequency = val
+          this.$emit('input', this.item)
         }
-      }
+      },
+      url: {
+        get () {
+          return this.item.url
+        },
+        set (val) {
+          this.item.url = val
+          this.$emit('input', this.item)
+        }
+      },
+      targetNamespace: {
+        get () {
+          return this.item.targetNamespace
+        },
+        set (val) {
+          this.item.targetNamespace = val
+          this.$emit('input', this.item)
+        }
+      },
+      ezbMatch: {
+        get () {
+          return this.item.ezbMatch
+        },
+        set (val) {
+          this.item.ezbMatch = val
+          this.$emit('input', this.item)
+        }
+      },
+      zdbMatch: {
+        get () {
+          return this.item.zdbMatch
+        },
+        set (val) {
+          this.item.zdbMatch = val
+          this.$emit('input', this.item)
+        }
+      },
+      automaticUpdates: {
+        get () {
+          return this.item.automaticUpdates
+        },
+        set (val) {
+          this.item.automaticUpdates = val
+          this.$emit('input', this.item)
+        }
+      },
+      update: {
+        get () {
+          return this.item.update
+        },
+        set (val) {
+          this.item.update = val
+          this.$emit('input', this.item)
+        }
+      },
     },
     async mounted () {
       if (this.value?.id) {
@@ -149,31 +199,17 @@
           })
 
           if (result?.status === 200) {
-            this.id = result.data.id
-            this.titleIdNamespace = result.titleIdNamespace
-            this.frequency = result.frequency
-            this.name = result.data.name
-            this.url = result.data.url
-            this.automaticUpdates = result.data.automaticUpdates
-            this.lastRun = result.data.lastRun ? new Date(result.data.lastRun).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : undefined
-            this.zdbMatch = result.data.zdbMatch
-            this.ezbMatch = result.data.ezbMatch
+            this.item.id = result.data.id
+            this.lastRun = (result.data.lastRun ? new Date(result.data.lastRun).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : undefined)
+            this.item.targetNamespace = result.data.targetNamespace
+            this.item.frequency = result.data.frequency
+            this.item.name = result.data.name
+            this.item.url = result.data.url
+            this.item.automaticUpdates = result.data.automaticUpdates
+            this.item.zdbMatch = result.data.zdbMatch
+            this.item.ezbMatch = result.data.ezbMatch
           }
         }
-      },
-      submit () {
-        var sourceItem = {
-          id: this.id,
-          name: this.name,
-          update: this.update,
-          url: this.url,
-          ezbMatch: this.ezbMatch,
-          zdbMatch: this.zdbMatch,
-          automaticUpdates: this.automaticUpdates,
-          titleIdNamespace: this.titleIdNamespace,
-          frequency: this.frequency
-        }
-        this.$emit('input', sourceItem)
       }
     }
   }

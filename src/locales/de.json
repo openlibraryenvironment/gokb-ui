@@ -547,7 +547,12 @@
         "label": "Zugriffs-URL | Zugriffs-URLs",
         "error": "Bitte erfassen Sie eine gültige URL."
       },
-      "access": "Zugriff",
+      "access": {
+        "label": "Zugriff"
+      },
+      "other": {
+        "label": "Weitere Informationen"
+      },
       "name": "Paketspezifischer Titel",
       "accessPeriod": "Zugriffszeitraum",
       "identifier": {
@@ -555,6 +560,9 @@
       },
       "accessStartDate": "Zugriffsanfang",
       "accessEndDate": "Zugriffsende",
+      "importId": {
+        "label": "KBART title_id"
+      },
       "lastChangedExternal": "Letzte externe Änderung",
       "series": {
         "label": "Serie"
@@ -698,7 +706,13 @@
       "type": "Typ",
       "cause": "Ursache",
       "componentToReview": "Komponente",
-      "otherComponents": "Weitere Komponenten",
+      "otherComponents": {
+        "label": "Weitere Komponenten",
+        "add": "Weitere Komponente verknüpfen",
+        "error": {
+          "duplicate": "Diese Komponente ist bereits mit dem Prüfauftrag verknüpft!"
+        }
+      },
       "showClosed": "Abgeschlossene anzeigen",
       "status": {
         "label": "Status",

@@ -231,7 +231,7 @@
         this.$emit('paginate', this.options.page)
       },
       closeEdit () {
-        this.editItemPopupVisible = false
+        this.editItemPopupVisible = undefined
       },
       checkEditItemPopupVisible (oid) {
         return this.editItemPopupVisible === oid

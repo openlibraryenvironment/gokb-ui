@@ -20,6 +20,19 @@
         :label="$t('component.general.status.label')"
         return-object
       />
+      <gokb-add-review-popup
+        v-if="addReviewPopupVisible"
+        v-model="addReviewPopupVisible"
+        :component="reviewComponent"
+        @added="retrieveReviews"
+      />
+      <gokb-button
+        class="mr-4"
+        icon-id="add"
+        @click="showAddReviewPopup"
+      >
+        {{ $t('btn.add') }}
+      </gokb-button>
       <gokb-button
         :disabled="selectedItems.length == 0"
         icon-id="delete"
@@ -55,6 +68,7 @@
 
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
   import reviewServices from '@/shared/services/review-services'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
@@ -64,7 +78,8 @@
   export default {
     name: 'GokbReviewsSection',
     components: {
-      GokbConfirmationPopup
+      GokbConfirmationPopup,
+      GokbAddReviewPopup
     },
     extends: BaseComponent,
     props: {
@@ -79,7 +94,7 @@
         default: undefined
       },
       reviewComponent: {
-        type: [Number, String],
+        type: Object,
         required: false,
         default: undefined
       },
@@ -93,6 +108,7 @@
       return {
         rawReviews: undefined,
         confirmationPopUpVisible: false,
+        addReviewPopupVisible: undefined,
         selectedItems: [],
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -231,7 +247,7 @@
         }
 
         if (this.reviewComponent) {
-          searchParams.componentToReview = this.reviewComponent
+          searchParams.componentToReview = this.reviewComponent.id
         }
 
         const parameters = {
@@ -249,6 +265,9 @@
         this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.selectedItems.length, this.$i18n.tc('component.review.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
+      },
+      showAddReviewPopup () {
+        this.addReviewPopupVisible = 1
       },
       async _closeSelectedItems () {
         await Promise.all(this.selectedItems.map(({ id }) =>

@@ -10,7 +10,8 @@
       <v-col md="12">
         <gokb-entity-field
           v-model="reviewItem.component"
-          :readonly="isEdit || isReadonly"
+          :readonly="isEdit || isReadonly || !!component"
+          :init-item="component"
           :type-filter="cmpType"
           :show-link="true"
           :label="cmpLabel"
@@ -29,7 +30,7 @@
       <v-col cols="3">
         <gokb-state-field
           v-model="reviewItem.stdDesc"
-          :init-item="selectedItem.stdDesc"
+          :init-item="stdDesc"
           :readonly="isReadonly"
           return-object
           url="refdata/categories/ReviewRequest.StdDesc"
@@ -140,28 +141,60 @@
             :disabled="isEdit"
             :label="$i18n.t('component.review.cause')"
           />
-          <div
-            v-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
-            class="pt-3"
-          >
+          <div class="pt-3">
             <label
               class="v-label"
               style="display:block;font-size:0.9em;"
               for="otherComponents"
             >
-              {{ $tc('component.review.otherComponents') }}
+              {{ $tc('component.review.otherComponents.label') }}
             </label>
-            <div
+            <v-row
               v-for="(oc, idx) in reviewItem.otherComponents"
               :key="idx"
+              dense
             >
-              <router-link
-                :style="{ color: '#f2994a', fontSize: '1.2em', marginRight: '4px' }"
-                :to="{ name: oc.route, params: { 'id': oc.id } }"
-              >
-                {{ oc.name }}
-              </router-link>
-            </div>
+              <v-col>
+                <router-link
+                  v-if="oc.route"
+                  :style="{ color: '#f2994a', fontSize: '1.2em', marginRight: '4px' }"
+                  :to="{ name: oc.route, params: { 'id': oc.id } }"
+                >
+                  {{ oc.name }}
+                </router-link>
+                <span v-else>
+                  {{ oc.name }} ({{ oc.type }})
+                </span>
+                <v-icon
+                  class="mr-3"
+                  :disabled="isReadonly"
+                  style="cursor:pointer"
+                  :title="$t('btn.delete')"
+                  small
+                  @click="removeOtherComponent(oc.id)"
+                >
+                  close
+                </v-icon>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="5">
+                <gokb-entity-field
+                  v-model="newAdditionalComponent"
+                  :readonly="!!isReadonly"
+                  :show-link="true"
+                  :label="$t('component.review.otherComponents.add')"
+                  return-object
+                  @input="addNewOtherComponent"
+                />
+                <div
+                  v-if="ocError"
+                  class="mb-3 error--text"
+                >
+                  {{ $t('component.review.otherComponents.error.duplicate') }}
+                </div>
+              </v-col>
+            </v-row>
           </div>
         </template>
       </v-col>
@@ -221,7 +254,7 @@
         :disabled="isReadonly"
         default
       >
-        {{ $t('btn.update') }}
+        {{ isEdit ? $t('btn.update') : $t('btn.create') }}
       </gokb-button>
     </template>
   </gokb-dialog>
@@ -245,6 +278,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      component: {
+        type: Object,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -252,7 +290,9 @@
         config: [],
         id: undefined,
         selectedItem: undefined,
+        ocError: false,
         additionalInfo: undefined,
+        newAdditionalComponent: undefined,
         updateUrl: undefined,
         deleteUrl: undefined,
         reviewItem: {
@@ -263,16 +303,24 @@
           description: undefined,
           dateCreated: undefined,
           component: undefined,
-          otherComponents: undefined
+          otherComponents: []
         },
         items: [],
         componentRoutes: {
           package: '/package',
           org: '/provider',
+          organization: '/provider',
+          tipp: '/package-title',
+          titleinstancepackageplatform: '/package-title',
           title: '/title',
           journal: '/title',
           book: '/title',
-          database: '/title'
+          database: '/title',
+          titleinstance: '/title',
+          journalinstance: '/title',
+          bookinstance: '/title',
+          databaseinstance: '/title',
+          otherinstance: '/title'
         }
       }
     },
@@ -291,6 +339,9 @@
       isEdit () {
         return !!this.id
       },
+      stdDesc () {
+        return this.selectedItem?.stdDesc || undefined
+      },
       numMessageVars () {
         return this.additionalInfo?.vars ? this.additionalInfo.vars.length : 0
       },
@@ -307,6 +358,10 @@
       if (this.selected) {
         this.id = this.selected.id
         this.fetch(this.id)
+      }
+
+      if (this.component) {
+        this.reviewItem.component = this.component
       }
     },
     methods: {
@@ -338,10 +393,11 @@
         this.reviewItem.dateCreated = new Date(dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
         this.reviewItem.component = componentToReview
         this.reviewItem.allocatedGroups = allocatedGroups
-        this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(({ oid, name }) => ({
-          name,
-          id: oid.split(':')[1],
-          route: this.componentRoutes[componentToReview?.type?.toLowerCase()]
+        this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(oc => ({
+          name: oc.name,
+          id: (oc.oid ? oc.oid.split(':')[1] : oc.id),
+          type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
+          route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
         })) : []
         this.updateUrl = _links?.update?.href || undefined
         this.deleteUrl = _links?.delete?.href || undefined
@@ -349,11 +405,12 @@
       async save () {
         const newReview = {
           id: this.id,
-          status: this.reviewItem.status.id,
+          status: this.reviewItem.status?.id || null,
           stdDesc: this.reviewItem.stdDesc?.id || null,
           reviewRequest: this.reviewItem.request,
           descriptionOfCause: this.reviewItem.description,
-          componentToReview: this.reviewItem.component.id
+          componentToReview: this.reviewItem.component.id,
+          additionalInfo: { otherComponents: this.reviewItem.otherComponents }
         }
 
         const response = await this.catchError({
@@ -364,9 +421,25 @@
         if (response.status === 200) {
           this.$emit('edit', this.selectedItem)
           this.close()
-        } else {
-          console.log(newReview.status)
+        } else if (response.status === 201) {
+          this.$emit('added', response.data)
+          this.close()
         }
+      },
+      addNewOtherComponent (cmp) {
+        if (cmp?.id) {
+          if (!this.reviewItem.otherComponents.find(oc => oc.id === cmp.id)) {
+            const newComp = { name: cmp.name, id: cmp.id, route: this.componentRoutes[cmp.type.toLowerCase()], type: cmp.type }
+            this.reviewItem.otherComponents.push(newComp)
+            this.ocError = false
+          } else {
+            this.ocError = true
+          }
+          this.newAdditionalComponent = undefined
+        }
+      },
+      removeOtherComponent (cmpId) {
+        this.reviewItem.otherComponents = this.reviewItem.otherComponents.filter(({ id }) => id !== cmpId)
       }
     }
   }

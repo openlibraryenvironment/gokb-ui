@@ -42,7 +42,7 @@
       <v-row v-if="id">
         <v-col>
           <gokb-state-select-field
-            v-model="status"
+            v-model="titleItem.status"
             :deletable="!!deleteUrl"
             :editable="!!updateUrl"
             :api-errors="errors.status"
@@ -52,7 +52,7 @@
       <v-row>
         <v-col cols="3">
           <gokb-state-field
-            v-model="OAStatus"
+            v-model="titleItem.OAStatus"
             message-path="component.title.OAStatus"
             width="100%"
             url="refdata/categories/TitleInstance.OAStatus"
@@ -67,7 +67,7 @@
           cols="3"
         >
           <gokb-state-field
-            v-model="medium"
+            v-model="titleItem.medium"
             message-path="component.title.medium"
             width="100%"
             url="refdata/categories/TitleInstance.Medium"
@@ -79,7 +79,7 @@
         </v-col>
         <v-col v-if="currentType == 'Book'">
           <gokb-text-field
-            v-model="firstAuthor"
+            v-model="titleItem.firstAuthor"
             :label="$t('component.title.firstAuthor.label')"
             :disabled="isReadonly"
             :api-errors="errors.firstAuthor"
@@ -88,7 +88,7 @@
         </v-col>
         <v-col v-if="currentType == 'Book'">
           <gokb-text-field
-            v-model="firstEditor"
+            v-model="titleItem.firstEditor"
             :label="$t('component.title.firstEditor.label')"
             :disabled="isReadonly"
             :api-errors="errors.firstEditor"
@@ -97,7 +97,7 @@
         </v-col>
         <v-col v-if="currentType == 'Journal'">
           <gokb-date-field
-            v-model="publishedFrom"
+            v-model="titleItem.publishedFrom"
             :readonly="isReadonly"
             :label="$t('component.title.publishedFrom')"
             :api-errors="errors.publishedFrom"
@@ -106,7 +106,7 @@
         </v-col>
         <v-col v-if="currentType == 'Journal'">
           <gokb-date-field
-            v-model="publishedTo"
+            v-model="titleItem.publishedTo"
             :readonly="isReadonly"
             :label="$t('component.title.publishedTo')"
             :api-errors="errors.publishedTo"
@@ -117,7 +117,7 @@
       <v-row v-if="currentType == 'Book'">
         <v-col cols="3">
           <gokb-number-field
-            v-model="volumeNumber"
+            v-model="titleItem.volumeNumber"
             :disabled="isReadonly"
             :label="$t('component.title.volumeNumber')"
             :api-errors="errors.volumeNumber"
@@ -126,7 +126,7 @@
         </v-col>
         <v-col cols="3">
           <gokb-number-field
-            v-model="editionNumber"
+            v-model="titleItem.editionNumber"
             :disabled="isReadonly"
             :label="$t('component.title.editionNumber')"
             :api-errors="errors.editionNumber"
@@ -135,7 +135,7 @@
         </v-col>
         <v-col>
           <gokb-text-field
-            v-model="editionStatement"
+            v-model="titleItem.editionStatement"
             :label="$t('component.title.editionStatement')"
             :disabled="isReadonly"
             :api-errors="errors.editionStatement"
@@ -146,7 +146,7 @@
       <v-row v-if="currentType == 'Book'">
         <v-col>
           <gokb-date-field
-            v-model="firstPublishedInPrint"
+            v-model="titleItem.firstPublishedInPrint"
             :readonly="isReadonly"
             :label="$t('component.title.firstPublishedInPrint')"
             :api-errors="errors.firstPublishedInPrint"
@@ -155,7 +155,7 @@
         </v-col>
         <v-col>
           <gokb-date-field
-            v-model="firstPublishedOnline"
+            v-model="titleItem.firstPublishedOnline"
             :readonly="isReadonly"
             :label="$t('component.title.firstPublishedOnline')"
             :api-errors="errors.firstPublishedOnline"
@@ -296,7 +296,7 @@
             class="mt-4"
           >
             <gokb-reviews-section
-              :review-component="id"
+              :review-component="titleItem"
               :api-errors="errors.reviewRequests"
               @update="addPendingChange"
             />
@@ -346,7 +346,7 @@
       />
       <gokb-reviews-section
         v-if="id && loggedIn"
-        :review-component="id"
+        :review-component="titleItem"
         :api-errors="errors.reviewRequests"
       />
       <gokb-tipps-section
@@ -454,28 +454,32 @@
         tab: null,
         pendingChanges: {},
         shortTitleMap: { name: undefined, id: undefined, uuid: undefined, type: undefined },
-        name: undefined,
-        notFound: false,
-        source: undefined,
+        titleItem: {
+          id: undefined,
+          name: undefined,
+          source: undefined,
+          publishedFrom: undefined,
+          publishedTo: undefined,
+          status: undefined,
+          firstPublishedOnline: undefined,
+          firstPublishedInPrint: undefined,
+          firstAuthor: undefined,
+          firstEditor: undefined,
+          editionNumber: undefined,
+          editionStatement: undefined,
+          volumeNumber: undefined,
+          OAStatus: undefined,
+          medium: undefined,
+          type: undefined
+        },
         dateCreated: undefined,
         lastUpdated: undefined,
-        publishedFrom: undefined,
-        publishedTo: undefined,
-        publishers: [],
-        status: undefined,
+        notFound: false,
         tabsView: true,
+        publishers: [],
         history: [],
         allNames: { name: undefined, alts: [] },
         reviewRequests: [],
-        firstPublishedOnline: undefined,
-        firstPublishedInPrint: undefined,
-        firstAuthor: undefined,
-        firstEditor: undefined,
-        editionNumber: undefined,
-        editionStatement: undefined,
-        volumeNumber: undefined,
-        OAStatus: undefined,
-        medium: undefined,
         version: undefined,
         reference: undefined,
         errors: {},
@@ -564,18 +568,18 @@
           name: this.allNames.name,
           ids: this.ids.map(id => ({ value: id.value, type: id.namespace })),
           variantNames: this.allNames.alts,
-          publishedFrom: this.publishedFrom,
-          publishedTo: this.publishedTo,
-          dateFirstInPrint: this.firstPublishedInPrint,
-          dateFirstOnline: this.firstPublishedOnline,
-          firstAuthor: this.firstAuthor,
-          firstEditor: this.firstEditor,
+          publishedFrom: this.titleItem.publishedFrom,
+          publishedTo: this.titleItem.publishedTo,
+          dateFirstInPrint: this.titleItem.firstPublishedInPrint,
+          dateFirstOnline: this.titleItem.firstPublishedOnline,
+          firstAuthor: this.titleItem.firstAuthor,
+          firstEditor: this.titleItem.firstEditor,
           type: this.currentType,
-          volumeNumber: this.volumeNumber,
-          editionNumber: this.editionNumber,
-          editionStatement: this.editionStatement,
-          OAStatus: (!this.OAStatus || typeof this.OAStatus === 'number') ? this.OAStatus : this.OAStatus.id,
-          status: this.status,
+          volumeNumber: this.titleItem.volumeNumber,
+          editionNumber: this.titleItem.editionNumber,
+          editionStatement: this.titleItem.editionStatement,
+          OAStatus: (!this.titleItem.OAStatus || typeof this.titleItem.OAStatus === 'number') ? this.titleItem.OAStatus : this.titleItem.OAStatus.id,
+          status: this.titleItem.status,
           publisher: this.publishers.map(pub => pub.id)
         }
         const response = await this.catchError({
@@ -619,36 +623,38 @@
 
           if (result.status === 200) {
             const data = result.data
+            this.titleItem.id = data.id
 
             if (!this.id) {
               this.id = data.id
             }
             this.updateUrl = data._links?.update?.href || null
             this.deleteUrl = data._links?.delete?.href || null
-            this.name = data.name
-            this.source = data.source
+            this.titleItem.name = data.name
+            this.titleItem.source = data.source
             this.version = data.version
             this.currentType = data.type
-            this.publishedFrom = data.publishedFrom && data.publishedFrom.substr(0, 10)
-            this.publishedTo = data.publishedTo && data.publishedTo.substr(0, 10)
+            this.titleItem.type = data.type
+            this.titleItem.publishedFrom = data.publishedFrom && data.publishedFrom.substr(0, 10)
+            this.titleItem.publishedTo = data.publishedTo && data.publishedTo.substr(0, 10)
             this.publishers = data._embedded.publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!this.updateUrl }))
             this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
             this.tipps = data._embedded.tipps || []
             this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
-            this.allNames = { name: this.name, alts: this.allAlternateNames }
+            this.allNames = { name: data.name, alts: this.allAlternateNames }
             this.reviewRequests = data._embedded.reviewRequests
-            this.editionStatement = data.editionStatement
+            this.titleItem.editionStatement = data.editionStatement
             this.dateCreated = data.dateCreated
             this.lastUpdated = data.lastUpdated
             this.firstAuthor = data.firstAuthor
             this.firstEditor = data.firstEditor
-            this.medium = data.medium
-            this.OAStatus = data.OAStatus
-            this.editionNumber = data.editionNumber
-            this.firstPublishedInPrint = data.firstPublishedInPrint
-            this.firstPublishedOnline = data.firstPublishedOnline
-            this.volumeNumber = data.volumeNumber
-            this.status = data.status
+            this.titleItem.medium = data.medium
+            this.titleItem.OAStatus = data.OAStatus
+            this.titleItem.editionNumber = data.editionNumber
+            this.titleItem.firstPublishedInPrint = data.firstPublishedInPrint
+            this.titleItem.firstPublishedOnline = data.firstPublishedOnline
+            this.titleItem.volumeNumber = data.volumeNumber
+            this.titleItem.status = data.status
             this.history = data.history
 
             this.shortTitleMap = { name: data.name, id: data.id, uuid: data.uuid, type: data.type }

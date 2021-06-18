@@ -376,7 +376,7 @@
           />
           <gokb-reviews-section
             v-if="id && isContrib"
-            :review-component="id"
+            :review-component="packageItem"
           />
         </v-stepper-content>
       </v-stepper-items>
@@ -544,8 +544,10 @@
         dateCreated: undefined,
         newTipps: [],
         packageItem: {
+          id: undefined,
           name: undefined,
           source: undefined,
+          type: 'package',
           status: undefined,
           descriptionUrl: undefined,
           description: undefined,
@@ -686,7 +688,7 @@
             ezbMatch: true,
             zdbMatch: true,
             automaticUpdates: false,
-            titleIdNamespace: options.selectedNamespace,
+            targetNamespace: options.selectedNamespace,
             duration: undefined,
             unit: undefined,
           }
@@ -704,8 +706,6 @@
             this.submitConfirmationMessage = { text: 'component.package.navigation.confirm.noTipps.label', vars: [this.allNames.name] }
           }
           this.showSubmitConfirm = true
-        } else {
-          this.error = 'Invalid info!'
         }
       },
       async createPackage () {
@@ -766,7 +766,7 @@
               : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
 
             if (this.kbart || this.urlUpdate) {
-              const namespace = (this.kbart?.selectedNamespace?.name ? { titleIdNamespace: this.kbart?.selectedNamespace?.name } : {})
+              const namespace = (this.kbart?.selectedNamespace?.value ? { titleIdNamespace: this.kbart?.selectedNamespace?.value } : {})
               var pars = {
                 processOption: 'kbart',
                 ...namespace,
@@ -828,6 +828,7 @@
 
           if (result.status === 200) {
             const data = result.data
+            this.packageItem.id = data.id
 
             if (!this.id) {
               this.id = data.id

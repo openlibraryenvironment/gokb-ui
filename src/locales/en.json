@@ -547,7 +547,12 @@
         "label": "Access URL | Access URLs",
         "error": "Please provide a valid URL."
       },
-      "access": "Access",
+      "access": {
+        "label": "Access"
+      },
+      "other": {
+        "label": "More"
+      },
       "name": "Package-specific name",
       "accessPeriod": "Access Period",
       "identifier": {
@@ -555,6 +560,9 @@
       },
       "accessStartDate": "Access Start Date",
       "accessEndDate": "Access End Date",
+      "importId": {
+        "label": "KBART title_id"
+      },
       "lastChangedExternal": "Last external changes",
       "series": {
         "label": "Series"
@@ -699,7 +707,13 @@
       "type": "Type",
       "cause": "Cause",
       "componentToReview": "Component",
-      "otherComponents": "Other Components",
+      "otherComponents": {
+        "label": "Other Components",
+        "add": "Link new component",
+        "error": {
+          "duplicate": "This component is already linked to this review!"
+        }
+      },
       "showClosed": "Show closed requests",
       "status": {
         "label": "Status",
