@@ -156,6 +156,7 @@
           }
         })
         this.resultItems = []
+        this.totalNumberOfItems = 0
       },
       resultPaginate (options) {
         const page = options.page
