@@ -504,6 +504,7 @@
           "label": "Gemischt"
         }
       },
+      "count": "Anzahl Titel",
       "listStatus": {
         "label": "Listenstatus",
         "Checked": {
