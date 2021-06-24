@@ -2,7 +2,7 @@
   <gokb-page
     v-if="!notFound"
     :key="version"
-    :title="title"
+    :title="$tc('component.tipp.label')"
     @submit="update"
   >
     <gokb-error-component :value="error" />
@@ -29,7 +29,7 @@
         <v-col>
           <gokb-title-field
             v-model="packageTitleItem.title"
-            :label="$tc('component.title.label')"
+            :label="titleLabel"
             :readonly="isEdit || isReadonly"
             return-object
           />
@@ -189,7 +189,7 @@
                     v-if="isJournal"
                     dense
                   >
-                    <v-col>
+                    <v-col cols="4">
                       <gokb-date-field
                         v-model="statement.startDate"
                         :readonly="isReadonly"
@@ -197,7 +197,7 @@
                         :label="$t('component.tipp.coverage.startDate')"
                       />
                     </v-col>
-                    <v-col>
+                    <v-col cols="4">
                       <gokb-text-field
                         v-model="statement.startVolume"
                         :disabled="isReadonly"
@@ -205,7 +205,7 @@
                         :label="$t('component.tipp.coverage.startVolume')"
                       />
                     </v-col>
-                    <v-col>
+                    <v-col cols="4">
                       <gokb-text-field
                         v-model="statement.startIssue"
                         :disabled="isReadonly"
@@ -218,7 +218,7 @@
                     v-if="isJournal"
                     dense
                   >
-                    <v-col>
+                    <v-col cols="4">
                       <gokb-date-field
                         v-model="statement.endDate"
                         :readonly="isReadonly"
@@ -226,7 +226,7 @@
                         :label="$t('component.tipp.coverage.endDate')"
                       />
                     </v-col>
-                    <v-col>
+                    <v-col cols="4">
                       <gokb-text-field
                         v-model="statement.endVolume"
                         :disabled="isReadonly"
@@ -234,7 +234,7 @@
                         :label="$t('component.tipp.coverage.endVolume')"
                       />
                     </v-col>
-                    <v-col>
+                    <v-col cols="4">
                       <gokb-text-field
                         v-model="statement.endIssue"
                         :disabled="isReadonly"
@@ -547,8 +547,8 @@
       header () {
         return !this.isReadonly ? (this.id ? (this.$i18n.t('header.edit.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel) : (this.$i18n.t('header.add.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel)) : (this.typeLabel + ' – ' + this.$i18n.tc('component.tipp.label'))
       },
-      title () {
-        return this.$i18n.tc('component.tipp.label') + ' – ' + this.typeLabel
+      titleLabel () {
+        return this.$i18n.tc('component.title.label') + ' (' + this.typeLabel + ')'
       },
       typeLabel () {
         return this.packageTitleItem.publicationType ? this.$i18n.tc('component.title.type.' + this.packageTitleItem.publicationType) : this.$i18n.tc('component.title.type.' + this.packageTitleItem.title?.type)
@@ -706,7 +706,7 @@
             }))
           }
 
-          document.title = this.$i18n.tc('component.tipp.label') + ' – ' + data.name
+          document.title = this.$i18n.tc('component.tipp.label') + ' – ' + (data.name || data.title?.name)
         } else {
           this.notFound = true
         }

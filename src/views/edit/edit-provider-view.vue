@@ -13,15 +13,6 @@
         {{ successMsg }}
       </v-alert>
     </span>
-    <v-row>
-      <v-spacer />
-      <v-col cols="3">
-        <v-switch
-          v-model="tabsView"
-          :label="$t('component.title.tabsView')"
-        />
-      </v-col>
-    </v-row>
     <gokb-section :no-tool-bar="true">
       <v-row>
         <v-col md="12">
@@ -210,6 +201,13 @@
       />
     </div>
     <template #buttons>
+      <gokb-button
+        v-if="!isReadonly"
+        text
+        @click="reload"
+      >
+        {{ $t('btn.reset') }}
+      </gokb-button>
       <v-spacer />
       <div v-if="id">
         <v-chip
@@ -239,13 +237,11 @@
         </v-chip>
       </div>
       <v-spacer />
-      <gokb-button
-        v-if="!isReadonly"
-        text
-        @click="reload"
-      >
-        {{ $t('btn.cancel') }}
-      </gokb-button>
+      <v-switch
+        v-model="tabsView"
+        class="pt-4 pr-6"
+        :label="$t('component.title.tabsView')"
+      />
       <gokb-button
         v-if="!isReadonly"
         default
@@ -341,10 +337,19 @@
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
         }
+      },
+      tabsView (value) {
+        if (this.loggedIn) {
+          accountModel.useTabbedView(value)
+        }
       }
     },
     async created () {
       this.reload()
+
+      if (this.loggedIn) {
+        this.tabsView = accountModel.tabbedView()
+      }
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

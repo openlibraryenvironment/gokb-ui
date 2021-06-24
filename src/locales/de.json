@@ -1,28 +1,54 @@
 {
   "btn": {
-    "edit": "Bearbeiten",
-    "update": "Aktualisieren",
-    "refresh": "Aktualisieren",
-    "submit": "Abschicken",
+    "activate": "Aktivieren",
     "add": "Hinzufügen",
     "back": "Zurück",
-    "new": "Neu",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
     "confirm": "Bestätigen",
     "create": "Erstellen",
-    "close": "Schließen",
-    "cancel": "Abbrechen",
-    "retire": "Archivieren",
-    "activate": "Aktivieren",
+    "darkMode": "Dunkle Ansicht",
     "deactivate": "Deaktivieren",
     "delete": "Löschen",
-    "search": "Suchen",
-    "reset": "Zurücksetzen",
-    "reload": "Neu laden",
+    "disableSync": "Aktualisierung stoppen",
+    "edit": "Bearbeiten",
+    "enableSync": "Automatisch aktualisieren",
+    "new": "Neu",
     "next": "Weiter",
     "prev": "Zurück",
-    "enableSync": "Automatisch aktualisieren",
-    "disableSync": "Aktualisierung stoppen",
-    "darkMode": "Dunkle Ansicht"
+    "refresh": "Aktualisieren",
+    "reload": "Neu laden",
+    "reset": "Zurücksetzen",
+    "retire": "Archivieren",
+    "search": "Suchen",
+    "submit": "Abschicken",
+    "update": "Aktualisieren"
+  },
+  "main": {
+    "docs": {
+      "target": "https://github.com/openlibraryenvironment/gokb/wiki",
+      "label": "Dokumentation"
+    },
+    "legal": {
+      "label": "Impressum"
+    },
+    "privacy": {
+      "label": "Datenschutz"
+    }
+  },
+  "default": {
+    "true": "Ja",
+    "false": "Nein",
+    "ISOdateHint": "JJJJ-MM-TT",
+    "404": {
+      "title": "Unbekannter Pfad",
+      "text": "Die von Ihnen gesuchte Ressource konnte nicht gefunden werden."
+    },
+    "401": {
+      "title": "Fehlende Berechtigung",
+      "text": "Ihnen fehlt die Berechtigung um diese Seite zu sehen. Falls dies ein Fehler ist, wenden Sie sich bitte an einen Administrator."
+    },
+    "docsUrl": "https://service-wiki.hbz-nrw.de/display/GOKB/GOKb+-+Deutsche+Sektion"
   },
   "direction": "ltr",
   "route": {
@@ -64,21 +90,6 @@
     "home": "GOKb",
     "profile": "Profil",
     "noaccess": "Kein Zugang"
-  },
-  "default": {
-    "true": "Ja",
-    "false": "Nein",
-    "ISOdateHint": "JJJJ-MM-TT",
-    "error": {
-      "404": {
-        "title": "Unbekannter Pfad",
-        "text": "Die von Ihnen gesuchte Ressource konnte nicht gefunden werden."
-      },
-      "401": {
-        "title": "Fehlende Berechtigung",
-        "text": "Ihnen fehlt die Berechtigung um diese Seite zu sehen. Falls dies ein Fehler ist, wenden Sie sich bitte an einen Administrator."
-      }
-    }
   },
   "pending": {
     "lists": {
@@ -158,8 +169,8 @@
     },
     "ok": "Erfolgreich",
     "error": "Fehlerhaft",
-    "waiting": "Warten",
     "description": "Beschreibung",
+    "waiting": "Warten",
     "messages": "Ereignisse",
     "status": "Status",
     "startTime": "Start",
@@ -366,6 +377,9 @@
         "Journal": {
           "label": "Zeitschrift"
         },
+        "Other": {
+          "label": "Andere"
+        },
         "Published Score": {
           "label": "Musiknoten"
         },
@@ -412,7 +426,7 @@
       },
       "volumeNumber": "Bandnr.",
       "editionNumber": "Ausgabenr.",
-      "editionStatement": "Ausgabebezeichnung",
+      "editionStatement": "Ausgabe",
       "firstPublishedInPrint": "Veröffentlichungsdatum (Print)",
       "firstPublishedOnline": "Veröffentlichungsdatum (Online)",
       "firstAuthor": {
@@ -638,7 +652,8 @@
       "label": "Anbieter | Anbieter",
       "homepage": "Webseite",
       "titleNamespace": "Titel-Namensraum",
-      "packageNamespace": "Paket-Namensraum"
+      "packageNamespace": "Paket-Namensraum",
+      "technicalSupport": "Technischer Support"
     },
     "office": {
       "label": "Kontakt | Kontakte",
@@ -860,6 +875,10 @@
       "label": "Automatischer Import und Update | Automatische Imports und Updates",
       "updateNow": "Jetzt Importieren",
       "lastRun": "Letzter Durchlauf",
+      "ezbMatch": "EZB-Abgleich",
+      "zdbMatch": "ZDB-Abgleich",
+      "enableUpdate": "Aktiviert",
+      "url": "URL",
       "frequency": {
         "label": "Update-Zyklus",
         "Daily": {
@@ -877,11 +896,7 @@
         "Yearly": {
           "label": "Jährlich"
         }
-      },
-      "enableUpdate": "Aktiviert",
-      "ezbMatch": "EZB-Abgleich",
-      "zdbMatch": "ZDB-Abgleich",
-      "url": "URL"
+      }
     },
     "general": {
       "name": "Name",

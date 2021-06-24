@@ -37,22 +37,58 @@
         </template>
       </v-list>
       <template v-slot:append>
-        <v-row class="pa-2">
-          <v-col
-            class="text-caption"
-            align="center"
-          >
+        <v-row class="pl-6 pr-2">
+          <v-col class="text-caption">
             v{{ currentVersion }}
           </v-col>
-        </v-row>
-        <v-row v-if="updateExists">
-          <v-col align="center">
+          <v-col v-if="updateExists">
             <v-btn
               text
               @click="refreshApp"
             >
               - Update -
             </v-btn>
+          </v-col>
+        </v-row>
+        <v-row
+          class="text-caption pl-6"
+          dense
+        >
+          <v-col>
+            <a
+              :href="$t('main.docs.target')"
+              style="text-decoration:none"
+            >
+              {{ $t('main.docs.label') }}
+            </a>
+          </v-col>
+        </v-row>
+        <v-row
+          v-if="imprintLink"
+          class="text-caption pl-6"
+          dense
+        >
+          <v-col>
+            <a
+              :href="imprintLink"
+              style="text-decoration:none"
+            >
+              {{ $t('main.legal.label') }}
+            </a>
+          </v-col>
+        </v-row>
+        <v-row
+          v-if="privacyLink"
+          class="text-caption pl-6 pb-4"
+          dense
+        >
+          <v-col>
+            <a
+              :href="privacyLink"
+              style="text-decoration:none"
+            >
+              {{ $t('main.privacy.label') }}
+            </a>
           </v-col>
         </v-row>
       </template>
@@ -95,7 +131,7 @@
         hide-no-data
         hide-selected
         item-text="name"
-        item-value="API"
+        item-value="id"
         full-width
         no-filter
         :placeholder="globalSearchPlaceholder"
@@ -117,6 +153,8 @@
       </v-autocomplete>
       <v-btn
         class="mr-2"
+        icon
+        small
         :title="$t('btn.darkMode')"
         @click="toggleDarkMode"
       >
@@ -203,6 +241,8 @@
     mixins: [update],
     data: () => ({
       drawer: null,
+      privacyLink: process.env.VUE_APP_DP_LINK,
+      imprintLink: process.env.VUE_APP_IMP_LINK,
       globalSearchSelected: undefined,
       globalSearchField: undefined,
       globalSearchItems: undefined,
@@ -267,8 +307,8 @@
           { type: 'BookInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Book') },
           { type: 'Database', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Database') },
           { type: 'DatabaseInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Database') },
-          { type: 'TitleInstancePackagePlatform', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.label') },
-          { type: 'TIPP', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.label') },
+          { type: 'TitleInstancePackagePlatform', path: '/package-title/', icon: 'snippet_folder', label: this.$i18n.tc('component.tipp.label') },
+          { type: 'TIPP', path: '/package-title/', icon: 'snippet_folder', label: this.$i18n.tc('component.tipp.label') },
         ]
       }
     },
@@ -293,13 +333,9 @@
           if (result?.data?.data) {
             this.globalSearchItems = []
 
-            console.log(result.data.data)
-
             result.data.data.forEach((item, idx) => {
-              var res
-
               if (this.typeRoutes.find(({ type: atype }) => atype === item.type || atype === item.componentType)) {
-                res = item
+                var res = item
                 res.icon = this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.icon
                 res.iconTitle = this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.label
                 res.path = this.typeRoutes.find(({ type: atype }) => atype === res.type || atype === res.componentType)?.path
@@ -311,14 +347,14 @@
             })
           }
         } catch (exception) {
-          this.globalSearchItems = []
+
         } finally {
           this.isLoading = false
         }
       },
       globalSearchSelected () {
         if (this.globalSearchSelected.path) {
-          this.globalSearchSelected && this.$router.push({ path: this.globalSearchSelected.path + (this.globalSearchSelected.tippTitleMedium ? this.globalSearchSelected.title.id : this.globalSearchSelected.id) })
+          this.globalSearchSelected && this.$router.push({ path: this.globalSearchSelected.path + this.globalSearchSelected.id })
           this.globalSearchField = undefined
         }
       },
@@ -341,6 +377,10 @@
       if (accountModel.loggedIn() && accountModel.userLocale()) {
         this.currentLocale = accountModel.userLocale()
       }
+
+      if (accountModel.loggedIn()) {
+        this.$vuetify.theme.dark = accountModel.darkMode()
+      }
     },
     created () {
       this.HOME_ROUTE = HOME_ROUTE
@@ -348,6 +388,7 @@
     methods: {
       toggleDarkMode () {
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+        accountModel.toggleDarkMode(this.$vuetify.theme.dark)
       }
     }
   }

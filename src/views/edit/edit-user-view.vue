@@ -2,6 +2,7 @@
   <gokb-page
     :title="title"
     @submit="update"
+    @valid="valid = $event"
   >
     <gokb-error-component :value="error" />
     <gokb-section :sub-title="$t('component.general.general')">
@@ -13,6 +14,7 @@
           <gokb-username-field
             v-model="username"
             :label="$t('component.user.username')"
+            required
             hide-icon
             autocomplete="off"
             dense
@@ -122,6 +124,7 @@
       </gokb-button>
       <gokb-button
         default
+        :disabled="!valid"
       >
         {{ updateButtonText }}
       </gokb-button>
@@ -156,7 +159,6 @@
     data () {
       return {
         addRolePopupVisible: false,
-
         username: undefined,
         password: undefined,
         passwordExpired: undefined,
@@ -209,6 +211,9 @@
       },
       updateButtonText () {
         return this.id ? this.$i18n.t('btn.update') : this.$i18n.t('btn.add')
+      },
+      valid () {
+        return this.username && (this.isEdit || (this.password.length > 5 && this.password.length < 64))
       }
     },
     async created () {

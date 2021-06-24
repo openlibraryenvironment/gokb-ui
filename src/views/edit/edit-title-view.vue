@@ -363,14 +363,6 @@
         :api-errors="errors.history"
       />
     </div>
-    <v-row justify="end">
-      <v-col cols="3">
-        <v-switch
-          v-model="tabsView"
-          :label="$t('component.title.tabsView')"
-        />
-      </v-col>
-    </v-row>
     <template #buttons>
       <gokb-button
         v-if="!isReadonly"
@@ -407,6 +399,11 @@
         </v-chip>
       </div>
       <v-spacer />
+      <v-switch
+        v-model="tabsView"
+        class="pt-4 pr-6"
+        :label="$t('component.title.tabsView')"
+      />
       <gokb-button
         v-if="!isReadonly"
         default
@@ -510,7 +507,7 @@
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
       },
       typeDisplay () {
-        return this.$i18n.tc('component.title.type.' + this.currentType)
+        return this.currentType ? this.$i18n.tc('component.title.type.' + this.currentType) : this.$i18n.tc('component.title.label')
       },
       isReadonly () {
         return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))

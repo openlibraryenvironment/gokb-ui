@@ -2,212 +2,340 @@
   <gokb-dialog
     v-model="localValue"
     :title="header"
-    :width="800"
+    :width="1350"
     @submit="submitTipp"
   >
     <gokb-error-component :value="error" />
-    <gokb-section :sub-title="$t('component.general.general')">
-      <v-row dense>
-        <v-col>
-          <gokb-state-select-field
-            v-if="status"
-            v-model="packageTitleItem.status"
-            :deletable="!!deleteUrl"
-            :editable="!!updateUrl"
-          />
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col>
-          <gokb-name-field
-            v-model="allNames"
-            :disabled="isReadonly"
-            dense
-            :label="$tc('component.tipp.name')"
-          />
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col>
-          <gokb-title-field
-            v-model="packageTitleItem.title"
-            :type-filter="title.type.id"
-            :label="$tc('component.title.label')"
-            dense
-            :readonly="isEdit || isReadonly"
-            return-object
-          />
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col>
-          <gokb-search-package-field
-            v-if="packageTitleItem.title"
-            v-model="packageTitleItem.pkg"
-            :label="$tc('component.package.label')"
-            dense
-            :readonly="true"
-            return-object
-          />
-        </v-col>
-      </v-row>
-    </gokb-section>
-    <gokb-section
-      expandable
-      :sub-title="$t('component.tipp.access.label')"
-    >
-      <v-row dense>
-        <v-col>
-          <gokb-search-platform-field
-            v-model="packageTitleItem.hostPlatform"
-            :items="platformSelection"
-            :label="$tc('component.platform.label')"
-            :readonly="isEdit || isReadonly"
-            return-object
-          />
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col>
-          <gokb-date-field
-            v-model="packageTitleItem.accessStartDate"
-            :readonly="isReadonly"
-            :label="$t('component.tipp.accessStartDate')"
-          />
-        </v-col>
-        <v-col>
-          <gokb-date-field
-            v-model="packageTitleItem.accessEndDate"
-            :readonly="isReadonly"
-            :label="$t('component.tipp.accessEndDate')"
-          />
-        </v-col>
-        <v-col>
-          <gokb-state-field
-            v-model="packageTitleItem.paymentType"
-            :init-item="packageTitleItem.paymentType"
-            message-path="component.tipp.paymentType"
-            url="refdata/categories/TitleInstancePackagePlatform.PaymentType"
-            :label="$t('component.tipp.paymentType.label')"
-            :readonly="isReadonly"
-          />
-        </v-col>
-      </v-row>
-      <v-row dense>
-        <v-col>
-          <gokb-url-field
-            v-model="packageTitleItem.url"
-            :disabled="isReadonly"
-            dense
-            :label="$tc('component.tipp.url.label')"
-          />
-        </v-col>
-      </v-row>
-    </gokb-section>
-    <v-row dense>
+    <v-row>
       <v-col>
-        <span class="text-h6 ml-4">
-          {{ $t('component.tipp.coverage.label') }}
-        </span>
-        <v-btn
-          icon
-          @click="doExpandCoverage"
+        <gokb-section :sub-title="$t('component.general.general')">
+          <v-row dense>
+            <v-col>
+              <gokb-state-select-field
+                v-if="status"
+                v-model="packageTitleItem.status"
+                :deletable="!!deleteUrl"
+                :editable="!!updateUrl"
+              />
+            </v-col>
+          </v-row>
+          <v-row dense>
+            <v-col>
+              <gokb-name-field
+                v-model="allNames"
+                :disabled="isReadonly"
+                dense
+                :label="$tc('component.tipp.name')"
+              />
+            </v-col>
+          </v-row>
+          <v-row dense>
+            <v-col>
+              <gokb-title-field
+                v-model="packageTitleItem.title"
+                :type-filter="title.type.id"
+                :label="$tc('component.title.label')"
+                dense
+                :readonly="isEdit || isReadonly"
+                return-object
+              />
+            </v-col>
+          </v-row>
+          <v-row dense>
+            <v-col>
+              <gokb-search-package-field
+                v-if="packageTitleItem.title"
+                v-model="packageTitleItem.pkg"
+                :label="$tc('component.package.label')"
+                dense
+                :readonly="true"
+                return-object
+              />
+            </v-col>
+          </v-row>
+          <v-row class="pt-4" />
+        </gokb-section>
+        <gokb-section
+          expandable
+          :sub-title="$t('component.tipp.access.label')"
         >
-          <v-icon>{{ expansionIcon }}</v-icon>
-        </v-btn>
+          <v-row dense>
+            <v-col>
+              <gokb-search-platform-field
+                v-model="packageTitleItem.hostPlatform"
+                :items="platformSelection"
+                :label="$tc('component.platform.label')"
+                :readonly="isEdit || isReadonly"
+                dense
+                return-object
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="4">
+              <gokb-date-field
+                v-model="packageTitleItem.accessStartDate"
+                :readonly="isReadonly"
+                :label="$t('component.tipp.accessStartDate')"
+              />
+            </v-col>
+            <v-col cols="4">
+              <gokb-date-field
+                v-model="packageTitleItem.accessEndDate"
+                :readonly="isReadonly"
+                :label="$t('component.tipp.accessEndDate')"
+              />
+            </v-col>
+            <v-col cols="4">
+              <gokb-state-field
+                v-model="packageTitleItem.paymentType"
+                :init-item="packageTitleItem.paymentType"
+                message-path="component.tipp.paymentType"
+                url="refdata/categories/TitleInstancePackagePlatform.PaymentType"
+                :label="$t('component.tipp.paymentType.label')"
+                :readonly="isReadonly"
+              />
+            </v-col>
+          </v-row>
+          <v-row dense>
+            <v-col>
+              <gokb-url-field
+                v-model="packageTitleItem.url"
+                :disabled="isReadonly"
+                dense
+                :label="$tc('component.tipp.url.label')"
+              />
+            </v-col>
+          </v-row>
+        </gokb-section>
+      </v-col>
+      <v-col cols="6">
+        <v-row>
+          <v-col>
+            <gokb-section :sub-title="$t('component.tipp.other.label')">
+              <v-row>
+                <v-col>
+                  <gokb-text-field
+                    v-model="packageTitleItem.publisherName"
+                    :disabled="isReadonly"
+                    :label="$tc('component.title.publisher.label')"
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-text-field
+                    v-model="packageTitleItem.series"
+                    :disabled="isReadonly"
+                    :label="$t('component.tipp.series.label')"
+                  />
+                </v-col>
+              </v-row>
+              <v-row dense>
+                <v-col>
+                  <gokb-text-field
+                    v-model="packageTitleItem.subjectArea"
+                    :disabled="isReadonly"
+                    dense
+                    :label="$t('component.tipp.subjectArea.label')"
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-state-field
+                    v-model="packageTitleItem.medium"
+                    :init-item="packageTitleItem.medium"
+                    width="100%"
+                    dense
+                    message-path="component.title.medium"
+                    url="refdata/categories/TitleInstancePackagePlatform.Medium"
+                    :label="$t('component.title.medium.label')"
+                    :readonly="isReadonly"
+                  />
+                </v-col>
+              </v-row>
+              <v-row dense>
+                <v-col>
+                  <gokb-text-field
+                    v-model="importId"
+                    disabled
+                    dense
+                    :label="$t('component.tipp.importId.label')"
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-date-field
+                    v-model="packageTitleItem.lastChangedExternal"
+                    readonly
+                    dense
+                    :label="$t('component.tipp.lastChangedExternal')"
+                  />
+                </v-col>
+              </v-row>
+              <v-row
+                v-if="isBook"
+                dense
+              >
+                <v-col>
+                  <gokb-date-field
+                    v-model="packageTitleItem.dateFirstInPrint"
+                    :readonly="isReadonly"
+                    dense
+                    :label="$t('component.title.firstPublishedInPrint')"
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-date-field
+                    v-model="packageTitleItem.dateFirstOnline"
+                    :readonly="isReadonly"
+                    dense
+                    :label="$t('component.title.firstPublishedOnline')"
+                  />
+                </v-col>
+              </v-row>
+              <v-row
+                v-if="isBook"
+                dense
+              >
+                <v-col>
+                  <gokb-text-field
+                    v-model="packageTitleItem.firstAuthor"
+                    :disabled="isReadonly"
+                    dense
+                    :label="$t('component.title.firstAuthor.label')"
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-text-field
+                    v-model="packageTitleItem.firstEditor"
+                    :disabled="isReadonly"
+                    dense
+                    :label="$t('component.title.firstEditor.label')"
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-text-field
+                    v-model="packageTitleItem.editionStatement"
+                    :disabled="isReadonly"
+                    dense
+                    :label="$t('component.title.editionStatement')"
+                  />
+                </v-col>
+                <v-col cols="3">
+                  <gokb-text-field
+                    v-model="packageTitleItem.volumeNumber"
+                    :disabled="isReadonly"
+                    dense
+                    :label="$t('component.title.volumeNumber')"
+                  />
+                </v-col>
+              </v-row>
+            </gokb-section>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col class="mt-2">
+            <span class="text-h6 ma-4">
+              {{ $t('component.tipp.coverage.label') }}
+            </span>
+            <v-btn
+              icon
+              @click="doExpandCoverage"
+            >
+              <v-icon>{{ expansionIcon }}</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+        <div v-if="coverageExpanded">
+          <v-row
+            v-for="statement in packageTitleItem.coverageStatements"
+            :key="statement.id"
+            dense
+          >
+            <v-col>
+              <gokb-section no-tool-bar>
+                <v-row>
+                  <v-col cols="4">
+                    <gokb-state-field
+                      v-model="statement.coverageDepth"
+                      :readonly="isReadonly"
+                      :init-item="statement.coverageDepth"
+                      :label="$t('component.tipp.coverage.depth.label')"
+                      message-path="component.tipp.coverage.depth"
+                      url="refdata/categories/TIPPCoverageStatement.CoverageDepth"
+                    />
+                  </v-col>
+                  <v-col>
+                    <gokb-textarea-field
+                      v-model="statement.coverageNote"
+                      :disabled="isReadonly"
+                      :label="$t('component.tipp.coverage.note')"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row v-if="isJournal">
+                  <v-col md="4">
+                    <gokb-date-field
+                      v-model="statement.startDate"
+                      :readonly="isReadonly"
+                      dense
+                      :label="$t('component.tipp.coverage.startDate')"
+                    />
+                  </v-col>
+                  <v-col md="4">
+                    <gokb-text-field
+                      v-model="statement.startVolume"
+                      :disabled="isReadonly"
+                      dense
+                      :label="$t('component.tipp.coverage.startVolume')"
+                    />
+                  </v-col>
+                  <v-col md="4">
+                    <gokb-text-field
+                      v-model="statement.startIssue"
+                      :disabled="isReadonly"
+                      dense
+                      :label="$t('component.tipp.coverage.startIssue')"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row v-if="isJournal">
+                  <v-col md="4">
+                    <gokb-date-field
+                      v-model="statement.endDate"
+                      :readonly="isReadonly"
+                      dense
+                      :label="$t('component.tipp.coverage.endDate')"
+                    />
+                  </v-col>
+                  <v-col md="4">
+                    <gokb-text-field
+                      v-model="statement.endVolume"
+                      :disabled="isReadonly"
+                      dense
+                      :label="$t('component.tipp.coverage.endVolume')"
+                    />
+                  </v-col>
+                  <v-col md="4">
+                    <gokb-text-field
+                      v-model="statement.endIssue"
+                      :disabled="isReadonly"
+                      dense
+                      :label="$t('component.tipp.coverage.endIssue')"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row dense>
+                  <v-col>
+                    <gokb-embargo-field
+                      v-model="statement.embargo"
+                      :readonly="isReadonly"
+                    />
+                  </v-col>
+                </v-row>
+              </gokb-section>
+            </v-col>
+          </v-row>
+        </div>
       </v-col>
     </v-row>
-    <div v-if="coverageExpanded">
-      <v-row
-        v-for="statement in packageTitleItem.coverageStatements"
-        :key="statement.id"
-        dense
-      >
-        <v-col>
-          <gokb-section no-tool-bar>
-            <v-row>
-              <v-col cols="4">
-                <gokb-state-field
-                  v-model="statement.coverageDepth"
-                  :readonly="isReadonly"
-                  :init-item="statement.coverageDepth"
-                  :label="$t('component.tipp.coverage.depth.label')"
-                  message-path="component.tipp.coverage.depth"
-                  url="refdata/categories/TIPPCoverageStatement.CoverageDepth"
-                />
-              </v-col>
-              <v-col>
-                <gokb-textarea-field
-                  v-model="statement.coverageNote"
-                  :disabled="isReadonly"
-                  :label="$t('component.tipp.coverage.note')"
-                />
-              </v-col>
-            </v-row>
-            <v-row v-if="isJournal">
-              <v-col>
-                <gokb-date-field
-                  v-model="statement.startDate"
-                  :readonly="isReadonly"
-                  dense
-                  :label="$t('component.tipp.coverage.startDate')"
-                />
-              </v-col>
-              <v-col>
-                <gokb-text-field
-                  v-model="statement.startVolume"
-                  :disabled="isReadonly"
-                  dense
-                  :label="$t('component.tipp.coverage.startVolume')"
-                />
-              </v-col>
-              <v-col>
-                <gokb-text-field
-                  v-model="statement.startIssue"
-                  :disabled="isReadonly"
-                  dense
-                  :label="$t('component.tipp.coverage.startIssue')"
-                />
-              </v-col>
-            </v-row>
-            <v-row v-if="isJournal">
-              <v-col>
-                <gokb-date-field
-                  v-model="statement.endDate"
-                  :readonly="isReadonly"
-                  dense
-                  :label="$t('component.tipp.coverage.endDate')"
-                />
-              </v-col>
-              <v-col>
-                <gokb-text-field
-                  v-model="statement.endVolume"
-                  :disabled="isReadonly"
-                  dense
-                  :label="$t('component.tipp.coverage.endVolume')"
-                />
-              </v-col>
-              <v-col>
-                <gokb-text-field
-                  v-model="statement.endIssue"
-                  :disabled="isReadonly"
-                  dense
-                  :label="$t('component.tipp.coverage.endIssue')"
-                />
-              </v-col>
-            </v-row>
-            <v-row dense>
-              <v-col>
-                <gokb-embargo-field
-                  v-model="statement.embargo"
-                  :readonly="isReadonly"
-                />
-              </v-col>
-            </v-row>
-          </gokb-section>
-        </v-col>
-      </v-row>
-    </div>
     <template #buttons>
       <v-btn
         class="ml-6 btn-default"
@@ -302,6 +430,7 @@
         updateUrl: undefined,
         deleteUrl: undefined,
         status: undefined,
+        importId: undefined,
         items: [],
         id: undefined,
         allNames: { name: undefined, alts: [] },
@@ -371,6 +500,9 @@
       expansionIcon () {
         return this.coverageExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
       },
+      isCoverageExpanded () {
+        return this.coverageExpanded
+      },
       localDateCreated () {
         return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
       },
@@ -425,6 +557,7 @@
         this.deleteUrl = this.selectedItem.deleteUrl
         this.platformSelection.push(this.selectedItem.hostPlatform)
         this.status = this.selectedItem.status
+        this.importId = this.selectedItem.importId
         this.lastUpdated = this.selectedItem.lastUpdated
         this.dateCreated = this.selectedItem.dateCreated
         this.allNames.name = this.selectedItem.name
@@ -453,7 +586,7 @@
         this.title.type = this.titleType
         this.packageTitleItem.hostPlatform = this.parentPlatform
       }
-      this.coverageExpanded = this.isJournal
+      this.coverageExpanded = (this.title.type === 'Journal' || this.title.type === 'serial')
     },
     methods: {
       async submitTipp () {

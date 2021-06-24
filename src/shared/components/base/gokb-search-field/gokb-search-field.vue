@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="readonly"
-    class="mt-2 pt-4"
+    :class="[(dense ? '' : 'mt-2 pt-4')]"
   >
     <div
       v-if="localLabel"
@@ -38,6 +38,7 @@
     :loading="loading"
     :placeholder="placeholder"
     :rules="rules"
+    :dense="dense"
     :search-input.sync="search"
     :item-text="itemText"
     :item-value="itemValue"
@@ -55,6 +56,7 @@
     :loading="loading"
     :placeholder="placeholder"
     :rules="rules"
+    :dense="dense"
     :search-input.sync="search"
     :item-text="itemText"
     :item-value="itemValue"
@@ -112,6 +114,11 @@
         type: String,
         required: false,
         default: 'id'
+      },
+      dense: {
+        type: Boolean,
+        required: false,
+        default: false
       },
       returnObject: {
         type: Boolean,

@@ -4,7 +4,7 @@
       Embargo
     </div>
     <v-row>
-      <v-col>
+      <v-col cols="4">
         <gokb-embargo-type-field
           v-model="embargoType"
           :label="$t('component.tipp.embargo.type')"
@@ -12,7 +12,7 @@
           :readonly="readonly"
         />
       </v-col>
-      <v-col>
+      <v-col cols="4">
         <gokb-number-field
           v-model="embargoDuration"
           :disabled="readonly"
@@ -20,7 +20,7 @@
           :label="$t('component.tipp.embargo.duration')"
         />
       </v-col>
-      <v-col>
+      <v-col cols="4">
         <gokb-time-period-field
           v-model="embargoUnit"
           :label="$t('component.tipp.embargo.unit.label')"

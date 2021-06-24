@@ -5,6 +5,7 @@ const api = (vue, accountServices) => {
     username: undefined,
     userLocale: undefined,
     tabbedView: true,
+    darkMode: false,
     id: undefined,
     roles: undefined,
   })
@@ -30,6 +31,10 @@ const api = (vue, accountServices) => {
       return state.tabbedView
     },
 
+    darkMode () {
+      return state.darkMode
+    },
+
     userLocale () {
       return state.userLocale
     },
@@ -50,6 +55,10 @@ const api = (vue, accountServices) => {
 
     useTabbedView (val) {
       state.tabbedView = val
+    },
+
+    toggleDarkMode (dm) {
+      state.darkMode = dm
     },
 
     loggedIn () {

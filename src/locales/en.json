@@ -1,27 +1,40 @@
 {
   "btn": {
-    "edit": "Edit",
-    "submit": "Submit",
-    "update": "Update",
-    "refresh": "Refresh",
+    "activate": "Activate",
     "add": "Add",
-    "new": "Add New",
-    "create": "Create",
-    "close": "Close",
+    "back": "Back",
     "cancel": "Cancel",
+    "close": "Close",
     "confirm": "Confirm",
-    "retire": "Retire",
+    "create": "Create",
+    "darkMode": "Dark Mode",
     "deactivate": "Deactivate",
     "delete": "Delete",
-    "search": "Search",
-    "reset": "Reset",
-    "reload": "Neu laden",
-    "back": "Back",
+    "disableSync": "Stop Auto-Refresh",
+    "edit": "Edit",
+    "enableSync": "Enable Auto-Refresh",
+    "new": "Add New",
     "next": "Next",
     "prev": "Previous",
-    "enableSync": "Enable Auto-Refresh",
-    "disableSync": "Stop Auto-Refresh",
-    "darkMode": "Dark Mode"
+    "refresh": "Refresh",
+    "reload": "Neu laden",
+    "reset": "Reset",
+    "retire": "Retire",
+    "search": "Search",
+    "submit": "Submit",
+    "update": "Update"
+  },
+  "main": {
+    "docs": {
+      "target": "https://github.com/openlibraryenvironment/gokb/wiki",
+      "label": "Documentation"
+    },
+    "legal": {
+      "label": "Legal Note"
+    },
+    "privacy": {
+      "label": "Privacy"
+    }
   },
   "default": {
     "true": "Yes",
@@ -36,6 +49,7 @@
       "text": "You have insufficient permissions for viewing this page. If you think this is an error, please contact an admin."
     }
   },
+  "direction": "ltr",
   "route": {
     "package": {
       "edit": "Edit Package",
@@ -76,7 +90,6 @@
     "profile": "Profile",
     "noaccess": "No Access"
   },
-  "direction": "ltr",
   "pending": {
     "lists": {
       "changed": "This list contains unsaved changes.",
@@ -666,6 +679,7 @@
     "user": {
       "label": "User | Users",
       "username": "Username",
+      "register": "Registration",
       "password": "Password",
       "email": "Email",
       "role": {
@@ -680,7 +694,6 @@
         "ROLE_SUPERUSER": "System",
         "ROLE_API": "API"
       },
-      "register": "Registration",
       "enabled": {
         "label": "Enabled",
         "active": {

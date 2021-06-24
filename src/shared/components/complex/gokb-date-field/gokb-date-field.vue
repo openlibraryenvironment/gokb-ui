@@ -1,5 +1,5 @@
 <template>
-  <div style="min-width:250px">
+  <div>
     <v-row v-if="!readonly">
       <v-col
         cols="10"
@@ -27,7 +27,7 @@
           <template v-slot:activator="{ on }">
             <v-icon
               v-bind="$props"
-              class="pb-1"
+              :class="dense ? 'pb-5' : 'pb-1'"
               v-on="on"
             >
               mdi-calendar
