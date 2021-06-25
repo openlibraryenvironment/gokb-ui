@@ -62,10 +62,7 @@
             dense
           />
         </v-col>
-        <v-col
-          v-if="currentType == 'Other'"
-          cols="3"
-        >
+        <v-col cols="3">
           <gokb-state-field
             v-model="titleItem.medium"
             message-path="component.title.medium"
@@ -575,6 +572,7 @@
           volumeNumber: this.titleItem.volumeNumber,
           editionNumber: this.titleItem.editionNumber,
           editionStatement: this.titleItem.editionStatement,
+          medium: this.titleItem.medium,
           OAStatus: (!this.titleItem.OAStatus || typeof this.titleItem.OAStatus === 'number') ? this.titleItem.OAStatus : this.titleItem.OAStatus.id,
           status: this.titleItem.status,
           publisher: this.publishers.map(pub => pub.id)

@@ -26,6 +26,11 @@
         default: false
       }
     },
+    computed: {
+      localName () {
+        return (this.messagePath && this.localValue) ? this.$i18n.t(this.messagePath + '.' + this.localValue?.name + '.label') : this.localValue?.name
+      },
+    },
     watch: {
       '$i18n.locale' (l) {
         this.fetch()

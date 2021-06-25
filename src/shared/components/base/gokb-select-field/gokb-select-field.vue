@@ -1,7 +1,7 @@
 <template>
   <gokb-text-field
     v-if="readonly"
-    v-model="selectedName"
+    v-model="localName"
     :label="label"
     :dense="dense"
     disabled
@@ -92,8 +92,7 @@
     },
     data () {
       return {
-        items: [],
-        selectedName: undefined
+        items: []
       }
     },
     computed: {
@@ -105,6 +104,9 @@
           // console.log('select field', value)
           this.$emit('input', value)
         }
+      },
+      localName () {
+        return this.localValue.name
       },
       rules () {
         return [((!!this.required && !!this.value) || !this.required || this.$i18n.t('validation.missingSelection'))]
@@ -140,7 +142,6 @@
 
           if (selected?.length === 1) {
             this.localValue = selected[0]
-            this.selectedName = selected[0].name
           }
         }
       },
