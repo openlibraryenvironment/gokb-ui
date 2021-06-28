@@ -517,6 +517,7 @@
           "label": "Mixed"
         }
       },
+      "count": "Number of titles",
       "listStatus": {
         "label": "List Status",
         "Checked": {

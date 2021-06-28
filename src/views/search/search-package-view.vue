@@ -199,6 +199,13 @@
             value: 'contentType'
           },
           {
+            text: this.$i18n.tc('component.package.count'),
+            align: 'start',
+            sortable: true,
+            width: '15%',
+            value: 'count'
+          },
+          {
             text: this.$i18n.tc('component.general.lastUpdated'),
             align: 'end',
             sortable: true,
@@ -210,7 +217,7 @@
     },
     async created () {
       this.searchServicesUrl = 'rest/packages'
-      this.searchServiceIncludes = 'id,uuid,name,provider,nominalPlatform,_links,contentType,lastUpdated'
+      this.searchServiceIncludes = 'id,uuid,name,provider,nominalPlatform,_links,contentType,lastUpdated,_tippCount'
       this.linkSearchParameterValues = {
         link: 'name',
         linkTwo: 'provider'
@@ -226,6 +233,7 @@
           uuid,
           contentType,
           nominalPlatform,
+          _tippCount,
           _links
         }) => ({
           id,
@@ -236,6 +244,7 @@
           lastUpdated: new Date(lastUpdated).toISOString().substr(0, 10),
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
+          count: _tippCount,
           deleteUrl: _links?.delete?.href || undefined,
           retireUrl: _links?.update?.href || undefined
         }))
