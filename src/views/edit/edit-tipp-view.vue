@@ -593,7 +593,7 @@
         return this.$i18n.tc('component.title.label') + ' (' + this.typeLabel + ')'
       },
       typeLabel () {
-        return this.packageTitleItem.publicationType ? this.$i18n.tc('component.title.type.' + this.packageTitleItem.publicationType) : this.$i18n.tc('component.title.type.' + this.packageTitleItem.title?.type)
+        return this.packageTitleItem.publicationType ? this.$i18n.tc('component.title.type.' + this.packageTitleItem.publicationType.name) : this.$i18n.tc('component.title.type.' + this.packageTitleItem.title?.type)
       },
       isEdit () {
         return !!this.id

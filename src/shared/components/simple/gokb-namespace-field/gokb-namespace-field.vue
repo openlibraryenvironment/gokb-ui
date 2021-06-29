@@ -17,6 +17,11 @@
         default: undefined
       }
     },
+    computed: {
+      localName () {
+        return this.localValue?.name
+      },
+    },
     created () {
       this.entityName = 'identifier-namespaces'
       if (this.targetType) {

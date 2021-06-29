@@ -330,6 +330,7 @@
       "type": {
         "label": "Typ",
         "Journal": "Journal | Journals",
+        "Serial": "Journal | Journals",
         "Monograph": "Monographie | Monographien",
         "Book": "Monographie | Monographien",
         "Database": "Datenbank | Datenbanken",

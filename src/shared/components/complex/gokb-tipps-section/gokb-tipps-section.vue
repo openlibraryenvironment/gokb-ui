@@ -287,20 +287,20 @@
     watch: {
       loggedIn (value) {
         if (value) {
-          this.fetchTipps(this.options.page)
+          this.fetchTipps(this.options)
         }
       },
       searchFilters: {
         handler (val) {
           this.options.page = 1
-          this.fetchTipps()
+          this.fetchTipps(this.options)
         },
         deep: true
       }
     },
     async created () {
       if (this.pkg || this.ttl) {
-        this.fetchTipps(this.page)
+        this.fetchTipps(this.options)
       }
     },
     methods: {
@@ -353,7 +353,7 @@
         this.newTipps = this.newTipps.filter(({ id }) => id !== idToDelete)
       },
       _retireItem (idToRetire) {
-        this.fetchTipps()
+        this.fetchTipps(this.options)
       },
       showAddNewTitlePopup (titleType) {
         this.addTitleType = titleType
@@ -366,7 +366,7 @@
       },
       editTitle (tipp) {
         this.successMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), tipp.title.name])
-        this.fetchTipps()
+        this.fetchTipps(this.options)
       },
       addNewTitle (tipp) {
         this.successMessage = this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), tipp.title.name])
@@ -377,24 +377,16 @@
         this.$emit('kbart', options)
       },
       resultPaginate (options) {
-        const page = options.page
-        if (options.sortBy) {
-          this.options.sortBy = options.sortBy
-        }
-
-        if (options.desc) {
-          this.options.desc = options.desc
-        }
         this.successMessage = false
 
         if (this.ttl || this.pkg) {
-          this.fetchTipps({ page })
+          this.fetchTipps(this.options)
         }
       },
       resultNewPaginate (page) {
         this.successMessage = false
       },
-      async fetchTipps ({ page } = { page: undefined }) {
+      async fetchTipps (options) {
         if (this.pkg || this.ttl) {
           const reqId = this.pkg || this.ttl
           const searchService = this.pkg ? packageServices : titleServices
@@ -415,7 +407,7 @@
           const result = await this.catchError({
             promise: searchService.getTipps(reqId, {
               ...(searchParams || {}),
-              offset: page ? (page - 1) * this.options.itemsPerPage : 0,
+              offset: (options ? (options.page - 1) * this.options.itemsPerPage : 0),
               limit: this.options.itemsPerPage
             }, this.cancelToken.token),
             instance: this

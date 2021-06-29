@@ -329,6 +329,7 @@
       "type": {
         "label": "Type",
         "Journal": "Journal | Journals",
+        "Serial": "Journal | Journals",
         "Monograph": "Monograph | Monographs",
         "Book": "Monograph | Monographs",
         "Database": "Database | Databases",
