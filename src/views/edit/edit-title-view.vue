@@ -370,11 +370,12 @@
       <v-spacer />
       <div v-if="id && !notFound">
         <v-chip
-          class="mr-2"
+          class="ma-1"
           label
         >
           <v-icon
             :title="$t('component.general.dateCreated')"
+            class="pb-1"
             medium
           >
             mdi-file-plus-outline
@@ -382,11 +383,12 @@
           <span class="ml-1">{{ localDateCreated }}</span>
         </v-chip>
         <v-chip
-          class="mr-2"
+          class="ma-1"
           label
         >
           <v-icon
             :title="$t('component.general.lastUpdated')"
+            class="pb-1"
             label
             medium
           >

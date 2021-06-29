@@ -230,23 +230,33 @@
             </gokb-section>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col class="mt-2">
-            <span class="text-h6 ma-4">
-              {{ $t('component.tipp.coverage.label') }}
-            </span>
-            <v-btn
-              icon
-              @click="doExpandCoverage"
+        <v-toolbar
+          dense
+          flat
+        >
+          <span class="text-h6">
+            {{ $t('component.tipp.coverage.label') }}
+          </span>
+          <v-btn
+            icon
+            @click="doExpandCoverage"
+          >
+            <v-icon>{{ expansionIcon }}</v-icon>
+          </v-btn>
+          <v-spacer />
+          <v-toolbar-items class="pa-2">
+            <gokb-button
+              icon-id="add"
+              @click="addNewCoverage"
             >
-              <v-icon>{{ expansionIcon }}</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
+              {{ $t('btn.add') }}
+            </gokb-button>
+          </v-toolbar-items>
+        </v-toolbar>
         <div v-if="coverageExpanded">
           <v-row
-            v-for="statement in packageTitleItem.coverageStatements"
-            :key="statement.id"
+            v-for="(statement, idx) in packageTitleItem.coverageStatements"
+            :key="idx"
             dense
           >
             <v-col>
@@ -268,6 +278,20 @@
                       :disabled="isReadonly"
                       :label="$t('component.tipp.coverage.note')"
                     />
+                  </v-col>
+                  <v-col
+                    cols="1"
+                    class="pt-6 mr-2"
+                  >
+                    <v-btn
+                      icon
+                      :title="$t('btn.delete')"
+                      @click="removeCoverage(idx)"
+                    >
+                      <v-icon>
+                        delete
+                      </v-icon>
+                    </v-btn>
                   </v-col>
                 </v-row>
                 <v-row v-if="isJournal">
@@ -643,6 +667,16 @@
       },
       openDetails () {
         this.$router.push({ name: EDIT_TIPP_ROUTE, params: { id: this.id } })
+      },
+      addNewCoverage () {
+        this.packageTitleItem.coverageStatements.push(this.coverageObject)
+      },
+      removeCoverage (idx) {
+        this.packageTitleItem.coverageStatements.splice(idx, 1)
+
+        if (this.packageTitleItem.coverageStatements.length === 0) {
+          this.packageTitleItem.coverageStatements.push(this.coverageObject)
+        }
       }
     }
   }

@@ -66,6 +66,14 @@
             :active-class="tabClass"
           >
             {{ $t('component.tipp.coverage.label') }}
+            <v-icon
+              v-if="pendingChanges.coverage"
+              class="pb-1"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
           </v-tab>
           <v-tab
             key="identifiers"
@@ -159,9 +167,26 @@
             </gokb-section>
           </v-tab-item>
           <v-tab-item key="coverage">
+            <v-toolbar
+              dense
+              flat
+            >
+              <span class="text-h6">
+                {{ $t('component.tipp.coverage.label') }}
+              </span>
+              <v-spacer />
+              <v-toolbar-items class="pa-2">
+                <gokb-button
+                  icon-id="add"
+                  @click="addNewCoverage"
+                >
+                  {{ $t('btn.add') }}
+                </gokb-button>
+              </v-toolbar-items>
+            </v-toolbar>
             <v-row
-              v-for="statement in packageTitleItem.coverageStatements"
-              :key="statement.id"
+              v-for="(statement, idx) in packageTitleItem.coverageStatements"
+              :key="idx"
               dense
             >
               <v-col>
@@ -183,6 +208,20 @@
                         :disabled="isReadonly"
                         :label="$t('component.tipp.coverage.note')"
                       />
+                    </v-col>
+                    <v-col
+                      cols="1"
+                      class="pt-6"
+                    >
+                      <v-btn
+                        icon
+                        :title="$t('btn.delete')"
+                        @click="removeCoverage(idx)"
+                      >
+                        <v-icon>
+                          delete
+                        </v-icon>
+                      </v-btn>
                     </v-col>
                   </v-row>
                   <v-row
@@ -262,6 +301,7 @@
               :target-type="titleTypeString"
               :disabled="isReadonly"
               no-tool-bar
+              @update="addPendingChange"
             />
           </v-tab-item>
           <v-tab-item
@@ -408,6 +448,7 @@
         >
           <v-icon
             :title="$t('component.general.dateCreated')"
+            class="pb-1"
             medium
           >
             mdi-file-plus-outline
@@ -420,6 +461,7 @@
         >
           <v-icon
             :title="$t('component.general.lastUpdated')"
+            class="pb-1"
             label
             medium
           >
@@ -649,6 +691,7 @@
       },
       async reload () {
         loading.startLoading()
+        this.pendingChanges = {}
         const result = await this.catchError({
           promise: tippServices.getTipp(this.id, this.cancelToken.token),
           instance: this
@@ -726,6 +769,18 @@
       addPendingChange (prop) {
         if (!this.pendingChanges[prop]) {
           this.pendingChanges[prop] = true
+        }
+      },
+      addNewCoverage () {
+        this.pendingChanges.coverage = true
+        this.packageTitleItem.coverageStatements.push(this.coverageObject)
+      },
+      removeCoverage (idx) {
+        this.pendingChanges.coverage = true
+        this.packageTitleItem.coverageStatements.splice(idx, 1)
+
+        if (this.packageTitleItem.coverageStatements.length === 0) {
+          this.packageTitleItem.coverageStatements.push(this.coverageObject)
         }
       }
     },

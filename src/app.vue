@@ -37,17 +37,19 @@
         </template>
       </v-list>
       <template v-slot:append>
-        <v-row class="pl-6 pr-2">
-          <v-col class="text-caption">
-            v{{ currentVersion }}
-          </v-col>
-          <v-col v-if="updateExists">
+        <v-row v-if="updateExists">
+          <v-col>
             <v-btn
               text
               @click="refreshApp"
             >
               - Update -
             </v-btn>
+          </v-col>
+        </v-row>
+        <v-row class="pl-6">
+          <v-col class="text-caption">
+            v{{ currentVersion }}
           </v-col>
         </v-row>
         <v-row
@@ -57,7 +59,8 @@
           <v-col>
             <a
               :href="$t('main.docs.target')"
-              style="text-decoration:none"
+              target="_blank"
+              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
             >
               {{ $t('main.docs.label') }}
             </a>
@@ -71,7 +74,8 @@
           <v-col>
             <a
               :href="imprintLink"
-              style="text-decoration:none"
+              target="_blank"
+              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
             >
               {{ $t('main.legal.label') }}
             </a>
@@ -79,13 +83,14 @@
         </v-row>
         <v-row
           v-if="privacyLink"
-          class="text-caption pl-6 pb-4"
+          class="text-caption pl-6 pb-6"
           dense
         >
           <v-col>
             <a
               :href="privacyLink"
-              style="text-decoration:none"
+              target="_blank"
+              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
             >
               {{ $t('main.privacy.label') }}
             </a>
@@ -158,10 +163,21 @@
         :title="$t('btn.darkMode')"
         @click="toggleDarkMode"
       >
-        <v-icon>
+        <v-icon small>
           {{ $vuetify.theme.dark ? 'invert_colors_off' : 'invert_colors' }}
         </v-icon>
       </v-btn>
+      <a
+        icon
+        class="mb-1 mr-2"
+        target="_blank"
+        :href="$t('main.docs.target')"
+        :title="$t('main.docs.label')"
+      >
+        <v-icon small>
+          mdi-help-circle
+        </v-icon>
+      </a>
       <v-select
         v-model="currentLocale"
         offset-y

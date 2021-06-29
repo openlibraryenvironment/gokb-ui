@@ -17,7 +17,7 @@
           identifierValue: undefined,
           contentType: undefined,
           status: undefined,
-          global: ['Global', 'Consortial', 'Regional', 'Unknown'],
+          global: ['Global', 'Consortium', 'Regional', 'Unknown'],
           name: undefined,
         },
         sortMappings: {
@@ -201,8 +201,8 @@
           {
             text: this.$i18n.tc('component.package.count'),
             align: 'start',
-            sortable: true,
-            width: '15%',
+            sortable: false,
+            width: '13%',
             value: 'count'
           },
           {

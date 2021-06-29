@@ -126,7 +126,7 @@
               </v-col>
               <v-col>
                 <gokb-state-field
-                  v-if="id"
+                  v-if="!!id"
                   v-model="packageItem.editStatus"
                   :init-item="packageItem.editStatus"
                   message-path="component.general.editStatus"
@@ -139,9 +139,8 @@
               </v-col>
               <v-col>
                 <gokb-state-field
-                  v-if="id"
+                  v-if="!!id"
                   v-model="packageItem.listStatus"
-                  :init-item="packageItem.listStatus"
                   message-path="component.package.listStatus"
                   url="refdata/categories/Package.ListStatus"
                   width="100%"
@@ -408,6 +407,7 @@
         >
           <v-icon
             :title="$t('component.general.dateCreated')"
+            class="pb-1"
             medium
           >
             mdi-file-plus-outline
@@ -420,6 +420,7 @@
         >
           <v-icon
             :title="$t('component.general.lastUpdated')"
+            class="pb-1"
             label
             medium
           >
