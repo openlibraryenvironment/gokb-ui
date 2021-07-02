@@ -43,7 +43,7 @@
         </v-menu>
       </template>
       <span>
-        {{ username }}
+        {{ username || $tc('component.user.label') }}
       </span>
     </v-tooltip>
   </span>

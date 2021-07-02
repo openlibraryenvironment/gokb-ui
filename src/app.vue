@@ -182,6 +182,7 @@
         v-model="currentLocale"
         offset-y
         :items="locales"
+        :title="$t('component.general.language.label')"
         class="pt-2 ma-2"
         style="max-width:80px"
         dense
