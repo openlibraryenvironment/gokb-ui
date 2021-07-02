@@ -1,6 +1,6 @@
 <template>
   <gokb-page
-    title="Profil"
+    :title="$t('profile.label')"
     @valid="valid = $event"
     @submit="updateProfile"
   >

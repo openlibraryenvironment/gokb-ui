@@ -1,6 +1,7 @@
 export const HOME_ROUTE = '/home'
 
 export const PROFILE_ROUTE = '/profiles'
+export const REGISTER_ROUTE = '/register'
 export const TITLE_ROUTE = '/titles'
 export const PACKAGE_ROUTE = '/packages'
 export const PROVIDER_ROUTE = '/providers'

@@ -166,7 +166,7 @@
             },
             publication_type: {
               rules: {
-                general: /^([Mm]onograph)|([Ss]erial)|([Oo]ther)$/
+                general: /^([Mm]onograph)|([Ss]erial)|([Dd]atabase)|([Oo]ther)$/
               }
             }
           },
@@ -345,7 +345,7 @@
                   this.loadedFile.errors.type.publication_type.empty++
                   this.loadedFile.errors.single.push({ row: idxr, column: 'publication_type', reason: this.$i18n.t('kbart.errors.missingVal', ['publication_type']) })
                   hasErrors = true
-                } else if (!['serial', 'monograph', 'other'].includes(type)) {
+                } else if (!['serial', 'monograph', 'database', 'other'].includes(type)) {
                   this.loadedFile.errors.type.publication_type.invalid++
                   this.loadedFile.errors.single.push({ row: idxr, column: 'publication_type', reason: this.$i18n.t('kbart.errors.illegalType') })
                   hasErrors = true

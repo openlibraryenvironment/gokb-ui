@@ -1,5 +1,5 @@
 import {
-  HOME_ROUTE, PROFILE_ROUTE, TITLE_ROUTE, PACKAGE_ROUTE, PROVIDER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
+  HOME_ROUTE, PROFILE_ROUTE, REGISTER_ROUTE, TITLE_ROUTE, PACKAGE_ROUTE, PROVIDER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
   SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
   SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_USER_ROUTE, EDIT_USER_ROUTE, ERROR_ROUTE, EDIT_PACKAGE_ROUTE,
   EDIT_PROVIDER_ROUTE, ADD_PROVIDER_ROUTE, EDIT_TITLE_ROUTE, NO_ACCESS_ROUTE, EDIT_TIPP_ROUTE
@@ -32,6 +32,14 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
           code: 'route.profile'
         },
         component: () => import('@/views/profile-view.vue')
+      },
+      {
+        path: REGISTER_ROUTE,
+        name: REGISTER_ROUTE,
+        meta: {
+          code: 'route.register'
+        },
+        component: () => import('@/views/register-view.vue')
       },
       {
         path: `${TITLE_ROUTE}/:id`,

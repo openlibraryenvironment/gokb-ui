@@ -7,7 +7,7 @@
     <iframe
       id="register-embed"
       frameborder="0"
-      style="width:100%;min-height:560px;border:0px"
+      style="width:100%;min-height:600px;border:0px"
       :src="link"
     />
     <template #buttons>

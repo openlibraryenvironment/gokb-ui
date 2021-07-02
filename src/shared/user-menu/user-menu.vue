@@ -89,7 +89,7 @@
               id: 0,
               items: [
                 {
-                  title: 'Profil',
+                  title: this.$i18n.t('profile.label'),
                   icon: 'mdi-face-profile',
                   path: PROFILE_ROUTE,
                 },
