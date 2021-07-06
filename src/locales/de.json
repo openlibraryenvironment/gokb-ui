@@ -331,7 +331,7 @@
       "type": {
         "label": "Typ",
         "Journal": "Journal | Journals",
-        "Serial": "Journal | Journals",
+        "Serial": "Serie | Serien",
         "Monograph": "Monographie | Monographien",
         "Book": "Monographie | Monographien",
         "Database": "Datenbank | Datenbanken",
@@ -642,6 +642,21 @@
         },
         "Unknown": {
           "label": "Unknown"
+        }
+      },
+      "publicationType": {
+        "label": "KBART publication_type",
+        "Serial": {
+          "label": "Serial"
+        },
+        "Monograph": {
+          "label": "Monograph"
+        },
+        "Database": {
+          "label": "Database"
+        },
+        "Other": {
+          "label": "Other"
         }
       }
     },

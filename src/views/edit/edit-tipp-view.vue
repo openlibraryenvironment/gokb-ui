@@ -332,13 +332,6 @@
                     :label="$t('component.tipp.series.label')"
                   />
                 </v-col>
-                <v-col>
-                  <gokb-text-field
-                    v-model="importId"
-                    disabled
-                    :label="$t('component.tipp.importId.label')"
-                  />
-                </v-col>
               </v-row>
               <v-row dense>
                 <v-col>
@@ -358,6 +351,28 @@
                     message-path="component.title.medium"
                     url="refdata/categories/TitleInstancePackagePlatform.Medium"
                     :label="$t('component.title.medium.label')"
+                    :readonly="isReadonly"
+                  />
+                </v-col>
+              </v-row>
+              <v-row dense>
+                <v-col>
+                  <gokb-text-field
+                    v-model="importId"
+                    disabled
+                    dense
+                    :label="$t('component.tipp.importId.label')"
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-state-field
+                    v-model="packageTitleItem.publicationType"
+                    :init-item="packageTitleItem.publicationType"
+                    width="100%"
+                    dense
+                    message-path="component.tipp.publicationType"
+                    url="refdata/categories/TitleInstancePackagePlatform.PublicationType"
+                    :label="$t('component.tipp.publicationType.label')"
                     :readonly="isReadonly"
                   />
                 </v-col>

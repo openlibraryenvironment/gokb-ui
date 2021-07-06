@@ -642,6 +642,21 @@
         "Unknown": {
           "label": "Unknown"
         }
+      },
+      "publicationType": {
+        "label": "KBART publication_type",
+        "Serial": {
+          "label": "Serial"
+        },
+        "Monograph": {
+          "label": "Monograph"
+        },
+        "Database": {
+          "label": "Database"
+        },
+        "Other": {
+          "label": "Other"
+        }
       }
     },
     "org": {

@@ -161,6 +161,18 @@
                   />
                 </v-col>
                 <v-col>
+                  <gokb-state-field
+                    v-model="packageTitleItem.publicationType"
+                    :init-item="packageTitleItem.publicationType"
+                    width="100%"
+                    dense
+                    message-path="component.tipp.publicationType"
+                    url="refdata/categories/TitleInstancePackagePlatform.PublicationType"
+                    :label="$t('component.tipp.publicationType.label')"
+                    :readonly="isReadonly"
+                  />
+                </v-col>
+                <v-col>
                   <gokb-date-field
                     v-model="packageTitleItem.lastChangedExternal"
                     readonly
