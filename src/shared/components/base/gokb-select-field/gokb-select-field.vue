@@ -106,7 +106,7 @@
         }
       },
       localName () {
-        return this.localValue.name
+        return this.localValue?.name || undefined
       },
       rules () {
         return [((!!this.required && !!this.value) || !this.required || this.$i18n.t('validation.missingSelection'))]
