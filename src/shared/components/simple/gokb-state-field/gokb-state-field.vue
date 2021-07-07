@@ -28,7 +28,7 @@
     },
     computed: {
       localName () {
-        return (this.messagePath && this.localValue) ? this.$i18n.t(this.messagePath + '.' + this.localValue?.value + '.label') : this.localValue?.name
+        return (this.messagePath && this.localValue) ? this.$i18n.t(this.messagePath + '.' + (this.localValue?.value || this.localValue?.name) + '.label') : this.localValue?.name
       },
     },
     watch: {
