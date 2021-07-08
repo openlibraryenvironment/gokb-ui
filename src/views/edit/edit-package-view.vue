@@ -16,12 +16,20 @@
         {{ successMsg }}
       </v-alert>
     </span>
-    <span v-if="kbartResult">
+    <span v-if="kbartResult === 'success' || kbartStatus === 'success'">
       <v-alert
         type="success"
         dismissible
       >
-        {{ kbartResult }}
+        {{ $t('kbart.transmission.started') }}
+      </v-alert>
+    </span>
+    <span v-else-if="kbartResult === 'error' || kbartStatus === 'error'">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ $t('kbart.transmission.failure') }}
       </v-alert>
     </span>
     <v-stepper
@@ -527,6 +535,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      kbartStatus: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -710,6 +723,7 @@
         }
       },
       async createPackage () {
+        loading.startLoading()
         var isUpdate = !!this.id
         this.successMsg = undefined
         this.kbartResult = undefined
@@ -792,18 +806,31 @@
                 instance: this
               })
 
-              if (ygorResponse < 400) {
-                this.kbartResult = this.$i18n.t('kbart.transmission.started')
+              if (ygorResponse?.status === 'STARTED') {
+                const ygorJobStatusResponse = await this.catchError({
+                  promise: this.getYgorJobStatus(ygorResponse.jobId),
+                  instance: this
+                })
+
+                console.log(ygorJobStatusResponse.status)
+
+                if (ygorJobStatusResponse.status === 400) {
+                  this.kbartResult = 'error'
+                } else {
+                  this.kbartResult = 'success'
+                }
+
                 this.kbart = undefined
+                loading.stopLoading()
 
                 if (isUpdate) {
                   this.step = 1
                   this.reload()
                 } else {
-                  this.$router.push('/package/' + response.data?.id)
+                  this.$router.push({ path: '/package/', props: { id: response.data?.id, kbartStatus: this.kbartResult } })
                 }
               } else {
-                this.kbartResult = this.$i18n.t('kbart.transmission.failure')
+                this.kbartResult = 'error'
               }
             } else {
               if (isUpdate) {
@@ -882,10 +909,8 @@
         }
       },
       async sendKbartUpdateRquest (parameters, file) {
-        loading.startLoading()
         const urlParameters = baseServices.createQueryParameters(parameters)
         const data = new FormData()
-        var status = null
 
         if (file) {
           data.append('uploadFile', file)
@@ -893,13 +918,22 @@
 
         const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/processGokbPackage?${urlParameters}`
 
-        axios.post(url, data)
-          .then(response => {
-            status = response.status
-          })
+        const resp = await axios.post(url, data).then(response => response.data)
+        console.log(resp)
 
-        loading.stopLoading()
-        return status
+        return resp
+      },
+      async getYgorJobStatus (jobId) {
+        const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/getStatus?jobId=${jobId}`
+        let resp = {}
+        let status = 'PREPARATION'
+
+        while (status === 'PREPARATION') {
+          resp = await axios.get(url).then(response => response.data)
+          status = resp.status
+        }
+
+        return resp
       },
       async loadUserGroups () {
         const {

@@ -255,7 +255,7 @@
     },
     "transmission": {
       "started": "The KBART Import has started. You may check its status via your dashboard.",
-      "failure": "Something went wrong with the KBART Upload!"
+      "failure": "Unable to process the provided KBART File! If you provided an URL for automatic updating, please try a direct upload instead."
     }
   },
   "profile": {
