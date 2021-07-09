@@ -1,6 +1,6 @@
 <template>
   <gokb-section
-    expandable
+    :expandable="expandable"
     :sub-title="$tc('component.review.label', 2)"
   >
     <template #buttons>
@@ -14,6 +14,7 @@
       <gokb-state-field
         v-model="searchFilters.status"
         class="mr-4"
+        width="200px"
         :init-item="$t('component.review.status.Open.label')"
         message-path="component.review.status"
         url="refdata/categories/ReviewRequest.Status"
@@ -102,6 +103,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      expandable: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     data () {
@@ -259,6 +265,7 @@
           promise: reviewServices.get({ parameters }, this.cancelToken.token),
           instance: this
         })
+        this.$emit('update', this.rawReviews.data.data.length)
       },
       confirmCloseSelectedItems () {
         this.actionToConfirm = '_closeSelectedItems'

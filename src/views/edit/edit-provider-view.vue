@@ -33,16 +33,14 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col md="12">
+        <v-col>
           <gokb-text-field
             v-model="reference"
             :label="$t('component.provider.homepage')"
             :disabled="isReadonly"
           />
         </v-col>
-      </v-row>
-      <v-row>
-        <v-col md="4">
+        <v-col lg="2">
           <gokb-namespace-field
             v-model="titleNamespace"
             target-type="Title"
@@ -50,7 +48,7 @@
             :label="$t('component.provider.titleNamespace')"
           />
         </v-col>
-        <v-col md="4">
+        <v-col lg="2">
           <gokb-namespace-field
             v-model="packageNamespace"
             target-type="Package"
@@ -58,11 +56,12 @@
             :label="$t('component.provider.packageNamespace')"
           />
         </v-col>
+        <v-col lg="2" />
       </v-row>
     </gokb-section>
     <v-row
       v-if="tabsView"
-      style="min-height:400px"
+      :style="{ minHeight:'330px' }"
     >
       <v-col>
         <v-tabs
@@ -76,6 +75,9 @@
             :active-class="tabClass"
           >
             {{ $tc('component.variantName.label', 2) }}
+            <v-chip class="ma-2">
+              {{ allAlternateNames.length }}
+            </v-chip>
             <v-icon
               v-if="pendingChanges.variants"
               :title="$t('pending.lists.changed')"
@@ -89,6 +91,9 @@
             :active-class="tabClass"
           >
             {{ $tc('component.identifier.label', 2) }}
+            <v-chip class="ma-2">
+              {{ ids.length }}
+            </v-chip>
             <v-icon
               v-if="pendingChanges.ids"
               :title="$t('pending.lists.changed')"
@@ -102,6 +107,9 @@
             :active-class="tabClass"
           >
             {{ $tc('component.platform.label', 2) }}
+            <v-chip class="ma-2">
+              {{ allPlatforms.length }}
+            </v-chip>
             <v-icon
               v-if="pendingChanges.platforms"
               :title="$t('pending.lists.changed')"
@@ -115,6 +123,9 @@
             :active-class="tabClass"
           >
             {{ $tc('component.curatoryGroup.label', 2) }}
+            <v-chip class="ma-2">
+              {{ allCuratoryGroups.length }}
+            </v-chip>
             <v-icon
               v-if="pendingChanges.curators"
               :title="$t('pending.lists.changed')"
@@ -128,6 +139,9 @@
             :active-class="tabClass"
           >
             {{ $tc('component.office.label', 2) }}
+            <v-chip class="ma-2">
+              {{ offices.length }}
+            </v-chip>
             <v-icon
               v-if="pendingChanges.offices"
               :title="$t('pending.lists.changed')"

@@ -1,6 +1,6 @@
 <template>
   <gokb-section
-    expandable
+    :expandable="expandable"
     :hide-default="!expanded"
     :title="title"
     :sub-title="subTitle"
@@ -18,7 +18,7 @@
         icon-id="add"
         @click="showAddNewCuratoryGroup"
       >
-        {{ $t('btn.add') }}
+        {{ $t('btn.new') }}
       </gokb-button>
       <gokb-button
         v-if="isEditable"
@@ -81,6 +81,11 @@
         default: false
       },
       expanded: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
+      expandable: {
         type: Boolean,
         required: false,
         default: true

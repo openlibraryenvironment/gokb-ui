@@ -459,6 +459,8 @@
               )
             )
             this.itemCount = result?.data?._pagination?.total
+
+            this.$emit('update', this.itemCount)
           }
         }
       }

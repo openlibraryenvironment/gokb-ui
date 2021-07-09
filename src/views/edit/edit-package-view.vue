@@ -84,25 +84,37 @@
               :disabled="isReadonly"
             />
           </gokb-section>
-          <gokb-section
-            :sub-title="$t('component.package.provider')"
-          >
-            <gokb-search-organisation-field
-              v-model="packageItem.provider"
-              :items="providerSelection"
-              :show-link="true"
-              :readonly="isReadonly"
-              return-object
-            />
-          </gokb-section>
-          <gokb-section :sub-title="$t('component.package.platform')">
-            <gokb-search-platform-field
-              v-model="packageItem.nominalPlatform"
-              :items="platformSelection"
-              :readonly="isReadonly"
-              return-object
-            />
-          </gokb-section>
+          <v-row>
+            <v-col
+              cols="12"
+              xl="6"
+            >
+              <gokb-section
+                :sub-title="$t('component.package.provider')"
+              >
+                <gokb-search-organisation-field
+                  v-model="packageItem.provider"
+                  :items="providerSelection"
+                  :show-link="true"
+                  :readonly="isReadonly"
+                  return-object
+                />
+              </gokb-section>
+            </v-col>
+            <v-col
+              cols="12"
+              xl="6"
+            >
+              <gokb-section :sub-title="$t('component.package.platform')">
+                <gokb-search-platform-field
+                  v-model="packageItem.nominalPlatform"
+                  :items="platformSelection"
+                  :readonly="isReadonly"
+                  return-object
+                />
+              </gokb-section>
+            </v-col>
+          </v-row>
         </v-stepper-content>
 
         <v-stepper-content :step="isEdit ? 3 : 2">
@@ -235,15 +247,27 @@
               />
             </v-row>
           </gokb-section>
-          <gokb-identifier-section
-            v-model="packageItem.ids"
-            target-type="Package"
-            :disabled="isReadonly"
-          />
-          <gokb-alternate-names-section
-            v-model="allNames.alts"
-            :disabled="isReadonly"
-          />
+          <v-row>
+            <v-col
+              cols="12"
+              xl="6"
+            >
+              <gokb-identifier-section
+                v-model="packageItem.ids"
+                target-type="Package"
+                :disabled="isReadonly"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              xl="6"
+            >
+              <gokb-alternate-names-section
+                v-model="allNames.alts"
+                :disabled="isReadonly"
+              />
+            </v-col>
+          </v-row>
         </v-stepper-content>
 
         <v-stepper-content :step="isEdit ? 4 : 3">
@@ -391,15 +415,29 @@
               disabled
             />
           </gokb-section>
-          <gokb-curatory-group-section
-            v-model="allCuratoryGroups"
-            :disabled="isReadonly"
-            :sub-title="$tc('component.curatoryGroup.label', 2)"
-          />
-          <gokb-reviews-section
-            v-if="id && isContrib"
-            :review-component="packageItem"
-          />
+          <v-row>
+            <v-col
+              cols="12"
+              xl="4"
+            >
+              <gokb-curatory-group-section
+                v-model="allCuratoryGroups"
+                :disabled="isReadonly"
+                :expandable="false"
+                :sub-title="$tc('component.curatoryGroup.label', 2)"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              xl="8"
+            >
+              <gokb-reviews-section
+                v-if="id && isContrib"
+                :expandable="false"
+                :review-component="packageItem"
+              />
+            </v-col>
+          </v-row>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>

@@ -27,18 +27,22 @@
           </v-col>
         </v-row>
       </template>
-      <v-row justify-md="end">
+      <v-row justify="end">
         <v-spacer />
-        <v-col md="4">
+        <v-spacer />
+        <v-col
+          style="text-align:right;"
+          md="4"
+        >
           <gokb-button
-            class="ms-4"
+            class="mr-4 mb-4"
             @click="resetSearch"
           >
             {{ $i18n.t('btn.reset') }}
           </gokb-button>
           <gokb-button
             default
-            class="ms-4"
+            class="mr-4 mb-4"
           >
             {{ $i18n.t('btn.search') }}
           </gokb-button>

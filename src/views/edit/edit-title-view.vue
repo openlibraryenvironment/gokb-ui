@@ -121,15 +121,6 @@
             dense
           />
         </v-col>
-        <v-col cols="3">
-          <gokb-number-field
-            v-model="titleItem.editionNumber"
-            :disabled="isReadonly"
-            :label="$t('component.title.editionNumber')"
-            :api-errors="errors.editionNumber"
-            dense
-          />
-        </v-col>
         <v-col>
           <gokb-text-field
             v-model="titleItem.editionStatement"
@@ -139,8 +130,6 @@
             dense
           />
         </v-col>
-      </v-row>
-      <v-row v-if="currentType == 'Book'">
         <v-col>
           <gokb-date-field
             v-model="titleItem.firstPublishedInPrint"
@@ -178,6 +167,9 @@
             :active-class="tabClass"
           >
             {{ $tc('component.identifier.label', 2) }}
+            <v-chip class="ma-2">
+              {{ ids.length }}
+            </v-chip>
             <v-icon
               v-if="pendingChanges.ids"
               :title="$t('pending.lists.changed')"
@@ -191,6 +183,9 @@
             :active-class="tabClass"
           >
             {{ $tc('component.title.publisher.label', 2) }}
+            <v-chip class="ma-2">
+              {{ publishers.length }}
+            </v-chip>
             <v-icon
               v-if="pendingChanges.publisher"
               :title="$t('pending.lists.changed')"
@@ -204,6 +199,9 @@
             :active-class="tabClass"
           >
             {{ $tc('component.variantName.label', 2) }}
+            <v-chip class="ma-2">
+              {{ allAlternateNames.length }}
+            </v-chip>
             <v-icon
               v-if="pendingChanges.variants"
               :title="$t('pending.lists.changed')"
@@ -218,6 +216,9 @@
             :active-class="tabClass"
           >
             {{ $tc('component.review.label', 2) }}
+            <v-chip class="ma-2">
+              {{ reviewsCount }}
+            </v-chip>
             <v-icon
               v-if="pendingChanges.reviews"
               :title="$t('pending.lists.changed')"
@@ -232,13 +233,19 @@
             :active-class="tabClass"
           >
             {{ $tc('component.tipp.label', 2) }}
+            <v-chip class="ma-2">
+              {{ tippCount }}
+            </v-chip>
           </v-tab>
           <v-tab
-            v-if="isEdit"
+            v-if="isEdit && history"
             key="history"
             :active-class="tabClass"
           >
             {{ $t('component.title.history.label') }}
+            <v-chip class="ma-2">
+              {{ history.length }}
+            </v-chip>
             <v-icon
               v-if="pendingChanges.history"
               :title="$t('pending.lists.changed')"
@@ -295,7 +302,7 @@
             <gokb-reviews-section
               :review-component="titleItem"
               :api-errors="errors.reviewRequests"
-              @update="addPendingChange"
+              @update="refreshReviewsCount"
             />
           </v-tab-item>
           <v-tab-item
@@ -307,6 +314,7 @@
               :show-title="false"
               :disabled="true"
               :api-errors="errors.tipps"
+              @update="updateTippCount"
             />
           </v-tab-item>
           <v-tab-item
@@ -449,6 +457,8 @@
       return {
         tab: null,
         pendingChanges: {},
+        reviewsCount: undefined,
+        tippCount: undefined,
         shortTitleMap: { name: undefined, id: undefined, uuid: undefined, type: undefined },
         titleItem: {
           id: undefined,
@@ -655,8 +665,18 @@
             this.history = data.history
 
             this.shortTitleMap = { name: data.name, id: data.id, uuid: data.uuid, type: data.type }
+            this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
 
             document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
+
+            const tippsResult = await this.catchError({
+              promise: titleServices.getTipps(this.id, { status: 'Current' }, this.cancelToken.token),
+              instance: this
+            })
+
+            if (tippsResult.status === 200) {
+              this.tippCount = tippsResult.data._pagination.total
+            }
           } else {
             this.notFound = true
           }
@@ -667,6 +687,12 @@
         if (!this.pendingChanges[prop]) {
           this.pendingChanges[prop] = true
         }
+      },
+      refreshReviewsCount (count) {
+        this.reviewsCount = count
+      },
+      updateTippCount (count) {
+        this.tippCount = count
       }
     },
   }
