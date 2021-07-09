@@ -66,6 +66,7 @@
           v-model="update"
           class="mr-5"
           :readonly="readonly"
+          :disabled="!url"
           :label="$t('component.source.updateNow')"
         />
       </v-col>
