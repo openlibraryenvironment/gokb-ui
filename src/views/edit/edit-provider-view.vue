@@ -391,7 +391,7 @@
           id: this.id,
           name: this.allNames.name,
           source: this.source || null,
-          status: status ? (typeof this.status === 'number' ? this.status : this.status.id) : undefined,
+          status: this.status,
           reference: this.reference,
           ids: this.ids,
           variantNames: this.allAlternateNames.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),

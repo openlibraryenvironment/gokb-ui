@@ -11,7 +11,7 @@
         <v-col>
           <gokb-state-select-field
             v-if="status"
-            v-model="status"
+            v-model="packageTitleItem.status"
             :deletable="!!deleteUrl"
             :editable="!!updateUrl"
           />
@@ -723,6 +723,7 @@
           this.packageTitleItem.title = data.title
           this.packageTitleItem.hostPlatform = data.hostPlatform
           this.version = data.version
+          this.status = data.status
           this.packageTitleItem.publisherName = data.publisherName
           this.packageTitleItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
           this.reviewRequests = data._embedded.reviewRequests
@@ -746,7 +747,7 @@
           this.packageTitleItem.editionStatement = data.editionStatement
           this.packageTitleItem.medium = data.medium
           this.packageTitleItem.lastChangedExternal = data.lastChangedExternal
-          this.status = data.status
+          this.packageTitleItem.status = data.status
           this.history = data.history
           this.allNames = { name: data.name, alts: [] }
 
