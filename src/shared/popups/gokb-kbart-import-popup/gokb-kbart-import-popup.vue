@@ -127,6 +127,11 @@
         required: true,
         default: true
       },
+      defaultTitleNamespace: {
+        type: Object,
+        required: false,
+        default: undefined
+      }
     },
     data () {
       return {
@@ -269,7 +274,6 @@
     },
     watch: {
       selectedFile (file) {
-        this.options.selectedNamespace = undefined
         this.options.lineCount = undefined
         this.completion = 0
         this.loadedFile.columns = []
@@ -283,6 +287,11 @@
         this.loadedFile.lineStats.error = 0
         this.options.addOnly = false
         this.options.selectedFile = file
+      }
+    },
+    mounted () {
+      if (this.defaultTitleNamespace) {
+        this.options.selectedNamespace = this.defaultTitleNamespace
       }
     },
     methods: {

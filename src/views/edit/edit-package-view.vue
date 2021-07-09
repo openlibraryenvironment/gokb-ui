@@ -107,7 +107,10 @@
 
         <v-stepper-content :step="isEdit ? 3 : 2">
           <gokb-section :no-tool-bar="true">
-            <v-row class="pt-4">
+            <v-row
+              class="pt-4"
+              dense
+            >
               <v-col>
                 <gokb-state-field
                   v-model="packageItem.scope"
@@ -158,7 +161,7 @@
                 />
               </v-col>
             </v-row>
-            <v-row>
+            <v-row dense>
               <v-col cols="7">
                 <div>
                   <label for="validity">{{ $t('component.package.global.label') }}</label>
@@ -259,6 +262,7 @@
             ref="tipps"
             :pkg="parseInt(id)"
             :platform="packageItem.nominalPlatform"
+            :default-title-namespace="providerTitleNamespace"
             :disabled="isReadonly"
             @kbart="setKbart"
             @update="updateNewTipps"
@@ -267,6 +271,7 @@
             v-if="loggedIn"
             ref="source"
             v-model="sourceItem"
+            :default-title-namespace="providerTitleNamespace"
             :expanded="false"
             :readonly="isReadonly"
             @enable="triggerUpdate"
@@ -279,6 +284,7 @@
               <v-col>
                 <gokb-name-field
                   v-model="allNames"
+                  dense
                   readonly
                 />
               </v-col>
@@ -288,6 +294,7 @@
                 <gokb-state-select-field
                   v-if="packageItem.status"
                   v-model="packageItem.status"
+                  dense
                   :deletable="!!deleteUrl"
                   :editable="!!updateUrl"
                 />
@@ -298,6 +305,7 @@
                 <gokb-text-field
                   v-model="providerName"
                   :label="$t('component.package.provider')"
+                  dense
                   disabled
                 />
               </v-col>
@@ -305,6 +313,7 @@
                 <gokb-text-field
                   v-model="platformName"
                   :label="$t('component.package.platform')"
+                  dense
                   disabled
                 />
               </v-col>
@@ -314,6 +323,7 @@
                 <gokb-textarea-field
                   v-model="packageItem.description"
                   :label="$t('component.package.description')"
+                  dense
                   disabled
                 />
               </v-col>
@@ -326,6 +336,7 @@
                   message-path="component.package.contentType"
                   url="refdata/categories/Package.ContentType"
                   :label="$t('component.package.contentType.label')"
+                  dense
                   readonly
                 />
               </v-col>
@@ -333,6 +344,7 @@
                 <gokb-number-field
                   :value="totalNumberOfTitles"
                   :label="$tc('component.tipp.label', 2)"
+                  dense
                   disabled
                 />
               </v-col>
@@ -343,6 +355,7 @@
                   message-path="component.package.listStatus"
                   url="refdata/categories/Package.ListStatus"
                   :label="$t('component.package.listStatus.label')"
+                  dense
                   readonly
                 />
               </v-col>
@@ -351,6 +364,7 @@
                   v-if="listVerifiedDate"
                   v-model="localListVerifiedDate"
                   :label="$t('component.package.listVerifiedDate.label')"
+                  dense
                   disabled
                 />
               </v-col>
@@ -360,6 +374,7 @@
                 <gokb-text-field
                   v-model="kbart.selectedFile.name"
                   label="KBART"
+                  dense
                   disabled
                 />
               </v-col>
@@ -399,7 +414,7 @@
         v-if="!isReadonly"
         @click="reload"
       >
-        {{ $t('btn.cancel') }}
+        {{ $t('btn.reset') }}
       </gokb-button>
       <gokb-button
         v-show="step !== 1"
@@ -487,6 +502,7 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import { HOME_ROUTE } from '@/router/route-paths'
   import packageServices from '@/shared/services/package-services'
+  import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import baseServices from '@/shared/services/base-services'
   import profileServices from '@/shared/services/profile-services'
@@ -556,6 +572,7 @@
         lastUpdated: undefined,
         listVerifiedDate: undefined,
         dateCreated: undefined,
+        providerTitleNamespace: undefined,
         newTipps: [],
         packageItem: {
           id: undefined,
@@ -901,6 +918,22 @@
           } else {
             this.notFound = true
           }
+
+          if (this.providerSelect) {
+            const providerResult = await this.catchError({
+              promise: providerServices.getProvider(this.providerSelect.id, this.cancelToken.token),
+              instance: this
+            })
+
+            if (providerResult?.status === 200) {
+              const fullProvider = providerResult.data
+
+              if (fullProvider.titleNamespace) {
+                this.providerTitleNamespace = fullProvider.titleNamespace
+              }
+            }
+          }
+
           loading.stopLoading()
         } else {
           if (this.loggedIn) {

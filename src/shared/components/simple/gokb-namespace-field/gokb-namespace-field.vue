@@ -19,7 +19,7 @@
     },
     computed: {
       localName () {
-        return this.localValue?.name
+        return this.localValue?.name || this.localValue?.value
       },
     },
     created () {

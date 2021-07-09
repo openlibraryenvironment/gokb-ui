@@ -100,6 +100,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      defaultTitleNamespace: {
+        type: Object,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -184,6 +189,13 @@
           this.$emit('input', this.item)
         }
       },
+    },
+    watch: {
+      defaultTitleNamespace (val) {
+        if (val && !this.targetNamespace) {
+          this.targetNamespace = this.defaultTitleNamespace
+        }
+      }
     },
     async mounted () {
       if (this.value?.id) {

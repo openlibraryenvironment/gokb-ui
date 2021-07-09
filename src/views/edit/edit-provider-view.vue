@@ -123,6 +123,19 @@
               mdi-alert-decagram
             </v-icon>
           </v-tab>
+          <v-tab
+            key="offices"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.office.label', 2) }}
+            <v-icon
+              v-if="pendingChanges.offices"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
+          </v-tab>
         </v-tabs>
         <v-tabs-items
           v-model="tab"
@@ -135,6 +148,7 @@
               v-model="allNames.alts"
               :show-title="false"
               :disabled="isReadonly"
+              @update="addPendingChange"
             />
           </v-tab-item>
           <v-tab-item
@@ -145,6 +159,7 @@
               v-model="ids"
               :show-title="false"
               :disabled="isReadonly"
+              @update="addPendingChange"
             />
           </v-tab-item>
           <v-tab-item
@@ -155,6 +170,7 @@
               v-model="allPlatforms"
               :show-title="false"
               :disabled="isReadonly"
+              @update="addPendingChange"
             />
           </v-tab-item>
           <v-tab-item
@@ -165,6 +181,18 @@
               v-model="allCuratoryGroups"
               :show-title="false"
               :disabled="isReadonly"
+              @update="addPendingChange"
+            />
+          </v-tab-item>
+          <v-tab-item
+            key="offices"
+            class="mt-4"
+          >
+            <gokb-offices-section
+              v-model="offices"
+              :show-title="false"
+              :disabled="isReadonly"
+              @update="addPendingChange"
             />
           </v-tab-item>
         </v-tabs-items>
@@ -203,7 +231,6 @@
     <template #buttons>
       <gokb-button
         v-if="!isReadonly"
-        text
         @click="reload"
       >
         {{ $t('btn.reset') }}
@@ -379,6 +406,7 @@
         // todo: check error code
         if (response.status === 200) {
           if (isUpdate) {
+            this.pendingChanges = {}
             this.reload()
           } else {
             this.$router.push('/provider/' + response.data?.id)
@@ -445,6 +473,11 @@
           document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
 
           loading.stopLoading()
+        }
+      },
+      addPendingChange (prop) {
+        if (!this.pendingChanges[prop]) {
+          this.pendingChanges[prop] = true
         }
       }
     }

@@ -16,6 +16,7 @@
       <gokb-kbart-import-popup
         v-if="kbartImportPopupVisible"
         v-model="kbartImportPopupVisible"
+        :default-title-namespace="defaultTitleNamespace"
         @kbart="addKbartFile"
       />
       <gokb-add-title-popup
@@ -201,6 +202,11 @@
       },
       apiErrors: {
         type: Array,
+        required: false,
+        default: undefined
+      },
+      defaultTitleNamespace: {
+        type: Object,
         required: false,
         default: undefined
       }
