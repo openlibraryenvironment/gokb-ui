@@ -697,7 +697,11 @@
     },
   }
 </script>
-
+<style>
+  .v-slide-group__prev {
+    margin-left: -50px;
+  }
+</style>
 <style scoped>
   .tab-dark {
     color: rgba(255, 255, 255, 0.6);

@@ -82,6 +82,8 @@
       <gokb-table
         :headers="resultHeaders"
         :items="resultItems"
+        :editable="!isReadonly"
+        :hide-select="!showSelect"
         :options.sync="resultOptions"
         :total-number-of-items="totalNumberOfItems"
         :selected-items="selectedItems"
@@ -136,7 +138,10 @@
         return this.$i18n.t('header.results')
       },
       isReadonly () {
-        return !accountModel.loggedIn || !accountModel.hasRole('ROLE_CONTRIBUTOR')
+        return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_CONTRIBUTOR')
+      },
+      showSelect () {
+        return false
       }
     },
     watch: {

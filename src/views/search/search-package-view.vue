@@ -36,6 +36,9 @@
       isExportSelectedDisabled () {
         return this.selectedItems.length !== 1
       },
+      showSelect () {
+        return true
+      },
       title () {
         return this.$i18n.tc('component.package.label', 2)
       },
@@ -195,21 +198,21 @@
             text: this.$i18n.tc('component.package.contentType.label'),
             align: 'start',
             sortable: true,
-            width: '15%',
+            width: '150px',
             value: 'contentType'
           },
           {
             text: this.$i18n.tc('component.package.count'),
             align: 'start',
             sortable: false,
-            width: '13%',
+            width: '150px',
             value: 'count'
           },
           {
             text: this.$i18n.tc('component.general.lastUpdated'),
-            align: 'end',
+            align: 'start',
             sortable: true,
-            width: '13%',
+            width: '150px',
             value: 'lastUpdated'
           }
         ]

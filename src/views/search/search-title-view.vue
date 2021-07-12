@@ -115,7 +115,7 @@
           {
             text: this.$i18n.t('component.title.publishStart'),
             algin: 'left',
-            width: '15%',
+            width: '150px',
             sortable: false,
             value: 'startDate'
           }

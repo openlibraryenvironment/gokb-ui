@@ -56,6 +56,7 @@
           {
             text: this.$i18n.t('component.general.dateCreated'),
             align: 'left',
+            width: '150px',
             sortable: true,
             value: 'dateCreated'
           }

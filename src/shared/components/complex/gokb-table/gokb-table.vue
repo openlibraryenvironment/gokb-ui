@@ -88,7 +88,10 @@
           mdi-minus
         </v-icon>
       </template>
-      <template #item.action="{ item }">
+      <template
+        v-if="editable && actions"
+        #item.action="{ item }"
+      >
         <div style="white-space:nowrap">
           <v-icon
             v-if="editable && item.isRetireable !== undefined"
@@ -145,7 +148,7 @@
       editable: {
         type: Boolean,
         required: false,
-        default: true,
+        default: false,
       },
       headers: {
         type: Array,
@@ -172,7 +175,7 @@
       hideSelect: {
         type: Boolean,
         required: false,
-        default: false,
+        default: true,
       },
       totalNumberOfItems: {
         type: Number,
@@ -181,6 +184,11 @@
       options: {
         type: Object,
         required: true,
+      },
+      actions: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -194,13 +202,13 @@
         set (value) { this.$emit('selected-items', value) }
       },
       localHeaders () {
-        return [...this.headers, { value: '_pending', sortable: false }, { value: 'action', sortable: false }] // with delete icon
+        return [...this.headers, { value: '_pending', sortable: false }, { value: 'action', sortable: false }].filter(header => ((!this.editable ? header.value !== '_pending' : true) && (!this.actions ? header.value !== 'action' : true))) // with delete icon
       },
       pages () {
         return Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage)
       },
       showSelect () {
-        return !this.hideSelect && this.editable
+        return this.editable || !this.hideSelect
       }
     },
     watch: {

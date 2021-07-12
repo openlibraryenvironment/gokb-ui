@@ -2,7 +2,6 @@
   <gokb-page
     :title="title"
     @submit="update"
-    @valid="valid = $event"
   >
     <gokb-error-component :value="error" />
     <gokb-section :sub-title="$t('component.general.general')">
@@ -77,43 +76,55 @@
       :component="{ type: 'GokbRoleField', name: 'Rolle', properties: { returnObject: true } }"
       @add="addNewRole"
     />
-    <gokb-section :sub-title="$tc('component.user.role.label', 2)">
-      <template #buttons>
-        <gokb-button
-          class="mr-4"
-          icon-id="add"
-          @click="showAddNewRole"
-        >
-          {{ $t('btn.add') }}
-        </gokb-button>
-        <gokb-button
-          icon-id="delete"
-          :disabled="isDeleteSelectedRolesDisabled"
-          @click="confirmDeleteSelectedRoles"
-        >
-          {{ $t('btn.delete') }}
-        </gokb-button>
-      </template>
-      <gokb-confirmation-popup
-        v-model="confirmationPopUpVisible"
-        :message="messageToConfirm"
-        @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-      />
-      <gokb-table
-        :headers="rolesTableHeaders"
-        :disabled="updateUserAvailable"
-        :items="roles"
-        :selected-items="selectedRoles"
-        :total-number-of-items="totalNumberOfRoles"
-        :options.sync="rolesOptions"
-        @selected-items="selectedRoles = $event"
-        @delete-item="confirmDeleteRole"
-      />
-    </gokb-section>
-    <gokb-curatory-group-section
-      v-model="allCuratoryGroups"
-      :sub-title="$tc('component.curatoryGroup.label', 2)"
-    />
+    <v-row>
+      <v-col
+        cols="12"
+        xl="6"
+      >
+        <gokb-section :sub-title="$tc('component.user.role.label', 2)">
+          <template #buttons>
+            <gokb-button
+              class="mr-4"
+              icon-id="add"
+              @click="showAddNewRole"
+            >
+              {{ $t('btn.add') }}
+            </gokb-button>
+            <gokb-button
+              icon-id="delete"
+              :disabled="isDeleteSelectedRolesDisabled"
+              @click="confirmDeleteSelectedRoles"
+            >
+              {{ $t('btn.delete') }}
+            </gokb-button>
+          </template>
+          <gokb-confirmation-popup
+            v-model="confirmationPopUpVisible"
+            :message="messageToConfirm"
+            @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+          />
+          <gokb-table
+            :headers="rolesTableHeaders"
+            :disabled="updateUserAvailable"
+            :items="roles"
+            :selected-items="selectedRoles"
+            :total-number-of-items="totalNumberOfRoles"
+            :options.sync="rolesOptions"
+            @selected-items="selectedRoles = $event"
+            @delete-item="confirmDeleteRole"
+          />
+        </gokb-section>
+      </v-col>
+      <v-col
+        cols="12"
+        xl="6"
+      >
+        <gokb-curatory-group-section
+          v-model="allCuratoryGroups"
+          :sub-title="$tc('component.curatoryGroup.label', 2)"
+        />
+      </v-col>
+    </v-row>
     <template #buttons>
       <v-spacer />
       <gokb-button
@@ -151,7 +162,7 @@
     extends: BaseComponent,
     props: {
       id: {
-        type: Number,
+        type: [Number, String],
         required: false,
         default: undefined
       }
@@ -189,7 +200,7 @@
       },
       rolesTableHeaders () {
         return [
-          { text: this.$i18n.tc('component.user.role.label'), align: 'left', value: 'name', sortable: false, width: '100%' },
+          { text: this.$i18n.tc('component.user.role.label'), align: 'left', value: 'localName', sortable: false, width: '100%' },
         ]
       },
       isDeleteSelectedRolesDisabled () {
@@ -197,6 +208,7 @@
       },
       roles () {
         return [...this.addedRoles, ...this.allRoles]
+          .map(role => ({ ...role, localName: this.$i18n.t('component.user.role.' + role.name) }))
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.rolesOptions.page - 1) * ROWS_PER_PAGE, this.rolesOptions.page * ROWS_PER_PAGE)
       },
