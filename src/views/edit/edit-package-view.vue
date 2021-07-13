@@ -13,7 +13,7 @@
         type="success"
         dismissible
       >
-        {{ successMsg }}
+        {{ localSuccessMessage }}
       </v-alert>
     </span>
     <span v-if="kbartResult === 'success' || kbartStatus === 'success'">
@@ -713,6 +713,9 @@
       },
       localListVerifiedDate () {
         return this.listVerifiedDate ? new Date(this.listVerifiedDate).toISOString().substr(0, 10) : ''
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
       }
     },
     watch: {
@@ -832,9 +835,7 @@
           })
 
           if (response.status < 400) {
-            this.successMsg = this.isEdit
-              ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name])
-              : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
+            this.successMsg = this.isEdit ? 'success.update' : 'success.create'
 
             if (this.kbart || this.urlUpdate) {
               const namespace = (this.kbart?.selectedNamespace?.value ? { titleIdNamespace: this.kbart?.selectedNamespace?.value } : {})

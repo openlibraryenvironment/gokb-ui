@@ -258,6 +258,7 @@
           <v-spacer />
           <v-toolbar-items class="pa-2">
             <gokb-button
+              v-if="!isReadonly"
               icon-id="add"
               @click="addNewCoverage"
             >
@@ -292,6 +293,7 @@
                     />
                   </v-col>
                   <v-col
+                    v-if="!isReadonly"
                     cols="1"
                     class="pt-6 mr-2"
                   >

@@ -1,7 +1,8 @@
 <template>
   <gokb-section
     :expandable="expandable"
-    :sub-title="$tc('component.review.label', 2)"
+    :sub-title="title"
+    :items-total="totalNumberOfReviews"
   >
     <template #buttons>
       <gokb-state-field
@@ -105,6 +106,11 @@
         default: false
       },
       expandable: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
+      showTitle: {
         type: Boolean,
         required: false,
         default: true
@@ -219,11 +225,13 @@
           },
         ]
       },
+      title () {
+        return this.showTitle ? this.$i18n.tc('component.review.label', 2) : undefined
+      }
     },
     watch: {
       searchFilters: {
         handler (val) {
-          console.log(val)
           this.reviewsOptions.page = 1
           this.retrieveReviews()
         },
