@@ -24,6 +24,19 @@ const api = (baseServices) => ({
       data,
     }, cancelToken)
   },
+  ingestKbart (id, file, cancelToken) {
+    const data = new FormData()
+
+    if (file) {
+      data.append('submissionFile', file)
+    }
+
+    return baseServices.request({
+      method: 'POST',
+      url: process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}/ingest`,
+      data,
+    }, cancelToken)
+  },
   archivePackage (url, cancelToken) {
     return baseServices.request({
       method: 'POST',

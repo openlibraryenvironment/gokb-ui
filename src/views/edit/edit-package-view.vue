@@ -837,56 +837,25 @@
               : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
 
             if (this.kbart || this.urlUpdate) {
-              const namespace = (this.kbart?.selectedNamespace?.value ? { titleIdNamespace: this.kbart?.selectedNamespace?.value } : {})
-              var pars = {
-                processOption: 'kbart',
-                ...namespace,
-                pkgId: response.data.id
-              }
-
-              if (this.kbart) {
-                pars.addOnly = this.kbart.addOnly ? 'true' : 'false'
-                pars.localFile = 'true'
-              } else if (this.urlUpdate) {
-                pars.urlUpdate = 'true'
-              }
-
-              if (response.data.updateToken) {
-                pars.updateToken = response.data.updateToken
-              }
-
-              const file = this.kbart?.selectedFile || null
-
-              const ygorResponse = await this.catchError({
-                promise: this.sendKbartUpdateRquest(pars, file),
+              const kbartResult = await this.catchError({
+                promise: packageServices.ingestKbart(this.id, this.kbart.selectedFile, this.cancelToken.token),
                 instance: this
               })
 
-              if (ygorResponse?.status === 'STARTED') {
-                const ygorJobStatusResponse = await this.catchError({
-                  promise: this.getYgorJobStatus(ygorResponse.jobId),
-                  instance: this
-                })
-
-                console.log(ygorJobStatusResponse.status)
-
-                if (ygorJobStatusResponse.status === 400) {
-                  this.kbartResult = 'error'
-                } else {
-                  this.kbartResult = 'success'
-                }
-
-                this.kbart = undefined
-                loading.stopLoading()
-
-                if (isUpdate) {
-                  this.step = 1
-                  this.reload()
-                } else {
-                  this.$router.push({ path: '/package/', props: { id: response.data?.id, kbartStatus: this.kbartResult } })
-                }
+              if (kbartResult.status < 400) {
+                this.kbartResult = 'success'
               } else {
                 this.kbartResult = 'error'
+              }
+
+              this.kbart = undefined
+              loading.stopLoading()
+
+              if (isUpdate) {
+                this.step = 1
+                this.reload()
+              } else {
+                this.$router.push({ path: '/package/', props: { id: response.data?.id, kbartStatus: this.kbartResult } })
               }
             } else {
               if (isUpdate) {
