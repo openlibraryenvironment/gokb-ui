@@ -886,9 +886,11 @@
                   this.$router.push({ path: '/package/', props: { id: response.data?.id, kbartStatus: this.kbartResult } })
                 }
               } else {
+                loading.stopLoading()
                 this.kbartResult = 'error'
               }
             } else {
+              loading.stopLoading()
               if (isUpdate) {
                 this.step = 1
                 this.reload()

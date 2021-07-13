@@ -223,6 +223,7 @@
     watch: {
       searchFilters: {
         handler (val) {
+          console.log(val)
           this.reviewsOptions.page = 1
           this.retrieveReviews()
         },
@@ -265,7 +266,10 @@
           promise: reviewServices.get({ parameters }, this.cancelToken.token),
           instance: this
         })
-        this.$emit('update', this.rawReviews.data.data.length)
+
+        if (this.rawReviews?.data) {
+          this.$emit('update', this.rawReviews.data.data.length)
+        }
       },
       confirmCloseSelectedItems () {
         this.actionToConfirm = '_closeSelectedItems'
