@@ -544,8 +544,8 @@
         "Regional": {
           "label": "Regional"
         },
-        "Unknown": {
-          "label": "Unknown"
+        "Other": {
+          "label": "Other"
         },
         "Local": {
           "label": "Local"

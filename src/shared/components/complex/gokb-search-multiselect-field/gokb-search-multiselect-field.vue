@@ -3,7 +3,7 @@
     <label>
       {{ label }}
     </label>
-    <v-row :id="`ms-${label}`">
+    <v-row>
       <v-col
         v-for="(option, idx) in options"
         :key="idx"
