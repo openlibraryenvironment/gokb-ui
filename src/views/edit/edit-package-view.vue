@@ -199,7 +199,7 @@
                   />
                   <gokb-radiobutton-field
                     value="Other"
-                    :label="$t('component.package.global.Unknown.label')"
+                    :label="$t('component.package.global.Other.label')"
                     :readonly="isReadonly"
                   />
                   <gokb-radiobutton-field
@@ -904,6 +904,7 @@
               }
             }
           } else {
+            loading.stopLoading()
             console.log('GOKb status: ' + response.status)
           }
         }

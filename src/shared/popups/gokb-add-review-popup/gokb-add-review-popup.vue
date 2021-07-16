@@ -141,6 +141,26 @@
             :disabled="isEdit"
             :label="$i18n.t('component.review.cause')"
           />
+          <div
+            v-if="additionalInfo.candidates"
+            class="pt-3"
+          >
+            <label
+              class="v-label"
+              style="display:block;font-size:0.9em;"
+              for="otherComponents"
+            >
+              Candidates
+            </label>
+            <v-row dense>
+              <v-col
+                v-for="(c, idx) in additionalInfo.candidates"
+                :key="idx"
+              >
+                {{ c.title }} ({{ c.id }})
+              </v-col>
+            </v-row>
+          </div>
           <div class="pt-3">
             <label
               class="v-label"
