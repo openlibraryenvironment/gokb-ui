@@ -746,6 +746,9 @@
           "duplicate": "Diese Komponente ist bereits mit dem Prüfauftrag verknüpft!"
         }
       },
+      "candidates": {
+        "label": "Kandidaten"
+      },
       "showClosed": "Abgeschlossene anzeigen",
       "status": {
         "label": "Status",

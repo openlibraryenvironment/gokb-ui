@@ -142,7 +142,7 @@
             :label="$i18n.t('component.review.cause')"
           />
           <div
-            v-if="additionalInfo.candidates"
+            v-if="additionalInfo && additionalInfo.candidates"
             class="pt-3"
           >
             <label
@@ -150,7 +150,7 @@
               style="display:block;font-size:0.9em;"
               for="otherComponents"
             >
-              Candidates
+              {{ $t('component.review.candidates.label') }}
             </label>
             <v-row dense>
               <v-col

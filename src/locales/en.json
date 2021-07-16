@@ -745,6 +745,9 @@
           "duplicate": "This component is already linked to this review!"
         }
       },
+      "candidates": {
+        "label": "Candidates"
+      },
       "showClosed": "Show closed requests",
       "status": {
         "label": "Status",
