@@ -505,7 +505,7 @@
     <v-card>
       <v-card-text>
         <div class="text-h5 primary--text">
-          {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
+          {{ $t('component.general.notFound', [$tc('component.tipp.label')]) }}
         </div>
       </v-card-text>
     </v-card>

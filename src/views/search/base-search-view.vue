@@ -1,5 +1,6 @@
 <template>
   <gokb-page
+    v-if="accessible"
     :title="title"
     @submit="search"
   >
@@ -94,6 +95,7 @@
       />
     </gokb-section>
   </gokb-page>
+  <gokb-no-access-field v-else />
 </template>
 
 <script>
@@ -124,7 +126,8 @@
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: undefined
+        messageToConfirm: undefined,
+        accessible: true
       }
     },
     computed: {

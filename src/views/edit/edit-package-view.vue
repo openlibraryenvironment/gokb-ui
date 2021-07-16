@@ -1,6 +1,6 @@
 <template>
   <gokb-page
-    v-if="!notFound"
+    v-if="accessible && !notFound"
     :key="version"
     :title="title"
     :sub-title="subTitle"
@@ -462,7 +462,7 @@
         {{ $t('btn.back') }}
       </gokb-button>
       <v-spacer />
-      <div v-if="id && !notFound">
+      <div v-if="id">
         <v-chip
           class="ma-1"
           label
@@ -511,14 +511,15 @@
       </gokb-button>
     </template>
   </gokb-page>
+  <gokb-no-access-field v-else-if="!accessible" />
   <gokb-page
     v-else
     title=""
   >
     <v-card>
       <v-card-text>
-        <div class="text-h4 primary--text">
-          {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
+        <div class="text-h5 primary--text">
+          {{ $t('component.general.notFound', [$tc('component.package.label')]) }}
         </div>
       </v-card-text>
     </v-card>
@@ -716,6 +717,9 @@
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
+      },
+      accessible () {
+        return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
       }
     },
     watch: {

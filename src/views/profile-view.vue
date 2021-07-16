@@ -1,5 +1,6 @@
 <template>
   <gokb-page
+    v-if="loggedIn"
     :title="$t('profile.label')"
     @valid="valid = $event"
     @submit="updateProfile"
@@ -69,10 +70,11 @@
       </gokb-button>
     </template>
   </gokb-page>
+  <gokb-no-access-field v-else />
 </template>
 
 <script>
-  import { HOME_ROUTE, NO_ACCESS_ROUTE } from '@/router/route-paths'
+  import { HOME_ROUTE } from '@/router/route-paths'
   import account from '@/shared/models/account-model'
   import profileServices from '@/shared/services/profile-services'
   import BaseComponent from '@/shared/components/base-component'
@@ -126,7 +128,10 @@
       },
       isAdmin () {
         return account.hasRole('ROLE_ADMIN')
-      }
+      },
+      loggedIn () {
+        return account.loggedIn()
+      },
     },
     watch: {
       passwordWrongMessage () {
@@ -140,12 +145,15 @@
         this.$refs.newpass.validate()
         this.$refs.repeatpass.validate()
       },
+      loggedIn (acc) {
+        if (acc) {
+          this.fetchProfile()
+        }
+      }
     },
     async activated () {
       if (account.loggedIn()) {
         this.fetchProfile()
-      } else {
-        this.$router.push(NO_ACCESS_ROUTE)
       }
     },
     methods: {

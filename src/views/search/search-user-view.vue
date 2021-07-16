@@ -1,6 +1,6 @@
 <script>
   import BaseSearch from './base-search-view'
-  import { EDIT_USER_ROUTE, ADD_USER_ROUTE, NO_ACCESS_ROUTE } from '@/router/route-paths'
+  import { EDIT_USER_ROUTE, ADD_USER_ROUTE } from '@/router/route-paths'
   import account from '@/shared/models/account-model'
   import userServices from '@/shared/services/user-services'
 
@@ -109,6 +109,18 @@
       },
       title () {
         return this.$i18n.tc('component.user.label', 2)
+      },
+      isAdmin () {
+        return account.loggedIn() && account.hasRole('ROLE_ADMIN')
+      }
+    },
+    watch: {
+      isAdmin (val) {
+        if (val) {
+          this.accessible = true
+        } else {
+          this.accessible = false
+        }
       }
     },
     created () {
@@ -118,13 +130,8 @@
         link: 'username'
       }
 
-      if (!account.loggedIn()) {
-        this.$router.push(NO_ACCESS_ROUTE)
-      }
-    },
-    activated () {
-      if (!account.loggedIn()) {
-        this.$router.push(NO_ACCESS_ROUTE)
+      if (!this.isAdmin) {
+        this.accessible = false
       }
     },
     methods: {

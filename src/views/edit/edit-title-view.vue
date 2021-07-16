@@ -1,6 +1,6 @@
 <template>
   <gokb-page
-    v-if="!notFound"
+    v-if="accessible && !notFound"
     :key="version"
     :title="title"
     @submit="update"
@@ -376,7 +376,7 @@
         {{ $i18n.t('btn.reset') }}
       </gokb-button>
       <v-spacer />
-      <div v-if="id && !notFound">
+      <div v-if="id">
         <v-chip
           class="ma-1"
           label
@@ -419,6 +419,7 @@
       </gokb-button>
     </template>
   </gokb-page>
+  <gokb-no-access-field v-else-if="!accessible" />
   <gokb-page
     v-else
     title=""
@@ -535,6 +536,9 @@
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
+      },
+      accessible () {
+        return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
       }
     },
     watch: {
