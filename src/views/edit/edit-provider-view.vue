@@ -1,5 +1,6 @@
 <template>
   <gokb-page
+    v-if="accessible && !notFound"
     :key="version"
     :title="title"
     @submit="update"
@@ -293,6 +294,19 @@
       </gokb-button>
     </template>
   </gokb-page>
+  <gokb-no-access-field v-else-if="!accessible" />
+  <gokb-page
+    v-else
+    title=""
+  >
+    <v-card>
+      <v-card-text>
+        <div class="text-h5 primary--text">
+          {{ $t('component.general.notFound', [$tc('component.provider.label')]) }}
+        </div>
+      </v-card-text>
+    </v-card>
+  </gokb-page>
 </template>
 
 <script>
@@ -368,6 +382,9 @@
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
+      },
+      accessible () {
+        return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
       }
     },
     watch: {

@@ -1,6 +1,5 @@
 <script>
   import BaseSearch from './base-search-view'
-  import { NO_ACCESS_ROUTE } from '@/router/route-paths'
   import account from '@/shared/models/account-model'
   import reviewServices from '@/shared/services/review-services'
 
@@ -119,6 +118,18 @@
             }
           ]
         ]
+      },
+      isContributor () {
+        return account.loggedIn() && account.hasRole('ROLE_CONTRIBUTOR')
+      }
+    },
+    watch: {
+      isContributor (acc) {
+        if (acc) {
+          this.accessible = true
+        } else {
+          this.accessible = false
+        }
       }
     },
     created () {
@@ -129,11 +140,9 @@
         popup: 'componentToReview',
         localDesc: 'stdDesc'
       }
-    },
-    activated () {
-      if (!account.loggedIn()) {
-        console.log('Not logged in!')
-        this.$router.replace(NO_ACCESS_ROUTE)
+
+      if (!this.isContributor) {
+        this.accessible = false
       }
     },
     methods: {

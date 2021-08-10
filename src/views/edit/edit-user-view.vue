@@ -1,9 +1,18 @@
 <template>
   <gokb-page
+    v-if="accessible && !notFound"
     :title="title"
     @submit="update"
   >
     <gokb-error-component :value="error" />
+    <span v-if="successMsg">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
     <gokb-section :sub-title="$t('component.general.general')">
       <v-row>
         <v-col
@@ -105,7 +114,6 @@
           />
           <gokb-table
             :headers="rolesTableHeaders"
-            :disabled="updateUserAvailable"
             :items="roles"
             :selected-items="selectedRoles"
             :total-number-of-items="totalNumberOfRoles"
@@ -141,11 +149,23 @@
       </gokb-button>
     </template>
   </gokb-page>
+  <gokb-no-access-field v-else-if="!accessible" />
+  <gokb-page
+    v-else
+    title=""
+  >
+    <v-card>
+      <v-card-text>
+        <div class="text-h5 primary--text">
+          {{ $t('component.general.notFound', [$tc('component.user.label')]) }}
+        </div>
+      </v-card-text>
+    </v-card>
+  </gokb-page>
 </template>
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
-  import { NO_ACCESS_ROUTE } from '@/router/route-paths'
   import account from '@/shared/models/account-model'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
@@ -165,6 +185,11 @@
         type: [Number, String],
         required: false,
         default: undefined
+      },
+      isCreated: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -175,6 +200,7 @@
         passwordExpired: undefined,
         email: undefined,
         enabled: undefined,
+        successMsg: undefined,
         accountLocked: undefined,
         // organisation: undefined,
 
@@ -187,7 +213,7 @@
         addedRoles: [],
         allCuratoryGroups: [],
         updateUserUrl: undefined,
-
+        notFound: false,
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -195,8 +221,8 @@
       }
     },
     computed: {
-      updateUserAvailable () {
-        return !this.updateUserUrl
+      accessible () {
+        return account.loggedIn() && account.hasRole('ROLE_ADMIN')
       },
       rolesTableHeaders () {
         return [
@@ -226,6 +252,16 @@
       },
       valid () {
         return this.username && (this.isEdit || (this.password.length > 5 && this.password.length < 64))
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.user.label'), this.username]) : undefined
+      }
+    },
+    watch: {
+      accessible (acc) {
+        if (acc) {
+          this.fetch()
+        }
       }
     },
     async created () {
@@ -233,8 +269,10 @@
         if (this.isEdit) {
           this.fetch()
         }
-      } else {
-        this.$router.push(NO_ACCESS_ROUTE)
+
+        if (this.isCreated) {
+          this.successMsg = 'success.create'
+        }
       }
     },
     methods: {
@@ -250,7 +288,6 @@
       },
       async update () {
         const data = {
-          id: this.id,
           username: this.username,
           password: this.password,
           email: this.email,
@@ -262,16 +299,19 @@
           // organisation: this.organisation
         }
         const response = await this.catchError({
-          promise: userServices.createOrUpdateUser(data, this.cancelToken.token),
+          promise: userServices.createOrUpdateUser(this.id, data, this.cancelToken.token),
           instance: this
         })
         // todo: check error code
         if (response.status === 200) {
           if (this.isEdit) {
+            this.successMsg = 'success.update'
             this.fetch()
           } else {
-            this.$router.put('/user/' + response.data.id)
+            this.$router.put({ path: '/user/', props: { id: response.data.id, isCreated: true } })
           }
+        } else {
+          this.notFound = true
         }
       },
       pageBack () {

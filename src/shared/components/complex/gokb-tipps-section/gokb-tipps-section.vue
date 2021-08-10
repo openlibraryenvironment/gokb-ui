@@ -448,7 +448,7 @@
                   hostPlatform: tipp.hostPlatform,
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
-                  titleType: this.$i18n.tc('component.title.type.' + tipp.title.type),
+                  titleType: this.title?.type ? this.$i18n.tc('component.title.type.' + tipp.title.type) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
                   titleId: tipp.title?.id,
                   ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!tipp._links.delete.href })),
                   popup: { value: (this.ttl ? tipp.pkg.name : (tipp.title ? tipp.title.name : tipp.name)), label: 'tipp', type: 'GokbAddTitlePopup' },

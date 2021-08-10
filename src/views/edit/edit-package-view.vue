@@ -1,6 +1,6 @@
 <template>
   <gokb-page
-    v-if="!notFound"
+    v-if="accessible && !notFound"
     :key="version"
     :title="title"
     :sub-title="subTitle"
@@ -13,7 +13,7 @@
         type="success"
         dismissible
       >
-        {{ successMsg }}
+        {{ localSuccessMessage }}
       </v-alert>
     </span>
     <span v-if="kbartResult === 'success' || kbartStatus === 'success'">
@@ -199,7 +199,7 @@
                   />
                   <gokb-radiobutton-field
                     value="Other"
-                    :label="$t('component.package.global.Unknown.label')"
+                    :label="$t('component.package.global.Other.label')"
                     :readonly="isReadonly"
                   />
                   <gokb-radiobutton-field
@@ -462,7 +462,7 @@
         {{ $t('btn.back') }}
       </gokb-button>
       <v-spacer />
-      <div v-if="id && !notFound">
+      <div v-if="id">
         <v-chip
           class="ma-1"
           label
@@ -511,14 +511,15 @@
       </gokb-button>
     </template>
   </gokb-page>
+  <gokb-no-access-field v-else-if="!accessible" />
   <gokb-page
     v-else
     title=""
   >
     <v-card>
       <v-card-text>
-        <div class="text-h4 primary--text">
-          {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
+        <div class="text-h5 primary--text">
+          {{ $t('component.general.notFound', [$tc('component.package.label')]) }}
         </div>
       </v-card-text>
     </v-card>
@@ -713,6 +714,12 @@
       },
       localListVerifiedDate () {
         return this.listVerifiedDate ? new Date(this.listVerifiedDate).toISOString().substr(0, 10) : ''
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
+      },
+      accessible () {
+        return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
       }
     },
     watch: {
@@ -832,9 +839,7 @@
           })
 
           if (response.status < 400) {
-            this.successMsg = this.isEdit
-              ? this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.packageItem.name])
-              : this.$i18n.t('success.create', [this.$i18n.tc('component.package.label'), this.packageItem.name])
+            this.successMsg = this.isEdit ? 'success.update' : 'success.create'
 
             if (this.kbart || this.urlUpdate) {
               const kbartResult = await this.catchError({
@@ -855,9 +860,11 @@
                 this.step = 1
                 this.reload()
               } else {
-                this.$router.push({ path: '/package/', props: { id: response.data?.id, kbartStatus: this.kbartResult } })
+                loading.stopLoading()
+                this.kbartResult = 'error'
               }
             } else {
+              loading.stopLoading()
               if (isUpdate) {
                 this.step = 1
                 this.reload()
@@ -866,6 +873,7 @@
               }
             }
           } else {
+            loading.stopLoading()
             console.log('GOKb status: ' + response.status)
           }
         }
@@ -948,33 +956,6 @@
             this.loadUserGroups()
           }
         }
-      },
-      async sendKbartUpdateRquest (parameters, file) {
-        const urlParameters = baseServices.createQueryParameters(parameters)
-        const data = new FormData()
-
-        if (file) {
-          data.append('uploadFile', file)
-        }
-
-        const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/processGokbPackage?${urlParameters}`
-
-        const resp = await axios.post(url, data).then(response => response.data)
-        console.log(resp)
-
-        return resp
-      },
-      async getYgorJobStatus (jobId) {
-        const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/getStatus?jobId=${jobId}`
-        let resp = {}
-        let status = 'PREPARATION'
-
-        while (status === 'PREPARATION') {
-          resp = await axios.get(url).then(response => response.data)
-          status = resp.status
-        }
-
-        return resp
       },
       async loadUserGroups () {
         const {

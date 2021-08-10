@@ -1,7 +1,8 @@
 <template>
   <gokb-section
     :expandable="expandable"
-    :sub-title="$tc('component.review.label', 2)"
+    :sub-title="title"
+    :items-total="totalNumberOfReviews"
   >
     <template #buttons>
       <gokb-state-field
@@ -105,6 +106,11 @@
         default: false
       },
       expandable: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
+      showTitle: {
         type: Boolean,
         required: false,
         default: true
@@ -219,6 +225,9 @@
           },
         ]
       },
+      title () {
+        return this.showTitle ? this.$i18n.tc('component.review.label', 2) : undefined
+      }
     },
     watch: {
       searchFilters: {
@@ -265,7 +274,10 @@
           promise: reviewServices.get({ parameters }, this.cancelToken.token),
           instance: this
         })
-        this.$emit('update', this.rawReviews.data.data.length)
+
+        if (this.rawReviews?.data) {
+          this.$emit('update', this.rawReviews.data.data.length)
+        }
       },
       confirmCloseSelectedItems () {
         this.actionToConfirm = '_closeSelectedItems'

@@ -33,6 +33,6 @@
 
 <script>
   export default {
-    name: 'NoAccessView'
+    name: 'GokbNoAccessField'
   }
 </script>

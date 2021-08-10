@@ -545,8 +545,8 @@
         "Regional": {
           "label": "Regional"
         },
-        "Unknown": {
-          "label": "Unbekannt"
+        "Other": {
+          "label": "Andere"
         },
         "Local": {
           "label": "Lokal"
@@ -745,6 +745,9 @@
         "error": {
           "duplicate": "Diese Komponente ist bereits mit dem Prüfauftrag verknüpft!"
         }
+      },
+      "candidates": {
+        "label": "Kandidaten"
       },
       "showClosed": "Abgeschlossene anzeigen",
       "status": {

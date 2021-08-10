@@ -17,7 +17,7 @@
           identifierValue: undefined,
           contentType: undefined,
           status: undefined,
-          global: ['Global', 'Consortium', 'Regional', 'Unknown'],
+          global: ['Global', 'Consortium', 'Regional', 'Other'],
           name: undefined,
         },
         sortMappings: {
@@ -173,7 +173,7 @@
                   { key: 'Consortium', label: this.$i18n.t('component.package.global.Consortium.label') },
                   { key: 'Regional', label: this.$i18n.t('component.package.global.Regional.label') },
                   { key: 'Local', label: this.$i18n.t('component.package.global.Local.label') },
-                  { key: 'Unknown', label: this.$i18n.t('component.package.global.Unknown.label') },
+                  { key: 'Other', label: this.$i18n.t('component.package.global.Other.label') },
                 ]
               }
             }

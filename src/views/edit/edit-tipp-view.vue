@@ -177,6 +177,7 @@
               <v-spacer />
               <v-toolbar-items class="pa-2">
                 <gokb-button
+                  v-if="!isReadonly"
                   icon-id="add"
                   @click="addNewCoverage"
                 >
@@ -210,6 +211,7 @@
                       />
                     </v-col>
                     <v-col
+                      v-if="!isReadonly"
                       cols="1"
                       class="pt-6"
                     >
@@ -373,7 +375,7 @@
                     message-path="component.tipp.publicationType"
                     url="refdata/categories/TitleInstancePackagePlatform.PublicationType"
                     :label="$t('component.tipp.publicationType.label')"
-                    :readonly="isReadonly"
+                    readonly
                   />
                 </v-col>
                 <v-col>
@@ -503,7 +505,7 @@
     <v-card>
       <v-card-text>
         <div class="text-h5 primary--text">
-          {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
+          {{ $t('component.general.notFound', [$tc('component.tipp.label')]) }}
         </div>
       </v-card-text>
     </v-card>
