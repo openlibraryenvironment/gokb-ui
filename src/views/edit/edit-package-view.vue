@@ -544,10 +544,8 @@
   import packageServices from '@/shared/services/package-services'
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
-  import baseServices from '@/shared/services/base-services'
   import profileServices from '@/shared/services/profile-services'
   import loading from '@/shared/models/loading'
-  import axios from 'axios'
 
   const ROWS_PER_PAGE = 10
 
@@ -843,7 +841,7 @@
 
             if (this.kbart || this.urlUpdate) {
               const kbartResult = await this.catchError({
-                promise: packageServices.ingestKbart(this.id, this.kbart.selectedFile, this.cancelToken.token),
+                promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, this.cancelToken.token),
                 instance: this
               })
 
@@ -860,11 +858,11 @@
                 this.step = 1
                 this.reload()
               } else {
-                loading.stopLoading()
                 this.kbartResult = 'error'
               }
             } else {
               loading.stopLoading()
+
               if (isUpdate) {
                 this.step = 1
                 this.reload()
