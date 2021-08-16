@@ -114,6 +114,12 @@
           >
             {{ $t('component.tipp.other.label') }}
           </v-tab>
+          <v-tab
+            key="prices"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.tipp.prices.label', 2) }}
+          </v-tab>
         </v-tabs>
         <v-tabs-items v-model="tab">
           <v-tab-item key="access">
@@ -447,6 +453,14 @@
               </v-row>
             </gokb-section>
           </v-tab-item>
+          <v-tab-item key="prices">
+            <gokb-prices-section
+              v-model="packageTitleItem.prices"
+              :disabled="isReadonly"
+              no-tool-bar
+              @update="addPendingChange"
+            />
+          </v-tab-item>
         </v-tabs-items>
       </v-col>
     </v-row>
@@ -569,6 +583,7 @@
           hostPlatform: undefined,
           status: undefined,
           paymentType: undefined,
+          prices: [],
           url: undefined,
           name: undefined,
           accessStartDate: undefined,
@@ -749,6 +764,7 @@
           this.packageTitleItem.editionStatement = data.editionStatement
           this.packageTitleItem.medium = data.medium
           this.packageTitleItem.lastChangedExternal = data.lastChangedExternal
+          this.packageTitleItem.prices = data._embedded.prices
           this.packageTitleItem.status = data.status
           this.history = data.history
           this.allNames = { name: data.name, alts: [] }
