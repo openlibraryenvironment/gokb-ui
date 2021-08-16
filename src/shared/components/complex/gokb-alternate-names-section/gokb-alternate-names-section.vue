@@ -35,6 +35,15 @@
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <span v-if="errorMessage">
+      <v-alert
+        v-model="showErrorMessage"
+        type="error"
+        dismissible
+      >
+        {{ errorMessage }}
+      </v-alert>
+    </span>
     <gokb-table
       :headers="tableHeaders"
       :items="variantNames"
@@ -90,6 +99,8 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
+        errorMessage: undefined,
+        showErrorMessage: false,
         selectedVariantNames: [],
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
@@ -166,12 +177,19 @@
       showAddVariantName () {
         this.addItemPopupVisible = true
       },
+      normalizeVariant (variant) {
+        var result = variant.normalize('NFKD').replace(/[^\w]/g, '')
+        return result
+      },
       addItem (item) {
-        if (!this.localValue.find(({ variantName }) => variantName === item)) {
+        if (!this.localValue.find(({ variantName }) => this.normalizeVariant(variantName) === this.normalizeVariant(item))) {
           this.localValue.push({ id: this.tempId(), variantName: item, isDeletable: true, _pending: 'added' })
           this.$emit('update', 'variants')
+        } else {
+          this.errorMessage = this.$i18n.t('component.variantName.error.duplicate', [item])
+          this.showErrorMessage = true
         }
-      },
+      }
     }
   }
 </script>

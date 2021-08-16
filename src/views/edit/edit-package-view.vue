@@ -840,6 +840,7 @@
 
           if (response.status < 400) {
             this.successMsg = this.isEdit ? 'success.update' : 'success.create'
+            this.packageItem.id = response.data.id
 
             if (this.kbart || this.urlUpdate) {
               const namespace = (this.kbart?.selectedNamespace?.value ? { titleIdNamespace: this.kbart?.selectedNamespace?.value } : {})
@@ -888,7 +889,7 @@
                   this.step = 1
                   this.reload()
                 } else {
-                  this.$router.push({ path: '/package/', props: { id: response.data?.id, kbartStatus: this.kbartResult } })
+                  this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
                 }
               } else {
                 loading.stopLoading()
@@ -900,7 +901,7 @@
                 this.step = 1
                 this.reload()
               } else {
-                this.$router.push('/package/' + response.data?.id)
+                this.$router.push('/package/' + this.packageItem.id)
               }
             }
           } else {

@@ -45,7 +45,7 @@
       persistent: {
         type: Boolean,
         required: false,
-        default: false
+        default: true
       },
       fullscreen: {
         type: Boolean,

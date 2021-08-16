@@ -657,13 +657,13 @@
             this.titleItem.editionStatement = data.editionStatement
             this.dateCreated = data.dateCreated
             this.lastUpdated = data.lastUpdated
-            this.firstAuthor = data.firstAuthor
-            this.firstEditor = data.firstEditor
+            this.titleItem.firstAuthor = data.firstAuthor
+            this.titleItem.firstEditor = data.firstEditor
             this.titleItem.medium = data.medium
             this.titleItem.OAStatus = data.OAStatus
             this.titleItem.editionNumber = data.editionNumber
-            this.titleItem.firstPublishedInPrint = data.firstPublishedInPrint
-            this.titleItem.firstPublishedOnline = data.firstPublishedOnline
+            this.titleItem.firstPublishedInPrint = data.firstPublishedInPrint && data.firstPublishedInPrint.substr(0, 10)
+            this.titleItem.firstPublishedOnline = data.firstPublishedOnline && data.firstPublishedOnline.substr(0, 10)
             this.titleItem.volumeNumber = data.volumeNumber
             this.titleItem.status = data.status
             this.history = data.history

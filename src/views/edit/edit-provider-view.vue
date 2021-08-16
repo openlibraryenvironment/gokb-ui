@@ -428,7 +428,9 @@
           variantNames: this.allAlternateNames.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
           offices: this.offices.map(office => ({ ...office, id: (typeof office.id === 'number' ? office.id : null) })),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
-          providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null }))
+          providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null })),
+          titleNamespace: this.titleNamespace,
+          packageNamespace: this.packageNamespace
         }
         const response = await this.catchError({
           promise: providerServices.createOrUpdateProvider(data, this.cancelToken.token),

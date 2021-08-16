@@ -570,6 +570,30 @@
       "other": {
         "label": "Weitere Informationen"
       },
+      "prices": {
+        "label": "Preis | Preise",
+        "currency": {
+          "label": "Währung | Währungen"
+        },
+        "priceType": {
+          "label": "Typ",
+          "list": {
+            "label": "Liste"
+          },
+          "perpetual": {
+            "label": "Dauerhaft"
+          },
+          "topup": {
+            "label": "Top-Up"
+          },
+          "on-off": {
+            "label": "On-Off"
+          },
+          "subscription": {
+            "label": "Abonnement"
+          }
+        }
+      },
       "name": "Paketspezifischer Titel",
       "accessPeriod": "Zugriffszeitraum",
       "identifier": {
@@ -890,7 +914,10 @@
       "label": "Kuratorengruppe | Kuratorengruppen"
     },
     "variantName": {
-      "label": "Namensvariante | Namensvarianten"
+      "label": "Namensvariante | Namensvarianten",
+      "error": {
+        "duplicate": "Eine ähnliche Variante zu '{0}' existiert bereits!"
+      }
     },
     "source": {
       "label": "Automatischer Import und Update | Automatische Imports und Updates",

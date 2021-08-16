@@ -569,6 +569,30 @@
       "other": {
         "label": "More"
       },
+      "prices": {
+        "label": "Price | Prices",
+        "currency": {
+          "label": "Currency | Currencies"
+        },
+        "priceType": {
+          "label": "Type",
+          "list": {
+            "label": "List"
+          },
+          "perpetual": {
+            "label": "Perpetual"
+          },
+          "topup": {
+            "label": "Top-Up"
+          },
+          "on-off": {
+            "label": "On-Off"
+          },
+          "subscription": {
+            "label": "Subscription"
+          }
+        }
+      },
       "name": "Package-specific name",
       "accessPeriod": "Access Period",
       "identifier": {
@@ -889,7 +913,10 @@
       "label": "Curatory Group | Curatory Groups"
     },
     "variantName": {
-      "label": "Name Variant | Name Variants"
+      "label": "Name Variant | Name Variants",
+      "error": {
+        "duplicate": "A similar variant to '{0}' already exists!"
+      }
     },
     "source": {
       "label": "Settings for Automated Import and Update |  Settings for Automated Imports and Updates",
