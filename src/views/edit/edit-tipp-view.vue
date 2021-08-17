@@ -372,6 +372,7 @@
                     :init-item="packageTitleItem.publicationType"
                     width="100%"
                     dense
+                    return-object
                     message-path="component.tipp.publicationType"
                     url="refdata/categories/TitleInstancePackagePlatform.PublicationType"
                     :label="$t('component.tipp.publicationType.label')"

@@ -166,6 +166,7 @@
                     :init-item="packageTitleItem.publicationType"
                     width="100%"
                     dense
+                    return-object
                     message-path="component.tipp.publicationType"
                     url="refdata/categories/TitleInstancePackagePlatform.PublicationType"
                     :label="$t('component.tipp.publicationType.label')"
@@ -631,7 +632,7 @@
         if (this.selected && typeof this.selected.id === 'number') {
           const newTipp = {
             ...this.packageTitleItem,
-            publicationType: this.packageTitleItem.publicationType && this.packageTitleItem.publicationType.name,
+            publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
             id: this.id
           }
 
@@ -654,6 +655,7 @@
             ...this.packageTitleItem,
             id: this.tempId(),
             titleId: this.packageTitleItem.title.id,
+            publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
             popup: { value: this.packageTitleItem.title.name, label: 'tipp', type: 'GokbAddTitlePopup' },
             link: { value: this.packageTitleItem.title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },
             hostPlatformName: this.packageTitleItem.hostPlatform?.name,
