@@ -692,6 +692,7 @@
         const newTipp = {
           ...this.packageTitleItem,
           name: this.allNames.name,
+          publicationType: this.packageTitleItem.publicationType && this.packageTitleItem.publicationType.name,
           id: this.id
         }
 
@@ -700,7 +701,7 @@
           instance: this
         })
 
-        if (response.status === 200) {
+        if (response.status < 400) {
           this.reload()
         } else {
           console.log(response.status)

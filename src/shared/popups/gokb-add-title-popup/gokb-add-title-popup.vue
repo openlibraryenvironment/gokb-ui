@@ -631,6 +631,7 @@
         if (this.selected && typeof this.selected.id === 'number') {
           const newTipp = {
             ...this.packageTitleItem,
+            publicationType: this.packageTitleItem.publicationType && this.packageTitleItem.publicationType.name,
             id: this.id
           }
 
@@ -639,7 +640,7 @@
             instance: this
           })
 
-          if (response.status === 200) {
+          if (response.status < 400) {
             this.$emit('edit', this.packageTitleItem)
             this.close()
           } else {
