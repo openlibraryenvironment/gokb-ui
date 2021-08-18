@@ -74,7 +74,7 @@
               :disabled="isReadonly"
             />
             <gokb-url-field
-              v-model="packageItem.descriptionUrl"
+              v-model="packageItem.descriptionURL"
               :disabled="isReadonly"
               :label="$t('component.package.descriptionUrl')"
             />
@@ -620,7 +620,7 @@
           source: undefined,
           type: 'package',
           status: undefined,
-          descriptionUrl: undefined,
+          descriptionURL: undefined,
           description: undefined,
           scope: undefined,
           global: undefined,
@@ -930,7 +930,7 @@
             this.packageItem.name = data.name
             this.packageItem.source = data.source
             this.packageItem.status = data.status
-            this.packageItem.descriptionUrl = data.descriptionUrl
+            this.packageItem.descriptionURL = data.descriptionURL
             this.packageItem.description = data.description
             this.packageItem.scope = data.scope
             this.packageItem.global = data.global?.name

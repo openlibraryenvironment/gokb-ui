@@ -203,7 +203,8 @@
       "DeleteTIWithoutHistory": "Delete Titles without Packages",
       "RejectTIWithoutIdentifier": "Reject Titles without Identifier",
       "PlatformCleanup": "Platform Cleanup",
-      "RecalculateStatistics": "Recalculate Statistics"
+      "RecalculateStatistics": "Recalculate Statistics",
+      "PackageUpdateTipps": "KBART Update"
     }
   },
   "kbart": {
