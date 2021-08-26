@@ -3,6 +3,7 @@
     v-if="accessible && !notFound"
     :key="version"
     :title="title"
+    @valid="valid = $event"
     @submit="update"
   >
     <gokb-error-component :value="error" />
@@ -20,7 +21,7 @@
           <gokb-name-field
             v-model="allNames"
             :disabled="isReadonly"
-            label="Titel"
+            :label="$t('component.general.name')"
           />
         </v-col>
       </v-row>
@@ -288,6 +289,7 @@
       />
       <gokb-button
         v-if="!isReadonly"
+        :disabled="!valid"
         default
       >
         {{ updateButtonText }}
@@ -336,6 +338,8 @@
         name: undefined,
         source: undefined,
         version: undefined,
+        valid: true,
+        notFound: false,
         tabsView: false,
         status: undefined,
         dateCreated: undefined,
@@ -437,7 +441,7 @@
           instance: this
         })
         // todo: check error code
-        if (response.status === 200) {
+        if (response?.status === 200) {
           if (isUpdate) {
             this.pendingChanges = {}
             this.reload()
@@ -453,57 +457,38 @@
       async reload () {
         if (this.isEdit) {
           loading.startLoading()
-          const {
-            data: {
-              //  data: {
-              name,
-              source,
-              status,
-              titleNamespace,
-              packageNamespace,
-              version,
-              dateCreated,
-              lastUpdated,
-              homepage,
-              _embedded: {
-                curatoryGroups,
-                ids,
-                variantNames,
-                providedPlatforms,
-                providedPackages,
-                offices
-              },
-              _links: {
-                update: { href: updateUrl },
-                delete: { href: deleteUrl }
-              },
-              //  }
-            }
-          } = await this.catchError({
+          this.successMsg = false
+
+          const result = await this.catchError({
             promise: providerServices.getProvider(this.id, this.cancelToken.token),
             instance: this
           })
-          this.name = name
-          this.source = source
-          this.reference = homepage
-          this.version = version
-          this.ids = ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!updateUrl }))
-          this.allAlternateNames = variantNames.map(variantName => ({ ...variantName, isDeletable: !!updateUrl }))
-          this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: !!updateUrl }))
-          this.allPlatforms = providedPlatforms.map(platform => ({ ...platform, isDeletable: !!updateUrl }))
-          this.titleNamespace = titleNamespace
-          this.packageNamespace = packageNamespace
-          this.allPackages = providedPackages
-          this.allNames = { name: name, alts: this.allAlternateNames }
-          this.offices = offices?.map(office => ({ ...office, typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined), localLanguage: (office.language?.value && office.language.value), isDeletable: !!updateUrl })) || []
-          this.dateCreated = dateCreated
-          this.lastUpdated = lastUpdated
-          this.updateUrl = updateUrl
-          this.deleteUrl = deleteUrl
-          this.status = status
-          this.successMsg = false
 
-          document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
+          if (result.status === 200) {
+            const data = result.data
+            this.name = data.name
+            this.source = data.source
+            this.reference = data.homepage
+            this.version = data.version
+            this.updateUrl = data._links?.update?.href || null
+            this.deleteUrl = data._links?.delete?.href || null
+            this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
+            this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
+            this.allCuratoryGroups = data._embedded.curatoryGroups.map(group => ({ ...group, isDeletable: !!this.updateUrl }))
+            this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({ ...platform, isDeletable: !!this.updateUrl }))
+            this.titleNamespace = data.titleNamespace
+            this.packageNamespace = data.packageNamespace
+            this.allPackages = data._embedded.providedPackages
+            this.allNames = { name: data.name, alts: this.allAlternateNames }
+            this.offices = data._embedded.offices?.map(office => ({ ...office, typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined), localLanguage: (office.language?.value && office.language.value), isDeletable: !!this.updateUrl })) || []
+            this.dateCreated = data.dateCreated
+            this.lastUpdated = data.lastUpdated
+            this.status = data.status
+
+            document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
+          } else {
+            this.notFound = true
+          }
 
           loading.stopLoading()
         }

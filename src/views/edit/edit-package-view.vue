@@ -4,7 +4,6 @@
     :key="version"
     :title="title"
     :sub-title="subTitle"
-    @valid="valid = $event"
     @submit="showCreatePackageConfirm"
   >
     <gokb-error-component :value="error" />
@@ -45,21 +44,22 @@
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
-          editable
+          :editable="currentStepValid"
+          :class="{ error: !!step2Error }"
           :step="2"
         >
           {{ isEdit ? $t('component.package.navigation.step1') : $t('component.package.navigation.step2') }}
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
-          editable
+          :editable="currentStepValid"
           :step="3"
         >
           {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
-          editable
+          :editable="currentStepValid"
           :step="4"
         >
           {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
@@ -72,6 +72,7 @@
             <gokb-name-field
               v-model="allNames"
               :disabled="isReadonly"
+              :required="!isReadonly"
             />
             <gokb-url-field
               v-model="packageItem.descriptionURL"
@@ -91,12 +92,14 @@
             >
               <gokb-section
                 :sub-title="$t('component.package.provider')"
+                :mark-required="!isReadonly"
               >
                 <gokb-search-organisation-field
                   v-model="packageItem.provider"
                   :items="providerSelection"
                   :show-link="true"
                   :readonly="isReadonly"
+                  required
                   return-object
                 />
               </gokb-section>
@@ -105,11 +108,15 @@
               cols="12"
               xl="6"
             >
-              <gokb-section :sub-title="$t('component.package.platform')">
+              <gokb-section
+                :sub-title="$t('component.package.platform')"
+                :mark-required="!isReadonly"
+              >
                 <gokb-search-platform-field
                   v-model="packageItem.nominalPlatform"
                   :items="platformSelection"
                   :readonly="isReadonly"
+                  required
                   return-object
                 />
               </gokb-section>
@@ -495,7 +502,7 @@
       <gokb-button
         v-if="!isInLastStep"
         color="accent"
-        :disabled="!valid"
+        :disabled="!currentStepValid"
         @click="go2NextStep"
       >
         {{ $t('btn.next') }}
@@ -504,7 +511,7 @@
       <gokb-button
         v-else-if="!isReadonly"
         key="add"
-        :disabled="!valid"
+        :disabled="!isValid"
         default
       >
         {{ $i18n.t('btn.submit') }}
@@ -600,8 +607,10 @@
     },
     data () {
       return {
-        valid: undefined,
+        valid: false,
         step: 1,
+        step2Error: false,
+        waiting: false,
         notFound: false,
         version: undefined,
         isCurator: false,
@@ -720,6 +729,12 @@
       },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
+      },
+      currentStepValid () {
+        return this.isReadonly || (this.isEdit && (this.step !== 2 || (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider))) || (!this.isEdit && (this.step !== 1 || (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)))
+      },
+      isValid () {
+        return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
       }
     },
     watch: {
@@ -731,6 +746,13 @@
       '$i18n.locale' (l) {
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.package.label') + ' – ' + this.allNames.name
+        }
+      },
+      isValid (valid) {
+        if (this.isEdit && !this.isReadonly && !valid) {
+          this.step2Error = true
+        } else {
+          this.step2Error = false
         }
       }
     },
@@ -1008,9 +1030,13 @@
         const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/getStatus?jobId=${jobId}`
         let resp = {}
         let status = 'PREPARATION'
+        this.waiting = true
 
         while (status === 'PREPARATION') {
-          resp = await axios.get(url).then(response => response.data)
+          resp = axios.get(url).then(
+            response => response.data,
+            await this.wait(1000)
+          )
           status = resp.status
         }
 
@@ -1031,6 +1057,9 @@
       },
       triggerUpdate (checked) {
         this.urlUpdate = checked
+      },
+      wait (ms) {
+        return new Promise((resolve) => { setTimeout(resolve, ms) })
       }
     }
   }

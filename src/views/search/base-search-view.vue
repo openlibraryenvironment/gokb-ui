@@ -232,19 +232,31 @@
         // console.log(this.searchInputFields, this.searchParameters)
         const sort = this.resultOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.resultOptions.sortBy[0]] || this.resultOptions.sortBy[0]) : undefined
         const desc = this.resultOptions.desc[0] ? 'desc' : 'asc'
+
+        const esTypedParams = {
+          es: true,
+          ...((sort && { sort: sort }) || {}),
+          ...({ order: desc }),
+          max: this.resultOptions.itemsPerPage
+        }
+
+        const dbTypedParams = {
+          ...((sort && { _sort: sort }) || {}),
+          ...({ _order: desc }),
+          limit: this.resultOptions.itemsPerPage
+        }
+
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...searchParameters,
-            ...((sort && { _sort: sort }) || {}),
-            ...({ _order: desc }),
+            ...(this.searchByEs ? esTypedParams : dbTypedParams),
             ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
             ...((this.searchServiceEmbeds && { _embed: this.searchServiceEmbeds }) || {}),
             offset: page ? (page - 1) * this.resultOptions.itemsPerPage : 0,
-            limit: this.resultOptions.itemsPerPage
           }, this.cancelToken.token),
           instance: this
         })
-        if (result) {
+        if (result.status === 200) {
           const { data: { data, _pagination } } = result
           // console.log(data, _pagination, _links)
           if (!page) {

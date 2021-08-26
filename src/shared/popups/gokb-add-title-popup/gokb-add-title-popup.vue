@@ -482,6 +482,7 @@
           status: undefined,
           paymentType: undefined,
           url: undefined,
+          uuid: undefined,
           name: undefined,
           accessStartDate: undefined,
           accessEndDate: undefined,
@@ -575,6 +576,7 @@
         this.packageTitleItem.pkg = this.selectedItem.pkg
         this.packageTitleItem.title = this.selectedItem.title
         this.packageTitleItem.url = this.selectedItem.url
+        this.packageTitleItem.uuid = this.selectedItem.uuid
         this.packageTitleItem.paymentType = this.selectedItem.paymentType
         this.packageTitleItem.accessStartDate = this.selectedItem.accessStartDate
         this.packageTitleItem.accessEndDate = this.selectedItem.accessEndDate

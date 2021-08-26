@@ -12,6 +12,7 @@
     :rules="rules"
     :type="type"
     :error="!!apiErrors"
+    maxlength="255"
     :placeholder="placeholder"
     :append-icon="appendIcon"
     validate-on-blur
