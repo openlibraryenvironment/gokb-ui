@@ -16,7 +16,10 @@
           {{ title }} <span v-if="markRequired">(<span style="color:red">*</span>)</span>
         </span>
         <v-spacer />
-        <v-toolbar-items class="pa-2">
+        <v-toolbar-items
+          v-if="expanded"
+          class="pa-2"
+        >
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>
@@ -51,7 +54,10 @@
           <v-icon>{{ expansionIcon }}</v-icon>
         </v-btn>
         <v-spacer />
-        <v-toolbar-items class="pa-2">
+        <v-toolbar-items
+          v-if="expanded"
+          class="pa-2"
+        >
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>
@@ -62,7 +68,10 @@
         flat
       >
         <v-spacer />
-        <v-toolbar-items class="pa-2">
+        <v-toolbar-items
+          v-if="expanded"
+          class="pa-2"
+        >
           <slot name="search" />
         </v-toolbar-items>
       </v-toolbar>
@@ -72,7 +81,10 @@
         flat
       >
         <v-spacer />
-        <v-toolbar-items class="pa-2">
+        <v-toolbar-items
+          v-if="expanded"
+          class="pa-2"
+        >
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>

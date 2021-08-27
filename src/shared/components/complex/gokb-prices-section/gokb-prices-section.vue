@@ -3,6 +3,7 @@
     :expandable="expandable"
     :sub-title="title"
     :items-total="totalNumberOfItems"
+    :hide-default="!expanded"
   >
     <gokb-add-item-popup
       v-if="addItemPopupVisible"
@@ -75,6 +76,11 @@
         default: true
       },
       showTitle: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
+      expanded: {
         type: Boolean,
         required: false,
         default: true

@@ -6,9 +6,12 @@
     @submit="submitTipp"
   >
     <gokb-error-component :value="error" />
-    <v-row>
+    <v-row dense>
       <v-col>
-        <gokb-section :sub-title="$t('component.general.general')">
+        <gokb-section
+          expandable
+          :sub-title="$t('component.general.general')"
+        >
           <v-row dense>
             <v-col>
               <gokb-state-select-field
@@ -29,7 +32,10 @@
               />
             </v-col>
           </v-row>
-          <v-row dense>
+          <v-row
+            dense
+            class="mt-4"
+          >
             <v-col>
               <gokb-title-field
                 v-model="packageTitleItem.title"
@@ -55,11 +61,18 @@
           </v-row>
           <v-row class="pt-4" />
         </gokb-section>
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col>
         <gokb-section
           expandable
           :sub-title="$t('component.tipp.access.label')"
         >
-          <v-row dense>
+          <v-row
+            dense
+            class="mt-4"
+          >
             <v-col>
               <gokb-search-platform-field
                 v-model="packageTitleItem.hostPlatform"
@@ -109,140 +122,9 @@
           </v-row>
         </gokb-section>
       </v-col>
-      <v-col cols="6">
-        <v-row>
-          <v-col>
-            <gokb-section :sub-title="$t('component.tipp.other.label')">
-              <v-row>
-                <v-col>
-                  <gokb-text-field
-                    v-model="packageTitleItem.publisherName"
-                    :disabled="isReadonly"
-                    :label="$tc('component.title.publisher.label')"
-                  />
-                </v-col>
-                <v-col>
-                  <gokb-text-field
-                    v-model="packageTitleItem.series"
-                    :disabled="isReadonly"
-                    :label="$t('component.tipp.series.label')"
-                  />
-                </v-col>
-              </v-row>
-              <v-row dense>
-                <v-col>
-                  <gokb-text-field
-                    v-model="packageTitleItem.subjectArea"
-                    :disabled="isReadonly"
-                    dense
-                    :label="$t('component.tipp.subjectArea.label')"
-                  />
-                </v-col>
-                <v-col>
-                  <gokb-state-field
-                    v-model="packageTitleItem.medium"
-                    :init-item="packageTitleItem.medium"
-                    width="100%"
-                    dense
-                    message-path="component.title.medium"
-                    url="refdata/categories/TitleInstancePackagePlatform.Medium"
-                    :label="$t('component.title.medium.label')"
-                    :readonly="isReadonly"
-                  />
-                </v-col>
-              </v-row>
-              <v-row dense>
-                <v-col>
-                  <gokb-text-field
-                    v-model="importId"
-                    disabled
-                    dense
-                    :label="$t('component.tipp.importId.label')"
-                  />
-                </v-col>
-                <v-col>
-                  <gokb-state-field
-                    v-model="packageTitleItem.publicationType"
-                    :init-item="packageTitleItem.publicationType"
-                    width="100%"
-                    dense
-                    return-object
-                    message-path="component.tipp.publicationType"
-                    url="refdata/categories/TitleInstancePackagePlatform.PublicationType"
-                    :label="$t('component.tipp.publicationType.label')"
-                    :readonly="isReadonly"
-                  />
-                </v-col>
-                <v-col>
-                  <gokb-date-field
-                    v-model="packageTitleItem.lastChangedExternal"
-                    readonly
-                    dense
-                    :label="$t('component.tipp.lastChangedExternal')"
-                  />
-                </v-col>
-              </v-row>
-              <v-row
-                v-if="isBook"
-                dense
-              >
-                <v-col>
-                  <gokb-date-field
-                    v-model="packageTitleItem.dateFirstInPrint"
-                    :readonly="isReadonly"
-                    dense
-                    :label="$t('component.title.firstPublishedInPrint')"
-                  />
-                </v-col>
-                <v-col>
-                  <gokb-date-field
-                    v-model="packageTitleItem.dateFirstOnline"
-                    :readonly="isReadonly"
-                    dense
-                    :label="$t('component.title.firstPublishedOnline')"
-                  />
-                </v-col>
-              </v-row>
-              <v-row
-                v-if="isBook"
-                dense
-              >
-                <v-col>
-                  <gokb-text-field
-                    v-model="packageTitleItem.firstAuthor"
-                    :disabled="isReadonly"
-                    dense
-                    :label="$t('component.title.firstAuthor.label')"
-                  />
-                </v-col>
-                <v-col>
-                  <gokb-text-field
-                    v-model="packageTitleItem.firstEditor"
-                    :disabled="isReadonly"
-                    dense
-                    :label="$t('component.title.firstEditor.label')"
-                  />
-                </v-col>
-                <v-col>
-                  <gokb-text-field
-                    v-model="packageTitleItem.editionStatement"
-                    :disabled="isReadonly"
-                    dense
-                    :label="$t('component.title.editionStatement')"
-                  />
-                </v-col>
-                <v-col cols="3">
-                  <gokb-text-field
-                    v-model="packageTitleItem.volumeNumber"
-                    :disabled="isReadonly"
-                    dense
-                    :label="$t('component.title.volumeNumber')"
-                  />
-                </v-col>
-              </v-row>
-            </gokb-section>
-          </v-col>
-        </v-row>
+    </v-row>
+    <v-row dense>
+      <v-col>
         <v-toolbar
           dense
           flat
@@ -259,7 +141,7 @@
           <v-spacer />
           <v-toolbar-items class="pa-2">
             <gokb-button
-              v-if="!isReadonly"
+              v-if="!isReadonly && coverageExpanded"
               icon-id="add"
               @click="addNewCoverage"
             >
@@ -375,8 +257,165 @@
         </div>
       </v-col>
     </v-row>
+    <v-row dense>
+      <v-col>
+        <gokb-identifier-section
+          v-model="packageTitleItem.ids"
+          :target-type="titleTypeString"
+          :disabled="isReadonly"
+          :expanded="false"
+        />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col>
+        <gokb-prices-section
+          v-model="packageTitleItem.prices"
+          :disabled="isReadonly"
+          :expanded="false"
+        />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col>
+        <gokb-section
+          :sub-title="$t('component.tipp.other.label')"
+          hide-default
+          expandable
+        >
+          <v-row>
+            <v-col>
+              <gokb-text-field
+                v-model="packageTitleItem.publisherName"
+                :disabled="isReadonly"
+                :label="$tc('component.title.publisher.label')"
+              />
+            </v-col>
+            <v-col>
+              <gokb-text-field
+                v-model="packageTitleItem.series"
+                :disabled="isReadonly"
+                :label="$t('component.tipp.series.label')"
+              />
+            </v-col>
+          </v-row>
+          <v-row dense>
+            <v-col>
+              <gokb-text-field
+                v-model="packageTitleItem.subjectArea"
+                :disabled="isReadonly"
+                dense
+                :label="$t('component.tipp.subjectArea.label')"
+              />
+            </v-col>
+            <v-col>
+              <gokb-state-field
+                v-model="packageTitleItem.medium"
+                :init-item="packageTitleItem.medium"
+                width="100%"
+                dense
+                message-path="component.title.medium"
+                url="refdata/categories/TitleInstancePackagePlatform.Medium"
+                :label="$t('component.title.medium.label')"
+                :readonly="isReadonly"
+              />
+            </v-col>
+          </v-row>
+          <v-row dense>
+            <v-col>
+              <gokb-text-field
+                v-model="importId"
+                disabled
+                dense
+                :label="$t('component.tipp.importId.label')"
+              />
+            </v-col>
+            <v-col>
+              <gokb-state-field
+                v-model="packageTitleItem.publicationType"
+                :init-item="packageTitleItem.publicationType"
+                width="100%"
+                dense
+                return-object
+                message-path="component.tipp.publicationType"
+                url="refdata/categories/TitleInstancePackagePlatform.PublicationType"
+                :label="$t('component.tipp.publicationType.label')"
+                :readonly="isReadonly"
+              />
+            </v-col>
+            <v-col>
+              <gokb-date-field
+                v-model="packageTitleItem.lastChangedExternal"
+                readonly
+                dense
+                :label="$t('component.tipp.lastChangedExternal')"
+              />
+            </v-col>
+          </v-row>
+          <v-row
+            v-if="isBook"
+            dense
+          >
+            <v-col>
+              <gokb-date-field
+                v-model="packageTitleItem.dateFirstInPrint"
+                :readonly="isReadonly"
+                dense
+                :label="$t('component.title.firstPublishedInPrint')"
+              />
+            </v-col>
+            <v-col>
+              <gokb-date-field
+                v-model="packageTitleItem.dateFirstOnline"
+                :readonly="isReadonly"
+                dense
+                :label="$t('component.title.firstPublishedOnline')"
+              />
+            </v-col>
+          </v-row>
+          <v-row
+            v-if="isBook"
+            dense
+          >
+            <v-col>
+              <gokb-text-field
+                v-model="packageTitleItem.firstAuthor"
+                :disabled="isReadonly"
+                dense
+                :label="$t('component.title.firstAuthor.label')"
+              />
+            </v-col>
+            <v-col>
+              <gokb-text-field
+                v-model="packageTitleItem.firstEditor"
+                :disabled="isReadonly"
+                dense
+                :label="$t('component.title.firstEditor.label')"
+              />
+            </v-col>
+            <v-col>
+              <gokb-text-field
+                v-model="packageTitleItem.editionStatement"
+                :disabled="isReadonly"
+                dense
+                :label="$t('component.title.editionStatement')"
+              />
+            </v-col>
+            <v-col cols="3">
+              <gokb-text-field
+                v-model="packageTitleItem.volumeNumber"
+                :disabled="isReadonly"
+                dense
+                :label="$t('component.title.volumeNumber')"
+              />
+            </v-col>
+          </v-row>
+        </gokb-section>
+      </v-col>
+    </v-row>
     <template #buttons>
       <v-btn
+        v-if="isEdit"
         class="ml-6 btn-default"
         :to="{ name: '/package-title', params: { id: id} }"
       >
@@ -486,6 +525,7 @@
           name: undefined,
           accessStartDate: undefined,
           accessEndDate: undefined,
+          prices: [],
           ids: [],
           coverageStatements: [
             {
@@ -529,7 +569,7 @@
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isJournal () {
-        return this.title?.type === 'Journal' || this.title.type.id === 'journal'
+        return this.title?.type === 'Journal' || this.title.type.id === 'journal' || this.titleType?.id === 'Journal'
       },
       isBook () {
         return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph'
@@ -581,6 +621,7 @@
         this.packageTitleItem.accessStartDate = this.selectedItem.accessStartDate
         this.packageTitleItem.accessEndDate = this.selectedItem.accessEndDate
         this.packageTitleItem.ids = this.selectedItem.ids
+        this.packageTitleItem.prices = this.selectedItem.prices
         this.packageTitleItem.series = this.selectedItem.series
         this.packageTitleItem.subjectArea = this.selectedItem.subjectArea
         this.packageTitleItem.publisherName = this.selectedItem.publisherName
@@ -627,13 +668,15 @@
         this.title.type = this.titleType
         this.packageTitleItem.hostPlatform = this.parentPlatform
       }
-      this.coverageExpanded = (this.title.type === 'Journal' || this.title.type === 'serial')
+      this.coverageExpanded = !this.isEdit && (this.title.type === 'Journal' || this.title.type === 'serial')
     },
     methods: {
       async submitTipp () {
         if (this.selected && typeof this.selected.id === 'number') {
           const newTipp = {
             ...this.packageTitleItem,
+            ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
+            prices: this.packageTitleItem.prices.map(price => ({ ...price, type: price.priceType, id: (typeof price.id === 'number' ? price.id : null) })),
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
             id: this.id
           }
@@ -657,6 +700,8 @@
             ...this.packageTitleItem,
             id: this.tempId(),
             titleId: this.packageTitleItem.title.id,
+            ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
+            prices: this.packageTitleItem.prices.map(price => ({ ...price, type: price.priceType, id: (typeof price.id === 'number' ? price.id : null) })),
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
             popup: { value: this.packageTitleItem.title.name, label: 'tipp', type: 'GokbAddTitlePopup' },
             link: { value: this.packageTitleItem.title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },
