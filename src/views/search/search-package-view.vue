@@ -18,7 +18,7 @@
           contentType: undefined,
           status: undefined,
           global: ['Global', 'Consortium', 'Regional', 'Other'],
-          name: undefined,
+          label: undefined,
         },
         sortMappings: {
           link: 'name',
@@ -70,8 +70,7 @@
           [
             {
               type: 'GokbTextField',
-              name: 'name',
-              value: 'name',
+              name: 'label',
               properties: {
                 label: this.$i18n.t('component.general.name'),
               }
