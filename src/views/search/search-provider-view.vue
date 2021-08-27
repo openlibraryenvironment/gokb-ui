@@ -11,7 +11,7 @@
     data () {
       return {
         searchFilters: {
-          name: undefined,
+          label: undefined,
           identifier: undefined,
           curatoryGroupIds: undefined
         }
@@ -48,7 +48,7 @@
           [
             {
               type: 'GokbTextField',
-              name: 'name',
+              name: 'label',
               properties: {
                 label: this.$i18n.t('component.general.name')
               }
@@ -101,6 +101,7 @@
     async created () {
       this.searchServicesUrl = 'rest/provider'
       this.searchServiceIncludes = 'id,name'
+      this.searchByEs = true
       this.linkSearchParameterValues = {
         link: 'name'
       }
@@ -110,12 +111,12 @@
         return data.map(({
           id,
           name,
-          _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
+          _links
         }) => ({
           id,
           link: { value: name, route: EDIT_PROVIDER_ROUTE, id: 'id' },
-          deleteUrl,
-          retireUrl
+          deleteUrl: _links?.delete?.href || undefined,
+          retireUrl: _links?.update?.href || undefined
         }))
       },
       _confirmArchiveSelectedItems () {

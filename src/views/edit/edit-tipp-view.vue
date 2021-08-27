@@ -707,6 +707,8 @@
       async update () {
         const newTipp = {
           ...this.packageTitleItem,
+          ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
+          prices: this.packageTitleItem.prices.map(price => ({ ...price, type: price.priceType, id: (typeof price.id === 'number' ? price.id : null) })),
           name: this.allNames.name,
           publicationType: this.packageTitleItem.publicationType && this.packageTitleItem.publicationType.name,
           id: this.id

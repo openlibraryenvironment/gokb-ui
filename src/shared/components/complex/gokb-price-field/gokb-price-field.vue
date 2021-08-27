@@ -7,19 +7,20 @@
           message-path="component.tipp.prices.priceType"
           url="refdata/categories/Price.type"
           return-object
+          required
           :label="$t('component.tipp.prices.priceType.label')"
         />
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="8">
-        <gokb-number-field
+        <vuetify-money
           v-model="localPrice"
-          :disabled="disabled"
-          dense
           :label="$tc('component.tipp.prices.label')"
-          :append-icon="deleteIcon"
-          @click:append="$emit('delete', value)"
+          :disabled="disabled"
+          required
+          clearable
+          dense
         />
       </v-col>
       <v-col cols="4">
@@ -27,6 +28,7 @@
           v-model="localCurrency"
           :items="allCurrencies"
           return-object
+          required
           dense
           :label="$tc('component.tipp.prices.currency.label')"
         />
@@ -36,13 +38,12 @@
 </template>
 <script>
   import GokbStateField from '@/shared/components/simple/gokb-state-field'
-  import GokbNumberField from '@/shared/components/simple/gokb-number-field'
 
   const CURRENCIES = [{ name: 'EUR' }, { name: 'GBP' }, { name: 'USD' }]
 
   export default {
     name: 'GokbPriceField',
-    components: { GokbStateField, GokbNumberField },
+    components: { GokbStateField },
     props: {
       disabled: {
         type: Boolean,

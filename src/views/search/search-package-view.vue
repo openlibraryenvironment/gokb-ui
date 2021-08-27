@@ -220,7 +220,7 @@
     },
     async created () {
       this.searchServicesUrl = 'rest/packages'
-      this.searchServiceIncludes = 'id,uuid,name,provider,nominalPlatform,_links,contentType,lastUpdated,_tippCount'
+      this.searchByEs = true
       this.linkSearchParameterValues = {
         link: 'name',
         linkTwo: 'provider'
@@ -236,6 +236,7 @@
           uuid,
           contentType,
           nominalPlatform,
+          tippCount,
           _tippCount,
           _links
         }) => ({
@@ -247,7 +248,7 @@
           lastUpdated: new Date(lastUpdated).toISOString().substr(0, 10),
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
-          count: _tippCount,
+          count: _tippCount || tippCount,
           deleteUrl: _links?.delete?.href || undefined,
           retireUrl: _links?.update?.href || undefined
         }))

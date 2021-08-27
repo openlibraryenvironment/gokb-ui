@@ -577,7 +577,7 @@
           id: this.id,
           name: this.allNames.name,
           ids: this.ids.map(id => ({ value: id.value, type: id.namespace })),
-          variantNames: this.allNames.alts,
+          variantNames: this.allNames.alts.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
           publishedFrom: this.titleItem.publishedFrom,
           publishedTo: this.titleItem.publishedTo,
           dateFirstInPrint: this.titleItem.firstPublishedInPrint,
