@@ -324,8 +324,6 @@
           { type: 'BookInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Book') },
           { type: 'Database', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Database') },
           { type: 'DatabaseInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Database') },
-          { type: 'TitleInstancePackagePlatform', path: '/package-title/', icon: 'snippet_folder', label: this.$i18n.tc('component.tipp.label') },
-          { type: 'TIPP', path: '/package-title/', icon: 'snippet_folder', label: this.$i18n.tc('component.tipp.label') },
         ]
       }
     },
@@ -341,7 +339,7 @@
 
         try {
           const result = await this.searchServices.search({
-            suggest: this.globalSearchField,
+            q: this.globalSearchField.trim(),
             status: 'Current',
             es: 'true',
             max: 20
@@ -371,7 +369,8 @@
       },
       globalSearchSelected () {
         if (this.globalSearchSelected.path) {
-          this.globalSearchSelected && this.$router.push({ path: this.globalSearchSelected.path + this.globalSearchSelected.id })
+          this.globalSearchSelected && this.$router.push({ path: this.globalSearchSelected.path + this.globalSearchSelected.id }).catch(() => {})
+          this.globalSearchItems = []
           this.globalSearchField = undefined
         }
       },

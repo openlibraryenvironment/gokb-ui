@@ -65,7 +65,7 @@
             class="error"
             @click="toggleShow"
           >
-            Schließen
+            {{ $t('btn.close') }}
           </v-btn>
           <v-spacer />
         </v-card-actions>

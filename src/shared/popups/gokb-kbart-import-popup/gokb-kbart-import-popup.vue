@@ -166,12 +166,18 @@
             },
             title_url: {
               rules: {
-                notEmpty: true
+                notEmpty: true,
+                general: /^http[s]?:\/\/.*$/
               }
             },
             publication_type: {
               rules: {
                 general: /^([Mm]onograph)|([Ss]erial)|([Dd]atabase)|([Oo]ther)$/
+              }
+            },
+            access_type: {
+              rules: {
+                general: /^[PF]$/
               }
             }
           },
@@ -199,7 +205,7 @@
             date_first_issue_online: {
               type: 'date',
               rules: {
-                general: /^[1-9][0-9]{3}(-[01][0-9]?(-[0-3][0-9])?)?(\s[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?)?$/
+                general: /^[1-9][0-9]{3}(-[01][0-9]?(-[0-3][0-9])?)?([T\s][0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z?)?$/
               }
             },
             num_first_vol_online: {
@@ -211,7 +217,7 @@
             date_last_issue_online: {
               type: 'date',
               rules: {
-                general: /^[1-9][0-9]{3}(-[01][0-9]?(-[0-3][0-9])?)?(\s[0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?)?$/
+                general: /^[1-9][0-9]{3}(-[01][0-9]?(-[0-3][0-9])?)?([T\s][0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z?)?$/
               }
             },
             num_last_vol_online: {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span>{{ label }}</span>
+    <span>{{ label }} <span v-if="!disabled && markRequired">(<span style="color:red">*</span>)</span></span>
     <v-banner>
       <span
         style="font-size:1.1rem"
@@ -91,6 +91,11 @@
         required: false,
         default: false
       },
+      markRequired: {
+        type: Boolean,
+        required: false,
+        default: true
+      }
     },
     data () {
       return {

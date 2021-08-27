@@ -166,6 +166,7 @@
                     :init-item="packageTitleItem.publicationType"
                     width="100%"
                     dense
+                    return-object
                     message-path="component.tipp.publicationType"
                     url="refdata/categories/TitleInstancePackagePlatform.PublicationType"
                     :label="$t('component.tipp.publicationType.label')"
@@ -481,6 +482,7 @@
           status: undefined,
           paymentType: undefined,
           url: undefined,
+          uuid: undefined,
           name: undefined,
           accessStartDate: undefined,
           accessEndDate: undefined,
@@ -574,6 +576,7 @@
         this.packageTitleItem.pkg = this.selectedItem.pkg
         this.packageTitleItem.title = this.selectedItem.title
         this.packageTitleItem.url = this.selectedItem.url
+        this.packageTitleItem.uuid = this.selectedItem.uuid
         this.packageTitleItem.paymentType = this.selectedItem.paymentType
         this.packageTitleItem.accessStartDate = this.selectedItem.accessStartDate
         this.packageTitleItem.accessEndDate = this.selectedItem.accessEndDate
@@ -631,6 +634,7 @@
         if (this.selected && typeof this.selected.id === 'number') {
           const newTipp = {
             ...this.packageTitleItem,
+            publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
             id: this.id
           }
 
@@ -639,7 +643,7 @@
             instance: this
           })
 
-          if (response.status === 200) {
+          if (response.status < 400) {
             this.$emit('edit', this.packageTitleItem)
             this.close()
           } else {
@@ -653,6 +657,7 @@
             ...this.packageTitleItem,
             id: this.tempId(),
             titleId: this.packageTitleItem.title.id,
+            publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
             popup: { value: this.packageTitleItem.title.name, label: 'tipp', type: 'GokbAddTitlePopup' },
             link: { value: this.packageTitleItem.title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },
             hostPlatformName: this.packageTitleItem.hostPlatform?.name,

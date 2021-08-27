@@ -14,11 +14,11 @@
     </v-row>
     <v-row>
       <v-col>
-        <gokb-text-field
+        <gokb-url-field
           v-model="localUrl"
           :disabled="disabled"
           :required="true"
-          :label="'URL'"
+          label="URL"
           :append-icon="deleteIcon"
           @click:append="$emit('delete', value)"
         />
@@ -28,10 +28,11 @@
 </template>
 <script>
   import GokbTextField from '@/shared/components/base/gokb-text-field'
+  import GokbUrlField from '@/shared/components/simple/gokb-url-field'
 
   export default {
     name: 'GokbPlatformField',
-    components: { GokbTextField },
+    components: { GokbTextField, GokbUrlField },
     props: {
       disabled: {
         type: Boolean,

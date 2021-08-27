@@ -378,6 +378,7 @@
                     :init-item="packageTitleItem.publicationType"
                     width="100%"
                     dense
+                    return-object
                     message-path="component.tipp.publicationType"
                     url="refdata/categories/TitleInstancePackagePlatform.PublicationType"
                     :label="$t('component.tipp.publicationType.label')"
@@ -707,6 +708,7 @@
         const newTipp = {
           ...this.packageTitleItem,
           name: this.allNames.name,
+          publicationType: this.packageTitleItem.publicationType && this.packageTitleItem.publicationType.name,
           id: this.id
         }
 
@@ -715,7 +717,7 @@
           instance: this
         })
 
-        if (response.status === 200) {
+        if (response.status < 400) {
           this.reload()
         } else {
           console.log(response.status)

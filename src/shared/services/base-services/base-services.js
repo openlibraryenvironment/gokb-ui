@@ -29,10 +29,10 @@ const api = (http, utils) => ({
       .forEach(([name, value]) => {
         if (Array.isArray(value)) {
           value.forEach(val =>
-            pars.push(`${name}=${val}`)
+            pars.push(`${name}=${typeof val === 'string' ? val.trim() : val}`)
           )
         } else if (value !== undefined && value !== null) {
-          pars.push(`${name}=${value}`)
+          pars.push(`${name}=${typeof value === 'string' ? value.trim() : value}`)
         }
       })
 
