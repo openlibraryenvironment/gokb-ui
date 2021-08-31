@@ -8,6 +8,7 @@
     <v-card class="elevation-12">
       <v-form
         ref="form"
+        :value="isValid"
         @submit.prevent="doSubmit"
       >
         <v-toolbar color="#F2994A">
@@ -51,17 +52,16 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      isValid: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     methods: {
       doSubmit () {
         this.$emit('submit', this.$refs.form)
-      },
-      resetValidation () {
-        this.$refs.form.resetValidation()
-      },
-      validate () {
-        this.$refs.form.validate()
       }
     }
   }
