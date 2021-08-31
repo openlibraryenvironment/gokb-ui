@@ -101,14 +101,14 @@
     <v-app-bar
       :clipped-left="$vuetify.breakpoint.mdAndUp"
       app
-      color="#4f4f4f"
+      :color="appColor"
       dark
     >
       <v-toolbar-title class="toolbar-title">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <v-btn
           text
-          color="#4f4f4f"
+          :color="appColor"
           :to="{ name: HOME_ROUTE }"
         >
           <v-icon
@@ -122,7 +122,7 @@
             class="application-title text-h6"
             :title="currentVersion"
           >
-            GOKb Client
+            {{ appName }}
           </span>
         </v-btn>
       </v-toolbar-title>
@@ -260,6 +260,8 @@
       drawer: null,
       privacyLink: process.env.VUE_APP_DP_LINK,
       imprintLink: process.env.VUE_APP_IMP_LINK,
+      appName: process.env.VUE_APP_TITLE || 'GOKb Client',
+      appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
       globalSearchSelected: undefined,
       globalSearchField: undefined,
       globalSearchItems: undefined,

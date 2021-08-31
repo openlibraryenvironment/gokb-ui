@@ -5,6 +5,7 @@
         v-model="localNamespace"
         :readonly="namespaceFixed"
         :target-type="targetType"
+        required
         width="140px"
         :label="$tc('component.identifier.namespace')"
       />
@@ -14,6 +15,7 @@
         v-model="localValue"
         :disabled="disabled"
         :label="namespaceFixed ? localNamespace.name : $tc('component.identifier.label')"
+        required
         :append-icon="deleteIcon"
         @click:append="$emit('delete', value)"
       />

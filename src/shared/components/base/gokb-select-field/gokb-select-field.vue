@@ -17,7 +17,7 @@
     :rules="rules"
     :no-data-text="$t('search.results.empty')"
     :style="{width: width}"
-    :clearable="clearable"
+    :clearable="clearable && !required"
     :return-object="returnObject"
     :dense="dense"
   />
@@ -109,7 +109,7 @@
         return this.localValue?.name || undefined
       },
       rules () {
-        return [((!!this.required && !!this.value) || !this.required || this.$i18n.t('validation.missingSelection'))]
+        return [value => (!!this.required && !!value) || !this.required || this.$i18n.t('validation.missingSelection')]
       }
     },
     async mounted () {
