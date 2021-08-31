@@ -67,7 +67,6 @@
         deep: true,
         handler () {
           this.isValid = this.$refs.comp.$refs.form.validate()
-          console.log(this.isValid)
         }
       }
     },
