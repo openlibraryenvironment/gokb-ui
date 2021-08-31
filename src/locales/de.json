@@ -573,6 +573,9 @@
       },
       "prices": {
         "label": "Preis | Preise",
+        "price": {
+          "label": "Betrag"
+        },
         "currency": {
           "label": "Währung | Währungen"
         },
@@ -593,6 +596,12 @@
           "subscription": {
             "label": "Abonnement"
           }
+        },
+        "startDate": {
+          "label": "Startdatum"
+        },
+        "endDate": {
+          "label": "Enddatum"
         }
       },
       "name": "Paketspezifischer Titel",

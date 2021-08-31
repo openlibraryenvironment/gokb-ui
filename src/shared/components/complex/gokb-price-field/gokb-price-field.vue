@@ -1,49 +1,30 @@
 <template>
-  <div>
-    <v-row>
-      <v-col>
-        <gokb-state-field
-          v-model="localPriceType"
-          message-path="component.tipp.prices.priceType"
-          url="refdata/categories/Price.type"
-          return-object
-          required
-          :label="$t('component.tipp.prices.priceType.label')"
-        />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="8">
-        <vuetify-money
-          v-model="localPrice"
-          :label="$tc('component.tipp.prices.label')"
-          :disabled="disabled"
-          required
-          clearable
-          dense
-        />
-      </v-col>
-      <v-col cols="4">
-        <gokb-select-field
-          v-model="localCurrency"
-          :items="allCurrencies"
-          return-object
-          required
-          dense
-          :label="$tc('component.tipp.prices.currency.label')"
-        />
-      </v-col>
-    </v-row>
-  </div>
+  <v-row class="mt-4">
+    <v-col cols="8">
+      <vuetify-money
+        v-model="localPrice"
+        :label="$tc('component.tipp.prices.price.label')"
+        :disabled="disabled"
+        dense
+      />
+    </v-col>
+    <v-col cols="4">
+      <gokb-select-field
+        v-model="localCurrency"
+        :items="allCurrencies"
+        return-object
+        required
+        dense
+        :label="$tc('component.tipp.prices.currency.label')"
+      />
+    </v-col>
+  </v-row>
 </template>
 <script>
-  import GokbStateField from '@/shared/components/simple/gokb-state-field'
-
   const CURRENCIES = [{ name: 'EUR' }, { name: 'GBP' }, { name: 'USD' }]
 
   export default {
     name: 'GokbPriceField',
-    components: { GokbStateField },
     props: {
       disabled: {
         type: Boolean,
@@ -78,14 +59,6 @@
         },
         set (currency) {
           this.$emit('input', { price: this.value.price, currency, priceType: this.value.priceType })
-        }
-      },
-      localPriceType: {
-        get () {
-          return this.value.priceType
-        },
-        set (type) {
-          this.$emit('input', { priceType: type, currency: this.value.currency, price: this.value.price })
         }
       },
       allCurrencies () {

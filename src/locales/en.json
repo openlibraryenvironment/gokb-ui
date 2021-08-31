@@ -572,6 +572,9 @@
       },
       "prices": {
         "label": "Price | Prices",
+        "price": {
+          "label": "Amount"
+        },
         "currency": {
           "label": "Currency | Currencies"
         },
@@ -592,6 +595,12 @@
           "subscription": {
             "label": "Subscription"
           }
+        },
+        "startDate": {
+          "label": "Start Date"
+        },
+        "endDate": {
+          "label": "End Date"
         }
       },
       "name": "Package-specific name",

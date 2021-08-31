@@ -111,7 +111,13 @@
       },
       prices () {
         return [...this.value]
-          .map(item => ({ ...item, localCurrency: (item.currency && item.currency.name), localType: (item.priceType && this.$i18n.t('component.tipp.prices.priceType.' + (item.priceType.value || item.priceType.name) + '.label')) }))
+          .map(item => ({
+            ...item,
+            localCurrency: (item.currency && item.currency.name),
+            localStart: item.startDate && item.startDate.substr(2, 10),
+            localEnd: item.endDate && item.endDate.substr(2, 10),
+            localType: (item.priceType && this.$i18n.t('component.tipp.prices.priceType.' + (item.priceType.value || item.priceType.name) + '.label'))
+          }))
       },
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
@@ -124,9 +130,10 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.t('component.tipp.prices.priceType.label'), align: 'left', value: 'localType', sortable: true },
-          { text: this.$i18n.tc('component.tipp.prices.label'), align: 'left', value: 'price', sortable: true },
+          { text: this.$i18n.tc('component.tipp.prices.price.label'), align: 'left', value: 'price', sortable: true },
           { text: this.$i18n.tc('component.tipp.prices.currency.label'), align: 'left', value: 'localCurrency', sortable: true, width: '15%' },
+          { text: this.$i18n.tc('component.tipp.prices.startDate.label'), align: 'left', value: 'localStart', sortable: true, width: '15%' },
+          { text: this.$i18n.tc('component.tipp.prices.endDate.label'), align: 'left', value: 'localEnd', sortable: true, width: '15%' },
         ]
       },
       title () {

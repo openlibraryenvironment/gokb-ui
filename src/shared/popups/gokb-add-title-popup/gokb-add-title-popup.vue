@@ -676,7 +676,7 @@
           const newTipp = {
             ...this.packageTitleItem,
             ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
-            prices: this.packageTitleItem.prices.map(price => ({ ...price, type: price.priceType, id: (typeof price.id === 'number' ? price.id : null) })),
+            prices: this.packageTitleItem.prices.map(price => ({ ...price, id: (typeof price.id === 'number' ? price.id : null) })),
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
             id: this.id
           }
