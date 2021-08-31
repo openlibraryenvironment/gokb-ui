@@ -3,6 +3,7 @@
     ref="comp"
     v-model="localValue"
     :title="$t('header.add.label', [component.name])"
+    :is-valid="isValid"
     @submit="addItem"
   >
     <component
@@ -65,8 +66,8 @@
       item: {
         deep: true,
         handler () {
-          this.$refs.comp.$refs.form.resetValidation()
           this.isValid = this.$refs.comp.$refs.form.validate()
+          console.log(this.isValid)
         }
       }
     },

@@ -38,7 +38,7 @@
       value: {
         type: Object,
         required: true,
-        default: () => ({ currency: undefined, price: undefined, priceType: undefined })
+        default: () => ({ currency: undefined, price: undefined, priceType: undefined, type: 'list' })
       },
     },
     computed: {
@@ -50,7 +50,7 @@
           return this.value.price
         },
         set (price) {
-          this.$emit('input', { price, currency: this.value.currency, priceType: this.value.priceType })
+          this.$emit('input', { price, currency: this.value.currency, priceType: this.value.priceType, type: this.value.type })
         }
       },
       localCurrency: {
@@ -58,7 +58,7 @@
           return this.value.currency
         },
         set (currency) {
-          this.$emit('input', { price: this.value.price, currency, priceType: this.value.priceType })
+          this.$emit('input', { price: this.value.price, currency, priceType: this.value.priceType, type: this.value.type })
         }
       },
       allCurrencies () {
