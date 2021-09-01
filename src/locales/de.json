@@ -925,7 +925,6 @@
       "updateNow": "Jetzt Importieren",
       "lastRun": "Letzter Durchlauf",
       "ezbMatch": "EZB-Abgleich",
-      "zdbMatch": "ZDB-Abgleich",
       "enableUpdate": "Aktiviert",
       "url": "URL",
       "frequency": {
