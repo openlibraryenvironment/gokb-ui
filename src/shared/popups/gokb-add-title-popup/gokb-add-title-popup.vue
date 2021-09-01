@@ -632,10 +632,13 @@
     methods: {
       async submitTipp () {
         if (this.selected && typeof this.selected.id === 'number') {
+          const activeGroup = accountModel.activeGroup()
+
           const newTipp = {
             ...this.packageTitleItem,
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
-            id: this.id
+            id: this.id,
+            activeGroup: activeGroup
           }
 
           const response = await this.catchError({

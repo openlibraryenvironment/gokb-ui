@@ -836,6 +836,8 @@
             }
           }
 
+          this.activeGroup = accountModel.activeGroup()
+
           const newPackage = {
             ...this.packageItem,
             id: this.id,
@@ -849,6 +851,7 @@
             fixed: utils.asYesNo(this.packageItem.fixed),
             nominalPlatform: this.packageItem.nominalPlatform?.id,
             provider: this.packageItem.provider?.id,
+            activeGroup: this.activeGroup
           }
 
           if (this.kbart || this.urlUpdate) {
@@ -869,7 +872,8 @@
               var pars = {
                 processOption: 'kbart',
                 ...namespace,
-                pkgId: response.data.id
+                pkgId: response.data.id,
+                activeGroup: this.activeGroup?.id || null
               }
 
               if (this.kbart) {

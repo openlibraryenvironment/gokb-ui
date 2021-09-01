@@ -690,11 +690,14 @@
         this[actionMethodName](actionMethodParameter)
       },
       async update () {
+        const activeGroup = accountModel.activeGroup()
+
         const newTipp = {
           ...this.packageTitleItem,
           name: this.allNames.name,
           publicationType: this.packageTitleItem.publicationType && this.packageTitleItem.publicationType.name,
-          id: this.id
+          id: this.id,
+          activeGroup: activeGroup
         }
 
         const response = await this.catchError({
