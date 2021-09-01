@@ -785,7 +785,6 @@
             update: false,
             url: undefined,
             ezbMatch: false,
-            zdbMatch: false,
             automaticUpdates: false,
             targetNamespace: options.selectedNamespace,
             duration: undefined,
