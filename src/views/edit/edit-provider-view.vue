@@ -422,6 +422,8 @@
       async update () {
         var isUpdate = !!this.id
 
+        const activeGroup = accountModel.activeGroup()
+
         const data = {
           id: this.id,
           name: this.allNames.name,
@@ -434,7 +436,8 @@
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
           providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null })),
           titleNamespace: this.titleNamespace,
-          packageNamespace: this.packageNamespace
+          packageNamespace: this.packageNamespace,
+          activeGroup: activeGroup
         }
         const response = await this.catchError({
           promise: providerServices.createOrUpdateProvider(data, this.cancelToken.token),

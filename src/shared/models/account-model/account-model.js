@@ -4,6 +4,7 @@ const api = (vue, accountServices) => {
     loggedIn: false,
     username: undefined,
     userLocale: undefined,
+    activeGroup: undefined,
     tabbedView: true,
     darkMode: false,
     id: undefined,
@@ -35,6 +36,10 @@ const api = (vue, accountServices) => {
       return state.darkMode
     },
 
+    activeGroup () {
+      return state.activeGroup
+    },
+
     userLocale () {
       return state.userLocale
     },
@@ -47,6 +52,10 @@ const api = (vue, accountServices) => {
         state.roles = result.roles
         state.username = result.username
       }
+    },
+
+    setActiveGroup (group) {
+      state.activeGroup = group
     },
 
     setLocale (lcl) {
