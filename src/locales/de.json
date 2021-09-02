@@ -718,7 +718,10 @@
     "identifier": {
       "label": "Identifikator | Identifikatoren",
       "value": "Wert",
-      "namespace": "Namensraum | Namensräume"
+      "namespace": "Namensraum | Namensräume",
+      "validation": {
+        "pattern": "Der eingegebene Wert hat ein ungültiges Format."
+      }
     },
     "user": {
       "label": "Benutzer | Benutzer",

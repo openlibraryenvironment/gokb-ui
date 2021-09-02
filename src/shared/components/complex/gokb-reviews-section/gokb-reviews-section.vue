@@ -226,7 +226,7 @@
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.review.label', 2) + ' (' + this.group.name + ')' : undefined
+        return this.showTitle ? (this.group ? this.$i18n.tc('component.review.label', 2) + ' (' + this.group.name + ')' : this.$i18n.tc('component.review.label', 2)) : undefined
       }
     },
     watch: {

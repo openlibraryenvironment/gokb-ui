@@ -265,6 +265,7 @@
             <gokb-identifier-section
               v-model="ids"
               :show-title="false"
+              :target-type="currentType"
               :disabled="isReadonly"
               :api-errors="errors.ids"
               @update="addPendingChange"
@@ -337,6 +338,7 @@
       <gokb-identifier-section
         v-model="ids"
         :disabled="isReadonly"
+        :target-type="currentType"
         :api-errors="errors.ids"
       />
       <gokb-publisher-section
