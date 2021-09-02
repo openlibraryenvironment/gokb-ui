@@ -111,7 +111,6 @@
           url: undefined,
           targetNamespace: undefined,
           ezbMatch: undefined,
-          zdbMatch: undefined,
           automaticUpdates: undefined,
           update: false
         },
@@ -202,7 +201,6 @@
             this.item.name = result.data.name
             this.item.url = result.data.url
             this.item.automaticUpdates = result.data.automaticUpdates
-            this.item.zdbMatch = result.data.zdbMatch
             this.item.ezbMatch = result.data.ezbMatch
           }
         }
