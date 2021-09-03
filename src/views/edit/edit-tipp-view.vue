@@ -705,13 +705,16 @@
         this[actionMethodName](actionMethodParameter)
       },
       async update () {
+        const activeGroup = accountModel.activeGroup()
+
         const newTipp = {
           ...this.packageTitleItem,
           ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
           prices: this.packageTitleItem.prices.map(price => ({ ...price, id: (typeof price.id === 'number' ? price.id : null) })),
           name: this.allNames.name,
           publicationType: this.packageTitleItem.publicationType && this.packageTitleItem.publicationType.name,
-          id: this.id
+          id: this.id,
+          activeGroup: activeGroup
         }
 
         const response = await this.catchError({

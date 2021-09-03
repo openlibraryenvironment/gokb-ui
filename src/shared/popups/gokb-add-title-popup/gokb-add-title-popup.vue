@@ -673,12 +673,15 @@
     methods: {
       async submitTipp () {
         if (this.selected && typeof this.selected.id === 'number') {
+          const activeGroup = accountModel.activeGroup()
+
           const newTipp = {
             ...this.packageTitleItem,
             ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
             prices: this.packageTitleItem.prices.map(price => ({ ...price, id: (typeof price.id === 'number' ? price.id : null) })),
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
-            id: this.id
+            id: this.id,
+            activeGroup: activeGroup
           }
 
           const response = await this.catchError({

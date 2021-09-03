@@ -726,7 +726,10 @@
     "identifier": {
       "label": "Identifier | Identifiers",
       "value": "Value",
-      "namespace": "Namespace | Namespaces"
+      "namespace": "Namespace | Namespaces",
+      "validation": {
+        "pattern": "The entered value does not meet the format requirements."
+      }
     },
     "user": {
       "label": "User | Users",
@@ -933,7 +936,6 @@
       "updateNow": "Import Now",
       "lastRun": "Last Run",
       "ezbMatch": "Match EZB",
-      "zdbMatch": "Match ZDB",
       "enableUpdate": "Activated",
       "url": "URL",
       "frequency": {

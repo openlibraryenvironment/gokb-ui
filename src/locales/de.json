@@ -727,7 +727,10 @@
     "identifier": {
       "label": "Identifikator | Identifikatoren",
       "value": "Wert",
-      "namespace": "Namensraum | Namensräume"
+      "namespace": "Namensraum | Namensräume",
+      "validation": {
+        "pattern": "Der eingegebene Wert hat ein ungültiges Format."
+      }
     },
     "user": {
       "label": "Benutzer | Benutzer",
@@ -934,7 +937,6 @@
       "updateNow": "Jetzt Importieren",
       "lastRun": "Letzter Durchlauf",
       "ezbMatch": "EZB-Abgleich",
-      "zdbMatch": "ZDB-Abgleich",
       "enableUpdate": "Aktiviert",
       "url": "URL",
       "frequency": {

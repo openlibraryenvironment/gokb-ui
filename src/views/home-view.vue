@@ -24,21 +24,11 @@
     v-else
     title="Dashboard"
   >
-    <div v-if="isContrib">
-      <template v-for="group in groups">
-        <v-row :key="group.id">
-          <v-col>
-            <div class="text-h4 ml-3  ">
-              {{ group.name }}
-            </div>
-            <gokb-reviews-section
-              :key="group.id"
-              :group="group.id"
-              :user="true"
-            />
-          </v-col>
-        </v-row>
-      </template>
+    <div v-if="isContrib && activeGroup">
+      <gokb-reviews-section
+        :group="activeGroup"
+        :user="true"
+      />
       <gokb-jobs-section v-model="groupId" />
     </div>
     <gokb-packages-section
@@ -73,6 +63,9 @@
       },
       isContrib () {
         return this.loggedIn && account.hasRole('ROLE_CONTRIBUTOR')
+      },
+      activeGroup () {
+        return account.activeGroup()
       }
     },
     watch: {

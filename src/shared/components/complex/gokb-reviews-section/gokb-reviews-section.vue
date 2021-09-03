@@ -91,7 +91,7 @@
         default: false
       },
       group: {
-        type: Number,
+        type: Object,
         required: false,
         default: undefined
       },
@@ -226,13 +226,19 @@
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.review.label', 2) : undefined
+        return this.showTitle ? (this.group ? this.$i18n.tc('component.review.label', 2) + ' (' + this.group.name + ')' : this.$i18n.tc('component.review.label', 2)) : undefined
       }
     },
     watch: {
       searchFilters: {
         handler (val) {
           this.reviewsOptions.page = 1
+          this.retrieveReviews()
+        },
+        deep: true
+      },
+      group: {
+        handler (grp) {
           this.retrieveReviews()
         },
         deep: true
@@ -258,7 +264,7 @@
         })
 
         if (this.group) {
-          searchParams.allocatedGroups = this.group
+          searchParams.allocatedGroups = this.group.id
         }
 
         if (this.reviewComponent) {

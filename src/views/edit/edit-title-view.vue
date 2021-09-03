@@ -265,6 +265,7 @@
             <gokb-identifier-section
               v-model="ids"
               :show-title="false"
+              :target-type="currentType"
               :disabled="isReadonly"
               :api-errors="errors.ids"
               @update="addPendingChange"
@@ -337,6 +338,7 @@
       <gokb-identifier-section
         v-model="ids"
         :disabled="isReadonly"
+        :target-type="currentType"
         :api-errors="errors.ids"
       />
       <gokb-publisher-section
@@ -573,6 +575,8 @@
         this.errors = {}
         var isUpdate = !!this.id
 
+        const activeGroup = accountModel.activeGroup()
+
         const data = {
           id: this.id,
           name: this.allNames.name,
@@ -591,7 +595,8 @@
           medium: this.titleItem.medium,
           OAStatus: (!this.titleItem.OAStatus || typeof this.titleItem.OAStatus === 'number') ? this.titleItem.OAStatus : this.titleItem.OAStatus.id,
           status: this.titleItem.status,
-          publisher: this.publishers.map(pub => pub.id)
+          publisher: this.publishers.map(pub => pub.id),
+          activeGroup: activeGroup
         }
         const response = await this.catchError({
           promise: titleServices.createOrUpdateTitle(data, this.cancelToken.token),

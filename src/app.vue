@@ -187,6 +187,19 @@
         style="max-width:80px"
         dense
       />
+      <v-select
+        v-if="loggedIn"
+        v-model="activeGroup"
+        offset-y
+        :items="groups"
+        item-text="name"
+        item-value="id"
+        :title="$tc('component.curatoryGroup.label')"
+        class="pt-2 ma-2"
+        style="max-width:150px"
+        return-object
+        dense
+      />
       <!-- <v-menu
         ref="actions-menu"
         :disabled="canCreate"
@@ -239,6 +252,7 @@
   import { ROLE_ADMIN, ROLE_EDITOR } from '@/shared/models/roles'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
+  import profileServices from '@/shared/services/profile-services'
   import update from './mixins/update'
   import { version } from '../package.json'
   import {
@@ -268,7 +282,8 @@
       globalSearchIsLoading: false,
 
       dialog: false,
-      locales: ['de', 'en']
+      locales: ['de', 'en'],
+      groups: []
     }),
     computed: {
       visibleItems () {
@@ -306,6 +321,14 @@
           }
         }
       },
+      activeGroup: {
+        get () {
+          return accountModel.activeGroup()
+        },
+        set (group) {
+          accountModel.setActiveGroup(group)
+        }
+      },
       canCreate () {
         return accountModel.hasRole('ROLE_CONTRIBUTOR')
       },
@@ -314,6 +337,9 @@
       },
       currentVersion () {
         return version
+      },
+      loggedIn () {
+        return accountModel.loggedIn()
       },
       typeRoutes () {
         return [
@@ -381,6 +407,13 @@
       },
       '$i18n.locale' (l) {
         document.title = this.$i18n.t(this.$route.meta.code)
+      },
+      loggedIn (val) {
+        if (val) {
+          this.loadGroups()
+        } else {
+          this.groups = []
+        }
       }
     },
     mounted () {
@@ -407,8 +440,25 @@
       toggleDarkMode () {
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark
         accountModel.toggleDarkMode(this.$vuetify.theme.dark)
+      },
+      async loadGroups () {
+        this.cancelToken = createCancelToken()
+
+        const {
+          data: {
+            data: {
+              curatoryGroups
+            }
+          }
+        } = await profileServices.getProfile(this.cancelToken.token)
+
+        this.groups = curatoryGroups
+
+        if (!this.activeGroup && this.groups.length > 0) {
+          this.activeGroup = curatoryGroups[0]
+        }
       }
-    }
+    },
   }
 </script>
 
