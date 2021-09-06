@@ -265,6 +265,12 @@
     </v-row>
 
     <template #buttons>
+      <gokb-button
+        :disabled="isReadonly"
+        @click="escalate"
+      >
+        {{ $t('btn.escalate') }}
+      </gokb-button>
       <v-spacer />
       <gokb-button
         @click="close"
@@ -388,6 +394,10 @@
     methods: {
       close () {
         this.localValue = false
+      },
+      escalate () {
+        this.localValue = true
+        // TODO: was hier?
       },
       async fetch (rid) {
         const {
