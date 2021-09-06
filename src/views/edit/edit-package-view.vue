@@ -99,7 +99,6 @@
                   :items="providerSelection"
                   :show-link="true"
                   :readonly="isReadonly"
-                  required
                   return-object
                 />
               </gokb-section>
@@ -116,7 +115,6 @@
                   v-model="packageItem.nominalPlatform"
                   :items="platformSelection"
                   :readonly="isReadonly"
-                  required
                   return-object
                 />
               </gokb-section>

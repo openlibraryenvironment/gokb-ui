@@ -4,6 +4,7 @@
     :hide-default="!expanded"
     :sub-title="title"
     :items-total="totalNumberOfItems"
+    :mark-required="markRequired"
     :errors="!!apiErrors"
   >
     <gokb-add-item-popup
@@ -90,6 +91,16 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      rules: {
+        type: Array,
+        required: false,
+        default: undefined
+      },
+      markRequired: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

@@ -7,13 +7,29 @@
       v-if="localLabel"
       style="font-size:0.8rem"
     >
-      <label class="text-caption">{{ label }}</label>
+      <label class="text-caption">
+        {{ label }}
+        <span
+          v-if="required"
+          style="color:red"
+        >
+          *
+        </span>
+      </label>
     </div>
     <div
       v-else
       style="font-size:1.1rem"
     >
-      <label class="text-caption">{{ label }}</label>
+      <label class="text-caption">
+        {{ label }}
+        <span
+          v-if="required"
+          style="color:red"
+        >
+          *
+        </span>
+      </label>
     </div>
     <router-link
       v-if="componentRoute"
@@ -26,7 +42,9 @@
       v-else
       style="font-size:1.1rem"
     >
-      <label class="v-label">{{ localLabel }}</label>
+      <label class="v-label">
+        {{ localLabel }}
+      </label>
     </span>
     <v-divider />
   </div>
@@ -37,7 +55,7 @@
     :label="label"
     :loading="loading"
     :placeholder="placeholder"
-    :rules="rules"
+    :rules="activeRules"
     :dense="dense"
     :search-input.sync="search"
     :item-text="itemText"
@@ -47,7 +65,17 @@
     hide-details
     hide-no-data
     no-filter
-  />
+  >
+    <template #label>
+      {{ label }}
+      <span
+        v-if="required"
+        style="color:red"
+      >
+        *
+      </span>
+    </template>
+  </v-combobox>
   <v-autocomplete
     v-else
     v-model="localValue"
@@ -55,7 +83,7 @@
     :label="label"
     :loading="loading"
     :placeholder="placeholder"
-    :rules="rules"
+    :rules="activeRules"
     :dense="dense"
     :search-input.sync="search"
     :item-text="itemText"
@@ -65,6 +93,15 @@
     clearable
     hide-no-data
   >
+    <template #label>
+      {{ label }}
+      <span
+        v-if="required"
+        style="color:red"
+      >
+        *
+      </span>
+    </template>
     <template v-slot:selection="data">
       <router-link
         v-if="showLink"
@@ -134,12 +171,16 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      required: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
       return {
         placeholder: undefined,
-        rules: undefined,
         loading: false,
         mainParam: 'q',
         items: [],
@@ -170,6 +211,9 @@
       },
       componentRoute () {
         return this.knownRoutes?.[this.value?.type] || null
+      },
+      activeRules () {
+        return [v => !!v || !this.required || this.$i18n.t('validation.missingSelection')]
       }
     },
     watch: {

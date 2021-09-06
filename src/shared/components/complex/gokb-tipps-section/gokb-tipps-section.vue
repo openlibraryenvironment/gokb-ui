@@ -7,6 +7,7 @@
       :sub-title="title"
       :items-total="totalNumberOfItems"
       :errors="!!apiErrors"
+      :mark-required="required"
     >
       <span v-if="successMessage">
         <v-alert type="success">
@@ -48,7 +49,7 @@
               v-on="on"
             >
               <v-icon>add</v-icon>
-              {{ $t('btn.new') }}
+              {{ $t('btn.add') }}
               <v-icon>keyboard_arrow_down</v-icon>
             </v-btn>
           </template>
@@ -122,6 +123,7 @@
         :editable="isEditable"
         :selected-items="selectedItems"
         :total-number-of-items="totalNumberOfItems"
+        :show-loading="isLoading"
         :options.sync="options"
         @selected-items="selectedItems = $event"
         @delete-item="confirmDeleteItem"
@@ -209,6 +211,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      required: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -243,7 +250,8 @@
         itemCount: 0,
         newItemCount: 0,
         interval: null,
-        linkValue: 'title'
+        linkValue: 'title',
+        loading: false
       }
     },
     computed: {
@@ -288,6 +296,9 @@
       },
       title () {
         return this.showTitle ? this.$i18n.tc('component.tipp.label', 2) : undefined
+      },
+      isLoading () {
+        return this.loading
       }
     },
     watch: {
@@ -410,6 +421,8 @@
             }
           })
 
+          this.loading = true
+
           const result = await this.catchError({
             promise: searchService.getTipps(reqId, {
               ...(searchParams || {}),
@@ -463,6 +476,8 @@
 
             this.$emit('update', this.itemCount)
           }
+
+          this.loading = false
         }
       }
     }

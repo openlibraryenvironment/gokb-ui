@@ -13,7 +13,13 @@
         <span
           class="text-h5 text-no-wrap"
         >
-          {{ title }} <span v-if="markRequired">(<span style="color:red">*</span>)</span>
+          {{ title }}
+          <span
+            v-if="markRequired"
+            style="color:red"
+          >
+            *
+          </span>
         </span>
         <v-spacer />
         <v-toolbar-items
@@ -27,7 +33,13 @@
         v-else-if="title && subTitle"
         class="text-h5 ml-4 text-no-wrap"
       >
-        {{ subTitle }} <span v-if="markRequired">(<span style="color:red">*</span>)</span>
+        {{ subTitle }}
+        <span
+          v-if="markRequired"
+          style="color:red"
+        >
+          *
+        </span>
       </span>
       <v-toolbar
         v-else-if="!title && subTitle"
@@ -38,7 +50,13 @@
           v-if="subTitle"
           class="text-h6 text-no-wrap"
         >
-          {{ subTitle }} <span v-if="markRequired">(<span style="color:red">*</span>)</span>
+          {{ subTitle }}
+          <span
+            v-if="markRequired"
+            style="color:red"
+          >
+            *
+          </span>
         </span>
         <v-chip
           v-if="itemsTotal !== undefined && itemsTotal !== -1"

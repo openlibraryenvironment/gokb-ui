@@ -1,6 +1,14 @@
 <template>
   <div>
-    <span>{{ label }} <span v-if="!disabled && markRequired">(<span style="color:red">*</span>)</span></span>
+    <span>
+      {{ label }}
+      <span
+        v-if="!disabled && markRequired"
+        style="color:red"
+      >
+        *
+      </span>
+    </span>
     <v-banner>
       <span
         style="font-size:1.1rem"

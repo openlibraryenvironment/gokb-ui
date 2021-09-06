@@ -302,6 +302,7 @@
           >
             <gokb-reviews-section
               :review-component="titleItem"
+              :show-title="false"
               :api-errors="errors.reviewRequests"
               @update="refreshReviewsCount"
             />
@@ -541,6 +542,9 @@
       },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
+      },
+      isValid () {
+        return !!this.allNames.name
       }
     },
     watch: {

@@ -1,27 +1,11 @@
 <template>
   <gokb-section
     :expandable="expandable"
+    filters
     :sub-title="title"
     :items-total="totalNumberOfReviews"
   >
     <template #buttons>
-      <gokb-state-field
-        v-model="searchFilters.stdDesc"
-        class="mr-4"
-        message-path="component.review.stdDesc"
-        url="refdata/categories/ReviewRequest.StdDesc"
-        :label="$t('component.review.type')"
-      />
-      <gokb-state-field
-        v-model="searchFilters.status"
-        class="mr-4"
-        width="200px"
-        :init-item="$t('component.review.status.Open.label')"
-        message-path="component.review.status"
-        url="refdata/categories/ReviewRequest.Status"
-        :label="$t('component.general.status.label')"
-        return-object
-      />
       <gokb-add-review-popup
         v-if="addReviewPopupVisible"
         v-model="addReviewPopupVisible"
@@ -51,6 +35,25 @@
           mdi-refresh
         </v-icon>
       </v-btn>
+    </template>
+    <template #search>
+      <gokb-state-field
+        v-model="searchFilters.stdDesc"
+        class="mr-4"
+        message-path="component.review.stdDesc"
+        url="refdata/categories/ReviewRequest.StdDesc"
+        :label="$t('component.review.type')"
+      />
+      <gokb-state-field
+        v-model="searchFilters.status"
+        class="mr-4"
+        width="200px"
+        :init-item="$t('component.review.status.Open.label')"
+        message-path="component.review.status"
+        url="refdata/categories/ReviewRequest.Status"
+        :label="$t('component.general.status.label')"
+        return-object
+      />
     </template>
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"

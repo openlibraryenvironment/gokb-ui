@@ -14,6 +14,7 @@
       :server-items-length="totalNumberOfItems"
       hide-default-footer
       :item-key="itemKey"
+      :loading="showLoading"
       :show-select="showSelect"
       :must-sort="true"
       dense
@@ -186,6 +187,11 @@
         required: true,
       },
       actions: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      showLoading: {
         type: Boolean,
         required: false,
         default: false

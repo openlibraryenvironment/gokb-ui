@@ -2,7 +2,7 @@
   <gokb-dialog
     v-model="localValue"
     :title="header"
-    :width="1350"
+    :width="1000"
     @submit="submitTipp"
   >
     <gokb-error-component :value="error" />
@@ -67,6 +67,7 @@
       <v-col>
         <gokb-section
           expandable
+          :mark-required="!isReadonly"
           :sub-title="$t('component.tipp.access.label')"
         >
           <v-row
@@ -79,6 +80,7 @@
                 :items="platformSelection"
                 :label="$tc('component.platform.label')"
                 :readonly="isEdit || isReadonly"
+                required
                 dense
                 return-object
               />
@@ -115,12 +117,24 @@
               <gokb-url-field
                 v-model="packageTitleItem.url"
                 :disabled="isReadonly"
+                required
                 dense
                 :label="$tc('component.tipp.url.label')"
               />
             </v-col>
           </v-row>
         </gokb-section>
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col>
+        <gokb-identifier-section
+          v-model="packageTitleItem.ids"
+          :target-type="titleTypeString"
+          :mark-required="!isEdit"
+          :disabled="isReadonly"
+          :expanded="false"
+        />
       </v-col>
     </v-row>
     <v-row dense>
@@ -255,16 +269,6 @@
             </v-col>
           </v-row>
         </div>
-      </v-col>
-    </v-row>
-    <v-row dense>
-      <v-col>
-        <gokb-identifier-section
-          v-model="packageTitleItem.ids"
-          :target-type="titleTypeString"
-          :disabled="isReadonly"
-          :expanded="false"
-        />
       </v-col>
     </v-row>
     <v-row dense>

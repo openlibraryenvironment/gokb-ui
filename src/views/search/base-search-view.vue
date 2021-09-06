@@ -87,6 +87,7 @@
         :hide-select="!showSelect"
         :options.sync="resultOptions"
         :total-number-of-items="totalNumberOfItems"
+        :show-loading="isLoading"
         :selected-items="selectedItems"
         @selected-items="selectedItems = $event"
         @paginate="resultPaginate"
@@ -127,7 +128,8 @@
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
-        accessible: true
+        accessible: true,
+        loading: false
       }
     },
     computed: {
@@ -145,6 +147,9 @@
       },
       showSelect () {
         return false
+      },
+      isLoading () {
+        return this.loading
       }
     },
     watch: {
@@ -246,6 +251,8 @@
           limit: this.resultOptions.itemsPerPage
         }
 
+        this.loading = true
+
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...searchParameters,
@@ -266,6 +273,8 @@
           this.totalNumberOfItems = _pagination.total
           this.resultItems = this._transformForTable(data)
         }
+
+        this.loading = false
       },
       executeAction (actionMethodName, actionMethodParameter) {
         actionMethodName && this[actionMethodName](actionMethodParameter)
