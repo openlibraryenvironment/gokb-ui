@@ -771,7 +771,7 @@
     },
     "review": {
       "label": "Review | Reviews",
-      "request": "Title",
+      "request": "Request",
       "type": "Type",
       "cause": "Cause",
       "componentToReview": "Component",

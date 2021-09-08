@@ -5,10 +5,21 @@
     :readonly="readonly"
     rows="1"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
+    :required="required"
     validate-on-blur
     auto-grow
     clearable
-  />
+  >
+    <template #label>
+      {{ label }}
+      <span
+        v-if="required"
+        style="color:red"
+      >
+        *
+      </span>
+    </template>
+  </v-textarea>
 </template>
 
 <script>
@@ -50,6 +61,7 @@
       required: {
         type: Boolean,
         required: false,
+        default: false,
       },
       hideIcon: {
         type: Boolean,

@@ -137,7 +137,8 @@
           </div>
           <gokb-text-field
             v-else
-            v-model="reviewItem.request"
+            v-model="reviewItem.description"
+            required
             :disabled="isEdit"
             :label="$i18n.t('component.review.cause')"
           />
@@ -256,7 +257,8 @@
           </div>
           <gokb-textarea-field
             v-else
-            v-model="reviewItem.description"
+            v-model="reviewItem.request"
+            required
             :disabled="isEdit"
             :label="$i18n.t('component.review.request')"
           />
@@ -272,7 +274,8 @@
         {{ $t('btn.close') }}
       </gokb-button>
       <gokb-button
-        :disabled="isReadonly"
+        v-if="!isReadonly"
+        :disabled="!isValid"
         default
       >
         {{ isEdit ? $t('btn.update') : $t('btn.create') }}
@@ -360,6 +363,9 @@
       isEdit () {
         return !!this.id
       },
+      isValid () {
+        return (!!this.reviewItem.request && !!this.reviewItem.description) || this.stdDesc
+      },
       stdDesc () {
         return this.selectedItem?.stdDesc || undefined
       },
@@ -430,8 +436,8 @@
           id: this.id,
           status: this.reviewItem.status?.id || null,
           stdDesc: this.reviewItem.stdDesc?.id || null,
-          reviewRequest: this.reviewItem.request,
-          descriptionOfCause: this.reviewItem.description,
+          reviewRequest: this.reviewItem.request || this.$i18n.t('component.review.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.action'),
+          descriptionOfCause: this.reviewItem.description || this.$i18n.t('component.review.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.info'),
           activeGroup,
           componentToReview: this.reviewItem.component.id,
           additionalInfo: { otherComponents: this.reviewItem.otherComponents }

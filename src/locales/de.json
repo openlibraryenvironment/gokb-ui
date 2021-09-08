@@ -772,7 +772,7 @@
     },
     "review": {
       "label": "Prüfanfrage | Prüfanfragen",
-      "request": "Titel",
+      "request": "Anfrage",
       "type": "Typ",
       "cause": "Ursache",
       "componentToReview": "Komponente",
