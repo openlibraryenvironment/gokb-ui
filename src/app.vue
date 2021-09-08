@@ -20,7 +20,7 @@
             :to="item.route"
           >
             <v-list-item-action>
-              <v-icon color="#F2994A">
+              <v-icon color="accent">
                 {{ item.icon }}
               </v-icon>
             </v-list-item-action>

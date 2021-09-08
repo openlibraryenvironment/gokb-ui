@@ -82,23 +82,23 @@
               <template v-slot:0>
                 <router-link
                   v-if="numMessageVars > 0 && typeof additionalInfo.vars[0] === 'number'"
-                  :style="{ color: '#f2994a' }"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
+                  :style="{ color: '#f2994a' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
                 <b v-else-if="numMessageVars > 0">{{ additionalInfo.vars[0] }}</b>
                 <router-link
                   v-else-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
-                  :style="{ color: '#f2994a' }"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
+                  :style="{ color: '#f2994a' }"
                 >
                   {{ reviewItem.otherComponents[0].name }}
                 </router-link>
                 <router-link
                   v-else-if="reviewItem.component"
-                  :style="{ color: '#f2994a' }"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
+                  :style="{ color: '#f2994a' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
@@ -240,13 +240,14 @@
                   v-if="reviewItem.otherComponents && reviewItem.otherComponents.size > 0"
                   :style="{ color: '#f2994a' }"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
+                  color="primary"
                 >
                   {{ reviewItem.otherComponents[0].name }}
                 </router-link>
                 <router-link
                   v-else-if="reviewItem.component"
-                  :style="{ color: '#f2994a' }"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
+                  :style="{ color: '#f2994a' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
@@ -423,12 +424,15 @@
         this.deleteUrl = _links?.delete?.href || undefined
       },
       async save () {
+        const activeGroup = accountModel.activeGroup()
+
         const newReview = {
           id: this.id,
           status: this.reviewItem.status?.id || null,
           stdDesc: this.reviewItem.stdDesc?.id || null,
           reviewRequest: this.reviewItem.request,
           descriptionOfCause: this.reviewItem.description,
+          activeGroup,
           componentToReview: this.reviewItem.component.id,
           additionalInfo: { otherComponents: this.reviewItem.otherComponents }
         }

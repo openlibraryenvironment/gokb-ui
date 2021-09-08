@@ -11,8 +11,12 @@
         :value="isValid"
         @submit.prevent="doSubmit"
       >
-        <v-toolbar color="#F2994A">
-          <v-toolbar-title>{{ title }}</v-toolbar-title>
+        <v-toolbar
+          color="accent"
+        >
+          <v-toolbar-title>
+            {{ title }}
+          </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <slot />

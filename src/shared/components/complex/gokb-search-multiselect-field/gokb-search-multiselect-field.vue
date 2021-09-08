@@ -10,6 +10,7 @@
       >
         <v-checkbox
           v-model="localValue"
+          color="primary"
           :label="option.label"
           :value="option.key"
           :disabled="disabled"

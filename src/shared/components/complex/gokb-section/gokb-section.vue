@@ -109,7 +109,7 @@
       <v-card-text v-show="expanded">
         <div
           class="pa-2"
-          :class="[darkMode ? 'controls-dark' : 'controls' ]"
+          :class="[!clearBackground ? (darkMode ? 'controls-dark' : 'controls') : '']"
         >
           <slot />
         </div>
@@ -168,6 +168,11 @@
         default: undefined
       },
       markRequired: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      clearBackground: {
         type: Boolean,
         required: false,
         default: false

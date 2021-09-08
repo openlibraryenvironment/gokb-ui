@@ -123,11 +123,14 @@
         set (localValue) {
           this.$emit('input', localValue)
         }
+      },
+      isValid () {
+        return this.$refs.textField.valid
       }
     },
     methods: {
       validate () {
-        this.$refs.textField.validate()
+        return this.$refs.textField.validate()
       }
     }
   }

@@ -16,6 +16,7 @@
       <gokb-button
         v-if="isEditable"
         icon-id="add"
+        color="primary"
         @click="showAddNewCuratoryGroup"
       >
         {{ $t('btn.new') }}
@@ -24,6 +25,7 @@
         v-if="isEditable"
         class="ml-4"
         icon-id="delete"
+        color="primary"
         :disabled="isDeleteSelectedDisabled"
         @click="confirmDeleteSelectedItems"
       >

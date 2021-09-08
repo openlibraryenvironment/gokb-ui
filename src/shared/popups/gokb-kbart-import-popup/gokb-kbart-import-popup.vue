@@ -174,11 +174,6 @@
               rules: {
                 general: /^([Mm]onograph)|([Ss]erial)|([Dd]atabase)|([Oo]ther)$/
               }
-            },
-            access_type: {
-              rules: {
-                general: /^[PF]$/
-              }
             }
           },
           monograph: {
@@ -225,6 +220,13 @@
             },
             num_last_issue_online: {
               rules: {}
+            }
+          },
+          general: {
+            access_type: {
+              rules: {
+                general: /^(P|F)$/
+              }
             }
           }
         },
@@ -399,6 +401,12 @@
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
                         hasErrors = true
                       }
+                    }
+
+                    if (col.length && this.kbartStd.general[colName]?.rules.general && !this.kbartStd.general[colName]?.rules.general?.test(col)) {
+                      this.loadedFile.errors.type[colName].invalid++
+                      this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalVal', [col]) })
+                      hasErrors = true
                     }
 
                     if (colName === 'online_identifier') {

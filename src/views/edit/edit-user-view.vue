@@ -38,6 +38,7 @@
             v-model="password"
             :label="$t('component.user.password')"
             hide-icon
+            required
             autocomplete="off"
             :rules="[]"
             dense
@@ -95,6 +96,7 @@
             <gokb-button
               class="mr-4"
               icon-id="add"
+              color="primary"
               @click="showAddNewRole"
             >
               {{ $t('btn.add') }}

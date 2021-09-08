@@ -14,16 +14,18 @@ export default new Vuetify({
     themes: {
       light: {
         primary: '#4f4f4f',
-        secondary: '#bdbdbd',
-        accent: '#f2994a',
+        secondary: '#a0a0a0',
+        invert: '#fdfdfd',
+        accent: '#f2994a', // #a5141b
         error: '#eb5757',
         // warning: '',
         info: '#2d9cdb',
       },
       dark: {
-        primary: '#262626',
-        secondary: '#404040',
-        accent: '#f2994a',
+        primary: '#d9d9d9',
+        secondary: '#5b5b5b',
+        invert: '#020202',
+        accent: '#f2994a', // #a5141b
         error: '#eb5757',
         // warning: '',
         info: '#2d9cdb',

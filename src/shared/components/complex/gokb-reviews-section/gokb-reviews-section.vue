@@ -15,6 +15,7 @@
       <gokb-button
         class="mr-4"
         icon-id="add"
+        color="primary"
         @click="showAddReviewPopup"
       >
         {{ $t('btn.add') }}
@@ -22,6 +23,7 @@
       <gokb-button
         :disabled="selectedItems.length == 0"
         icon-id="delete"
+        color="primary"
         @click="confirmCloseSelectedItems"
       >
         {{ $t('btn.close') }}

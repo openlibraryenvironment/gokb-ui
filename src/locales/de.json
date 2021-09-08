@@ -917,6 +917,12 @@
           "info": "Es gibt mehrere Kandidaten für den Titel.",
           "action": "ZDB-Anreicherung verhindert",
           "toDo": "Selektieren Sie die korrekte ZDB-Aufnahme für den Titel."
+        },
+        "Coverage Mismatch": {
+          "label": "Abdeckungskonflikt",
+          "info": "Der Erscheinungszeitraums des gefundenen Referenztitels stimmt nicht der Abdeckung überein.",
+          "action": "Referenztitelauswahl verhindert",
+          "toDo": "Überprüfen Sie die Zeitangaben und damit eine manuelle Verknüpfung des Titels."
         }
       }
     },

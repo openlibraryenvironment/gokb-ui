@@ -290,7 +290,6 @@
           <gokb-tipps-section
             ref="tipps"
             :pkg="parseInt(id)"
-            :expanded="isEdit"
             :platform="packageItem.nominalPlatform"
             :default-title-namespace="providerTitleNamespace"
             :disabled="isReadonly"
@@ -499,7 +498,7 @@
       <v-spacer />
       <gokb-button
         v-if="!isInLastStep"
-        color="accent"
+        color="primary"
         :disabled="!currentStepValid"
         @click="go2NextStep"
       >

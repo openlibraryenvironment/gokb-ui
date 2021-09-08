@@ -8,6 +8,7 @@
       :items-total="totalNumberOfItems"
       :errors="!!apiErrors"
       :mark-required="required"
+      :clear-background="!ttl && !pkg"
     >
       <span v-if="successMessage">
         <v-alert type="success">
@@ -34,6 +35,7 @@
       >
         <gokb-button
           class="mr-4"
+          color="primary"
           @click="showKbartImportPopup"
         >
           KBART Import
@@ -133,7 +135,7 @@
       />
     </gokb-section>
     <gokb-section
-      v-if="(!pkg && !ttl) || newTipps.length > 0"
+      v-if="(!pkg && !ttl) && newTipps.length > 0"
       no-tool-bar
     >
       <gokb-table
@@ -458,6 +460,7 @@
                   accessEndDate: tipp.accessEndDate && tipp.accessEndDate.substr(0, 10),
                   pkg: tipp.pkg,
                   title: tipp.title,
+                  importId: tipp.importId,
                   hostPlatform: tipp.hostPlatform,
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,

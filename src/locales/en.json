@@ -916,6 +916,12 @@
           "info": "There were multiple ZDB results for this title.",
           "action": "Skipped ZDB enrichment",
           "toDo": "Select a ZDB entry from the candidates."
+        },
+        "Coverage Mismatch": {
+          "label": "Coverage Mismatch",
+          "info": "The matched global title reference has conflicting publishing dates to the coverage of this item.",
+          "action": "Skipped title linking",
+          "toDo": "Manually link the existing match or create a new title for linking."
         }
       }
     },

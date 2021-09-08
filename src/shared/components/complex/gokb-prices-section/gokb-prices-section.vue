@@ -15,13 +15,16 @@
       <gokb-button
         v-if="isEditable"
         icon-id="add"
+        color="primary"
         @click="showAddItemPopup"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
       <gokb-button
+        v-if="isEditable"
         :disabled="selectedItems.length == 0"
         class="ml-4"
+        color="primary"
         icon-id="delete"
         @click="confirmDeleteSelectedItems"
       >

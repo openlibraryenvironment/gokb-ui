@@ -39,7 +39,7 @@
             <v-col>
               <gokb-title-field
                 v-model="packageTitleItem.title"
-                :type-filter="title.type.id"
+                :type-filter="titleTypeId"
                 :label="$tc('component.title.label')"
                 dense
                 :readonly="isEdit || isReadonly"
@@ -115,6 +115,7 @@
           <v-row dense>
             <v-col>
               <gokb-url-field
+                ref="tippUrl"
                 v-model="packageTitleItem.url"
                 :disabled="isReadonly"
                 required
@@ -436,7 +437,7 @@
       </gokb-button>
       <gokb-button
         v-if="updateUrl || !id"
-        :disabled="!packageTitleItem.title"
+        :disabled="!isValid"
         class="mr-6"
         default
       >
@@ -573,13 +574,19 @@
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isJournal () {
-        return this.title?.type === 'Journal' || this.title.type.id === 'journal' || this.titleType?.id === 'Journal'
+        return this.title?.type === 'Journal' || this.title?.type?.id === 'journal' || this.titleType?.id === 'Journal'
       },
       isBook () {
         return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph'
       },
+      isValid () {
+        return !!this.allNames.name && !!this.packageTitleItem.hostPlatform && this.packageTitleItem.ids.length > 0 && this.$refs.tippUrl.isValid
+      },
       titleTypeString () {
-        return (typeof this.title.type === 'object' ? this.title.type.id : this.title.type)
+        return (typeof this.title?.type === 'object' ? this.title.type.id : this.title?.type || this.packageTitleItem.publicationType.name)
+      },
+      titleTypeId () {
+        return this.title?.type?.id || this.packageTitleItem.publicationType?.name || this.titleType?.id
       },
       expansionIcon () {
         return this.coverageExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
@@ -700,7 +707,9 @@
             console.log(response.status)
           }
         } else {
-          this.packageTitleItem.title.type = this.title.type
+          if (this.packageTitleItem.title) {
+            this.packageTitleItem.title.type = this.title.type
+          }
           this.packageTitleItem.name = this.allNames.name
 
           const newTipp = {
@@ -710,8 +719,8 @@
             ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
             prices: this.packageTitleItem.prices.map(price => ({ ...price, type: price.priceType, id: (typeof price.id === 'number' ? price.id : null) })),
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
-            popup: { value: this.packageTitleItem.title.name, label: 'tipp', type: 'GokbAddTitlePopup' },
-            link: { value: this.packageTitleItem.title.name, route: EDIT_TITLE_ROUTE, id: 'titleId' },
+            popup: { value: this.packageTitleItem.name, label: 'tipp', type: 'GokbAddTitlePopup' },
+            link: { value: (this.packageTitleItem.title?.name), route: EDIT_TITLE_ROUTE, id: 'titleId' },
             hostPlatformName: this.packageTitleItem.hostPlatform?.name,
             updateUrl: '',
             deleteUrl: '',

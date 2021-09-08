@@ -37,12 +37,14 @@
         >
           <gokb-button
             class="mr-4 mb-4"
+            color="primary"
             @click="resetSearch"
           >
             {{ $i18n.t('btn.reset') }}
           </gokb-button>
           <gokb-button
             default
+            color="accent"
             class="mr-4 mb-4"
           >
             {{ $i18n.t('btn.search') }}
@@ -68,6 +70,7 @@
             class="ms-4"
             :icon-id="button.icon"
             :to="button.route"
+            color="primary"
             :disabled="isButtonDisabled(button.disabled)"
             @click="executeAction(button.action)"
           >
