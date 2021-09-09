@@ -266,7 +266,7 @@
 
     <template #buttons>
       <gokb-button
-        :disabled="isReadonly"
+        :disabled="escalatable == true"
         @click="escalate"
       >
         {{ $t('btn.escalate') }}
@@ -394,6 +394,9 @@
     methods: {
       close () {
         this.localValue = false
+      },
+      escalatable () {
+        return reviewServices.escalatable(this.id, accountModel.activeGroup())
       },
       async escalate () {
         const response = await this.catchError({
