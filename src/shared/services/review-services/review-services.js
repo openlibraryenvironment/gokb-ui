@@ -33,6 +33,14 @@ const api = (baseServices) => ({
       url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/${id}`,
       data: { status: 'Closed' },
     }, cancelToken)
+  },
+
+  escalate (id, group) {
+    return baseServices.request({
+      method: 'PUT',
+      url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/escalate/${id}`,
+      data: { id: id, activeGroup: group }
+    })
   }
 })
 

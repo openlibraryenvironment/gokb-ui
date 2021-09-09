@@ -395,9 +395,18 @@
       close () {
         this.localValue = false
       },
-      escalate () {
-        this.localValue = true
-        // TODO: was hier?
+      async escalate () {
+        const response = await this.catchError({
+          promise: reviewServices.escalate(this.id, accountModel.activeGroup()),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.$emit('escalated', response.data)
+          this.close()
+        } else {
+          this.$emit('not_escalated', response.data)
+        }
       },
       async fetch (rid) {
         const {

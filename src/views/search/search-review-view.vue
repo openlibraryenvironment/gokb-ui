@@ -188,7 +188,7 @@
           })
         ))
         this.resultPaginate(this.resultOptions.page)
-      },
+      }
     }
   }
 </script>
