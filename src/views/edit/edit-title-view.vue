@@ -532,10 +532,10 @@
         return accountModel.loggedIn()
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''

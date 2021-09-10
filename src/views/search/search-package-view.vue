@@ -133,7 +133,8 @@
               value: 'status',
               properties: {
                 initItem: this.$i18n.t('component.general.status.Current.label'),
-                width: '100%'
+                width: '100%',
+                messagePath: 'component.general.status'
               }
             },
             {

@@ -453,6 +453,8 @@
   import tippServices from '@/shared/services/tipp-services'
   import { EDIT_TITLE_ROUTE, EDIT_TIPP_ROUTE } from '@/router/route-paths'
 
+  const URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/
+
   export default {
     name: 'GokbAddTitlePopup',
     extends: BaseComponent,
@@ -486,6 +488,7 @@
     data () {
       return {
         pprops: undefined,
+        urlValid: false,
         platformSelection: [],
         coverageExpanded: false,
         title: {
@@ -580,7 +583,7 @@
         return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph'
       },
       isValid () {
-        return !!this.allNames.name && !!this.packageTitleItem.hostPlatform && this.packageTitleItem.ids.length > 0 && this.$refs.tippUrl.isValid
+        return !!this.allNames.name && !!this.packageTitleItem.hostPlatform && this.packageTitleItem.ids.length > 0 && this.packageTitleItem.url && URL_REGEX.test(this.packageTitleItem.url)
       },
       titleTypeString () {
         return (typeof this.title?.type === 'object' ? this.title.type.id : this.title?.type || this.packageTitleItem.publicationType.name)
@@ -595,10 +598,10 @@
         return this.coverageExpanded
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale) : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale) : ''
       },
       localValue: {
         get () {
@@ -657,8 +660,8 @@
 
         if (this.selectedItem?.coverageStatements?.length) {
           this.packageTitleItem.coverageStatements = this.selectedItem.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
-            startDate: startDate?.substr(0, 10),
-            endDate: endDate?.substr(0, 10),
+            startDate: startDate && this.buildDateString(startDate),
+            endDate: endDate && this.buildDateString(endDate),
             coverageDepth,
             coverageNote,
             startIssue,

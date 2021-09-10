@@ -121,6 +121,7 @@
     <div class="text-center pt-2">
       <v-pagination
         v-model="options.page"
+        color="secondary"
         :disabled="disabled"
         :length="pages"
         :total-visible="7"

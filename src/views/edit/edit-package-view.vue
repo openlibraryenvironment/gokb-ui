@@ -713,13 +713,13 @@
         return accountModel.loggedIn()
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
       localListVerifiedDate () {
-        return this.listVerifiedDate ? new Date(this.listVerifiedDate).toISOString().substr(0, 10) : ''
+        return this.listVerifiedDate ? this.buildDateString(this.listVerifiedDate) : ''
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined

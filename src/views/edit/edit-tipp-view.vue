@@ -650,10 +650,10 @@
         return this.coverageExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
@@ -757,13 +757,13 @@
           this.lastUpdated = data.lastUpdated
           this.packageTitleItem.paymentType = data.paymentType
           this.packageTitleItem.url = data.url
-          this.packageTitleItem.accessStartDate = data.accessStartDate?.substr(0, 10)
-          this.packageTitleItem.accessEndDate = data.accessEndDate?.substr(0, 10)
+          this.packageTitleItem.accessStartDate = this.buildDateString(data.accessStartDate)
+          this.packageTitleItem.accessEndDate = this.buildDateString(data.accessEndDate)
           this.packageTitleItem.series = data.series
           this.packageTitleItem.subjectArea = data.subjectArea
           this.packageTitleItem.publisherName = data.publisherName
-          this.packageTitleItem.dateFirstInPrint = data.dateFirstInPrint?.substr(0, 10)
-          this.packageTitleItem.dateFirstOnline = data.dateFirstOnline?.substr(0, 10)
+          this.packageTitleItem.dateFirstInPrint = this.buildDateString(data.dateFirstInPrint)
+          this.packageTitleItem.dateFirstOnline = this.buildDateString(data.dateFirstOnline)
           this.packageTitleItem.firstAuthor = data.firstAuthor
           this.packageTitleItem.firstEditor = data.firstEditor
           this.packageTitleItem.publicationType = data.publicationType
@@ -778,8 +778,8 @@
 
           if (data._embedded.coverageStatements?.length) {
             this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
-              startDate: startDate?.substr(0, 10),
-              endDate: endDate?.substr(0, 10),
+              startDate: this.buildDateString(startDate),
+              endDate: this.buildDateString(endDate),
               coverageDepth,
               coverageNote,
               startIssue,
