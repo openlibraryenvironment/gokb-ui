@@ -923,6 +923,18 @@
           "info": "Der Erscheinungszeitraums des gefundenen Referenztitels stimmt nicht der Abdeckung überein.",
           "action": "Referenztitelauswahl verhindert",
           "toDo": "Überprüfen Sie die Zeitangaben und damit eine manuelle Verknüpfung des Titels."
+        },
+        "ZDB Title Overlap": {
+          "label": "ZDB-ID bereits verwendet",
+          "info": "Die gefundene ZDB-ID ist bereits mit einem anderen Referenztitel verknüpft.",
+          "action": "ZDB-Anreicherung übersprungen",
+          "toDo": "Review all titles for possible discrepancies"
+        },
+        "No ZDB Results": {
+          "label": "Keine ZDB-Aufnahme gefunden",
+          "info": "Für die gegebenen ISSNs wurde keine ZDB-Aufnahme gefunden.",
+          "action": "ZDB-Anreicherung übersprungen",
+          "toDo": ""
         }
       }
     },

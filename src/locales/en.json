@@ -922,6 +922,18 @@
           "info": "The matched global title reference has conflicting publishing dates to the coverage of this item.",
           "action": "Skipped title linking",
           "toDo": "Manually link the existing match or create a new title for linking."
+        },
+        "ZDB Title Overlap": {
+          "label": "ZDB Label Mismatch",
+          "info": "Matched ZDB-ID is already linked to another title instance.",
+          "action": "Skipped ZDB enrichment",
+          "toDo": "Review all titles for possible discrepancies"
+        },
+        "No ZDB Results": {
+          "label": "No ZDB Matches",
+          "info": "No ZDB-IDs found for given ISSNs",
+          "action": "Skipped ZDB enrichment",
+          "toDo": ""
         }
       }
     },

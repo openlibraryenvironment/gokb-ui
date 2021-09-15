@@ -16,6 +16,7 @@
             <component
               :is="column.type"
               :key="`${title}_${rowIndex}_${columnIndex}`"
+              :ref="column.value"
               v-model="searchFilters[column.value]"
               :items="column.items"
               clearable
@@ -128,6 +129,7 @@
         },
         totalNumberOfItems: -1,
         confirmationPopUpVisible: false,
+        initVals: {},
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
@@ -170,9 +172,19 @@
       resetSearch () {
         Object.keys(this.searchFilters).forEach(filter => {
           if (Array.isArray(this.searchFilters[filter])) {
-            this.searchFilters[filter] = []
+            if (this.initVals[filter]) {
+              this.searchFilters[filter] = this.initVals[filter]
+            } else {
+              this.searchFilters[filter] = []
+            }
           } else {
-            this.searchFilters[filter] = undefined
+            if (this.initVals[filter] === 'setInit') {
+              this.$refs[filter][0].setInit()
+            } else if (this.initVals[filter]) {
+              this.searchFilters[filter] = this.initVals[filter]
+            } else {
+              this.searchFilters[filter] = undefined
+            }
           }
         })
         this.resultItems = []

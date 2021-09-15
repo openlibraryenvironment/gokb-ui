@@ -127,6 +127,9 @@
       this.searchServicesUrl = 'rest/titles'
       this.searchServiceIncludes = 'id,name,_links,publishedFrom,dateFirstInPrint,dateFirstOnline,publisher'
       this.searchServiceEmbeds = 'ids'
+      this.initVals = {
+        status: 'setInit'
+      }
       this.linkSearchParameterValues = {
         link: 'name'
       }

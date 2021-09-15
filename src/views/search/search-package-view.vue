@@ -16,7 +16,7 @@
           lastUpdated: undefined,
           identifierValue: undefined,
           contentType: undefined,
-          status: undefined,
+          status: 'Current',
           global: ['Global', 'Consortium', 'Regional', 'Other'],
           label: undefined,
         },
@@ -221,6 +221,10 @@
     async created () {
       this.searchServicesUrl = 'rest/packages'
       this.searchByEs = true
+      this.initVals = {
+        status: 'setInit',
+        global: ['Global', 'Consortium', 'Regional', 'Other']
+      }
       this.linkSearchParameterValues = {
         link: 'name',
         linkTwo: 'provider'

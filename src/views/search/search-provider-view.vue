@@ -102,6 +102,9 @@
     async created () {
       this.searchServicesUrl = 'rest/provider'
       this.searchServiceIncludes = 'id,name'
+      this.initVals = {
+        status: 'setInit'
+      }
       this.searchByEs = true
       this.linkSearchParameterValues = {
         link: 'name'
