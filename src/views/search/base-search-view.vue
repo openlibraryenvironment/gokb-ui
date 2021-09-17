@@ -183,7 +183,7 @@
             } else if (this.initVals[filter]) {
               this.searchFilters[filter] = this.initVals[filter]
             } else {
-              if (this.$refs[filter]?.size() > 0) {
+              if (this.$refs[filter]?.length > 0) {
                 this.$refs[filter][0].clear()
               }
               this.searchFilters[filter] = undefined
