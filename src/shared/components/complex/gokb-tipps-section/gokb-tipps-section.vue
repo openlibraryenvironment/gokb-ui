@@ -3,7 +3,7 @@
     <gokb-section
       expandable
       :hide-default="!expanded"
-      filters
+      :filters="filterAlign"
       :sub-title="title"
       :items-total="totalNumberOfItems"
       :errors="!!apiErrors"
@@ -72,6 +72,7 @@
         <gokb-button
           :disabled="selectedItems.length == 0"
           class="mr-4"
+          color="primary"
           icon-id="close"
           @click="confirmRetireSelectedItems"
         >
@@ -80,6 +81,7 @@
         <gokb-button
           :disabled="selectedItems.length == 0"
           icon-id="delete"
+          color="primary"
           @click="confirmDeleteSelectedItems"
         >
           {{ $t('btn.delete') }}
@@ -218,6 +220,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      filterAlign: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     data () {

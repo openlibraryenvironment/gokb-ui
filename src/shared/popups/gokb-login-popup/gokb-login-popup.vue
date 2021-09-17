@@ -83,8 +83,7 @@
       },
       rules () {
         return [
-          value => !!value || this.$i18n.t('validation.missingValue'),
-          () => !this.error || this.$i18n.t('login.errors.401')
+          value => !!value || this.$i18n.t('validation.missingValue')
         ]
       },
     },

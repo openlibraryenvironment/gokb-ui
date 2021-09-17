@@ -105,7 +105,7 @@
     <template v-slot:selection="data">
       <router-link
         v-if="showLink"
-        :style="{ color: '#f2994a', fontSize: '1.1rem', maxWidth: '75%' }"
+        :style="{ color: 'accent', fontSize: '1.1rem', maxWidth: '75%' }"
         class="text-truncate"
         color="accent"
         :to="{ name: knownRoutes[data.item.type], params: { 'id': data.item.id } }"
@@ -247,6 +247,10 @@
         })
         this.loading = false
         this.items = result?.data?.data
+      },
+      clear () {
+        this.items = []
+        this.localValue = undefined
       }
     }
   }

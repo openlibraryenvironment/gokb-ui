@@ -226,6 +226,9 @@
         this.handlePaging()
       }
     },
+    activated () {
+      this.closeEdit()
+    },
     methods: {
       handlePaging () {
         this.$emit('paginate', this.options)

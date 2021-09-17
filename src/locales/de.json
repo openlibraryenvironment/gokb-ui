@@ -140,6 +140,7 @@
       "label": "Anmelden",
       "automatic": "Eingeloggt bleiben",
       "error": {
+        "400": "Die eingebebenen Informationen sind nicht korrekt.",
         "401": "Die eingebebenen Informationen sind nicht korrekt.",
         "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
       }

@@ -529,7 +529,6 @@
           status: undefined,
           paymentType: undefined,
           url: undefined,
-          uuid: undefined,
           name: undefined,
           accessStartDate: undefined,
           accessEndDate: undefined,

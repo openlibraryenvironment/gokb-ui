@@ -431,7 +431,7 @@
           status: this.status,
           reference: this.reference,
           ids: this.ids,
-          variantNames: this.allAlternateNames.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
+          variantNames: this.allNames.alts.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
           offices: this.offices.map(office => ({ ...office, id: (typeof office.id === 'number' ? office.id : null) })),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
           providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null })),

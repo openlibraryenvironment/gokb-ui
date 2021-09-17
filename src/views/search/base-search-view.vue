@@ -183,6 +183,9 @@
             } else if (this.initVals[filter]) {
               this.searchFilters[filter] = this.initVals[filter]
             } else {
+              if (this.$refs[filter]?.size() > 0) {
+                this.$refs[filter][0].clear()
+              }
               this.searchFilters[filter] = undefined
             }
           }
@@ -217,14 +220,14 @@
         await this._executeDeleteItemService(deleteUrl)
         this.resultPaginate(this.resultOptions.page)
       },
-      confirmRetireItem ({ retireUrl }) {
+      confirmRetireItem ({ updateUrl }) {
         this.actionToConfirm = 'retireItem'
         this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)] }
-        this.parameterToConfirm = retireUrl
+        this.parameterToConfirm = updateUrl
         this.confirmationPopUpVisible = true
       },
-      async retireItem (retireUrl) {
-        await this._executeRetireItemService(retireUrl)
+      async retireItem (updateUrl) {
+        await this._executeRetireItemService(updateUrl)
         this.resultPaginate(this.resultOptions.page)
       },
       _executeDeleteItemService (deleteUrl) {
@@ -233,9 +236,9 @@
           instance: this
         })
       },
-      _executeRetireItemService (retireUrl) {
+      _executeRetireItemService (updateUrl) {
         return this.catchError({
-          promise: this.searchServices.retire(retireUrl, this.cancelToken.token),
+          promise: this.searchServices.retire(updateUrl, this.cancelToken.token),
           instance: this
         })
       },

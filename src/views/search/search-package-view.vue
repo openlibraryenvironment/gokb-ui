@@ -113,7 +113,6 @@
               value: 'providerId',
               properties: {
                 label: this.$i18n.tc('component.provider.label'),
-
               }
             },
             {
@@ -122,7 +121,6 @@
               value: 'platformId',
               properties: {
                 label: this.$i18n.tc('component.platform.label'),
-
               }
             }
           ],
@@ -238,6 +236,7 @@
           provider,
           lastUpdated,
           uuid,
+          status,
           contentType,
           nominalPlatform,
           tippCount,
@@ -253,8 +252,9 @@
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
           count: _tippCount || tippCount,
+          status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
-          retireUrl: _links?.update?.href || undefined
+          updateUrl: _links?.update?.href || undefined
         }))
       },
       _confirmDeleteSelectedItems () {

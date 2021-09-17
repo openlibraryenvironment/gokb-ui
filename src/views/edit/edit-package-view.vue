@@ -290,6 +290,7 @@
           <gokb-tipps-section
             ref="tipps"
             :pkg="parseInt(id)"
+            :filter-align="isEdit"
             :platform="packageItem.nominalPlatform"
             :default-title-namespace="providerTitleNamespace"
             :disabled="isReadonly"
@@ -423,18 +424,19 @@
           <v-row>
             <v-col
               cols="12"
-              xl="4"
+              xl="5"
             >
               <gokb-curatory-group-section
                 v-model="allCuratoryGroups"
                 :disabled="isReadonly"
+                :filter-align="!isReadonly"
                 :expandable="false"
                 :sub-title="$tc('component.curatoryGroup.label', 2)"
               />
             </v-col>
             <v-col
               cols="12"
-              xl="8"
+              xl="7"
             >
               <gokb-reviews-section
                 v-if="id && isContrib"
@@ -859,7 +861,7 @@
             instance: this
           })
 
-          if (response.status < 400) {
+          if (response?.status < 400) {
             this.successMsg = this.isEdit ? 'success.update' : 'success.create'
             this.packageItem.id = response.data.id
 
@@ -928,7 +930,7 @@
             }
           } else {
             loading.stopLoading()
-            console.log('GOKb status: ' + response.status)
+            console.log('GOKb status: ' + (response?.status || 'ERROR'))
           }
         }
       },

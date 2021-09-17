@@ -271,7 +271,7 @@
       <gokb-button
         @click="close"
       >
-        {{ $t('btn.close') }}
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         v-if="!isReadonly"
@@ -364,7 +364,7 @@
         return !!this.id
       },
       isValid () {
-        return (!!this.reviewItem.request && !!this.reviewItem.description) || this.stdDesc
+        return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
       },
       stdDesc () {
         return this.selectedItem?.stdDesc || undefined
@@ -417,7 +417,7 @@
         this.reviewItem.stdDesc = stdDesc
         this.reviewItem.request = reviewRequest
         this.reviewItem.description = descriptionOfCause
-        this.reviewItem.dateCreated = new Date(dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
+        this.reviewItem.dateCreated = dateCreated ? new Date(dateCreated).toLocaleString('sv') : ''
         this.reviewItem.component = componentToReview
         this.reviewItem.allocatedGroups = allocatedGroups
         this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(oc => ({
@@ -448,10 +448,10 @@
           instance: this
         })
 
-        if (response.status === 200) {
+        if (response?.status === 200) {
           this.$emit('edit', this.selectedItem)
           this.close()
-        } else if (response.status === 201) {
+        } else if (response?.status === 201) {
           this.$emit('added', response.data)
           this.close()
         }

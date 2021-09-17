@@ -125,7 +125,6 @@
     },
     async created () {
       this.searchServicesUrl = 'rest/titles'
-      this.searchServiceIncludes = 'id,name,_links,publishedFrom,dateFirstInPrint,dateFirstOnline,publisher'
       this.searchServiceEmbeds = 'ids'
       this.initVals = {
         status: 'setInit'
@@ -140,11 +139,12 @@
           id,
           name,
           type,
+          status,
           publishedFrom,
           publisher,
           dateFirstInPrint,
           dateFirstOnline,
-          _links: { delete: { href: deleteUrl }, retire: { href: retireUrl } }
+          _links
         }) => ({
           id,
           type: this.$i18n.tc('component.title.type.' + type),
@@ -152,8 +152,9 @@
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
           linkTwo: publisher ? { value: publisher.name, route: EDIT_PROVIDER_ROUTE, id: 'publisherId' } : undefined,
           publisherId: publisher?.id || undefined,
-          deleteUrl: deleteUrl,
-          retireUrl: retireUrl,
+          status: status?.value,
+          deleteUrl: _links?.delete?.href || undefined,
+          updateUrl: _links?.update?.href || undefined
         }))
       },
       _confirmDeleteSelectedItems () {
@@ -175,9 +176,9 @@
         this.confirmationPopUpVisible = true
       },
       async _retireSelectedItems () {
-        await Promise.all(this.selectedItems.map(({ retireUrl }) =>
+        await Promise.all(this.selectedItems.map(({ updateUrl }) =>
           this.catchError({
-            promise: this.searchServices.retire(retireUrl, this.cancelToken.token),
+            promise: this.searchServices.retire(updateUrl, this.cancelToken.token),
             instance: this
           })
         ))

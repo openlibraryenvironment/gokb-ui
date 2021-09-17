@@ -101,7 +101,6 @@
     },
     async created () {
       this.searchServicesUrl = 'rest/provider'
-      this.searchServiceIncludes = 'id,name'
       this.initVals = {
         status: 'setInit'
       }
@@ -115,12 +114,14 @@
         return data.map(({
           id,
           name,
+          status,
           _links
         }) => ({
           id,
           link: { value: name, route: EDIT_PROVIDER_ROUTE, id: 'id' },
+          status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
-          retireUrl: _links?.update?.href || undefined
+          updateUrl: _links?.update?.href || undefined
         }))
       },
       _confirmArchiveSelectedItems () {

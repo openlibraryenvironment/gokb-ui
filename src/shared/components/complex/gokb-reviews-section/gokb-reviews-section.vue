@@ -13,6 +13,7 @@
         @added="retrieveReviews"
       />
       <gokb-button
+        v-if="!!reviewComponent"
         class="mr-4"
         icon-id="add"
         color="primary"
@@ -65,6 +66,7 @@
     <gokb-table
       :items="reviews"
       :headers="reviewHeaders"
+      :editable="!!group"
       :total-number-of-items="totalNumberOfReviews"
       :options.sync="reviewsOptions"
       @selected-items="selectedItems = $event"

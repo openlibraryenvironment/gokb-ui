@@ -655,8 +655,8 @@
             this.version = data.version
             this.currentType = data.type
             this.titleItem.type = data.type
-            this.titleItem.publishedFrom = data.publishedFrom && data.publishedFrom.substr(0, 10)
-            this.titleItem.publishedTo = data.publishedTo && data.publishedTo.substr(0, 10)
+            this.titleItem.publishedFrom = this.buildDateString(data.publishedFrom)
+            this.titleItem.publishedTo = this.buildDateString(data.publishedTo)
             this.publishers = data._embedded.publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!this.updateUrl }))
             this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
             this.tipps = data._embedded.tipps || []
@@ -671,8 +671,8 @@
             this.titleItem.medium = data.medium
             this.titleItem.OAStatus = data.OAStatus
             this.titleItem.editionNumber = data.editionNumber
-            this.titleItem.firstPublishedInPrint = data.firstPublishedInPrint && data.firstPublishedInPrint.substr(0, 10)
-            this.titleItem.firstPublishedOnline = data.firstPublishedOnline && data.firstPublishedOnline.substr(0, 10)
+            this.titleItem.firstPublishedInPrint = this.buildDateString(data.firstPublishedInPrint)
+            this.titleItem.firstPublishedOnline = this.buildDateString(data.firstPublishedOnline)
             this.titleItem.volumeNumber = data.volumeNumber
             this.titleItem.status = data.status
             this.history = data.history
