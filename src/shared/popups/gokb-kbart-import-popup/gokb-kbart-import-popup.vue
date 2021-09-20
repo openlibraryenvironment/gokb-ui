@@ -403,7 +403,7 @@
                       }
                     }
 
-                    if (col.length && this.kbartStd.general[colName]?.rules.general && !this.kbartStd.general[colName]?.rules.general?.test(col)) {
+                    if (col.length > 0 && this.kbartStd.general[colName]?.rules.general && !this.kbartStd.general[colName]?.rules.general?.test(col)) {
                       this.loadedFile.errors.type[colName].invalid++
                       this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalVal', [col]) })
                       hasErrors = true

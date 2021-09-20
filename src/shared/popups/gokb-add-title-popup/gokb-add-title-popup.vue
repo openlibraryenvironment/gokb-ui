@@ -516,6 +516,7 @@
         updateUrl: undefined,
         deleteUrl: undefined,
         status: undefined,
+        version: undefined,
         importId: undefined,
         items: [],
         id: undefined,
@@ -652,6 +653,7 @@
         this.deleteUrl = this.selectedItem.deleteUrl
         this.platformSelection.push(this.selectedItem.hostPlatform)
         this.status = this.selectedItem.status
+        this.version = this.selectedItem.version
         this.importId = this.selectedItem.importId
         this.lastUpdated = this.selectedItem.lastUpdated
         this.dateCreated = this.selectedItem.dateCreated
@@ -724,6 +726,7 @@
             popup: { value: this.packageTitleItem.name, label: 'tipp', type: 'GokbAddTitlePopup' },
             link: { value: (this.packageTitleItem.title?.name), route: EDIT_TITLE_ROUTE, id: 'titleId' },
             hostPlatformName: this.packageTitleItem.hostPlatform?.name,
+            version: this.version,
             updateUrl: '',
             deleteUrl: '',
             isDeletable: true

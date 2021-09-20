@@ -430,6 +430,7 @@
           source: this.source || null,
           status: this.status,
           reference: this.reference,
+          version: this.version,
           ids: this.ids,
           variantNames: this.allNames.alts.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
           offices: this.offices.map(office => ({ ...office, id: (typeof office.id === 'number' ? office.id : null) })),

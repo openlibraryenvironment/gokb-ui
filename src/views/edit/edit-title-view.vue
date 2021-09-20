@@ -593,6 +593,7 @@
           firstAuthor: this.titleItem.firstAuthor,
           firstEditor: this.titleItem.firstEditor,
           type: this.currentType,
+          version: this.version,
           volumeNumber: this.titleItem.volumeNumber,
           editionNumber: this.titleItem.editionNumber,
           editionStatement: this.titleItem.editionStatement,

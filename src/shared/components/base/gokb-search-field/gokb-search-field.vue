@@ -78,6 +78,7 @@
   </v-combobox>
   <v-autocomplete
     v-else
+    ref="autocomplete"
     v-model="localValue"
     :items="items"
     :label="label"
@@ -110,13 +111,21 @@
         color="accent"
         :to="{ name: knownRoutes[data.item.type], params: { 'id': data.item.id } }"
       >
-        <span :title="data.item[itemText]">{{ data.item[itemText] }}</span>
+        <span
+          :title="data.item[itemText]"
+        >
+          {{ data.item[itemText] }}
+        </span>
       </router-link>
       <span
         v-else
         style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:75%;"
       >
-        <span :title="data.item[itemText]">{{ data.item[itemText] }}</span>
+        <span
+          :title="data.item[itemText]"
+        >
+          {{ data.item[itemText] }}
+        </span>
       </span>
     </template>
   </v-autocomplete>
@@ -207,11 +216,9 @@
       },
       localValue: {
         get () {
-          // console.log('get', this.label, this.value)
           return this.returnObject ? this.value : this.value?.[this.itemValue]
         },
         set (localValue) {
-          // console.log('set', this.label, localValue, this.items)
           this.$emit('input', localValue)
         }
       },
@@ -249,8 +256,10 @@
         this.items = result?.data?.data
       },
       clear () {
+        this.search = null
         this.items = []
         this.localValue = undefined
+        this.$refs.autocomplete.lazyValue = undefined
       }
     }
   }

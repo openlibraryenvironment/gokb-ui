@@ -183,10 +183,11 @@
             } else if (this.initVals[filter]) {
               this.searchFilters[filter] = this.initVals[filter]
             } else {
-              if (this.$refs[filter]?.length > 0) {
+              if (this.$refs[filter] && this.$refs[filter].length > 0 && typeof this.$refs[filter][0].clear !== 'undefined' && typeof this.$refs[filter][0].clear === 'function') {
                 this.$refs[filter][0].clear()
+              } else {
+                this.searchFilters[filter] = undefined
               }
-              this.searchFilters[filter] = undefined
             }
           }
         })

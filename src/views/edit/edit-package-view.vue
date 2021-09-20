@@ -841,6 +841,7 @@
             id: this.id,
             ...(this.newTipps.length > 0 ? { tipps: this.newTipps } : {}),
             name: this.allNames.name,
+            version: this.version,
             variantNames: this.allNames.alts.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
             curatoryGroups: this.allCuratoryGroups,
             ids: this.packageItem.ids.map(id => ({ value: id.value, type: id.namespace })),

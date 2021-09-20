@@ -403,6 +403,7 @@
             reviewRequest,
             descriptionOfCause,
             dateCreated,
+            version,
             componentToReview,
             allocatedGroups,
             additionalInfo,
@@ -428,6 +429,7 @@
         })) : []
         this.updateUrl = _links?.update?.href || undefined
         this.deleteUrl = _links?.delete?.href || undefined
+        this.version = version
       },
       async save () {
         const activeGroup = accountModel.activeGroup()
@@ -436,6 +438,7 @@
           id: this.id,
           status: this.reviewItem.status?.id || null,
           stdDesc: this.reviewItem.stdDesc?.id || null,
+          version: this.version,
           reviewRequest: this.reviewItem.request || this.$i18n.t('component.review.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.action'),
           descriptionOfCause: this.reviewItem.description || this.$i18n.t('component.review.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.info'),
           activeGroup,
