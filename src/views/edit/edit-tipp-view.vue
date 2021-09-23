@@ -6,6 +6,22 @@
     @submit="update"
   >
     <gokb-error-component :value="error" />
+    <span v-if="successMsg">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
     <gokb-section :sub-title="$t('component.general.general')">
       <v-row dense>
         <v-col>
@@ -558,6 +574,8 @@
         coverageExpanded: true,
         selectedTitle: undefined,
         selectedItem: undefined,
+        successMsg: undefined,
+        errorMsg: undefined,
         coverageObject: {
           coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
           startDate: undefined,
@@ -655,6 +673,12 @@
       localLastUpdated () {
         return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
+      },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
       },
@@ -706,6 +730,8 @@
       },
       async update () {
         const activeGroup = accountModel.activeGroup()
+        this.errorMsg = undefined
+        this.successMsg = undefined
 
         const newTipp = {
           ...this.packageTitleItem,
@@ -724,9 +750,16 @@
         })
 
         if (response.status < 400) {
+          this.successMsg = this.isEdit ? 'success.update' : 'success.create'
           this.reload()
         } else {
-          console.log(response.status)
+          if (response.status === 409) {
+            this.errorMsg = 'error.update.409'
+          } else if (response.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else {
+            this.errors = response.data.error
+          }
         }
       },
       async reload () {

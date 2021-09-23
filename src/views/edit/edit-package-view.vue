@@ -15,6 +15,14 @@
         {{ localSuccessMessage }}
       </v-alert>
     </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
     <span v-if="kbartResult === 'success' || kbartStatus === 'success'">
       <v-alert
         type="success"
@@ -653,6 +661,7 @@
           { id: 'mixed', text: 'Gemischt' },
         ],
         successMsg: undefined,
+        errorMsg: undefined,
         kbartResult: undefined,
         titlesHeader: TITLES_HEADER,
         titlesOptions: {
@@ -725,6 +734,9 @@
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.package.label')]) : undefined
       },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
@@ -809,6 +821,7 @@
         loading.startLoading()
         var isUpdate = !!this.id
         this.successMsg = undefined
+        this.errorMsg = undefined
         this.kbartResult = undefined
 
         if (this.valid) {
@@ -899,8 +912,6 @@
                   instance: this
                 })
 
-                console.log(ygorJobStatusResponse.status)
-
                 if (ygorJobStatusResponse.status === 400) {
                   this.kbartResult = 'error'
                 } else {
@@ -931,7 +942,14 @@
             }
           } else {
             loading.stopLoading()
-            console.log('GOKb status: ' + (response?.status || 'ERROR'))
+            if (response.status === 409) {
+              this.errorMsg = 'error.update.409'
+            } else if (response.status === 500) {
+              this.errorMsg = 'error.general.500'
+            } else {
+              this.errorMsg = 'error.update.400'
+              this.errors = response.data.error
+            }
           }
         }
       },

@@ -6,6 +6,22 @@
     @submit="submitTipp"
   >
     <gokb-error-component :value="error" />
+    <span v-if="successMsg">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
     <v-row dense>
       <v-col>
         <gokb-section
@@ -515,6 +531,8 @@
         },
         updateUrl: undefined,
         deleteUrl: undefined,
+        successMsg: undefined,
+        errorMsg: undefined,
         status: undefined,
         version: undefined,
         importId: undefined,
@@ -602,6 +620,12 @@
       },
       localLastUpdated () {
         return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale) : ''
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
       },
       localValue: {
         get () {
@@ -708,7 +732,13 @@
             this.$emit('edit', this.packageTitleItem)
             this.close()
           } else {
-            console.log(response.status)
+            if (response.status === 409) {
+              this.errorMsg = 'error.update.409'
+            } else if (response.status === 500) {
+              this.errorMsg = 'error.general.500'
+            } else {
+              this.errors = response.data.error
+            }
           }
         } else {
           if (this.packageTitleItem.title) {

@@ -12,7 +12,15 @@
         type="success"
         dismissible
       >
-        {{ successMsg }}
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
       </v-alert>
     </span>
     <gokb-section :no-tool-bar="true">
@@ -356,7 +364,8 @@
         allNames: { name: undefined, alts: [] },
         allPlatforms: [],
         updateUrl: undefined,
-        successMsg: undefined
+        successMsg: undefined,
+        errorMsg: undefined
       }
     },
     computed: {
@@ -383,6 +392,12 @@
       },
       localLastUpdated () {
         return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.name]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.provider.label')]) : undefined
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
@@ -421,6 +436,8 @@
       },
       async update () {
         var isUpdate = !!this.id
+        this.successMsg = undefined
+        this.errorMsg = undefined
 
         const activeGroup = accountModel.activeGroup()
 
@@ -453,9 +470,15 @@
             this.$router.push('/provider/' + response.data?.id)
           }
 
-          this.successMsg = this.isEdit
-            ? this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.name])
-            : this.$i18n.t('success.create', [this.$i18n.tc('component.provider.label'), this.name])
+          this.successMsg = this.isEdit ? 'success.update' : 'success.create'
+        } else {
+          if (response.status === 409) {
+            this.errorMsg = 'error.update.409'
+          } else if (response.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else {
+            this.errors = response.data.error
+          }
         }
       },
       async reload () {

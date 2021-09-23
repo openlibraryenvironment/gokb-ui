@@ -391,7 +391,7 @@
                     var colName = columns[idxc]
                     var colRules = this.kbartStd.mandatoryColumns[colName]?.rules
 
-                    if (colRules?.notEmpty && col.length === 0) {
+                    if (colRules?.notEmpty && col.trim().length === 0) {
                       if (colRules?.notEmpty === 'warn') {
                         this.loadedFile.warnings.type[colName].empty++
                         this.loadedFile.warnings.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
@@ -403,30 +403,30 @@
                       }
                     }
 
-                    if (col.length > 0 && this.kbartStd.general[colName]?.rules.general && !this.kbartStd.general[colName]?.rules.general?.test(col)) {
+                    if (col.length > 0 && this.kbartStd.general[colName]?.rules.general && !this.kbartStd.general[colName]?.rules.general?.test(col.trim())) {
                       this.loadedFile.errors.type[colName].invalid++
                       this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalVal', [col]) })
                       hasErrors = true
                     }
 
                     if (colName === 'online_identifier') {
-                      if (col.length > 0 && !this.kbartStd.mandatoryColumns.online_identifier.rules[type]?.test(col)) {
+                      if (col.length > 0 && !this.kbartStd.mandatoryColumns.online_identifier.rules[type]?.test(col.trim())) {
                         this.loadedFile.errors.type[colName].invalid++
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalOnlineId', [col]) })
                         hasErrors = true
                       }
                     } else if (colName === 'print_identifier') {
-                      if (col.length > 0 && !this.kbartStd.mandatoryColumns.print_identifier.rules[type]?.test(col)) {
+                      if (col.length > 0 && !this.kbartStd.mandatoryColumns.print_identifier.rules[type]?.test(col.trim())) {
                         this.loadedFile.errors.type[colName].invalid++
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalPrintId', [col]) })
                         hasErrors = true
                       }
                     } else if (type === 'serial' && this.kbartStd.serial[colName]) {
-                      if (this.kbartStd.serial[colName]?.rules?.notEmpty && col.length === 0) {
+                      if (this.kbartStd.serial[colName]?.rules?.notEmpty && col.trim().length === 0) {
                         this.loadedFile.errors.type[colName].empty++
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
                         hasErrors = true
-                      } else if (col.length > 0 && this.kbartStd.serial[colName]?.rules.general && !this.kbartStd.serial[colName]?.rules.general?.test(col)) {
+                      } else if (col.length > 0 && this.kbartStd.serial[colName]?.rules.general && !this.kbartStd.serial[colName]?.rules.general?.test(col.trim())) {
                         this.loadedFile.errors.type[colName].invalid++
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalVal', [col]) })
                         hasErrors = true

@@ -6,6 +6,7 @@ import router from './router'
 import './register-service-worker'
 import utils from '@/shared/utils/utils'
 import './plugins/vuetify-money.js'
+import './plugins/vue-json-pretty.js'
 
 // configuration vue itself
 const isNotProduction = !utils.isProduction()

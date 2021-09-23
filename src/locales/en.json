@@ -8,6 +8,7 @@
     "confirm": "Confirm",
     "create": "Create",
     "darkMode": "Dark Mode",
+    "reactivate": "Reactivate",
     "deactivate": "Deactivate",
     "delete": "Delete",
     "disableSync": "Stop Auto-Refresh",
@@ -22,7 +23,8 @@
     "retire": "Retire",
     "search": "Search",
     "submit": "Submit",
-    "update": "Update"
+    "update": "Update",
+    "bulkSetStatus": "Set all {0} as {1}"
   },
   "main": {
     "docs": {
@@ -289,6 +291,19 @@
     "update": "Successfully edited {0} {1}!",
     "retire": "Successfully archived {0} {1}!",
     "delete": "Successfully deleted {0} {1}!"
+  },
+  "error": {
+    "update": {
+      "400": "{0} update contained errors!",
+      "403": "{0} could not be saved due to missing user permissions.",
+      "409": "{0} could not be saved because it has had another update in the meantime. Please look through your changes and enter them again after refreshing this site."
+    },
+    "general": {
+      "500": "The request failed, please report this to an admin or try again later."
+    },
+    "bulkUpdate": {
+      "403": "Not all {0} could be updated!"
+    }
   },
   "header": {
     "edit": {
@@ -776,6 +791,9 @@
       "type": "Type",
       "cause": "Cause",
       "componentToReview": "Component",
+      "additionalInfo": {
+        "label": "Structured info"
+      },
       "otherComponents": {
         "label": "Other Components",
         "add": "Link new component",

@@ -8,6 +8,7 @@
     "confirm": "Bestätigen",
     "create": "Erstellen",
     "darkMode": "Dunkle Ansicht",
+    "reactivate": "Reaktivieren",
     "deactivate": "Deaktivieren",
     "delete": "Löschen",
     "disableSync": "Aktualisierung stoppen",
@@ -22,7 +23,8 @@
     "retire": "Archivieren",
     "search": "Suchen",
     "submit": "Abschicken",
-    "update": "Aktualisieren"
+    "update": "Aktualisieren",
+    "bulkSetStatus": "Alle {0} auf {1} setzen"
   },
   "main": {
     "docs": {
@@ -290,6 +292,19 @@
     "update": "{0} {1} erfolgreich bearbeitet!",
     "retire": "{0} {1} wurde archiviert!",
     "delete": "{0} {1} wurde gelöscht!"
+  },
+  "error": {
+    "update": {
+      "400": "Bei der Aktualisierung sind Fehler aufgetreten!",
+      "403": "{0} konnte nicht gespeichert werden, da dieser Benutzer nicht berechtigt ist.",
+      "409": "{0} konnte nicht gespeichert werden, da Ihre Ansicht auf Grund einer anderen Aktualisierung nicht mehr aktuell ist. Bitte akutalisieren Sie diese Seite und versuchen es noch einmal."
+    },
+    "general": {
+      "500": "Die Anfrage ist fehlgeschlagen, bitte melden Sie den Vorfall oder versuchen Sie es später noch einmal."
+    },
+    "bulkUpdate": {
+      "403": "Nicht alle {0} konnten geändert werden!"
+    }
   },
   "header": {
     "edit": {
@@ -777,6 +792,9 @@
       "type": "Typ",
       "cause": "Ursache",
       "componentToReview": "Komponente",
+      "additionalInfo": {
+        "label": "Strukturierte Detailansicht"
+      },
       "otherComponents": {
         "label": "Weitere Komponenten",
         "add": "Weitere Komponente verknüpfen",

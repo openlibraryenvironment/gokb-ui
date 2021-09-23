@@ -6,6 +6,22 @@
     @submit="save"
   >
     <gokb-error-component :value="error" />
+    <span v-if="successMsg">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
     <v-row>
       <v-col md="12">
         <gokb-entity-field
@@ -105,7 +121,7 @@
               </template>
               <template v-slot:1>
                 <b v-if="numMessageVars > 1">
-                  <span v-if="typeof additionalInfo.vars[1] === 'string'">
+                  <span v-if="typeof additionalInfo.vars[1] === 'string' || typeof additionalInfo.vars[1] === 'number'">
                     {{ additionalInfo.vars[1] }}
                   </span>
                   <span v-else-if="Array.isArray(additionalInfo.vars[1])">
@@ -265,6 +281,18 @@
         </template>
       </v-col>
     </v-row>
+    <v-row v-if="additionalInfo">
+      <v-col md="12">
+        <v-expansion-panels accordion>
+          <v-expansion-panel>
+            <v-expansion-panel-header>{{ $t('component.review.additionalInfo.label') }}</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <vue-json-pretty :data="additionalInfo" />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-col>
+    </v-row>
 
     <template #buttons>
       <v-spacer />
@@ -288,9 +316,12 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import reviewServices from '@/shared/services/review-services'
+  import VueJsonPretty from 'vue-json-pretty'
+  import 'vue-json-pretty/lib/styles.css'
 
   export default {
     name: 'GokbAddReviewPopup',
+    components: { VueJsonPretty },
     extends: BaseComponent,
     props: {
       selected: {
@@ -318,6 +349,8 @@
         additionalInfo: undefined,
         newAdditionalComponent: undefined,
         updateUrl: undefined,
+        successMsg: undefined,
+        errorMsg: undefined,
         deleteUrl: undefined,
         reviewItem: {
           status: undefined,
@@ -377,6 +410,12 @@
       },
       cmpLabel () {
         return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview'))
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.review.label')]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label')]) : undefined
       }
     },
     async created () {
@@ -457,6 +496,14 @@
         } else if (response?.status === 201) {
           this.$emit('added', response.data)
           this.close()
+        } else {
+          if (response.status === 409) {
+            this.errorMsg = 'error.update.409'
+          } else if (response.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else {
+            this.errors = response.data.error
+          }
         }
       },
       addNewOtherComponent (cmp) {
@@ -477,3 +524,8 @@
     }
   }
 </script>
+
+<style>
+  .vjs-tree__node.is-highlight, .vjs-tree__node:hover {background-color:#9b9b9b }
+  .vjs-value__string { color: #3c804b }
+</style>

@@ -11,7 +11,15 @@
         type="success"
         dismissible
       >
-        {{ successMsg }}
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
       </v-alert>
     </span>
     <v-row>
@@ -501,6 +509,7 @@
         updateUrl: undefined,
         deleteUrl: undefined,
         successMsg: undefined,
+        errorMsg: undefined,
         allTypes: [
           { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
           { name: this.$i18n.tc('component.title.type.Book'), id: 'Book' },
@@ -536,6 +545,12 @@
       },
       localLastUpdated () {
         return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.typeDisplay, this.allNames.name]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.typeDisplay]) : undefined
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
@@ -626,10 +641,17 @@
               this.$router.push('/title/' + response.data?.id)
             }
 
-            this.successMsg = this.isEdit ? this.$i18n.t('success.update', [this.typeDisplay, this.allNames.name]) : this.$i18n.t('success.create', [this.typeDisplay, this.allNames.name])
+            this.successMsg = this.isEdit ? 'success.update' : 'success.create'
           }
         } else {
-          this.errors = response.data.error
+          if (response.status === 409) {
+            this.errorMsg = 'error.update.409'
+          } else if (response.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else {
+            this.errorMsg = 'error.update.400'
+            this.errors = response.data.error
+          }
         }
 
         window.scrollTo(0, 0)
