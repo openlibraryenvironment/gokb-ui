@@ -278,7 +278,7 @@
         deep: true
       },
       'selectedItems.length' (length) {
-        if (length >= 1) {
+        if (length >= 10) {
           this.enableBulkCheck = true
         } else {
           this.allPagesSelected = false
