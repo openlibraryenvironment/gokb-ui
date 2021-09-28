@@ -149,7 +149,7 @@
             },
             title_id: {
               rules: {
-                notEmpty: 'warn'
+                notEmpty: true
               }
             },
             online_identifier: {
@@ -343,7 +343,7 @@
           })
 
           if (this.loadedFile.errors.missingColumns.length > 0) {
-            this.error = 'Missing columns:'
+            this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
           } else {
             var idxr = 0
             var row
@@ -393,41 +393,41 @@
 
                     if (colRules?.notEmpty && col.trim().length === 0) {
                       if (colRules?.notEmpty === 'warn') {
-                        this.loadedFile.warnings.type[colName].empty++
+                        this.ensureFieldCounter(colName, 'warnings', 'empty')
                         this.loadedFile.warnings.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
                         hasWarnings = true
                       } else {
-                        this.loadedFile.errors.type[colName].empty++
+                        this.ensureFieldCounter(colName, 'errors', 'empty')
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
                         hasErrors = true
                       }
                     }
 
                     if (col.length > 0 && this.kbartStd.general[colName]?.rules.general && !this.kbartStd.general[colName]?.rules.general?.test(col.trim())) {
-                      this.loadedFile.errors.type[colName].invalid++
+                      this.ensureFieldCounter(colName, 'errors', 'invalid')
                       this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalVal', [col]) })
                       hasErrors = true
                     }
 
                     if (colName === 'online_identifier') {
                       if (col.length > 0 && !this.kbartStd.mandatoryColumns.online_identifier.rules[type]?.test(col.trim())) {
-                        this.loadedFile.errors.type[colName].invalid++
+                        this.ensureFieldCounter(colName, 'errors', 'invalid')
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalOnlineId', [col]) })
                         hasErrors = true
                       }
                     } else if (colName === 'print_identifier') {
                       if (col.length > 0 && !this.kbartStd.mandatoryColumns.print_identifier.rules[type]?.test(col.trim())) {
-                        this.loadedFile.errors.type[colName].invalid++
+                        this.ensureFieldCounter(colName, 'errors', 'invalid')
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalPrintId', [col]) })
                         hasErrors = true
                       }
                     } else if (type === 'serial' && this.kbartStd.serial[colName]) {
                       if (this.kbartStd.serial[colName]?.rules?.notEmpty && col.trim().length === 0) {
-                        this.loadedFile.errors.type[colName].empty++
+                        this.ensureFieldCounter(colName, 'errors', 'empty')
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
                         hasErrors = true
                       } else if (col.length > 0 && this.kbartStd.serial[colName]?.rules.general && !this.kbartStd.serial[colName]?.rules.general?.test(col.trim())) {
-                        this.loadedFile.errors.type[colName].invalid++
+                        this.ensureFieldCounter(colName, 'errors', 'invalid')
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalVal', [col]) })
                         hasErrors = true
                       }
@@ -461,6 +461,17 @@
         } finally {
           this.completion = 100
           this.importRunning = false
+        }
+      },
+      ensureFieldCounter (colName, severity, type) {
+        if (!this.loadedFile[severity][colName]) {
+          this.loadedFile[severity][colName] = {}
+        }
+
+        if (!this.loadedFile[severity][colName][type]) {
+          this.loadedFile[severity][colName][type] = 1
+        } else {
+          this.loadedFile[severity][colName][type]++
         }
       },
       _importProgress ({ loaded, total }) {

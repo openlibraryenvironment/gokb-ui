@@ -235,6 +235,7 @@
     },
     "errors": {
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
+      "missingCols": "Fehlende Spalten: {0}",
       "illegalVal": "Wert {0} ist fehlerhaft!",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
