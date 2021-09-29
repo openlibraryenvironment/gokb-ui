@@ -449,7 +449,7 @@
           reference: this.reference,
           version: this.version,
           ids: this.ids,
-          variantNames: this.allNames.alts.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
+          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
           offices: this.offices.map(office => ({ ...office, id: (typeof office.id === 'number' ? office.id : null) })),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
           providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null })),
@@ -477,6 +477,7 @@
           } else if (response.status === 500) {
             this.errorMsg = 'error.general.500'
           } else {
+            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
             this.errors = response.data.error
           }
         }

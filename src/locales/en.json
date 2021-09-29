@@ -296,11 +296,18 @@
   "error": {
     "update": {
       "400": "{0} update contained errors!",
-      "403": "{0} could not be saved due to missing user permissions.",
+      "403": "{0} could not be updated due to missing user permissions.",
       "409": "{0} could not be saved because it has had another update in the meantime. Please look through your changes and enter them again after refreshing this site."
     },
+    "create": {
+      "400": "{0} contained errors!",
+      "403": "{0} could not be created due to missing user permissions."
+    },
     "general": {
-      "500": "The request failed, please report this to an admin or try again later."
+      "500": "The request failed, please report this to an admin or try again later.",
+      "name": {
+        "notUnique": "This name is already in use!"
+      }
     },
     "bulkUpdate": {
       "403": "Not all {0} could be updated!"

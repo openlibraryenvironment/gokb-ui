@@ -10,6 +10,9 @@ const api = (http, utils) => ({
   setAuthorization (tokenType, accessToken) {
     headers[HEADER_AUTHORIZATION_KEY] = `${tokenType} ${accessToken}`
   },
+  setLanguage (lang) {
+    headers['Accept-Language'] = lang
+  },
 
   request ({ method, url, data }, cancelToken) {
     const parameters = {

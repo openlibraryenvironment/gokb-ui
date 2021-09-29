@@ -465,6 +465,7 @@
                   lastChangedExternal: tipp.lastChangedExternal,
                   accessStartDate: tipp.accessStartDate && this.buildDateString(tipp.accessStartDate),
                   accessEndDate: tipp.accessEndDate && this.buildDateString(tipp.accessEndDate),
+                  variantNames: tipp._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })),
                   pkg: tipp.pkg,
                   title: tipp.title,
                   importId: tipp.importId,

@@ -4,6 +4,7 @@
     v-model="localValue"
     :title="$t('header.add.label', [component.name])"
     :is-valid="isValid"
+    :width="width"
     @submit="addItem"
   >
     <component
@@ -45,6 +46,11 @@
         type: Object,
         required: true
       },
+      width: {
+        type: [Number, String],
+        required: false,
+        default: 400
+      }
     },
     data () {
       return {

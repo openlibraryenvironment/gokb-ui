@@ -600,7 +600,7 @@
           id: this.id,
           name: this.allNames.name,
           ids: this.ids.map(id => ({ value: id.value, type: id.namespace })),
-          variantNames: this.allNames.alts.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
+          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
           publishedFrom: this.titleItem.publishedFrom,
           publishedTo: this.titleItem.publishedTo,
           dateFirstInPrint: this.titleItem.firstPublishedInPrint,
@@ -649,7 +649,7 @@
           } else if (response.status === 500) {
             this.errorMsg = 'error.general.500'
           } else {
-            this.errorMsg = 'error.update.400'
+            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
             this.errors = response.data.error
           }
         }

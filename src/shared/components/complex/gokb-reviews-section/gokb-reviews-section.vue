@@ -282,6 +282,7 @@
           this.enableBulkCheck = true
         } else {
           this.allPagesSelected = false
+          this.enableBulkCheck = false
         }
       }
     },

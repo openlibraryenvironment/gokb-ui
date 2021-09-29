@@ -10,12 +10,12 @@
       </span>
     </span>
     <v-banner>
-      <span
+      <div
         style="font-size:1.1rem"
         class="font-weight-bold"
       >
         {{ currentName || value.name }}
-      </span>
+      </div>
       <template v-slot:actions>
         <gokb-dialog
           v-if="editNamePopupVisible"
@@ -25,17 +25,18 @@
           @submit="selectNewName"
         >
           <gokb-text-field
+            ref="nameTextField"
             v-model="editedVal"
             :rules="rules"
           />
           <template #buttons>
-            <v-spacer />
             <v-checkbox
               v-if="currentName"
               v-model="keepCurrent"
-              class="mr-2"
+              class="ml-2 mt-4"
               :label="keepCurrentLabel"
             />
+            <v-spacer />
             <gokb-button
               text
               @click="close"
@@ -44,7 +45,7 @@
             </gokb-button>
 
             <gokb-button
-              :disabled="!valid"
+              :disabled="!editedVal || editedVal === currentName || editedVal === inValidName"
               default
             >
               {{ $i18n.t('btn.confirm') }}
@@ -69,6 +70,8 @@
 
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import searchServices from '@/shared/services/search-services'
+  import { createCancelToken } from '@/shared/services/http'
 
   export default {
     name: 'GokbNameField',
@@ -103,6 +106,16 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      checkDupes: {
+        type: String,
+        required: false,
+        default: undefined
+      },
+      itemId: {
+        type: Number,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -114,6 +127,8 @@
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
+        cancelToken: undefined,
+        inValidName: undefined
       }
     },
     computed: {
@@ -133,7 +148,8 @@
       },
       rules () {
         return [
-          value => value?.length > 0 || this.$i18n.t('validation.missingName')
+          value => value?.length > 0 || this.$i18n.t('validation.missingName'),
+          value => !this.inValidName || value.trim() !== this.inValidName || this.$i18n.t('error.general.name.notUnique')
         ]
       },
       valid () {
@@ -161,18 +177,53 @@
         this.localValue.name = this.currentName
         this.editNamePopupVisible = false
       },
-      selectNewName () {
-        if (this.currentName !== this.editedVal) {
-          if (this.currentName && this.keepCurrent && !this.localValue.alts.find(({ variantName }) => variantName === this.editedVal)) {
-            this.localValue.alts.push({ id: this.tempId(), variantName: this.currentName, isDeletable: true })
+      async selectNewName () {
+        this.editedVal = this.editedVal.trim()
+
+        if (this.checkDupes) {
+          this.inValidName = undefined
+          var dupes = await this.checkForDupes(this.checkDupes)
+
+          if (dupes === true) {
+            this.inValidName = this.editedVal
+            this.validate(false)
+          } else {
+            this.setNewName()
           }
-          this.currentName = this.editedVal
-          this.localValue.name = this.editedVal
-          this.editNamePopupVisible = false
         } else {
-          this.validate(false)
+          this.setNewName()
         }
       },
+      setNewName () {
+        if (this.currentName && this.keepCurrent && !this.localValue.alts.find(({ variantName }) => variantName === this.editedVal)) {
+          this.localValue.alts.push({ id: this.tempId(), variantName: this.currentName, isDeletable: true })
+        }
+        this.currentName = this.editedVal
+        this.localValue.name = this.editedVal
+        this.editNamePopupVisible = false
+      },
+      async checkForDupes (type) {
+        this.cancelToken = createCancelToken()
+        var response = await searchServices('rest/entities').search({
+          name: this.editedVal,
+          status: 'Current',
+          componentType: type,
+          es: 'true',
+          max: 20
+        }, this.cancelToken.token)
+
+        if (response?.status < 400) {
+          var dupes = response.data?.data.filter(res => (res.name === this.editedVal && (!this.itemId || (this.itemId !== res.id))))
+
+          if (dupes?.length > 0) {
+            return true
+          } else {
+            return false
+          }
+        } else {
+          return false
+        }
+      }
     }
   }
 </script>

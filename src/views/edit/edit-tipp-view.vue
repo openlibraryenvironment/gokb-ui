@@ -737,6 +737,7 @@
           ...this.packageTitleItem,
           ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
           prices: this.packageTitleItem.prices.map(price => ({ ...price, id: (typeof price.id === 'number' ? price.id : null) })),
+          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
           name: this.allNames.name,
           version: this.version,
           publicationType: this.packageTitleItem.publicationType && this.packageTitleItem.publicationType.name,
@@ -758,6 +759,7 @@
           } else if (response.status === 500) {
             this.errorMsg = 'error.general.500'
           } else {
+            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
             this.errors = response.data.error
           }
         }
@@ -808,7 +810,7 @@
           this.packageTitleItem.prices = data._embedded.prices
           this.packageTitleItem.status = data.status
           this.history = data.history
-          this.allNames = { name: data.name, alts: [] }
+          this.allNames = { name: data.name, alts: data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })) }
 
           if (data._embedded.coverageStatements?.length) {
             this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({

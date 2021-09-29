@@ -297,11 +297,18 @@
   "error": {
     "update": {
       "400": "Bei der Aktualisierung sind Fehler aufgetreten!",
-      "403": "{0} konnte nicht gespeichert werden, da dieser Benutzer nicht berechtigt ist.",
+      "403": "{0} konnte nicht aktualisiert werden, da dieser Benutzer nicht dazu berechtigt ist.",
       "409": "{0} konnte nicht gespeichert werden, da Ihre Ansicht auf Grund einer anderen Aktualisierung nicht mehr aktuell ist. Bitte akutalisieren Sie diese Seite und versuchen es noch einmal."
     },
+    "create": {
+      "400": "Bei der Erstellung sind Fehler aufgetreten!",
+      "403": "{0} konnte nicht angelegt werden, da dieser Benutzer nicht dazu berechtigt ist."
+    },
     "general": {
-      "500": "Die Anfrage ist fehlgeschlagen, bitte melden Sie den Vorfall oder versuchen Sie es später noch einmal."
+      "500": "Die Anfrage ist fehlgeschlagen, bitte melden Sie den Vorfall oder versuchen Sie es später noch einmal.",
+      "name": {
+        "notUnique": "Dieser Name ist bereits vergeben!"
+      }
     },
     "bulkUpdate": {
       "403": "Nicht alle {0} konnten geändert werden!"

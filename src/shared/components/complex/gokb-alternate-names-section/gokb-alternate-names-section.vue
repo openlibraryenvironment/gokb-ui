@@ -9,7 +9,8 @@
     <gokb-add-item-popup
       v-if="addItemPopupVisible"
       v-model="addItemPopupVisible"
-      :component="{ type: 'GokbTextField', name: $t('component.general.name') }"
+      width="500px"
+      :component="{ type: 'GokbAlternateNamesField', name: $tc('component.variantName.label') }"
       @add="addItem"
     />
     <template #buttons>
@@ -121,6 +122,7 @@
       },
       variantNames () {
         return [...this.value]
+          .map(item => ({ variantName: item.variantName, locale: (item.locale?.name || item.locale), id: item.id }))
           .sort(({ variantName: first }, { variantName: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.variantNameOptions.page - 1) * ROWS_PER_PAGE, this.variantNameOptions.page * ROWS_PER_PAGE)
       },
@@ -138,7 +140,8 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.t('component.general.name'), align: 'left', value: 'variantName', sortable: false, width: '100%' },
+          { text: this.$i18n.tc('component.general.name'), align: 'left', value: 'variantName', sortable: false, width: '100%' },
+          { text: this.$i18n.t('component.general.language.label'), align: 'left', value: 'locale', sortable: false },
         ]
       },
       title () {
@@ -184,11 +187,11 @@
         return result
       },
       addItem (item) {
-        if (!this.localValue.find(({ variantName }) => this.normalizeVariant(variantName) === this.normalizeVariant(item))) {
-          this.localValue.push({ id: this.tempId(), variantName: item, isDeletable: true, _pending: 'added' })
+        if (!this.localValue.find(({ variantName }) => this.normalizeVariant(variantName) === this.normalizeVariant(item.variantName))) {
+          this.localValue.push({ id: this.tempId(), variantName: item.variantName, locale: item.locale, variantType: null, isDeletable: true, _pending: 'added' })
           this.$emit('update', 'variants')
         } else {
-          this.errorMessage = this.$i18n.t('component.variantName.error.duplicate', [item])
+          this.errorMessage = this.$i18n.t('component.variantName.error.duplicate', [item.variantName])
           this.showErrorMessage = true
         }
       }

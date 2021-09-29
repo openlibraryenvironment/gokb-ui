@@ -81,6 +81,8 @@
               v-model="allNames"
               :disabled="isReadonly"
               :required="!isReadonly"
+              check-dupes="Package"
+              :item-id="packageItem.id"
             />
             <gokb-url-field
               v-model="packageItem.descriptionURL"
@@ -855,7 +857,7 @@
             ...(this.newTipps.length > 0 ? { tipps: this.newTipps } : {}),
             name: this.allNames.name,
             version: this.version,
-            variantNames: this.allNames.alts.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
+            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
             curatoryGroups: this.allCuratoryGroups,
             ids: this.packageItem.ids.map(id => ({ value: id.value, type: id.namespace })),
             breakable: utils.asYesNo(this.packageItem.breakable),
@@ -947,8 +949,9 @@
             } else if (response.status === 500) {
               this.errorMsg = 'error.general.500'
             } else {
-              this.errorMsg = 'error.update.400'
+              this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
               this.errors = response.data.error
+              this.step = 1
             }
           }
         }
@@ -988,7 +991,7 @@
             this.packageItem.editStatus = data.editStatus
             this.version = data.version
             this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
-            this.allAlternateNames = data._embedded.variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!this.updateUrl }))
+            this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
             this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!this.updateUrl }))
             this.reviewRequests = data._embedded.reviewRequests
             this.updateUrl = data._links?.update?.href || null

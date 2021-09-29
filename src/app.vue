@@ -263,6 +263,7 @@
   } from '@/router/route-paths'
   import { createCancelToken } from '@/shared/services/http'
   import searchServices from '@/shared/services/search-services'
+  import baseServices from '@/shared/services/base-services'
 
   // const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
 
@@ -319,6 +320,8 @@
           if (accountModel.loggedIn() && locale !== accountModel.userLocale()) {
             accountModel.setLocale(locale)
           }
+
+          baseServices.setLanguage(locale)
         }
       },
       activeGroup: {
@@ -427,6 +430,8 @@
 
       if (accountModel.loggedIn() && accountModel.userLocale()) {
         this.currentLocale = accountModel.userLocale()
+      } else {
+        baseServices.setLanguage(this.$i18n.locale)
       }
 
       if (accountModel.loggedIn()) {
