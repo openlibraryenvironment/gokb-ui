@@ -149,11 +149,16 @@
       rules () {
         return [
           value => value?.length > 0 || this.$i18n.t('validation.missingName'),
-          value => !this.inValidName || value.trim() !== this.inValidName || this.$i18n.t('error.general.name.notUnique')
+          value => !this.inValidName || value.trim().toLowerCase() !== this.inValidName || this.$i18n.t('error.general.name.notUnique')
         ]
       },
       valid () {
         return !!this.editedVal
+      }
+    },
+    watch: {
+      'localValue.name' (val) {
+        this.currentName = val
       }
     },
     methods: {
@@ -185,7 +190,7 @@
           var dupes = await this.checkForDupes(this.checkDupes)
 
           if (dupes === true) {
-            this.inValidName = this.editedVal
+            this.inValidName = this.editedVal.toLowerCase()
             this.validate(false)
           } else {
             this.setNewName()
@@ -213,7 +218,7 @@
         }, this.cancelToken.token)
 
         if (response?.status < 400) {
-          var dupes = response.data?.data.filter(res => (res.name === this.editedVal && (!this.itemId || (this.itemId !== res.id))))
+          var dupes = response.data?.data.filter(res => (res.name.toLowerCase() === this.editedVal.toLowerCase() && (!this.itemId || (this.itemId !== res.id))))
 
           if (dupes?.length > 0) {
             return true

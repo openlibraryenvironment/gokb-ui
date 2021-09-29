@@ -30,13 +30,15 @@
             v-model="allNames"
             :disabled="isReadonly"
             :label="$t('component.general.name')"
+            check-dupes="Org"
+            :item-id="providerObject.id"
           />
         </v-col>
       </v-row>
       <v-row v-if="id">
         <v-col>
           <gokb-state-select-field
-            v-model="status"
+            v-model="providerObject.status"
             :deletable="!!deleteUrl"
             :editable="!!updateUrl"
           />
@@ -45,14 +47,14 @@
       <v-row>
         <v-col>
           <gokb-text-field
-            v-model="reference"
+            v-model="providerObject.reference"
             :label="$t('component.provider.homepage')"
             :disabled="isReadonly"
           />
         </v-col>
         <v-col lg="2">
           <gokb-namespace-field
-            v-model="titleNamespace"
+            v-model="providerObject.titleNamespace"
             target-type="Title"
             :readonly="isReadonly"
             :label="$t('component.provider.titleNamespace')"
@@ -60,7 +62,7 @@
         </v-col>
         <v-col lg="2">
           <gokb-namespace-field
-            v-model="packageNamespace"
+            v-model="providerObject.packageNamespace"
             target-type="Package"
             :readonly="isReadonly"
             :label="$t('component.provider.packageNamespace')"
@@ -78,7 +80,7 @@
           v-model="tab"
           class="mx-4"
         >
-          <v-tabs-slider color="black" />
+          <v-tabs-slider color="primary" />
 
           <v-tab
             key="variants"
@@ -102,7 +104,7 @@
           >
             {{ $tc('component.identifier.label', 2) }}
             <v-chip class="ma-2">
-              {{ ids.length }}
+              {{ providerObject.ids.length }}
             </v-chip>
             <v-icon
               v-if="pendingChanges.ids"
@@ -180,7 +182,7 @@
             class="mt-4"
           >
             <gokb-identifier-section
-              v-model="ids"
+              v-model="providerObject.ids"
               :show-title="false"
               :disabled="isReadonly"
               @update="addPendingChange"
@@ -229,7 +231,7 @@
         :disabled="isReadonly"
       />
       <gokb-identifier-section
-        v-model="ids"
+        v-model="providerObject.ids"
         :expanded="ids.length > 0"
         :disabled="isReadonly"
       />
@@ -343,29 +345,31 @@
       return {
         tab: null,
         pendingChanges: {},
-        name: undefined,
-        source: undefined,
-        version: undefined,
         valid: true,
         notFound: false,
         tabsView: false,
-        status: undefined,
         dateCreated: undefined,
         lastUpdated: undefined,
         deleteUrl: undefined,
-        titleNamespace: undefined,
-        packageNamespace: undefined,
-        reference: undefined,
-        ids: [],
         allAlternateNames: [],
         allCuratoryGroups: [],
-        offices: [],
         allPackages: [],
         allNames: { name: undefined, alts: [] },
         allPlatforms: [],
+        offices: [],
         updateUrl: undefined,
         successMsg: undefined,
-        errorMsg: undefined
+        version: undefined,
+        errorMsg: undefined,
+        providerObject: {
+          id: undefined,
+          ids: [],
+          status: undefined,
+          source: undefined,
+          titleNamespace: undefined,
+          packageNamespace: undefined,
+          reference: undefined,
+        }
       }
     },
     computed: {
@@ -442,19 +446,13 @@
         const activeGroup = accountModel.activeGroup()
 
         const data = {
-          id: this.id,
+          ...this.providerObject,
           name: this.allNames.name,
-          source: this.source || null,
-          status: this.status,
-          reference: this.reference,
           version: this.version,
-          ids: this.ids,
           variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
           offices: this.offices.map(office => ({ ...office, id: (typeof office.id === 'number' ? office.id : null) })),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
           providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null })),
-          titleNamespace: this.titleNamespace,
-          packageNamespace: this.packageNamespace,
           activeGroup: activeGroup
         }
         const response = await this.catchError({
