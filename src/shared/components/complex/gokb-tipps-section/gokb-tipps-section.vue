@@ -3,10 +3,12 @@
     <gokb-section
       expandable
       :hide-default="!expanded"
-      filters
+      :filters="filterAlign"
       :sub-title="title"
       :items-total="totalNumberOfItems"
       :errors="!!apiErrors"
+      :mark-required="required"
+      :clear-background="!ttl && !pkg"
     >
       <span v-if="successMessage">
         <v-alert type="success">
@@ -33,6 +35,7 @@
       >
         <gokb-button
           class="mr-4"
+          color="primary"
           @click="showKbartImportPopup"
         >
           KBART Import
@@ -48,7 +51,7 @@
               v-on="on"
             >
               <v-icon>add</v-icon>
-              {{ $t('btn.new') }}
+              {{ $t('btn.add') }}
               <v-icon>keyboard_arrow_down</v-icon>
             </v-btn>
           </template>
@@ -69,6 +72,7 @@
         <gokb-button
           :disabled="selectedItems.length == 0"
           class="mr-4"
+          color="primary"
           icon-id="close"
           @click="confirmRetireSelectedItems"
         >
@@ -77,6 +81,7 @@
         <gokb-button
           :disabled="selectedItems.length == 0"
           icon-id="delete"
+          color="primary"
           @click="confirmDeleteSelectedItems"
         >
           {{ $t('btn.delete') }}
@@ -122,6 +127,7 @@
         :editable="isEditable"
         :selected-items="selectedItems"
         :total-number-of-items="totalNumberOfItems"
+        :show-loading="isLoading"
         :options.sync="options"
         @selected-items="selectedItems = $event"
         @delete-item="confirmDeleteItem"
@@ -131,7 +137,7 @@
       />
     </gokb-section>
     <gokb-section
-      v-if="(!pkg && !ttl) || newTipps.length > 0"
+      v-if="(!pkg && !ttl) && newTipps.length > 0"
       no-tool-bar
     >
       <gokb-table
@@ -209,6 +215,16 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      required: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      filterAlign: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     data () {
@@ -243,7 +259,8 @@
         itemCount: 0,
         newItemCount: 0,
         interval: null,
-        linkValue: 'title'
+        linkValue: 'title',
+        loading: false
       }
     },
     computed: {
@@ -288,6 +305,9 @@
       },
       title () {
         return this.showTitle ? this.$i18n.tc('component.tipp.label', 2) : undefined
+      },
+      isLoading () {
+        return this.loading
       }
     },
     watch: {
@@ -410,6 +430,8 @@
             }
           })
 
+          this.loading = true
+
           const result = await this.catchError({
             promise: searchService.getTipps(reqId, {
               ...(searchParams || {}),
@@ -432,8 +454,8 @@
                   series: tipp.series,
                   subjectArea: tipp.subjectArea,
                   publisherName: tipp.publisherName,
-                  dateFirstInPrint: tipp.dateFirstInPrint && tipp.dateFirstInPrint.substr(0, 10),
-                  dateFirstOnline: tipp.dateFirstOnline && tipp.dateFirstOnline.substr(0, 10),
+                  dateFirstInPrint: tipp.dateFirstInPrint && this.buildDateString(tipp.dateFirstInPrint),
+                  dateFirstOnline: tipp.dateFirstOnline && this.buildDateString(tipp.dateFirstOnline),
                   firstAuthor: tipp.firstAuthor,
                   firstEditor: tipp.firstEditor,
                   publicationType: tipp.publicationType,
@@ -441,16 +463,19 @@
                   editionStatement: tipp.editionStatement,
                   medium: tipp.medium,
                   lastChangedExternal: tipp.lastChangedExternal,
-                  accessStartDate: tipp.accessStartDate && tipp.accessStartDate.substr(0, 10),
-                  accessEndDate: tipp.accessEndDate && tipp.accessEndDate.substr(0, 10),
+                  accessStartDate: tipp.accessStartDate && this.buildDateString(tipp.accessStartDate),
+                  accessEndDate: tipp.accessEndDate && this.buildDateString(tipp.accessEndDate),
+                  variantNames: tipp._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })),
                   pkg: tipp.pkg,
                   title: tipp.title,
+                  importId: tipp.importId,
                   hostPlatform: tipp.hostPlatform,
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
                   titleType: this.title?.type ? this.$i18n.tc('component.title.type.' + tipp.title.type) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
                   titleId: tipp.title?.id,
                   ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!tipp._links.delete.href })),
+                  prices: tipp._embedded.prices,
                   popup: { value: (this.ttl ? tipp.pkg.name : (tipp.title ? tipp.title.name : tipp.name)), label: 'tipp', type: 'GokbAddTitlePopup' },
                   hostPlatformName: tipp.hostPlatform?.name,
                   lastUpdated: tipp.lastUpdated,
@@ -462,6 +487,8 @@
 
             this.$emit('update', this.itemCount)
           }
+
+          this.loading = false
         }
       }
     }

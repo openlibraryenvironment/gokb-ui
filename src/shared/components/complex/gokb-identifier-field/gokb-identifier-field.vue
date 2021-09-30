@@ -5,6 +5,7 @@
         v-model="localNamespace"
         :readonly="namespaceFixed"
         :target-type="targetType"
+        required
         width="140px"
         :label="$tc('component.identifier.namespace')"
       />
@@ -14,6 +15,7 @@
         v-model="localValue"
         :disabled="disabled"
         :label="namespaceFixed ? localNamespace.name : $tc('component.identifier.label')"
+        :rules="namespaceRules"
         :append-icon="deleteIcon"
         @click:append="$emit('delete', value)"
       />
@@ -72,6 +74,15 @@
           this.$emit('input', { value: this.value.value, namespace })
         }
       },
+      namespacePattern () {
+        return this.localNamespace?.pattern && new RegExp(this.localNamespace.pattern)
+      },
+      namespaceRules () {
+        return [
+          v => v?.length > 0 || this.$i18n.t('validation.missingValue'),
+          v => !this.namespacePattern || !!this.namespacePattern.test(v) || this.$i18n.t('component.identifier.validation.pattern')
+        ]
+      }
     }
   }
 </script>

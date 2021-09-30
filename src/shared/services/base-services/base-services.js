@@ -10,6 +10,9 @@ const api = (http, utils) => ({
   setAuthorization (tokenType, accessToken) {
     headers[HEADER_AUTHORIZATION_KEY] = `${tokenType} ${accessToken}`
   },
+  setLanguage (lang) {
+    headers['Accept-Language'] = lang
+  },
 
   request ({ method, url, data }, cancelToken) {
     const parameters = {
@@ -29,10 +32,10 @@ const api = (http, utils) => ({
       .forEach(([name, value]) => {
         if (Array.isArray(value)) {
           value.forEach(val =>
-            pars.push(`${name}=${val}`)
+            pars.push(`${name}=${typeof val === 'string' ? encodeURIComponent(val.trim()) : val}`)
           )
         } else if (value !== undefined && value !== null) {
-          pars.push(`${name}=${value}`)
+          pars.push(`${name}=${typeof value === 'string' ? encodeURIComponent(value.trim()) : value}`)
         }
       })
 

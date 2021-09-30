@@ -45,14 +45,6 @@
           :label="$t('component.source.ezbMatch')"
         />
       </v-col>
-      <v-col>
-        <v-checkbox
-          v-model="zdbMatch"
-          class="mr-5"
-          :readonly="readonly"
-          :label="$t('component.source.zdbMatch')"
-        />
-      </v-col>
       <v-col class="d-flex flex-row-reverse">
         <v-checkbox
           v-model="automaticUpdates"
@@ -119,7 +111,6 @@
           url: undefined,
           targetNamespace: undefined,
           ezbMatch: undefined,
-          zdbMatch: undefined,
           automaticUpdates: undefined,
           update: false
         },
@@ -160,15 +151,6 @@
         },
         set (val) {
           this.item.ezbMatch = val
-          this.$emit('input', this.item)
-        }
-      },
-      zdbMatch: {
-        get () {
-          return this.item.zdbMatch
-        },
-        set (val) {
-          this.item.zdbMatch = val
           this.$emit('input', this.item)
         }
       },
@@ -219,7 +201,6 @@
             this.item.name = result.data.name
             this.item.url = result.data.url
             this.item.automaticUpdates = result.data.automaticUpdates
-            this.item.zdbMatch = result.data.zdbMatch
             this.item.ezbMatch = result.data.ezbMatch
           }
         }

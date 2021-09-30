@@ -11,7 +11,15 @@
         type="success"
         dismissible
       >
-        {{ successMsg }}
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
       </v-alert>
     </span>
     <v-row>
@@ -265,6 +273,7 @@
             <gokb-identifier-section
               v-model="ids"
               :show-title="false"
+              :target-type="currentType"
               :disabled="isReadonly"
               :api-errors="errors.ids"
               @update="addPendingChange"
@@ -301,6 +310,7 @@
           >
             <gokb-reviews-section
               :review-component="titleItem"
+              :show-title="false"
               :api-errors="errors.reviewRequests"
               @update="refreshReviewsCount"
             />
@@ -337,6 +347,7 @@
       <gokb-identifier-section
         v-model="ids"
         :disabled="isReadonly"
+        :target-type="currentType"
         :api-errors="errors.ids"
       />
       <gokb-publisher-section
@@ -498,6 +509,7 @@
         updateUrl: undefined,
         deleteUrl: undefined,
         successMsg: undefined,
+        errorMsg: undefined,
         allTypes: [
           { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
           { name: this.$i18n.tc('component.title.type.Book'), id: 'Book' },
@@ -529,16 +541,25 @@
         return accountModel.loggedIn()
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.typeDisplay, this.allNames.name]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.typeDisplay]) : undefined
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
       },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
+      },
+      isValid () {
+        return !!this.allNames.name
       }
     },
     watch: {
@@ -573,11 +594,13 @@
         this.errors = {}
         var isUpdate = !!this.id
 
+        const activeGroup = accountModel.activeGroup()
+
         const data = {
           id: this.id,
           name: this.allNames.name,
           ids: this.ids.map(id => ({ value: id.value, type: id.namespace })),
-          variantNames: this.allNames.alts,
+          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
           publishedFrom: this.titleItem.publishedFrom,
           publishedTo: this.titleItem.publishedTo,
           dateFirstInPrint: this.titleItem.firstPublishedInPrint,
@@ -585,13 +608,15 @@
           firstAuthor: this.titleItem.firstAuthor,
           firstEditor: this.titleItem.firstEditor,
           type: this.currentType,
+          version: this.version,
           volumeNumber: this.titleItem.volumeNumber,
           editionNumber: this.titleItem.editionNumber,
           editionStatement: this.titleItem.editionStatement,
           medium: this.titleItem.medium,
           OAStatus: (!this.titleItem.OAStatus || typeof this.titleItem.OAStatus === 'number') ? this.titleItem.OAStatus : this.titleItem.OAStatus.id,
           status: this.titleItem.status,
-          publisher: this.publishers.map(pub => pub.id)
+          publisher: this.publishers.map(pub => pub.id),
+          activeGroup: activeGroup
         }
         const response = await this.catchError({
           promise: titleServices.createOrUpdateTitle(data, this.cancelToken.token),
@@ -616,10 +641,17 @@
               this.$router.push('/title/' + response.data?.id)
             }
 
-            this.successMsg = this.isEdit ? this.$i18n.t('success.update', [this.typeDisplay, this.allNames.name]) : this.$i18n.t('success.create', [this.typeDisplay, this.allNames.name])
+            this.successMsg = this.isEdit ? 'success.update' : 'success.create'
           }
         } else {
-          this.errors = response.data.error
+          if (response.status === 409) {
+            this.errorMsg = 'error.update.409'
+          } else if (response.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else {
+            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+            this.errors = response.data.error
+          }
         }
 
         window.scrollTo(0, 0)
@@ -646,8 +678,8 @@
             this.version = data.version
             this.currentType = data.type
             this.titleItem.type = data.type
-            this.titleItem.publishedFrom = data.publishedFrom && data.publishedFrom.substr(0, 10)
-            this.titleItem.publishedTo = data.publishedTo && data.publishedTo.substr(0, 10)
+            this.titleItem.publishedFrom = this.buildDateString(data.publishedFrom)
+            this.titleItem.publishedTo = this.buildDateString(data.publishedTo)
             this.publishers = data._embedded.publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!this.updateUrl }))
             this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
             this.tipps = data._embedded.tipps || []
@@ -657,13 +689,13 @@
             this.titleItem.editionStatement = data.editionStatement
             this.dateCreated = data.dateCreated
             this.lastUpdated = data.lastUpdated
-            this.firstAuthor = data.firstAuthor
-            this.firstEditor = data.firstEditor
+            this.titleItem.firstAuthor = data.firstAuthor
+            this.titleItem.firstEditor = data.firstEditor
             this.titleItem.medium = data.medium
             this.titleItem.OAStatus = data.OAStatus
             this.titleItem.editionNumber = data.editionNumber
-            this.titleItem.firstPublishedInPrint = data.firstPublishedInPrint
-            this.titleItem.firstPublishedOnline = data.firstPublishedOnline
+            this.titleItem.firstPublishedInPrint = this.buildDateString(data.firstPublishedInPrint)
+            this.titleItem.firstPublishedOnline = this.buildDateString(data.firstPublishedOnline)
             this.titleItem.volumeNumber = data.volumeNumber
             this.titleItem.status = data.status
             this.history = data.history

@@ -12,13 +12,24 @@
     :rules="rules"
     :type="type"
     :error="!!apiErrors"
+    maxlength="255"
     :placeholder="placeholder"
     :append-icon="appendIcon"
     validate-on-blur
     :clearable="!readonly"
     :dense="dense"
     @click:append="$emit('click:append', $event)"
-  />
+  >
+    <template #label>
+      {{ label }}
+      <span
+        v-if="required"
+        style="color:red"
+      >
+        *
+      </span>
+    </template>
+  </v-text-field>
 </template>
 
 <script>
@@ -112,11 +123,14 @@
         set (localValue) {
           this.$emit('input', localValue)
         }
+      },
+      isValid () {
+        return this.$refs.textField.valid
       }
     },
     methods: {
       validate () {
-        this.$refs.textField.validate()
+        return this.$refs.textField.validate()
       }
     }
   }

@@ -3,6 +3,7 @@
     :color="colorValue"
     :text="text"
     :type="type"
+    :class="text || 'invert--text'"
     :disabled="disabled"
     :to="to"
     @click="$emit('click', $event)"
@@ -54,7 +55,7 @@
     },
     computed: {
       colorValue () {
-        return this.color || (this.default && 'accent') || 'primary'
+        return this.color || (!this.default && 'secondary') || 'primary'
       },
       type () {
         return (this.default && 'submit') || undefined

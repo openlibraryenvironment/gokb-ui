@@ -17,7 +17,7 @@
     :rules="rules"
     :no-data-text="$t('search.results.empty')"
     :style="{width: width}"
-    :clearable="clearable"
+    :clearable="clearable && !required"
     :return-object="returnObject"
     :dense="dense"
   />
@@ -109,7 +109,7 @@
         return this.localValue?.name || undefined
       },
       rules () {
-        return [((!!this.required && !!this.value) || !this.required || this.$i18n.t('validation.missingSelection'))]
+        return [value => (!!this.required && !!value) || !this.required || this.$i18n.t('validation.missingSelection')]
       }
     },
     async mounted () {
@@ -156,12 +156,10 @@
 
           if (response) {
             this.items = this.transform(response)
+          }
 
-            if (this.initItem) {
-              this.setInit()
-            }
-          } else {
-            console.log('No RDV result! for ' + this.entityName)
+          if (this.initItem) {
+            this.setInit()
           }
         } else if (this.$attrs.items) {
           this.items = this.$attrs.items

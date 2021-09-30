@@ -2,6 +2,7 @@
   <gokb-section
     :expandable="expandable"
     :hide-default="!expanded"
+    :filters="filterAlign"
     :title="title"
     :sub-title="subTitle"
     :items-total="totalNumberOfItems"
@@ -16,14 +17,16 @@
       <gokb-button
         v-if="isEditable"
         icon-id="add"
+        color="primary"
         @click="showAddNewCuratoryGroup"
       >
-        {{ $t('btn.new') }}
+        {{ $t('btn.add') }}
       </gokb-button>
       <gokb-button
         v-if="isEditable"
         class="ml-4"
         icon-id="delete"
+        color="primary"
         :disabled="isDeleteSelectedDisabled"
         @click="confirmDeleteSelectedItems"
       >
@@ -89,6 +92,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      filterAlign: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

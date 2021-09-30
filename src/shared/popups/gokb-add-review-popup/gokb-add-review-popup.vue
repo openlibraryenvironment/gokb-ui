@@ -6,6 +6,22 @@
     @submit="save"
   >
     <gokb-error-component :value="error" />
+    <span v-if="successMsg">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
     <v-row>
       <v-col md="12">
         <gokb-entity-field
@@ -82,30 +98,30 @@
               <template v-slot:0>
                 <router-link
                   v-if="numMessageVars > 0 && typeof additionalInfo.vars[0] === 'number'"
-                  :style="{ color: '#f2994a' }"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
+                  :style="{ color: '#f2994a' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
                 <b v-else-if="numMessageVars > 0">{{ additionalInfo.vars[0] }}</b>
                 <router-link
                   v-else-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
-                  :style="{ color: '#f2994a' }"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
+                  :style="{ color: '#f2994a' }"
                 >
                   {{ reviewItem.otherComponents[0].name }}
                 </router-link>
                 <router-link
                   v-else-if="reviewItem.component"
-                  :style="{ color: '#f2994a' }"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
+                  :style="{ color: '#f2994a' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
               </template>
               <template v-slot:1>
                 <b v-if="numMessageVars > 1">
-                  <span v-if="typeof additionalInfo.vars[1] === 'string'">
+                  <span v-if="typeof additionalInfo.vars[1] === 'string' || typeof additionalInfo.vars[1] === 'number'">
                     {{ additionalInfo.vars[1] }}
                   </span>
                   <span v-else-if="Array.isArray(additionalInfo.vars[1])">
@@ -137,7 +153,8 @@
           </div>
           <gokb-text-field
             v-else
-            v-model="reviewItem.request"
+            v-model="reviewItem.description"
+            required
             :disabled="isEdit"
             :label="$i18n.t('component.review.cause')"
           />
@@ -240,13 +257,14 @@
                   v-if="reviewItem.otherComponents && reviewItem.otherComponents.size > 0"
                   :style="{ color: '#f2994a' }"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
+                  color="primary"
                 >
                   {{ reviewItem.otherComponents[0].name }}
                 </router-link>
                 <router-link
                   v-else-if="reviewItem.component"
-                  :style="{ color: '#f2994a' }"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
+                  :style="{ color: '#f2994a' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
@@ -255,11 +273,24 @@
           </div>
           <gokb-textarea-field
             v-else
-            v-model="reviewItem.description"
+            v-model="reviewItem.request"
+            required
             :disabled="isEdit"
             :label="$i18n.t('component.review.request')"
           />
         </template>
+      </v-col>
+    </v-row>
+    <v-row v-if="additionalInfo">
+      <v-col md="12">
+        <v-expansion-panels accordion>
+          <v-expansion-panel>
+            <v-expansion-panel-header>{{ $t('component.review.additionalInfo.label') }}</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <vue-json-pretty :data="additionalInfo" />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-col>
     </v-row>
 
@@ -268,10 +299,11 @@
       <gokb-button
         @click="close"
       >
-        {{ $t('btn.close') }}
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
-        :disabled="isReadonly"
+        v-if="!isReadonly"
+        :disabled="!isValid"
         default
       >
         {{ isEdit ? $t('btn.update') : $t('btn.create') }}
@@ -284,9 +316,12 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import reviewServices from '@/shared/services/review-services'
+  import VueJsonPretty from 'vue-json-pretty'
+  import 'vue-json-pretty/lib/styles.css'
 
   export default {
     name: 'GokbAddReviewPopup',
+    components: { VueJsonPretty },
     extends: BaseComponent,
     props: {
       selected: {
@@ -314,6 +349,8 @@
         additionalInfo: undefined,
         newAdditionalComponent: undefined,
         updateUrl: undefined,
+        successMsg: undefined,
+        errorMsg: undefined,
         deleteUrl: undefined,
         reviewItem: {
           status: undefined,
@@ -359,6 +396,9 @@
       isEdit () {
         return !!this.id
       },
+      isValid () {
+        return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
+      },
       stdDesc () {
         return this.selectedItem?.stdDesc || undefined
       },
@@ -370,6 +410,12 @@
       },
       cmpLabel () {
         return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview'))
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.review.label')]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label')]) : undefined
       }
     },
     async created () {
@@ -396,6 +442,7 @@
             reviewRequest,
             descriptionOfCause,
             dateCreated,
+            version,
             componentToReview,
             allocatedGroups,
             additionalInfo,
@@ -410,7 +457,7 @@
         this.reviewItem.stdDesc = stdDesc
         this.reviewItem.request = reviewRequest
         this.reviewItem.description = descriptionOfCause
-        this.reviewItem.dateCreated = new Date(dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
+        this.reviewItem.dateCreated = dateCreated ? new Date(dateCreated).toLocaleString('sv') : ''
         this.reviewItem.component = componentToReview
         this.reviewItem.allocatedGroups = allocatedGroups
         this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(oc => ({
@@ -421,14 +468,19 @@
         })) : []
         this.updateUrl = _links?.update?.href || undefined
         this.deleteUrl = _links?.delete?.href || undefined
+        this.version = version
       },
       async save () {
+        const activeGroup = accountModel.activeGroup()
+
         const newReview = {
           id: this.id,
           status: this.reviewItem.status?.id || null,
           stdDesc: this.reviewItem.stdDesc?.id || null,
-          reviewRequest: this.reviewItem.request,
-          descriptionOfCause: this.reviewItem.description,
+          version: this.version,
+          reviewRequest: this.reviewItem.request || this.$i18n.t('component.review.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.action'),
+          descriptionOfCause: this.reviewItem.description || this.$i18n.t('component.review.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.info'),
+          activeGroup,
           componentToReview: this.reviewItem.component.id,
           additionalInfo: { otherComponents: this.reviewItem.otherComponents }
         }
@@ -438,12 +490,20 @@
           instance: this
         })
 
-        if (response.status === 200) {
+        if (response?.status === 200) {
           this.$emit('edit', this.selectedItem)
           this.close()
-        } else if (response.status === 201) {
+        } else if (response?.status === 201) {
           this.$emit('added', response.data)
           this.close()
+        } else {
+          if (response.status === 409) {
+            this.errorMsg = 'error.update.409'
+          } else if (response.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else {
+            this.errors = response.data.error
+          }
         }
       },
       addNewOtherComponent (cmp) {
@@ -464,3 +524,8 @@
     }
   }
 </script>
+
+<style>
+  .vjs-tree__node.is-highlight, .vjs-tree__node:hover {background-color:#9b9b9b }
+  .vjs-value__string { color: #3c804b }
+</style>

@@ -45,6 +45,7 @@
       :items="packages"
       :headers="resultHeaders"
       :total-number-of-items="totalNumberOfResults"
+      :show-loading="isLoading"
       :options.sync="resultOptions"
       @selected-items="selectedItems = $event"
       @paginate="retrievePackages"
@@ -109,6 +110,7 @@
         rawPackages: undefined,
         confirmationPopUpVisible: false,
         selectedItems: [],
+        loading: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
@@ -195,6 +197,9 @@
             value: 'lastUpdated'
           }
         ]
+      },
+      isLoading () {
+        return this.loading
       }
     },
     watch: {
@@ -243,6 +248,8 @@
           }
         })
 
+        this.loading = true
+
         this.rawPackages = await this.catchError({
           promise: searchServices('rest/packages').search({
             ...(searchParams || {}),
@@ -254,6 +261,8 @@
           }, this.cancelToken.token),
           instance: this
         })
+
+        this.loading = false
       }
     }
   }

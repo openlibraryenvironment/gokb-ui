@@ -1,35 +1,34 @@
 <template>
   <gokb-section
-    expandable
-    :hide-default="!expanded"
+    :expandable="expandable"
     :sub-title="title"
     :items-total="totalNumberOfItems"
-    :errors="!!apiErrors"
+    :hide-default="!expanded"
   >
     <gokb-add-item-popup
       v-if="addItemPopupVisible"
       v-model="addItemPopupVisible"
-      :component="{ type: 'GokbOfficeField', name: $tc('component.office.label') }"
-      @add="addItem"
+      :component="{ type: 'GokbPriceField', name: $tc('component.tipp.prices.label') }"
+      @add="addNewItem"
     />
     <template #buttons>
       <gokb-button
         v-if="isEditable"
         icon-id="add"
         color="primary"
-        @click="showAddItem"
+        @click="showAddItemPopup"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
       <gokb-button
         v-if="isEditable"
+        :disabled="selectedItems.length == 0"
         class="ml-4"
-        icon-id="delete"
         color="primary"
-        :disabled="isDeleteSelectedDisabled"
+        icon-id="delete"
         @click="confirmDeleteSelectedItems"
       >
-        {{ $i18n.t('btn.delete') }}
+        {{ $t('btn.delete') }}
       </gokb-button>
     </template>
     <gokb-confirmation-popup
@@ -38,8 +37,8 @@
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
     <gokb-table
+      :items="prices"
       :headers="tableHeaders"
-      :items="offices"
       :editable="isEditable"
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
@@ -53,12 +52,17 @@
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
+  import BaseComponent from '@/shared/components/base-component'
 
   const ROWS_PER_PAGE = 10
 
   export default {
-    name: 'GokbOfficesSection',
-    components: { GokbAddItemPopup, GokbConfirmationPopup },
+    name: 'GokbPricesSection',
+    components: {
+      GokbConfirmationPopup,
+      GokbAddItemPopup
+    },
+    extends: BaseComponent,
     props: {
       value: {
         type: Array,
@@ -69,7 +73,7 @@
         required: false,
         default: false
       },
-      expanded: {
+      expandable: {
         type: Boolean,
         required: false,
         default: true
@@ -79,29 +83,45 @@
         required: false,
         default: true
       },
-      apiErrors: {
-        type: Array,
+      expanded: {
+        type: Boolean,
         required: false,
-        default: undefined
+        default: true
       }
     },
     data () {
       return {
-        addItemPopupVisible: false,
-        options: {
-          page: 1,
-          itemsPerPage: ROWS_PER_PAGE,
-          sortBy: ['popup'],
-          desc: [false]
-        },
-        selectedItems: [],
         confirmationPopUpVisible: false,
+        addItemPopupVisible: undefined,
+        selectedItems: [],
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: { text: undefined, vars: undefined }
+        messageToConfirm: undefined,
+        options: {
+          page: 1,
+          itemsPerPage: ROWS_PER_PAGE
+        }
       }
     },
     computed: {
+      localValue: {
+        get () {
+          return this.value
+        },
+        set (localValue) {
+          this.$emit('input', localValue)
+        }
+      },
+      prices () {
+        return [...this.value]
+          .map(item => ({
+            ...item,
+            localCurrency: (item.currency && item.currency.name),
+            localStart: item.startDate && item.startDate.substr(2, 10),
+            localEnd: item.endDate && item.endDate.substr(2, 10),
+            localType: (item.priceType && this.$i18n.t('component.tipp.prices.priceType.' + (item.priceType.value || item.priceType.name) + '.label'))
+          }))
+      },
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
       },
@@ -111,29 +131,16 @@
       isEditable () {
         return !this.disabled
       },
-      localValue: {
-        get () {
-          return this.value
-        },
-        set (localValue) {
-          this.$emit('input', localValue)
-        }
-      },
-      offices () {
-        return [...this.value]
-          .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-          .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
-      },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.office.type.label'), align: 'left', value: 'function.name', sortable: false, width: '15%' },
-          { text: this.$i18n.tc('component.office.name'), align: 'left', value: 'name', sortable: false, width: '15%' },
-          { text: this.$i18n.tc('component.general.language.label'), align: 'left', value: 'language.name', sortable: false, width: '15%' },
-          { text: this.$i18n.tc('component.office.email'), align: 'left', value: 'email', sortable: false }
+          { text: this.$i18n.tc('component.tipp.prices.price.label'), align: 'left', value: 'price', sortable: true },
+          { text: this.$i18n.tc('component.tipp.prices.currency.label'), align: 'left', value: 'localCurrency', sortable: true, width: '15%' },
+          { text: this.$i18n.tc('component.tipp.prices.startDate.label'), align: 'left', value: 'localStart', sortable: true, width: '15%' },
+          { text: this.$i18n.tc('component.tipp.prices.endDate.label'), align: 'left', value: 'localEnd', sortable: true, width: '15%' },
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.office.label', 2) : undefined
+        return this.showTitle ? this.$i18n.tc('component.tipp.prices.label') : undefined
       }
     },
     methods: {
@@ -145,13 +152,13 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.office.label', this.selectedItems.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.tipp.prices.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      confirmDeleteItem ({ id, name }) {
+      confirmDeleteItem ({ id, price }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: ['', name] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: ['', price] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -160,20 +167,26 @@
         this.localValue = this.localValue.filter(({ id }) => !this.selectedItems
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedItems = []
-        this.$emit('update', 'offices')
+        this.$emit('update', 'prices')
       },
       _deleteItem (idToDelete) {
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
-        this.$emit('update', 'offices')
+        this.$emit('update', 'prices')
       },
-      showAddItem () {
+      addNewItem (item) {
+        this.localValue.push({
+          id: this.tempId(),
+          ...item,
+          localCurrency: (item.currency && item.currency.name),
+          isDeletable: true,
+          _pending: 'added'
+        })
+        this.$emit('update', 'prices')
+      },
+      showAddItemPopup () {
         this.addItemPopupVisible = true
       },
-      addItem (item) {
-        this.localValue.push({ ...item, id: this.tempId(), isDeletable: true, _pending: 'added' })
-        this.$emit('update', 'offices')
-      }
     }
   }
 </script>

@@ -3,6 +3,7 @@
     <template v-slot:activator="{ on }">
       <gokb-button
         icon-id="import_export"
+        color="primary"
         :disabled="disabled"
         @click="on.click"
       >

@@ -4,7 +4,6 @@
     :key="version"
     :title="title"
     :sub-title="subTitle"
-    @valid="valid = $event"
     @submit="showCreatePackageConfirm"
   >
     <gokb-error-component :value="error" />
@@ -14,6 +13,14 @@
         dismissible
       >
         {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
       </v-alert>
     </span>
     <span v-if="kbartResult === 'success' || kbartStatus === 'success'">
@@ -45,21 +52,22 @@
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
-          editable
+          :editable="currentStepValid"
+          :class="{ error: !!step2Error }"
           :step="2"
         >
           {{ isEdit ? $t('component.package.navigation.step1') : $t('component.package.navigation.step2') }}
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
-          editable
+          :editable="currentStepValid"
           :step="3"
         >
           {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
         </v-stepper-step>
         <v-divider />
         <v-stepper-step
-          editable
+          :editable="currentStepValid"
           :step="4"
         >
           {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
@@ -72,9 +80,12 @@
             <gokb-name-field
               v-model="allNames"
               :disabled="isReadonly"
+              :required="!isReadonly"
+              check-dupes="Package"
+              :item-id="packageItem.id"
             />
             <gokb-url-field
-              v-model="packageItem.descriptionUrl"
+              v-model="packageItem.descriptionURL"
               :disabled="isReadonly"
               :label="$t('component.package.descriptionUrl')"
             />
@@ -91,6 +102,7 @@
             >
               <gokb-section
                 :sub-title="$t('component.package.provider')"
+                :mark-required="!isReadonly"
               >
                 <gokb-search-organisation-field
                   v-model="packageItem.provider"
@@ -105,7 +117,10 @@
               cols="12"
               xl="6"
             >
-              <gokb-section :sub-title="$t('component.package.platform')">
+              <gokb-section
+                :sub-title="$t('component.package.platform')"
+                :mark-required="!isReadonly"
+              >
                 <gokb-search-platform-field
                   v-model="packageItem.nominalPlatform"
                   :items="platformSelection"
@@ -285,7 +300,7 @@
           <gokb-tipps-section
             ref="tipps"
             :pkg="parseInt(id)"
-            :expanded="isEdit"
+            :filter-align="isEdit"
             :platform="packageItem.nominalPlatform"
             :default-title-namespace="providerTitleNamespace"
             :disabled="isReadonly"
@@ -419,18 +434,19 @@
           <v-row>
             <v-col
               cols="12"
-              xl="4"
+              xl="5"
             >
               <gokb-curatory-group-section
                 v-model="allCuratoryGroups"
                 :disabled="isReadonly"
+                :filter-align="!isReadonly"
                 :expandable="false"
                 :sub-title="$tc('component.curatoryGroup.label', 2)"
               />
             </v-col>
             <v-col
               cols="12"
-              xl="8"
+              xl="7"
             >
               <gokb-reviews-section
                 v-if="id && isContrib"
@@ -494,8 +510,8 @@
       <v-spacer />
       <gokb-button
         v-if="!isInLastStep"
-        color="accent"
-        :disabled="!valid"
+        color="primary"
+        :disabled="!currentStepValid"
         @click="go2NextStep"
       >
         {{ $t('btn.next') }}
@@ -504,7 +520,7 @@
       <gokb-button
         v-else-if="!isReadonly"
         key="add"
-        :disabled="!valid"
+        :disabled="!isValid"
         default
       >
         {{ $i18n.t('btn.submit') }}
@@ -598,8 +614,10 @@
     },
     data () {
       return {
-        valid: undefined,
+        valid: false,
         step: 1,
+        step2Error: false,
+        waiting: false,
         notFound: false,
         version: undefined,
         isCurator: false,
@@ -618,7 +636,7 @@
           source: undefined,
           type: 'package',
           status: undefined,
-          descriptionUrl: undefined,
+          descriptionURL: undefined,
           description: undefined,
           scope: undefined,
           global: undefined,
@@ -643,6 +661,7 @@
           { id: 'mixed', text: 'Gemischt' },
         ],
         successMsg: undefined,
+        errorMsg: undefined,
         kbartResult: undefined,
         titlesHeader: TITLES_HEADER,
         titlesOptions: {
@@ -705,19 +724,28 @@
         return accountModel.loggedIn()
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
       localListVerifiedDate () {
-        return this.listVerifiedDate ? new Date(this.listVerifiedDate).toISOString().substr(0, 10) : ''
+        return this.listVerifiedDate ? this.buildDateString(this.listVerifiedDate) : ''
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
       },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.package.label')]) : undefined
+      },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
+      },
+      currentStepValid () {
+        return this.isReadonly || (this.isEdit && (this.step !== 2 || (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider))) || (!this.isEdit && (this.step !== 1 || (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)))
+      },
+      isValid () {
+        return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
       }
     },
     watch: {
@@ -729,6 +757,13 @@
       '$i18n.locale' (l) {
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.package.label') + ' – ' + this.allNames.name
+        }
+      },
+      isValid (valid) {
+        if (this.isEdit && !this.isReadonly && !valid) {
+          this.step2Error = true
+        } else {
+          this.step2Error = false
         }
       }
     },
@@ -761,7 +796,6 @@
             update: false,
             url: undefined,
             ezbMatch: false,
-            zdbMatch: false,
             automaticUpdates: false,
             targetNamespace: options.selectedNamespace,
             duration: undefined,
@@ -787,6 +821,7 @@
         loading.startLoading()
         var isUpdate = !!this.id
         this.successMsg = undefined
+        this.errorMsg = undefined
         this.kbartResult = undefined
 
         if (this.valid) {
@@ -812,12 +847,15 @@
             }
           }
 
+          this.activeGroup = accountModel.activeGroup()
+
           const newPackage = {
             ...this.packageItem,
             id: this.id,
             ...(this.newTipps.length > 0 ? { tipps: this.newTipps } : {}),
             name: this.allNames.name,
-            variantNames: this.allAlternateNames,
+            version: this.version,
+            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
             curatoryGroups: this.allCuratoryGroups,
             ids: this.packageItem.ids.map(id => ({ value: id.value, type: id.namespace })),
             breakable: utils.asYesNo(this.packageItem.breakable),
@@ -825,6 +863,7 @@
             fixed: utils.asYesNo(this.packageItem.fixed),
             nominalPlatform: this.packageItem.nominalPlatform?.id,
             provider: this.packageItem.provider?.id,
+            activeGroup: this.activeGroup
           }
 
           if (this.kbart || this.urlUpdate) {
@@ -836,8 +875,9 @@
             instance: this
           })
 
-          if (response.status < 400) {
+          if (response?.status < 400) {
             this.successMsg = this.isEdit ? 'success.update' : 'success.create'
+            this.packageItem.id = response.data.id
 
             if (this.kbart || this.urlUpdate) {
               const kbartResult = await this.catchError({
@@ -858,7 +898,7 @@
                 this.step = 1
                 this.reload()
               } else {
-                this.kbartResult = 'error'
+                this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
               }
             } else {
               loading.stopLoading()
@@ -867,12 +907,20 @@
                 this.step = 1
                 this.reload()
               } else {
-                this.$router.push('/package/' + response.data?.id)
+                this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
               }
             }
           } else {
             loading.stopLoading()
-            console.log('GOKb status: ' + response.status)
+            if (response.status === 409) {
+              this.errorMsg = 'error.update.409'
+            } else if (response.status === 500) {
+              this.errorMsg = 'error.general.500'
+            } else {
+              this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+              this.errors = response.data.error
+              this.step = 1
+            }
           }
         }
       },
@@ -896,7 +944,7 @@
             this.packageItem.name = data.name
             this.packageItem.source = data.source
             this.packageItem.status = data.status
-            this.packageItem.descriptionUrl = data.descriptionUrl
+            this.packageItem.descriptionURL = data.descriptionURL
             this.packageItem.description = data.description
             this.packageItem.scope = data.scope
             this.packageItem.global = data.global?.name
@@ -911,7 +959,7 @@
             this.packageItem.editStatus = data.editStatus
             this.version = data.version
             this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
-            this.allAlternateNames = data._embedded.variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!this.updateUrl }))
+            this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
             this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!this.updateUrl }))
             this.reviewRequests = data._embedded.reviewRequests
             this.updateUrl = data._links?.update?.href || null
@@ -970,6 +1018,9 @@
       },
       triggerUpdate (checked) {
         this.urlUpdate = checked
+      },
+      wait (ms) {
+        return new Promise((resolve) => { setTimeout(resolve, ms) })
       }
     }
   }

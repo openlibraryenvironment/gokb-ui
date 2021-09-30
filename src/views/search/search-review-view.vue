@@ -136,6 +136,9 @@
       this.component = 'g:reviewRequests'
       this.searchServicesUrl = 'rest/reviews'
       this.linkValue = 'componentToReview'
+      this.initVals = {
+        status: 'setInit'
+      }
       this.linkSearchParameterValues = {
         popup: 'componentToReview',
         localDesc: 'stdDesc'

@@ -8,10 +8,15 @@
     <v-card class="elevation-12">
       <v-form
         ref="form"
+        :value="isValid"
         @submit.prevent="doSubmit"
       >
-        <v-toolbar color="#F2994A">
-          <v-toolbar-title>{{ title }}</v-toolbar-title>
+        <v-toolbar
+          color="accent"
+        >
+          <v-toolbar-title>
+            {{ title }}
+          </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <slot />
@@ -45,23 +50,22 @@
       persistent: {
         type: Boolean,
         required: false,
-        default: false
+        default: true
       },
       fullscreen: {
         type: Boolean,
         required: false,
         default: false
+      },
+      isValid: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     methods: {
       doSubmit () {
         this.$emit('submit', this.$refs.form)
-      },
-      resetValidation () {
-        this.$refs.form.resetValidation()
-      },
-      validate () {
-        this.$refs.form.validate()
       }
     }
   }

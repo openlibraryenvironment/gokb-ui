@@ -44,6 +44,9 @@
     methods: {
       doSubmit () {
         this.$emit('submit', this.$refs.form)
+      },
+      validate () {
+        this.$refs.validate()
       }
     }
   }

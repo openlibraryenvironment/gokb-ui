@@ -14,6 +14,7 @@
       :server-items-length="totalNumberOfItems"
       hide-default-footer
       :item-key="itemKey"
+      :loading="showLoading"
       :show-select="showSelect"
       :must-sort="true"
       dense
@@ -120,6 +121,7 @@
     <div class="text-center pt-2">
       <v-pagination
         v-model="options.page"
+        color="secondary"
         :disabled="disabled"
         :length="pages"
         :total-visible="7"
@@ -189,6 +191,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      showLoading: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -218,6 +225,9 @@
       '$i18n.locale' () {
         this.handlePaging()
       }
+    },
+    activated () {
+      this.closeEdit()
     },
     methods: {
       handlePaging () {

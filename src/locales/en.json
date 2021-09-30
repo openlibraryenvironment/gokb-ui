@@ -8,6 +8,7 @@
     "confirm": "Confirm",
     "create": "Create",
     "darkMode": "Dark Mode",
+    "reactivate": "Reactivate",
     "deactivate": "Deactivate",
     "delete": "Delete",
     "disableSync": "Stop Auto-Refresh",
@@ -22,7 +23,8 @@
     "retire": "Retire",
     "search": "Search",
     "submit": "Submit",
-    "update": "Update"
+    "update": "Update",
+    "bulkSetStatus": "Set all {0} as {1}"
   },
   "main": {
     "docs": {
@@ -139,6 +141,7 @@
       "label": "Login",
       "automatic": "Stay logged in",
       "error": {
+        "400": "The entered login information is not valid.",
         "401": "The entered login information is not valid.",
         "500": "There was an error processing the login request. Please try again later."
       }
@@ -202,7 +205,8 @@
       "DeleteTIWithoutHistory": "Delete Titles without Packages",
       "RejectTIWithoutIdentifier": "Reject Titles without Identifier",
       "PlatformCleanup": "Platform Cleanup",
-      "RecalculateStatistics": "Recalculate Statistics"
+      "RecalculateStatistics": "Recalculate Statistics",
+      "PackageUpdateTipps": "Package KBART Update"
     }
   },
   "kbart": {
@@ -230,6 +234,7 @@
     },
     "errors": {
       "missingVal": "Missing value in column '{0}'!",
+      "missingCols": "Missing columns: {0}",
       "illegalVal": "Value {0} is not valid!",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
@@ -287,6 +292,26 @@
     "update": "Successfully edited {0} {1}!",
     "retire": "Successfully archived {0} {1}!",
     "delete": "Successfully deleted {0} {1}!"
+  },
+  "error": {
+    "update": {
+      "400": "{0} update contained errors!",
+      "403": "{0} could not be updated due to missing user permissions.",
+      "409": "{0} could not be saved because it has had another update in the meantime. Please look through your changes and enter them again after refreshing this site."
+    },
+    "create": {
+      "400": "{0} contained errors!",
+      "403": "{0} could not be created due to missing user permissions."
+    },
+    "general": {
+      "500": "The request failed, please report this to an admin or try again later.",
+      "name": {
+        "notUnique": "This name is already in use!"
+      }
+    },
+    "bulkUpdate": {
+      "403": "Not all {0} could be updated!"
+    }
   },
   "header": {
     "edit": {
@@ -569,6 +594,39 @@
       "other": {
         "label": "More"
       },
+      "prices": {
+        "label": "Price | Prices",
+        "price": {
+          "label": "Amount"
+        },
+        "currency": {
+          "label": "Currency | Currencies"
+        },
+        "priceType": {
+          "label": "Type",
+          "list": {
+            "label": "List"
+          },
+          "perpetual": {
+            "label": "Perpetual"
+          },
+          "topup": {
+            "label": "Top-Up"
+          },
+          "on-off": {
+            "label": "On-Off"
+          },
+          "subscription": {
+            "label": "Subscription"
+          }
+        },
+        "startDate": {
+          "label": "Start Date"
+        },
+        "endDate": {
+          "label": "End Date"
+        }
+      },
       "name": "Package-specific name",
       "accessPeriod": "Access Period",
       "identifier": {
@@ -692,7 +750,10 @@
     "identifier": {
       "label": "Identifier | Identifiers",
       "value": "Value",
-      "namespace": "Namespace | Namespaces"
+      "namespace": "Namespace | Namespaces",
+      "validation": {
+        "pattern": "The entered value does not meet the format requirements."
+      }
     },
     "user": {
       "label": "User | Users",
@@ -734,10 +795,13 @@
     },
     "review": {
       "label": "Review | Reviews",
-      "request": "Title",
+      "request": "Request",
       "type": "Type",
       "cause": "Cause",
       "componentToReview": "Component",
+      "additionalInfo": {
+        "label": "Structured info"
+      },
       "otherComponents": {
         "label": "Other Components",
         "add": "Link new component",
@@ -879,6 +943,24 @@
           "info": "There were multiple ZDB results for this title.",
           "action": "Skipped ZDB enrichment",
           "toDo": "Select a ZDB entry from the candidates."
+        },
+        "Coverage Mismatch": {
+          "label": "Coverage Mismatch",
+          "info": "The matched global title reference has conflicting publishing dates to the coverage of this item.",
+          "action": "Skipped title linking",
+          "toDo": "Manually link the existing match or create a new title for linking."
+        },
+        "ZDB Title Overlap": {
+          "label": "ZDB Label Mismatch",
+          "info": "Matched ZDB-ID is already linked to another title instance.",
+          "action": "Skipped ZDB enrichment",
+          "toDo": "Review all titles for possible discrepancies"
+        },
+        "No ZDB Results": {
+          "label": "No ZDB Matches",
+          "info": "No ZDB-IDs found for given ISSNs",
+          "action": "Skipped ZDB enrichment",
+          "toDo": ""
         }
       }
     },
@@ -889,14 +971,16 @@
       "label": "Curatory Group | Curatory Groups"
     },
     "variantName": {
-      "label": "Name Variant | Name Variants"
+      "label": "Name Variant | Name Variants",
+      "error": {
+        "duplicate": "A similar variant to '{0}' already exists!"
+      }
     },
     "source": {
       "label": "Settings for Automated Import and Update |  Settings for Automated Imports and Updates",
       "updateNow": "Import Now",
       "lastRun": "Last Run",
       "ezbMatch": "Match EZB",
-      "zdbMatch": "Match ZDB",
       "enableUpdate": "Activated",
       "url": "URL",
       "frequency": {

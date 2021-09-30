@@ -74,7 +74,7 @@
         }
       },
       colorAccountIcon () {
-        return this.loggedIn ? 'success' : 'info'
+        return this.loggedIn ? 'success' : 'white'
       },
       username () {
         return accountModel.username()

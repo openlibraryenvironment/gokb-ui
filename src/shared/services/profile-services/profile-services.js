@@ -18,7 +18,7 @@ const api = (baseServices) => ({
   },
   updateProfile (url, data, cancelToken) {
     return baseServices.request({
-      method: 'PATCH',
+      method: 'PUT',
       url,
       data,
     }, cancelToken)

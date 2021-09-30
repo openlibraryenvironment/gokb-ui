@@ -38,6 +38,7 @@
             v-model="password"
             :label="$t('component.user.password')"
             hide-icon
+            required
             autocomplete="off"
             :rules="[]"
             dense
@@ -95,6 +96,7 @@
             <gokb-button
               class="mr-4"
               icon-id="add"
+              color="primary"
               @click="showAddNewRole"
             >
               {{ $t('btn.add') }}
@@ -200,6 +202,7 @@
         passwordExpired: undefined,
         email: undefined,
         enabled: undefined,
+        version: undefined,
         successMsg: undefined,
         accountLocked: undefined,
         // organisation: undefined,
@@ -293,6 +296,7 @@
           email: this.email,
           accountLocked: this.accountLocked,
           enabled: this.enabled,
+          version: this.version,
           passwordExpired: this.passwordExpired,
           roleIds: this.roles.map(({ id }) => id),
           curatoryGroupIds: this.allCuratoryGroups.map(({ id }) => id),
@@ -327,6 +331,7 @@
               enabled,
               passwordExpired,
               roles,
+              version,
               curatoryGroups,
               _links: {
                 update: { href: updateUserUrl },
@@ -341,6 +346,7 @@
         this.username = username
         this.password = undefined
         this.email = email
+        this.version = version
         this.accountLocked = accountLocked
         this.enabled = enabled
         this.passwordExpired = passwordExpired

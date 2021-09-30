@@ -1,10 +1,63 @@
 <template>
   <gokb-section
     :expandable="expandable"
+    filters
     :sub-title="title"
     :items-total="totalNumberOfReviews"
   >
     <template #buttons>
+      <gokb-add-review-popup
+        v-if="addReviewPopupVisible"
+        v-model="addReviewPopupVisible"
+        :component="reviewComponent"
+        @added="retrieveReviews"
+      />
+      <span v-if="errorMsg">
+        <v-alert
+          type="error"
+          dismissible
+        >
+          {{ localErrorMessage }}
+        </v-alert>
+      </span>
+      <gokb-button
+        v-if="enableBulkCheck && searchFilters.status.value === 'Open'"
+        class="mr-4"
+        icon-id="delete"
+        color="primary"
+        @click="confirmBulkClose"
+      >
+        {{ bulkCloseLabel }}
+      </gokb-button>
+      <v-spacer />
+      <gokb-button
+        v-if="!!reviewComponent"
+        class="mr-4"
+        icon-id="add"
+        color="primary"
+        @click="showAddReviewPopup"
+      >
+        {{ $t('btn.add') }}
+      </gokb-button>
+      <gokb-button
+        :disabled="selectedItems.length == 0"
+        icon-id="delete"
+        color="primary"
+        @click="confirmCloseSelectedItems"
+      >
+        {{ $t('btn.close') }}
+      </gokb-button>
+      <v-btn
+        icon
+        :title="$t('btn.refresh')"
+        @click="retrieveReviews"
+      >
+        <v-icon>
+          mdi-refresh
+        </v-icon>
+      </v-btn>
+    </template>
+    <template #search>
       <gokb-state-field
         v-model="searchFilters.stdDesc"
         class="mr-4"
@@ -22,35 +75,6 @@
         :label="$t('component.general.status.label')"
         return-object
       />
-      <gokb-add-review-popup
-        v-if="addReviewPopupVisible"
-        v-model="addReviewPopupVisible"
-        :component="reviewComponent"
-        @added="retrieveReviews"
-      />
-      <gokb-button
-        class="mr-4"
-        icon-id="add"
-        @click="showAddReviewPopup"
-      >
-        {{ $t('btn.add') }}
-      </gokb-button>
-      <gokb-button
-        :disabled="selectedItems.length == 0"
-        icon-id="delete"
-        @click="confirmCloseSelectedItems"
-      >
-        {{ $t('btn.close') }}
-      </gokb-button>
-      <v-btn
-        icon
-        :title="$t('btn.refresh')"
-        @click="retrieveReviews"
-      >
-        <v-icon>
-          mdi-refresh
-        </v-icon>
-      </v-btn>
     </template>
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
@@ -60,6 +84,7 @@
     <gokb-table
       :items="reviews"
       :headers="reviewHeaders"
+      :editable="!!group"
       :total-number-of-items="totalNumberOfReviews"
       :options.sync="reviewsOptions"
       @selected-items="selectedItems = $event"
@@ -91,7 +116,7 @@
         default: false
       },
       group: {
-        type: Number,
+        type: Object,
         required: false,
         default: undefined
       },
@@ -121,6 +146,9 @@
         rawReviews: undefined,
         confirmationPopUpVisible: false,
         addReviewPopupVisible: undefined,
+        allPagesSelected: false,
+        enableBulkCheck: false,
+        errorMsg: undefined,
         selectedItems: [],
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -156,6 +184,9 @@
           { text: this.$i18n.t('component.general.dateCreated'), align: 'left', value: 'dateCreated', sortable: false },
         ]
       },
+      bulkCloseLabel () {
+        return this.$i18n.t('btn.bulkSetStatus', [this.totalNumberOfReviews, this.$i18n.t('component.review.status.Closed.label')])
+      },
       reviews () {
         const componentRoutes = {
           package: '/package',
@@ -171,7 +202,7 @@
           const component = entry?.componentToReview
           const componentId = entry?.componentToReview.id
           const type = entry?.componentToReview?.type ? this.$i18n.tc('component.' + entry?.componentToReview?.type.toLowerCase() + '.label') : undefined
-          const dateCreated = new Date(entry?.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
+          const dateCreated = new Date(entry?.dateCreated).toLocaleString('sv')
           const request = entry?.reviewRequest
           const description = entry?.descriptionOfCause
           const status = entry?.status
@@ -190,6 +221,9 @@
       },
       isContrib () {
         return this.loggedIn && account.hasRole('ROLE_CONTRIBUTOR')
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label', 2)]) : undefined
       },
       localizedReviewHeaders () {
         return [
@@ -226,7 +260,7 @@
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.review.label', 2) : undefined
+        return this.showTitle ? (this.group ? this.$i18n.tc('component.review.label', 2) + ' (' + this.group.name + ')' : this.$i18n.tc('component.review.label', 2)) : undefined
       }
     },
     watch: {
@@ -236,6 +270,20 @@
           this.retrieveReviews()
         },
         deep: true
+      },
+      group: {
+        handler (grp) {
+          this.retrieveReviews()
+        },
+        deep: true
+      },
+      'selectedItems.length' (length) {
+        if (length >= 10) {
+          this.enableBulkCheck = true
+        } else {
+          this.allPagesSelected = false
+          this.enableBulkCheck = false
+        }
       }
     },
     methods: {
@@ -258,7 +306,7 @@
         })
 
         if (this.group) {
-          searchParams.allocatedGroups = this.group
+          searchParams.allocatedGroups = this.group.id
         }
 
         if (this.reviewComponent) {
@@ -288,16 +336,55 @@
       showAddReviewPopup () {
         this.addReviewPopupVisible = 1
       },
-      async _closeSelectedItems () {
-        await Promise.all(this.selectedItems.map(({ id }) =>
-          this.catchError({
-            promise: reviewServices.closeReview(id, this.cancelToken.token),
-            instance: this
-          })
-        ))
-        this.retrieveReviews()
+      confirmBulkClose () {
+        this.actionToConfirm = '_executeBulkAction'
+        this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.totalNumberOfReviews, this.$i18n.tc('component.review.label', this.selectedItems.length)] }
+        this.parameterToConfirm = { field: 'status', value: 'Closed' }
+        this.confirmationPopUpVisible = true
+      },
+      async _executeBulkAction ({ field, value }) {
+        const searchParams = {}
+
+        Object.keys(this.searchFilters).forEach(key => {
+          if (this.searchFilters[key] instanceof String || typeof this.searchFilters[key] === 'number') {
+            searchParams[key] = this.searchFilters[key]
+          } else if (this.searchFilters[key] instanceof Object) {
+            if (this.searchFilters[key].id) {
+              searchParams[key] = this.searchFilters[key].id
+            } else if (this.searchFilters[key].value) {
+              searchParams[key] = this.searchFilters[key].value
+            }
+          }
+        })
+
+        const response = await this.catchError({
+          promise: reviewServices.bulkUpdate(searchParams, field, value, this.cancelToken.token),
+          instance: this
+        })
+
+        if (response.status === 403) {
+          this.errorMsg = 'error.bulkUpdate.403'
+        }
+
         this.selectedItems = []
         this.reviewsOptions.page = 1
+        this.retrieveReviews()
+      },
+      async _closeSelectedItems () {
+        if (this.allPagesSelected) {
+          this.allPagesSelected = false
+        } else {
+          await Promise.all(this.selectedItems.map(({ id }) =>
+            this.catchError({
+              promise: reviewServices.closeReview(id, this.cancelToken.token),
+              instance: this
+            })
+          ))
+
+          this.selectedItems = []
+          this.reviewsOptions.page = 1
+          this.retrieveReviews()
+        }
       },
     }
   }

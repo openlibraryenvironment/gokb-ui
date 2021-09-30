@@ -14,9 +14,18 @@
           class="text-h5 text-no-wrap"
         >
           {{ title }}
+          <span
+            v-if="markRequired"
+            style="color:red"
+          >
+            *
+          </span>
         </span>
         <v-spacer />
-        <v-toolbar-items class="pa-2">
+        <v-toolbar-items
+          v-if="expanded"
+          class="pa-2"
+        >
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>
@@ -25,6 +34,12 @@
         class="text-h5 ml-4 text-no-wrap"
       >
         {{ subTitle }}
+        <span
+          v-if="markRequired"
+          style="color:red"
+        >
+          *
+        </span>
       </span>
       <v-toolbar
         v-else-if="!title && subTitle"
@@ -36,9 +51,16 @@
           class="text-h6 text-no-wrap"
         >
           {{ subTitle }}
+          <span
+            v-if="markRequired"
+            style="color:red"
+          >
+            *
+          </span>
         </span>
         <v-chip
           v-if="itemsTotal !== undefined && itemsTotal !== -1"
+          style="overflow:visible"
           class="ma-2"
         >
           {{ itemsTotal }}
@@ -51,7 +73,10 @@
           <v-icon>{{ expansionIcon }}</v-icon>
         </v-btn>
         <v-spacer />
-        <v-toolbar-items class="pa-2">
+        <v-toolbar-items
+          v-if="expanded"
+          class="pa-2"
+        >
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>
@@ -62,7 +87,10 @@
         flat
       >
         <v-spacer />
-        <v-toolbar-items class="pa-2">
+        <v-toolbar-items
+          v-if="expanded"
+          class="pa-2"
+        >
           <slot name="search" />
         </v-toolbar-items>
       </v-toolbar>
@@ -72,14 +100,17 @@
         flat
       >
         <v-spacer />
-        <v-toolbar-items class="pa-2">
+        <v-toolbar-items
+          v-if="expanded"
+          class="pa-2"
+        >
           <slot name="buttons" />
         </v-toolbar-items>
       </v-toolbar>
       <v-card-text v-show="expanded">
         <div
           class="pa-2"
-          :class="[darkMode ? 'controls-dark' : 'controls' ]"
+          :class="[!clearBackground ? (darkMode ? 'controls-dark' : 'controls') : '']"
         >
           <slot />
         </div>
@@ -136,6 +167,16 @@
         type: String,
         required: false,
         default: undefined
+      },
+      markRequired: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      clearBackground: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

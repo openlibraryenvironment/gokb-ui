@@ -20,7 +20,7 @@
             :to="item.route"
           >
             <v-list-item-action>
-              <v-icon color="#F2994A">
+              <v-icon color="accent">
                 {{ item.icon }}
               </v-icon>
             </v-list-item-action>
@@ -101,14 +101,14 @@
     <v-app-bar
       :clipped-left="$vuetify.breakpoint.mdAndUp"
       app
-      color="#4f4f4f"
+      :color="appColor"
       dark
     >
       <v-toolbar-title class="toolbar-title">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <v-btn
           text
-          color="#4f4f4f"
+          :color="appColor"
           :to="{ name: HOME_ROUTE }"
         >
           <v-icon
@@ -122,7 +122,7 @@
             class="application-title text-h6"
             :title="currentVersion"
           >
-            GOKb Client
+            {{ appName }}
           </span>
         </v-btn>
       </v-toolbar-title>
@@ -187,6 +187,19 @@
         style="max-width:80px"
         dense
       />
+      <v-select
+        v-if="loggedIn"
+        v-model="activeGroup"
+        offset-y
+        :items="groups"
+        item-text="name"
+        item-value="id"
+        :title="$tc('component.curatoryGroup.label')"
+        class="pt-2 ma-2"
+        style="max-width:150px"
+        return-object
+        dense
+      />
       <!-- <v-menu
         ref="actions-menu"
         :disabled="canCreate"
@@ -239,6 +252,7 @@
   import { ROLE_ADMIN, ROLE_EDITOR } from '@/shared/models/roles'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
+  import profileServices from '@/shared/services/profile-services'
   import update from './mixins/update'
   import { version } from '../package.json'
   import {
@@ -249,6 +263,7 @@
   } from '@/router/route-paths'
   import { createCancelToken } from '@/shared/services/http'
   import searchServices from '@/shared/services/search-services'
+  import baseServices from '@/shared/services/base-services'
 
   // const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
 
@@ -260,13 +275,16 @@
       drawer: null,
       privacyLink: process.env.VUE_APP_DP_LINK,
       imprintLink: process.env.VUE_APP_IMP_LINK,
+      appName: process.env.VUE_APP_TITLE || 'GOKb Client',
+      appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
       globalSearchSelected: undefined,
       globalSearchField: undefined,
       globalSearchItems: undefined,
       globalSearchIsLoading: false,
 
       dialog: false,
-      locales: ['de', 'en']
+      locales: ['de', 'en'],
+      groups: []
     }),
     computed: {
       visibleItems () {
@@ -302,6 +320,16 @@
           if (accountModel.loggedIn() && locale !== accountModel.userLocale()) {
             accountModel.setLocale(locale)
           }
+
+          baseServices.setLanguage(locale)
+        }
+      },
+      activeGroup: {
+        get () {
+          return accountModel.activeGroup()
+        },
+        set (group) {
+          accountModel.setActiveGroup(group)
         }
       },
       canCreate () {
@@ -312,6 +340,9 @@
       },
       currentVersion () {
         return version
+      },
+      loggedIn () {
+        return accountModel.loggedIn()
       },
       typeRoutes () {
         return [
@@ -324,8 +355,6 @@
           { type: 'BookInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Book') },
           { type: 'Database', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Database') },
           { type: 'DatabaseInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Database') },
-          { type: 'TitleInstancePackagePlatform', path: '/package-title/', icon: 'snippet_folder', label: this.$i18n.tc('component.tipp.label') },
-          { type: 'TIPP', path: '/package-title/', icon: 'snippet_folder', label: this.$i18n.tc('component.tipp.label') },
         ]
       }
     },
@@ -341,7 +370,7 @@
 
         try {
           const result = await this.searchServices.search({
-            suggest: this.globalSearchField,
+            q: this.globalSearchField.trim(),
             status: 'Current',
             es: 'true',
             max: 20
@@ -371,7 +400,8 @@
       },
       globalSearchSelected () {
         if (this.globalSearchSelected.path) {
-          this.globalSearchSelected && this.$router.push({ path: this.globalSearchSelected.path + this.globalSearchSelected.id })
+          this.globalSearchSelected && this.$router.push({ path: this.globalSearchSelected.path + this.globalSearchSelected.id }).catch(() => {})
+          this.globalSearchItems = []
           this.globalSearchField = undefined
         }
       },
@@ -380,6 +410,13 @@
       },
       '$i18n.locale' (l) {
         document.title = this.$i18n.t(this.$route.meta.code)
+      },
+      loggedIn (val) {
+        if (val) {
+          this.loadGroups()
+        } else {
+          this.groups = []
+        }
       }
     },
     mounted () {
@@ -393,6 +430,8 @@
 
       if (accountModel.loggedIn() && accountModel.userLocale()) {
         this.currentLocale = accountModel.userLocale()
+      } else {
+        baseServices.setLanguage(this.$i18n.locale)
       }
 
       if (accountModel.loggedIn()) {
@@ -406,8 +445,25 @@
       toggleDarkMode () {
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark
         accountModel.toggleDarkMode(this.$vuetify.theme.dark)
+      },
+      async loadGroups () {
+        this.cancelToken = createCancelToken()
+
+        const {
+          data: {
+            data: {
+              curatoryGroups
+            }
+          }
+        } = await profileServices.getProfile(this.cancelToken.token)
+
+        this.groups = curatoryGroups
+
+        if (!this.activeGroup && this.groups.length > 0) {
+          this.activeGroup = curatoryGroups[0]
+        }
       }
-    }
+    },
   }
 </script>
 

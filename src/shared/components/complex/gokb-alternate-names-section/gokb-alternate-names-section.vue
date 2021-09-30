@@ -9,13 +9,15 @@
     <gokb-add-item-popup
       v-if="addItemPopupVisible"
       v-model="addItemPopupVisible"
-      :component="{ type: 'GokbTextField', name: $t('component.general.name') }"
+      width="500px"
+      :component="{ type: 'GokbAlternateNamesField', name: $tc('component.variantName.label') }"
       @add="addItem"
     />
     <template #buttons>
       <gokb-button
         v-if="isEditable"
         icon-id="add"
+        color="primary"
         @click="showAddVariantName"
       >
         {{ $i18n.t('btn.add') }}
@@ -24,6 +26,7 @@
         v-if="isEditable"
         class="ml-4"
         icon-id="delete"
+        color="primary"
         :disabled="isDeleteSelectedDisabled"
         @click="confirmDeleteSelectedItems"
       >
@@ -35,6 +38,15 @@
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <span v-if="errorMessage">
+      <v-alert
+        v-model="showErrorMessage"
+        type="error"
+        dismissible
+      >
+        {{ errorMessage }}
+      </v-alert>
+    </span>
     <gokb-table
       :headers="tableHeaders"
       :items="variantNames"
@@ -90,6 +102,8 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
+        errorMessage: undefined,
+        showErrorMessage: false,
         selectedVariantNames: [],
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
@@ -108,6 +122,7 @@
       },
       variantNames () {
         return [...this.value]
+          .map(item => ({ variantName: item.variantName, locale: (item.locale?.name || item.locale), id: item.id }))
           .sort(({ variantName: first }, { variantName: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.variantNameOptions.page - 1) * ROWS_PER_PAGE, this.variantNameOptions.page * ROWS_PER_PAGE)
       },
@@ -125,7 +140,8 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.t('component.general.name'), align: 'left', value: 'variantName', sortable: false, width: '100%' },
+          { text: this.$i18n.tc('component.general.name'), align: 'left', value: 'variantName', sortable: false, width: '100%' },
+          { text: this.$i18n.t('component.general.language.label'), align: 'left', value: 'locale', sortable: false },
         ]
       },
       title () {
@@ -166,12 +182,19 @@
       showAddVariantName () {
         this.addItemPopupVisible = true
       },
-      addItem (item) {
-        if (!this.localValue.find(({ variantName }) => variantName === item)) {
-          this.localValue.push({ id: this.tempId(), variantName: item, isDeletable: true, _pending: 'added' })
-          this.$emit('update', 'variants')
-        }
+      normalizeVariant (variant) {
+        var result = variant.normalize('NFKD').replace(/[^\w]/g, '')
+        return result
       },
+      addItem (item) {
+        if (!this.localValue.find(({ variantName }) => this.normalizeVariant(variantName) === this.normalizeVariant(item.variantName))) {
+          this.localValue.push({ id: this.tempId(), variantName: item.variantName, locale: item.locale, variantType: null, isDeletable: true, _pending: 'added' })
+          this.$emit('update', 'variants')
+        } else {
+          this.errorMessage = this.$i18n.t('component.variantName.error.duplicate', [item.variantName])
+          this.showErrorMessage = true
+        }
+      }
     }
   }
 </script>

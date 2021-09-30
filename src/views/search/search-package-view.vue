@@ -16,9 +16,9 @@
           lastUpdated: undefined,
           identifierValue: undefined,
           contentType: undefined,
-          status: undefined,
+          status: 'Current',
           global: ['Global', 'Consortium', 'Regional', 'Other'],
-          name: undefined,
+          label: undefined,
         },
         sortMappings: {
           link: 'name',
@@ -70,8 +70,7 @@
           [
             {
               type: 'GokbTextField',
-              name: 'name',
-              value: 'name',
+              name: 'label',
               properties: {
                 label: this.$i18n.t('component.general.name'),
               }
@@ -114,7 +113,6 @@
               value: 'providerId',
               properties: {
                 label: this.$i18n.tc('component.provider.label'),
-
               }
             },
             {
@@ -123,7 +121,6 @@
               value: 'platformId',
               properties: {
                 label: this.$i18n.tc('component.platform.label'),
-
               }
             }
           ],
@@ -134,7 +131,8 @@
               value: 'status',
               properties: {
                 initItem: this.$i18n.t('component.general.status.Current.label'),
-                width: '100%'
+                width: '100%',
+                messagePath: 'component.general.status'
               }
             },
             {
@@ -220,7 +218,11 @@
     },
     async created () {
       this.searchServicesUrl = 'rest/packages'
-      this.searchServiceIncludes = 'id,uuid,name,provider,nominalPlatform,_links,contentType,lastUpdated,_tippCount'
+      this.searchByEs = true
+      this.initVals = {
+        status: 'setInit',
+        global: ['Global', 'Consortium', 'Regional', 'Other']
+      }
       this.linkSearchParameterValues = {
         link: 'name',
         linkTwo: 'provider'
@@ -234,8 +236,10 @@
           provider,
           lastUpdated,
           uuid,
+          status,
           contentType,
           nominalPlatform,
+          tippCount,
           _tippCount,
           _links
         }) => ({
@@ -247,9 +251,10 @@
           lastUpdated: new Date(lastUpdated).toISOString().substr(0, 10),
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
-          count: _tippCount,
+          count: _tippCount || tippCount,
+          status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
-          retireUrl: _links?.update?.href || undefined
+          updateUrl: _links?.update?.href || undefined
         }))
       },
       _confirmDeleteSelectedItems () {

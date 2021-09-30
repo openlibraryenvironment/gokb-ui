@@ -31,7 +31,7 @@
     methods: {
       transform (result) {
         const { data: { data: values } } = result
-        return values.map(ns => ({ id: ns.id, name: (ns.name || ns.value), value: ns.value }))
+        return values.map(ns => ({ id: ns.id, pattern: ns.pattern, name: (ns.name || ns.value), value: ns.value })).sort(({ value: first }, { value: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
       }
     }
   }

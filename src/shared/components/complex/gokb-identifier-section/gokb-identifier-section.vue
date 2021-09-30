@@ -4,6 +4,7 @@
     :hide-default="!expanded"
     :sub-title="title"
     :items-total="totalNumberOfItems"
+    :mark-required="markRequired"
     :errors="!!apiErrors"
   >
     <gokb-add-item-popup
@@ -16,6 +17,7 @@
       <gokb-button
         v-if="isEditable"
         icon-id="add"
+        color="primary"
         @click="showAddIdentifierPopup"
       >
         {{ $i18n.t('btn.add') }}
@@ -24,6 +26,7 @@
         v-if="isEditable"
         class="ml-4"
         icon-id="delete"
+        color="primary"
         :disabled="isDeleteSelectedDisabled"
         @click="confirmDeleteSelectedItems"
       >
@@ -90,6 +93,16 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      rules: {
+        type: Array,
+        required: false,
+        default: undefined
+      },
+      markRequired: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

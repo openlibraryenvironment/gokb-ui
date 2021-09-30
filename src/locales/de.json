@@ -8,6 +8,7 @@
     "confirm": "Bestätigen",
     "create": "Erstellen",
     "darkMode": "Dunkle Ansicht",
+    "reactivate": "Reaktivieren",
     "deactivate": "Deaktivieren",
     "delete": "Löschen",
     "disableSync": "Aktualisierung stoppen",
@@ -22,7 +23,8 @@
     "retire": "Archivieren",
     "search": "Suchen",
     "submit": "Abschicken",
-    "update": "Aktualisieren"
+    "update": "Aktualisieren",
+    "bulkSetStatus": "Alle {0} auf {1} setzen"
   },
   "main": {
     "docs": {
@@ -140,6 +142,7 @@
       "label": "Anmelden",
       "automatic": "Eingeloggt bleiben",
       "error": {
+        "400": "Die eingebebenen Informationen sind nicht korrekt.",
         "401": "Die eingebebenen Informationen sind nicht korrekt.",
         "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
       }
@@ -203,7 +206,8 @@
       "DeleteTIWithoutHistory": "Delete Titles without Packages",
       "RejectTIWithoutIdentifier": "Reject Titles without Identifier",
       "PlatformCleanup": "Platform Cleanup",
-      "RecalculateStatistics": "Recalculate Statistics"
+      "RecalculateStatistics": "Recalculate Statistics",
+      "PackageUpdateTipps": "KBART Update"
     }
   },
   "kbart": {
@@ -231,6 +235,7 @@
     },
     "errors": {
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
+      "missingCols": "Fehlende Spalten: {0}",
       "illegalVal": "Wert {0} ist fehlerhaft!",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
@@ -288,6 +293,26 @@
     "update": "{0} {1} erfolgreich bearbeitet!",
     "retire": "{0} {1} wurde archiviert!",
     "delete": "{0} {1} wurde gelöscht!"
+  },
+  "error": {
+    "update": {
+      "400": "Bei der Aktualisierung sind Fehler aufgetreten!",
+      "403": "{0} konnte nicht aktualisiert werden, da dieser Benutzer nicht dazu berechtigt ist.",
+      "409": "{0} konnte nicht gespeichert werden, da Ihre Ansicht auf Grund einer anderen Aktualisierung nicht mehr aktuell ist. Bitte akutalisieren Sie diese Seite und versuchen es noch einmal."
+    },
+    "create": {
+      "400": "Bei der Erstellung sind Fehler aufgetreten!",
+      "403": "{0} konnte nicht angelegt werden, da dieser Benutzer nicht dazu berechtigt ist."
+    },
+    "general": {
+      "500": "Die Anfrage ist fehlgeschlagen, bitte melden Sie den Vorfall oder versuchen Sie es später noch einmal.",
+      "name": {
+        "notUnique": "Dieser Name ist bereits vergeben!"
+      }
+    },
+    "bulkUpdate": {
+      "403": "Nicht alle {0} konnten geändert werden!"
+    }
   },
   "header": {
     "edit": {
@@ -570,6 +595,39 @@
       "other": {
         "label": "Weitere Informationen"
       },
+      "prices": {
+        "label": "Preis | Preise",
+        "price": {
+          "label": "Betrag"
+        },
+        "currency": {
+          "label": "Währung | Währungen"
+        },
+        "priceType": {
+          "label": "Typ",
+          "list": {
+            "label": "Liste"
+          },
+          "perpetual": {
+            "label": "Dauerhaft"
+          },
+          "topup": {
+            "label": "Top-Up"
+          },
+          "on-off": {
+            "label": "On-Off"
+          },
+          "subscription": {
+            "label": "Abonnement"
+          }
+        },
+        "startDate": {
+          "label": "Startdatum"
+        },
+        "endDate": {
+          "label": "Enddatum"
+        }
+      },
       "name": "Paketspezifischer Titel",
       "accessPeriod": "Zugriffszeitraum",
       "identifier": {
@@ -693,7 +751,10 @@
     "identifier": {
       "label": "Identifikator | Identifikatoren",
       "value": "Wert",
-      "namespace": "Namensraum | Namensräume"
+      "namespace": "Namensraum | Namensräume",
+      "validation": {
+        "pattern": "Der eingegebene Wert hat ein ungültiges Format."
+      }
     },
     "user": {
       "label": "Benutzer | Benutzer",
@@ -735,10 +796,13 @@
     },
     "review": {
       "label": "Prüfanfrage | Prüfanfragen",
-      "request": "Titel",
+      "request": "Anfrage",
       "type": "Typ",
       "cause": "Ursache",
       "componentToReview": "Komponente",
+      "additionalInfo": {
+        "label": "Strukturierte Detailansicht"
+      },
       "otherComponents": {
         "label": "Weitere Komponenten",
         "add": "Weitere Komponente verknüpfen",
@@ -880,6 +944,24 @@
           "info": "Es gibt mehrere Kandidaten für den Titel.",
           "action": "ZDB-Anreicherung verhindert",
           "toDo": "Selektieren Sie die korrekte ZDB-Aufnahme für den Titel."
+        },
+        "Coverage Mismatch": {
+          "label": "Abdeckungskonflikt",
+          "info": "Der Erscheinungszeitraums des gefundenen Referenztitels stimmt nicht der Abdeckung überein.",
+          "action": "Referenztitelauswahl verhindert",
+          "toDo": "Überprüfen Sie die Zeitangaben und damit eine manuelle Verknüpfung des Titels."
+        },
+        "ZDB Title Overlap": {
+          "label": "ZDB-ID bereits verwendet",
+          "info": "Die gefundene ZDB-ID ist bereits mit einem anderen Referenztitel verknüpft.",
+          "action": "ZDB-Anreicherung übersprungen",
+          "toDo": "Review all titles for possible discrepancies"
+        },
+        "No ZDB Results": {
+          "label": "Keine ZDB-Aufnahme gefunden",
+          "info": "Für die gegebenen ISSNs wurde keine ZDB-Aufnahme gefunden.",
+          "action": "ZDB-Anreicherung übersprungen",
+          "toDo": ""
         }
       }
     },
@@ -890,14 +972,16 @@
       "label": "Kuratorengruppe | Kuratorengruppen"
     },
     "variantName": {
-      "label": "Namensvariante | Namensvarianten"
+      "label": "Namensvariante | Namensvarianten",
+      "error": {
+        "duplicate": "Eine ähnliche Variante zu '{0}' existiert bereits!"
+      }
     },
     "source": {
       "label": "Automatischer Import und Update | Automatische Imports und Updates",
       "updateNow": "Jetzt Importieren",
       "lastRun": "Letzter Durchlauf",
       "ezbMatch": "EZB-Abgleich",
-      "zdbMatch": "ZDB-Abgleich",
       "enableUpdate": "Aktiviert",
       "url": "URL",
       "frequency": {

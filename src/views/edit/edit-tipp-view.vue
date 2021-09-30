@@ -6,6 +6,22 @@
     @submit="update"
   >
     <gokb-error-component :value="error" />
+    <span v-if="successMsg">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
     <gokb-section :sub-title="$t('component.general.general')">
       <v-row dense>
         <v-col>
@@ -113,6 +129,12 @@
             :active-class="tabClass"
           >
             {{ $t('component.tipp.other.label') }}
+          </v-tab>
+          <v-tab
+            key="prices"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.tipp.prices.label', 2) }}
           </v-tab>
         </v-tabs>
         <v-tabs-items v-model="tab">
@@ -372,6 +394,7 @@
                     :init-item="packageTitleItem.publicationType"
                     width="100%"
                     dense
+                    return-object
                     message-path="component.tipp.publicationType"
                     url="refdata/categories/TitleInstancePackagePlatform.PublicationType"
                     :label="$t('component.tipp.publicationType.label')"
@@ -446,6 +469,14 @@
                 </v-col>
               </v-row>
             </gokb-section>
+          </v-tab-item>
+          <v-tab-item key="prices">
+            <gokb-prices-section
+              v-model="packageTitleItem.prices"
+              :disabled="isReadonly"
+              no-tool-bar
+              @update="addPendingChange"
+            />
           </v-tab-item>
         </v-tabs-items>
       </v-col>
@@ -543,6 +574,8 @@
         coverageExpanded: true,
         selectedTitle: undefined,
         selectedItem: undefined,
+        successMsg: undefined,
+        errorMsg: undefined,
         coverageObject: {
           coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
           startDate: undefined,
@@ -569,6 +602,7 @@
           hostPlatform: undefined,
           status: undefined,
           paymentType: undefined,
+          prices: [],
           url: undefined,
           name: undefined,
           accessStartDate: undefined,
@@ -634,10 +668,16 @@
         return this.coverageExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
@@ -689,10 +729,20 @@
         this[actionMethodName](actionMethodParameter)
       },
       async update () {
+        const activeGroup = accountModel.activeGroup()
+        this.errorMsg = undefined
+        this.successMsg = undefined
+
         const newTipp = {
           ...this.packageTitleItem,
+          ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
+          prices: this.packageTitleItem.prices.map(price => ({ ...price, id: (typeof price.id === 'number' ? price.id : null) })),
+          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
           name: this.allNames.name,
-          id: this.id
+          version: this.version,
+          publicationType: this.packageTitleItem.publicationType && this.packageTitleItem.publicationType.name,
+          id: this.id,
+          activeGroup: activeGroup
         }
 
         const response = await this.catchError({
@@ -700,10 +750,18 @@
           instance: this
         })
 
-        if (response.status === 200) {
+        if (response.status < 400) {
+          this.successMsg = this.isEdit ? 'success.update' : 'success.create'
           this.reload()
         } else {
-          console.log(response.status)
+          if (response.status === 409) {
+            this.errorMsg = 'error.update.409'
+          } else if (response.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else {
+            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+            this.errors = response.data.error
+          }
         }
       },
       async reload () {
@@ -735,13 +793,13 @@
           this.lastUpdated = data.lastUpdated
           this.packageTitleItem.paymentType = data.paymentType
           this.packageTitleItem.url = data.url
-          this.packageTitleItem.accessStartDate = data.accessStartDate?.substr(0, 10)
-          this.packageTitleItem.accessEndDate = data.accessEndDate?.substr(0, 10)
+          this.packageTitleItem.accessStartDate = this.buildDateString(data.accessStartDate)
+          this.packageTitleItem.accessEndDate = this.buildDateString(data.accessEndDate)
           this.packageTitleItem.series = data.series
           this.packageTitleItem.subjectArea = data.subjectArea
           this.packageTitleItem.publisherName = data.publisherName
-          this.packageTitleItem.dateFirstInPrint = data.dateFirstInPrint?.substr(0, 10)
-          this.packageTitleItem.dateFirstOnline = data.dateFirstOnline?.substr(0, 10)
+          this.packageTitleItem.dateFirstInPrint = this.buildDateString(data.dateFirstInPrint)
+          this.packageTitleItem.dateFirstOnline = this.buildDateString(data.dateFirstOnline)
           this.packageTitleItem.firstAuthor = data.firstAuthor
           this.packageTitleItem.firstEditor = data.firstEditor
           this.packageTitleItem.publicationType = data.publicationType
@@ -749,14 +807,15 @@
           this.packageTitleItem.editionStatement = data.editionStatement
           this.packageTitleItem.medium = data.medium
           this.packageTitleItem.lastChangedExternal = data.lastChangedExternal
+          this.packageTitleItem.prices = data._embedded.prices
           this.packageTitleItem.status = data.status
           this.history = data.history
-          this.allNames = { name: data.name, alts: [] }
+          this.allNames = { name: data.name, alts: data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })) }
 
           if (data._embedded.coverageStatements?.length) {
             this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
-              startDate: startDate?.substr(0, 10),
-              endDate: endDate?.substr(0, 10),
+              startDate: this.buildDateString(startDate),
+              endDate: this.buildDateString(endDate),
               coverageDepth,
               coverageNote,
               startIssue,

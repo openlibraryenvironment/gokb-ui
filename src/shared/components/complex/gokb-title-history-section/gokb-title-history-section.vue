@@ -14,6 +14,7 @@
     <template #buttons>
       <gokb-button
         v-if="isEditable"
+        color="primary"
         icon-id="add"
         @click="showAddHistoryEvent"
       >

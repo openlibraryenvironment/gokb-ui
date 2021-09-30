@@ -7,13 +7,29 @@
       v-if="localLabel"
       style="font-size:0.8rem"
     >
-      <label class="text-caption">{{ label }}</label>
+      <label class="text-caption">
+        {{ label }}
+        <span
+          v-if="required"
+          style="color:red"
+        >
+          *
+        </span>
+      </label>
     </div>
     <div
       v-else
       style="font-size:1.1rem"
     >
-      <label class="text-caption">{{ label }}</label>
+      <label class="text-caption">
+        {{ label }}
+        <span
+          v-if="required"
+          style="color:red"
+        >
+          *
+        </span>
+      </label>
     </div>
     <router-link
       v-if="componentRoute"
@@ -26,7 +42,9 @@
       v-else
       style="font-size:1.1rem"
     >
-      <label class="v-label">{{ localLabel }}</label>
+      <label class="v-label">
+        {{ localLabel }}
+      </label>
     </span>
     <v-divider />
   </div>
@@ -37,7 +55,7 @@
     :label="label"
     :loading="loading"
     :placeholder="placeholder"
-    :rules="rules"
+    :rules="activeRules"
     :dense="dense"
     :search-input.sync="search"
     :item-text="itemText"
@@ -47,15 +65,26 @@
     hide-details
     hide-no-data
     no-filter
-  />
+  >
+    <template #label>
+      {{ label }}
+      <span
+        v-if="required"
+        style="color:red"
+      >
+        *
+      </span>
+    </template>
+  </v-combobox>
   <v-autocomplete
     v-else
+    ref="autocomplete"
     v-model="localValue"
     :items="items"
     :label="label"
     :loading="loading"
     :placeholder="placeholder"
-    :rules="rules"
+    :rules="activeRules"
     :dense="dense"
     :search-input.sync="search"
     :item-text="itemText"
@@ -65,20 +94,38 @@
     clearable
     hide-no-data
   >
+    <template #label>
+      {{ label }}
+      <span
+        v-if="required"
+        style="color:red"
+      >
+        *
+      </span>
+    </template>
     <template v-slot:selection="data">
       <router-link
         v-if="showLink"
-        :style="{ color: '#f2994a', fontSize: '1.1rem', maxWidth: '75%' }"
+        :style="{ color: 'accent', fontSize: '1.1rem', maxWidth: '75%' }"
         class="text-truncate"
+        color="accent"
         :to="{ name: knownRoutes[data.item.type], params: { 'id': data.item.id } }"
       >
-        <span :title="data.item[itemText]">{{ data.item[itemText] }}</span>
+        <span
+          :title="data.item[itemText]"
+        >
+          {{ data.item[itemText] }}
+        </span>
       </router-link>
       <span
         v-else
         style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:75%;"
       >
-        <span :title="data.item[itemText]">{{ data.item[itemText] }}</span>
+        <span
+          :title="data.item[itemText]"
+        >
+          {{ data.item[itemText] }}
+        </span>
       </span>
     </template>
   </v-autocomplete>
@@ -134,12 +181,21 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      required: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      label: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {
       return {
         placeholder: undefined,
-        rules: undefined,
         loading: false,
         mainParam: 'q',
         items: [],
@@ -160,16 +216,17 @@
       },
       localValue: {
         get () {
-          // console.log('get', this.label, this.value)
           return this.returnObject ? this.value : this.value?.[this.itemValue]
         },
         set (localValue) {
-          // console.log('set', this.label, localValue, this.items)
           this.$emit('input', localValue)
         }
       },
       componentRoute () {
         return this.knownRoutes?.[this.value?.type] || null
+      },
+      activeRules () {
+        return [v => !!v || !this.required || this.$i18n.t('validation.missingSelection')]
       }
     },
     watch: {
@@ -197,6 +254,12 @@
         })
         this.loading = false
         this.items = result?.data?.data
+      },
+      clear () {
+        this.search = null
+        this.items = []
+        this.localValue = undefined
+        this.$refs.autocomplete.lazyValue = undefined
       }
     }
   }

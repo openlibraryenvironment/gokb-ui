@@ -83,8 +83,7 @@
       },
       rules () {
         return [
-          value => !!value || 'Bitte erfassen.',
-          () => !this.error || 'Falscher Benutzername oder Passwort.'
+          value => !!value || this.$i18n.t('validation.missingValue')
         ]
       },
     },
@@ -109,7 +108,7 @@
         this.password = undefined
         this.save = undefined
         this.localValue = false
-        this.$refs.dialog.resetValidation()
+        this.$refs.dialog.$refs.form.resetValidation()
       },
     }
   }
