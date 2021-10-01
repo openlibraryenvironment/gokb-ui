@@ -438,7 +438,7 @@
             >
               <gokb-curatory-group-section
                 v-model="allCuratoryGroups"
-                :disabled="isReadonly"
+                :disabled="!isAdmin"
                 :filter-align="!isReadonly"
                 :expandable="false"
                 :sub-title="$tc('component.curatoryGroup.label', 2)"
@@ -561,7 +561,6 @@
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import baseServices from '@/shared/services/base-services'
-  import profileServices from '@/shared/services/profile-services'
   import loading from '@/shared/models/loading'
   import axios from 'axios'
 
@@ -654,7 +653,6 @@
           nominalPlatform: undefined,
         },
         allCuratoryGroups: [],
-        userCuratoryGroups: [],
         sourceItem: undefined,
         packageTypes: [
           { id: 'book', text: 'Buch' },
@@ -694,6 +692,9 @@
       },
       isEdit () {
         return !!this.id
+      },
+      isAdmin () {
+        return this.loggedIn && accountModel.hasRole('ROLE_ADMIN')
       },
       isReadonly () {
         return !this.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
@@ -748,6 +749,9 @@
       },
       isValid () {
         return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
+      },
+      activeGroup () {
+        return this.loggedIn && accountModel.activeGroup()
       }
     },
     watch: {
@@ -932,6 +936,7 @@
               } else {
                 loading.stopLoading()
                 this.kbartResult = 'error'
+                this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
               }
             } else {
               loading.stopLoading()
@@ -1031,7 +1036,7 @@
           loading.stopLoading()
         } else {
           if (this.loggedIn) {
-            this.loadUserGroups()
+            this.allCuratoryGroups = [this.activeGroup]
           }
         }
       },
@@ -1065,19 +1070,6 @@
         }
 
         return resp
-      },
-      async loadUserGroups () {
-        const {
-          data: {
-            data: {
-              curatoryGroups
-            }
-          }
-        } = await this.catchError({
-          promise: profileServices.getProfile(this.cancelToken.token),
-          instance: this
-        })
-        this.allCuratoryGroups = curatoryGroups
       },
       triggerUpdate (checked) {
         this.urlUpdate = checked

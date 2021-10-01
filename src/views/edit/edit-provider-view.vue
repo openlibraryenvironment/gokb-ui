@@ -493,23 +493,24 @@
           if (result.status === 200) {
             const data = result.data
             this.name = data.name
-            this.source = data.source
-            this.reference = data.homepage
+            this.providerObject.source = data.source
+            this.providerObject.reference = data.homepage
             this.version = data.version
             this.updateUrl = data._links?.update?.href || null
             this.deleteUrl = data._links?.delete?.href || null
-            this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
+            this.providerObject.id = data.id
+            this.providerObject.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
             this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
             this.allCuratoryGroups = data._embedded.curatoryGroups.map(group => ({ ...group, isDeletable: !!this.updateUrl }))
             this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({ ...platform, isDeletable: !!this.updateUrl }))
-            this.titleNamespace = data.titleNamespace
-            this.packageNamespace = data.packageNamespace
+            this.providerObject.titleNamespace = data.titleNamespace
+            this.providerObject.packageNamespace = data.packageNamespace
             this.allPackages = data._embedded.providedPackages
             this.allNames = { name: data.name, alts: this.allAlternateNames }
             this.offices = data._embedded.offices?.map(office => ({ ...office, typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined), localLanguage: (office.language?.value && office.language.value), isDeletable: !!this.updateUrl })) || []
             this.dateCreated = data.dateCreated
             this.lastUpdated = data.lastUpdated
-            this.status = data.status
+            this.providerObject.status = data.status
 
             document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
           } else {

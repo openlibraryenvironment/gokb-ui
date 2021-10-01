@@ -597,7 +597,7 @@
         const activeGroup = accountModel.activeGroup()
 
         const data = {
-          id: this.id,
+          id: this.titleItem.id,
           name: this.allNames.name,
           ids: this.ids.map(id => ({ value: id.value, type: id.namespace })),
           variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
