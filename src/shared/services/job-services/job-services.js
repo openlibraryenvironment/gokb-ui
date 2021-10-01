@@ -10,10 +10,10 @@ const api = (baseServices) => ({
     }, cancelToken)
   },
 
-  getJob (id, cancelToken) {
+  getJob (id, archived, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${REST_PATH}/${id}`,
+      url: process.env.VUE_APP_API_BASE_URL + `${REST_PATH}/${id}${archived ? '?archived=true' : ''}`,
     }, cancelToken)
   },
 
