@@ -123,7 +123,7 @@
         selectedItems: [],
         resultOptions: {
           page: 1,
-          sortBy: ['link'],
+          sortBy: [],
           desc: [false],
           itemsPerPage: ROWS_PER_PAGE
         },
@@ -260,13 +260,13 @@
         const esTypedParams = {
           es: true,
           ...((sort && { sort: sort }) || {}),
-          ...({ order: desc }),
+          ...((sort && { order: desc }) || {}),
           max: this.resultOptions.itemsPerPage
         }
 
         const dbTypedParams = {
           ...((sort && { _sort: sort }) || {}),
-          ...({ _order: desc }),
+          ...((sort && { _order: desc }) || {}),
           limit: this.resultOptions.itemsPerPage
         }
 
