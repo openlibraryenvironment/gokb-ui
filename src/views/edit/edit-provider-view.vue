@@ -47,7 +47,7 @@
       <v-row>
         <v-col>
           <gokb-text-field
-            v-model="providerObject.reference"
+            v-model="providerObject.homepage"
             :label="$t('component.provider.homepage')"
             :disabled="isReadonly"
           />
@@ -226,13 +226,13 @@
     </v-row>
     <div v-else>
       <gokb-alternate-names-section
-        v-model="allAlternateNames"
+        v-model="allNames.alts"
         :expanded="allAlternateNames.length > 0"
         :disabled="isReadonly"
       />
       <gokb-identifier-section
         v-model="providerObject.ids"
-        :expanded="ids.length > 0"
+        :expanded="providerObject.ids.length > 0"
         :disabled="isReadonly"
       />
       <gokb-platform-section
@@ -368,7 +368,7 @@
           source: undefined,
           titleNamespace: undefined,
           packageNamespace: undefined,
-          reference: undefined,
+          homepage: undefined,
         }
       }
     },
@@ -398,7 +398,7 @@
         return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
       localSuccessMessage () {
-        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.name]) : undefined
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.provider.label'), this.name]) : undefined
       },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.provider.label')]) : undefined
@@ -494,7 +494,7 @@
             const data = result.data
             this.name = data.name
             this.providerObject.source = data.source
-            this.providerObject.reference = data.homepage
+            this.providerObject.homepage = data.homepage
             this.version = data.version
             this.updateUrl = data._links?.update?.href || null
             this.deleteUrl = data._links?.delete?.href || null
