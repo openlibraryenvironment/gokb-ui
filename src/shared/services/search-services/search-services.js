@@ -5,21 +5,21 @@ const api = baseServices =>
     const url = process.env.VUE_APP_API_BASE_URL + `/${resourceUrl}?${urlParameter}`
     return baseServices.request({
       method: 'GET',
-      url: url,
+      url,
     }, cancelToken)
   },
 
   delete (url, cancelToken) {
     return baseServices.request({
       method: 'DELETE',
-      url: baseServices.relativeUrl(url),
+      url,
     }, cancelToken)
   },
 
   retire (url, cancelToken) {
     return baseServices.request({
       method: 'POST',
-      url: baseServices.relativeUrl(url),
+      url: url + '/retire',
     }, cancelToken)
   },
 })

@@ -8,6 +8,7 @@
     "confirm": "Bestätigen",
     "create": "Erstellen",
     "darkMode": "Dunkle Ansicht",
+    "reactivate": "Reaktivieren",
     "deactivate": "Deaktivieren",
     "delete": "Löschen",
     "disableSync": "Aktualisierung stoppen",
@@ -22,7 +23,8 @@
     "retire": "Archivieren",
     "search": "Suchen",
     "submit": "Abschicken",
-    "update": "Aktualisieren"
+    "update": "Aktualisieren",
+    "bulkSetStatus": "Alle {0} auf {1} setzen"
   },
   "main": {
     "docs": {
@@ -63,9 +65,9 @@
       "search": "Einzeltitel"
     },
     "tipp": {
-      "edit": "Paket-Titel bearbeiten",
-      "create": "Paket-Titel anlegen",
-      "search": "Paket-Titel"
+      "edit": "Pakettitel bearbeiten",
+      "create": "Pakettitel anlegen",
+      "search": "Pakettitel"
     },
     "provider": {
       "edit": "Anbieter bearbeiten",
@@ -140,6 +142,7 @@
       "label": "Anmelden",
       "automatic": "Eingeloggt bleiben",
       "error": {
+        "400": "Die eingebebenen Informationen sind nicht korrekt.",
         "401": "Die eingebebenen Informationen sind nicht korrekt.",
         "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
       }
@@ -232,6 +235,7 @@
     },
     "errors": {
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
+      "missingCols": "Fehlende Spalten: {0}",
       "illegalVal": "Wert {0} ist fehlerhaft!",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
@@ -289,6 +293,26 @@
     "update": "{0} {1} erfolgreich bearbeitet!",
     "retire": "{0} {1} wurde archiviert!",
     "delete": "{0} {1} wurde gelöscht!"
+  },
+  "error": {
+    "update": {
+      "400": "Bei der Aktualisierung sind Fehler aufgetreten!",
+      "403": "{0} konnte nicht aktualisiert werden, da dieser Benutzer nicht dazu berechtigt ist.",
+      "409": "{0} konnte nicht gespeichert werden, da Ihre Ansicht auf Grund einer anderen Aktualisierung nicht mehr aktuell ist. Bitte akutalisieren Sie diese Seite und versuchen es noch einmal."
+    },
+    "create": {
+      "400": "Bei der Erstellung sind Fehler aufgetreten!",
+      "403": "{0} konnte nicht angelegt werden, da dieser Benutzer nicht dazu berechtigt ist."
+    },
+    "general": {
+      "500": "Die Anfrage ist fehlgeschlagen, bitte melden Sie den Vorfall oder versuchen Sie es später noch einmal.",
+      "name": {
+        "notUnique": "Dieser Name ist bereits vergeben!"
+      }
+    },
+    "bulkUpdate": {
+      "403": "Nicht alle {0} konnten geändert werden!"
+    }
   },
   "header": {
     "edit": {
@@ -559,7 +583,7 @@
       "descriptionUrl": "URL zur Beschreibung des Pakets"
     },
     "tipp": {
-      "label": "Paket-Titel | Paket-Titel",
+      "label": "Pakettitel | Pakettitel",
       "toFullView": "Vollansicht öffnen",
       "url": {
         "label": "Zugriffs-URL | Zugriffs-URLs",
@@ -772,10 +796,13 @@
     },
     "review": {
       "label": "Prüfanfrage | Prüfanfragen",
-      "request": "Titel",
+      "request": "Anfrage",
       "type": "Typ",
       "cause": "Ursache",
       "componentToReview": "Komponente",
+      "additionalInfo": {
+        "label": "Strukturierte Detailansicht"
+      },
       "otherComponents": {
         "label": "Weitere Komponenten",
         "add": "Weitere Komponente verknüpfen",
@@ -806,7 +833,7 @@
         "label": "Kategorie | Kategorien",
         "Invalid TIPPs": {
           "label": "Ungültige Pakettitel",
-          "info": "Ein Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
+          "info": "Beim  einer Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
           "action": "Paket nicht aktualisiert",
           "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
         },
@@ -923,6 +950,60 @@
           "info": "Der Erscheinungszeitraums des gefundenen Referenztitels stimmt nicht der Abdeckung überein.",
           "action": "Referenztitelauswahl verhindert",
           "toDo": "Überprüfen Sie die Zeitangaben und damit eine manuelle Verknüpfung des Titels."
+        },
+        "ZDB Title Overlap": {
+          "label": "ZDB-ID bereits verwendet",
+          "info": "Die gefundene ZDB-ID ist bereits mit einem anderen Referenztitel verknüpft.",
+          "action": "ZDB-Anreicherung übersprungen",
+          "toDo": "Review all titles for possible discrepancies"
+        },
+        "No ZDB Results": {
+          "label": "Keine ZDB-Aufnahme gefunden",
+          "info": "Für die gegebenen ISSNs wurde keine ZDB-Aufnahme gefunden.",
+          "action": "ZDB-Anreicherung übersprungen",
+          "toDo": ""
+        },
+        "Ambiguous Title Matches": {
+          "label": "Uneindeutige Titelübereinstimmung",
+          "info": "Der Pakettitel kann anhand der vorliegenden Identifikatoren nicht eindeutig einem Referenztitel zugeordnet werden.",
+          "action": "Kein Referenztitel verknüpft",
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln eine Dublette vorliegt. Falls ja, führen Sie sie zusammen und verknüpfen diesen Titel manuell. Überprüfen Sie die Identifikatoren und löschen Sie gegebenenfalls welche, falls sie falsch sind."
+        },
+        "Namespace Conflict": {
+          "label": "Unterschiedliche Namensräume",
+          "info": "Der Pakettitel besitzt eine eISSN, die einer bestehenden Print-ISSN des Refernztitels entspricht, oder umgekehrt.",
+          "action": "",
+          "toDo": "Überprüfen Sie, ob beim Referenztitel ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diesen Fall. Ansonsten überprüfen Sie den Pakettitel und die KBART-Datei dahingehend und korrigieren Sie diese."
+        },
+        "Critical Identifier Conflict": {
+          "label": "Identifikator-Konflikt (Neuer Titel)",
+          "info": "Referenztitel {0} stimmt anhand eines Identifikators mit einem vorhandenen Referenztitel überein, aber andere Identifikatoren desselben Namensraumes stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname stark.",
+          "action": "Neuer Referenztitel erstellt",
+          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Referenztitel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diese, falls sie falsch sind."
+        },
+        "Secondary Identifier Conflict": {
+          "label": "Identifikatoren-Konflikt (ID ergänzt)",
+          "info": "Referenztitel {0} stimmt mit dem vorhandenen Referenztitel überein, aber manche Identifikatoren {1} desselben Namensraums stimmen nicht überein.",
+          "action": "Identifikator ergänzt",
+          "toDo": "Überprüfen Sie die Identifikatoren des Referenztitels und löschen Sie diese, falls sie falsch sind."
+        },
+        "Generic Matching Conflict": {
+          "label": "Generischer Matchingkonflikt",
+          "info": "Es trat ein Konflikt beim Matching des Pakettitels mit bestehenden Referenztiteln auf.",
+          "action": "",
+          "toDo": "Überprüfen Sie die betroffenen Titel und informieren Sie gegebenenfalls die GOKb-Redaktion."
+        },
+        "Invalid Record": {
+          "label": "Ungültiger KBART-Datensatz",
+          "info": "Ein Datensatz der KBART-Datei enthält ungültige Werte. Es wurde kein Pakettitel angelegt.",
+          "action": "Kein Pakettitel angelegt",
+          "toDo": "Überprüfen Sie den entsprechenden Datensatz in der KBART-Datei auf Fehler und korrigieren Sie ihn."
+        },
+        "Ambiguous Record Matches": {
+          "label": "Uneindeutiger KBART-Datensatz",
+          "info": "Ein Datensatz der KBART-Datei kann nicht eindeutig einem Pakettitel zugeordnet werden.",
+          "action": "Pakettitel ausgewählt",
+          "toDo": "Überprüfen Sie den entsprechenden Datensatz sowie den Pakettitel, ob der korrekte Pakettitel ausgewählt wurde."
         }
       }
     },

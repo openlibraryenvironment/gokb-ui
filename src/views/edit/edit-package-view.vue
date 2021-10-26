@@ -15,6 +15,14 @@
         {{ localSuccessMessage }}
       </v-alert>
     </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
     <span v-if="kbartResult === 'success' || kbartStatus === 'success'">
       <v-alert
         type="success"
@@ -73,6 +81,8 @@
               v-model="allNames"
               :disabled="isReadonly"
               :required="!isReadonly"
+              check-dupes="Package"
+              :item-id="packageItem.id"
             />
             <gokb-url-field
               v-model="packageItem.descriptionURL"
@@ -290,6 +300,7 @@
           <gokb-tipps-section
             ref="tipps"
             :pkg="parseInt(id)"
+            :filter-align="isEdit"
             :platform="packageItem.nominalPlatform"
             :default-title-namespace="providerTitleNamespace"
             :disabled="isReadonly"
@@ -423,18 +434,19 @@
           <v-row>
             <v-col
               cols="12"
-              xl="4"
+              xl="5"
             >
               <gokb-curatory-group-section
                 v-model="allCuratoryGroups"
-                :disabled="isReadonly"
+                :disabled="!isAdmin"
+                :filter-align="!isReadonly"
                 :expandable="false"
                 :sub-title="$tc('component.curatoryGroup.label', 2)"
               />
             </v-col>
             <v-col
               cols="12"
-              xl="8"
+              xl="7"
             >
               <gokb-reviews-section
                 v-if="id && isContrib"
@@ -549,7 +561,6 @@
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import baseServices from '@/shared/services/base-services'
-  import profileServices from '@/shared/services/profile-services'
   import loading from '@/shared/models/loading'
   import axios from 'axios'
 
@@ -642,7 +653,6 @@
           nominalPlatform: undefined,
         },
         allCuratoryGroups: [],
-        userCuratoryGroups: [],
         sourceItem: undefined,
         packageTypes: [
           { id: 'book', text: 'Buch' },
@@ -651,6 +661,7 @@
           { id: 'mixed', text: 'Gemischt' },
         ],
         successMsg: undefined,
+        errorMsg: undefined,
         kbartResult: undefined,
         titlesHeader: TITLES_HEADER,
         titlesOptions: {
@@ -681,6 +692,9 @@
       },
       isEdit () {
         return !!this.id
+      },
+      isAdmin () {
+        return this.loggedIn && accountModel.hasRole('ROLE_ADMIN')
       },
       isReadonly () {
         return !this.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
@@ -713,16 +727,19 @@
         return accountModel.loggedIn()
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
       localListVerifiedDate () {
-        return this.listVerifiedDate ? new Date(this.listVerifiedDate).toISOString().substr(0, 10) : ''
+        return this.listVerifiedDate ? this.buildDateString(this.listVerifiedDate) : ''
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.package.label')]) : undefined
       },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
@@ -732,6 +749,9 @@
       },
       isValid () {
         return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
+      },
+      activeGroup () {
+        return this.loggedIn && accountModel.activeGroup()
       }
     },
     watch: {
@@ -807,6 +827,7 @@
         loading.startLoading()
         var isUpdate = !!this.id
         this.successMsg = undefined
+        this.errorMsg = undefined
         this.kbartResult = undefined
 
         if (this.valid) {
@@ -839,7 +860,8 @@
             id: this.id,
             ...(this.newTipps.length > 0 ? { tipps: this.newTipps } : {}),
             name: this.allNames.name,
-            variantNames: this.allNames.alts.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
+            version: this.version,
+            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
             curatoryGroups: this.allCuratoryGroups,
             ids: this.packageItem.ids.map(id => ({ value: id.value, type: id.namespace })),
             breakable: utils.asYesNo(this.packageItem.breakable),
@@ -859,7 +881,7 @@
             instance: this
           })
 
-          if (response.status < 400) {
+          if (response?.status < 400) {
             this.successMsg = this.isEdit ? 'success.update' : 'success.create'
             this.packageItem.id = response.data.id
 
@@ -896,8 +918,6 @@
                   instance: this
                 })
 
-                console.log(ygorJobStatusResponse.status)
-
                 if (ygorJobStatusResponse.status === 400) {
                   this.kbartResult = 'error'
                 } else {
@@ -916,6 +936,7 @@
               } else {
                 loading.stopLoading()
                 this.kbartResult = 'error'
+                this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
               }
             } else {
               loading.stopLoading()
@@ -928,7 +949,15 @@
             }
           } else {
             loading.stopLoading()
-            console.log('GOKb status: ' + response.status)
+            if (response.status === 409) {
+              this.errorMsg = 'error.update.409'
+            } else if (response.status === 500) {
+              this.errorMsg = 'error.general.500'
+            } else {
+              this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+              this.errors = response.data.error
+              this.step = 1
+            }
           }
         }
       },
@@ -967,7 +996,7 @@
             this.packageItem.editStatus = data.editStatus
             this.version = data.version
             this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
-            this.allAlternateNames = data._embedded.variantNames.map(({ variantName, id }) => ({ id, variantName, isDeletable: !!this.updateUrl }))
+            this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
             this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!this.updateUrl }))
             this.reviewRequests = data._embedded.reviewRequests
             this.updateUrl = data._links?.update?.href || null
@@ -1007,7 +1036,7 @@
           loading.stopLoading()
         } else {
           if (this.loggedIn) {
-            this.loadUserGroups()
+            this.allCuratoryGroups = [this.activeGroup]
           }
         }
       },
@@ -1041,19 +1070,6 @@
         }
 
         return resp
-      },
-      async loadUserGroups () {
-        const {
-          data: {
-            data: {
-              curatoryGroups
-            }
-          }
-        } = await this.catchError({
-          promise: profileServices.getProfile(this.cancelToken.token),
-          instance: this
-        })
-        this.allCuratoryGroups = curatoryGroups
       },
       triggerUpdate (checked) {
         this.urlUpdate = checked

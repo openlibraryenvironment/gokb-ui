@@ -7,7 +7,7 @@ const api = (baseServices) =>
         ? baseServices.createQueryParameters(parameters)
         : baseServices.createQueryParameters({ _sort: 'name', _order: 'asc' })
       const url = process.env.VUE_APP_API_BASE_URL + `/rest/${entityName}?${urlParameters}`
-      const result = CACHE[url] || baseServices.request({
+      const result = CACHE[url]?.length > 0 || baseServices.request({
         method: 'GET',
         url,
       }, cancelToken)

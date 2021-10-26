@@ -2,6 +2,7 @@
   <gokb-section
     :expandable="expandable"
     :hide-default="!expanded"
+    :filters="filterAlign"
     :title="title"
     :sub-title="subTitle"
     :items-total="totalNumberOfItems"
@@ -19,7 +20,7 @@
         color="primary"
         @click="showAddNewCuratoryGroup"
       >
-        {{ $t('btn.new') }}
+        {{ $t('btn.add') }}
       </gokb-button>
       <gokb-button
         v-if="isEditable"
@@ -91,6 +92,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      filterAlign: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

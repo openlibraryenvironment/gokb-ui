@@ -60,6 +60,7 @@
         </span>
         <v-chip
           v-if="itemsTotal !== undefined && itemsTotal !== -1"
+          style="overflow:visible"
           class="ma-2"
         >
           {{ itemsTotal }}

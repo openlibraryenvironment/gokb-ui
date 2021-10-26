@@ -8,6 +8,7 @@
     "confirm": "Confirm",
     "create": "Create",
     "darkMode": "Dark Mode",
+    "reactivate": "Reactivate",
     "deactivate": "Deactivate",
     "delete": "Delete",
     "disableSync": "Stop Auto-Refresh",
@@ -22,7 +23,8 @@
     "retire": "Retire",
     "search": "Search",
     "submit": "Submit",
-    "update": "Update"
+    "update": "Update",
+    "bulkSetStatus": "Set all {0} as {1}"
   },
   "main": {
     "docs": {
@@ -139,6 +141,7 @@
       "label": "Login",
       "automatic": "Stay logged in",
       "error": {
+        "400": "The entered login information is not valid.",
         "401": "The entered login information is not valid.",
         "500": "There was an error processing the login request. Please try again later."
       }
@@ -231,6 +234,7 @@
     },
     "errors": {
       "missingVal": "Missing value in column '{0}'!",
+      "missingCols": "Missing columns: {0}",
       "illegalVal": "Value {0} is not valid!",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
@@ -288,6 +292,26 @@
     "update": "Successfully edited {0} {1}!",
     "retire": "Successfully archived {0} {1}!",
     "delete": "Successfully deleted {0} {1}!"
+  },
+  "error": {
+    "update": {
+      "400": "{0} update contained errors!",
+      "403": "{0} could not be updated due to missing user permissions.",
+      "409": "{0} could not be saved because it has had another update in the meantime. Please look through your changes and enter them again after refreshing this site."
+    },
+    "create": {
+      "400": "{0} contained errors!",
+      "403": "{0} could not be created due to missing user permissions."
+    },
+    "general": {
+      "500": "The request failed, please report this to an admin or try again later.",
+      "name": {
+        "notUnique": "This name is already in use!"
+      }
+    },
+    "bulkUpdate": {
+      "403": "Not all {0} could be updated!"
+    }
   },
   "header": {
     "edit": {
@@ -771,10 +795,13 @@
     },
     "review": {
       "label": "Review | Reviews",
-      "request": "Title",
+      "request": "Request",
       "type": "Type",
       "cause": "Cause",
       "componentToReview": "Component",
+      "additionalInfo": {
+        "label": "Structured info"
+      },
       "otherComponents": {
         "label": "Other Components",
         "add": "Link new component",
@@ -922,6 +949,60 @@
           "info": "The matched global title reference has conflicting publishing dates to the coverage of this item.",
           "action": "Skipped title linking",
           "toDo": "Manually link the existing match or create a new title for linking."
+        },
+        "ZDB Title Overlap": {
+          "label": "ZDB Label Mismatch",
+          "info": "Matched ZDB-ID is already linked to another title instance.",
+          "action": "Skipped ZDB enrichment",
+          "toDo": "Review all titles for possible discrepancies"
+        },
+        "No ZDB Results": {
+          "label": "No ZDB Matches",
+          "info": "No ZDB-IDs found for given ISSNs",
+          "action": "Skipped ZDB enrichment",
+          "toDo": ""
+        },
+        "Ambiguous Title Matches": {
+          "label": "Ambiguous Title Matches",
+          "info": "The package title has been matched on multiple reference titles.",
+          "action": "No reference title selected",
+          "toDo": "Check reference titles for duplicates. Merge titles if necessary and link this title manually. Check identifier duplicates and delete them if they are incorrect."
+        },
+        "Namespace Conflict": {
+          "label": "Namespace Conflict",
+          "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
+          "action": "",
+          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. Check the package title identifiers and the KBART record. Correct them if necessary."
+        },
+        "Critical Identifier Conflict": {
+          "label": "Identifier Conflict (New Title)",
+          "info": "Reference title {0} matched an existing reference title on one identifier, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs badly.",
+          "action": "New reference title created",
+          "toDo": "Check if the new reference title is correct or if it is a duplicate. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
+        },
+        "Secondary Identifier Conflict": {
+          "label": "Identifier Conflict (ID added)",
+          "info": "Reference title {0} matched an existing reference title on one identifier, but other identifiers {1} differ from existing ones in the same namespaces.",
+          "action": "Identifier added",
+          "toDo": "Check identifiers of the reference title and delete the incorrect identifiers if necessary."
+        },
+        "Generic Matching Conflict": {
+          "label": "Generic Matching Conflict",
+          "info": "There has been a conflict matching the package title with an existing reference title.",
+          "action": "",
+          "toDo": "Check all titles and contact the GOKb team if necessary."
+        },
+        "Invalid Record": {
+          "label": "Invalid KBART Record",
+          "info": "There have been invalid values in a KBART file record. No package title has been created.",
+          "action": "No package title created",
+          "toDo": "Check the KBART file record and correct the invalid values. "
+        },
+        "Ambiguous Record Matches": {
+          "label": "Ambiguous KBART Record Matches",
+          "info": "A KBART record has been matched on multiple package titles.",
+          "action": "Package title selected",
+          "toDo": "Check the KBART record and the package title if the correct package title has been selected."
         }
       }
     },

@@ -57,6 +57,17 @@ export default {
         .finally(() => {
           doLoading && loading.stopLoading()
         })
+    },
+
+    buildDateString (ts) {
+      if (!ts) {
+        return ts
+      }
+
+      var obj = new Date(ts)
+      obj.setHours(obj.getHours() + 2)
+
+      return obj.toISOString().substr(0, 10)
     }
   }
 }

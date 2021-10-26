@@ -1,15 +1,15 @@
-const PROVIDER_URL = '/rest/tipps'
+const TIPP_PATH = '/rest/tipps'
 
 const api = (baseServices) => ({
   getTipp (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}`,
+      url: process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/${id}`,
     }, cancelToken)
   },
   createOrUpdateTipp (data, cancelToken) {
     const { id } = data
-    const url = id ? process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}` : process.env.VUE_APP_API_BASE_URL + PROVIDER_URL
+    const url = id ? process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/${id}` : process.env.VUE_APP_API_BASE_URL + TIPP_PATH
     return baseServices.request({
       method: id ? 'PUT' : 'POST',
       url,
@@ -27,6 +27,15 @@ const api = (baseServices) => ({
     return baseServices.request({
       method: 'DELETE',
       url: baseServices.relativeUrl(url),
+    }, cancelToken)
+  },
+  bulkUpdate (parameters, field, value, cancelToken) {
+    const urlParameters = baseServices.createQueryParameters(parameters)
+    const url = process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/bulk?_field=${field}&_value=${value}&${urlParameters}`
+
+    return baseServices.request({
+      method: 'GET',
+      url,
     }, cancelToken)
   }
 })

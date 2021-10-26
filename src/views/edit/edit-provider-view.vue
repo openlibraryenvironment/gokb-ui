@@ -12,7 +12,15 @@
         type="success"
         dismissible
       >
-        {{ successMsg }}
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
       </v-alert>
     </span>
     <gokb-section :no-tool-bar="true">
@@ -22,13 +30,15 @@
             v-model="allNames"
             :disabled="isReadonly"
             :label="$t('component.general.name')"
+            check-dupes="Org"
+            :item-id="providerObject.id"
           />
         </v-col>
       </v-row>
       <v-row v-if="id">
         <v-col>
           <gokb-state-select-field
-            v-model="status"
+            v-model="providerObject.status"
             :deletable="!!deleteUrl"
             :editable="!!updateUrl"
           />
@@ -37,14 +47,14 @@
       <v-row>
         <v-col>
           <gokb-text-field
-            v-model="reference"
+            v-model="providerObject.homepage"
             :label="$t('component.provider.homepage')"
             :disabled="isReadonly"
           />
         </v-col>
         <v-col lg="2">
           <gokb-namespace-field
-            v-model="titleNamespace"
+            v-model="providerObject.titleNamespace"
             target-type="Title"
             :readonly="isReadonly"
             :label="$t('component.provider.titleNamespace')"
@@ -52,7 +62,7 @@
         </v-col>
         <v-col lg="2">
           <gokb-namespace-field
-            v-model="packageNamespace"
+            v-model="providerObject.packageNamespace"
             target-type="Package"
             :readonly="isReadonly"
             :label="$t('component.provider.packageNamespace')"
@@ -70,7 +80,7 @@
           v-model="tab"
           class="mx-4"
         >
-          <v-tabs-slider color="black" />
+          <v-tabs-slider color="primary" />
 
           <v-tab
             key="variants"
@@ -94,7 +104,7 @@
           >
             {{ $tc('component.identifier.label', 2) }}
             <v-chip class="ma-2">
-              {{ ids.length }}
+              {{ providerObject.ids.length }}
             </v-chip>
             <v-icon
               v-if="pendingChanges.ids"
@@ -172,7 +182,7 @@
             class="mt-4"
           >
             <gokb-identifier-section
-              v-model="ids"
+              v-model="providerObject.ids"
               :show-title="false"
               :disabled="isReadonly"
               @update="addPendingChange"
@@ -216,13 +226,13 @@
     </v-row>
     <div v-else>
       <gokb-alternate-names-section
-        v-model="allAlternateNames"
+        v-model="allNames.alts"
         :expanded="allAlternateNames.length > 0"
         :disabled="isReadonly"
       />
       <gokb-identifier-section
-        v-model="ids"
-        :expanded="ids.length > 0"
+        v-model="providerObject.ids"
+        :expanded="providerObject.ids.length > 0"
         :disabled="isReadonly"
       />
       <gokb-platform-section
@@ -335,28 +345,31 @@
       return {
         tab: null,
         pendingChanges: {},
-        name: undefined,
-        source: undefined,
-        version: undefined,
         valid: true,
         notFound: false,
         tabsView: false,
-        status: undefined,
         dateCreated: undefined,
         lastUpdated: undefined,
         deleteUrl: undefined,
-        titleNamespace: undefined,
-        packageNamespace: undefined,
-        reference: undefined,
-        ids: [],
         allAlternateNames: [],
         allCuratoryGroups: [],
-        offices: [],
         allPackages: [],
         allNames: { name: undefined, alts: [] },
         allPlatforms: [],
+        offices: [],
         updateUrl: undefined,
-        successMsg: undefined
+        successMsg: undefined,
+        version: undefined,
+        errorMsg: undefined,
+        providerObject: {
+          id: undefined,
+          ids: [],
+          status: undefined,
+          source: undefined,
+          titleNamespace: undefined,
+          packageNamespace: undefined,
+          homepage: undefined,
+        }
       }
     },
     computed: {
@@ -379,10 +392,16 @@
         return accountModel.loggedIn()
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.provider.label'), this.name]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.provider.label')]) : undefined
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
@@ -421,22 +440,19 @@
       },
       async update () {
         var isUpdate = !!this.id
+        this.successMsg = undefined
+        this.errorMsg = undefined
 
         const activeGroup = accountModel.activeGroup()
 
         const data = {
-          id: this.id,
+          ...this.providerObject,
           name: this.allNames.name,
-          source: this.source || null,
-          status: this.status,
-          reference: this.reference,
-          ids: this.ids,
-          variantNames: this.allAlternateNames.map(({ variantName, id }) => ({ variantName, id: typeof id === 'number' ? id : null })),
+          version: this.version,
+          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
           offices: this.offices.map(office => ({ ...office, id: (typeof office.id === 'number' ? office.id : null) })),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
           providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null })),
-          titleNamespace: this.titleNamespace,
-          packageNamespace: this.packageNamespace,
           activeGroup: activeGroup
         }
         const response = await this.catchError({
@@ -452,9 +468,16 @@
             this.$router.push('/provider/' + response.data?.id)
           }
 
-          this.successMsg = this.isEdit
-            ? this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.name])
-            : this.$i18n.t('success.create', [this.$i18n.tc('component.provider.label'), this.name])
+          this.successMsg = this.isEdit ? 'success.update' : 'success.create'
+        } else {
+          if (response.status === 409) {
+            this.errorMsg = 'error.update.409'
+          } else if (response.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else {
+            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+            this.errors = response.data.error
+          }
         }
       },
       async reload () {
@@ -470,23 +493,24 @@
           if (result.status === 200) {
             const data = result.data
             this.name = data.name
-            this.source = data.source
-            this.reference = data.homepage
+            this.providerObject.source = data.source
+            this.providerObject.homepage = data.homepage
             this.version = data.version
             this.updateUrl = data._links?.update?.href || null
             this.deleteUrl = data._links?.delete?.href || null
-            this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
+            this.providerObject.id = data.id
+            this.providerObject.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
             this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
             this.allCuratoryGroups = data._embedded.curatoryGroups.map(group => ({ ...group, isDeletable: !!this.updateUrl }))
             this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({ ...platform, isDeletable: !!this.updateUrl }))
-            this.titleNamespace = data.titleNamespace
-            this.packageNamespace = data.packageNamespace
+            this.providerObject.titleNamespace = data.titleNamespace
+            this.providerObject.packageNamespace = data.packageNamespace
             this.allPackages = data._embedded.providedPackages
             this.allNames = { name: data.name, alts: this.allAlternateNames }
             this.offices = data._embedded.offices?.map(office => ({ ...office, typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined), localLanguage: (office.language?.value && office.language.value), isDeletable: !!this.updateUrl })) || []
             this.dateCreated = data.dateCreated
             this.lastUpdated = data.lastUpdated
-            this.status = data.status
+            this.providerObject.status = data.status
 
             document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
           } else {

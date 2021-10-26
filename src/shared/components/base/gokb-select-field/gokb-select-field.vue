@@ -156,8 +156,6 @@
 
           if (response) {
             this.items = this.transform(response)
-          } else {
-            console.log('No RDV result! for ' + this.entityName)
           }
 
           if (this.initItem) {

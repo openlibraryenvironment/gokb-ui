@@ -47,6 +47,12 @@
             value: 'popup'
           },
           {
+            text: this.$i18n.t('component.review.type'),
+            align: 'left',
+            sortable: true,
+            value: 'type'
+          },
+          {
             text: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'left',
             sortable: true,
@@ -136,6 +142,9 @@
       this.component = 'g:reviewRequests'
       this.searchServicesUrl = 'rest/reviews'
       this.linkValue = 'componentToReview'
+      this.initVals = {
+        status: 'setInit'
+      }
       this.linkSearchParameterValues = {
         popup: 'componentToReview',
         localDesc: 'stdDesc'

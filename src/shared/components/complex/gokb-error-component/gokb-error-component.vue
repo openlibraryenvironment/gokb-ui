@@ -38,7 +38,7 @@
                 <div class="text-h6">Config</div>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <code>{{ config }}</code>
+                <vue-json-pretty :data="config" />
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel>
@@ -46,7 +46,7 @@
                 <div class="text-h6">Request</div>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <code>{{ request }}</code>
+                <vue-json-pretty :data="request" />
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel>
@@ -54,7 +54,7 @@
                 <div class="text-h6">Response</div>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <code>{{ response }}</code>
+                <vue-json-pretty :data="response" />
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -75,8 +75,12 @@
 </template>
 
 <script>
+  import VueJsonPretty from 'vue-json-pretty'
+  import 'vue-json-pretty/lib/styles.css'
+
   export default {
     name: 'GokbErrorComponent',
+    components: { VueJsonPretty },
     props: {
       value: {
         type: Error,

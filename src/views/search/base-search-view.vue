@@ -16,6 +16,7 @@
             <component
               :is="column.type"
               :key="`${title}_${rowIndex}_${columnIndex}`"
+              :ref="column.value"
               v-model="searchFilters[column.value]"
               :items="column.items"
               clearable
@@ -122,12 +123,13 @@
         selectedItems: [],
         resultOptions: {
           page: 1,
-          sortBy: ['link'],
+          sortBy: [],
           desc: [false],
           itemsPerPage: ROWS_PER_PAGE
         },
         totalNumberOfItems: -1,
         confirmationPopUpVisible: false,
+        initVals: {},
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
@@ -170,9 +172,23 @@
       resetSearch () {
         Object.keys(this.searchFilters).forEach(filter => {
           if (Array.isArray(this.searchFilters[filter])) {
-            this.searchFilters[filter] = []
+            if (this.initVals[filter]) {
+              this.searchFilters[filter] = this.initVals[filter]
+            } else {
+              this.searchFilters[filter] = []
+            }
           } else {
-            this.searchFilters[filter] = undefined
+            if (this.initVals[filter] === 'setInit') {
+              this.$refs[filter][0].setInit()
+            } else if (this.initVals[filter]) {
+              this.searchFilters[filter] = this.initVals[filter]
+            } else {
+              if (this.$refs[filter] && this.$refs[filter].length > 0 && typeof this.$refs[filter][0].clear !== 'undefined' && typeof this.$refs[filter][0].clear === 'function') {
+                this.$refs[filter][0].clear()
+              } else {
+                this.searchFilters[filter] = undefined
+              }
+            }
           }
         })
         this.resultItems = []
@@ -205,14 +221,14 @@
         await this._executeDeleteItemService(deleteUrl)
         this.resultPaginate(this.resultOptions.page)
       },
-      confirmRetireItem ({ retireUrl }) {
+      confirmRetireItem ({ updateUrl }) {
         this.actionToConfirm = 'retireItem'
         this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)] }
-        this.parameterToConfirm = retireUrl
+        this.parameterToConfirm = updateUrl
         this.confirmationPopUpVisible = true
       },
-      async retireItem (retireUrl) {
-        await this._executeRetireItemService(retireUrl)
+      async retireItem (updateUrl) {
+        await this._executeRetireItemService(updateUrl)
         this.resultPaginate(this.resultOptions.page)
       },
       _executeDeleteItemService (deleteUrl) {
@@ -221,9 +237,9 @@
           instance: this
         })
       },
-      _executeRetireItemService (retireUrl) {
+      _executeRetireItemService (updateUrl) {
         return this.catchError({
-          promise: this.searchServices.retire(retireUrl, this.cancelToken.token),
+          promise: this.searchServices.retire(updateUrl, this.cancelToken.token),
           instance: this
         })
       },
@@ -244,13 +260,13 @@
         const esTypedParams = {
           es: true,
           ...((sort && { sort: sort }) || {}),
-          ...({ order: desc }),
+          ...((sort && { order: desc }) || {}),
           max: this.resultOptions.itemsPerPage
         }
 
         const dbTypedParams = {
           ...((sort && { _sort: sort }) || {}),
-          ...({ _order: desc }),
+          ...((sort && { _order: desc }) || {}),
           limit: this.resultOptions.itemsPerPage
         }
 

@@ -55,7 +55,7 @@
     },
     computed: {
       colorValue () {
-        return this.color || (this.default && 'primary') || 'secondary'
+        return this.color || (!this.default && 'secondary') || 'primary'
       },
       type () {
         return (this.default && 'submit') || undefined

@@ -6,6 +6,22 @@
     @submit="submitTipp"
   >
     <gokb-error-component :value="error" />
+    <span v-if="successMsg">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ localSuccessMessage }}
+      </v-alert>
+    </span>
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
     <v-row dense>
       <v-col>
         <gokb-section
@@ -453,6 +469,8 @@
   import tippServices from '@/shared/services/tipp-services'
   import { EDIT_TITLE_ROUTE, EDIT_TIPP_ROUTE } from '@/router/route-paths'
 
+  const URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/
+
   export default {
     name: 'GokbAddTitlePopup',
     extends: BaseComponent,
@@ -486,6 +504,7 @@
     data () {
       return {
         pprops: undefined,
+        urlValid: false,
         platformSelection: [],
         coverageExpanded: false,
         title: {
@@ -512,7 +531,10 @@
         },
         updateUrl: undefined,
         deleteUrl: undefined,
+        successMsg: undefined,
+        errorMsg: undefined,
         status: undefined,
+        version: undefined,
         importId: undefined,
         items: [],
         id: undefined,
@@ -526,7 +548,6 @@
           status: undefined,
           paymentType: undefined,
           url: undefined,
-          uuid: undefined,
           name: undefined,
           accessStartDate: undefined,
           accessEndDate: undefined,
@@ -580,7 +601,7 @@
         return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph'
       },
       isValid () {
-        return !!this.allNames.name && !!this.packageTitleItem.hostPlatform && this.packageTitleItem.ids.length > 0 && this.$refs.tippUrl.isValid
+        return !!this.allNames.name && !!this.packageTitleItem.hostPlatform && this.packageTitleItem.ids.length > 0 && this.packageTitleItem.url && URL_REGEX.test(this.packageTitleItem.url)
       },
       titleTypeString () {
         return (typeof this.title?.type === 'object' ? this.title.type.id : this.title?.type || this.packageTitleItem.publicationType.name)
@@ -595,10 +616,16 @@
         return this.coverageExpanded
       },
       localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString(this.$i18n.locale) : ''
       },
       localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : ''
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString(this.$i18n.locale) : ''
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
       },
       localValue: {
         get () {
@@ -650,15 +677,17 @@
         this.deleteUrl = this.selectedItem.deleteUrl
         this.platformSelection.push(this.selectedItem.hostPlatform)
         this.status = this.selectedItem.status
+        this.version = this.selectedItem.version
         this.importId = this.selectedItem.importId
         this.lastUpdated = this.selectedItem.lastUpdated
         this.dateCreated = this.selectedItem.dateCreated
         this.allNames.name = this.selectedItem.name
+        this.allNames.alts = this.selectedItem.variantNames
 
         if (this.selectedItem?.coverageStatements?.length) {
           this.packageTitleItem.coverageStatements = this.selectedItem.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
-            startDate: startDate?.substr(0, 10),
-            endDate: endDate?.substr(0, 10),
+            startDate: startDate && this.buildDateString(startDate),
+            endDate: endDate && this.buildDateString(endDate),
             coverageDepth,
             coverageNote,
             startIssue,
@@ -691,6 +720,7 @@
             ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
             prices: this.packageTitleItem.prices.map(price => ({ ...price, id: (typeof price.id === 'number' ? price.id : null) })),
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
+            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
             id: this.id,
             activeGroup: activeGroup
           }
@@ -704,7 +734,14 @@
             this.$emit('edit', this.packageTitleItem)
             this.close()
           } else {
-            console.log(response.status)
+            if (response.status === 409) {
+              this.errorMsg = 'error.update.409'
+            } else if (response.status === 500) {
+              this.errorMsg = 'error.general.500'
+            } else {
+              this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+              this.errors = response.data.error
+            }
           }
         } else {
           if (this.packageTitleItem.title) {
@@ -718,10 +755,12 @@
             titleId: this.packageTitleItem.title.id,
             ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
             prices: this.packageTitleItem.prices.map(price => ({ ...price, type: price.priceType, id: (typeof price.id === 'number' ? price.id : null) })),
+            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
             popup: { value: this.packageTitleItem.name, label: 'tipp', type: 'GokbAddTitlePopup' },
             link: { value: (this.packageTitleItem.title?.name), route: EDIT_TITLE_ROUTE, id: 'titleId' },
             hostPlatformName: this.packageTitleItem.hostPlatform?.name,
+            version: this.version,
             updateUrl: '',
             deleteUrl: '',
             isDeletable: true

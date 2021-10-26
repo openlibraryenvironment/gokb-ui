@@ -3,7 +3,7 @@
     <gokb-section
       expandable
       :hide-default="!expanded"
-      filters
+      :filters="filterAlign"
       :sub-title="title"
       :items-total="totalNumberOfItems"
       :errors="!!apiErrors"
@@ -72,6 +72,7 @@
         <gokb-button
           :disabled="selectedItems.length == 0"
           class="mr-4"
+          color="primary"
           icon-id="close"
           @click="confirmRetireSelectedItems"
         >
@@ -80,6 +81,7 @@
         <gokb-button
           :disabled="selectedItems.length == 0"
           icon-id="delete"
+          color="primary"
           @click="confirmDeleteSelectedItems"
         >
           {{ $t('btn.delete') }}
@@ -218,6 +220,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      filterAlign: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     data () {
@@ -447,8 +454,8 @@
                   series: tipp.series,
                   subjectArea: tipp.subjectArea,
                   publisherName: tipp.publisherName,
-                  dateFirstInPrint: tipp.dateFirstInPrint && tipp.dateFirstInPrint.substr(0, 10),
-                  dateFirstOnline: tipp.dateFirstOnline && tipp.dateFirstOnline.substr(0, 10),
+                  dateFirstInPrint: tipp.dateFirstInPrint && this.buildDateString(tipp.dateFirstInPrint),
+                  dateFirstOnline: tipp.dateFirstOnline && this.buildDateString(tipp.dateFirstOnline),
                   firstAuthor: tipp.firstAuthor,
                   firstEditor: tipp.firstEditor,
                   publicationType: tipp.publicationType,
@@ -456,8 +463,9 @@
                   editionStatement: tipp.editionStatement,
                   medium: tipp.medium,
                   lastChangedExternal: tipp.lastChangedExternal,
-                  accessStartDate: tipp.accessStartDate && tipp.accessStartDate.substr(0, 10),
-                  accessEndDate: tipp.accessEndDate && tipp.accessEndDate.substr(0, 10),
+                  accessStartDate: tipp.accessStartDate && this.buildDateString(tipp.accessStartDate),
+                  accessEndDate: tipp.accessEndDate && this.buildDateString(tipp.accessEndDate),
+                  variantNames: tipp._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })),
                   pkg: tipp.pkg,
                   title: tipp.title,
                   importId: tipp.importId,

@@ -80,7 +80,8 @@
               value: 'status',
               properties: {
                 initItem: this.$i18n.t('component.general.status.Current.label'),
-                width: '100%'
+                width: '100%',
+                messagePath: 'component.general.status'
               }
             }
           ],
@@ -100,7 +101,9 @@
     },
     async created () {
       this.searchServicesUrl = 'rest/provider'
-      this.searchServiceIncludes = 'id,name'
+      this.initVals = {
+        status: 'setInit'
+      }
       this.searchByEs = true
       this.linkSearchParameterValues = {
         link: 'name'
@@ -111,12 +114,14 @@
         return data.map(({
           id,
           name,
+          status,
           _links
         }) => ({
           id,
           link: { value: name, route: EDIT_PROVIDER_ROUTE, id: 'id' },
+          status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
-          retireUrl: _links?.update?.href || undefined
+          updateUrl: _links?.update?.href || undefined
         }))
       },
       _confirmArchiveSelectedItems () {

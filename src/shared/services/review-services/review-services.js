@@ -52,6 +52,16 @@ const api = (baseServices) => ({
       return true
     }
     return false
+  },
+
+  bulkUpdate (parameters, field, value, cancelToken) {
+    const urlParameters = baseServices.createQueryParameters(parameters)
+    const url = process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/bulk?_field=${field}&_value=${value}&${urlParameters}`
+
+    return baseServices.request({
+      method: 'GET',
+      url,
+    }, cancelToken)
   }
 })
 
