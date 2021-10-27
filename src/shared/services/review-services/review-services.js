@@ -35,6 +35,14 @@ const api = (baseServices) => ({
     }, cancelToken)
   },
 
+  deescalate (id, group) {
+    return baseServices.request({
+      method: 'PUT',
+      url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/deescalate/${id}`,
+      data: { id: id, activeGroup: group }
+    })
+  },
+
   escalate (id, group) {
     return baseServices.request({
       method: 'PUT',
