@@ -52,14 +52,10 @@ const api = (baseServices) => ({
   },
 
   escalatable (id, group) {
-    const result = baseServices.request({
+    return baseServices.request({
       method: 'GET',
       url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/escalatable/${id}/${group}`
     })
-    if (result.get(result) === 200) {
-      return true
-    }
-    return false
   },
 
   bulkUpdate (parameters, field, value, cancelToken) {

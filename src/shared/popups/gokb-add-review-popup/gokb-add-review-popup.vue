@@ -363,6 +363,7 @@
         successMsg: undefined,
         errorMsg: undefined,
         deleteUrl: undefined,
+        escalatable: false,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,
@@ -435,6 +436,7 @@
       if (this.selected) {
         this.id = this.selected.id
         this.fetch(this.id)
+        this.escalatable = this.isEscalatable()
       }
 
       if (this.component) {
@@ -445,8 +447,12 @@
       close () {
         this.localValue = false
       },
-      escalatable () {
-        return reviewServices.escalatable(this.id, accountModel.activeGroup())
+      isEscalatable () {
+        const response = reviewServices.escalatable(this.id, accountModel.activeGroup())
+        if (response.get('result') === 200) {
+          return true
+        }
+        return false
       },
       async escalate () {
         const response = await this.catchError({
