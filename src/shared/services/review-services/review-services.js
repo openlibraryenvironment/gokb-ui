@@ -43,6 +43,13 @@ const api = (baseServices) => ({
     })
   },
 
+  deescalatable (id, group) {
+    return baseServices.request({
+      method: 'GET',
+      url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/deescalatable/${id}/${group}`
+    })
+  },
+
   escalate (id, group) {
     return baseServices.request({
       method: 'PUT',
@@ -52,10 +59,11 @@ const api = (baseServices) => ({
   },
 
   escalatable (id, group) {
-    return baseServices.request({
+    const result = baseServices.request({
       method: 'GET',
       url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/escalatable/${id}/${group}`
     })
+    return result
   },
 
   bulkUpdate (parameters, field, value, cancelToken) {

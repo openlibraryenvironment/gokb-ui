@@ -302,6 +302,7 @@
         {{ $t('btn.escalate') }}
       </gokb-button>
       <gokb-button
+        :disabled="deescalatable == false"
         @click="deescalate"
       >
         {{ $t('btn.deescalate') }}
@@ -364,6 +365,7 @@
         errorMsg: undefined,
         deleteUrl: undefined,
         escalatable: false,
+        deescalatable: false,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,
@@ -437,6 +439,7 @@
         this.id = this.selected.id
         this.fetch(this.id)
         this.escalatable = this.isEscalatable()
+        this.deescalatable = this.isDeescalatable()
       }
 
       if (this.component) {
@@ -447,8 +450,21 @@
       close () {
         this.localValue = false
       },
-      isEscalatable () {
-        const response = reviewServices.escalatable(this.id, accountModel.activeGroup())
+      async isEscalatable () {
+        const response = await this.catchError({
+          promise: reviewServices.escalatable(this.id, accountModel.activeGroup()),
+          instance: this
+        })
+        if (response.get('result') === 200) {
+          return true
+        }
+        return false
+      },
+      async isDeescalatable () {
+        const response = await this.catchError({
+          promise: reviewServices.deescalatable(this.id, accountModel.activeGroup()),
+          instance: this
+        })
         if (response.get('result') === 200) {
           return true
         }
