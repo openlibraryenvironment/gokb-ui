@@ -479,6 +479,7 @@
         if (response.status === 200) {
           this.$emit('escalated', response.data)
           this.close()
+          window.location.reload()
         } else {
           this.$emit('not_escalated', response.data)
         }
@@ -492,6 +493,7 @@
         if (response.status === 200) {
           this.$emit('deescalated', response.data)
           this.close()
+          window.location.reload()
         } else {
           this.$emit('not_deescalated', response.data)
         }
