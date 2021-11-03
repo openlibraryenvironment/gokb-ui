@@ -452,7 +452,7 @@
       },
       async isEscalatable () {
         const response = await this.catchError({
-          promise: reviewServices.escalatable(this.id, accountModel.activeGroup()),
+          promise: reviewServices.escalatable(this.id, accountModel.activeGroup().id),
           instance: this
         })
         if (response.get('result') === 200) {
@@ -462,7 +462,7 @@
       },
       async isDeescalatable () {
         const response = await this.catchError({
-          promise: reviewServices.deescalatable(this.id, accountModel.activeGroup()),
+          promise: reviewServices.deescalatable(this.id, accountModel.activeGroup().id),
           instance: this
         })
         if (response.get('result') === 200) {
@@ -472,7 +472,7 @@
       },
       async escalate () {
         const response = await this.catchError({
-          promise: reviewServices.escalate(this.id, accountModel.activeGroup()),
+          promise: reviewServices.escalate(this.id, accountModel.activeGroup().id),
           instance: this
         })
 
@@ -485,7 +485,7 @@
       },
       async deescalate () {
         const response = await this.catchError({
-          promise: reviewServices.deescalate(this.id, accountModel.activeGroup()),
+          promise: reviewServices.deescalate(this.id, accountModel.activeGroup().id),
           instance: this
         })
 
