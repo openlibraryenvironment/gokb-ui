@@ -1003,6 +1003,18 @@
           "info": "A KBART record has been matched on multiple package titles.",
           "action": "Package title selected",
           "toDo": "Check the KBART record and the package title if the correct package title has been selected."
+        },
+        "Import Identifier Mismatch": {
+          "label": "Import Identifier Mismatch",
+          "info": "A KBART record has been matched on an existing package title by some identifiers ({0}), but not by other important identifiers ({1}).",
+          "action": "New package title created",
+          "toDo": "Check the package titles and merge them if necessary."
+        },
+        "Import Report": {
+          "label": "Report on KBART Import",
+          "info": "A KBART File has been imported. Please check the details for further information.",
+          "action": "",
+          "toDo": ""
         }
       }
     },

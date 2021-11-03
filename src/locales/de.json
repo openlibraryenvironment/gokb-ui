@@ -1004,6 +1004,18 @@
           "info": "Ein Datensatz der KBART-Datei kann nicht eindeutig einem Pakettitel zugeordnet werden.",
           "action": "Pakettitel ausgewählt",
           "toDo": "Überprüfen Sie den entsprechenden Datensatz sowie den Pakettitel, ob der korrekte Pakettitel ausgewählt wurde."
+        },
+        "Import Identifier Mismatch": {
+          "label": "Identifikatoren-Konflikt beim KBART-Import",
+          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren ({0}) einem bestehenden Pakettitel zugordnet werden, allerdings unterscheidet sich ein wichtiger anderer bzw. andere Identifikatoren ({1}).",
+          "action": "Neuer Pakettitel angelegt",
+          "toDo": "Überprüfen Sie die Pakettitel und führen sie beide gegebenenfalls zusammen."
+        },
+        "Import Report": {
+          "label": "Ergebnisbericht einer KBART-Einspielung",
+          "info": "Eine KBART-Einspielung hat stattgefunden. Entnehmen Sie genauere Informationen bitte den Details.",
+          "action": "",
+          "toDo": ""
         }
       }
     },
