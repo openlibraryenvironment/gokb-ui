@@ -68,9 +68,9 @@
       "search": "Einzeltitel"
     },
     "tipp": {
-      "edit": "Paket-Titel bearbeiten",
-      "create": "Paket-Titel anlegen",
-      "search": "Paket-Titel"
+      "edit": "Pakettitel bearbeiten",
+      "create": "Pakettitel anlegen",
+      "search": "Pakettitel"
     },
     "provider": {
       "edit": "Anbieter bearbeiten",
@@ -594,7 +594,7 @@
       "descriptionUrl": "URL zur Beschreibung des Pakets"
     },
     "tipp": {
-      "label": "Paket-Titel | Paket-Titel",
+      "label": "Pakettitel | Pakettitel",
       "toFullView": "Vollansicht öffnen",
       "url": {
         "label": "Zugriffs-URL | Zugriffs-URLs",
@@ -853,7 +853,7 @@
         },
         "Invalid TIPPs": {
           "label": "Ungültige Pakettitel",
-          "info": "Ein Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
+          "info": "Beim  einer Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
           "action": "Paket nicht aktualisiert",
           "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
         },
@@ -981,6 +981,60 @@
           "label": "Keine ZDB-Aufnahme gefunden",
           "info": "Für die gegebenen ISSNs wurde keine ZDB-Aufnahme gefunden.",
           "action": "ZDB-Anreicherung übersprungen",
+          "toDo": ""
+        },
+        "Ambiguous Title Matches": {
+          "label": "Uneindeutige Titelübereinstimmung",
+          "info": "Der Pakettitel kann anhand der vorliegenden Identifikatoren nicht eindeutig einem Referenztitel zugeordnet werden.",
+          "action": "Kein Referenztitel verknüpft",
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln eine Dublette vorliegt. Falls ja, führen Sie sie zusammen und verknüpfen diesen Titel manuell. Überprüfen Sie die Identifikatoren und löschen Sie gegebenenfalls welche, falls sie falsch sind."
+        },
+        "Namespace Conflict": {
+          "label": "Unterschiedliche Namensräume",
+          "info": "Der Pakettitel besitzt eine eISSN, die einer bestehenden Print-ISSN des Refernztitels entspricht, oder umgekehrt.",
+          "action": "",
+          "toDo": "Überprüfen Sie, ob beim Referenztitel ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diesen Fall. Ansonsten überprüfen Sie den Pakettitel und die KBART-Datei dahingehend und korrigieren Sie diese."
+        },
+        "Critical Identifier Conflict": {
+          "label": "Identifikator-Konflikt (Neuer Titel)",
+          "info": "Referenztitel {0} stimmt anhand eines Identifikators mit einem vorhandenen Referenztitel überein, aber andere Identifikatoren desselben Namensraumes stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname stark.",
+          "action": "Neuer Referenztitel erstellt",
+          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Referenztitel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diese, falls sie falsch sind."
+        },
+        "Secondary Identifier Conflict": {
+          "label": "Identifikatoren-Konflikt (ID ergänzt)",
+          "info": "Referenztitel {0} stimmt mit dem vorhandenen Referenztitel überein, aber manche Identifikatoren {1} desselben Namensraums stimmen nicht überein.",
+          "action": "Identifikator ergänzt",
+          "toDo": "Überprüfen Sie die Identifikatoren des Referenztitels und löschen Sie diese, falls sie falsch sind."
+        },
+        "Generic Matching Conflict": {
+          "label": "Generischer Matchingkonflikt",
+          "info": "Es trat ein Konflikt beim Matching des Pakettitels mit bestehenden Referenztiteln auf.",
+          "action": "",
+          "toDo": "Überprüfen Sie die betroffenen Titel und informieren Sie gegebenenfalls die GOKb-Redaktion."
+        },
+        "Invalid Record": {
+          "label": "Ungültiger KBART-Datensatz",
+          "info": "Ein Datensatz der KBART-Datei enthält ungültige Werte. Es wurde kein Pakettitel angelegt.",
+          "action": "Kein Pakettitel angelegt",
+          "toDo": "Überprüfen Sie den entsprechenden Datensatz in der KBART-Datei auf Fehler und korrigieren Sie ihn."
+        },
+        "Ambiguous Record Matches": {
+          "label": "Uneindeutiger KBART-Datensatz",
+          "info": "Ein Datensatz der KBART-Datei kann nicht eindeutig einem Pakettitel zugeordnet werden.",
+          "action": "Pakettitel ausgewählt",
+          "toDo": "Überprüfen Sie den entsprechenden Datensatz sowie den Pakettitel, ob der korrekte Pakettitel ausgewählt wurde."
+        },
+        "Import Identifier Mismatch": {
+          "label": "Identifikatoren-Konflikt beim KBART-Import",
+          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren ({0}) einem bestehenden Pakettitel zugordnet werden, allerdings unterscheidet sich ein wichtiger anderer bzw. andere Identifikatoren ({1}).",
+          "action": "Neuer Pakettitel angelegt",
+          "toDo": "Überprüfen Sie die Pakettitel und führen sie beide gegebenenfalls zusammen."
+        },
+        "Import Report": {
+          "label": "Ergebnisbericht einer KBART-Einspielung",
+          "info": "Eine KBART-Einspielung hat stattgefunden. Entnehmen Sie genauere Informationen bitte den Details.",
+          "action": "",
           "toDo": ""
         }
       }

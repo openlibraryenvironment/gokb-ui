@@ -981,6 +981,60 @@
           "info": "No ZDB-IDs found for given ISSNs",
           "action": "Skipped ZDB enrichment",
           "toDo": ""
+        },
+        "Ambiguous Title Matches": {
+          "label": "Ambiguous Title Matches",
+          "info": "The package title has been matched on multiple reference titles.",
+          "action": "No reference title selected",
+          "toDo": "Check reference titles for duplicates. Merge titles if necessary and link this title manually. Check identifier duplicates and delete them if they are incorrect."
+        },
+        "Namespace Conflict": {
+          "label": "Namespace Conflict",
+          "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
+          "action": "",
+          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. Check the package title identifiers and the KBART record. Correct them if necessary."
+        },
+        "Critical Identifier Conflict": {
+          "label": "Identifier Conflict (New Title)",
+          "info": "Reference title {0} matched an existing reference title on one identifier, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs badly.",
+          "action": "New reference title created",
+          "toDo": "Check if the new reference title is correct or if it is a duplicate. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
+        },
+        "Secondary Identifier Conflict": {
+          "label": "Identifier Conflict (ID added)",
+          "info": "Reference title {0} matched an existing reference title on one identifier, but other identifiers {1} differ from existing ones in the same namespaces.",
+          "action": "Identifier added",
+          "toDo": "Check identifiers of the reference title and delete the incorrect identifiers if necessary."
+        },
+        "Generic Matching Conflict": {
+          "label": "Generic Matching Conflict",
+          "info": "There has been a conflict matching the package title with an existing reference title.",
+          "action": "",
+          "toDo": "Check all titles and contact the GOKb team if necessary."
+        },
+        "Invalid Record": {
+          "label": "Invalid KBART Record",
+          "info": "There have been invalid values in a KBART file record. No package title has been created.",
+          "action": "No package title created",
+          "toDo": "Check the KBART file record and correct the invalid values. "
+        },
+        "Ambiguous Record Matches": {
+          "label": "Ambiguous KBART Record Matches",
+          "info": "A KBART record has been matched on multiple package titles.",
+          "action": "Package title selected",
+          "toDo": "Check the KBART record and the package title if the correct package title has been selected."
+        },
+        "Import Identifier Mismatch": {
+          "label": "Import Identifier Mismatch",
+          "info": "A KBART record has been matched on an existing package title by some identifiers ({0}), but not by other important identifiers ({1}).",
+          "action": "New package title created",
+          "toDo": "Check the package titles and merge them if necessary."
+        },
+        "Import Report": {
+          "label": "Report on KBART Import",
+          "info": "A KBART File has been imported. Please check the details for further information.",
+          "action": "",
+          "toDo": ""
         }
       }
     },
