@@ -86,6 +86,11 @@ const api = (vue, accountServices) => {
       state.loggedIn = false
       state.username = ''
       state.roles = []
+      state.activeGroup = undefined
+      state.darkMode = false
+      state.id = undefined
+      state.tabbedView = true
+      state.userLocale = undefined
     },
 
     async register ({ username, email, password, password2 }) {

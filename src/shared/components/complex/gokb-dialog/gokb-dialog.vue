@@ -4,6 +4,7 @@
     :persistent="persistent"
     :fullscreen="fullscreen"
     :width="width"
+    :retain-focus="false"
   >
     <v-card class="elevation-12">
       <v-form
@@ -12,7 +13,8 @@
         @submit.prevent="doSubmit"
       >
         <v-toolbar
-          color="accent"
+          :color="appColor"
+          dark
         >
           <v-toolbar-title>
             {{ title }}
@@ -61,6 +63,25 @@
         type: Boolean,
         required: false,
         default: true
+      }
+    },
+    data () {
+      return {
+        appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
+      }
+    },
+    mounted () {
+      if (this.value) {
+        this.$nextTick(() => {
+          console.log(this.$refs.form)
+          const theElement = this.$refs.form.$el
+          const input = theElement.querySelector('input:not([type=hidden]),textarea:not([type=hidden])')
+          if (input) {
+            setTimeout(() => {
+              input.focus()
+            }, 0)
+          }
+        })
       }
     },
     methods: {

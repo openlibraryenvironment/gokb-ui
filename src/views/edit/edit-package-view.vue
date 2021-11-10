@@ -439,7 +439,7 @@
               <gokb-curatory-group-section
                 v-model="allCuratoryGroups"
                 :disabled="!isAdmin"
-                :filter-align="!isReadonly"
+                :filter-align="false"
                 :expandable="false"
                 :sub-title="$tc('component.curatoryGroup.label', 2)"
               />
@@ -853,8 +853,6 @@
             }
           }
 
-          this.activeGroup = accountModel.activeGroup()
-
           const newPackage = {
             ...this.packageItem,
             id: this.id,
@@ -971,50 +969,20 @@
           })
 
           if (result.status === 200) {
-            const data = result.data
-            this.packageItem.id = data.id
+            this.mapRecord(result.data)
+          } else if (result.status === 401) {
+            accountModel.logout()
+            const retry = await this.catchError({
+              promise: packageServices.getPackage(this.id, this.cancelToken.token),
+              instance: this
+            })
 
-            if (!this.id) {
-              this.id = data.id
+            if (retry.status > 200) {
+              this.accessible = false
+            } else {
+              this.mapRecord(retry.data)
             }
-            this.currentName = data.name
-            this.packageItem.name = data.name
-            this.packageItem.source = data.source
-            this.packageItem.status = data.status
-            this.packageItem.descriptionURL = data.descriptionURL
-            this.packageItem.description = data.description
-            this.packageItem.scope = data.scope
-            this.packageItem.global = data.global?.name
-            this.packageItem.globalNote = data.globalNote
-            this.packageItem.consistent = data.consistent?.name === 'Yes'
-            this.packageItem.breakable = data.breakable?.name === 'Yes'
-            this.packageItem.fixed = data.fixed?.name === 'Yes'
-            this.packageItem.provider = data.provider
-            this.packageItem.nominalPlatform = data.nominalPlatform
-            this.packageItem.contentType = data.contentType
-            this.packageItem.listStatus = data.listStatus
-            this.packageItem.editStatus = data.editStatus
-            this.version = data.version
-            this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
-            this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
-            this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!this.updateUrl }))
-            this.reviewRequests = data._embedded.reviewRequests
-            this.updateUrl = data._links?.update?.href || null
-            this.deleteUrl = data._links?.delete?.href || null
-            this.providerSelect = data.provider
-            this.platformSelect = data.nominalPlatform
-            this.titleCount = data._tippCount
-            this.allNames = { name: data.name, alts: this.allAlternateNames }
-            this.listVerifiedDate = data.listVerifiedDate
-            if (data.source && this.$refs.source) {
-              this.sourceItem = data.source
-              this.$refs.source.fetch(data.source.id)
-            }
-            this.lastUpdated = data.lastUpdated
-            this.dateCreated = data.dateCreated
-
-            document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
-          } else {
+          } else if (result.status === 404) {
             this.notFound = true
           }
 
@@ -1039,6 +1007,50 @@
             this.allCuratoryGroups = [this.activeGroup]
           }
         }
+      },
+      mapRecord (data) {
+        this.packageItem.id = data.id
+
+        if (!this.id) {
+          this.id = data.id
+        }
+        this.currentName = data.name
+        this.packageItem.name = data.name
+        this.packageItem.source = data.source
+        this.packageItem.status = data.status
+        this.packageItem.descriptionURL = data.descriptionURL
+        this.packageItem.description = data.description
+        this.packageItem.scope = data.scope
+        this.packageItem.global = data.global?.name
+        this.packageItem.globalNote = data.globalNote
+        this.packageItem.consistent = data.consistent?.name === 'Yes'
+        this.packageItem.breakable = data.breakable?.name === 'Yes'
+        this.packageItem.fixed = data.fixed?.name === 'Yes'
+        this.packageItem.provider = data.provider
+        this.packageItem.nominalPlatform = data.nominalPlatform
+        this.packageItem.contentType = data.contentType
+        this.packageItem.listStatus = data.listStatus
+        this.packageItem.editStatus = data.editStatus
+        this.version = data.version
+        this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
+        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
+        this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!this.updateUrl }))
+        this.reviewRequests = data._embedded.reviewRequests
+        this.updateUrl = data._links?.update?.href || null
+        this.deleteUrl = data._links?.delete?.href || null
+        this.providerSelect = data.provider
+        this.platformSelect = data.nominalPlatform
+        this.titleCount = data._tippCount
+        this.allNames = { name: data.name, alts: this.allAlternateNames }
+        this.listVerifiedDate = data.listVerifiedDate
+        if (data.source && this.$refs.source) {
+          this.sourceItem = data.source
+          this.$refs.source.fetch(data.source.id)
+        }
+        this.lastUpdated = data.lastUpdated
+        this.dateCreated = data.dateCreated
+
+        document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
       },
       async sendKbartUpdateRquest (parameters, file) {
         const urlParameters = baseServices.createQueryParameters(parameters)

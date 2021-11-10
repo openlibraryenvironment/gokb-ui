@@ -38,7 +38,7 @@
         >
           <gokb-button
             class="mr-4 mb-4"
-            color="primary"
+            color="secondary"
             @click="resetSearch"
           >
             {{ $i18n.t('btn.reset') }}
@@ -121,6 +121,7 @@
       return {
         resultItems: [],
         selectedItems: [],
+        staticParams: {},
         resultOptions: {
           page: 1,
           sortBy: [],
@@ -257,6 +258,8 @@
         const sort = this.resultOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.resultOptions.sortBy[0]] || this.resultOptions.sortBy[0]) : undefined
         const desc = this.resultOptions.desc[0] ? 'desc' : 'asc'
 
+        const componentOptions = this.staticParams
+
         const esTypedParams = {
           es: true,
           ...((sort && { sort: sort }) || {}),
@@ -275,6 +278,7 @@
         const result = await this.catchError({
           promise: this.searchServices.search({
             ...searchParameters,
+            ...componentOptions,
             ...(this.searchByEs ? esTypedParams : dbTypedParams),
             ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
             ...((this.searchServiceEmbeds && { _embed: this.searchServiceEmbeds }) || {}),

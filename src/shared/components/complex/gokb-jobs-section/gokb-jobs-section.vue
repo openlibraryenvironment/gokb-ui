@@ -52,6 +52,7 @@
             :selected-items="selectedItems"
             :total-number-of-items="totalNumberOfItems"
             :options.sync="options"
+            hide-select
             @selected-items="selectedItems = $event"
             @retire-item="confirmCancelJob"
             @paginate="resultPaginate"
@@ -70,6 +71,7 @@
             :selected-items="selectedOldResults"
             :total-number-of-items="totalOldResults"
             :options.sync="optionsOldResults"
+            hide-select
             @selected-items="selectedOldResults = $event"
             @paginate="oldResultPaginate"
           />

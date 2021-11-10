@@ -122,7 +122,13 @@
       },
       variantNames () {
         return [...this.value]
-          .map(item => ({ variantName: item.variantName, locale: (item.locale?.name || item.locale), id: item.id }))
+          .map(item => ({
+            ...item,
+            locale: (item.locale?.name || item.locale),
+            markError: this.apiErrors?.find(e => (e.baddata.variantName === item.variantName))
+              ? this.$i18n.t('component.variantName.error.' + this.apiErrors.find(e => (e.baddata.variantName === item.variantName)).code)
+              : null
+          }))
           .sort(({ variantName: first }, { variantName: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.variantNameOptions.page - 1) * ROWS_PER_PAGE, this.variantNameOptions.page * ROWS_PER_PAGE)
       },

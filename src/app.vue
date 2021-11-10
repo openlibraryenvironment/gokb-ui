@@ -49,7 +49,7 @@
         </v-row>
         <v-row class="pl-6">
           <v-col class="text-caption">
-            v{{ currentVersion }}
+            {{ appVersion }}
           </v-col>
         </v-row>
         <v-row
@@ -131,7 +131,8 @@
         :items="globalSearchItems"
         :loading="globalSearchIsLoading"
         :search-input.sync="globalSearchField"
-        class="hidden-sm-and-down pt-7 ma-7"
+        class="hidden-sm-and-down pt-7 mx-7"
+        background-color="rgba(0,0,0,.26)"
         clearable
         hide-no-data
         hide-selected
@@ -277,6 +278,7 @@
       imprintLink: process.env.VUE_APP_IMP_LINK,
       appName: process.env.VUE_APP_TITLE || 'GOKb Client',
       appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
+      appVersion: process.env.VUE_APP_VERSION || version,
       globalSearchSelected: undefined,
       globalSearchField: undefined,
       globalSearchItems: undefined,

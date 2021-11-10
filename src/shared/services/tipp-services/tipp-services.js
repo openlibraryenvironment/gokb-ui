@@ -37,6 +37,23 @@ const api = (baseServices) => ({
       method: 'GET',
       url,
     }, cancelToken)
+  },
+  bulkUpdateStatus (body, cancelToken) {
+    const url = process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/bulk`
+
+    return baseServices.request({
+      method: 'POST',
+      data: body,
+      url,
+    }, cancelToken)
+  },
+  updateStatus (id, status, cancelToken) {
+    const url = process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/${id}/set-status?status=${status}`
+
+    return baseServices.request({
+      method: 'GET',
+      url,
+    }, cancelToken)
   }
 })
 

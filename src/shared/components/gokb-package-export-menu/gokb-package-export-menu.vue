@@ -18,10 +18,9 @@
         <v-list-item-title>
           <a
             download
-            :href="dataUrl"
+            :href="exportType.url"
             :title="exportType.description"
             :type="type"
-            @click="download(exportType)"
           >
             {{ exportType.label }}
           </a>
@@ -54,35 +53,51 @@
       exportVariants () {
         return {
           KBART: {
-            url: `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`,
+            url: this.currentTippUrl,
             flavour: 'tipp',
             label: this.$i18n.t('kbart.export.type.tipp.label'),
             description: this.$i18n.t('kbart.export.type.tipp.description'),
             type: 'text/tab-separated-values'
           },
           KBART_TITLE: {
-            url: `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`,
+            url: this.currentTitleUrl,
             flavour: 'title',
             label: this.$i18n.t('kbart.export.type.title.label'),
             description: this.$i18n.t('kbart.export.type.title.description'),
             type: 'text/tab-separated-values'
           }
         }
-      }
-    },
-    methods: {
-      download (exportType) {
-        this.type = exportType.type
+      },
+      currentTippUrl () {
+        var fullUrl = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`
 
         if (this.selectedItems?.length === 1) {
-          this.dataUrl = `${exportType.url}/${this.selectedItems[0].uuid}?exportType=${exportType.flavour}`
-        } else if (this.selectedItems?.length > 1) {
-          this.dataUrl = `${exportType.url}?exportType=${exportType.flavour}`
+          fullUrl = fullUrl + `/${this.selectedItems[0].uuid}` + `?exportType=tipp`
+        } else if (this.selectedItems) {
+          fullUrl = fullUrl + `?exportType=tipp`
+
           this.selectedItems.forEach(pkg => {
-            this.dataUrl = this.dataUrl + `&pkg=${pkg.uuid}`
+            fullUrl = fullUrl + `&pkg=${pkg.uuid}`
           })
         }
+
+        return fullUrl
       },
+      currentTitleUrl () {
+        var fullUrl = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`
+
+        if (this.selectedItems?.length === 1) {
+          fullUrl = fullUrl + `/${this.selectedItems[0].uuid}` + `?exportType=title`
+        } else if (this.selectedItems) {
+          fullUrl = fullUrl + `?exportType=title`
+
+          this.selectedItems.forEach(pkg => {
+            fullUrl = fullUrl + `&pkg=${pkg.uuid}`
+          })
+        }
+
+        return fullUrl
+      }
     }
   }
 </script>

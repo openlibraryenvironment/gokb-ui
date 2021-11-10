@@ -37,7 +37,7 @@
       </template>
       <template #item.link="{ item }">
         <router-link
-          :style="{ color: '#f2994a' }"
+          :style="{ color: 'primary' }"
           :to="{ name: item.link.route, params: { 'id': item[item.link.id] } }"
         >
           {{ item.link.value }}
@@ -46,7 +46,7 @@
       <template #item.linkTwo="{ item }">
         <router-link
           v-if="item.linkTwo"
-          :style="{ color: '#f2994a' }"
+          :style="{ color: 'primary' }"
           :to="{ name: item.linkTwo.route, params: { 'id': item[item.linkTwo.id] } }"
         >
           {{ item.linkTwo.value }}
@@ -55,7 +55,7 @@
       <template #item.popup="{ item }">
         <a
           :href="$route.query.page"
-          :style="{ color: '#f2994a', textDecoration: 'underline' }"
+          :style="{ color: 'primary', textDecoration: 'underline' }"
           @click="editItemPopupVisible = item.id"
         >
           {{ item.popup.value }}
@@ -74,7 +74,15 @@
       </template>
       <template #item._pending="{ item }">
         <v-icon
-          v-if="item._pending === 'added'"
+          v-if="item.markError"
+          class="mr-6"
+          color="red"
+          :title="item.markError"
+        >
+          mdi-alert
+        </v-icon>
+        <v-icon
+          v-else-if="item._pending === 'added'"
           class="mr-6"
           color="green"
           :title="$t('pending.item.added')"
@@ -90,10 +98,30 @@
         </v-icon>
       </template>
       <template
-        v-if="editable && actions"
+        v-if="actions"
         #item.action="{ item }"
       >
+        <component
+          :is="item.popup.type"
+          v-if="editItemPopupVisible == item.id"
+          :key="`${item.popup.label}_${item.id}`"
+          v-model="editItemPopupVisible"
+          :items="items"
+          :pprops="item.popup.otherProps"
+          :selected="item"
+          @edit="editItem(item)"
+        />
         <div style="white-space:nowrap">
+          <v-icon
+            v-if="item.popup"
+            class="mr-2"
+            style="cursor:pointer"
+            :title="item.updateUrl ? $t('btn.edit') : $t('btn.details')"
+            small
+            @click="editItemPopupVisible = item.id"
+          >
+            {{ item.updateUrl ? 'edit' : 'mdi-arrow-top-left' }}
+          </v-icon>
           <v-icon
             v-if="editable && item.isRetireable !== undefined"
             class="mr-2"
@@ -114,6 +142,17 @@
             @click="deleteItem(item)"
           >
             delete
+          </v-icon>
+          <v-icon
+            v-if="editable && item.isClosable"
+            :disabled="disabled"
+            style="cursor:pointer"
+            class="font-weight-bold"
+            :title="$t('btn.close')"
+            small
+            @click="closeReview(item)"
+          >
+            mdi-check-bold
           </v-icon>
         </div>
       </template>
@@ -245,8 +284,11 @@
       retireItem (item) {
         this.$emit('retire-item', item)
       },
+      closeReview (item) {
+        this.$emit('close-review', item)
+      },
       editItem (item) {
-        this.$emit('paginate', this.options.page)
+        this.$emit('edit', item)
       },
       closeEdit () {
         this.editItemPopupVisible = undefined

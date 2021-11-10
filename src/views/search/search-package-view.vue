@@ -28,10 +28,10 @@
     },
     computed: {
       isDeleteSelectedDisabled () {
-        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.deleteUrl === false)).length > 0
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (!item.deleteUrl)).length > 0
       },
       isRetiredSelectedDisabled () {
-        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.retireUrl === false)).length > 0
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (!item.updateUrl)).length > 0
       },
       isExportSelectedDisabled () {
         return this.selectedItems.length !== 1
@@ -248,7 +248,7 @@
           link: { value: name, route: EDIT_PACKAGE_ROUTE, id: 'id' },
           linkTwo: provider ? { value: provider.name, route: EDIT_PROVIDER_ROUTE, id: 'providerId' } : undefined,
           providerId: provider?.id || undefined,
-          lastUpdated: new Date(lastUpdated).toISOString().substr(0, 10),
+          lastUpdated: lastUpdated ? new Date(lastUpdated).toLocaleString('sv').substr(0, 10) : undefined,
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
           count: _tippCount || tippCount,
