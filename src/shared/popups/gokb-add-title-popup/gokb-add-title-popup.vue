@@ -445,8 +445,8 @@
       <v-spacer />
       <v-spacer />
       <gokb-button
-        text
         class="mr-6"
+        color="secondary"
         @click="close"
       >
         {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
@@ -731,7 +731,14 @@
           })
 
           if (response.status < 400) {
-            this.$emit('edit', this.packageTitleItem)
+            const edited = {
+              ...this.packageTitleItem,
+              statusLocal: this.$i18n.t('component.general.status.' + this.packageTitleItem.name + '.label'),
+              popup: { value: (this.pkg ? (this.packageTitleItem.title ? this.packageTitleItem.title.name : this.packageTitleItem.name) : this.packageTitleItem.pkg.name), label: 'tipp', type: 'GokbAddTitlePopup' },
+              hostPlatformName: this.packageTitleItem.hostPlatform?.name,
+              titleType: this.title.type,
+            }
+            this.$emit('edit', edited)
             this.close()
           } else {
             if (response.status === 409) {
@@ -763,10 +770,15 @@
             version: this.version,
             updateUrl: '',
             deleteUrl: '',
-            isDeletable: true
+            isDeletable: true,
+            _pending: 'added'
           }
 
-          this.$emit('add', newTipp)
+          if (this.selected?.id) {
+            this.$emit('edit', newTipp)
+          } else {
+            this.$emit('add', newTipp)
+          }
           this.close()
         }
       },

@@ -33,7 +33,7 @@
     </div>
     <router-link
       v-if="componentRoute"
-      :style="{ color: '#f2994a', fontSize: '1.1rem' }"
+      :style="{ color: 'primary', fontSize: '1.1rem' }"
       :to="{ name: componentRoute, params: { 'id': value.id } }"
     >
       {{ localLabel }}
@@ -206,7 +206,8 @@
           Journal: '/title',
           Book: '/title',
           Database: '/title',
-          Package: '/package'
+          Package: '/package',
+          TIPP: '/package-title'
         }
       }
     },

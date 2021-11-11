@@ -22,12 +22,10 @@
           </span>
         </span>
         <v-spacer />
-        <v-toolbar-items
+        <slot
           v-if="expanded"
-          class="pa-2"
-        >
-          <slot name="buttons" />
-        </v-toolbar-items>
+          name="buttons"
+        />
       </v-toolbar>
       <span
         v-else-if="title && subTitle"
@@ -73,22 +71,26 @@
           <v-icon>{{ expansionIcon }}</v-icon>
         </v-btn>
         <v-spacer />
-        <v-toolbar-items
+        <slot
           v-if="expanded"
-          class="pa-2"
-        >
-          <slot name="buttons" />
-        </v-toolbar-items>
+          name="buttons"
+        />
       </v-toolbar>
       <v-toolbar
         v-if="filters && expanded"
         class="pt-1"
-        align="end"
         flat
       >
+        <slot
+          v-if="showActions"
+          name="actions"
+        />
         <v-spacer />
+        <slot
+          v-if="!title && !subTitle"
+          name="buttons"
+        />
         <v-toolbar-items
-          v-if="expanded"
           class="pa-2"
         >
           <slot name="search" />
@@ -100,12 +102,10 @@
         flat
       >
         <v-spacer />
-        <v-toolbar-items
+        <slot
           v-if="expanded"
-          class="pa-2"
-        >
-          <slot name="buttons" />
-        </v-toolbar-items>
+          name="buttons"
+        />
       </v-toolbar>
       <v-card-text v-show="expanded">
         <div
@@ -139,6 +139,11 @@
         default: false
       },
       filters: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+      showActions: {
         type: Boolean,
         required: false,
         default: false,

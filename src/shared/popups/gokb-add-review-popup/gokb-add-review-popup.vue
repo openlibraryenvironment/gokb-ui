@@ -35,7 +35,10 @@
         />
       </v-col>
     </v-row>
-    <v-row align="center">
+    <v-row
+      v-if="isEdit"
+      align="center"
+    >
       <v-col cols="3">
         <gokb-text-field
           v-model="reviewItem.dateCreated"
@@ -47,7 +50,7 @@
         <gokb-state-field
           v-model="reviewItem.stdDesc"
           :init-item="stdDesc"
-          :readonly="isReadonly"
+          readonly
           return-object
           url="refdata/categories/ReviewRequest.StdDesc"
           message-path="component.review.stdDesc"
@@ -68,15 +71,29 @@
       </v-col>
       <v-col
         v-if="reviewItem.allocatedGroups.length > 0"
-        align-self="center"
+        cols="3"
       >
-        <label class="v-label"> {{ $tc('component.curatoryGroup.label', 2) }}: </label>
-        <v-chip
-          v-for="group in reviewItem.allocatedGroups"
-          :key="group.name"
+        <div
+          class="v-select__slot"
+          style="margin-top:-8px"
         >
-          {{ group.name }}
-        </v-chip>
+          <label
+            class="v-label"
+            style="display:block;font-size:0.9em;"
+          > {{ $tc('component.curatoryGroup.label', 2) }}: </label>
+        </div>
+        <div style="margin-top:-6px">
+          <v-chip-group>
+            <v-chip
+              v-for="group in reviewItem.allocatedGroups"
+              :key="group.name"
+              class="font-weight-medium"
+              pill
+            >
+              {{ group.name }}
+            </v-chip>
+          </v-chip-group>
+        </div>
       </v-col>
     </v-row>
     <v-row>
@@ -99,7 +116,7 @@
                 <router-link
                   v-if="numMessageVars > 0 && typeof additionalInfo.vars[0] === 'number'"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
-                  :style="{ color: '#f2994a' }"
+                  :style="{ color: 'primary' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
@@ -107,14 +124,14 @@
                 <router-link
                   v-else-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
-                  :style="{ color: '#f2994a' }"
+                  :style="{ color: 'primary' }"
                 >
                   {{ reviewItem.otherComponents[0].name }}
                 </router-link>
                 <router-link
                   v-else-if="reviewItem.component"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
-                  :style="{ color: '#f2994a' }"
+                  :style="{ color: 'primary' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
@@ -194,7 +211,7 @@
               <v-col>
                 <router-link
                   v-if="oc.route"
-                  :style="{ color: '#f2994a', fontSize: '1.2em', marginRight: '4px' }"
+                  :style="{ color: 'primary', fontSize: '1.2em', marginRight: '4px' }"
                   :to="{ name: oc.route, params: { 'id': oc.id } }"
                 >
                   {{ oc.name }}
@@ -255,7 +272,7 @@
               <template v-slot:0>
                 <router-link
                   v-if="reviewItem.otherComponents && reviewItem.otherComponents.size > 0"
-                  :style="{ color: '#f2994a' }"
+                  :style="{ color: 'primary' }"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
                   color="primary"
                 >
@@ -264,7 +281,7 @@
                 <router-link
                   v-else-if="reviewItem.component"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
-                  :style="{ color: '#f2994a' }"
+                  :style="{ color: 'primary' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>

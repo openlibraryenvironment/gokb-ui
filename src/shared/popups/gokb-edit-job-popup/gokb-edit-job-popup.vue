@@ -24,7 +24,7 @@
         </div>
         <router-link
           v-if="selectedItem.link"
-          :style="{ color: '#f2994a' }"
+          :style="{ color: 'primary' }"
           :to="{ name: '/package', params: { 'id': selectedItem.componentId } }"
         >
           {{ selectedItem.link.value || $i18n.tc('component.package.label') + ' ' + selectedItem.componentId }}

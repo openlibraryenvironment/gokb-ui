@@ -11,6 +11,7 @@
     "deescalate": "Deeskalieren",
     "reactivate": "Reaktivieren",
     "deactivate": "Deaktivieren",
+    "details": "Detailansicht",
     "delete": "Löschen",
     "disableSync": "Aktualisierung stoppen",
     "edit": "Bearbeiten",
@@ -19,6 +20,7 @@
     "new": "Neu",
     "next": "Weiter",
     "prev": "Zurück",
+    "reactivate": "Reaktivieren",
     "refresh": "Aktualisieren",
     "reload": "Neu laden",
     "reset": "Zurücksetzen",
@@ -26,7 +28,8 @@
     "search": "Suchen",
     "submit": "Abschicken",
     "update": "Aktualisieren",
-    "bulkSetStatus": "Alle {0} auf {1} setzen"
+    "bulkSelect": "Status für {0} Einträge setzen auf ...",
+    "bulkCloseReview": "{0} als erledigt markieren"
   },
   "main": {
     "docs": {
@@ -43,6 +46,7 @@
   "default": {
     "true": "Ja",
     "false": "Nein",
+    "all": "Alle",
     "ISOdateHint": "JJJJ-MM-TT",
     "404": {
       "title": "Unbekannter Pfad",
@@ -138,6 +142,11 @@
         "generic": "Möchten Sie die ausgewählten Benutzerkonten deaktivieren?",
         "specific": "Möchten Sie {0} {1} wirklich deaktivieren?",
         "list": "Möchten Sie {0} {1} wirklich deaktivieren?"
+      },
+      "status": {
+        "generic": "Möchten Sie den Status der ausgewählten Elemente wirklich ändern?",
+        "specific": "Möchten Sie den Status von {0} wirklich zu {1} ändern?",
+        "list": "Möchten Sie den Status von {0} Elementen wirklich auf {1} setzen?"
       }
     },
     "login": {
@@ -506,6 +515,9 @@
           "sourceUpdate": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei unter der Adresse {1}."
           },
+          "tippBulkUpdate": {
+            "label": "Bitte bestätigen Sie, dass sie die {0} ausgeählten Paket-Titel auf {1} setzen möchten. Falls Sie noch weitere ungespeicherte Änderungen für dieses Paket haben, klicken Sie bitte auf 'Abbrechen' und speichern Sie zunächst die restlichen Änderungen."
+          },
           "noTipps": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0}."
           }
@@ -733,6 +745,9 @@
       "packageNamespace": "Paket-Namensraum",
       "technicalSupport": "Technischer Support"
     },
+    "organization": {
+      "label": "Anbieter | Anbieter"
+    },
     "office": {
       "label": "Kontakt | Kontakte",
       "name": "Bezeichnung",
@@ -833,6 +848,12 @@
       },
       "stdDesc": {
         "label": "Kategorie | Kategorien",
+        "None": {
+          "label": "- Keine -"
+        },
+        "none": {
+          "label": "- Keine -"
+        },
         "Invalid TIPPs": {
           "label": "Ungültige Pakettitel",
           "info": "Beim  einer Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
@@ -1006,6 +1027,18 @@
           "info": "Ein Datensatz der KBART-Datei kann nicht eindeutig einem Pakettitel zugeordnet werden.",
           "action": "Pakettitel ausgewählt",
           "toDo": "Überprüfen Sie den entsprechenden Datensatz sowie den Pakettitel, ob der korrekte Pakettitel ausgewählt wurde."
+        },
+        "Import Identifier Mismatch": {
+          "label": "Identifikatoren-Konflikt beim KBART-Import",
+          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren ({0}) einem bestehenden Pakettitel zugordnet werden, allerdings unterscheidet sich ein wichtiger anderer bzw. andere Identifikatoren ({1}).",
+          "action": "Neuer Pakettitel angelegt",
+          "toDo": "Überprüfen Sie die Pakettitel und führen sie beide gegebenenfalls zusammen."
+        },
+        "Import Report": {
+          "label": "Ergebnisbericht einer KBART-Einspielung",
+          "info": "Eine KBART-Einspielung hat stattgefunden. Entnehmen Sie genauere Informationen bitte den Details.",
+          "action": "",
+          "toDo": ""
         }
       }
     },
@@ -1018,7 +1051,8 @@
     "variantName": {
       "label": "Namensvariante | Namensvarianten",
       "error": {
-        "duplicate": "Eine ähnliche Variante zu '{0}' existiert bereits!"
+        "duplicate": "Eine ähnliche Variante zu '{0}' existiert bereits!",
+        "inUse": "Diese Variante ist bereits anderweitig verknüpft!"
       }
     },
     "source": {

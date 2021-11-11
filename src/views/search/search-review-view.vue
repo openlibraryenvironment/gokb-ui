@@ -142,6 +142,7 @@
       this.component = 'g:reviewRequests'
       this.searchServicesUrl = 'rest/reviews'
       this.linkValue = 'componentToReview'
+      this.staticParams = { titlereviews: true }
       this.initVals = {
         status: 'setInit'
       }
