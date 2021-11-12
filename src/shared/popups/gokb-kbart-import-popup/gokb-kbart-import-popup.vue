@@ -115,6 +115,7 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import math from '@/shared/utils/math'
+  import jschardet from 'jschardet'
   import GokbNamespaceField from '@/shared/components/simple/gokb-namespace-field'
 
   export default {
@@ -136,6 +137,7 @@
     data () {
       return {
         error: undefined,
+        charsetError: false,
         selectedNamespace: undefined,
         cancelValidation: false,
         useProprietaryNamespace: false,
@@ -178,10 +180,14 @@
           },
           monograph: {
             date_monograph_published_print: {
-              rules: {}
+              rules: {
+                general: /^[1-9][0-9]{3}(-[01][0-9]?(-[0-3][0-9])?)?([T\s][0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z?)?$/
+              }
             },
             date_monograph_published_online: {
-              rules: {}
+              rules: {
+                general: /^[1-9][0-9]{3}(-[01][0-9]?(-[0-3][0-9])?)?([T\s][0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z?)?$/
+              }
             },
             monograph_volume: {
               rules: {}
@@ -222,10 +228,17 @@
               rules: {}
             }
           },
+          database: {},
+          other: {},
           general: {
             access_type: {
               rules: {
                 general: /^(P|F)$/
+              }
+            },
+            coverage_depth: {
+              rules: {
+                general: /^[Ff]ulltext$/
               }
             }
           }
@@ -316,13 +329,29 @@
       },
       doImport () {
         this.error = undefined
+        this.charsetError = false
         this.importRunning = true
         this.completion = 0
+        this.charsetReader = new FileReader()
+        this.charsetReader.onload = this._checkCharset
+
+        this.charsetReader.readAsBinaryString(this.options.selectedFile)
+
         this.readerForImport = new FileReader()
         this.readerForImport.onload = this._importCompleted
         this.readerForImport.onprogress = this._importProgress
 
         this.readerForImport.readAsText(this.options.selectedFile)
+      },
+      _checkCharset () {
+        const csvResult = this.charsetReader.result.split(/\r|\n|\r\n/)
+        const encoding = jschardet.detect(csvResult.toString()).encoding
+
+        if (encoding !== 'UTF-8' && encoding !== 'ASCII') {
+          console.log(jschardet.detectAll(csvResult.toString()))
+          this.charsetError = true
+          this.error = this.$i18n.t('kbart.errors.encoding')
+        }
       },
       async _importCompleted () {
         const csvDataRows = this.readerForImport.result.split(/\r?\n/)
@@ -403,30 +432,30 @@
                       }
                     }
 
-                    if (col.length > 0 && this.kbartStd.general[colName]?.rules.general && !this.kbartStd.general[colName]?.rules.general?.test(col.trim())) {
+                    if (col.trim().length > 0 && this.kbartStd.general[colName]?.rules.general && !this.kbartStd.general[colName]?.rules.general?.test(col.trim())) {
                       this.ensureFieldCounter(colName, 'errors', 'invalid')
                       this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalVal', [col]) })
                       hasErrors = true
                     }
 
                     if (colName === 'online_identifier') {
-                      if (col.length > 0 && !this.kbartStd.mandatoryColumns.online_identifier.rules[type]?.test(col.trim())) {
+                      if (col.trim().length > 0 && !this.kbartStd.mandatoryColumns.online_identifier.rules[type]?.test(col.trim())) {
                         this.ensureFieldCounter(colName, 'errors', 'invalid')
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalOnlineId', [col]) })
                         hasErrors = true
                       }
                     } else if (colName === 'print_identifier') {
-                      if (col.length > 0 && !this.kbartStd.mandatoryColumns.print_identifier.rules[type]?.test(col.trim())) {
+                      if (col.trim().length > 0 && !this.kbartStd.mandatoryColumns.print_identifier.rules[type]?.test(col.trim())) {
                         this.ensureFieldCounter(colName, 'errors', 'invalid')
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalPrintId', [col]) })
                         hasErrors = true
                       }
-                    } else if (type === 'serial' && this.kbartStd.serial[colName]) {
-                      if (this.kbartStd.serial[colName]?.rules?.notEmpty && col.trim().length === 0) {
+                    } else if (this.kbartStd[type][colName]) {
+                      if (col.trim().length === 0 && this.kbartStd[type][colName]?.rules?.notEmpty) {
                         this.ensureFieldCounter(colName, 'errors', 'empty')
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
                         hasErrors = true
-                      } else if (col.length > 0 && this.kbartStd.serial[colName]?.rules.general && !this.kbartStd.serial[colName]?.rules.general?.test(col.trim())) {
+                      } else if (col.trim().length > 0 && this.kbartStd[type][colName]?.rules.general && !this.kbartStd[type][colName]?.rules.general?.test(col.trim())) {
                         this.ensureFieldCounter(colName, 'errors', 'invalid')
                         this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalVal', [col]) })
                         hasErrors = true
