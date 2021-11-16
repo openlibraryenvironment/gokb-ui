@@ -313,13 +313,13 @@
 
     <template #buttons>
       <gokb-button
-        :disabled="escalatable == false"
+        :disabled="!escalatable"
         @click="escalate"
       >
         {{ $t('btn.escalate') }}
       </gokb-button>
       <gokb-button
-        :disabled="deescalatable == false"
+        :disabled="!deescalatable"
         @click="deescalate"
       >
         {{ $t('btn.deescalate') }}
@@ -472,7 +472,7 @@
           promise: reviewServices.escalatable(this.id, accountModel.activeGroup().id),
           instance: this
         })
-        if (response.get('result') === 200) {
+        if (response.data.isEscalatable /* && response.isEscalatable */) {
           return true
         }
         return false
@@ -492,13 +492,9 @@
           promise: reviewServices.escalate(this.id, accountModel.activeGroup().id),
           instance: this
         })
-
         if (response.status === 200) {
-          this.$emit('escalated', response.data)
+          this.$emit('paginate', response.data)
           this.close()
-          window.location.reload()
-        } else {
-          this.$emit('not_escalated', response.data)
         }
       },
       async deescalate () {
@@ -506,13 +502,9 @@
           promise: reviewServices.deescalate(this.id, accountModel.activeGroup().id),
           instance: this
         })
-
         if (response.status === 200) {
-          this.$emit('deescalated', response.data)
+          this.$emit('paginate', response.data)
           this.close()
-          window.location.reload()
-        } else {
-          this.$emit('not_deescalated', response.data)
         }
       },
       async fetch (rid) {
