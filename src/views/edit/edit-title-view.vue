@@ -707,6 +707,7 @@
         this.titleItem.editionStatement = data.editionStatement
         this.dateCreated = data.dateCreated
         this.lastUpdated = data.lastUpdated
+        this.titleItem.id = data.id
         this.titleItem.firstAuthor = data.firstAuthor
         this.titleItem.firstEditor = data.firstEditor
         this.titleItem.medium = data.medium
