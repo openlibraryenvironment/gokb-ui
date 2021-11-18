@@ -472,7 +472,7 @@
           promise: reviewServices.escalatable(this.id, accountModel.activeGroup().id),
           instance: this
         })
-        if (response.data.isEscalatable /* && response.isEscalatable */) {
+        if (response.data.isEscalatable) {
           return true
         }
         return false
@@ -482,7 +482,7 @@
           promise: reviewServices.deescalatable(this.id, accountModel.activeGroup().id),
           instance: this
         })
-        if (response.get('result') === 200) {
+        if (response.data.isDeescalatable) {
           return true
         }
         return false
