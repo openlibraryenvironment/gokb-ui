@@ -48,6 +48,7 @@
             :label="titleLabel"
             :readonly="isReadonly"
             return-object
+            show-link
           />
         </v-col>
       </v-row>

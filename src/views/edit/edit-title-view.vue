@@ -713,8 +713,8 @@
         this.titleItem.medium = data.medium
         this.titleItem.OAStatus = data.OAStatus
         this.titleItem.editionNumber = data.editionNumber
-        this.titleItem.firstPublishedInPrint = this.buildDateString(data.firstPublishedInPrint)
-        this.titleItem.firstPublishedOnline = this.buildDateString(data.firstPublishedOnline)
+        this.titleItem.firstPublishedInPrint = this.buildDateString(data.dateFirstInPrint)
+        this.titleItem.firstPublishedOnline = this.buildDateString(data.dateFirstOnline)
         this.titleItem.volumeNumber = data.volumeNumber
         this.titleItem.status = data.status
         this.history = data.history

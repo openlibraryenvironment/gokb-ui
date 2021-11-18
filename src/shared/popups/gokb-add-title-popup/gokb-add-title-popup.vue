@@ -58,6 +58,7 @@
                 :type-filter="titleTypeId"
                 :label="$tc('component.title.label')"
                 dense
+                show-link
                 :readonly="isReadonly"
                 return-object
               />
