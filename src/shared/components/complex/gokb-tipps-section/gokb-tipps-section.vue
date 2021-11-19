@@ -383,7 +383,7 @@
       }
     },
     async created () {
-      if (this.pkg || this.ttl) {
+      if (this.ttl) {
         this.fetchTipps(this.options)
       }
     },
@@ -475,11 +475,11 @@
         this.kbartImportPopupVisible = true
       },
       editTitle (tipp) {
-        this.successMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), tipp.title.name])
+        this.successMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label'), (tipp.name || tipp.title?.name)])
         this.fetchTipps(this.options)
       },
       addNewTitle (tipp) {
-        this.successMessage = this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), tipp.title.name])
+        this.successMessage = this.$i18n.t('success.add', [this.$i18n.tc('component.tipp.label'), (tipp.name || tipp.title?.name)])
         this.newTipps.push(tipp)
         this.$emit('update', this.newTipps)
       },
@@ -532,42 +532,22 @@
           if (result?.status === 200) {
             this.items = result.data?.data?.map(tipp => (
                 {
-                  id: tipp.id,
+                  ...tipp,
                   coverageStatements: tipp._embedded.coverageStatements,
-                  paymentType: tipp.paymentType,
                   statusLocal: this.$i18n.t('component.general.status.' + tipp.status.name + '.label'),
-                  name: tipp.name,
-                  status: tipp.status,
-                  url: tipp.url,
-                  series: tipp.series,
-                  subjectArea: tipp.subjectArea,
-                  publisherName: tipp.publisherName,
                   dateFirstInPrint: tipp.dateFirstInPrint && this.buildDateString(tipp.dateFirstInPrint),
                   dateFirstOnline: tipp.dateFirstOnline && this.buildDateString(tipp.dateFirstOnline),
-                  firstAuthor: tipp.firstAuthor,
-                  firstEditor: tipp.firstEditor,
-                  publicationType: tipp.publicationType,
-                  volumeNumber: tipp.volumeNumber,
-                  editionStatement: tipp.editionStatement,
-                  medium: tipp.medium,
-                  lastChangedExternal: tipp.lastChangedExternal,
                   accessStartDate: tipp.accessStartDate && this.buildDateString(tipp.accessStartDate),
                   accessEndDate: tipp.accessEndDate && this.buildDateString(tipp.accessEndDate),
                   variantNames: tipp._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })),
-                  pkg: tipp.pkg,
-                  title: tipp.title,
-                  importId: tipp.importId,
-                  hostPlatform: tipp.hostPlatform,
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
                   titleType: this.title?.type ? this.$i18n.tc('component.title.type.' + tipp.title.type) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
-                  titleId: tipp.title?.id,
+                  connectedTitleId: tipp.title?.id,
                   ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!tipp._links.delete.href })),
                   prices: tipp._embedded.prices,
-                  popup: { value: (this.ttl ? tipp.pkg.name : (tipp.title ? tipp.title.name : tipp.name)), label: 'tipp', type: 'GokbAddTitlePopup' },
+                  popup: { value: (this.ttl ? tipp.pkg.name : (tipp.title ? tipp.name : tipp.title.name)), label: 'tipp', type: 'GokbAddTitlePopup' },
                   hostPlatformName: tipp.hostPlatform?.name,
-                  lastUpdated: tipp.lastUpdated,
-                  dateCreated: tipp.dateCreated
                 }
               )
             )

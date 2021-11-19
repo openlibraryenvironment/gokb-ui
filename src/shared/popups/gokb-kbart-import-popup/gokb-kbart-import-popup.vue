@@ -347,7 +347,7 @@
         const csvResult = this.charsetReader.result.split(/\r|\n|\r\n/)
         const encoding = jschardet.detect(csvResult.toString()).encoding
 
-        if (encoding !== 'UTF-8' && encoding !== 'ASCII') {
+        if (encoding !== 'UTF-8' && encoding !== 'ascii') {
           console.log(jschardet.detectAll(csvResult.toString()))
           this.charsetError = true
           this.error = this.$i18n.t('kbart.errors.encoding')

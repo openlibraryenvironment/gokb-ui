@@ -856,7 +856,7 @@
           const newPackage = {
             ...this.packageItem,
             id: this.id,
-            ...(this.newTipps.length > 0 ? { tipps: this.newTipps } : {}),
+            ...(this.newTipps.length > 0 ? { tipps: this.newTipps.map(tipp => ({ ...tipp, id: null })) } : {}),
             name: this.allNames.name,
             version: this.version,
             variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
@@ -1000,6 +1000,7 @@
               }
             }
           }
+          this.$refs.tipps.fetchTipps()
 
           loading.stopLoading()
         } else {
