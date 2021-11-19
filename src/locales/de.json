@@ -938,7 +938,7 @@
         },
         "Type Mismatch": {
           "label": "Falscher Titeltyp",
-          "info": "Anhand eines Identifikators stimmt mit ein Titel mit dem Titel eines anderen Typs überein (z.B. ein Buch-Identifikator mit einem Zeitschriften-Identifikator oder umgekehrt).",
+          "info": "Anhand eines Identifikators stimmt ein Titel mit einem Titel anderen Typs überein (z.B. ein Buch-Identifikator mit einem Zeitschriften-Identifikator oder umgekehrt).",
           "action": "Neuer Titel angelegt",
           "toDo": "Überprüfen Sie, ob der Titel den korrekten Typ besitzt (Buch, Zeitschrift etc.) und ändern Sie den Typ gegebenenfalls."
         },
@@ -976,7 +976,7 @@
           "label": "ZDB-ID bereits verwendet",
           "info": "Die gefundene ZDB-ID ist bereits mit einem anderen Referenztitel verknüpft.",
           "action": "ZDB-Anreicherung übersprungen",
-          "toDo": "Review all titles for possible discrepancies"
+          "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt, und führen Sie die Referenztitel gegebenfalls zusammen. Überprüfen Sie außerdem die eISSNs."
         },
         "No ZDB Results": {
           "label": "Keine ZDB-Aufnahme gefunden",
