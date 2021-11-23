@@ -976,7 +976,7 @@
           "label": "ZDB Label Mismatch",
           "info": "Matched ZDB-ID is already linked to another title instance.",
           "action": "Skipped ZDB enrichment",
-          "toDo": "Review all titles for possible discrepancies"
+          "toDo": "Check reference titles for duplicates and merge them if necessary. Check eISSN identifiers."
         },
         "No ZDB Results": {
           "label": "No ZDB Matches",
