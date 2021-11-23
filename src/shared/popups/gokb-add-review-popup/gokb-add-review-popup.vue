@@ -468,24 +468,16 @@
         this.localValue = false
       },
       async isEscalatable () {
-        const response = await this.catchError({
+        await this.catchError({
           promise: reviewServices.escalatable(this.id, accountModel.activeGroup().id),
           instance: this
-        })
-        if (response.data.isEscalatable) {
-          return true
-        }
-        return false
+        }).data.isEscalatable
       },
       async isDeescalatable () {
-        const response = await this.catchError({
+        await this.catchError({
           promise: reviewServices.deescalatable(this.id, accountModel.activeGroup().id),
           instance: this
-        })
-        if (response.data.isDeescalatable) {
-          return true
-        }
-        return false
+        }).data.isDeescalatable
       },
       async escalate () {
         const response = await this.catchError({
