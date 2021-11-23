@@ -51,7 +51,7 @@
         <v-col>
           <gokb-state-select-field
             v-model="titleItem.status"
-            :deletable="!!deleteUrl"
+            :deletable="isDeletable"
             :editable="!!updateUrl"
             :api-errors="errors.status"
           />
@@ -325,7 +325,7 @@
               :show-title="false"
               :disabled="true"
               :api-errors="errors.tipps"
-              @update="updateTippCount"
+              @update="fetchTippCount"
             />
           </v-tab-item>
           <v-tab-item
@@ -561,6 +561,9 @@
       },
       isValid () {
         return !!this.allNames.name
+      },
+      isDeletable () {
+        return !!this.deleteUrl && this.tippCount === 0
       }
     },
     watch: {
@@ -724,6 +727,9 @@
 
         document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
 
+        this.fetchTippCount()
+      },
+      async fetchTippCount () {
         const tippsResult = await this.catchError({
           promise: titleServices.getTipps(this.id, { status: 'Current' }, this.cancelToken.token),
           instance: this
@@ -740,9 +746,6 @@
       },
       refreshReviewsCount (count) {
         this.reviewsCount = count
-      },
-      updateTippCount (count) {
-        this.tippCount = count
       }
     },
   }

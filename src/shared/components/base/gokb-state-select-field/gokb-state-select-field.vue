@@ -36,7 +36,8 @@
       on-icon="delete"
       color="red"
       :label="$t('component.general.status.Deleted.label')"
-      :readonly="!deletable"
+      :readonly="!editable"
+      :disabled="!deletable"
       off-icon="delete_outline"
     />
   </v-radio-group>

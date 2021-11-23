@@ -546,7 +546,7 @@
                   connectedTitleId: tipp.title?.id,
                   ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!tipp._links.delete.href })),
                   prices: tipp._embedded.prices,
-                  popup: { value: (this.ttl ? tipp.pkg.name : (tipp.title ? tipp.name : tipp.title.name)), label: 'tipp', type: 'GokbAddTitlePopup' },
+                  popup: { value: (this.ttl ? tipp.pkg.name : (tipp.name || tipp.title?.name || tipp.id)), label: 'tipp', type: 'GokbAddTitlePopup' },
                   hostPlatformName: tipp.hostPlatform?.name,
                 }
               )
