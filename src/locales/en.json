@@ -811,6 +811,7 @@
     "review": {
       "label": "Review | Reviews",
       "request": "Request",
+      "action": "Action taken",
       "type": "Type",
       "cause": "Cause",
       "componentToReview": "Component",
@@ -890,7 +891,7 @@
         "Namespace Mismatch": {
           "label": "Namespace Mismatch",
           "info": "Ingest file issn matched an existing eissn or vice versa.",
-          "action": "",
+          "action": "Added identifier",
           "toDo": "Check if an issn is erroneously marked as eissn or vice versa and correct those identifiers if necessary."
         },
         "New Org": {
@@ -908,7 +909,7 @@
         "Platform Noncurrent": {
           "label": "Platform Noncurrent",
           "info": "The existing platform {0} matched for this package title is marked as {1}.",
-          "action": "Package title {0}",
+          "action": "Package title with platform {0} was created/updated",
           "toDo": "Review the URL/platform for validity. Link the package title to the correct platform if necessary."
         },
         "Removed Identifier": {
@@ -1034,7 +1035,7 @@
         "Import Report": {
           "label": "Report on KBART Import",
           "info": "A KBART File has been imported. Please check the details for further information.",
-          "action": "",
+          "action": "Package imported",
           "toDo": ""
         }
       }

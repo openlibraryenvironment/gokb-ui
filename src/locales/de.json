@@ -812,6 +812,7 @@
     "review": {
       "label": "Prüfanfrage | Prüfanfragen",
       "request": "Anfrage",
+      "action": "Durchgeführte Aktion",
       "type": "Typ",
       "cause": "Ursache",
       "componentToReview": "Komponente",
@@ -854,7 +855,7 @@
         },
         "Invalid TIPPs": {
           "label": "Ungültige Pakettitel",
-          "info": "Beim  einer Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
+          "info": "Eine Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
           "action": "Paket nicht aktualisiert",
           "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
         },
@@ -891,7 +892,7 @@
         "Namespace Mismatch": {
           "label": "Unterschiedliche Namensräume",
           "info": "Der neue Titel besitzt eine eISSN, die einer bestehenden Print-ISSN entspricht, oder umgekehrt.",
-          "action": "",
+          "action": "Identifikator hinzugefügt",
           "toDo": "Überprüfen Sie, ob hier ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde."
         },
         "New Org": {
@@ -909,7 +910,7 @@
         "Platform Noncurrent": {
           "label": "Inaktive Plattform",
           "info": "Die Plattform {0}, die für diesen Pakettitel angegeben ist, ist als {1} gekennzeichnet.",
-          "action": "Pakettitel {0} angelegt",
+          "action": "Pakettitel mit Plattform {0} wurde angelegt/aktualisiert",
           "toDo": "Überprüfen Sie die Plattform bzw. deren URL auf die Gültigkeit. Verknüpfen Sie den Pakettitel gegebenenfalls mit der korrekten Plattform."
         },
         "Removed Identifier": {
@@ -1035,7 +1036,7 @@
         "Import Report": {
           "label": "Ergebnisbericht einer KBART-Einspielung",
           "info": "Eine KBART-Einspielung hat stattgefunden. Entnehmen Sie genauere Informationen bitte den Details.",
-          "action": "",
+          "action": "Paket eingespielt",
           "toDo": ""
         }
       }
