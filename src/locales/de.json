@@ -964,6 +964,12 @@
           "action": "Paket nicht aktualisiert",
           "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
         },
+        "Multiple EZB Results": {
+          "label": "Mehrere EZB-Kandidaten",
+          "info": "Es gibt mehrere Kandidaten für den Titel.",
+          "action": "EZB-Anreicherung verhindert",
+          "toDo": "Selektieren Sie die korrekte EZB-Aufnahme für den Titel."
+        },
         "Multiple ZDB Results": {
           "label": "Mehrere ZDB-Kandidaten",
           "info": "Es gibt mehrere Kandidaten für den Titel.",
@@ -976,11 +982,23 @@
           "action": "Referenztitelauswahl verhindert",
           "toDo": "Überprüfen Sie die Zeitangaben und damit eine manuelle Verknüpfung des Titels."
         },
+        "EZB Title Overlap": {
+          "label": "EZB-ID bereits verwendet",
+          "info": "Die gefundene EZB-ID ist bereits mit einem anderen Referenztitel verknüpft.",
+          "action": "",
+          "toDo": ""
+        },
         "ZDB Title Overlap": {
           "label": "ZDB-ID bereits verwendet",
           "info": "Die gefundene ZDB-ID ist bereits mit einem anderen Referenztitel verknüpft.",
           "action": "ZDB-Anreicherung übersprungen",
           "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt, und führen Sie die Referenztitel gegebenfalls zusammen. Überprüfen Sie außerdem die eISSNs."
+        },
+        "No EZB Results": {
+          "label": "Keine EZB-Aufnahme gefunden",
+          "info": "Für die gegebenen ISSNs wurde keine EZB-Aufnahme gefunden.",
+          "action": "EZB-Anreicherung übersprungen",
+          "toDo": ""
         },
         "No ZDB Results": {
           "label": "Keine ZDB-Aufnahme gefunden",

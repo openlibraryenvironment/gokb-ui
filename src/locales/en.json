@@ -963,6 +963,12 @@
           "action": "Package not updated",
           "toDo": "Check records for erroneous or missing information."
         },
+        "Multiple EZB Results": {
+          "label": "Multiple EZB Results",
+          "info": "There were multiple EZB results for this title.",
+          "action": "Skipped EZB enrichment",
+          "toDo": "Select a EZB entry from the candidates."
+        },
         "Multiple ZDB Results": {
           "label": "Multiple ZDB Results",
           "info": "There were multiple ZDB results for this title.",
@@ -975,11 +981,23 @@
           "action": "Skipped title linking",
           "toDo": "Manually link the existing match or create a new title for linking."
         },
+        "EZB Title Overlap": {
+          "label": "EZB Label Mismatch",
+          "info": "Matched EZB-ID is already linked to another title instance.",
+          "action": "",
+          "toDo": ""
+        },
         "ZDB Title Overlap": {
           "label": "ZDB Label Mismatch",
           "info": "Matched ZDB-ID is already linked to another title instance.",
           "action": "Skipped ZDB enrichment",
           "toDo": "Check reference titles for duplicates and merge them if necessary. Check eISSN identifiers."
+        },
+        "No EZB Results": {
+          "label": "No EZB Matches",
+          "info": "No EZB-IDs found for given ISSNs",
+          "action": "Skipped EZB enrichment",
+          "toDo": ""
         },
         "No ZDB Results": {
           "label": "No ZDB Matches",
