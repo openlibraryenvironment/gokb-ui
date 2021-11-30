@@ -73,7 +73,6 @@
     mounted () {
       if (this.value) {
         this.$nextTick(() => {
-          console.log(this.$refs.form)
           const theElement = this.$refs.form.$el
           const input = theElement.querySelector('input:not([type=hidden]),textarea:not([type=hidden])')
           if (input) {

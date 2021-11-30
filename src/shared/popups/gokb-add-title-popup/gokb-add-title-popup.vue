@@ -58,7 +58,8 @@
                 :type-filter="titleTypeId"
                 :label="$tc('component.title.label')"
                 dense
-                :readonly="isEdit || isReadonly"
+                show-link
+                :readonly="isReadonly"
                 return-object
               />
             </v-col>
@@ -66,11 +67,11 @@
           <v-row dense>
             <v-col>
               <gokb-search-package-field
-                v-if="packageTitleItem.title"
+                v-if="isEdit"
                 v-model="packageTitleItem.pkg"
                 :label="$tc('component.package.label')"
                 dense
-                :readonly="true"
+                readonly
                 return-object
               />
             </v-col>
@@ -345,8 +346,8 @@
           <v-row dense>
             <v-col>
               <gokb-text-field
-                v-model="importId"
-                disabled
+                v-model="packageTitleItem.importId"
+                :disabled="isEdit"
                 dense
                 :label="$t('component.tipp.importId.label')"
               />
@@ -535,7 +536,6 @@
         errorMsg: undefined,
         status: undefined,
         version: undefined,
-        importId: undefined,
         items: [],
         id: undefined,
         allNames: { name: undefined, alts: [] },
@@ -545,6 +545,7 @@
           title: undefined,
           pkg: undefined,
           hostPlatform: undefined,
+          importId: undefined,
           status: undefined,
           paymentType: undefined,
           url: undefined,
@@ -595,10 +596,10 @@
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isJournal () {
-        return this.title?.type === 'Journal' || this.title?.type?.id === 'journal' || this.titleType?.id === 'Journal'
+        return this.title?.type === 'Journal' || this.title?.type?.id === 'journal' || this.titleType?.id === 'Journal' || this.packageTitleItem.publicationType?.name === 'Serial'
       },
       isBook () {
-        return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph'
+        return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph' || this.packageTitleItem.publicationType?.name === 'Monograph'
       },
       isValid () {
         return !!this.allNames.name && !!this.packageTitleItem.hostPlatform && this.packageTitleItem.ids.length > 0 && this.packageTitleItem.url && URL_REGEX.test(this.packageTitleItem.url)
@@ -673,12 +674,12 @@
         this.packageTitleItem.medium = this.selectedItem.medium
         this.packageTitleItem.lastChangedExternal = this.selectedItem.lastChangedExternal
         this.packageTitleItem.status = this.selectedItem.status
+        this.packageTitleItem.importId = this.selectedItem.importId
         this.updateUrl = this.selectedItem.updateUrl
         this.deleteUrl = this.selectedItem.deleteUrl
         this.platformSelection.push(this.selectedItem.hostPlatform)
         this.status = this.selectedItem.status
         this.version = this.selectedItem.version
-        this.importId = this.selectedItem.importId
         this.lastUpdated = this.selectedItem.lastUpdated
         this.dateCreated = this.selectedItem.dateCreated
         this.allNames.name = this.selectedItem.name
@@ -759,13 +760,13 @@
           const newTipp = {
             ...this.packageTitleItem,
             id: this.tempId(),
-            titleId: this.packageTitleItem.title.id,
+            connectedTitleId: this.packageTitleItem.title.id,
             ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
             prices: this.packageTitleItem.prices.map(price => ({ ...price, type: price.priceType, id: (typeof price.id === 'number' ? price.id : null) })),
             variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
             popup: { value: this.packageTitleItem.name, label: 'tipp', type: 'GokbAddTitlePopup' },
-            link: { value: (this.packageTitleItem.title?.name), route: EDIT_TITLE_ROUTE, id: 'titleId' },
+            link: { value: (this.packageTitleItem.title?.name), route: EDIT_TITLE_ROUTE, id: 'connectedTitleId' },
             hostPlatformName: this.packageTitleItem.hostPlatform?.name,
             version: this.version,
             updateUrl: '',

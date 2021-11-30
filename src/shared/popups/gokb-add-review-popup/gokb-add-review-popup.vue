@@ -1,7 +1,7 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    title="Review-Details"
+    :title="localTitle"
     :width="1000"
     @submit="save"
   >
@@ -22,19 +22,6 @@
         {{ localErrorMessage }}
       </v-alert>
     </span>
-    <v-row>
-      <v-col md="12">
-        <gokb-entity-field
-          v-model="reviewItem.component"
-          :readonly="isEdit || isReadonly || !!component"
-          :init-item="component"
-          :type-filter="cmpType"
-          :show-link="true"
-          :label="cmpLabel"
-          return-object
-        />
-      </v-col>
-    </v-row>
     <v-row
       v-if="isEdit"
       align="center"
@@ -44,17 +31,6 @@
           v-model="reviewItem.dateCreated"
           disabled
           :label="$t('component.general.dateCreated')"
-        />
-      </v-col>
-      <v-col cols="3">
-        <gokb-state-field
-          v-model="reviewItem.stdDesc"
-          :init-item="stdDesc"
-          readonly
-          return-object
-          url="refdata/categories/ReviewRequest.StdDesc"
-          message-path="component.review.stdDesc"
-          :label="$tc('component.review.stdDesc.label')"
         />
       </v-col>
       <v-col cols="3">
@@ -96,10 +72,32 @@
         </div>
       </v-col>
     </v-row>
+    <v-row dense>
+      <v-col md="12">
+        <gokb-entity-field
+          v-model="reviewItem.component"
+          :readonly="isEdit || isReadonly || !!component"
+          :init-item="component"
+          :type-filter="cmpType"
+          :show-link="true"
+          :label="cmpLabel"
+          return-object
+        />
+      </v-col>
+    </v-row>
     <v-row>
       <v-col md="12">
         <template>
           <div v-if="reviewItem.stdDesc">
+            <v-row dense>
+              <v-col cols="6">
+                <gokb-text-field
+                  v-model="localAction"
+                  :label="$t('component.review.action')"
+                  disabled
+                />
+              </v-col>
+            </v-row>
             <label
               class="v-label"
               style="display:block;font-size:0.9em;"
@@ -118,7 +116,7 @@
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
                   :style="{ color: 'primary' }"
                 >
-                  {{ reviewItem.component.name }}
+                  {{ additionalInfo.vars[0] === reviewItem.component.id ? reviewItem.component.name : additionalInfo.vars[1] }}
                 </router-link>
                 <b v-else-if="numMessageVars > 0">{{ additionalInfo.vars[0] }}</b>
                 <router-link
@@ -447,6 +445,12 @@
       },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label')]) : undefined
+      },
+      localAction () {
+        return this.reviewItem?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.action') : undefined
+      },
+      localTitle () {
+        return this.$i18n.tc('component.review.label') + (this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
       }
     },
     async created () {

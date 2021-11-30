@@ -244,6 +244,7 @@
       "label": "Row | Rows"
     },
     "errors": {
+      "encoding": "The encoding of this file is not UTF-8. Please correct this before importing!",
       "missingVal": "Missing value in column '{0}'!",
       "missingCols": "Missing columns: {0}",
       "illegalVal": "Value {0} is not valid!",
@@ -813,6 +814,7 @@
     "review": {
       "label": "Review | Reviews",
       "request": "Request",
+      "action": "Action taken",
       "type": "Type",
       "cause": "Cause",
       "componentToReview": "Component",
@@ -892,7 +894,7 @@
         "Namespace Mismatch": {
           "label": "Namespace Mismatch",
           "info": "Ingest file issn matched an existing eissn or vice versa.",
-          "action": "",
+          "action": "Added identifier",
           "toDo": "Check if an issn is erroneously marked as eissn or vice versa and correct those identifiers if necessary."
         },
         "New Org": {
@@ -910,7 +912,7 @@
         "Platform Noncurrent": {
           "label": "Platform Noncurrent",
           "info": "The existing platform {0} matched for this package title is marked as {1}.",
-          "action": "Package title {0}",
+          "action": "Package title with platform {0} was created/updated",
           "toDo": "Review the URL/platform for validity. Link the package title to the correct platform if necessary."
         },
         "Removed Identifier": {
@@ -977,7 +979,7 @@
           "label": "ZDB Label Mismatch",
           "info": "Matched ZDB-ID is already linked to another title instance.",
           "action": "Skipped ZDB enrichment",
-          "toDo": "Review all titles for possible discrepancies"
+          "toDo": "Check reference titles for duplicates and merge them if necessary. Check eISSN identifiers."
         },
         "No ZDB Results": {
           "label": "No ZDB Matches",
@@ -1036,7 +1038,7 @@
         "Import Report": {
           "label": "Report on KBART Import",
           "info": "A KBART File has been imported. Please check the details for further information.",
-          "action": "",
+          "action": "Package imported",
           "toDo": ""
         }
       }

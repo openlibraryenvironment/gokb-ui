@@ -245,6 +245,7 @@
       "label": "Zeile | Zeilen"
     },
     "errors": {
+      "encoding": "Diese Datei ist nicht in UTF-8 codiert. Bitte beheben Sie dies vor dem Import!",
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
       "missingCols": "Fehlende Spalten: {0}",
       "illegalVal": "Wert {0} ist fehlerhaft!",
@@ -814,6 +815,7 @@
     "review": {
       "label": "Prüfanfrage | Prüfanfragen",
       "request": "Anfrage",
+      "action": "Durchgeführte Aktion",
       "type": "Typ",
       "cause": "Ursache",
       "componentToReview": "Komponente",
@@ -856,7 +858,7 @@
         },
         "Invalid TIPPs": {
           "label": "Ungültige Pakettitel",
-          "info": "Beim  einer Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
+          "info": "Eine Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
           "action": "Paket nicht aktualisiert",
           "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
         },
@@ -893,7 +895,7 @@
         "Namespace Mismatch": {
           "label": "Unterschiedliche Namensräume",
           "info": "Der neue Titel besitzt eine eISSN, die einer bestehenden Print-ISSN entspricht, oder umgekehrt.",
-          "action": "",
+          "action": "Identifikator hinzugefügt",
           "toDo": "Überprüfen Sie, ob hier ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde."
         },
         "New Org": {
@@ -911,7 +913,7 @@
         "Platform Noncurrent": {
           "label": "Inaktive Plattform",
           "info": "Die Plattform {0}, die für diesen Pakettitel angegeben ist, ist als {1} gekennzeichnet.",
-          "action": "Pakettitel {0} angelegt",
+          "action": "Pakettitel mit Plattform {0} wurde angelegt/aktualisiert",
           "toDo": "Überprüfen Sie die Plattform bzw. deren URL auf die Gültigkeit. Verknüpfen Sie den Pakettitel gegebenenfalls mit der korrekten Plattform."
         },
         "Removed Identifier": {
@@ -940,7 +942,7 @@
         },
         "Type Mismatch": {
           "label": "Falscher Titeltyp",
-          "info": "Anhand eines Identifikators stimmt mit ein Titel mit dem Titel eines anderen Typs überein (z.B. ein Buch-Identifikator mit einem Zeitschriften-Identifikator oder umgekehrt).",
+          "info": "Anhand eines Identifikators stimmt ein Titel mit einem Titel anderen Typs überein (z.B. ein Buch-Identifikator mit einem Zeitschriften-Identifikator oder umgekehrt).",
           "action": "Neuer Titel angelegt",
           "toDo": "Überprüfen Sie, ob der Titel den korrekten Typ besitzt (Buch, Zeitschrift etc.) und ändern Sie den Typ gegebenenfalls."
         },
@@ -978,7 +980,7 @@
           "label": "ZDB-ID bereits verwendet",
           "info": "Die gefundene ZDB-ID ist bereits mit einem anderen Referenztitel verknüpft.",
           "action": "ZDB-Anreicherung übersprungen",
-          "toDo": "Review all titles for possible discrepancies"
+          "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt, und führen Sie die Referenztitel gegebenfalls zusammen. Überprüfen Sie außerdem die eISSNs."
         },
         "No ZDB Results": {
           "label": "Keine ZDB-Aufnahme gefunden",
@@ -1037,7 +1039,7 @@
         "Import Report": {
           "label": "Ergebnisbericht einer KBART-Einspielung",
           "info": "Eine KBART-Einspielung hat stattgefunden. Entnehmen Sie genauere Informationen bitte den Details.",
-          "action": "",
+          "action": "Paket eingespielt",
           "toDo": ""
         }
       }
