@@ -311,13 +311,13 @@
 
     <template #buttons>
       <gokb-button
-        :disabled="!escalatable"
+        v-if="escalatable"
         @click="escalate"
       >
         {{ $t('btn.escalate') }}
       </gokb-button>
       <gokb-button
-        :disabled="!deescalatable"
+        v-if="deescalatable"
         @click="deescalate"
       >
         {{ $t('btn.deescalate') }}
@@ -453,19 +453,20 @@
         return this.$i18n.tc('component.review.label') + (this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
       }
     },
-    async created () {
+    created () {
       this.selectedItem = this.selected
 
       if (this.selected) {
         this.id = this.selected.id
         this.fetch(this.id)
-        this.escalatable = this.isEscalatable()
-        this.deescalatable = this.isDeescalatable()
       }
 
       if (this.component) {
         this.reviewItem.component = this.component
       }
+
+      this.isEscalatable()
+      this.isDeescalatable()
     },
     methods: {
       close () {
@@ -475,13 +476,21 @@
         await this.catchError({
           promise: reviewServices.escalatable(this.id, accountModel.activeGroup().id),
           instance: this
-        }).data.isEscalatable
+        })
+          .then(response => {
+            console.log(response)
+            this.escalatable = response.data.isEscalatable
+          })
       },
       async isDeescalatable () {
         await this.catchError({
           promise: reviewServices.deescalatable(this.id, accountModel.activeGroup().id),
           instance: this
-        }).data.isDeescalatable
+        })
+          .then(response => {
+            console.log(response)
+            this.deescalatable = response.data.isDeescalatable
+          })
       },
       async escalate () {
         const response = await this.catchError({
