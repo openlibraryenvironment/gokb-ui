@@ -786,7 +786,13 @@
         "ROLE_ADMIN": "Admin",
         "ROLE_USER": "User",
         "ROLE_SUPERUSER": "System",
-        "ROLE_API": "API"
+        "ROLE_API": "API",
+        "Contributor": "Contributor",
+        "Editor": "Editor",
+        "Admin": "Admin",
+        "User": "User",
+        "API": "API",
+        "System": "System"
       },
       "enabled": {
         "label": "Enabled",

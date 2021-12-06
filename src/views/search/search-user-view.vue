@@ -85,6 +85,12 @@
             value: 'editor'
           },
           {
+            text: this.$i18n.t('component.user.role.API'),
+            align: 'left',
+            sortable: false,
+            value: 'api'
+          },
+          {
             text: this.$i18n.t('component.user.role.admin'),
             align: 'left',
             sortable: false,
@@ -143,6 +149,7 @@
           contributor: roles.filter(role => role.authority === 'ROLE_CONTRIBUTOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
           editor: roles.filter(role => role.authority === 'ROLE_EDITOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
           admin: roles.filter(role => role.authority === 'ROLE_ADMIN').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
+          api: roles.filter(role => role.authority === 'ROLE_API').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
           updateUrl
         }))
       },

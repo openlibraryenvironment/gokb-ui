@@ -86,6 +86,7 @@
           expandable
           :mark-required="!isReadonly"
           :sub-title="$t('component.tipp.access.label')"
+          hide-default
         >
           <v-row
             dense
@@ -602,7 +603,7 @@
         return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph' || this.packageTitleItem.publicationType?.name === 'Monograph'
       },
       isValid () {
-        return !!this.allNames.name && !!this.packageTitleItem.hostPlatform && this.packageTitleItem.ids.length > 0 && this.packageTitleItem.url && URL_REGEX.test(this.packageTitleItem.url)
+        return !!this.allNames.name && !!this.packageTitleItem.hostPlatform && (this.isEdit || this.packageTitleItem.ids.length > 0) && this.packageTitleItem.url && URL_REGEX.test(this.packageTitleItem.url)
       },
       titleTypeString () {
         return (typeof this.title?.type === 'object' ? this.title.type.id : this.title?.type || this.packageTitleItem.publicationType.name)

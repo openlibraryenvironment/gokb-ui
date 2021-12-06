@@ -61,6 +61,7 @@
         <v-divider />
         <v-stepper-step
           :editable="currentStepValid"
+          :class="{ error: !!step3Error }"
           :step="3"
         >
           {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
@@ -271,6 +272,7 @@
                 v-model="packageItem.ids"
                 target-type="Package"
                 :disabled="isReadonly"
+                :api-errors="errors.ids"
               />
             </v-col>
             <v-col
@@ -280,6 +282,7 @@
               <gokb-alternate-names-section
                 v-model="allNames.alts"
                 :disabled="isReadonly"
+                :api-errors="errors.variantNames"
               />
             </v-col>
           </v-row>
@@ -304,6 +307,7 @@
             :platform="packageItem.nominalPlatform"
             :default-title-namespace="providerTitleNamespace"
             :disabled="isReadonly"
+            :api-errors="errors.tipps"
             @kbart="setKbart"
             @update="updateNewTipps"
           />
@@ -313,6 +317,7 @@
             v-model="sourceItem"
             :default-title-namespace="providerTitleNamespace"
             :expanded="false"
+            :api-errors="errors.source"
             :readonly="isReadonly"
             @enable="triggerUpdate"
           />
@@ -621,6 +626,7 @@
         waiting: false,
         notFound: false,
         version: undefined,
+        errors: {},
         isCurator: false,
         showSubmitConfirm: false,
         submitConfirmationMessage: undefined,
@@ -752,6 +758,9 @@
       },
       activeGroup () {
         return this.loggedIn && accountModel.activeGroup()
+      },
+      step3Error () {
+        return (this.isEdit && this.errors.variantNames && this.errors.ids) || (!this.isEdit && this.errors.tipps)
       }
     },
     watch: {
@@ -1004,7 +1013,7 @@
 
           loading.stopLoading()
         } else {
-          if (this.loggedIn) {
+          if (this.loggedIn && this.activeGroup) {
             this.allCuratoryGroups = [this.activeGroup]
           }
         }

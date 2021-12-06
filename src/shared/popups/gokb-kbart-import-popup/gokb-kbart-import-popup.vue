@@ -401,6 +401,10 @@
                       this.loadedFile.errors.missingColumns.push(key)
                       hasErrors = true
                     }
+
+                    if (hasErrors) {
+                      this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
+                    }
                   })
                 } else if (type === 'monograph') {
                   Object.keys(this.kbartStd.monograph).forEach(key => {
@@ -408,11 +412,14 @@
                       this.loadedFile.errors.missingColumns.push(key)
                       hasErrors = true
                     }
+
+                    if (hasErrors) {
+                      this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
+                    }
                   })
                 }
 
                 if (hasErrors) {
-                  this.error = 'Fatal error!'
                   this.loadedFile.lineStats.error++
                   break
                 } else {
