@@ -465,8 +465,10 @@
         this.reviewItem.component = this.component
       }
 
-      this.isEscalatable()
-      this.isDeescalatable()
+      if (this.selectedItem) {
+        this.isEscalatable()
+        this.isDeescalatable()
+      }
     },
     methods: {
       close () {
