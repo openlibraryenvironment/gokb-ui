@@ -943,7 +943,12 @@
               } else {
                 loading.stopLoading()
                 this.kbartResult = 'error'
-                this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
+                if (isUpdate) {
+                  this.step = 1
+                  this.reload()
+                } else {
+                  this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
+                }
               }
             } else {
               loading.stopLoading()
