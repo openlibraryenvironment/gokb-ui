@@ -6,11 +6,11 @@
     :items-total="totalNumberOfItems"
     :errors="!!apiErrors"
   >
-    <gokb-add-item-popup
-      v-if="addPlatformPopupVisible"
-      v-model="addPlatformPopupVisible"
+    <gokb-edit-platform-popup
+      v-if="editPlatformPopupVisible"
+      v-model="editPlatformPopupVisible"
       :component="{ type: 'GokbPlatformField', name: $tc('component.platform.label') }"
-      @add="addNewPlatform"
+      @edit="editPlatform(item)"
     />
     <template #buttons>
       <gokb-button
@@ -52,20 +52,20 @@
 </template>
 
 <script>
-  import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbEditPlatformPopup from '@/shared/popups/gokb-edit-platform-popup'
 
   const ROWS_PER_PAGE = 10
 
   const TABLE_HEADERS = [
     { text: 'Name', align: 'start', value: 'name', sortable: false, width: '40%' },
-    { text: 'URL', align: 'start', value: 'primaryUrl', sortable: false, width: '60%' },
+    { text: 'URL', align: 'start', value: 'primaryUrl', sortable: false, width: '60%' }
   ]
 
   export default {
     name: 'GokbPlatformSection',
     components: {
-      GokbAddItemPopup,
+      GokbEditPlatformPopup,
       GokbConfirmationPopup
     },
     props: {
@@ -164,7 +164,7 @@
       showAddPlatformPopup () {
         this.addPlatformPopupVisible = true
       },
-      addNewPlatform (value) {
+      editPlatform (value) {
         this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: this.tempId(), isDeletable: true, unsaved: true })
         this.$emit('update', 'platforms')
       }
