@@ -999,7 +999,7 @@
         },
         "Namespace Conflict": {
           "label": "Unterschiedliche Namensräume",
-          "info": "Der Pakettitel besitzt eine eISSN, die einer bestehenden Print-ISSN des Refernztitels entspricht, oder umgekehrt.",
+          "info": "Der Pakettitel besitzt eine eISSN, die einer bestehenden Print-ISSN des Referenztitels entspricht, oder umgekehrt.",
           "action": "",
           "toDo": "Überprüfen Sie, ob beim Referenztitel ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diesen Fall. Ansonsten überprüfen Sie den Pakettitel und die KBART-Datei dahingehend und korrigieren Sie diese."
         },
