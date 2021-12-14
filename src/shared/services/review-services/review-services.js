@@ -34,6 +34,38 @@ const api = (baseServices) => ({
       data: { status: 'Closed' },
     }, cancelToken)
   },
+
+  deescalate (id, group) {
+    return baseServices.request({
+      method: 'PUT',
+      url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/deescalate/${id}`,
+      data: { id: id, activeGroup: group }
+    })
+  },
+
+  deescalatable (id, group) {
+    return baseServices.request({
+      method: 'GET',
+      url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/deescalatable/${id}/${group}`
+    })
+  },
+
+  escalate (id, group) {
+    return baseServices.request({
+      method: 'PUT',
+      url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/escalate/${id}`,
+      data: { id: id, activeGroup: group }
+    })
+  },
+
+  escalatable (id, group) {
+    const result = baseServices.request({
+      method: 'GET',
+      url: process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/escalatable/${id}/${group}`
+    })
+    return result
+  },
+
   bulkUpdate (parameters, field, value, cancelToken) {
     const urlParameters = baseServices.createQueryParameters(parameters)
     const url = process.env.VUE_APP_API_BASE_URL + `${REVIEW_PATH}/bulk?_field=${field}&_value=${value}&${urlParameters}`
