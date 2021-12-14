@@ -58,7 +58,7 @@
         >
           <v-col>
             <a
-              :href="$t('main.docs.target')"
+              :href="docsLink || $t('main.docs.target')"
               target="_blank"
               :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
             >
@@ -172,7 +172,7 @@
         icon
         class="mb-1 mr-2"
         target="_blank"
-        :href="$t('main.docs.target')"
+        :href="docsLink || $t('main.docs.target')"
         :title="$t('main.docs.label')"
       >
         <v-icon small>
@@ -276,6 +276,7 @@
       drawer: null,
       privacyLink: process.env.VUE_APP_DP_LINK,
       imprintLink: process.env.VUE_APP_IMP_LINK,
+      docsLink: process.env.VUE_APP_DOCS_LINK,
       appName: process.env.VUE_APP_TITLE || 'GOKb Client',
       appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
       appVersion: process.env.VUE_APP_VERSION || version,
