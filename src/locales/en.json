@@ -71,6 +71,10 @@
       "create": "Create Package Title",
       "search": "Package Titles"
     },
+    "platform": {
+      "edit": "Edit Platform",
+      "create": "Create Platform"
+    },
     "provider": {
       "edit": "Edit Provider",
       "create": "Create Provider",
@@ -733,7 +737,9 @@
       "label": "Organization | Organizations"
     },
     "platform": {
-      "label": "Platform | Platforms"
+      "label": "Platform | Platforms",
+      "name": "Platform name",
+      "url": "Platform URL"
     },
     "provider": {
       "label": "Provider | Providers",

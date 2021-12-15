@@ -72,6 +72,10 @@
       "create": "Pakettitel anlegen",
       "search": "Pakettitel"
     },
+    "platform": {
+      "edit": "Plattform bearbeiten",
+      "create": "Plattform anlegen"
+    },
     "provider": {
       "edit": "Anbieter bearbeiten",
       "create": "Anbieter anlegen",
@@ -734,7 +738,9 @@
       "label": "Organisation | Organisationen"
     },
     "platform": {
-      "label": "Plattform | Plattformen"
+      "label": "Plattform | Plattformen",
+      "name": "Plattform-Name",
+      "url": "Plattform-URL"
     },
     "provider": {
       "label": "Anbieter | Anbieter",
