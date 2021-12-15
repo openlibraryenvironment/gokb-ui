@@ -10,7 +10,7 @@
       v-if="editPlatformPopupVisible"
       v-model="editPlatformPopupVisible"
       :component="{ type: 'GokbPlatformField', name: $tc('component.platform.label') }"
-      @edit="editPlatform(item)"
+      @edit="editPlatform()"
     />
     <template #buttons>
       <gokb-button
@@ -58,7 +58,7 @@
   const ROWS_PER_PAGE = 10
 
   const TABLE_HEADERS = [
-    { text: 'Name', align: 'start', value: 'name', sortable: false, width: '40%' },
+    { text: 'Name', align: 'start', value: 'popup', sortable: false, width: '40%' },
     { text: 'URL', align: 'start', value: 'primaryUrl', sortable: false, width: '60%' }
   ]
 
@@ -91,13 +91,12 @@
     },
     data () {
       return {
-        addPlatformPopupVisible: false,
+        editPlatformPopupVisible: false,
         options: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedItems: [],
-
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -162,10 +161,10 @@
         this.$emit('update', 'platforms')
       },
       showAddPlatformPopup () {
-        this.addPlatformPopupVisible = true
+        this.editPlatformPopupVisible = true
       },
-      editPlatform (value) {
-        this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: this.tempId(), isDeletable: true, unsaved: true })
+      editPlatform () {
+        this.localValue.push({ name: this.name, primaryUrl: this.primaryUrl, id: this.tempId(), isDeletable: true, unsaved: true })
         this.$emit('update', 'platforms')
       }
     }

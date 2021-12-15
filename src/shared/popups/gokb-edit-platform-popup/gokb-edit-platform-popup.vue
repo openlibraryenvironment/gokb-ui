@@ -25,28 +25,15 @@
     <v-row>
       <v-col md="12">
         <template>
-          <div v-if="isEdit">
-            <v-row dense>
-              <v-col cols="6">
-                <gokb-text-field
-                  v-model="localAction"
-                  :label="$t('component.platform.edit')"
-                  disabled
-                />
-              </v-col>
-            </v-row>
-          </div>
-          <div v-else>
-            <v-row dense>
-              <v-col cols="6">
-                <gokb-text-field
-                  v-model="localAction"
-                  :label="$t('component.platform.create')"
-                  disabled
-                />
-              </v-col>
-            </v-row>
-          </div>
+          <v-row dense>
+            <v-col cols="6">
+              <gokb-text-field
+                v-model="localAction"
+                :label="submitButtonLabel"
+                disabled
+              />
+            </v-col>
+          </v-row>
         </template>
       </v-col>
     </v-row>
@@ -128,7 +115,8 @@
         updateUrl: undefined,
         platform: {
           label: undefined,
-          url: undefined
+          url: undefined,
+          title: undefined
         },
         items: []
       }
@@ -149,25 +137,23 @@
         return !!this.id
       },
       isValid () {
-        return !!this.platformItem.component
+        return !!this.platform.component
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.platform.label')]) : undefined
       },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.platform.label')]) : undefined
+      },
+      submitButtonLabel () {
+        return this.isEdit ? this.$i18n.tc('component.platform.edit') : this.$i18n.tc('component.platform.create')
       }
     },
     async created () {
       this.selectedItem = this.selected
 
-      if (this.selected) {
-        this.id = this.selected.id
-        this.fetch(this.id)
-      }
-
       if (this.component) {
-        this.platformItem.component = this.component
+        this.platform.component = this.component
       }
     },
     methods: {
@@ -177,16 +163,16 @@
       async fetch (pid) {
         const {
           data: {
-            label,
-            url,
+            name,
+            primaryUrl,
             _links
           }
         } = await this.catchError({
           promise: platformServices.getPlatform(pid, this.cancelToken.token),
           instance: this
         })
-        this.platformItem.label = label
-        this.platformItem.url = url
+        this.platform.label = name
+        this.platform.url = primaryUrl
         this.updateUrl = _links?.update?.href || undefined
       },
       async save () {
@@ -194,7 +180,7 @@
 
         const newPlatform = {
           id: this.id,
-          status: this.platformItem.status?.id || null,
+          status: this.platform.status?.id || null,
           version: this.version,
           activeGroup
         }
@@ -206,9 +192,6 @@
 
         if (response?.status === 200) {
           this.$emit('edit', this.selectedItem)
-          this.close()
-        } else if (response?.status === 201) {
-          this.$emit('added', response.data)
           this.close()
         } else {
           if (response.status === 409) {
@@ -223,8 +206,3 @@
     }
   }
 </script>
-
-<style>
-  .vjs-tree__node.is-highlight, .vjs-tree__node:hover {background-color:#9b9b9b }
-  .vjs-value__string { color: #3c804b }
-</style>
