@@ -47,7 +47,7 @@
       <v-row>
         <v-col>
           <gokb-text-field
-            v-model="providerObject.reference"
+            v-model="providerObject.homepage"
             :label="$t('component.provider.homepage')"
             :disabled="isReadonly"
           />
@@ -174,6 +174,7 @@
               v-model="allNames.alts"
               :show-title="false"
               :disabled="isReadonly"
+              :api-errors="errors.variantNames"
               @update="addPendingChange"
             />
           </v-tab-item>
@@ -185,6 +186,7 @@
               v-model="providerObject.ids"
               :show-title="false"
               :disabled="isReadonly"
+              :api-errors="errors.ids"
               @update="addPendingChange"
             />
           </v-tab-item>
@@ -196,6 +198,7 @@
               v-model="allPlatforms"
               :show-title="false"
               :disabled="isReadonly"
+              :api-errors="errors.providedPlatforms"
               @update="addPendingChange"
             />
           </v-tab-item>
@@ -207,6 +210,7 @@
               v-model="allCuratoryGroups"
               :show-title="false"
               :disabled="isReadonly"
+              :api-errors="errors.curatoryGroups"
               @update="addPendingChange"
             />
           </v-tab-item>
@@ -218,6 +222,7 @@
               v-model="offices"
               :show-title="false"
               :disabled="isReadonly"
+              :api-errors="errors.offices"
               @update="addPendingChange"
             />
           </v-tab-item>
@@ -226,13 +231,13 @@
     </v-row>
     <div v-else>
       <gokb-alternate-names-section
-        v-model="allAlternateNames"
+        v-model="allNames.alts"
         :expanded="allAlternateNames.length > 0"
         :disabled="isReadonly"
       />
       <gokb-identifier-section
         v-model="providerObject.ids"
-        :expanded="ids.length > 0"
+        :expanded="providerObject.ids.length > 0"
         :disabled="isReadonly"
       />
       <gokb-platform-section
@@ -357,6 +362,7 @@
         allNames: { name: undefined, alts: [] },
         allPlatforms: [],
         offices: [],
+        errors: {},
         updateUrl: undefined,
         successMsg: undefined,
         version: undefined,
@@ -368,7 +374,7 @@
           source: undefined,
           titleNamespace: undefined,
           packageNamespace: undefined,
-          reference: undefined,
+          homepage: undefined,
         }
       }
     },
@@ -398,7 +404,7 @@
         return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
       localSuccessMessage () {
-        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.name]) : undefined
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.provider.label'), this.name]) : undefined
       },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.provider.label')]) : undefined
@@ -460,7 +466,7 @@
           instance: this
         })
         // todo: check error code
-        if (response?.status === 200) {
+        if (response?.status < 400) {
           if (isUpdate) {
             this.pendingChanges = {}
             this.reload()
@@ -483,7 +489,9 @@
       async reload () {
         if (this.isEdit) {
           loading.startLoading()
-          this.successMsg = false
+          this.errors = {}
+          this.successMsg = undefined
+          this.errorMsg = undefined
 
           const result = await this.catchError({
             promise: providerServices.getProvider(this.id, this.cancelToken.token),
@@ -491,28 +499,20 @@
           })
 
           if (result.status === 200) {
-            const data = result.data
-            this.name = data.name
-            this.source = data.source
-            this.reference = data.homepage
-            this.version = data.version
-            this.updateUrl = data._links?.update?.href || null
-            this.deleteUrl = data._links?.delete?.href || null
-            this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
-            this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
-            this.allCuratoryGroups = data._embedded.curatoryGroups.map(group => ({ ...group, isDeletable: !!this.updateUrl }))
-            this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({ ...platform, isDeletable: !!this.updateUrl }))
-            this.titleNamespace = data.titleNamespace
-            this.packageNamespace = data.packageNamespace
-            this.allPackages = data._embedded.providedPackages
-            this.allNames = { name: data.name, alts: this.allAlternateNames }
-            this.offices = data._embedded.offices?.map(office => ({ ...office, typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined), localLanguage: (office.language?.value && office.language.value), isDeletable: !!this.updateUrl })) || []
-            this.dateCreated = data.dateCreated
-            this.lastUpdated = data.lastUpdated
-            this.status = data.status
+            this.mapRecord(result.data)
+          } else if (result.status === 401) {
+            accountModel.logout()
+            const retry = await this.catchError({
+              promise: providerServices.getProvider(this.id, this.cancelToken.token),
+              instance: this
+            })
 
-            document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
-          } else {
+            if (retry.status > 200) {
+              this.accessible = false
+            } else {
+              this.mapRecord(retry.data)
+            }
+          } else if (result.status === 404) {
             this.notFound = true
           }
 
@@ -523,6 +523,29 @@
         if (!this.pendingChanges[prop]) {
           this.pendingChanges[prop] = true
         }
+      },
+      mapRecord (data) {
+        this.name = data.name
+        this.providerObject.source = data.source
+        this.providerObject.homepage = data.homepage
+        this.version = data.version
+        this.updateUrl = data._links?.update?.href || null
+        this.deleteUrl = data._links?.delete?.href || null
+        this.providerObject.id = data.id
+        this.providerObject.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
+        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
+        this.allCuratoryGroups = data._embedded.curatoryGroups.map(group => ({ ...group, isDeletable: !!this.updateUrl }))
+        this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({ ...platform, isDeletable: !!this.updateUrl }))
+        this.providerObject.titleNamespace = data.titleNamespace
+        this.providerObject.packageNamespace = data.packageNamespace
+        this.allPackages = data._embedded.providedPackages
+        this.allNames = { name: data.name, alts: this.allAlternateNames }
+        this.offices = data._embedded.offices?.map(office => ({ ...office, typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined), localLanguage: (office.language?.value && office.language.value), isDeletable: !!this.updateUrl })) || []
+        this.dateCreated = data.dateCreated
+        this.lastUpdated = data.lastUpdated
+        this.providerObject.status = data.status
+
+        document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
       }
     }
   }

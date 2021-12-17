@@ -46,15 +46,15 @@
           <gokb-title-field
             v-model="packageTitleItem.title"
             :label="titleLabel"
-            :readonly="isEdit || isReadonly"
+            :readonly="isReadonly"
             return-object
+            show-link
           />
         </v-col>
       </v-row>
       <v-row dense>
         <v-col>
           <gokb-search-package-field
-            v-if="packageTitleItem.title"
             v-model="packageTitleItem.pkg"
             :label="$tc('component.package.label')"
             :readonly="true"
@@ -656,10 +656,10 @@
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isJournal () {
-        return this.packageTitleItem.title?.type === 'Journal' || this.packageTitleItem.title?.type?.id === 'journal'
+        return this.packageTitleItem.title?.type === 'Journal' || this.packageTitleItem.title?.type?.id === 'journal' || this.packageTitleItem.publicationType?.name === 'Serial'
       },
       isBook () {
-        return this.packageTitleItem.title?.type === 'Book' || this.packageTitleItem.title?.type?.id === 'book' || this.packageTitleItem.title?.type === 'Monograph' || this.packageTitleItem.title?.type?.id === 'monograph'
+        return this.packageTitleItem.title?.type === 'Book' || this.packageTitleItem.title?.type?.id === 'book' || this.packageTitleItem.title?.type === 'Monograph' || this.packageTitleItem.title?.type?.id === 'monograph' || this.packageTitleItem.publicationType?.name === 'Monograph'
       },
       titleTypeString () {
         return (typeof this.packageTitleItem.title?.type === 'object' ? this.packageTitleItem.title?.type?.id : this.packageTitleItem.title?.type)
@@ -773,64 +773,77 @@
         })
 
         if (result.status === 200) {
-          const data = result.data
+          this.mapRecord(result.data)
+        } else if (result.status === 401) {
+          accountModel.logout()
+          const retry = await this.catchError({
+            promise: tippServices.getTipp(this.id, this.cancelToken.token),
+            instance: this
+          })
 
-          this.packageTitleItem.id = data.id
-          this.updateUrl = data._links?.update?.href || null
-          this.deleteUrl = data._links?.delete?.href || null
-          this.packageTitleItem.name = data.name
-          this.packageTitleItem.pkg = data.pkg
-          this.packageTitleItem.title = data.title
-          this.packageTitleItem.hostPlatform = data.hostPlatform
-          this.version = data.version
-          this.status = data.status
-          this.packageTitleItem.publisherName = data.publisherName
-          this.packageTitleItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
-          this.reviewRequests = data._embedded.reviewRequests
-          this.editionStatement = data.editionStatement
-          this.importId = data.importId
-          this.dateCreated = data.dateCreated
-          this.lastUpdated = data.lastUpdated
-          this.packageTitleItem.paymentType = data.paymentType
-          this.packageTitleItem.url = data.url
-          this.packageTitleItem.accessStartDate = this.buildDateString(data.accessStartDate)
-          this.packageTitleItem.accessEndDate = this.buildDateString(data.accessEndDate)
-          this.packageTitleItem.series = data.series
-          this.packageTitleItem.subjectArea = data.subjectArea
-          this.packageTitleItem.publisherName = data.publisherName
-          this.packageTitleItem.dateFirstInPrint = this.buildDateString(data.dateFirstInPrint)
-          this.packageTitleItem.dateFirstOnline = this.buildDateString(data.dateFirstOnline)
-          this.packageTitleItem.firstAuthor = data.firstAuthor
-          this.packageTitleItem.firstEditor = data.firstEditor
-          this.packageTitleItem.publicationType = data.publicationType
-          this.packageTitleItem.volumeNumber = data.volumeNumber
-          this.packageTitleItem.editionStatement = data.editionStatement
-          this.packageTitleItem.medium = data.medium
-          this.packageTitleItem.lastChangedExternal = data.lastChangedExternal
-          this.packageTitleItem.prices = data._embedded.prices
-          this.packageTitleItem.status = data.status
-          this.history = data.history
-          this.allNames = { name: data.name, alts: data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })) }
-
-          if (data._embedded.coverageStatements?.length) {
-            this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
-              startDate: this.buildDateString(startDate),
-              endDate: this.buildDateString(endDate),
-              coverageDepth,
-              coverageNote,
-              startIssue,
-              startVolume,
-              endIssue,
-              endVolume,
-              embargo
-            }))
+          if (retry.status > 200) {
+            this.accessible = false
+          } else {
+            this.mapRecord(retry.data)
           }
-
-          document.title = this.$i18n.tc('component.tipp.label') + ' – ' + (data.name || data.title?.name)
-        } else {
+        } else if (result.status === 404) {
           this.notFound = true
         }
         loading.stopLoading()
+      },
+      mapRecord (data) {
+        this.packageTitleItem.id = data.id
+        this.updateUrl = data._links?.update?.href || null
+        this.deleteUrl = data._links?.delete?.href || null
+        this.packageTitleItem.name = data.name
+        this.packageTitleItem.pkg = data.pkg
+        this.packageTitleItem.title = data.title
+        this.packageTitleItem.hostPlatform = data.hostPlatform
+        this.version = data.version
+        this.status = data.status
+        this.packageTitleItem.publisherName = data.publisherName
+        this.packageTitleItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
+        this.reviewRequests = data._embedded.reviewRequests
+        this.editionStatement = data.editionStatement
+        this.importId = data.importId
+        this.dateCreated = data.dateCreated
+        this.lastUpdated = data.lastUpdated
+        this.packageTitleItem.paymentType = data.paymentType
+        this.packageTitleItem.url = data.url
+        this.packageTitleItem.accessStartDate = this.buildDateString(data.accessStartDate)
+        this.packageTitleItem.accessEndDate = this.buildDateString(data.accessEndDate)
+        this.packageTitleItem.series = data.series
+        this.packageTitleItem.subjectArea = data.subjectArea
+        this.packageTitleItem.publisherName = data.publisherName
+        this.packageTitleItem.dateFirstInPrint = this.buildDateString(data.dateFirstInPrint)
+        this.packageTitleItem.dateFirstOnline = this.buildDateString(data.dateFirstOnline)
+        this.packageTitleItem.firstAuthor = data.firstAuthor
+        this.packageTitleItem.firstEditor = data.firstEditor
+        this.packageTitleItem.publicationType = data.publicationType
+        this.packageTitleItem.volumeNumber = data.volumeNumber
+        this.packageTitleItem.editionStatement = data.editionStatement
+        this.packageTitleItem.medium = data.medium
+        this.packageTitleItem.lastChangedExternal = data.lastChangedExternal
+        this.packageTitleItem.prices = data._embedded.prices
+        this.packageTitleItem.status = data.status
+        this.history = data.history
+        this.allNames = { name: data.name, alts: data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })) }
+
+        if (data._embedded.coverageStatements?.length) {
+          this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
+            startDate: this.buildDateString(startDate),
+            endDate: this.buildDateString(endDate),
+            coverageDepth,
+            coverageNote,
+            startIssue,
+            startVolume,
+            endIssue,
+            endVolume,
+            embargo
+          }))
+        }
+
+        document.title = this.$i18n.tc('component.tipp.label') + ' – ' + (data.name || data.title?.name)
       },
       tempId () {
         return 'tempTippId' + Math.random().toString(36).substr(2, 5)

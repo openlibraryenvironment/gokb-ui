@@ -16,7 +16,7 @@ export default new Vuetify({
         primary: '#4f4f4f',
         secondary: '#a0a0a0',
         invert: '#fdfdfd',
-        accent: '#f2994a', // #a5141b
+        accent: '#4f4f4f',
         error: '#eb5757',
         // warning: '',
         info: '#2d9cdb',
@@ -25,7 +25,7 @@ export default new Vuetify({
         primary: '#d9d9d9',
         secondary: '#5b5b5b',
         invert: '#020202',
-        accent: '#f2994a', // #a5141b
+        accent: '#d9d9d9',
         error: '#eb5757',
         // warning: '',
         info: '#2d9cdb',

@@ -61,6 +61,7 @@
         <v-divider />
         <v-stepper-step
           :editable="currentStepValid"
+          :class="{ error: !!step3Error }"
           :step="3"
         >
           {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
@@ -271,6 +272,7 @@
                 v-model="packageItem.ids"
                 target-type="Package"
                 :disabled="isReadonly"
+                :api-errors="errors.ids"
               />
             </v-col>
             <v-col
@@ -280,6 +282,7 @@
               <gokb-alternate-names-section
                 v-model="allNames.alts"
                 :disabled="isReadonly"
+                :api-errors="errors.variantNames"
               />
             </v-col>
           </v-row>
@@ -304,6 +307,7 @@
             :platform="packageItem.nominalPlatform"
             :default-title-namespace="providerTitleNamespace"
             :disabled="isReadonly"
+            :api-errors="errors.tipps"
             @kbart="setKbart"
             @update="updateNewTipps"
           />
@@ -313,6 +317,7 @@
             v-model="sourceItem"
             :default-title-namespace="providerTitleNamespace"
             :expanded="false"
+            :api-errors="errors.source"
             :readonly="isReadonly"
             @enable="triggerUpdate"
           />
@@ -438,8 +443,8 @@
             >
               <gokb-curatory-group-section
                 v-model="allCuratoryGroups"
-                :disabled="isReadonly"
-                :filter-align="!isReadonly"
+                :disabled="!isAdmin"
+                :filter-align="false"
                 :expandable="false"
                 :sub-title="$tc('component.curatoryGroup.label', 2)"
               />
@@ -560,7 +565,6 @@
   import packageServices from '@/shared/services/package-services'
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
-  import profileServices from '@/shared/services/profile-services'
   import loading from '@/shared/models/loading'
 
   const ROWS_PER_PAGE = 10
@@ -620,6 +624,7 @@
         waiting: false,
         notFound: false,
         version: undefined,
+        errors: {},
         isCurator: false,
         showSubmitConfirm: false,
         submitConfirmationMessage: undefined,
@@ -652,7 +657,6 @@
           nominalPlatform: undefined,
         },
         allCuratoryGroups: [],
-        userCuratoryGroups: [],
         sourceItem: undefined,
         packageTypes: [
           { id: 'book', text: 'Buch' },
@@ -692,6 +696,9 @@
       },
       isEdit () {
         return !!this.id
+      },
+      isAdmin () {
+        return this.loggedIn && accountModel.hasRole('ROLE_ADMIN')
       },
       isReadonly () {
         return !this.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
@@ -746,6 +753,12 @@
       },
       isValid () {
         return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
+      },
+      activeGroup () {
+        return this.loggedIn && accountModel.activeGroup()
+      },
+      step3Error () {
+        return (this.isEdit && this.errors.variantNames && this.errors.ids) || (!this.isEdit && this.errors.tipps)
       }
     },
     watch: {
@@ -836,23 +849,24 @@
               this.urlUpdate = true
             }
 
-            const sourceReponse = await this.catchError({
+            const sourceResponse = await this.catchError({
               promise: sourceServices.createOrUpdateSource(sourceItem, this.cancelToken.token),
               instance: this
             })
 
-            if (sourceReponse.status < 400) {
-              this.packageItem.source = sourceReponse.data
-              this.sourceItem = sourceReponse.data
+            if (sourceResponse.status < 400) {
+              this.packageItem.source = sourceResponse.data
+              this.sourceItem = sourceResponse.data
+            }
+            else {
+              this.errors.source = sourceResponse?.data?.data
             }
           }
-
-          this.activeGroup = accountModel.activeGroup()
 
           const newPackage = {
             ...this.packageItem,
             id: this.id,
-            ...(this.newTipps.length > 0 ? { tipps: this.newTipps } : {}),
+            ...(this.newTipps.length > 0 ? { tipps: this.newTipps.map(tipp => ({ ...tipp, id: null })) } : {}),
             name: this.allNames.name,
             version: this.version,
             variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
@@ -880,8 +894,12 @@
             this.packageItem.id = response.data.id
 
             if (this.kbart || this.urlUpdate) {
+              const kbartPars = {
+                activeGroup: this.activeGroup?.id,
+                titleIdNamespace: this.sourceItem?.targetNamespace?.id
+              }
               const kbartResult = await this.catchError({
-                promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, this.cancelToken.token),
+                promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, kbartPars, this.cancelToken.token),
                 instance: this
               })
 
@@ -898,7 +916,14 @@
                 this.step = 1
                 this.reload()
               } else {
-                this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
+                loading.stopLoading()
+                this.kbartResult = 'error'
+                if (isUpdate) {
+                  this.step = 1
+                  this.reload()
+                } else {
+                  this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
+                }
               }
             } else {
               loading.stopLoading()
@@ -934,50 +959,20 @@
           })
 
           if (result.status === 200) {
-            const data = result.data
-            this.packageItem.id = data.id
+            this.mapRecord(result.data)
+          } else if (result.status === 401) {
+            accountModel.logout()
+            const retry = await this.catchError({
+              promise: packageServices.getPackage(this.id, this.cancelToken.token),
+              instance: this
+            })
 
-            if (!this.id) {
-              this.id = data.id
+            if (retry.status > 200) {
+              this.accessible = false
+            } else {
+              this.mapRecord(retry.data)
             }
-            this.currentName = data.name
-            this.packageItem.name = data.name
-            this.packageItem.source = data.source
-            this.packageItem.status = data.status
-            this.packageItem.descriptionURL = data.descriptionURL
-            this.packageItem.description = data.description
-            this.packageItem.scope = data.scope
-            this.packageItem.global = data.global?.name
-            this.packageItem.globalNote = data.globalNote
-            this.packageItem.consistent = data.consistent?.name === 'Yes'
-            this.packageItem.breakable = data.breakable?.name === 'Yes'
-            this.packageItem.fixed = data.fixed?.name === 'Yes'
-            this.packageItem.provider = data.provider
-            this.packageItem.nominalPlatform = data.nominalPlatform
-            this.packageItem.contentType = data.contentType
-            this.packageItem.listStatus = data.listStatus
-            this.packageItem.editStatus = data.editStatus
-            this.version = data.version
-            this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
-            this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
-            this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!this.updateUrl }))
-            this.reviewRequests = data._embedded.reviewRequests
-            this.updateUrl = data._links?.update?.href || null
-            this.deleteUrl = data._links?.delete?.href || null
-            this.providerSelect = data.provider
-            this.platformSelect = data.nominalPlatform
-            this.titleCount = data._tippCount
-            this.allNames = { name: data.name, alts: this.allAlternateNames }
-            this.listVerifiedDate = data.listVerifiedDate
-            if (data.source && this.$refs.source) {
-              this.sourceItem = data.source
-              this.$refs.source.fetch(data.source.id)
-            }
-            this.lastUpdated = data.lastUpdated
-            this.dateCreated = data.dateCreated
-
-            document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
-          } else {
+          } else if (result.status === 404) {
             this.notFound = true
           }
 
@@ -995,26 +990,58 @@
               }
             }
           }
+          this.$refs.tipps.fetchTipps()
 
           loading.stopLoading()
         } else {
-          if (this.loggedIn) {
-            this.loadUserGroups()
+          if (this.loggedIn && this.activeGroup) {
+            this.allCuratoryGroups = [this.activeGroup]
           }
         }
       },
-      async loadUserGroups () {
-        const {
-          data: {
-            data: {
-              curatoryGroups
-            }
-          }
-        } = await this.catchError({
-          promise: profileServices.getProfile(this.cancelToken.token),
-          instance: this
-        })
-        this.allCuratoryGroups = curatoryGroups
+      mapRecord (data) {
+        this.packageItem.id = data.id
+
+        if (!this.id) {
+          this.id = data.id
+        }
+        this.currentName = data.name
+        this.packageItem.name = data.name
+        this.packageItem.source = data.source
+        this.packageItem.status = data.status
+        this.packageItem.descriptionURL = data.descriptionURL
+        this.packageItem.description = data.description
+        this.packageItem.scope = data.scope
+        this.packageItem.global = data.global?.name
+        this.packageItem.globalNote = data.globalNote
+        this.packageItem.consistent = data.consistent?.name === 'Yes'
+        this.packageItem.breakable = data.breakable?.name === 'Yes'
+        this.packageItem.fixed = data.fixed?.name === 'Yes'
+        this.packageItem.provider = data.provider
+        this.packageItem.nominalPlatform = data.nominalPlatform
+        this.packageItem.contentType = data.contentType
+        this.packageItem.listStatus = data.listStatus
+        this.packageItem.editStatus = data.editStatus
+        this.version = data.version
+        this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
+        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
+        this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!this.updateUrl }))
+        this.reviewRequests = data._embedded.reviewRequests
+        this.updateUrl = data._links?.update?.href || null
+        this.deleteUrl = data._links?.delete?.href || null
+        this.providerSelect = data.provider
+        this.platformSelect = data.nominalPlatform
+        this.titleCount = data._tippCount
+        this.allNames = { name: data.name, alts: this.allAlternateNames }
+        this.listVerifiedDate = data.listVerifiedDate
+        if (data.source && this.$refs.source) {
+          this.sourceItem = data.source
+          this.$refs.source.fetch(data.source.id)
+        }
+        this.lastUpdated = data.lastUpdated
+        this.dateCreated = data.dateCreated
+
+        document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
       },
       triggerUpdate (checked) {
         this.urlUpdate = checked

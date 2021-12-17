@@ -8,15 +8,18 @@
     "confirm": "Confirm",
     "create": "Create",
     "darkMode": "Dark Mode",
-    "reactivate": "Reactivate",
+    "deescalate": "Deescalate",
     "deactivate": "Deactivate",
+    "details": "Details",
     "delete": "Delete",
     "disableSync": "Stop Auto-Refresh",
     "edit": "Edit",
     "enableSync": "Enable Auto-Refresh",
+    "escalate": "Escalate",
     "new": "Add New",
     "next": "Next",
     "prev": "Previous",
+    "reactivate": "Reactivate",
     "refresh": "Refresh",
     "reload": "Neu laden",
     "reset": "Reset",
@@ -24,7 +27,8 @@
     "search": "Search",
     "submit": "Submit",
     "update": "Update",
-    "bulkSetStatus": "Set all {0} as {1}"
+    "bulkSelect": "Set Status of {0} entries to ...",
+    "bulkCloseReview": "Mark {0} reviews as done"
   },
   "main": {
     "docs": {
@@ -41,6 +45,7 @@
   "default": {
     "true": "Yes",
     "false": "No",
+    "all": "All",
     "ISOdateHint": "YYYY-MM-DD",
     "404": {
       "title": "Unknown Path",
@@ -135,6 +140,11 @@
         "generic": "Are you sure you want to deactivate the selected user accounts?",
         "specific": "Are you sure you want to deactivate {0} {1}?",
         "list": "Are you sure you want to deactivate {0} {1}?"
+      },
+      "status": {
+        "generic": "Are you sure you want to update the status of the selected items?",
+        "specific": "Are you sure you want to set the status of {0} to {1}?",
+        "list": "Are you sure you want to set the status of {0} item(s) to {1}?"
       }
     },
     "login": {
@@ -233,6 +243,7 @@
       "label": "Row | Rows"
     },
     "errors": {
+      "encoding": "The encoding of this file is not UTF-8. Please correct this before importing!",
       "missingVal": "Missing value in column '{0}'!",
       "missingCols": "Missing columns: {0}",
       "illegalVal": "Value {0} is not valid!",
@@ -503,6 +514,9 @@
           "sourceUpdate": {
             "label": "Please confirm your changes to the package {0} and the processing of the KBART file located at '{1}'."
           },
+          "tippBulkUpdate": {
+            "label": "Please confirm that you want to change the status of {0} selected package titles to {1}. If you have entered any other unsaved package changes please press 'Cancel' and save those beforehand!"
+          },
           "noTipps": {
             "label": "Please confirm your changes to the package {0}."
           }
@@ -730,6 +744,9 @@
       "packageNamespace": "Package Namespace",
       "technicalSupport": "Technical Support"
     },
+    "organization": {
+      "label": "Provider | Providers"
+    },
     "office": {
       "label": "Contact | Contacts",
       "name": "Label",
@@ -771,7 +788,13 @@
         "ROLE_ADMIN": "Admin",
         "ROLE_USER": "User",
         "ROLE_SUPERUSER": "System",
-        "ROLE_API": "API"
+        "ROLE_API": "API",
+        "Contributor": "Contributor",
+        "Editor": "Editor",
+        "Admin": "Admin",
+        "User": "User",
+        "API": "API",
+        "System": "System"
       },
       "enabled": {
         "label": "Enabled",
@@ -796,6 +819,7 @@
     "review": {
       "label": "Review | Reviews",
       "request": "Request",
+      "action": "Action taken",
       "type": "Type",
       "cause": "Cause",
       "componentToReview": "Component",
@@ -830,6 +854,12 @@
       },
       "stdDesc": {
         "label": "Category | Categories",
+        "None": {
+          "label": "- None -"
+        },
+        "none": {
+          "label": "- None -"
+        },
         "Invalid TIPPs": {
           "label": "Invalid Package Titles",
           "info": "An update for this package failed because of invalid package title information.",
@@ -869,7 +899,7 @@
         "Namespace Mismatch": {
           "label": "Namespace Mismatch",
           "info": "Ingest file issn matched an existing eissn or vice versa.",
-          "action": "",
+          "action": "Added identifier",
           "toDo": "Check if an issn is erroneously marked as eissn or vice versa and correct those identifiers if necessary."
         },
         "New Org": {
@@ -887,7 +917,7 @@
         "Platform Noncurrent": {
           "label": "Platform Noncurrent",
           "info": "The existing platform {0} matched for this package title is marked as {1}.",
-          "action": "Package title {0}",
+          "action": "Package title with platform {0} was created/updated",
           "toDo": "Review the URL/platform for validity. Link the package title to the correct platform if necessary."
         },
         "Removed Identifier": {
@@ -938,6 +968,12 @@
           "action": "Package not updated",
           "toDo": "Check records for erroneous or missing information."
         },
+        "Multiple EZB Results": {
+          "label": "Multiple EZB Results",
+          "info": "There were multiple EZB results for this title.",
+          "action": "Skipped EZB enrichment",
+          "toDo": "Select a EZB entry from the candidates."
+        },
         "Multiple ZDB Results": {
           "label": "Multiple ZDB Results",
           "info": "There were multiple ZDB results for this title.",
@@ -950,16 +986,82 @@
           "action": "Skipped title linking",
           "toDo": "Manually link the existing match or create a new title for linking."
         },
+        "EZB Title Overlap": {
+          "label": "EZB Label Mismatch",
+          "info": "Matched EZB-ID is already linked to another title instance.",
+          "action": "",
+          "toDo": ""
+        },
         "ZDB Title Overlap": {
           "label": "ZDB Label Mismatch",
           "info": "Matched ZDB-ID is already linked to another title instance.",
           "action": "Skipped ZDB enrichment",
-          "toDo": "Review all titles for possible discrepancies"
+          "toDo": "Check reference titles for duplicates and merge them if necessary. Check eISSN identifiers."
+        },
+        "No EZB Results": {
+          "label": "No EZB Matches",
+          "info": "No EZB-IDs found for given ISSNs",
+          "action": "Skipped EZB enrichment",
+          "toDo": ""
         },
         "No ZDB Results": {
           "label": "No ZDB Matches",
           "info": "No ZDB-IDs found for given ISSNs",
           "action": "Skipped ZDB enrichment",
+          "toDo": ""
+        },
+        "Ambiguous Title Matches": {
+          "label": "Ambiguous Title Matches",
+          "info": "The package title has been matched on multiple reference titles.",
+          "action": "No reference title selected",
+          "toDo": "Check reference titles for duplicates. Merge titles if necessary and link this title manually. Check identifier duplicates and delete them if they are incorrect."
+        },
+        "Namespace Conflict": {
+          "label": "Namespace Conflict",
+          "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
+          "action": "",
+          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. Check the package title identifiers and the KBART record. Correct them if necessary."
+        },
+        "Critical Identifier Conflict": {
+          "label": "Identifier Conflict (New Title)",
+          "info": "Reference title {0} matched an existing reference title on one identifier, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs badly.",
+          "action": "New reference title created",
+          "toDo": "Check if the new reference title is correct or if it is a duplicate. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
+        },
+        "Secondary Identifier Conflict": {
+          "label": "Identifier Conflict (ID added)",
+          "info": "Reference title {0} matched an existing reference title on one identifier, but other identifiers {1} differ from existing ones in the same namespaces.",
+          "action": "Identifier added",
+          "toDo": "Check identifiers of the reference title and delete the incorrect identifiers if necessary."
+        },
+        "Generic Matching Conflict": {
+          "label": "Generic Matching Conflict",
+          "info": "There has been a conflict matching the package title with an existing reference title.",
+          "action": "",
+          "toDo": "Check all titles and contact the GOKb team if necessary."
+        },
+        "Invalid Record": {
+          "label": "Invalid KBART Record",
+          "info": "There have been invalid values in a KBART file record. No package title has been created.",
+          "action": "No package title created",
+          "toDo": "Check the KBART file record and correct the invalid values. "
+        },
+        "Ambiguous Record Matches": {
+          "label": "Ambiguous KBART Record Matches",
+          "info": "A KBART record has been matched on multiple package titles.",
+          "action": "Package title selected",
+          "toDo": "Check the KBART record and the package title if the correct package title has been selected."
+        },
+        "Import Identifier Mismatch": {
+          "label": "Import Identifier Mismatch",
+          "info": "A KBART record has been matched on an existing package title by some identifiers ({0}), but not by other important identifiers ({1}).",
+          "action": "New package title created",
+          "toDo": "Check the package titles and merge them if necessary."
+        },
+        "Import Report": {
+          "label": "Report on KBART Import",
+          "info": "A KBART File has been imported. Please check the details for further information.",
+          "action": "Package imported",
           "toDo": ""
         }
       }
@@ -973,7 +1075,8 @@
     "variantName": {
       "label": "Name Variant | Name Variants",
       "error": {
-        "duplicate": "A similar variant to '{0}' already exists!"
+        "duplicate": "A similar variant to '{0}' already exists!",
+        "inUse": "This variant is already in use elsewhere!"
       }
     },
     "source": {

@@ -16,7 +16,7 @@
     item-value="id"
     :rules="rules"
     :no-data-text="$t('search.results.empty')"
-    :style="{width: width}"
+    :style="{ maxWidth: width }"
     :clearable="clearable && !required"
     :return-object="returnObject"
     :dense="dense"

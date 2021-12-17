@@ -8,6 +8,11 @@
         <div class="text-h4 primary--text text-center">
           {{ $i18n.t('welcome.title') }}
         </div>
+        <v-img
+          src="img/logo.png"
+          max-height="150"
+          contain
+        />
         <p class="primary--text">
           {{ $i18n.t('welcome.p1') }}
         </p>
@@ -27,6 +32,7 @@
     <div v-if="isContrib && activeGroup">
       <gokb-reviews-section
         :group="activeGroup"
+        :editable="true"
         :user="true"
       />
       <gokb-jobs-section v-model="groupId" />

@@ -4,6 +4,7 @@
       expandable
       :hide-default="!expanded"
       :filters="filterAlign"
+      :show-actions="isEditable"
       :sub-title="title"
       :items-total="totalNumberOfItems"
       :errors="!!apiErrors"
@@ -28,6 +29,7 @@
         :pkg="pkg"
         :parent-platform="platform"
         @add="addNewTitle"
+        @edit="addTippChangeEvent"
       />
       <template
         v-if="isEditable"
@@ -46,7 +48,7 @@
         >
           <template #activator="{ on }">
             <v-btn
-              class="mr-4"
+              class="mr-4 invert--text"
               color="primary"
               v-on="on"
             >
@@ -68,51 +70,90 @@
             </template>
           </v-list>
         </v-menu>
-
-        <gokb-button
-          :disabled="selectedItems.length == 0"
-          class="mr-4"
-          color="primary"
-          icon-id="close"
-          @click="confirmRetireSelectedItems"
-        >
-          {{ $t('btn.retire') }}
-        </gokb-button>
-        <gokb-button
-          :disabled="selectedItems.length == 0"
-          icon-id="delete"
-          color="primary"
-          @click="confirmDeleteSelectedItems"
-        >
-          {{ $t('btn.delete') }}
-        </gokb-button>
       </template>
       <gokb-confirmation-popup
         v-model="confirmationPopUpVisible"
         :message="messageToConfirm"
         @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
       />
+      <template #actions>
+        <span
+          style="min-width:82px"
+          class="ml-2"
+        >
+          <div
+            v-if="selectedItems.length >= 10"
+            style="text-align:center"
+          >
+            <div class="mr-6">{{ $t('default.all') }}</div>
+            <v-checkbox
+              id="bulkCheck"
+              v-model="bulkSelect"
+              class="mx-4"
+            />
+          </div>
+        </span>
+
+        <v-menu
+          v-if="isEditable"
+          offset-y
+          open-on-hover
+        >
+          <template #activator="{ on }">
+            <v-btn
+              :disabled="selectedItems.length == 0"
+              class="mr-4"
+              color="primary"
+              v-on="on"
+            >
+              {{ $t('btn.bulkSelect', [bulkSelect ? totalNumberOfItems : selectedItems.length]) }}
+              <v-icon>keyboard_arrow_down</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <template v-for="status in statusTypes">
+              <v-list-item
+                v-if="!searchFilters.status || status.id != searchFilters.status.value"
+                :key="status.text"
+                @click="confirmBulkStatusChange(status.id)"
+              >
+                <v-list-item-icon>
+                  <v-icon
+                    :color="status.id === 'Deleted' ? 'red' : ''"
+                    v-text="status.icon"
+                  />
+                </v-list-item-icon>
+                <v-list-item-title>
+                  <span :style="{ color: status.id === 'Deleted' ? 'red' : '' }">{{ status.text }}</span>
+                </v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
+      </template>
       <template #search>
         <gokb-title-field
           v-if="pkg"
           v-model="searchFilters.title"
+          class="ms-4"
           :label="$tc('component.title.name.label')"
         />
-        <v-spacer class="ms-4" />
         <gokb-title-ids-field
           v-if="pkg"
           v-model="searchFilters.title"
+          class="ms-4"
           :label="$tc('component.title.ids.label')"
         />
         <gokb-search-package-field
           v-else
           v-model="searchFilters.pkg"
+          class="ms-4"
           :label="$tc('component.package.label')"
         />
-        <v-spacer class="ms-4" />
         <gokb-state-field
           v-model="searchFilters.status"
           width="150px"
+          class="ms-4"
           :init-item="$t('component.general.status.Current.label')"
           message-path="component.general.status"
           :label="$t('component.general.status.label')"
@@ -130,14 +171,12 @@
         :show-loading="isLoading"
         :options.sync="options"
         @selected-items="selectedItems = $event"
-        @delete-item="confirmDeleteItem"
-        @retire-item="confirmRetireItem"
         @paginate="resultPaginate"
         @edit="editTitle"
       />
     </gokb-section>
     <gokb-section
-      v-if="(!pkg && !ttl) && newTipps.length > 0"
+      v-if="(!pkg && !ttl) || newTipps.length > 0"
       no-tool-bar
     >
       <gokb-table
@@ -148,7 +187,6 @@
         :total-number-of-items="totalNumberOfNewItems"
         :options.sync="newOptions"
         hide-select
-        @delete-item="confirmDeleteNew"
         @paginate="resultNewPaginate"
         @edit="editTitle"
       />
@@ -161,6 +199,7 @@
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
   import GokbKbartImportPopup from '@/shared/popups/gokb-kbart-import-popup'
   import packageServices from '@/shared/services/package-services'
+  import tippServices from '@/shared/services/tipp-services'
   import titleServices from '@/shared/services/title-services'
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
@@ -241,6 +280,7 @@
         },
         selectedItems: [],
         selectedNewItems: [],
+        bulkSelect: false,
         searchFilters: {
           status: undefined,
           title: undefined,
@@ -288,7 +328,7 @@
         return [
           { text: this.$i18n.tc('component.title.label'), align: 'left', value: 'popup', sortable: false },
           { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'title.type.text', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
           { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
         ]
       },
@@ -300,6 +340,14 @@
           { id: 'Other', text: this.$i18n.tc('component.title.type.Other') },
         ]
       },
+      statusTypes () {
+        return [
+          { id: 'Current', text: this.$i18n.tc('component.general.status.Current.label'), icon: 'check' },
+          { id: 'Retired', text: this.$i18n.tc('component.general.status.Retired.label'), icon: 'close' },
+          { id: 'Expected', text: this.$i18n.tc('component.general.status.Expected.label'), icon: 'mdi-clock' },
+          { id: 'Deleted', text: this.$i18n.tc('component.general.status.Deleted.label'), icon: 'delete' },
+        ]
+      },
       loggedIn () {
         return accountModel.loggedIn()
       },
@@ -308,6 +356,9 @@
       },
       isLoading () {
         return this.loading
+      },
+      bulkSelectLabel () {
+        return this.$i18n.t('btn.bulkSelect', [Math.ceil(this.totalNumberOfItems / ROWS_PER_PAGE)])
       }
     },
     watch: {
@@ -322,10 +373,17 @@
           this.fetchTipps(this.options)
         },
         deep: true
+      },
+      'selectedItems.length' (length) {
+        if (length >= 10) {
+          this.enableBulkCheck = true
+        } else {
+          this.bulkSelect = false
+        }
       }
     },
     async created () {
-      if (this.pkg || this.ttl) {
+      if (this.ttl) {
         this.fetchTipps(this.options)
       }
     },
@@ -333,29 +391,18 @@
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
-      confirmDeleteSelectedItems () {
-        this.actionToConfirm = '_deleteSelectedTitles'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.tipp.label', this.selectedItems.length)] }
-        this.parameterToConfirm = undefined
-        this.confirmationPopUpVisible = true
-      },
-      confirmDeleteItem ({ id }) {
-        this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.tipp.label'), id] }
-        this.parameterToConfirm = id
-        this.confirmationPopUpVisible = true
-      },
-      confirmRetireSelectedItems () {
-        this.actionToConfirm = '_retireSelectedTitles'
-        this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.tipp.label', this.selectedItems.length)] }
-        this.parameterToConfirm = undefined
-        this.confirmationPopUpVisible = true
-      },
-      confirmRetireItem ({ id }) {
-        this.actionToConfirm = '_retireItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.tipp.label'), id] }
-        this.parameterToConfirm = id
-        this.confirmationPopUpVisible = true
+      confirmBulkStatusChange (status) {
+        if (this.bulkSelect) {
+          this.actionToConfirm = '_executeBulkAction'
+          this.messageToConfirm = { text: 'popups.confirm.status.list', vars: [this.totalNumberOfItems, this.$i18n.t('component.general.status.' + status + '.label')] }
+          this.parameterToConfirm = status
+          this.confirmationPopUpVisible = true
+        } else {
+          this.actionToConfirm = '_updateSelectedItems'
+          this.messageToConfirm = { text: 'popups.confirm.status.list', vars: [this.selectedItems.length, this.$i18n.t('component.general.status.' + status + '.label')] }
+          this.parameterToConfirm = status
+          this.confirmationPopUpVisible = true
+        }
       },
       confirmDeleteNew ({ id }) {
         this.actionToConfirm = '_deleteNewItem'
@@ -363,23 +410,60 @@
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
-      _deleteSelectedTitles () {
-        this.newTipps = this.newTipps.concat(this.selectedItems.map(item => ({ ...item, statusLocal: this.$i18n.t('component.general.status.Deleted.label'), status: 'Deleted', isDeletable: true })))
-        this.selectedItems = []
-        this.$emit('update', this.newTipps)
-      },
-      _retireSelectedTitles () {
-        this.newTipps = this.newTipps.concat(this.selectedItems.map(item => ({ ...item, statusLocal: this.$i18n.t('component.general.status.Retired.label'), status: 'Retired', isDeletable: true })))
-        this.selectedItems = []
-        this.$emit('update', this.newTipps)
-      },
-      _deleteItem (idToDelete) {
-      },
       _deleteNewItem (idToDelete) {
         this.newTipps = this.newTipps.filter(({ id }) => id !== idToDelete)
       },
-      _retireItem (idToRetire) {
-        this.fetchTipps(this.options)
+      async _executeBulkAction (status) {
+        const searchParams = { pkg: this.pkg }
+        this.loading = true
+
+        Object.keys(this.searchFilters).forEach(key => {
+          if (this.searchFilters[key] instanceof String || typeof this.searchFilters[key] === 'number') {
+            searchParams[key] = this.searchFilters[key]
+          } else if (this.searchFilters[key] instanceof Object) {
+            if (this.searchFilters[key].id) {
+              searchParams[key] = this.searchFilters[key].id
+            } else if (this.searchFilters[key].value) {
+              searchParams[key] = this.searchFilters[key].value
+            }
+          }
+        })
+
+        const response = await this.catchError({
+          promise: tippServices.bulkUpdate(searchParams, 'status', status, this.cancelToken.token),
+          instance: this
+        })
+
+        if (response.status === 403) {
+          this.errorMsg = 'error.bulkUpdate.403'
+        }
+
+        this.loading = false
+
+        this.selectedItems = []
+        this.options.page = 1
+        this.fetchTipps()
+      },
+      async _updateSelectedItems (status) {
+        const ids = this.selectedItems.map(({ id }) => id)
+
+        var body = {
+          status: status,
+          items: ids
+        }
+
+        const response = await this.catchError({
+          promise: tippServices.bulkUpdateStatus(body, this.cancelToken.token),
+          instance: this
+        })
+
+        if (response.status === 403) {
+          this.errorMsg = 'error.bulkUpdate.403'
+        }
+
+        this.selectedItems = []
+        this.options.page = 1
+        this.fetchTipps()
       },
       showAddNewTitlePopup (titleType) {
         this.addTitleType = titleType
@@ -391,13 +475,16 @@
         this.kbartImportPopupVisible = true
       },
       editTitle (tipp) {
-        this.successMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), tipp.title.name])
+        this.successMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label'), (tipp.name || tipp.title?.name)])
         this.fetchTipps(this.options)
       },
       addNewTitle (tipp) {
-        this.successMessage = this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), tipp.title.name])
+        this.successMessage = this.$i18n.t('success.add', [this.$i18n.tc('component.tipp.label'), (tipp.name || tipp.title?.name)])
         this.newTipps.push(tipp)
         this.$emit('update', this.newTipps)
+      },
+      addTippChangeEvent (tipp) {
+        this.newTipps.push(tipp)
       },
       addKbartFile (options) {
         this.$emit('kbart', options)
@@ -414,6 +501,7 @@
       },
       async fetchTipps (options) {
         if (this.pkg || this.ttl) {
+          this.selectedItems = []
           const reqId = this.pkg || this.ttl
           const searchService = this.pkg ? packageServices : titleServices
           const searchParams = {}
@@ -444,42 +532,22 @@
           if (result?.status === 200) {
             this.items = result.data?.data?.map(tipp => (
                 {
-                  id: tipp.id,
+                  ...tipp,
                   coverageStatements: tipp._embedded.coverageStatements,
-                  paymentType: tipp.paymentType,
                   statusLocal: this.$i18n.t('component.general.status.' + tipp.status.name + '.label'),
-                  name: tipp.name,
-                  status: tipp.status,
-                  url: tipp.url,
-                  series: tipp.series,
-                  subjectArea: tipp.subjectArea,
-                  publisherName: tipp.publisherName,
                   dateFirstInPrint: tipp.dateFirstInPrint && this.buildDateString(tipp.dateFirstInPrint),
                   dateFirstOnline: tipp.dateFirstOnline && this.buildDateString(tipp.dateFirstOnline),
-                  firstAuthor: tipp.firstAuthor,
-                  firstEditor: tipp.firstEditor,
-                  publicationType: tipp.publicationType,
-                  volumeNumber: tipp.volumeNumber,
-                  editionStatement: tipp.editionStatement,
-                  medium: tipp.medium,
-                  lastChangedExternal: tipp.lastChangedExternal,
                   accessStartDate: tipp.accessStartDate && this.buildDateString(tipp.accessStartDate),
                   accessEndDate: tipp.accessEndDate && this.buildDateString(tipp.accessEndDate),
                   variantNames: tipp._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })),
-                  pkg: tipp.pkg,
-                  title: tipp.title,
-                  importId: tipp.importId,
-                  hostPlatform: tipp.hostPlatform,
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
                   titleType: this.title?.type ? this.$i18n.tc('component.title.type.' + tipp.title.type) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
-                  titleId: tipp.title?.id,
+                  connectedTitleId: tipp.title?.id,
                   ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!tipp._links.delete.href })),
                   prices: tipp._embedded.prices,
-                  popup: { value: (this.ttl ? tipp.pkg.name : (tipp.title ? tipp.title.name : tipp.name)), label: 'tipp', type: 'GokbAddTitlePopup' },
+                  popup: { value: (this.ttl ? tipp.pkg.name : (tipp.name || tipp.title?.name || this.$i18n.t('component.tipp.label') + ' ' + tipp.id)), label: 'tipp', type: 'GokbAddTitlePopup' },
                   hostPlatformName: tipp.hostPlatform?.name,
-                  lastUpdated: tipp.lastUpdated,
-                  dateCreated: tipp.dateCreated
                 }
               )
             )

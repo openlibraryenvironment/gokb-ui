@@ -10,11 +10,6 @@
         required: false,
         default: 'Titel'
       },
-      allowNewValues: {
-        type: Boolean,
-        required: false,
-        default: false
-      },
       typeFilter: {
         type: String,
         required: false,

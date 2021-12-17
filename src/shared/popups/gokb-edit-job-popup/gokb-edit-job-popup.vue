@@ -24,7 +24,7 @@
         </div>
         <router-link
           v-if="selectedItem.link"
-          :style="{ color: '#f2994a' }"
+          :style="{ color: 'primary' }"
           :to="{ name: '/package', params: { 'id': selectedItem.componentId } }"
         >
           {{ selectedItem.link.value || $i18n.tc('component.package.label') + ' ' + selectedItem.componentId }}
@@ -64,6 +64,18 @@
         </ul>
       </v-col>
     </v-row>
+    <v-row v-if="selectedItem.results">
+      <v-col md="12">
+        <v-expansion-panels accordion>
+          <v-expansion-panel>
+            <v-expansion-panel-header>{{ $t('component.review.additionalInfo.label') }}</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <vue-json-pretty :data="selectedItem.results" />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-col>
+    </v-row>
 
     <template #buttons>
       <v-spacer />
@@ -79,9 +91,12 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import jobServices from '@/shared/services/job-services'
+  import VueJsonPretty from 'vue-json-pretty'
+  import 'vue-json-pretty/lib/styles.css'
 
   export default {
     name: 'GokbEditJobPopup',
+    components: { VueJsonPretty },
     extends: BaseComponent,
     props: {
       selected: {
@@ -135,22 +150,22 @@
         this.id = this.selected.id
 
         const result = await this.catchError({
-          promise: jobServices.getJob(this.id, this.cancelToken.token),
+          promise: jobServices.getJob(this.id, true, this.cancelToken.token),
           instance: this
         })
 
         const record = result?.data
 
         this.selectedItem.componentId = record.linkedItem?.id
-        this.selectedItem.componentType = this.$i18n.tc('component.' + record.linkedItem.type.toLowerCase() + '.label')
-        this.selectedItem.link = record.linkedItem ? { value: record.linkedItem?.name, route: componentRoutes[record.linkedItem.type.toLowerCase()], id: 'componentId' } : {}
+        this.selectedItem.componentType = record.linkedItem && this.$i18n.tc('component.' + record.linkedItem.type.toLowerCase() + '.label')
+        this.selectedItem.link = record.linkedItem ? { value: record.linkedItem.name, route: componentRoutes[record.linkedItem.type.toLowerCase()], id: 'componentId' } : {}
         this.selectedItem.type = record.type
         this.selectedItem.description = record.description
         this.selectedItem.status = record.status
         this.selectedItem.startTime = new Date(record.startTime).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
         this.selectedItem.endTime = new Date(record.endTime).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
         this.selectedItem.results = record.job_result
-        this.selectedItem.messages = [{ message: record.job_result.message }]
+        this.selectedItem.messages = record.job_result ? [{ message: record.job_result.message }] : []
       } else {
         this.selectedItem = this.selected
       }
@@ -162,3 +177,8 @@
     }
   }
 </script>
+
+<style>
+  .vjs-tree__node.is-highlight, .vjs-tree__node:hover { background-color:#9b9b9b }
+  .vjs-value__string { color: #3c804b }
+</style>

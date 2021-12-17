@@ -1,7 +1,7 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    title="Review-Details"
+    :title="localTitle"
     :width="1000"
     @submit="save"
   >
@@ -22,36 +22,15 @@
         {{ localErrorMessage }}
       </v-alert>
     </span>
-    <v-row>
-      <v-col md="12">
-        <gokb-entity-field
-          v-model="reviewItem.component"
-          :readonly="isEdit || isReadonly || !!component"
-          :init-item="component"
-          :type-filter="cmpType"
-          :show-link="true"
-          :label="cmpLabel"
-          return-object
-        />
-      </v-col>
-    </v-row>
-    <v-row align="center">
+    <v-row
+      v-if="isEdit"
+      align="center"
+    >
       <v-col cols="3">
         <gokb-text-field
           v-model="reviewItem.dateCreated"
           disabled
           :label="$t('component.general.dateCreated')"
-        />
-      </v-col>
-      <v-col cols="3">
-        <gokb-state-field
-          v-model="reviewItem.stdDesc"
-          :init-item="stdDesc"
-          :readonly="isReadonly"
-          return-object
-          url="refdata/categories/ReviewRequest.StdDesc"
-          message-path="component.review.stdDesc"
-          :label="$tc('component.review.stdDesc.label')"
         />
       </v-col>
       <v-col cols="3">
@@ -68,21 +47,57 @@
       </v-col>
       <v-col
         v-if="reviewItem.allocatedGroups.length > 0"
-        align-self="center"
+        cols="3"
       >
-        <label class="v-label"> {{ $tc('component.curatoryGroup.label', 2) }}: </label>
-        <v-chip
-          v-for="group in reviewItem.allocatedGroups"
-          :key="group.name"
+        <div
+          class="v-select__slot"
+          style="margin-top:-8px"
         >
-          {{ group.name }}
-        </v-chip>
+          <label
+            class="v-label"
+            style="display:block;font-size:0.9em;"
+          > {{ $tc('component.curatoryGroup.label', 2) }}: </label>
+        </div>
+        <div style="margin-top:-6px">
+          <v-chip-group>
+            <v-chip
+              v-for="group in reviewItem.allocatedGroups"
+              :key="group.name"
+              class="font-weight-medium"
+              pill
+            >
+              {{ group.name }}
+            </v-chip>
+          </v-chip-group>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col md="12">
+        <gokb-entity-field
+          v-model="reviewItem.component"
+          :readonly="isEdit || isReadonly || !!component"
+          :init-item="component"
+          :type-filter="cmpType"
+          :show-link="true"
+          :label="cmpLabel"
+          return-object
+        />
       </v-col>
     </v-row>
     <v-row>
       <v-col md="12">
         <template>
           <div v-if="reviewItem.stdDesc">
+            <v-row dense>
+              <v-col cols="6">
+                <gokb-text-field
+                  v-model="localAction"
+                  :label="$t('component.review.action')"
+                  disabled
+                />
+              </v-col>
+            </v-row>
             <label
               class="v-label"
               style="display:block;font-size:0.9em;"
@@ -99,22 +114,22 @@
                 <router-link
                   v-if="numMessageVars > 0 && typeof additionalInfo.vars[0] === 'number'"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
-                  :style="{ color: '#f2994a' }"
+                  :style="{ color: 'primary' }"
                 >
-                  {{ reviewItem.component.name }}
+                  {{ additionalInfo.vars[0] === reviewItem.component.id ? reviewItem.component.name : additionalInfo.vars[1] }}
                 </router-link>
                 <b v-else-if="numMessageVars > 0">{{ additionalInfo.vars[0] }}</b>
                 <router-link
                   v-else-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
-                  :style="{ color: '#f2994a' }"
+                  :style="{ color: 'primary' }"
                 >
                   {{ reviewItem.otherComponents[0].name }}
                 </router-link>
                 <router-link
                   v-else-if="reviewItem.component"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
-                  :style="{ color: '#f2994a' }"
+                  :style="{ color: 'primary' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
@@ -194,7 +209,7 @@
               <v-col>
                 <router-link
                   v-if="oc.route"
-                  :style="{ color: '#f2994a', fontSize: '1.2em', marginRight: '4px' }"
+                  :style="{ color: 'primary', fontSize: '1.2em', marginRight: '4px' }"
                   :to="{ name: oc.route, params: { 'id': oc.id } }"
                 >
                   {{ oc.name }}
@@ -255,7 +270,7 @@
               <template v-slot:0>
                 <router-link
                   v-if="reviewItem.otherComponents && reviewItem.otherComponents.size > 0"
-                  :style="{ color: '#f2994a' }"
+                  :style="{ color: 'primary' }"
                   :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
                   color="primary"
                 >
@@ -264,7 +279,7 @@
                 <router-link
                   v-else-if="reviewItem.component"
                   :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
-                  :style="{ color: '#f2994a' }"
+                  :style="{ color: 'primary' }"
                 >
                   {{ reviewItem.component.name }}
                 </router-link>
@@ -295,6 +310,18 @@
     </v-row>
 
     <template #buttons>
+      <gokb-button
+        v-if="escalatable"
+        @click="escalate"
+      >
+        {{ $t('btn.escalate') }}
+      </gokb-button>
+      <gokb-button
+        v-if="deescalatable"
+        @click="deescalate"
+      >
+        {{ $t('btn.deescalate') }}
+      </gokb-button>
       <v-spacer />
       <gokb-button
         @click="close"
@@ -352,6 +379,8 @@
         successMsg: undefined,
         errorMsg: undefined,
         deleteUrl: undefined,
+        escalatable: false,
+        deescalatable: false,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,
@@ -416,9 +445,15 @@
       },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label')]) : undefined
+      },
+      localAction () {
+        return this.reviewItem?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.action') : undefined
+      },
+      localTitle () {
+        return this.$i18n.tc('component.review.label') + (this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
       }
     },
-    async created () {
+    created () {
       this.selectedItem = this.selected
 
       if (this.selected) {
@@ -429,10 +464,55 @@
       if (this.component) {
         this.reviewItem.component = this.component
       }
+
+      if (this.selectedItem) {
+        this.isEscalatable()
+        this.isDeescalatable()
+      }
     },
     methods: {
       close () {
         this.localValue = false
+      },
+      async isEscalatable () {
+        await this.catchError({
+          promise: reviewServices.escalatable(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+          .then(response => {
+            console.log(response)
+            this.escalatable = response.data.isEscalatable
+          })
+      },
+      async isDeescalatable () {
+        await this.catchError({
+          promise: reviewServices.deescalatable(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+          .then(response => {
+            console.log(response)
+            this.deescalatable = response.data.isDeescalatable
+          })
+      },
+      async escalate () {
+        const response = await this.catchError({
+          promise: reviewServices.escalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+        if (response.status === 200) {
+          this.$emit('paginate', response.data)
+          this.close()
+        }
+      },
+      async deescalate () {
+        const response = await this.catchError({
+          promise: reviewServices.deescalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+        if (response.status === 200) {
+          this.$emit('paginate', response.data)
+          this.close()
+        }
       },
       async fetch (rid) {
         const {

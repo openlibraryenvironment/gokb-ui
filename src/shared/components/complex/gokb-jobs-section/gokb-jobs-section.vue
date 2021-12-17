@@ -52,6 +52,7 @@
             :selected-items="selectedItems"
             :total-number-of-items="totalNumberOfItems"
             :options.sync="options"
+            hide-select
             @selected-items="selectedItems = $event"
             @retire-item="confirmCancelJob"
             @paginate="resultPaginate"
@@ -70,6 +71,7 @@
             :selected-items="selectedOldResults"
             :total-number-of-items="totalOldResults"
             :options.sync="optionsOldResults"
+            hide-select
             @selected-items="selectedOldResults = $event"
             @paginate="oldResultPaginate"
           />
@@ -211,7 +213,7 @@
                 type,
                 popup: { value: (type ? this.$i18n.t('job.jobTypes.' + type.name) : this.$i18n.t('job.jobTypes.Unknown')), label: 'job', type: 'GokbEditJobPopup' },
                 componentId: linkedItem?.id || null,
-                componentType: this.$i18n.tc('component.' + linkedItem.type.toLowerCase() + '.label'),
+                componentType: linkedItem && this.$i18n.tc('component.' + linkedItem.type.toLowerCase() + '.label'),
                 link: linkedItem ? { value: linkedItem?.name, route: componentRoutes[linkedItem.type.toLowerCase()], id: 'componentId' } : {},
                 progress,
                 messages,
@@ -252,7 +254,7 @@
                 archived: true,
                 popup: { value: (type ? this.$i18n.t('job.jobTypes.' + type.name) : this.$i18n.t('job.jobTypes.Unknown')), label: 'job', type: 'GokbEditJobPopup' },
                 componentId: linkedItem?.id || null,
-                componentType: this.$i18n.tc('component.' + linkedItem.type.toLowerCase() + '.label'),
+                componentType: linkedItem && this.$i18n.tc('component.' + linkedItem.type.toLowerCase() + '.label'),
                 link: linkedItem ? { value: linkedItem?.name, route: componentRoutes[linkedItem.type.toLowerCase()], id: 'componentId' } : {},
                 startTime: new Date(startTime).toLocaleString(this.$i18n.locale),
                 endTime: new Date(endTime).toLocaleString(this.$i18n.locale),

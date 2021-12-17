@@ -312,6 +312,7 @@
               :review-component="titleItem"
               :show-title="false"
               :api-errors="errors.reviewRequests"
+              :expandable="false"
               @update="refreshReviewsCount"
             />
           </v-tab-item>
@@ -597,7 +598,7 @@
         const activeGroup = accountModel.activeGroup()
 
         const data = {
-          id: this.id,
+          id: this.titleItem.id,
           name: this.allNames.name,
           ids: this.ids.map(id => ({ value: id.value, type: id.namespace })),
           variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
@@ -665,59 +666,72 @@
           })
 
           if (result.status === 200) {
-            const data = result.data
-            this.titleItem.id = data.id
-
-            if (!this.id) {
-              this.id = data.id
-            }
-            this.updateUrl = data._links?.update?.href || null
-            this.deleteUrl = data._links?.delete?.href || null
-            this.titleItem.name = data.name
-            this.titleItem.source = data.source
-            this.version = data.version
-            this.currentType = data.type
-            this.titleItem.type = data.type
-            this.titleItem.publishedFrom = this.buildDateString(data.publishedFrom)
-            this.titleItem.publishedTo = this.buildDateString(data.publishedTo)
-            this.publishers = data._embedded.publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!this.updateUrl }))
-            this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
-            this.tipps = data._embedded.tipps || []
-            this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
-            this.allNames = { name: data.name, alts: this.allAlternateNames }
-            this.reviewRequests = data._embedded.reviewRequests
-            this.titleItem.editionStatement = data.editionStatement
-            this.dateCreated = data.dateCreated
-            this.lastUpdated = data.lastUpdated
-            this.titleItem.firstAuthor = data.firstAuthor
-            this.titleItem.firstEditor = data.firstEditor
-            this.titleItem.medium = data.medium
-            this.titleItem.OAStatus = data.OAStatus
-            this.titleItem.editionNumber = data.editionNumber
-            this.titleItem.firstPublishedInPrint = this.buildDateString(data.firstPublishedInPrint)
-            this.titleItem.firstPublishedOnline = this.buildDateString(data.firstPublishedOnline)
-            this.titleItem.volumeNumber = data.volumeNumber
-            this.titleItem.status = data.status
-            this.history = data.history
-
-            this.shortTitleMap = { name: data.name, id: data.id, uuid: data.uuid, type: data.type }
-            this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
-
-            document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
-
-            const tippsResult = await this.catchError({
-              promise: titleServices.getTipps(this.id, { status: 'Current' }, this.cancelToken.token),
+            this.mapRecord(result.data)
+          } else if (result.status === 401) {
+            accountModel.logout()
+            const retry = await this.catchError({
+              promise: titleServices.getTitle(this.id, this.cancelToken.token),
               instance: this
             })
 
-            if (tippsResult.status === 200) {
-              this.tippCount = tippsResult.data._pagination.total
+            if (retry.status > 200) {
+              this.accessible = false
+            } else {
+              this.mapRecord(retry.data)
             }
-          } else {
+          } else if (result.status === 404) {
             this.notFound = true
           }
         }
         loading.stopLoading()
+      },
+      async mapRecord (data) {
+        if (!this.id) {
+          this.id = data.id
+        }
+        this.updateUrl = data._links?.update?.href || null
+        this.deleteUrl = data._links?.delete?.href || null
+        this.titleItem.name = data.name
+        this.titleItem.source = data.source
+        this.version = data.version
+        this.currentType = data.type
+        this.titleItem.type = data.type
+        this.titleItem.publishedFrom = this.buildDateString(data.publishedFrom)
+        this.titleItem.publishedTo = this.buildDateString(data.publishedTo)
+        this.publishers = data._embedded.publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!this.updateUrl }))
+        this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
+        this.tipps = data._embedded.tipps || []
+        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
+        this.allNames = { name: data.name, alts: this.allAlternateNames }
+        this.reviewRequests = data._embedded.reviewRequests
+        this.titleItem.editionStatement = data.editionStatement
+        this.dateCreated = data.dateCreated
+        this.lastUpdated = data.lastUpdated
+        this.titleItem.id = data.id
+        this.titleItem.firstAuthor = data.firstAuthor
+        this.titleItem.firstEditor = data.firstEditor
+        this.titleItem.medium = data.medium
+        this.titleItem.OAStatus = data.OAStatus
+        this.titleItem.editionNumber = data.editionNumber
+        this.titleItem.firstPublishedInPrint = this.buildDateString(data.dateFirstInPrint)
+        this.titleItem.firstPublishedOnline = this.buildDateString(data.dateFirstOnline)
+        this.titleItem.volumeNumber = data.volumeNumber
+        this.titleItem.status = data.status
+        this.history = data.history
+
+        this.shortTitleMap = { name: data.name, id: data.id, uuid: data.uuid, type: data.type }
+        this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
+
+        document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
+
+        const tippsResult = await this.catchError({
+          promise: titleServices.getTipps(this.id, { status: 'Current' }, this.cancelToken.token),
+          instance: this
+        })
+
+        if (tippsResult.status === 200) {
+          this.tippCount = tippsResult.data._pagination.total
+        }
       },
       addPendingChange (prop) {
         if (!this.pendingChanges[prop]) {

@@ -8,15 +8,18 @@
     "confirm": "Bestätigen",
     "create": "Erstellen",
     "darkMode": "Dunkle Ansicht",
-    "reactivate": "Reaktivieren",
+    "deescalate": "Deeskalieren",
     "deactivate": "Deaktivieren",
+    "details": "Detailansicht",
     "delete": "Löschen",
     "disableSync": "Aktualisierung stoppen",
     "edit": "Bearbeiten",
     "enableSync": "Automatisch aktualisieren",
+    "escalate": "Eskalieren",
     "new": "Neu",
     "next": "Weiter",
     "prev": "Zurück",
+    "reactivate": "Reaktivieren",
     "refresh": "Aktualisieren",
     "reload": "Neu laden",
     "reset": "Zurücksetzen",
@@ -24,7 +27,8 @@
     "search": "Suchen",
     "submit": "Abschicken",
     "update": "Aktualisieren",
-    "bulkSetStatus": "Alle {0} auf {1} setzen"
+    "bulkSelect": "Status für {0} Einträge setzen auf ...",
+    "bulkCloseReview": "{0} als erledigt markieren"
   },
   "main": {
     "docs": {
@@ -41,6 +45,7 @@
   "default": {
     "true": "Ja",
     "false": "Nein",
+    "all": "Alle",
     "ISOdateHint": "JJJJ-MM-TT",
     "404": {
       "title": "Unbekannter Pfad",
@@ -65,9 +70,9 @@
       "search": "Einzeltitel"
     },
     "tipp": {
-      "edit": "Paket-Titel bearbeiten",
-      "create": "Paket-Titel anlegen",
-      "search": "Paket-Titel"
+      "edit": "Pakettitel bearbeiten",
+      "create": "Pakettitel anlegen",
+      "search": "Pakettitel"
     },
     "provider": {
       "edit": "Anbieter bearbeiten",
@@ -136,6 +141,11 @@
         "generic": "Möchten Sie die ausgewählten Benutzerkonten deaktivieren?",
         "specific": "Möchten Sie {0} {1} wirklich deaktivieren?",
         "list": "Möchten Sie {0} {1} wirklich deaktivieren?"
+      },
+      "status": {
+        "generic": "Möchten Sie den Status der ausgewählten Elemente wirklich ändern?",
+        "specific": "Möchten Sie den Status von {0} wirklich zu {1} ändern?",
+        "list": "Möchten Sie den Status von {0} Elementen wirklich auf {1} setzen?"
       }
     },
     "login": {
@@ -234,6 +244,7 @@
       "label": "Zeile | Zeilen"
     },
     "errors": {
+      "encoding": "Diese Datei ist nicht in UTF-8 codiert. Bitte beheben Sie dies vor dem Import!",
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
       "missingCols": "Fehlende Spalten: {0}",
       "illegalVal": "Wert {0} ist fehlerhaft!",
@@ -504,6 +515,9 @@
           "sourceUpdate": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei unter der Adresse {1}."
           },
+          "tippBulkUpdate": {
+            "label": "Bitte bestätigen Sie, dass sie die {0} ausgeählten Paket-Titel auf {1} setzen möchten. Falls Sie noch weitere ungespeicherte Änderungen für dieses Paket haben, klicken Sie bitte auf 'Abbrechen' und speichern Sie zunächst die restlichen Änderungen."
+          },
           "noTipps": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0}."
           }
@@ -583,7 +597,7 @@
       "descriptionUrl": "URL zur Beschreibung des Pakets"
     },
     "tipp": {
-      "label": "Paket-Titel | Paket-Titel",
+      "label": "Pakettitel | Pakettitel",
       "toFullView": "Vollansicht öffnen",
       "url": {
         "label": "Zugriffs-URL | Zugriffs-URLs",
@@ -731,6 +745,9 @@
       "packageNamespace": "Paket-Namensraum",
       "technicalSupport": "Technischer Support"
     },
+    "organization": {
+      "label": "Anbieter | Anbieter"
+    },
     "office": {
       "label": "Kontakt | Kontakte",
       "name": "Bezeichnung",
@@ -772,7 +789,13 @@
         "ROLE_ADMIN": "Admin",
         "ROLE_USER": "Benutzer",
         "ROLE_SUPERUSER": "System",
-        "ROLE_API": "API"
+        "ROLE_API": "API",
+        "Contributor": "Bearbeiter",
+        "Editor": "Editor",
+        "Admin": "Admin",
+        "User": "Benutzer",
+        "API": "API",
+        "System": "System"
       },
       "enabled": {
         "label": "Status",
@@ -797,6 +820,7 @@
     "review": {
       "label": "Prüfanfrage | Prüfanfragen",
       "request": "Anfrage",
+      "action": "Durchgeführte Aktion",
       "type": "Typ",
       "cause": "Ursache",
       "componentToReview": "Komponente",
@@ -831,9 +855,15 @@
       },
       "stdDesc": {
         "label": "Kategorie | Kategorien",
+        "None": {
+          "label": "- Keine -"
+        },
+        "none": {
+          "label": "- Keine -"
+        },
         "Invalid TIPPs": {
           "label": "Ungültige Pakettitel",
-          "info": "Ein Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
+          "info": "Eine Aktualisierung des Pakets ist an ungültigen Pakettiteldaten gescheitert.",
           "action": "Paket nicht aktualisiert",
           "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
         },
@@ -870,7 +900,7 @@
         "Namespace Mismatch": {
           "label": "Unterschiedliche Namensräume",
           "info": "Der neue Titel besitzt eine eISSN, die einer bestehenden Print-ISSN entspricht, oder umgekehrt.",
-          "action": "",
+          "action": "Identifikator hinzugefügt",
           "toDo": "Überprüfen Sie, ob hier ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde."
         },
         "New Org": {
@@ -888,7 +918,7 @@
         "Platform Noncurrent": {
           "label": "Inaktive Plattform",
           "info": "Die Plattform {0}, die für diesen Pakettitel angegeben ist, ist als {1} gekennzeichnet.",
-          "action": "Pakettitel {0} angelegt",
+          "action": "Pakettitel mit Plattform {0} wurde angelegt/aktualisiert",
           "toDo": "Überprüfen Sie die Plattform bzw. deren URL auf die Gültigkeit. Verknüpfen Sie den Pakettitel gegebenenfalls mit der korrekten Plattform."
         },
         "Removed Identifier": {
@@ -917,7 +947,7 @@
         },
         "Type Mismatch": {
           "label": "Falscher Titeltyp",
-          "info": "Anhand eines Identifikators stimmt mit ein Titel mit dem Titel eines anderen Typs überein (z.B. ein Buch-Identifikator mit einem Zeitschriften-Identifikator oder umgekehrt).",
+          "info": "Anhand eines Identifikators stimmt ein Titel mit einem Titel anderen Typs überein (z.B. ein Buch-Identifikator mit einem Zeitschriften-Identifikator oder umgekehrt).",
           "action": "Neuer Titel angelegt",
           "toDo": "Überprüfen Sie, ob der Titel den korrekten Typ besitzt (Buch, Zeitschrift etc.) und ändern Sie den Typ gegebenenfalls."
         },
@@ -939,6 +969,12 @@
           "action": "Paket nicht aktualisiert",
           "toDo": "Überprüfen Sie die einzuspielenden Titelsätze auf Fehler oder fehlende Daten."
         },
+        "Multiple EZB Results": {
+          "label": "Mehrere EZB-Kandidaten",
+          "info": "Es gibt mehrere Kandidaten für den Titel.",
+          "action": "EZB-Anreicherung verhindert",
+          "toDo": "Selektieren Sie die korrekte EZB-Aufnahme für den Titel."
+        },
         "Multiple ZDB Results": {
           "label": "Mehrere ZDB-Kandidaten",
           "info": "Es gibt mehrere Kandidaten für den Titel.",
@@ -951,16 +987,82 @@
           "action": "Referenztitelauswahl verhindert",
           "toDo": "Überprüfen Sie die Zeitangaben und damit eine manuelle Verknüpfung des Titels."
         },
+        "EZB Title Overlap": {
+          "label": "EZB-ID bereits verwendet",
+          "info": "Die gefundene EZB-ID ist bereits mit einem anderen Referenztitel verknüpft.",
+          "action": "",
+          "toDo": ""
+        },
         "ZDB Title Overlap": {
           "label": "ZDB-ID bereits verwendet",
           "info": "Die gefundene ZDB-ID ist bereits mit einem anderen Referenztitel verknüpft.",
           "action": "ZDB-Anreicherung übersprungen",
-          "toDo": "Review all titles for possible discrepancies"
+          "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt, und führen Sie die Referenztitel gegebenfalls zusammen. Überprüfen Sie außerdem die eISSNs."
+        },
+        "No EZB Results": {
+          "label": "Keine EZB-Aufnahme gefunden",
+          "info": "Für die gegebenen ISSNs wurde keine EZB-Aufnahme gefunden.",
+          "action": "EZB-Anreicherung übersprungen",
+          "toDo": ""
         },
         "No ZDB Results": {
           "label": "Keine ZDB-Aufnahme gefunden",
           "info": "Für die gegebenen ISSNs wurde keine ZDB-Aufnahme gefunden.",
           "action": "ZDB-Anreicherung übersprungen",
+          "toDo": ""
+        },
+        "Ambiguous Title Matches": {
+          "label": "Uneindeutige Titelübereinstimmung",
+          "info": "Der Pakettitel kann anhand der vorliegenden Identifikatoren nicht eindeutig einem Referenztitel zugeordnet werden.",
+          "action": "Kein Referenztitel verknüpft",
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln eine Dublette vorliegt. Falls ja, führen Sie sie zusammen und verknüpfen diesen Titel manuell. Überprüfen Sie die Identifikatoren und löschen Sie gegebenenfalls welche, falls sie falsch sind."
+        },
+        "Namespace Conflict": {
+          "label": "Unterschiedliche Namensräume",
+          "info": "Der Pakettitel besitzt eine eISSN, die einer bestehenden Print-ISSN des Referenztitels entspricht, oder umgekehrt.",
+          "action": "",
+          "toDo": "Überprüfen Sie, ob beim Referenztitel ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diesen Fall. Ansonsten überprüfen Sie den Pakettitel und die KBART-Datei dahingehend und korrigieren Sie diese."
+        },
+        "Critical Identifier Conflict": {
+          "label": "Identifikator-Konflikt (Neuer Titel)",
+          "info": "Referenztitel {0} stimmt anhand eines Identifikators mit einem vorhandenen Referenztitel überein, aber andere Identifikatoren desselben Namensraumes stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname stark.",
+          "action": "Neuer Referenztitel erstellt",
+          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Referenztitel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diese, falls sie falsch sind."
+        },
+        "Secondary Identifier Conflict": {
+          "label": "Identifikatoren-Konflikt (ID ergänzt)",
+          "info": "Referenztitel {0} stimmt mit dem vorhandenen Referenztitel überein, aber manche Identifikatoren {1} desselben Namensraums stimmen nicht überein.",
+          "action": "Identifikator ergänzt",
+          "toDo": "Überprüfen Sie die Identifikatoren des Referenztitels und löschen Sie diese, falls sie falsch sind."
+        },
+        "Generic Matching Conflict": {
+          "label": "Generischer Matchingkonflikt",
+          "info": "Es trat ein Konflikt beim Matching des Pakettitels mit bestehenden Referenztiteln auf.",
+          "action": "",
+          "toDo": "Überprüfen Sie die betroffenen Titel und informieren Sie gegebenenfalls die GOKb-Redaktion."
+        },
+        "Invalid Record": {
+          "label": "Ungültiger KBART-Datensatz",
+          "info": "Ein Datensatz der KBART-Datei enthält ungültige Werte. Es wurde kein Pakettitel angelegt.",
+          "action": "Kein Pakettitel angelegt",
+          "toDo": "Überprüfen Sie den entsprechenden Datensatz in der KBART-Datei auf Fehler und korrigieren Sie ihn."
+        },
+        "Ambiguous Record Matches": {
+          "label": "Uneindeutiger KBART-Datensatz",
+          "info": "Ein Datensatz der KBART-Datei kann nicht eindeutig einem Pakettitel zugeordnet werden.",
+          "action": "Pakettitel ausgewählt",
+          "toDo": "Überprüfen Sie den entsprechenden Datensatz sowie den Pakettitel, ob der korrekte Pakettitel ausgewählt wurde."
+        },
+        "Import Identifier Mismatch": {
+          "label": "Identifikatoren-Konflikt beim KBART-Import",
+          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren ({0}) einem bestehenden Pakettitel zugordnet werden, allerdings unterscheidet sich ein wichtiger anderer bzw. andere Identifikatoren ({1}).",
+          "action": "Neuer Pakettitel angelegt",
+          "toDo": "Überprüfen Sie die Pakettitel und führen sie beide gegebenenfalls zusammen."
+        },
+        "Import Report": {
+          "label": "Ergebnisbericht einer KBART-Einspielung",
+          "info": "Eine KBART-Einspielung hat stattgefunden. Entnehmen Sie genauere Informationen bitte den Details.",
+          "action": "Paket eingespielt",
           "toDo": ""
         }
       }
@@ -974,7 +1076,8 @@
     "variantName": {
       "label": "Namensvariante | Namensvarianten",
       "error": {
-        "duplicate": "Eine ähnliche Variante zu '{0}' existiert bereits!"
+        "duplicate": "Eine ähnliche Variante zu '{0}' existiert bereits!",
+        "inUse": "Diese Variante ist bereits anderweitig verknüpft!"
       }
     },
     "source": {

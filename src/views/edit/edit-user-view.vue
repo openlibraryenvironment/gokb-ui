@@ -254,7 +254,7 @@
         return this.id ? this.$i18n.t('btn.update') : this.$i18n.t('btn.add')
       },
       valid () {
-        return this.username && (this.isEdit || (this.password.length > 5 && this.password.length < 64))
+        return this.username && (this.isEdit || (this.password?.length > 5 && this.password?.length < 64))
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.user.label'), this.username]) : undefined
@@ -307,7 +307,7 @@
           instance: this
         })
         // todo: check error code
-        if (response.status === 200) {
+        if (response.status < 400) {
           if (this.isEdit) {
             this.successMsg = 'success.update'
             this.fetch()
@@ -322,6 +322,8 @@
         this.$router.go(-1)
       },
       async fetch () {
+        this.roles = []
+
         const {
           data: {
             data: {

@@ -24,8 +24,9 @@ const api = (baseServices) => ({
       data,
     }, cancelToken)
   },
-  ingestKbart (id, file, cancelToken) {
+  ingestKbart (id, file, parameters ,cancelToken) {
     const data = new FormData()
+    const urlParameter = baseServices.createQueryParameters(parameters)
 
     if (file) {
       data.append('submissionFile', file)
@@ -33,7 +34,7 @@ const api = (baseServices) => ({
 
     return baseServices.request({
       method: 'POST',
-      url: process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}/ingest`,
+      url: process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}/ingest?${urlParameter}`,
       data,
     }, cancelToken)
   },

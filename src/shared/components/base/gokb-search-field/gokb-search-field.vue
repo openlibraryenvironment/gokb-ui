@@ -33,7 +33,7 @@
     </div>
     <router-link
       v-if="componentRoute"
-      :style="{ color: '#f2994a', fontSize: '1.1rem' }"
+      :style="{ color: 'primary', fontSize: '1.1rem' }"
       :to="{ name: componentRoute, params: { 'id': value.id } }"
     >
       {{ localLabel }}
@@ -109,7 +109,7 @@
         :style="{ color: 'accent', fontSize: '1.1rem', maxWidth: '75%' }"
         class="text-truncate"
         color="accent"
-        :to="{ name: knownRoutes[data.item.type], params: { 'id': data.item.id } }"
+        :to="{ name: componentRoute, params: { 'id': data.item.id } }"
       >
         <span
           :title="data.item[itemText]"
@@ -202,11 +202,18 @@
         search: null,
         knownRoutes: {
           Organization: '/provider',
+          Org: '/provider',
           Title: '/title',
+          TitleInstance: '/title',
           Journal: '/title',
+          JournalInstance: '/title',
           Book: '/title',
+          BookInstance: '/title',
           Database: '/title',
-          Package: '/package'
+          DatabaseInstance: '/title',
+          Package: '/package',
+          TIPP: '/package-title',
+          TitleInstancePackagePlatform: '/package-title'
         }
       }
     },
@@ -223,7 +230,7 @@
         }
       },
       componentRoute () {
-        return this.knownRoutes?.[this.value?.type] || null
+        return this.knownRoutes[this.value?.type || this.value?.componentType] || null
       },
       activeRules () {
         return [v => !!v || !this.required || this.$i18n.t('validation.missingSelection')]

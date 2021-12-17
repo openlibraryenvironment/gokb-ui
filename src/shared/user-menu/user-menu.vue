@@ -15,11 +15,20 @@
               v-on="menuOn"
             >
               <v-icon
-                :color="colorAccountIcon"
+                v-if="!loggedIn"
                 v-on="tooltipOn"
               >
                 mdi-account
               </v-icon>
+              <v-avatar
+                v-else
+                color="rgba(0,0,0,.26)"
+                :title="username"
+              >
+                <span class="text-h6">
+                  {{ firstLetter }}
+                </span>
+              </v-avatar>
             </v-btn>
           </template>
           <v-list>
@@ -62,6 +71,7 @@
     data () {
       return {
         showRegister: false,
+        appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
       }
     },
     computed: {
@@ -81,6 +91,9 @@
       },
       loggedIn () {
         return accountModel.loggedIn()
+      },
+      firstLetter () {
+        return (this.loggedIn && this.username.substr(0, 1).toUpperCase())
       },
       userMenuItems () {
         if (this.loggedIn) {

@@ -4,6 +4,8 @@
     :persistent="persistent"
     :fullscreen="fullscreen"
     :width="width"
+    :retain-focus="false"
+    @keydown="closeWithEscape"
   >
     <v-card class="elevation-12">
       <v-form
@@ -12,11 +14,20 @@
         @submit.prevent="doSubmit"
       >
         <v-toolbar
-          color="accent"
+          :color="appColor"
+          dark
         >
           <v-toolbar-title>
             {{ title }}
           </v-toolbar-title>
+          <v-spacer />
+          <v-btn
+            icon
+            right
+            @click="localValue = false"
+          >
+            <v-icon>close</v-icon>
+          </v-btn>
         </v-toolbar>
         <v-card-text>
           <slot />
@@ -63,9 +74,42 @@
         default: true
       }
     },
+    data () {
+      return {
+        appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
+      }
+    },
+    computed: {
+      localValue: {
+        get () {
+          return this.value
+        },
+        set (localValue) {
+          this.$emit('input', localValue)
+        }
+      }
+    },
+    mounted () {
+      if (this.value) {
+        this.$nextTick(() => {
+          const theElement = this.$refs.form.$el
+          const input = theElement.querySelector('input:not([type=hidden]),textarea:not([type=hidden])')
+          if (input) {
+            setTimeout(() => {
+              input.focus()
+            }, 0)
+          }
+        })
+      }
+    },
     methods: {
       doSubmit () {
         this.$emit('submit', this.$refs.form)
+      },
+      closeWithEscape (event) {
+        if (event.key === 'Escape') {
+          this.localValue = false
+        }
       }
     }
   }
