@@ -56,7 +56,7 @@
         <gokb-url-field
           ref="platformUrl"
           v-model="platform.url"
-          :label="$tc('component.tipp.url.label')"
+          :label="$tc('component.platform.url')"
           required
           dense
         />
@@ -146,7 +146,7 @@
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.platform.label')]) : undefined
       },
       submitButtonLabel () {
-        return this.isEdit ? this.$i18n.tc('component.platform.edit') : this.$i18n.tc('component.platform.create')
+        return this.isEdit ? this.$i18n.tc('route.platform.edit') : this.$i18n.tc('route.platform.create')
       }
     },
     async created () {

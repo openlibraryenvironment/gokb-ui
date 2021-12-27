@@ -10,7 +10,7 @@
       v-if="editPlatformPopupVisible"
       v-model="editPlatformPopupVisible"
       :component="{ type: 'GokbPlatformField', name: $tc('component.platform.label') }"
-      @edit="editPlatform()"
+      @edit="editPlatform"
     />
     <template #buttons>
       <gokb-button
@@ -114,6 +114,10 @@
       },
       platforms () {
         return [...this.value]
+          .map(item => ({
+            ...item,
+            popup: { value: item.name, label: 'platform', type: 'GokbEditPlatformPopup' }
+          }))
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
@@ -163,8 +167,8 @@
       showAddPlatformPopup () {
         this.editPlatformPopupVisible = true
       },
-      editPlatform () {
-        this.localValue.push({ name: this.name, primaryUrl: this.primaryUrl, id: this.tempId(), isDeletable: true, unsaved: true })
+      editPlatform (value) {
+        this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: this.tempId(), isDeletable: true, unsaved: true })
         this.$emit('update', 'platforms')
       }
     }
