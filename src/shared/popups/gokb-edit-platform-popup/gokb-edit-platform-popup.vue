@@ -28,7 +28,7 @@
           <v-row dense>
             <v-col cols="6">
               <gokb-text-field
-                v-model="localAction"
+                v-model="platformId"
                 :label="submitButtonLabel"
                 disabled
               />
@@ -42,12 +42,11 @@
       class="mt-4"
     >
       <v-col>
-        <gokb-title-field
-          v-model="platform.title"
+        <gokb-text-field
+          v-model="platformName"
           :label="$tc('component.platform.label')"
           required
           dense
-          return-object
         />
       </v-col>
     </v-row>
@@ -55,7 +54,7 @@
       <v-col>
         <gokb-url-field
           ref="platformUrl"
-          v-model="platform.url"
+          v-model="platformUrl"
           :label="$tc('component.platform.url')"
           required
           dense
@@ -130,11 +129,30 @@
           this.$emit('input', localValue)
         }
       },
+      platformId () {
+        return this.selected?.id ? this.selected.id : undefined
+      },
+      platformName: {
+        get () {
+          return this.selected?.name ? this.selected.name : undefined
+        },
+        set (localName) {
+          this.$emit('input', localName)
+        }
+      },
+      platformUrl: {
+        get () {
+          return this.selected?.primaryUrl ? this.selected.primaryUrl : undefined
+        },
+        set (localUrl) {
+          this.$emit('input', localUrl)
+        }
+      },
       isReadonly () {
         return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isEdit () {
-        return !!this.id
+        return !!this.platformId
       },
       isValid () {
         return !!this.platform.component
@@ -147,6 +165,9 @@
       },
       submitButtonLabel () {
         return this.isEdit ? this.$i18n.tc('route.platform.edit') : this.$i18n.tc('route.platform.create')
+      },
+      localTitle () {
+        return this.$i18n.tc('component.platform.label') + (this.platform?.stdDesc ? (' – ' + this.$i18n.t('component.platform.stdDesc.' + (this.platform.stdDesc.value || this.platform.stdDesc.name) + '.label')) : '')
       }
     },
     async created () {
