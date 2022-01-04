@@ -1,6 +1,6 @@
 <template>
   <gokb-dialog
-    v-model="localValue"
+    value=""
     :title="localTitle"
     :width="1000"
     @submit="save"
@@ -69,12 +69,8 @@
       >
         {{ $t('btn.cancel') }}
       </gokb-button>
-      <gokb-button
-        v-if="!isReadonly"
-        :disabled="!isValid"
-        default
-      >
-        {{ isEdit ? $t('btn.update') : $t('btn.create') }}
+      <gokb-button default>
+        {{ submitButtonLabel }}
       </gokb-button>
     </template>
   </gokb-dialog>
@@ -92,23 +88,11 @@
     props: {
       selected: {
         type: Object,
-        required: false,
-        default: undefined
-      },
-      readonly: {
-        type: Boolean,
-        required: false,
-        default: false
-      },
-      component: {
-        type: Object,
-        required: false,
-        default: undefined
+        required: true
       }
     },
     data () {
       return {
-        selectedItem: undefined,
         successMsg: undefined,
         errorMsg: undefined,
         updateUrl: undefined,
@@ -116,19 +100,10 @@
           label: undefined,
           url: undefined,
           title: undefined
-        },
-        items: []
+        }
       }
     },
     computed: {
-      localValue: {
-        get () {
-          return this.value || true
-        },
-        set (localValue) {
-          this.$emit('input', localValue)
-        }
-      },
       platformId () {
         return this.selected?.id ? this.selected.id : undefined
       },
@@ -137,7 +112,7 @@
           return this.selected?.name ? this.selected.name : undefined
         },
         set (localName) {
-          this.$emit('input', localName)
+          this.selected.name = localName
         }
       },
       platformUrl: {
@@ -145,7 +120,7 @@
           return this.selected?.primaryUrl ? this.selected.primaryUrl : undefined
         },
         set (localUrl) {
-          this.$emit('input', localUrl)
+          this.selected.primaryUrl = localUrl
         }
       },
       isReadonly () {
@@ -155,7 +130,7 @@
         return !!this.platformId
       },
       isValid () {
-        return !!this.platform.component
+        return !!this.selected
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.platform.label')]) : undefined
@@ -167,19 +142,17 @@
         return this.isEdit ? this.$i18n.tc('route.platform.edit') : this.$i18n.tc('route.platform.create')
       },
       localTitle () {
-        return this.$i18n.tc('component.platform.label') + (this.platform?.stdDesc ? (' – ' + this.$i18n.t('component.platform.stdDesc.' + (this.platform.stdDesc.value || this.platform.stdDesc.name) + '.label')) : '')
-      }
-    },
-    async created () {
-      this.selectedItem = this.selected
-
-      if (this.component) {
-        this.platform.component = this.component
+        if (this.isEdit) {
+          return this.$i18n.tc('component.platform.label') + (this.platform?.stdDesc ? (' – ' + this.$i18n.t('component.platform.stdDesc.' + (this.platform.stdDesc.value || this.platform.stdDesc.name) + '.label')) : '')
+        } else {
+          return this.$i18n.tc('route.platform.create')
+        }
       }
     },
     methods: {
       close () {
         this.localValue = false
+        this.editPlatformPopupVisible = false
       },
       async fetch (pid) {
         const {
@@ -200,7 +173,9 @@
         const activeGroup = accountModel.activeGroup()
 
         const newPlatform = {
-          id: this.id,
+          id: this.platformId,
+          platformName: this.platformName,
+          platformUrl: this.platformUrl,
           status: this.platform.status?.id || null,
           version: this.version,
           activeGroup
@@ -212,15 +187,15 @@
         })
 
         if (response?.status === 200) {
-          this.$emit('edit', this.selectedItem)
+          this.$emit('edit', this.selected)
           this.close()
         } else {
-          if (response.status === 409) {
+          if (response?.status === 409) {
             this.errorMsg = 'error.update.409'
-          } else if (response.status === 500) {
+          } else if (response?.status === 500) {
             this.errorMsg = 'error.general.500'
           } else {
-            this.errors = response.data.error
+            this.errors = response?.data.error
           }
         }
       }

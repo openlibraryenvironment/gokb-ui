@@ -53,7 +53,6 @@
 
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
-  import GokbEditPlatformPopup from '@/shared/popups/gokb-edit-platform-popup'
 
   const ROWS_PER_PAGE = 10
 
@@ -65,7 +64,6 @@
   export default {
     name: 'GokbPlatformSection',
     components: {
-      GokbEditPlatformPopup,
       GokbConfirmationPopup
     },
     props: {
