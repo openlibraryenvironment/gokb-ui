@@ -851,14 +851,17 @@
               this.urlUpdate = true
             }
 
-            const sourceReponse = await this.catchError({
+            const sourceResponse = await this.catchError({
               promise: sourceServices.createOrUpdateSource(sourceItem, this.cancelToken.token),
               instance: this
             })
 
-            if (sourceReponse.status < 400) {
-              this.packageItem.source = sourceReponse.data
-              this.sourceItem = sourceReponse.data
+            if (sourceResponse.status < 400) {
+              this.packageItem.source = sourceResponse.data
+              this.sourceItem = sourceResponse.data
+            }
+            else {
+              this.errors.source = sourceResponse?.data?.data
             }
           }
 
@@ -943,7 +946,12 @@
               } else {
                 loading.stopLoading()
                 this.kbartResult = 'error'
-                this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
+                if (isUpdate) {
+                  this.step = 1
+                  this.reload()
+                } else {
+                  this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
+                }
               }
             } else {
               loading.stopLoading()
