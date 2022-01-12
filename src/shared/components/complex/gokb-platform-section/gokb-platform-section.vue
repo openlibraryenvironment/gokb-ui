@@ -136,9 +136,6 @@
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
-      tempId () {
-        return 'tempId' + Math.random().toString(36).substr(2, 5)
-      },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
         this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.platform.label', this.selectedItems.length)] }
@@ -166,8 +163,18 @@
         this.editPlatformPopupVisible = true
       },
       editPlatform (value) {
-        this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: this.tempId(), isDeletable: true, unsaved: true })
-        this.$emit('update', 'platforms')
+        const existingPlatform = this.localValue.filter(value.id)
+        if (existingPlatform) {
+          const index = this.localValue.indexOf(existingPlatform)
+          // edit existing platform
+          existingPlatform.name = value.name
+          existingPlatform.primaryUrl = value.primaryUrl
+          existingPlatform.id = value.id
+          this.localValue[index] = existingPlatform
+        } else {
+          // add new platform
+          this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: value.id, isDeletable: true })
+        }
       }
     }
   }

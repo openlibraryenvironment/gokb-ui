@@ -43,7 +43,7 @@
     >
       <v-col>
         <gokb-text-field
-          v-model="platformName"
+          v-model="platform.name"
           :label="$tc('component.platform.label')"
           required
           dense
@@ -54,7 +54,7 @@
       <v-col>
         <gokb-url-field
           ref="platformUrl"
-          v-model="platformUrl"
+          v-model="platform.primaryUrl"
           :label="$tc('component.platform.url')"
           required
           dense
@@ -97,31 +97,22 @@
         errorMsg: undefined,
         updateUrl: undefined,
         platform: {
-          label: undefined,
-          url: undefined,
-          title: undefined
+          name: undefined,
+          primaryUrl: undefined
         }
       }
     },
     computed: {
+      localValue: {
+        get () {
+          return this.value || true
+        },
+        set (localValue) {
+          this.$emit('input', localValue)
+        }
+      },
       platformId () {
         return this.selected?.id ? this.selected.id : undefined
-      },
-      platformName: {
-        get () {
-          return this.selected?.name ? this.selected.name : undefined
-        },
-        set (localName) {
-          this.selected.name = localName
-        }
-      },
-      platformUrl: {
-        get () {
-          return this.selected?.primaryUrl ? this.selected.primaryUrl : undefined
-        },
-        set (localUrl) {
-          this.selected.primaryUrl = localUrl
-        }
       },
       isReadonly () {
         return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
@@ -149,10 +140,17 @@
         }
       }
     },
+    created () {
+      if (this.selected) {
+        // edit existing platform
+        this.platform.name = this.selected.name
+        this.platform.primaryUrl = this.selected.primaryUrl
+        this.platform.id = this.selected.id
+      }
+    },
     methods: {
       close () {
         this.localValue = false
-        this.editPlatformPopupVisible = false
       },
       async fetch (pid) {
         const {
@@ -165,8 +163,8 @@
           promise: platformServices.getPlatform(pid, this.cancelToken.token),
           instance: this
         })
-        this.platform.label = name
-        this.platform.url = primaryUrl
+        this.platform.name = name
+        this.platform.primaryUrlrl = primaryUrl
         this.updateUrl = _links?.update?.href || undefined
       },
       async save () {
@@ -174,9 +172,8 @@
 
         const newPlatform = {
           id: this.platformId,
-          platformName: this.platformName,
-          platformUrl: this.platformUrl,
-          status: this.platform.status?.id || null,
+          name: this.platform.name,
+          primaryUrl: this.platform.primaryUrl,
           version: this.version,
           activeGroup
         }
@@ -186,8 +183,8 @@
           instance: this
         })
 
-        if (response?.status === 200) {
-          this.$emit('edit', this.selected)
+        if (response?.status < 300) {
+          this.$emit('edit', response.data)
           this.close()
         } else {
           if (response?.status === 409) {
