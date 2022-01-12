@@ -53,6 +53,7 @@
 
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbEditPlatformPopup from '@/shared/popups/gokb-edit-platform-popup'
 
   const ROWS_PER_PAGE = 10
 
@@ -64,7 +65,8 @@
   export default {
     name: 'GokbPlatformSection',
     components: {
-      GokbConfirmationPopup
+      GokbConfirmationPopup,
+      GokbEditPlatformPopup
     },
     props: {
       value: {
@@ -85,17 +87,21 @@
         type: Array,
         required: false,
         default: undefined
-      }
+      },
+      providerId: {
+        type: [String, Number],
+        required: true
+      },
     },
     data () {
       return {
-        editPlatformPopupVisible: false,
         options: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedItems: [],
         confirmationPopUpVisible: false,
+        editPlatformPopupVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,

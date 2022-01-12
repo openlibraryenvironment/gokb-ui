@@ -199,6 +199,7 @@
               :show-title="false"
               :disabled="isReadonly"
               :api-errors="errors.providedPlatforms"
+              :provider-id="providerObject.id"
               @update="addPendingChange"
             />
           </v-tab-item>

@@ -89,6 +89,10 @@
       selected: {
         type: Object,
         required: true
+      },
+      providerId: {
+        type: [String, Number],
+        required: true
       }
     },
     data () {
@@ -176,6 +180,10 @@
           primaryUrl: this.platform.primaryUrl,
           version: this.version,
           activeGroup
+        }
+
+        if (!this.isEdit) {
+          newPlatform.providerId = this.providerId
         }
 
         const response = await this.catchError({
