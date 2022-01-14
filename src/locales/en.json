@@ -169,6 +169,7 @@
     "missingSelection": "Please select a value from the list.",
     "missingName": "Please provide a name.",
     "missingEmail": "Please provide a valid email address.",
+    "nameNotUnique": "This name is already in use.",
     "urlForm": "Please provide a valid URL.",
     "numberFormat": "Please enter a number.",
     "dateFormat": "Invalid Date",

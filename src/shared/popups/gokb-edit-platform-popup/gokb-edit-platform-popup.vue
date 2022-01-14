@@ -62,6 +62,8 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import platformServices from '@/shared/services/platform-services'
+  import searchServices from '@/shared/services/search-services'
+  import { createCancelToken } from '@/shared/services/http'
   import 'vue-json-pretty/lib/styles.css'
 
   export default {
@@ -156,9 +158,32 @@
         this.platform.primaryUrl = primaryUrl
         this.updateUrl = _links?.update?.href || undefined
       },
+      async checkForDupes () {
+        this.cancelToken = createCancelToken()
+        var response = await searchServices('rest/platforms').search({
+          name: this.platform.name,
+          status: 'Current',
+          es: 'true',
+          max: 20
+        }, this.cancelToken.token)
+
+        if (response?.status < 400) {
+          var dupes = response.data?.data.filter(res => (res.name.toLowerCase() === this.platform.name.toLowerCase() && (!this.platform.id || this.platform.id !== res.id)))
+
+          if (dupes?.length > 0) {
+            return true
+          } else {
+            return false
+          }
+        } else {
+          return false
+        }
+      },
       async save () {
         this.errors = {}
-        if (this.$refs.name.validate() && this.$refs.primaryUrl.validate()) {
+        const dupesFound = this.checkForDupes()
+
+        if (!dupesFound) {
           const activeGroup = accountModel.activeGroup()
 
           const newPlatform = {
@@ -202,6 +227,8 @@
               this.errors = response?.data?.error
             }
           }
+        } else {
+          this.errorMsg = 'error.general.name.notUnique'
         }
       }
     }
