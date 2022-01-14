@@ -859,8 +859,7 @@
             if (sourceResponse.status < 400) {
               this.packageItem.source = sourceResponse.data
               this.sourceItem = sourceResponse.data
-            }
-            else {
+            } else {
               this.errors.source = sourceResponse?.data?.data
             }
           }
