@@ -359,8 +359,7 @@
         if (csvDataRows.length < 2) {
           return
         } else {
-          const columns = csvDataRows[0].split(/\t/)
-
+          const columns = csvDataRows[0].split(/\t/).map(col => col.toLowerCase())
           columns.forEach(v => {
             this.loadedFile.errors.type[v] = { empty: 0, invalid: 0 }
           })
