@@ -353,7 +353,7 @@
         pendingChanges: {},
         valid: true,
         notFound: false,
-        tabsView: false,
+        tabsView: true,
         dateCreated: undefined,
         lastUpdated: undefined,
         deleteUrl: undefined,

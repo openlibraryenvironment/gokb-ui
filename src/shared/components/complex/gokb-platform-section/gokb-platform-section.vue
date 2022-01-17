@@ -9,7 +9,7 @@
     <gokb-edit-platform-popup
       v-if="editPlatformPopupVisible"
       v-model="editPlatformPopupVisible"
-      :component="{ type: 'GokbPlatformField', name: $tc('component.platform.label') }"
+      :provider-id="providerId"
       @edit="editPlatform"
     />
     <template #buttons>
@@ -47,6 +47,7 @@
       :options.sync="options"
       @selected-items="selectedItems = $event"
       @delete-item="confirmDeleteItem"
+      @edit="editPlatform"
     />
   </gokb-section>
 </template>
@@ -117,10 +118,10 @@
         }
       },
       platforms () {
-        return [...this.value]
+        return [...this.localValue]
           .map(item => ({
             ...item,
-            popup: { value: item.name, label: 'platform', type: 'GokbEditPlatformPopup' }
+            popup: { value: item.name, label: 'platform', type: 'GokbEditPlatformPopup', otherProps: { providerId: this.providerId } }
           }))
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
@@ -169,13 +170,18 @@
         this.editPlatformPopupVisible = true
       },
       editPlatform (value) {
-        const existingPlatform = this.localValue.filter(value.id)
+        const platformMatch = this.localValue.filter(({ id }) => id === value.id)
+        var existingPlatform
+
+        if (platformMatch.length === 1) {
+          existingPlatform = platformMatch[0]
+        }
+
         if (existingPlatform) {
           const index = this.localValue.indexOf(existingPlatform)
           // edit existing platform
           existingPlatform.name = value.name
           existingPlatform.primaryUrl = value.primaryUrl
-          existingPlatform.id = value.id
           this.localValue[index] = existingPlatform
         } else {
           // add new platform

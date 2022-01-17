@@ -69,7 +69,7 @@
           :items="items"
           :pprops="item.popup.otherProps"
           :selected="item"
-          @edit="editItem(item)"
+          @edit="editItem"
         />
       </template>
       <template #item._pending="{ item }">
@@ -109,7 +109,7 @@
           :items="items"
           :pprops="item.popup.otherProps"
           :selected="item"
-          @edit="editItem(item)"
+          @edit="editItem"
         />
         <div style="white-space:nowrap">
           <v-icon

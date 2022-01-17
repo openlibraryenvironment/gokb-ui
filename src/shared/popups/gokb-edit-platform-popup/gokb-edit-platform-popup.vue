@@ -2,18 +2,9 @@
   <gokb-dialog
     value=""
     :title="localTitle"
-    :width="1000"
     @submit="save"
   >
     <gokb-error-component :value="error" />
-    <span v-if="successMsg">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ localSuccessMessage }}
-      </v-alert>
-    </span>
     <span v-if="errorMsg">
       <v-alert
         type="error"
@@ -22,40 +13,28 @@
         {{ localErrorMessage }}
       </v-alert>
     </span>
-    <v-row>
-      <v-col md="12">
-        <template>
-          <v-row dense>
-            <v-col cols="6">
-              <gokb-text-field
-                v-model="platformId"
-                :label="submitButtonLabel"
-                disabled
-              />
-            </v-col>
-          </v-row>
-        </template>
-      </v-col>
-    </v-row>
     <v-row
       dense
       class="mt-4"
     >
       <v-col>
         <gokb-text-field
+          ref="name"
           v-model="platform.name"
-          :label="$tc('component.platform.label')"
+          :label="$tc('component.general.name')"
+          :api-errors="errors.name"
           required
           dense
         />
       </v-col>
     </v-row>
-    <v-row dense>
+    <v-row>
       <v-col>
         <gokb-url-field
           ref="platformUrl"
           v-model="platform.primaryUrl"
           :label="$tc('component.platform.url')"
+          :api-errors="errors.primaryUrl"
           required
           dense
         />
@@ -69,7 +48,10 @@
       >
         {{ $t('btn.cancel') }}
       </gokb-button>
-      <gokb-button default>
+      <gokb-button
+        default
+        :disabled="!isValid"
+      >
         {{ submitButtonLabel }}
       </gokb-button>
     </template>
@@ -80,6 +62,8 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import platformServices from '@/shared/services/platform-services'
+  import searchServices from '@/shared/services/search-services'
+  import { createCancelToken } from '@/shared/services/http'
   import 'vue-json-pretty/lib/styles.css'
 
   export default {
@@ -88,19 +72,22 @@
     props: {
       selected: {
         type: Object,
-        required: true
+        required: false,
+        default: undefined
       },
-      providerId: {
-        type: [String, Number],
-        required: true
+      pprops: {
+        type: Object,
+        required: false,
+        default: undefined
       }
     },
     data () {
       return {
-        successMsg: undefined,
         errorMsg: undefined,
+        errors: {},
         updateUrl: undefined,
         platform: {
+          id: undefined,
           name: undefined,
           primaryUrl: undefined
         }
@@ -125,7 +112,7 @@
         return !!this.platformId
       },
       isValid () {
-        return !!this.selected
+        return !!this.platform.name && !!this.platform.primaryUrl
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.platform.label')]) : undefined
@@ -168,40 +155,80 @@
           instance: this
         })
         this.platform.name = name
-        this.platform.primaryUrlrl = primaryUrl
+        this.platform.primaryUrl = primaryUrl
         this.updateUrl = _links?.update?.href || undefined
       },
-      async save () {
-        const activeGroup = accountModel.activeGroup()
-
-        const newPlatform = {
-          id: this.platformId,
+      async checkForDupes () {
+        this.cancelToken = createCancelToken()
+        var response = await searchServices('rest/platforms').search({
           name: this.platform.name,
-          primaryUrl: this.platform.primaryUrl,
-          version: this.version,
-          activeGroup
-        }
+          status: 'Current',
+          es: 'true',
+          max: 20
+        }, this.cancelToken.token)
 
-        if (!this.isEdit) {
-          newPlatform.providerId = this.providerId
-        }
+        if (response?.status < 400) {
+          var dupes = response.data?.data.filter(res => (res.name.toLowerCase() === this.platform.name.toLowerCase() && (!this.platform.id || this.platform.id !== res.id)))
 
-        const response = await this.catchError({
-          promise: platformServices.createOrUpdatePlatform(newPlatform, this.cancelToken.token),
-          instance: this
-        })
-
-        if (response?.status < 300) {
-          this.$emit('edit', response.data)
-          this.close()
-        } else {
-          if (response?.status === 409) {
-            this.errorMsg = 'error.update.409'
-          } else if (response?.status === 500) {
-            this.errorMsg = 'error.general.500'
+          if (dupes?.length > 0) {
+            return true
           } else {
-            this.errors = response?.data.error
+            return false
           }
+        } else {
+          return false
+        }
+      },
+      async save () {
+        this.errors = {}
+        const dupesFound = this.checkForDupes()
+
+        if (!dupesFound) {
+          const activeGroup = accountModel.activeGroup()
+
+          const newPlatform = {
+            id: this.platform.id,
+            name: this.platform.name,
+            primaryUrl: this.platform.primaryUrl,
+            version: this.version,
+            activeGroup
+          }
+
+          if (!this.isEdit) {
+            newPlatform.provider = this.pprops?.providerId
+          }
+
+          const response = await this.catchError({
+            promise: platformServices.createOrUpdatePlatform(newPlatform, this.cancelToken.token),
+            instance: this
+          })
+
+          if (response?.status < 300) {
+            const updatedObj = {
+              id: response.data.id,
+              name: response.data.name,
+              primaryUrl: response.data.primaryUrl,
+              provider: response.data.provider,
+              status: response.data.status,
+              version: response.data.version,
+              isDeletable: true
+            }
+
+            this.$emit('edit', updatedObj)
+            this.close()
+          } else {
+            if (response?.status === 409) {
+              this.errorMsg = 'error.update.409'
+              this.errors = response?.data?.error
+            } else if (response?.status === 500) {
+              this.errorMsg = 'error.general.500'
+            } else {
+              this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+              this.errors = response?.data?.error
+            }
+          }
+        } else {
+          this.errorMsg = 'error.general.name.notUnique'
         }
       }
     }
