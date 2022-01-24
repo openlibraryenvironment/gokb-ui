@@ -199,6 +199,7 @@
               :show-title="false"
               :disabled="isReadonly"
               :api-errors="errors.providedPlatforms"
+              :provider-id="providerObject.id"
               @update="addPendingChange"
             />
           </v-tab-item>
@@ -352,7 +353,7 @@
         pendingChanges: {},
         valid: true,
         notFound: false,
-        tabsView: false,
+        tabsView: true,
         dateCreated: undefined,
         lastUpdated: undefined,
         deleteUrl: undefined,
