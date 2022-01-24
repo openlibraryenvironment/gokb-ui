@@ -344,6 +344,11 @@
         type: [String, Number],
         required: false,
         default: undefined
+      },
+      initMessageCode: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -365,6 +370,7 @@
         errors: {},
         updateUrl: undefined,
         successMsg: undefined,
+        warningMsg: undefined,
         version: undefined,
         errorMsg: undefined,
         providerObject: {
@@ -406,6 +412,9 @@
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.provider.label'), this.name]) : undefined
       },
+      localWarningMessage () {
+        return this.warningMsg ? this.$i18n.t(this.warningMsg, [this.$i18n.tc('component.provider.label'), this.name]) : undefined
+      },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.provider.label')]) : undefined
       },
@@ -436,6 +445,16 @@
     async created () {
       this.reload()
 
+      if (this.initMessageCode) {
+        if (this.initMessageCode.includes('success')) {
+          this.successMsg = this.initMessageCode
+        } else if (this.initMessageCode.includes('failure')) {
+          this.errorMsg = this.initMessageCode
+        } else if (this.initMessageCode.includes('warning')) {
+          this.warningMsg = this.initMessageCode
+        }
+      }
+
       if (this.loggedIn) {
         this.tabsView = accountModel.tabbedView()
       }
@@ -446,9 +465,6 @@
       },
       async update () {
         var isUpdate = !!this.id
-        this.successMsg = undefined
-        this.errorMsg = undefined
-
         const activeGroup = accountModel.activeGroup()
 
         const data = {
@@ -468,13 +484,11 @@
         // todo: check error code
         if (response?.status < 400) {
           if (isUpdate) {
-            this.pendingChanges = {}
             this.reload()
+            this.successMsg = 'success.update'
           } else {
-            this.$router.push('/provider/' + response.data?.id)
+            this.$router.push({ name: '/provider', params: { id: response.data?.id, initMessageCode: 'success.create' } })
           }
-
-          this.successMsg = this.isEdit ? 'success.update' : 'success.create'
         } else {
           if (response.status === 409) {
             this.errorMsg = 'error.update.409'
@@ -490,7 +504,9 @@
         if (this.isEdit) {
           loading.startLoading()
           this.errors = {}
+          this.pendingChanges = {}
           this.successMsg = undefined
+          this.warningMsg = undefined
           this.errorMsg = undefined
 
           const result = await this.catchError({

@@ -465,6 +465,11 @@
         required: false,
         default: undefined
       },
+      initMessageCode: {
+        type: String,
+        required: false,
+        default: undefined
+      }
     },
     data () {
       return {
@@ -510,6 +515,7 @@
         updateUrl: undefined,
         deleteUrl: undefined,
         successMsg: undefined,
+        warningMsg: undefined,
         errorMsg: undefined,
         allTypes: [
           { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
@@ -550,6 +556,9 @@
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.typeDisplay, this.allNames.name]) : undefined
       },
+      localWarningMessage () {
+        return this.warningMsg ? this.$i18n.t(this.warningMsg, [this.typeDisplay, this.allNames.name]) : undefined
+      },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.typeDisplay]) : undefined
       },
@@ -586,6 +595,16 @@
       }
 
       this.reload()
+
+      if (this.initMessageCode) {
+        if (this.initMessageCode.includes('success')) {
+          this.successMsg = this.initMessageCode
+        } else if (this.initMessageCode.includes('failure')) {
+          this.errorMsg = this.initMessageCode
+        } else if (this.initMessageCode.includes('warning')) {
+          this.warningMsg = this.initMessageCode
+        }
+      }
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -636,13 +655,11 @@
             this.errors.history = hresp.data.error
           } else {
             if (isUpdate) {
-              this.pendingChanges = {}
               this.reload()
+              this.successMsg = 'success.update'
             } else {
-              this.$router.push('/title/' + response.data?.id)
+              this.$router.push({ name: '/title', params: { id: response.data?.id, initMessageCode: 'success.create' } })
             }
-
-            this.successMsg = this.isEdit ? 'success.update' : 'success.create'
           }
         } else {
           if (response.status === 409) {
@@ -660,6 +677,12 @@
       async reload () {
         if (this.isEdit) {
           loading.startLoading()
+          this.errors = {}
+          this.pendingChanges = {}
+          this.successMsg = undefined
+          this.warningMsg = undefined
+          this.errorMsg = undefined
+
           const result = await this.catchError({
             promise: titleServices.getTitle(this.id, this.cancelToken.token),
             instance: this

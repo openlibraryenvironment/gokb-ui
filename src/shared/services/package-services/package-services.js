@@ -24,7 +24,14 @@ const api = (baseServices) => ({
       data,
     }, cancelToken)
   },
-  ingestKbart (id, file, parameters ,cancelToken) {
+  triggerSourceUpdate (id, parameters, cancelToken) {
+    const urlParameter = baseServices.createQueryParameters(parameters)
+    return baseServices.request({
+      method: 'GET',
+      url: process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}/triggerSourceUpdate?${urlParameter}`
+    }, cancelToken)
+  },
+  ingestKbart (id, file, parameters, cancelToken) {
     const data = new FormData()
     const urlParameter = baseServices.createQueryParameters(parameters)
 

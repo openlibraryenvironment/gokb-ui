@@ -23,12 +23,26 @@
         {{ localErrorMessage }}
       </v-alert>
     </span>
-    <span v-if="kbartResult === 'success' || kbartStatus === 'success'">
+    <span v-if="kbartResult === 'success'">
       <v-alert
         type="success"
         dismissible
       >
-        {{ $t('kbart.transmission.started') }}
+        {{ $t('kbart.transmission.success') }}
+      </v-alert>
+    </span>
+    <span v-else-if="kbartResult === 'started'">
+      <v-alert
+        type="info"
+        dismissible
+      >
+        <span>
+          {{ $t('kbart.transmission.started') }}
+          <v-progress-linear
+            v-if="kbartProgress"
+            v-model="kbartProgress"
+          />
+        </span>
       </v-alert>
     </span>
     <span v-else-if="kbartResult === 'error' || kbartStatus === 'error'">
@@ -563,6 +577,7 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import { HOME_ROUTE } from '@/router/route-paths'
   import packageServices from '@/shared/services/package-services'
+  import jobServices from '@/shared/services/job-services'
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
@@ -614,6 +629,16 @@
         type: String,
         required: false,
         default: undefined
+      },
+      kbartJob: {
+        type: String,
+        required: false,
+        default: undefined
+      },
+      initMessageCode: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -633,6 +658,7 @@
         lastUpdated: undefined,
         listVerifiedDate: undefined,
         dateCreated: undefined,
+        kbartProgress: undefined,
         providerTitleNamespace: undefined,
         newTipps: [],
         packageItem: {
@@ -665,6 +691,7 @@
           { id: 'mixed', text: 'Gemischt' },
         ],
         successMsg: undefined,
+        warningMsg: undefined,
         errorMsg: undefined,
         kbartResult: undefined,
         titlesHeader: TITLES_HEADER,
@@ -742,6 +769,9 @@
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
       },
+      localWarningMessage () {
+        return this.warningMsg ? this.$i18n.t(this.warningMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
+      },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.package.label')]) : undefined
       },
@@ -782,6 +812,21 @@
     },
     async created () {
       this.reload()
+
+      if (this.initMessageCode) {
+        if (this.initMessageCode.includes('success')) {
+          this.successMsg = this.initMessageCode
+        } else if (this.initMessageCode.includes('failure')) {
+          this.errorMsg = this.initMessageCode
+        } else if (this.initMessageCode.includes('warning')) {
+          this.warningMsg = this.initMessageCode
+        }
+      }
+
+      if (this.kbartJob) {
+        this.kbartResult = this.kbartStatus
+        this.loadJobStatus(this.kbartJob)
+      }
     },
     methods: {
       go2NextStep () {
@@ -876,10 +921,11 @@
             fixed: utils.asYesNo(this.packageItem.fixed),
             nominalPlatform: this.packageItem.nominalPlatform?.id,
             provider: this.packageItem.provider?.id,
-            activeGroup: this.activeGroup
+            activeGroup: this.activeGroup,
+            urlUpdate: this.urlU
           }
 
-          if (this.kbart || this.urlUpdate) {
+          if (this.kbart) {
             newPackage.generateToken = true
           }
 
@@ -892,10 +938,11 @@
             this.successMsg = this.isEdit ? 'success.update' : 'success.create'
             this.packageItem.id = response.data.id
 
-            if (this.kbart || this.urlUpdate) {
+            if (this.kbart) {
               const kbartPars = {
                 activeGroup: this.activeGroup?.id,
-                titleIdNamespace: this.sourceItem?.targetNamespace?.id
+                titleIdNamespace: this.sourceItem?.targetNamespace?.id,
+                addOnly: this.kbart?.addOnly || false
               }
               const kbartResult = await this.catchError({
                 promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, kbartPars, this.cancelToken.token),
@@ -903,7 +950,7 @@
               })
 
               if (kbartResult.status < 400) {
-                this.kbartResult = 'success'
+                this.kbartResult = 'started'
               } else {
                 this.kbartResult = 'error'
               }
@@ -914,15 +961,37 @@
               if (isUpdate) {
                 this.step = 1
                 this.reload()
-              } else {
-                loading.stopLoading()
-                this.kbartResult = 'error'
-                if (isUpdate) {
-                  this.step = 1
-                  this.reload()
-                } else {
-                  this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
+                if (kbartResult?.data?.jobId) {
+                  this.loadJobStatus(kbartResult?.data?.jobId)
                 }
+              } else {
+                this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartStatus: this.kbartResult, kbartJob: kbartResult?.data?.jobId, initMessageCode: 'success.create' } })
+              }
+            } else if (this.urlUpdate) {
+              const updateParams = {
+                activeGroup: this.activeGroup?.id
+              }
+              const sourceUpdateResult = await this.catchError({
+                promise: packageServices.triggerSourceUpdate(response.data.id, updateParams, this.cancelToken.token),
+                instance: this
+              })
+
+              if (sourceUpdateResult.status < 400) {
+                this.kbartResult = 'started'
+              } else {
+                this.kbartResult = 'error'
+              }
+
+              loading.stopLoading()
+
+              if (isUpdate) {
+                this.step = 1
+                this.reload()
+                if (sourceUpdateResult?.data?.jobId) {
+                  this.loadJobStatus(sourceUpdateResult?.data?.jobId)
+                }
+              } else {
+                this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartStatus: this.kbartResult, kbartJob: sourceUpdateResult?.data?.jobId, initMessageCode: 'success.create' } })
               }
             } else {
               loading.stopLoading()
@@ -931,7 +1000,7 @@
                 this.step = 1
                 this.reload()
               } else {
-                this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
+                this.$router.push({ name: '/package/', params: { id: this.packageItem.id, initMessageCode: 'success.create' } })
               }
             }
           } else {
@@ -952,6 +1021,11 @@
         if (this.isEdit) {
           loading.startLoading()
           this.newTipps = []
+          this.errors = {}
+          this.successMsg = undefined
+          this.warningMsg = undefined
+          this.errorMsg = undefined
+
           const result = await this.catchError({
             promise: packageServices.getPackage(this.id, this.cancelToken.token),
             instance: this
@@ -995,6 +1069,36 @@
         } else {
           if (this.loggedIn && this.activeGroup) {
             this.allCuratoryGroups = [this.activeGroup]
+          }
+        }
+      },
+      async loadJobStatus (jobId) {
+        var finished = false
+
+        while (!finished) {
+          const jobResult = await this.catchError({
+            promise: jobServices.getJob(jobId, false, this.cancelToken.token),
+            instance: this
+          })
+
+          if (jobResult.status < 400) {
+            this.kbartProgress = jobResult.data.progress
+
+            if (jobResult.data.finished) {
+              this.kbartProgress = undefined
+
+              if (jobResult.data.status === 'ERROR') {
+                this.kbartResult = 'error'
+              } else {
+                this.kbartResult = 'success'
+              }
+              finished = true
+            } else {
+              await this.wait(500)
+            }
+          } else {
+            this.kbartResult = 'error'
+            finished = true
           }
         }
       },

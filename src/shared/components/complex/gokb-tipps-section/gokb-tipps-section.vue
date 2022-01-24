@@ -70,6 +70,16 @@
             </template>
           </v-list>
         </v-menu>
+        <v-btn
+          icon
+          :title="$t('btn.refresh')"
+          style="margin-top:-4px"
+          @click="fetchTipps"
+        >
+          <v-icon>
+            mdi-refresh
+          </v-icon>
+        </v-btn>
       </template>
       <gokb-confirmation-popup
         v-model="confirmationPopUpVisible"
@@ -523,7 +533,7 @@
           const result = await this.catchError({
             promise: searchService.getTipps(reqId, {
               ...(searchParams || {}),
-              offset: (options ? (options.page - 1) * this.options.itemsPerPage : 0),
+              offset: ((options?.page || this.options.page) - 1) * this.options.itemsPerPage,
               limit: this.options.itemsPerPage
             }, this.cancelToken.token),
             instance: this
