@@ -166,6 +166,7 @@
     }
   },
   "validation": {
+    "valueNotUnique": "Dieser Wert wird bereits verwendet.",
     "missingValue": "Bitte füllen Sie dieses Feld aus.",
     "missingSelection": "Bitte wählen Sie einen Wert aus der Liste aus.",
     "urlNotUnique": "Diese URL wird bereits verwendet.",

@@ -165,6 +165,7 @@
     }
   },
   "validation": {
+    "valueNotUnique": "This value is already in use.",
     "missingValue": "Please fill this field.",
     "missingSelection": "Please select a value from the list.",
     "missingName": "Please provide a name.",

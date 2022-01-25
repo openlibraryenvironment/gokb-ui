@@ -164,18 +164,23 @@
         })
 
         if (response?.status < 300) {
-          const updatedObj = {
-            id: response.data.id,
-            name: response.data.name,
-            primaryUrl: response.data.primaryUrl,
-            provider: response.data.provider,
-            status: response.data.status,
-            version: response.data.version,
-            isDeletable: true
-          }
+          if (response.data?.error) {
+            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+            this.errors = response?.data?.error
+          } else {
+            const updatedObj = {
+              id: response.data.id,
+              name: response.data.name,
+              primaryUrl: response.data.primaryUrl,
+              provider: response.data.provider,
+              status: response.data.status,
+              version: response.data.version,
+              isDeletable: true
+            }
 
-          this.$emit('edit', updatedObj)
-          this.close()
+            this.$emit('edit', updatedObj)
+            this.close()
+          }
         } else {
           if (response?.status === 409) {
             this.errorMsg = 'error.update.409'

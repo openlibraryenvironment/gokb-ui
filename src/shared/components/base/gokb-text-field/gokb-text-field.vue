@@ -129,7 +129,7 @@
         return this.$refs.textField.valid
       },
       apiErrorMessages () {
-        return this.apiErrors?.length > 0 ? this.apiErrors.map(e => (e.messageCode ? this.$i18n.t(e.messageCode) : (e.matches ? this.$i18n.t() : e.message))) : undefined
+        return this.apiErrors?.length > 0 ? this.apiErrors.map(e => (e.messageCode ? this.$i18n.t(e.messageCode) : (e.matches ? this.$i18n.t('validation.valueNotUnique') : e.message))) : undefined
       }
     },
     methods: {
