@@ -40,6 +40,25 @@
         />
       </v-col>
     </v-row>
+    <v-row
+      v-for="c in conflictLinks"
+      :key="c.id"
+      dense
+    >
+      <v-col v-if="c.id">
+        {{ $t('component.platform.conflict.noProvider', [c.id]) }}
+      </v-col>
+      <v-col v-else>
+        {{ $t('component.platform.conflict.' + c.type, [c.platformName]) }}
+        {{ $t('component.platform.conflict.providerLink') }}
+        <router-link
+          :style="{ color: 'primary' }"
+          :to="{ name: '/provider', params: { 'id': c.id } }"
+        >
+          {{ c.name }}
+        </router-link>
+      </v-col>
+    </v-row>
 
     <template #buttons>
       <v-spacer />
@@ -83,6 +102,7 @@
       return {
         errorMsg: undefined,
         errors: {},
+        conflictLinks: [],
         updateUrl: undefined,
         platform: {
           id: undefined,
@@ -141,8 +161,22 @@
       close () {
         this.localValue = false
       },
+      async fetch (pid) {
+        const response = await this.catchError({
+          promise: platformServices.getPlatform(pid, this.cancelToken.token),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          return response.data
+        } else {
+          return undefined
+          // Something went wrong
+        }
+      },
       async save () {
         this.errors = {}
+        this.conflictLinks = []
 
         const activeGroup = accountModel.activeGroup()
 
@@ -165,8 +199,7 @@
 
         if (response?.status < 300) {
           if (response.data?.error) {
-            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
-            this.errors = response?.data?.error
+            this.handleApiErrors(response.data.error)
           } else {
             const updatedObj = {
               id: response.data.id,
@@ -187,11 +220,56 @@
             this.errors = response?.data?.error
           } else if (response?.status === 500) {
             this.errorMsg = 'error.general.500'
-          } else {
-            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
-            this.errors = response?.data?.error
+          } else if (response.data?.error) {
+            this.handleApiErrors(response.data.error)
           }
         }
+      },
+      async handleApiErrors (errors) {
+        var conflictProviders = {}
+        this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+
+        if (errors.name) {
+          for (const en of errors.name) {
+            if (en.matches) {
+              const fetchedPlt = await this.fetch(en.matches)
+
+              if (fetchedPlt.provider) {
+                conflictProviders[fetchedPlt.provider.id] = { id: fetchedPlt.provider.id, name: fetchedPlt.provider.name, platformName: fetchedPlt.name, type: 'name' }
+              } else {
+                conflictProviders.unknown = { platformName: fetchedPlt.name, platformId: fetchedPlt.id }
+              }
+            }
+          }
+        }
+
+        if (errors.primaryUrl) {
+          for (const eu of errors.primaryUrl) {
+            if (eu.matches) {
+              const fetchedPlt = await this.fetch(eu.matches)
+
+              if (fetchedPlt.provider) {
+                if (conflictProviders[fetchedPlt.provider.id]) {
+                  conflictProviders[fetchedPlt.provider.id].type = 'general'
+                } else {
+                  conflictProviders[fetchedPlt.provider.id] = { id: fetchedPlt.provider.id, name: fetchedPlt.provider.name, platformName: fetchedPlt.name, type: 'url' }
+                }
+              } else {
+                if (conflictProviders.unknown) {
+                  conflictProviders.unknown.type = 'general'
+                } else {
+                  conflictProviders.unknown = { platformName: fetchedPlt.name, platformId: fetchedPlt.id }
+                }
+              }
+            }
+          }
+        }
+
+        for (const cp in conflictProviders) {
+          this.conflictLinks.push(conflictProviders[cp])
+        }
+
+        this.errors = errors
       }
     }
   }
