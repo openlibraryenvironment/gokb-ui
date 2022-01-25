@@ -62,8 +62,6 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import platformServices from '@/shared/services/platform-services'
-  import searchServices from '@/shared/services/search-services'
-  import { createCancelToken } from '@/shared/services/http'
   import 'vue-json-pretty/lib/styles.css'
 
   export default {
@@ -143,92 +141,51 @@
       close () {
         this.localValue = false
       },
-      async fetch (pid) {
-        const {
-          data: {
-            name,
-            primaryUrl,
-            _links
-          }
-        } = await this.catchError({
-          promise: platformServices.getPlatform(pid, this.cancelToken.token),
-          instance: this
-        })
-        this.platform.name = name
-        this.platform.primaryUrl = primaryUrl
-        this.updateUrl = _links?.update?.href || undefined
-      },
-      async checkForDupes () {
-        this.cancelToken = createCancelToken()
-        var response = await searchServices('rest/platforms').search({
-          name: this.platform.name,
-          status: 'Current',
-          es: 'true',
-          max: 20
-        }, this.cancelToken.token)
-
-        if (response?.status < 400) {
-          var dupes = response.data?.data.filter(res => (res.name.toLowerCase() === this.platform.name.toLowerCase() && (!this.platform.id || this.platform.id !== res.id)))
-
-          if (dupes?.length > 0) {
-            return true
-          } else {
-            return false
-          }
-        } else {
-          return false
-        }
-      },
       async save () {
         this.errors = {}
-        const dupesFound = this.checkForDupes()
 
-        if (!dupesFound) {
-          const activeGroup = accountModel.activeGroup()
+        const activeGroup = accountModel.activeGroup()
 
-          const newPlatform = {
-            id: this.platform.id,
-            name: this.platform.name,
-            primaryUrl: this.platform.primaryUrl,
-            version: this.version,
-            activeGroup
+        const newPlatform = {
+          id: this.platform.id,
+          name: this.platform.name,
+          primaryUrl: this.platform.primaryUrl,
+          version: this.version,
+          activeGroup
+        }
+
+        if (!this.isEdit) {
+          newPlatform.provider = this.pprops?.providerId
+        }
+
+        const response = await this.catchError({
+          promise: platformServices.createOrUpdatePlatform(newPlatform, this.cancelToken.token),
+          instance: this
+        })
+
+        if (response?.status < 300) {
+          const updatedObj = {
+            id: response.data.id,
+            name: response.data.name,
+            primaryUrl: response.data.primaryUrl,
+            provider: response.data.provider,
+            status: response.data.status,
+            version: response.data.version,
+            isDeletable: true
           }
 
-          if (!this.isEdit) {
-            newPlatform.provider = this.pprops?.providerId
-          }
-
-          const response = await this.catchError({
-            promise: platformServices.createOrUpdatePlatform(newPlatform, this.cancelToken.token),
-            instance: this
-          })
-
-          if (response?.status < 300) {
-            const updatedObj = {
-              id: response.data.id,
-              name: response.data.name,
-              primaryUrl: response.data.primaryUrl,
-              provider: response.data.provider,
-              status: response.data.status,
-              version: response.data.version,
-              isDeletable: true
-            }
-
-            this.$emit('edit', updatedObj)
-            this.close()
-          } else {
-            if (response?.status === 409) {
-              this.errorMsg = 'error.update.409'
-              this.errors = response?.data?.error
-            } else if (response?.status === 500) {
-              this.errorMsg = 'error.general.500'
-            } else {
-              this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
-              this.errors = response?.data?.error
-            }
-          }
+          this.$emit('edit', updatedObj)
+          this.close()
         } else {
-          this.errorMsg = 'error.general.name.notUnique'
+          if (response?.status === 409) {
+            this.errorMsg = 'error.update.409'
+            this.errors = response?.data?.error
+          } else if (response?.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else {
+            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+            this.errors = response?.data?.error
+          }
         }
       }
     }

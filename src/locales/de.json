@@ -168,6 +168,7 @@
   "validation": {
     "missingValue": "Bitte füllen Sie dieses Feld aus.",
     "missingSelection": "Bitte wählen Sie einen Wert aus der Liste aus.",
+    "urlNotUnique": "Diese URL wird bereits verwendet.",
     "missingName": "Bitte geben Sie einen Namen an.",
     "missingEmail": "Bitte geben Sie eine gültige E-Mail-Adresse an.",
     "urlForm": "Bitte geben Sie eine gültige URL an.",
