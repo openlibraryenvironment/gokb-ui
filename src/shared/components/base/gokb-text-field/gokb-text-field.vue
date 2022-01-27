@@ -12,6 +12,7 @@
     :rules="rules"
     :type="type"
     :error="!!apiErrors"
+    :error-messages="apiErrorMessages"
     maxlength="255"
     :placeholder="placeholder"
     :append-icon="appendIcon"
@@ -122,10 +123,13 @@
         },
         set (localValue) {
           this.$emit('input', localValue)
-        }
+        },
       },
       isValid () {
         return this.$refs.textField.valid
+      },
+      apiErrorMessages () {
+        return this.apiErrors?.length > 0 ? this.apiErrors.map(e => (e.messageCode ? this.$i18n.t(e.messageCode) : (e.matches ? this.$i18n.t('validation.valueNotUnique') : e.message))) : undefined
       }
     },
     methods: {

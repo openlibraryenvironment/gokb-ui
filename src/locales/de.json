@@ -166,8 +166,10 @@
     }
   },
   "validation": {
+    "valueNotUnique": "Dieser Wert wird bereits verwendet.",
     "missingValue": "Bitte füllen Sie dieses Feld aus.",
     "missingSelection": "Bitte wählen Sie einen Wert aus der Liste aus.",
+    "urlNotUnique": "Diese URL wird bereits verwendet.",
     "missingName": "Bitte geben Sie einen Namen an.",
     "missingEmail": "Bitte geben Sie eine gültige E-Mail-Adresse an.",
     "urlForm": "Bitte geben Sie eine gültige URL an.",
@@ -742,7 +744,14 @@
     "platform": {
       "label": "Plattform | Plattformen",
       "name": "Plattform-Name",
-      "url": "Plattform-URL"
+      "url": "Plattform-URL",
+      "conflict": {
+        "providerLink": "Der Provider für diese Plattform ist:",
+        "url": "Die angegebene URL wird bereits von der Platform {0} verwendet. ",
+        "name": "Der angegebene Name wird bereits verwendet. ",
+        "general": "Die angegebenen Werte werden bereits in einer anderen Plattform verwendet. ",
+        "noProvider": "Die Plattform konnte nicht angelegt werden, da ein Konflikt mit einer anderen Plattform vorliegt (ID {0}). Bitte melden Sie dies an einen Administrator."
+      }
     },
     "provider": {
       "label": "Anbieter | Anbieter",

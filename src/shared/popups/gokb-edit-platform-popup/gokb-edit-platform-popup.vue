@@ -40,6 +40,25 @@
         />
       </v-col>
     </v-row>
+    <v-row
+      v-for="c in conflictLinks"
+      :key="c.id"
+      dense
+    >
+      <v-col v-if="c.id">
+        {{ $t('component.platform.conflict.noProvider', [c.id]) }}
+      </v-col>
+      <v-col v-else>
+        {{ $t('component.platform.conflict.' + c.type, [c.platformName]) }}
+        {{ $t('component.platform.conflict.providerLink') }}
+        <router-link
+          :style="{ color: 'primary' }"
+          :to="{ name: '/provider', params: { 'id': c.id } }"
+        >
+          {{ c.name }}
+        </router-link>
+      </v-col>
+    </v-row>
 
     <template #buttons>
       <v-spacer />
@@ -62,8 +81,6 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import platformServices from '@/shared/services/platform-services'
-  import searchServices from '@/shared/services/search-services'
-  import { createCancelToken } from '@/shared/services/http'
   import 'vue-json-pretty/lib/styles.css'
 
   export default {
@@ -85,6 +102,7 @@
       return {
         errorMsg: undefined,
         errors: {},
+        conflictLinks: [],
         updateUrl: undefined,
         platform: {
           id: undefined,
@@ -144,66 +162,45 @@
         this.localValue = false
       },
       async fetch (pid) {
-        const {
-          data: {
-            name,
-            primaryUrl,
-            _links
-          }
-        } = await this.catchError({
+        const response = await this.catchError({
           promise: platformServices.getPlatform(pid, this.cancelToken.token),
           instance: this
         })
-        this.platform.name = name
-        this.platform.primaryUrl = primaryUrl
-        this.updateUrl = _links?.update?.href || undefined
-      },
-      async checkForDupes () {
-        this.cancelToken = createCancelToken()
-        var response = await searchServices('rest/platforms').search({
-          name: this.platform.name,
-          status: 'Current',
-          es: 'true',
-          max: 20
-        }, this.cancelToken.token)
 
-        if (response?.status < 400) {
-          var dupes = response.data?.data.filter(res => (res.name.toLowerCase() === this.platform.name.toLowerCase() && (!this.platform.id || this.platform.id !== res.id)))
-
-          if (dupes?.length > 0) {
-            return true
-          } else {
-            return false
-          }
+        if (response.status === 200) {
+          return response.data
         } else {
-          return false
+          return undefined
+          // Something went wrong
         }
       },
       async save () {
         this.errors = {}
-        const dupesFound = this.checkForDupes()
+        this.conflictLinks = []
 
-        if (!dupesFound) {
-          const activeGroup = accountModel.activeGroup()
+        const activeGroup = accountModel.activeGroup()
 
-          const newPlatform = {
-            id: this.platform.id,
-            name: this.platform.name,
-            primaryUrl: this.platform.primaryUrl,
-            version: this.version,
-            activeGroup
-          }
+        const newPlatform = {
+          id: this.platform.id,
+          name: this.platform.name,
+          primaryUrl: this.platform.primaryUrl,
+          version: this.version,
+          activeGroup
+        }
 
-          if (!this.isEdit) {
-            newPlatform.provider = this.pprops?.providerId
-          }
+        if (!this.isEdit) {
+          newPlatform.provider = this.pprops?.providerId
+        }
 
-          const response = await this.catchError({
-            promise: platformServices.createOrUpdatePlatform(newPlatform, this.cancelToken.token),
-            instance: this
-          })
+        const response = await this.catchError({
+          promise: platformServices.createOrUpdatePlatform(newPlatform, this.cancelToken.token),
+          instance: this
+        })
 
-          if (response?.status < 300) {
+        if (response?.status < 300) {
+          if (response.data?.error) {
+            this.handleApiErrors(response.data.error)
+          } else {
             const updatedObj = {
               id: response.data.id,
               name: response.data.name,
@@ -216,20 +213,63 @@
 
             this.$emit('edit', updatedObj)
             this.close()
-          } else {
-            if (response?.status === 409) {
-              this.errorMsg = 'error.update.409'
-              this.errors = response?.data?.error
-            } else if (response?.status === 500) {
-              this.errorMsg = 'error.general.500'
-            } else {
-              this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
-              this.errors = response?.data?.error
-            }
           }
         } else {
-          this.errorMsg = 'error.general.name.notUnique'
+          if (response?.status === 409) {
+            this.errorMsg = 'error.update.409'
+            this.errors = response?.data?.error
+          } else if (response?.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else if (response.data?.error) {
+            this.handleApiErrors(response.data.error)
+          }
         }
+      },
+      async handleApiErrors (errors) {
+        var conflictProviders = {}
+        this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+
+        if (errors.name) {
+          for (const en of errors.name) {
+            if (en.matches) {
+              const fetchedPlt = await this.fetch(en.matches)
+
+              if (fetchedPlt.provider) {
+                conflictProviders[fetchedPlt.provider.id] = { id: fetchedPlt.provider.id, name: fetchedPlt.provider.name, platformName: fetchedPlt.name, type: 'name' }
+              } else {
+                conflictProviders.unknown = { platformName: fetchedPlt.name, platformId: fetchedPlt.id }
+              }
+            }
+          }
+        }
+
+        if (errors.primaryUrl) {
+          for (const eu of errors.primaryUrl) {
+            if (eu.matches) {
+              const fetchedPlt = await this.fetch(eu.matches)
+
+              if (fetchedPlt.provider) {
+                if (conflictProviders[fetchedPlt.provider.id]) {
+                  conflictProviders[fetchedPlt.provider.id].type = 'general'
+                } else {
+                  conflictProviders[fetchedPlt.provider.id] = { id: fetchedPlt.provider.id, name: fetchedPlt.provider.name, platformName: fetchedPlt.name, type: 'url' }
+                }
+              } else {
+                if (conflictProviders.unknown) {
+                  conflictProviders.unknown.type = 'general'
+                } else {
+                  conflictProviders.unknown = { platformName: fetchedPlt.name, platformId: fetchedPlt.id }
+                }
+              }
+            }
+          }
+        }
+
+        for (const cp in conflictProviders) {
+          this.conflictLinks.push(conflictProviders[cp])
+        }
+
+        this.errors = errors
       }
     }
   }

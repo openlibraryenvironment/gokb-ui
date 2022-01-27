@@ -165,10 +165,12 @@
     }
   },
   "validation": {
+    "valueNotUnique": "This value is already in use.",
     "missingValue": "Please fill this field.",
     "missingSelection": "Please select a value from the list.",
     "missingName": "Please provide a name.",
     "missingEmail": "Please provide a valid email address.",
+    "urlNotUnique": "This URL is already in use",
     "nameNotUnique": "This name is already in use.",
     "urlForm": "Please provide a valid URL.",
     "numberFormat": "Please enter a number.",
@@ -742,7 +744,14 @@
     "platform": {
       "label": "Platform | Platforms",
       "name": "Platform name",
-      "url": "Platform URL"
+      "url": "Platform URL",
+      "conflict": {
+        "providerLink": "The provider for this platform is:",
+        "url": "This URL is already in use for platform {0}. ",
+        "name": "This Name is already in use in another platform. ",
+        "general": "These values are already in use in another platform. ",
+        "noProvider": "The platform could not be created because of conflicts with another platform in the system (ID {0}). Please report this to an administrator."
+      }
     },
     "provider": {
       "label": "Provider | Providers",
