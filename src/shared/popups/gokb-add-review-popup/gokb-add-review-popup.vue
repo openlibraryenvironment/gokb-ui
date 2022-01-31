@@ -480,7 +480,6 @@
           instance: this
         })
           .then(response => {
-            console.log(response)
             this.escalatable = response.data.isEscalatable
           })
       },
@@ -490,7 +489,6 @@
           instance: this
         })
           .then(response => {
-            console.log(response)
             this.deescalatable = response.data.isDeescalatable
           })
       },

@@ -217,7 +217,8 @@
       "RejectTIWithoutIdentifier": "Reject Titles without Identifier",
       "PlatformCleanup": "Platform Cleanup",
       "RecalculateStatistics": "Recalculate Statistics",
-      "PackageUpdateTipps": "KBART Update"
+      "PackageUpdateTipps": "KBART Update",
+      "KBARTIngest": "KBART Import"
     }
   },
   "kbart": {
@@ -239,7 +240,12 @@
     "propId": {
       "label": "Namensraum für title_id"
     },
-    "addOnly": "Teil-Update",
+    "addOnly": {
+      "label": "Teil-Update"
+    },
+    "dryRun": {
+      "label": "Testdurchlauf"
+    },
     "row": {
       "label": "Zeile | Zeilen"
     },
@@ -247,6 +253,7 @@
       "encoding": "Diese Datei ist nicht in UTF-8 codiert. Bitte beheben Sie dies vor dem Import!",
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
       "missingCols": "Fehlende Spalten: {0}",
+      "replacementChars": "Die Datei enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
       "illegalVal": "Wert {0} ist fehlerhaft!",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",

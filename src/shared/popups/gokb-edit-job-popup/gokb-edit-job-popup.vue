@@ -59,7 +59,7 @@
             v-for="(m, idx) in selectedItem.messages"
             :key="idx"
           >
-            {{ m.message }}
+            {{ (typeof m === String ? m : m.message) }}
           </li>
         </ul>
       </v-col>
@@ -137,7 +137,7 @@
       }
     },
     async created () {
-      if (this.selected.archived) {
+      if (this.selected) {
         const componentRoutes = {
           package: '/package',
           org: '/provider',
@@ -150,7 +150,7 @@
         this.id = this.selected.id
 
         const result = await this.catchError({
-          promise: jobServices.getJob(this.id, true, this.cancelToken.token),
+          promise: jobServices.getJob(this.id, this.selected.archived, this.cancelToken.token),
           instance: this
         })
 
@@ -162,12 +162,22 @@
         this.selectedItem.type = record.type
         this.selectedItem.description = record.description
         this.selectedItem.status = record.status
-        this.selectedItem.startTime = new Date(record.startTime).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
-        this.selectedItem.endTime = new Date(record.endTime).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
-        this.selectedItem.results = record.job_result
-        this.selectedItem.messages = record.job_result ? [{ message: record.job_result.message }] : []
-      } else {
-        this.selectedItem = this.selected
+        this.selectedItem.startTime = new Date(record.startTime).toLocaleString('sv')
+        this.selectedItem.endTime = new Date(record.endTime).toLocaleString('sv')
+
+        if (record.finished) {
+          this.selectedItem.results = record.job_result
+        }
+
+        if (record.messages) {
+          this.selectedItem.messages = record.messages
+        } else if (record.job_result) {
+          if (record.job_result.message) {
+            this.selectedItem.messages = [record.job_result.message]
+          } else if (record.job_result.messages) {
+            this.selectedItem.messages = record.job_result.messages
+          }
+        }
       }
     },
     methods: {

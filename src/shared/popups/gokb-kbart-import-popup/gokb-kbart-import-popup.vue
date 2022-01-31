@@ -18,7 +18,11 @@
       />
       <gokb-checkbox-field
         v-model="options.addOnly"
-        :label="$t('kbart.addOnly')"
+        :label="$t('kbart.addOnly.label')"
+      />
+      <gokb-checkbox-field
+        v-model="options.dryRun"
+        :label="$t('kbart.dryRun.label')"
       />
       <v-progress-linear
         height="25"
@@ -266,7 +270,8 @@
           selectedFile: undefined,
           selectedNamespace: undefined,
           lineCount: undefined,
-          addOnly: false
+          addOnly: false,
+          dryRun: false
         }
       }
     },

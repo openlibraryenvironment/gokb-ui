@@ -216,7 +216,8 @@
       "RejectTIWithoutIdentifier": "Reject Titles without Identifier",
       "PlatformCleanup": "Platform Cleanup",
       "RecalculateStatistics": "Recalculate Statistics",
-      "PackageUpdateTipps": "Package KBART Update"
+      "PackageUpdateTipps": "Package KBART Update",
+      "KBARTIngest": "KBART Import"
     }
   },
   "kbart": {
@@ -238,7 +239,12 @@
     "propId": {
       "label": "Namespace for title_id values"
     },
-    "addOnly": "Partial Update",
+    "addOnly": {
+      "label": "Partial Update"
+    },
+    "dryRun": {
+      "label": "Dry Run"
+    },
     "row": {
       "label": "Row | Rows"
     },
@@ -246,6 +252,7 @@
       "encoding": "The encoding of this file is not UTF-8. Please correct this before importing!",
       "missingVal": "Missing value in column '{0}'!",
       "missingCols": "Missing columns: {0}",
+      "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "illegalVal": "Value {0} is not valid!",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",

@@ -942,7 +942,8 @@
               const kbartPars = {
                 activeGroup: this.activeGroup?.id,
                 titleIdNamespace: this.sourceItem?.targetNamespace?.id,
-                addOnly: this.kbart?.addOnly || false
+                dryRun: this.kbart.dryRun,
+                addOnly: this.kbart.addOnly
               }
               const kbartResult = await this.catchError({
                 promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, kbartPars, this.cancelToken.token),
