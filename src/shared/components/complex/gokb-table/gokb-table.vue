@@ -69,7 +69,7 @@
           :items="items"
           :pprops="item.popup.otherProps"
           :selected="item"
-          @edit="editItem(item)"
+          @edit="editItem"
         />
       </template>
       <template #item._pending="{ item }">
@@ -109,7 +109,7 @@
           :items="items"
           :pprops="item.popup.otherProps"
           :selected="item"
-          @edit="editItem(item)"
+          @edit="editItem"
         />
         <div style="white-space:nowrap">
           <v-icon
@@ -172,13 +172,14 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
+  import GokbEditPlatformPopup from '@/shared/popups/gokb-edit-platform-popup'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
   import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
   import GokbCuratoryGroupPopup from '@/shared/popups/gokb-curatory-group-popup'
 
   export default {
     name: 'GokbTable',
-    components: { GokbEditJobPopup, GokbAddTitlePopup, GokbAddReviewPopup, GokbCuratoryGroupPopup },
+    components: { GokbEditJobPopup, GokbEditPlatformPopup, GokbAddTitlePopup, GokbAddReviewPopup, GokbCuratoryGroupPopup },
     extends: BaseComponent,
     props: {
       disabled: {

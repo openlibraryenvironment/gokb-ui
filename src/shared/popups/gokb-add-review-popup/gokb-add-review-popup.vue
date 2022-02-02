@@ -310,6 +310,18 @@
     </v-row>
 
     <template #buttons>
+      <gokb-button
+        v-if="escalatable"
+        @click="escalate"
+      >
+        {{ $t('btn.escalate') }}
+      </gokb-button>
+      <gokb-button
+        v-if="deescalatable"
+        @click="deescalate"
+      >
+        {{ $t('btn.deescalate') }}
+      </gokb-button>
       <v-spacer />
       <gokb-button
         @click="close"
@@ -367,6 +379,8 @@
         successMsg: undefined,
         errorMsg: undefined,
         deleteUrl: undefined,
+        escalatable: false,
+        deescalatable: false,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,
@@ -439,7 +453,7 @@
         return this.$i18n.tc('component.review.label') + (this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
       }
     },
-    async created () {
+    created () {
       this.selectedItem = this.selected
 
       if (this.selected) {
@@ -450,10 +464,55 @@
       if (this.component) {
         this.reviewItem.component = this.component
       }
+
+      if (this.selectedItem) {
+        this.isEscalatable()
+        this.isDeescalatable()
+      }
     },
     methods: {
       close () {
         this.localValue = false
+      },
+      async isEscalatable () {
+        await this.catchError({
+          promise: reviewServices.escalatable(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+          .then(response => {
+            console.log(response)
+            this.escalatable = response.data.isEscalatable
+          })
+      },
+      async isDeescalatable () {
+        await this.catchError({
+          promise: reviewServices.deescalatable(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+          .then(response => {
+            console.log(response)
+            this.deescalatable = response.data.isDeescalatable
+          })
+      },
+      async escalate () {
+        const response = await this.catchError({
+          promise: reviewServices.escalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+        if (response.status === 200) {
+          this.$emit('paginate', response.data)
+          this.close()
+        }
+      },
+      async deescalate () {
+        const response = await this.catchError({
+          promise: reviewServices.deescalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+        if (response.status === 200) {
+          this.$emit('paginate', response.data)
+          this.close()
+        }
       },
       async fetch (rid) {
         const {

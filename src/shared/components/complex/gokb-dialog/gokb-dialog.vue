@@ -5,6 +5,7 @@
     :fullscreen="fullscreen"
     :width="width"
     :retain-focus="false"
+    @keydown="closeWithEscape"
   >
     <v-card class="elevation-12">
       <v-form
@@ -19,6 +20,14 @@
           <v-toolbar-title>
             {{ title }}
           </v-toolbar-title>
+          <v-spacer />
+          <v-btn
+            icon
+            right
+            @click="localValue = false"
+          >
+            <v-icon>close</v-icon>
+          </v-btn>
         </v-toolbar>
         <v-card-text>
           <slot />
@@ -70,6 +79,16 @@
         appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
       }
     },
+    computed: {
+      localValue: {
+        get () {
+          return this.value
+        },
+        set (localValue) {
+          this.$emit('input', localValue)
+        }
+      }
+    },
     mounted () {
       if (this.value) {
         this.$nextTick(() => {
@@ -86,6 +105,11 @@
     methods: {
       doSubmit () {
         this.$emit('submit', this.$refs.form)
+      },
+      closeWithEscape (event) {
+        if (event.key === 'Escape') {
+          this.localValue = false
+        }
       }
     }
   }

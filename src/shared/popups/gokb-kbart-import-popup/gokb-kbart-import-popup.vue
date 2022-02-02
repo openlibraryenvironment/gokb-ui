@@ -359,8 +359,7 @@
         if (csvDataRows.length < 2) {
           return
         } else {
-          const columns = csvDataRows[0].split(/\t/)
-
+          const columns = csvDataRows[0].split(/\t/).map(col => col.toLowerCase())
           columns.forEach(v => {
             this.loadedFile.errors.type[v] = { empty: 0, invalid: 0 }
           })
@@ -401,6 +400,10 @@
                       this.loadedFile.errors.missingColumns.push(key)
                       hasErrors = true
                     }
+
+                    if (hasErrors) {
+                      this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
+                    }
                   })
                 } else if (type === 'monograph') {
                   Object.keys(this.kbartStd.monograph).forEach(key => {
@@ -408,11 +411,14 @@
                       this.loadedFile.errors.missingColumns.push(key)
                       hasErrors = true
                     }
+
+                    if (hasErrors) {
+                      this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
+                    }
                   })
                 }
 
                 if (hasErrors) {
-                  this.error = 'Fatal error!'
                   this.loadedFile.lineStats.error++
                   break
                 } else {

@@ -6,11 +6,11 @@
     :items-total="totalNumberOfItems"
     :errors="!!apiErrors"
   >
-    <gokb-add-item-popup
-      v-if="addPlatformPopupVisible"
-      v-model="addPlatformPopupVisible"
-      :component="{ type: 'GokbPlatformField', name: $tc('component.platform.label') }"
-      @add="addNewPlatform"
+    <gokb-edit-platform-popup
+      v-if="editPlatformPopupVisible"
+      v-model="editPlatformPopupVisible"
+      :provider-id="providerId"
+      @edit="editPlatform"
     />
     <template #buttons>
       <gokb-button
@@ -47,26 +47,27 @@
       :options.sync="options"
       @selected-items="selectedItems = $event"
       @delete-item="confirmDeleteItem"
+      @edit="editPlatform"
     />
   </gokb-section>
 </template>
 
 <script>
-  import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbEditPlatformPopup from '@/shared/popups/gokb-edit-platform-popup'
 
   const ROWS_PER_PAGE = 10
 
   const TABLE_HEADERS = [
-    { text: 'Name', align: 'start', value: 'name', sortable: false, width: '40%' },
-    { text: 'URL', align: 'start', value: 'primaryUrl', sortable: false, width: '60%' },
+    { text: 'Name', align: 'start', value: 'popup', sortable: false, width: '40%' },
+    { text: 'URL', align: 'start', value: 'primaryUrl', sortable: false, width: '60%' }
   ]
 
   export default {
     name: 'GokbPlatformSection',
     components: {
-      GokbAddItemPopup,
-      GokbConfirmationPopup
+      GokbConfirmationPopup,
+      GokbEditPlatformPopup
     },
     props: {
       value: {
@@ -87,18 +88,21 @@
         type: Array,
         required: false,
         default: undefined
-      }
+      },
+      providerId: {
+        type: [String, Number],
+        required: true
+      },
     },
     data () {
       return {
-        addPlatformPopupVisible: false,
         options: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedItems: [],
-
         confirmationPopUpVisible: false,
+        editPlatformPopupVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
@@ -114,7 +118,11 @@
         }
       },
       platforms () {
-        return [...this.value]
+        return [...this.localValue]
+          .map(item => ({
+            ...item,
+            popup: { value: item.name, label: 'platform', type: 'GokbEditPlatformPopup', otherProps: { providerId: this.providerId } }
+          }))
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
@@ -134,9 +142,6 @@
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
-      },
-      tempId () {
-        return 'tempId' + Math.random().toString(36).substr(2, 5)
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
@@ -162,11 +167,26 @@
         this.$emit('update', 'platforms')
       },
       showAddPlatformPopup () {
-        this.addPlatformPopupVisible = true
+        this.editPlatformPopupVisible = true
       },
-      addNewPlatform (value) {
-        this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: this.tempId(), isDeletable: true, unsaved: true })
-        this.$emit('update', 'platforms')
+      editPlatform (value) {
+        const platformMatch = this.localValue.filter(({ id }) => id === value.id)
+        var existingPlatform
+
+        if (platformMatch.length === 1) {
+          existingPlatform = platformMatch[0]
+        }
+
+        if (existingPlatform) {
+          const index = this.localValue.indexOf(existingPlatform)
+          // edit existing platform
+          existingPlatform.name = value.name
+          existingPlatform.primaryUrl = value.primaryUrl
+          this.localValue[index] = existingPlatform
+        } else {
+          // add new platform
+          this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: value.id, isDeletable: true })
+        }
       }
     }
   }

@@ -322,6 +322,8 @@
         this.$router.go(-1)
       },
       async fetch () {
+        this.roles = []
+
         const {
           data: {
             data: {

@@ -8,12 +8,14 @@
     "confirm": "Confirm",
     "create": "Create",
     "darkMode": "Dark Mode",
+    "deescalate": "Deescalate",
     "deactivate": "Deactivate",
     "details": "Details",
     "delete": "Delete",
     "disableSync": "Stop Auto-Refresh",
     "edit": "Edit",
     "enableSync": "Enable Auto-Refresh",
+    "escalate": "Escalate",
     "new": "Add New",
     "next": "Next",
     "prev": "Previous",
@@ -70,6 +72,10 @@
       "edit": "Edit Package Title",
       "create": "Create Package Title",
       "search": "Package Titles"
+    },
+    "platform": {
+      "edit": "Edit Platform",
+      "create": "Create Platform"
     },
     "provider": {
       "edit": "Edit Provider",
@@ -159,10 +165,13 @@
     }
   },
   "validation": {
+    "valueNotUnique": "This value is already in use.",
     "missingValue": "Please fill this field.",
     "missingSelection": "Please select a value from the list.",
     "missingName": "Please provide a name.",
     "missingEmail": "Please provide a valid email address.",
+    "urlNotUnique": "This URL is already in use",
+    "nameNotUnique": "This name is already in use.",
     "urlForm": "Please provide a valid URL.",
     "numberFormat": "Please enter a number.",
     "dateFormat": "Invalid Date",
@@ -733,7 +742,16 @@
       "label": "Organization | Organizations"
     },
     "platform": {
-      "label": "Platform | Platforms"
+      "label": "Platform | Platforms",
+      "name": "Platform name",
+      "url": "Platform URL",
+      "conflict": {
+        "providerLink": "The provider for this platform is:",
+        "url": "This URL is already in use for platform {0}. ",
+        "name": "This Name is already in use in another platform. ",
+        "general": "These values are already in use in another platform. ",
+        "noProvider": "The platform could not be created because of conflicts with another platform in the system (ID {0}). Please report this to an administrator."
+      }
     },
     "provider": {
       "label": "Provider | Providers",
@@ -786,7 +804,13 @@
         "ROLE_ADMIN": "Admin",
         "ROLE_USER": "User",
         "ROLE_SUPERUSER": "System",
-        "ROLE_API": "API"
+        "ROLE_API": "API",
+        "Contributor": "Contributor",
+        "Editor": "Editor",
+        "Admin": "Admin",
+        "User": "User",
+        "API": "API",
+        "System": "System"
       },
       "enabled": {
         "label": "Enabled",
@@ -960,6 +984,12 @@
           "action": "Package not updated",
           "toDo": "Check records for erroneous or missing information."
         },
+        "Multiple EZB Results": {
+          "label": "Multiple EZB Results",
+          "info": "There were multiple EZB results for this title.",
+          "action": "Skipped EZB enrichment",
+          "toDo": "Select a EZB entry from the candidates."
+        },
         "Multiple ZDB Results": {
           "label": "Multiple ZDB Results",
           "info": "There were multiple ZDB results for this title.",
@@ -972,11 +1002,23 @@
           "action": "Skipped title linking",
           "toDo": "Manually link the existing match or create a new title for linking."
         },
+        "EZB Title Overlap": {
+          "label": "EZB Label Mismatch",
+          "info": "Matched EZB-ID is already linked to another title instance.",
+          "action": "",
+          "toDo": ""
+        },
         "ZDB Title Overlap": {
           "label": "ZDB Label Mismatch",
           "info": "Matched ZDB-ID is already linked to another title instance.",
           "action": "Skipped ZDB enrichment",
           "toDo": "Check reference titles for duplicates and merge them if necessary. Check eISSN identifiers."
+        },
+        "No EZB Results": {
+          "label": "No EZB Matches",
+          "info": "No EZB-IDs found for given ISSNs",
+          "action": "Skipped EZB enrichment",
+          "toDo": ""
         },
         "No ZDB Results": {
           "label": "No ZDB Matches",
