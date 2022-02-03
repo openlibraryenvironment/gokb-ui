@@ -1026,6 +1026,12 @@
           "action": "Skipped ZDB enrichment",
           "toDo": ""
         },
+        "Merged ZDB titles": {
+          "label": "Multiple ZDB-IDs Linked",
+          "info": "ZDB synchronisation skipped because the title has multiple ZDB-IDs linked",
+          "action": "Skipped ZDB enrichment",
+          "toDo": ""
+        },
         "Ambiguous Title Matches": {
           "label": "Ambiguous Title Matches",
           "info": "The package title has been matched on multiple reference titles.",

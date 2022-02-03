@@ -22,7 +22,7 @@
     "webpack-defaults": "webpack-defaults"
   },
   "dependencies": {
-    "axios": "^0.21.4",
+    "axios": "^0.25.0",
     "core-js": "^3.21.0",
     "eslint-webpack-plugin": "^2.6.0",
     "jschardet": "^3.0.0",
@@ -38,14 +38,14 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "@babel/plugin-proposal-export-default-from": "^7.16.7",
-    "@mdi/font": "^5.9.55",
+    "@mdi/font": "^6.5.95",
     "@vue/cli-plugin-babel": "^4.5.15",
     "@vue/cli-plugin-eslint": "^4.5.15",
     "@vue/cli-plugin-pwa": "^4.5.15",
     "@vue/cli-plugin-router": "^4.5.15",
     "@vue/cli-service": "^4.5.15",
     "@vue/eslint-config-standard": "^5.1.2",
-    "eslint": "^6.8.0",
+    "eslint": "^7.32.0",
     "eslint-config-vuetify": "^0.2.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-node": "^11.1.0",

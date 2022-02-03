@@ -1026,6 +1026,12 @@
           "action": "ZDB-Anreicherung übersprungen",
           "toDo": ""
         },
+        "Merged ZDB titles": {
+          "label": "Mehrere ZDB-IDs",
+          "info": "Der Referenztitel hat mehrere verknüpfte ZDB-IDs.",
+          "action": "ZDB-Anreicherung übersprungen",
+          "toDo": ""
+        },
         "Ambiguous Title Matches": {
           "label": "Uneindeutige Titelübereinstimmung",
           "info": "Der Pakettitel kann anhand der vorliegenden Identifikatoren nicht eindeutig einem Referenztitel zugeordnet werden.",
