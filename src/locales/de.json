@@ -493,6 +493,12 @@
             "label": "wurde zu"
           }
         }
+      },
+      "status": {
+        "label": "Status",
+        "restriction": {
+          "deleted": "Damit ein Titel als gelöscht markiert werden kann, dürfen keine aktiven Pakettitel mehr mit ihm verknüpft sein."
+        }
       }
     },
     "journal": {

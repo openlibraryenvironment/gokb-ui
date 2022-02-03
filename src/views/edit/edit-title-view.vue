@@ -53,6 +53,7 @@
             v-model="titleItem.status"
             :deletable="isDeletable"
             :editable="!!updateUrl"
+            :restriction-messages="statusChangeRestrictions"
             :api-errors="errors.status"
           />
         </v-col>
@@ -564,6 +565,9 @@
       },
       isDeletable () {
         return !!this.deleteUrl && this.tippCount === 0
+      },
+      statusChangeRestrictions () {
+        return this.tippCount > 0 ? { deleted: 'component.title.status.restriction.deleted' } : undefined
       }
     },
     watch: {

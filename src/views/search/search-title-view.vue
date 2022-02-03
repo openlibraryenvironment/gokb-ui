@@ -31,20 +31,7 @@
         return this.$i18n.tc('component.title.label', 2)
       },
       resultActionButtons () {
-        return [
-          {
-            icon: 'clear',
-            label: this.$i18n.t('btn.retire'),
-            disabled: 'isRetiredSelectedDisabled',
-            action: '_confirmRetireSelectedItems'
-          },
-          {
-            icon: 'delete',
-            label: this.$i18n.t('btn.delete'),
-            disabled: 'isDeleteSelectedDisabled',
-            action: '_confirmDeleteSelectedItems',
-          }
-        ]
+        return []
       },
       searchInputFields () {
         return [

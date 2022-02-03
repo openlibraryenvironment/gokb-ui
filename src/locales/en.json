@@ -493,6 +493,12 @@
             "label": "changed to"
           }
         }
+      },
+      "status": {
+        "label": "Status",
+        "restriction": {
+          "deleted": "Titles with active links to packages cannot be marked as deleted."
+        }
       }
     },
     "journal": {
