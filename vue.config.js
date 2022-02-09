@@ -1,3 +1,6 @@
+const {gitDescribe, gitDescribeSync} = require('git-describe')
+process.env.VUE_APP_GIT_HASH = gitDescribeSync().hash
+
 module.exports = {
   publicPath: process.env.VUE_APP_PUBLIC_PATH || '/', // base path for the application
   configureWebpack: {
@@ -20,7 +23,6 @@ module.exports = {
     },
     devtool: 'source-map'
   },
-
   devServer: {
     overlay: {
       warnings: true,

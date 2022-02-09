@@ -47,9 +47,22 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-row class="pl-6">
-          <v-col class="text-caption">
-            {{ appVersion }}
+        <v-row class="pl-6 mb-1">
+          <v-col
+            class="text-caption"
+          >
+            <span
+              :style="{ cursor: 'pointer', padding: '3px', borderRadius: '3px', backgroundColor: (showCommit ? '#eee' : '') }"
+              @click="showCommit = !showCommit"
+            >
+              {{ appVersion }}
+            </span>
+            <span
+              v-if="showCommit"
+              class="ml-4"
+            >
+              UI Commit #{{ gitCommit }}
+            </span>
           </v-col>
         </v-row>
         <v-row
@@ -120,7 +133,6 @@
           </v-icon>
           <span
             class="application-title text-h6"
-            :title="currentVersion"
           >
             {{ appName }}
           </span>
@@ -279,12 +291,13 @@
       docsLink: process.env.VUE_APP_DOCS_LINK,
       appName: process.env.VUE_APP_TITLE || 'GOKb Client',
       appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
-      appVersion: process.env.VUE_APP_VERSION || version,
+      appVersion: version || process.env.VUE_APP_VERSION,
+      gitCommit: process.env.VUE_APP_GIT_HASH,
       globalSearchSelected: undefined,
       globalSearchField: undefined,
       globalSearchItems: undefined,
       globalSearchIsLoading: false,
-
+      showCommit: false,
       dialog: false,
       locales: ['de', 'en'],
       groups: []
@@ -340,9 +353,6 @@
       },
       globalSearchPlaceholder () {
         return this.$i18n.t('search.global.placeholder')
-      },
-      currentVersion () {
-        return version
       },
       loggedIn () {
         return accountModel.loggedIn()
