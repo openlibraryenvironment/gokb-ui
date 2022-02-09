@@ -175,6 +175,7 @@
     "urlForm": "Bitte geben Sie eine gültige URL an.",
     "numberFormat": "Dieses Feld erwartet eine Zahl.",
     "dateFormat": "Ungültiges Datum",
+    "dateRange": "Das Enddatum muss nach dem Anfangsdatum liegen.",
     "passwordLength": "Das Passwort muss zwischen 6 und 64 Zeichen haben."
   },
   "job": {
@@ -642,10 +643,10 @@
           }
         },
         "startDate": {
-          "label": "Startdatum"
+          "label": "Gültigkeitsbeginn"
         },
         "endDate": {
-          "label": "Enddatum"
+          "label": "Gültigkeitsende"
         }
       },
       "name": "Paketspezifischer Titel",

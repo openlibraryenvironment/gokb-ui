@@ -866,7 +866,6 @@
 
           const newPackage = {
             ...this.packageItem,
-            id: this.id,
             ...(this.newTipps.length > 0 ? { tipps: this.newTipps.map(tipp => ({ ...tipp, id: null })) } : {}),
             name: this.allNames.name,
             version: this.version,
@@ -1027,10 +1026,6 @@
       },
       mapRecord (data) {
         this.packageItem.id = data.id
-
-        if (!this.id) {
-          this.id = data.id
-        }
         this.currentName = data.name
         this.packageItem.name = data.name
         this.packageItem.source = data.source
