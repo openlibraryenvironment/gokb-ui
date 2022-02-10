@@ -735,7 +735,7 @@
           if (response.status < 400) {
             const edited = {
               ...this.packageTitleItem,
-              statusLocal: this.$i18n.t('component.general.status.' + this.packageTitleItem.name + '.label'),
+              statusLocal: this.$i18n.t('component.general.status.' + this.packageTitleItem.status.name + '.label'),
               popup: { value: (this.pkg ? (this.packageTitleItem.title ? this.packageTitleItem.title.name : this.packageTitleItem.name) : this.packageTitleItem.pkg.name), label: 'tipp', type: 'GokbAddTitlePopup' },
               hostPlatformName: this.packageTitleItem.hostPlatform?.name,
               titleType: this.title.type,

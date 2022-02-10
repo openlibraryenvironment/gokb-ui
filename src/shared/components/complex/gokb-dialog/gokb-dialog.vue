@@ -104,7 +104,9 @@
     },
     methods: {
       doSubmit () {
-        this.$emit('submit', this.$refs.form)
+        if (this.$refs.form.validate()) {
+          this.$emit('submit', this.$refs.form)
+        }
       },
       closeWithEscape (event) {
         if (event.key === 'Escape') {

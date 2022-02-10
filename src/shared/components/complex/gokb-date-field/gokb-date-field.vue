@@ -9,9 +9,9 @@
           v-model="localDate"
           :clearable="clearable"
           :label="label"
-          validate-on-blur
           :hint="$t('default.ISOdateHint')"
-          :rules="rules"
+          :rules="combinedRules"
+          :required="required"
           :dense="dense"
         />
       </v-col>
@@ -80,6 +80,16 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      rules: {
+        type: Array,
+        required: false,
+        default: undefined
+      },
+      required: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -96,8 +106,9 @@
           this.$emit('input', localDate)
         }
       },
-      rules () {
-        return [
+      combinedRules () {
+        return this.rules || [
+          value => !this.required || !!value || this.$i18n.t('validation.missingValue'),
           value => !value || (/^([12][0-9]{3})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$/.test(value) && !isNaN(new Date(value))) || this.$i18n.t('validation.dateFormat')
         ]
       }

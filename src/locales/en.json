@@ -175,6 +175,7 @@
     "urlForm": "Please provide a valid URL.",
     "numberFormat": "Please enter a number.",
     "dateFormat": "Invalid Date",
+    "dateRange": "The end date must be after the start date.",
     "passwordLength": "The password must be between 6 and 64 characters of length."
   },
   "job": {

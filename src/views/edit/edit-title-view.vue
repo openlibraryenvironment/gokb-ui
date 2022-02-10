@@ -686,9 +686,6 @@
         loading.stopLoading()
       },
       async mapRecord (data) {
-        if (!this.id) {
-          this.id = data.id
-        }
         this.updateUrl = data._links?.update?.href || null
         this.deleteUrl = data._links?.delete?.href || null
         this.titleItem.name = data.name
