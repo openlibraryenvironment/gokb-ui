@@ -103,7 +103,7 @@
               items: [
                 {
                   title: this.$i18n.t('profile.label'),
-                  icon: 'mdi-face-profile',
+                  icon: 'mdi-face-man-profile',
                   path: PROFILE_ROUTE,
                 },
                 {

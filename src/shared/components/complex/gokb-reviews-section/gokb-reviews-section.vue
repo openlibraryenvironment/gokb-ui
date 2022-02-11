@@ -51,7 +51,7 @@
       <gokb-button
         v-if="!!reviewComponent"
         class="mr-4"
-        icon-id="add"
+        icon-id="mdi-plus"
         color="primary"
         @click="showAddReviewPopup"
       >
@@ -76,7 +76,7 @@
       </span>
       <gokb-button
         class="mr-4"
-        icon-id="check"
+        icon-id="mdi-check"
         :disabled="bulkEditDisabled"
         color="primary"
         @click="confirmBulkClose"

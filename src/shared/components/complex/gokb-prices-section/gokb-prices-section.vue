@@ -14,7 +14,7 @@
     <template #buttons>
       <gokb-button
         v-if="isEditable"
-        icon-id="add"
+        icon-id="mdi-plus"
         color="primary"
         @click="showAddItemPopup"
       >
@@ -25,7 +25,7 @@
         :disabled="selectedItems.length == 0"
         class="ml-4"
         color="primary"
-        icon-id="delete"
+        icon-id="mdi-delete"
         @click="confirmDeleteSelectedItems"
       >
         {{ $t('btn.delete') }}

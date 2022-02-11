@@ -15,7 +15,7 @@
     <template #buttons>
       <gokb-button
         v-if="isEditable"
-        icon-id="add"
+        icon-id="mdi-plus"
         color="primary"
         @click="showAddItem"
       >
@@ -24,7 +24,7 @@
       <gokb-button
         v-if="isEditable"
         class="ml-4"
-        icon-id="delete"
+        icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
         @click="confirmDeleteSelectedItems"

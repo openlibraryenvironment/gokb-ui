@@ -101,12 +101,12 @@
       resultActionButtons () {
         return [
           {
-            icon: 'add',
+            icon: 'mdi-plus',
             label: this.$i18n.t('btn.add'),
             route: ADD_USER_ROUTE,
           },
           {
-            icon: 'cancel',
+            icon: 'mdi-close-circle',
             label: this.$i18n.t('btn.deactivate'),
             disabled: 'isNothingSelected',
             action: '_confirmDeactivateSelectedItems',

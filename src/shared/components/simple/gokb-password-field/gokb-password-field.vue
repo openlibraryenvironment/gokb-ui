@@ -18,7 +18,7 @@
       prependIcon: {
         type: String,
         required: false,
-        default: 'lock',
+        default: 'mdi-lock',
       },
       autocomplete: {
         type: String,

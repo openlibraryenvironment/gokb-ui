@@ -28,7 +28,7 @@
       resultActionButtons () {
         return [
           {
-            icon: 'clear',
+            icon: 'mdi-close',
             label: this.$i18n.t('btn.close'),
             disabled: 'isCloseSelectedDisabled',
             action: '_confirmCloseSelectedItems',
