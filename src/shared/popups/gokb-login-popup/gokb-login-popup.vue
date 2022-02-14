@@ -18,7 +18,7 @@
     <v-checkbox
       v-model="save"
       :label="$t('popups.login.automatic')"
-      prepend-icon="cached"
+      prepend-icon="mdi-cached"
     />
     <span
       v-if="error"

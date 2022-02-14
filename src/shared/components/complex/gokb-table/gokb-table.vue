@@ -120,7 +120,7 @@
             small
             @click="editItemPopupVisible = item.id"
           >
-            {{ item.updateUrl ? 'edit' : 'mdi-arrow-top-left' }}
+            {{ item.updateUrl ? 'mdi-pencil' : 'mdi-arrow-top-left' }}
           </v-icon>
           <v-icon
             v-if="editable && item.isRetireable !== undefined"
@@ -131,7 +131,7 @@
             small
             @click="retireItem(item)"
           >
-            close
+            mdi-close
           </v-icon>
           <v-icon
             v-if="editable && item.isDeletable !== undefined"
@@ -141,7 +141,7 @@
             small
             @click="deleteItem(item)"
           >
-            delete
+            mdi-delete
           </v-icon>
           <v-icon
             v-if="editable && item.isClosable"

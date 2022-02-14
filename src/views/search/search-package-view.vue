@@ -52,13 +52,13 @@
             }
           },
           {
-            icon: 'clear',
+            icon: 'mdi-close',
             label: this.$i18n.t('btn.retire'),
             disabled: 'isDeleteSelectedDisabled',
             action: '_confirmRetireSelectedItems',
           },
           {
-            icon: 'delete',
+            icon: 'mdi-delete',
             label: this.$i18n.t('btn.delete'),
             disabled: 'isDeleteSelectedDisabled',
             action: '_confirmDeleteSelectedItems',

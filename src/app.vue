@@ -129,7 +129,7 @@
             class="mr-5"
             style="vertical-align:text-top"
           >
-            home
+            mdi-home
           </v-icon>
           <span
             class="application-title text-h6"
@@ -153,7 +153,7 @@
         full-width
         no-filter
         :placeholder="globalSearchPlaceholder"
-        prepend-inner-icon="search"
+        prepend-inner-icon="mdi-magnify"
         return-object
         solo
       >
@@ -177,7 +177,7 @@
         @click="toggleDarkMode"
       >
         <v-icon small>
-          {{ $vuetify.theme.dark ? 'invert_colors_off' : 'invert_colors' }}
+          {{ $vuetify.theme.dark ? 'mdi-invert-colors-off' : 'mdi-invert-colors' }}
         </v-icon>
       </v-btn>
       <a
@@ -305,17 +305,17 @@
     computed: {
       visibleItems () {
         const menuItems = [
-          { icon: 'create_new_folder', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.package.label')]), route: CREATE_PACKAGE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'library_add', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.title.label')]), route: CREATE_TITLE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'domain', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.provider.label')]), route: ADD_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'people', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.user.label')]), route: ADD_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
+          { icon: 'mdi-folder-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.package.label')]), route: CREATE_PACKAGE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-text-box-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.title.label')]), route: CREATE_TITLE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-domain-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.provider.label')]), route: ADD_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-account-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.user.label')]), route: ADD_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
           {},
-          { icon: 'folder', text: this.$i18n.tc('component.package.label', 2), route: SEARCH_PACKAGE_ROUTE },
-          { icon: 'library_books', text: this.$i18n.tc('component.title.label', 2), route: SEARCH_TITLE_ROUTE },
-          { icon: 'domain', text: this.$i18n.tc('component.provider.label', 2), route: SEARCH_PROVIDER_ROUTE },
-          { icon: 'rate_review', text: this.$i18n.tc('component.review.label', 2), route: SEARCH_REVIEW_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-folder', text: this.$i18n.tc('component.package.label', 2), route: SEARCH_PACKAGE_ROUTE },
+          { icon: 'mdi-text-box-multiple', text: this.$i18n.tc('component.title.label', 2), route: SEARCH_TITLE_ROUTE },
+          { icon: 'mdi-domain', text: this.$i18n.tc('component.provider.label', 2), route: SEARCH_PROVIDER_ROUTE },
+          { icon: 'mdi-message-draw', text: this.$i18n.tc('component.review.label', 2), route: SEARCH_REVIEW_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
           // { icon: 'keyboard', text: this.$i18n.tc('component.maintenance.label', 2), route: SEARCH_MAINTENANCE_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'people', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
+          { icon: 'mdi-account-multiple', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
         ]
 
         return menuItems.filter(item => (!accountModel.loggedIn() && !item.needsLogin) || (accountModel.loggedIn() && (!item.needsRole || accountModel.hasRole(item.needsRole))))
@@ -359,15 +359,15 @@
       },
       typeRoutes () {
         return [
-          { type: 'Organization', path: '/provider/', icon: 'domain', label: this.$i18n.tc('component.provider.label') },
-          { type: 'Org', path: '/provider/', icon: 'domain', label: this.$i18n.tc('component.provider.label') },
-          { type: 'Package', path: '/package/', icon: 'folder', label: this.$i18n.tc('component.package.label') },
-          { type: 'Journal', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Journal') },
-          { type: 'JournalInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Journal') },
-          { type: 'Book', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Book') },
-          { type: 'BookInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Book') },
-          { type: 'Database', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Database') },
-          { type: 'DatabaseInstance', path: '/title/', icon: 'library_books', label: this.$i18n.tc('component.title.type.Database') },
+          { type: 'Organization', path: '/provider/', icon: 'mdi-domain', label: this.$i18n.tc('component.provider.label') },
+          { type: 'Org', path: '/provider/', icon: 'mdi-domain', label: this.$i18n.tc('component.provider.label') },
+          { type: 'Package', path: '/package/', icon: 'mdi-folder', label: this.$i18n.tc('component.package.label') },
+          { type: 'Journal', path: '/title/', icon: 'mdi-text-box', label: this.$i18n.tc('component.title.type.Journal') },
+          { type: 'JournalInstance', path: '/title/', icon: 'mdi-text-box', label: this.$i18n.tc('component.title.type.Journal') },
+          { type: 'Book', path: '/title/', icon: 'mdi-book', label: this.$i18n.tc('component.title.type.Book') },
+          { type: 'BookInstance', path: '/title/', icon: 'mdi-text-box', label: this.$i18n.tc('component.title.type.Book') },
+          { type: 'Database', path: '/title/', icon: 'mdi-text-box', label: this.$i18n.tc('component.title.type.Database') },
+          { type: 'DatabaseInstance', path: '/title/', icon: 'mdi-text-box', label: this.$i18n.tc('component.title.type.Database') },
         ]
       }
     },
@@ -487,4 +487,7 @@
   .application-title {
     color: white;
   }
+</style>
+<style lang="sass">
+  @import '../node_modules/typeface-roboto/index.css'
 </style>

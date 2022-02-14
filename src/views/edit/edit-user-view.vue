@@ -83,7 +83,7 @@
     <gokb-add-item-popup
       v-if="addRolePopupVisible"
       v-model="addRolePopupVisible"
-      :component="{ type: 'GokbRoleField', name: 'Rolle', properties: { returnObject: true } }"
+      :component="{ type: 'GokbRoleField', properties: { returnObject: true } }"
       @add="addNewRole"
     />
     <v-row>
@@ -95,14 +95,14 @@
           <template #buttons>
             <gokb-button
               class="mr-4"
-              icon-id="add"
+              icon-id="mdi-plus"
               color="primary"
               @click="showAddNewRole"
             >
               {{ $t('btn.add') }}
             </gokb-button>
             <gokb-button
-              icon-id="delete"
+              icon-id="mdi-delete"
               :disabled="isDeleteSelectedRolesDisabled"
               @click="confirmDeleteSelectedRoles"
             >
@@ -322,8 +322,6 @@
         this.$router.go(-1)
       },
       async fetch () {
-        this.roles = []
-
         const {
           data: {
             data: {
@@ -345,6 +343,8 @@
           promise: userServices.getUser(this.id, this.cancelToken.token),
           instance: this
         })
+
+        this.addedRoles = []
         this.username = username
         this.password = undefined
         this.email = email
