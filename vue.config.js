@@ -24,22 +24,12 @@ module.exports = {
     devtool: 'source-map'
   },
   devServer: {
-    overlay: {
-      warnings: true,
-      errors: true
+    client: {
+      overlay: {
+        warnings: true,
+        errors: true
+      }
     }
-    // proxy: {
-    //   '^/rest': {
-    //     target: process.env.VUE_APP_API_BASE_URL,
-    //     changeOrigin: true,
-    //     // logLevel: 'debug',
-    //   },
-    //   '^/register': {
-    //     target: process.env.VUE_APP_API_BASE_URL,
-    //     changeOrigin: true,
-    //     // logLevel: 'debug',
-    //   }
-    // }
   },
 
   // not lint in production mode

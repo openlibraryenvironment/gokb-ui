@@ -267,7 +267,7 @@
   import UserMenu from '@/shared/user-menu'
   import profileServices from '@/shared/services/profile-services'
   import update from './mixins/update'
-  import { version } from '../package.json'
+  import pkg from '../package.json'
   import {
     HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
     SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
@@ -291,7 +291,7 @@
       docsLink: process.env.VUE_APP_DOCS_LINK,
       appName: process.env.VUE_APP_TITLE || 'GOKb Client',
       appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
-      appVersion: version || process.env.VUE_APP_VERSION,
+      appVersion: pkg.version || process.env.VUE_APP_VERSION,
       gitCommit: process.env.VUE_APP_GIT_HASH,
       globalSearchSelected: undefined,
       globalSearchField: undefined,

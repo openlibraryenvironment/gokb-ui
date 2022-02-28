@@ -224,7 +224,8 @@
       "RejectTIWithoutIdentifier": "Reject Titles without Identifier",
       "PlatformCleanup": "Platform Cleanup",
       "RecalculateStatistics": "Recalculate Statistics",
-      "PackageUpdateTipps": "KBART Update"
+      "PackageUpdateTipps": "KBART Update",
+      "KBARTIngest": "KBART-Import"
     }
   },
   "kbart": {
@@ -574,6 +575,9 @@
         },
         "In Progress": {
           "label": "In Bearbeitung"
+        },
+        "error": {
+          "openReviews": "Alle verknüpften Prüfanfragen müssen geschlossen sein bevor das Paket als geprüft markiert werden kann."
         }
       },
       "breakable": "Einzeltitelauswahl möglich",
@@ -835,11 +839,21 @@
     },
     "review": {
       "label": "Prüfanfrage | Prüfanfragen",
-      "request": "Anfrage",
-      "action": "Durchgeführte Aktion",
-      "type": "Typ",
-      "cause": "Ursache",
-      "componentToReview": "Komponente",
+      "request": {
+        "label": "Anfrage"
+      },
+      "action": {
+        "label": "Durchgeführte Aktion"
+      },
+      "type": {
+        "label": "Typ"
+      },
+      "cause": {
+        "label": "Ursache"
+      },
+      "componentToReview": {
+        "label": "Komponente"
+      },
       "additionalInfo": {
         "label": "Strukturierte Detailansicht"
       },
@@ -854,6 +868,15 @@
         "label": "Kandidaten"
       },
       "showClosed": "Abgeschlossene anzeigen",
+      "edit": {
+        "success": {
+          "created": "Eine neue Prüfanfrage wurde erfolgreich angelegt.",
+          "edited": "Prüfanfrage erfolgreich bearbeitet.",
+          "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
+          "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
+          "closed": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
+        }
+      },
       "status": {
         "label": "Status",
         "Open": {

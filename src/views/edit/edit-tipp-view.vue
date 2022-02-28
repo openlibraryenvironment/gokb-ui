@@ -200,7 +200,7 @@
               <v-toolbar-items class="pa-2">
                 <gokb-button
                   v-if="!isReadonly"
-                  icon-id="add"
+                  icon-id="mdi-plus"
                   @click="addNewCoverage"
                 >
                   {{ $t('btn.add') }}
@@ -243,7 +243,7 @@
                         @click="removeCoverage(idx)"
                       >
                         <v-icon>
-                          delete
+                          mdi-delete
                         </v-icon>
                       </v-btn>
                     </v-col>

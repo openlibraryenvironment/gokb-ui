@@ -224,7 +224,8 @@
       "RejectTIWithoutIdentifier": "Reject Titles without Identifier",
       "PlatformCleanup": "Platform Cleanup",
       "RecalculateStatistics": "Recalculate Statistics",
-      "PackageUpdateTipps": "Package KBART Update"
+      "PackageUpdateTipps": "Package KBART Update",
+      "KBARTIngest": "KBART Package Ingest"
     }
   },
   "kbart": {
@@ -574,6 +575,9 @@
         },
         "In Progress": {
           "label": "In Progress"
+        },
+        "error": {
+          "openReviews": "All connected requests for review must be closed before the package can be marked as checked."
         }
       },
       "breakable": "Content may be split",
@@ -835,11 +839,21 @@
     },
     "review": {
       "label": "Review | Reviews",
-      "request": "Request",
-      "action": "Action taken",
-      "type": "Type",
-      "cause": "Cause",
-      "componentToReview": "Component",
+      "request": {
+        "label": "Request"
+      },
+      "action": {
+        "label": "Action taken"
+      },
+      "type": {
+        "label":"Type"
+      },
+      "cause": {
+        "label": "Cause"
+      },
+      "componentToReview": {
+        "label": "Component"
+      },
       "additionalInfo": {
         "label": "Structured info"
       },
@@ -854,6 +868,15 @@
         "label": "Candidates"
       },
       "showClosed": "Show closed requests",
+      "edit": {
+        "success": {
+          "created": "A new request was successfully created.",
+          "edited": "Request was successfully edited.",
+          "escalated" : "The request has been successfully escalated.",
+          "deescalated" : "The request has been successfully deescalated.",
+          "closed": "Request marked as closed | {0} requests marked as closed"
+        }
+      },
       "status": {
         "label": "Status",
         "Open": {
