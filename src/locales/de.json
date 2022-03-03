@@ -166,6 +166,7 @@
     }
   },
   "validation": {
+    "hasErrors": "Fehlerhafte Angaben entdeckt! Bitte beheben Sie die verbleibenden Fehler vor dem Speichern.",
     "valueNotUnique": "Dieser Wert wird bereits verwendet.",
     "missingValue": "Bitte füllen Sie dieses Feld aus.",
     "missingSelection": "Bitte wählen Sie einen Wert aus der Liste aus.",

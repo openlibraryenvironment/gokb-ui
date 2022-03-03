@@ -819,9 +819,7 @@
         }
       },
       showCreatePackageConfirm (form) {
-        this.valid = form.validate()
-
-        if (this.valid) {
+        if (this.isValid) {
           if (this.kbart?.selectedFile) {
             this.submitConfirmationMessage = { text: 'component.package.navigation.confirm.kbartLocal.label', vars: [this.allNames.name, this.kbart.selectedFile.name] }
           } else if (this.urlUpdate) {
@@ -839,7 +837,7 @@
         this.errorMsg = undefined
         this.kbartResult = undefined
 
-        if (this.valid) {
+        if (this.isValid) {
           if (this.sourceItem) {
             var sourceItem = this.sourceItem
 
@@ -972,6 +970,10 @@
               this.step = 1
             }
           }
+        }
+        else {
+          loading.stopLoading()
+          this.errorMsg = 'validation.hasErrors'
         }
       },
       async reload () {

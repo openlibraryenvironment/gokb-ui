@@ -843,7 +843,8 @@
         }
 
         if (data._embedded.prices?.length) {
-          this.packageTitleItem.prices = data._embedded.prices.map(({ priceType, price, currency, startDate, endDate }) => ({
+          this.packageTitleItem.prices = data._embedded.prices.map(({ id, priceType, price, currency, startDate, endDate }) => ({
+            id,
             type: priceType,
             startDate: this.buildDateString(startDate),
             endDate: this.buildDateString(endDate),

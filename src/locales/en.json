@@ -165,6 +165,7 @@
     }
   },
   "validation": {
+    "hasErrors": "The entered information is not valid. Please fix the remaining issues before saving.",
     "valueNotUnique": "This value is already in use.",
     "missingValue": "Please fill this field.",
     "missingSelection": "Please select a value from the list.",

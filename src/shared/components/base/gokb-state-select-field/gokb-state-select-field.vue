@@ -17,7 +17,7 @@
     />
     <v-radio
       value="Retired"
-      on-icon="cancel"
+      on-icon="mdi-close-circle"
       color="amber"
       :label="$t('component.general.status.Retired.label')"
       :readonly="!editable"
