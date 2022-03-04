@@ -2,7 +2,7 @@
   <div>
     <v-row class="mt-4">
       <v-col cols="8">
-        <vuetify-money
+        <gokb-money-field
           v-model="localPrice"
           :label="$tc('component.tipp.prices.price.label')"
           :disabled="disabled"

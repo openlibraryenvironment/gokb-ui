@@ -878,7 +878,7 @@
             activeGroup: this.activeGroup
           }
 
-          if (this.kbart || this.urlUpdate) {
+          if (!this.isUpdate || this.kbart || this.urlUpdate) {
             newPackage.generateToken = true
           }
 
