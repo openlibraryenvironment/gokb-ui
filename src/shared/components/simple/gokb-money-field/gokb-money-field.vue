@@ -2,23 +2,22 @@
   <div>
     <v-text-field
       v-model="cmpValue"
-      v-bind:label="label"
-      v-bind:placeholder="placeholder"
-      v-bind:readonly="readonly"
-      v-bind:disabled="disabled"
-      v-bind:outlined="outlined"
-      v-bind:dense="dense"
-      v-bind:hide-details="hideDetails"
-      v-bind:error="error"
-      v-bind:error-messages="errorMessages"
-      v-bind:rules="rules"
-      v-bind:clearable="clearable"
-      v-bind:backgroundColor="backgroundColor"
-      v-bind:prefix="options.prefix"
-      v-bind:suffix="options.suffix"
+      :label="label"
+      :placeholder="placeholder"
+      :readonly="readonly"
+      :disabled="disabled"
+      :outlined="outlined"
+      :dense="dense"
+      :hide-details="hideDetails"
+      :error="error"
+      :error-messages="errorMessages"
+      :rules="rules"
+      :clearable="clearable"
+      :prefix="options.prefix"
+      :suffix="options.suffix"
       v-bind="properties"
-      v-on:keypress="keyPress"
-      v-on:blur="onBlur"
+      @keypress="keyPress"
+      @blur="onBlur"
     ></v-text-field>
   </div>
 </template>
@@ -76,10 +75,6 @@ export default {
       type: Boolean,
       default: false
     },
-    backgroundColor: {
-      type: String,
-      default: "white"
-    },
     valueWhenIsEmpty: {
       type: String,
       default: "" // "0" or "" or null
@@ -131,7 +126,7 @@ export default {
       if (isNaN(number)) {
         number = "";
       } else {
-        number = Number(number).toLocaleString(this.options.locale, {
+        number = Number(number).toLocaleString(this.$i18n.locale, {
           maximumFractionDigits: this.options.precision,
           minimumFractionDigits: this.options.precision
         });
