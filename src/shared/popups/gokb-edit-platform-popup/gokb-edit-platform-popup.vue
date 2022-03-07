@@ -96,6 +96,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      providerId: {
+        type: Number,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -189,7 +194,7 @@
         }
 
         if (!this.isEdit) {
-          newPlatform.provider = this.pprops?.providerId
+          newPlatform.provider = this.providerId
         }
 
         const response = await this.catchError({
