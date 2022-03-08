@@ -60,14 +60,13 @@ export default {
     },
 
     buildDateString (ts) {
-      if (!ts) {
-        return ts
+      if (ts && ts.length > 10) {
+        var obj = new Date(ts)
+        obj.setHours(obj.getHours() + 2)
+
+        return obj.toISOString().substring(0, 10)
       }
-
-      var obj = new Date(ts)
-      obj.setHours(obj.getHours() + 2)
-
-      return obj.toISOString().substr(0, 10)
+      return ts
     }
   }
 }

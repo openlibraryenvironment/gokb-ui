@@ -18,7 +18,7 @@
       prependIcon: {
         type: String,
         required: false,
-        default: 'person',
+        default: 'mdi-account',
       },
       autocomplete: {
         type: String,

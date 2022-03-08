@@ -862,9 +862,7 @@
         }
       },
       showCreatePackageConfirm (form) {
-        this.valid = form.validate()
-
-        if (this.valid) {
+        if (this.isValid) {
           if (this.kbart?.selectedFile) {
             this.submitConfirmationMessage = { text: 'component.package.navigation.confirm.kbartLocal.label', vars: [this.allNames.name, this.kbart.selectedFile.name] }
           } else if (this.urlUpdate) {
@@ -882,7 +880,7 @@
         this.errorMsg = undefined
         this.kbartResult = undefined
 
-        if (this.valid) {
+        if (this.isValid) {
           if (this.sourceItem) {
             var sourceItem = this.sourceItem
 
@@ -909,7 +907,6 @@
 
           const newPackage = {
             ...this.packageItem,
-            id: this.id,
             ...(this.newTipps.length > 0 ? { tipps: this.newTipps.map(tipp => ({ ...tipp, id: null })) } : {}),
             name: this.allNames.name,
             version: this.version,
@@ -925,7 +922,7 @@
             urlUpdate: this.urlU
           }
 
-          if (this.kbart) {
+          if (!this.isUpdate || this.kbart || this.urlUpdate) {
             newPackage.generateToken = true
           }
 
@@ -1017,6 +1014,10 @@
             }
           }
         }
+        else {
+          loading.stopLoading()
+          this.errorMsg = 'validation.hasErrors'
+        }
       },
       async reload () {
         if (this.isEdit) {
@@ -1105,10 +1106,6 @@
       },
       mapRecord (data) {
         this.packageItem.id = data.id
-
-        if (!this.id) {
-          this.id = data.id
-        }
         this.currentName = data.name
         this.packageItem.name = data.name
         this.packageItem.source = data.source

@@ -200,7 +200,7 @@
               <v-toolbar-items class="pa-2">
                 <gokb-button
                   v-if="!isReadonly"
-                  icon-id="add"
+                  icon-id="mdi-plus"
                   @click="addNewCoverage"
                 >
                   {{ $t('btn.add') }}
@@ -243,7 +243,7 @@
                         @click="removeCoverage(idx)"
                       >
                         <v-icon>
-                          delete
+                          mdi-delete
                         </v-icon>
                       </v-btn>
                     </v-col>
@@ -755,7 +755,7 @@
         const newTipp = {
           ...this.packageTitleItem,
           ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
-          prices: this.packageTitleItem.prices.map(price => ({ ...price, id: (typeof price.id === 'number' ? price.id : null) })),
+          prices: this.packageTitleItem.prices.map(price => ({ ...price, type: (price.type || price.priceType), id: (typeof price.id === 'number' ? price.id : null) })),
           variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
           name: this.allNames.name,
           version: this.version,
@@ -852,7 +852,6 @@
         this.packageTitleItem.editionStatement = data.editionStatement
         this.packageTitleItem.medium = data.medium
         this.packageTitleItem.lastChangedExternal = data.lastChangedExternal
-        this.packageTitleItem.prices = data._embedded.prices
         this.packageTitleItem.status = data.status
         this.history = data.history
         this.allNames = { name: data.name, alts: data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })) }
@@ -868,6 +867,17 @@
             endIssue,
             endVolume,
             embargo
+          }))
+        }
+
+        if (data._embedded.prices?.length) {
+          this.packageTitleItem.prices = data._embedded.prices.map(({ id, priceType, price, currency, startDate, endDate }) => ({
+            id,
+            type: priceType,
+            startDate: this.buildDateString(startDate),
+            endDate: this.buildDateString(endDate),
+            price,
+            currency
           }))
         }
 

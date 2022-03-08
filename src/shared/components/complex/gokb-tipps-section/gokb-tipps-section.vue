@@ -52,9 +52,9 @@
               color="primary"
               v-on="on"
             >
-              <v-icon>add</v-icon>
+              <v-icon>mdi-plus</v-icon>
               {{ $t('btn.add') }}
-              <v-icon>keyboard_arrow_down</v-icon>
+              <v-icon>mdi-chevron-down</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -117,7 +117,7 @@
               v-on="on"
             >
               {{ $t('btn.bulkSelect', [bulkSelect ? totalNumberOfItems : selectedItems.length]) }}
-              <v-icon>keyboard_arrow_down</v-icon>
+              <v-icon>mdi-chevron-down</v-icon>
             </v-btn>
           </template>
           <v-list>

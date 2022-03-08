@@ -26,7 +26,7 @@
             right
             @click="localValue = false"
           >
-            <v-icon>close</v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
         <v-card-text>
@@ -104,7 +104,9 @@
     },
     methods: {
       doSubmit () {
-        this.$emit('submit', this.$refs.form)
+        if (this.$refs.form.validate()) {
+          this.$emit('submit', this.$refs.form)
+        }
       },
       closeWithEscape (event) {
         if (event.key === 'Escape') {

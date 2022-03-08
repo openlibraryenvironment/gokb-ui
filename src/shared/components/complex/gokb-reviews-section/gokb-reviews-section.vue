@@ -12,7 +12,7 @@
         class="mr-4 mt-4"
         message-path="component.review.stdDesc"
         url="refdata/categories/ReviewRequest.StdDesc"
-        :label="$t('component.review.type')"
+        :label="$t('component.review.type.label')"
       />
       <gokb-state-field
         v-model="searchFilters.status"
@@ -38,20 +38,12 @@
         v-if="addReviewPopupVisible"
         v-model="addReviewPopupVisible"
         :component="reviewComponent"
-        @added="retrieveReviews"
+        @edit="handlePopupChange"
       />
-      <span v-if="errorMsg">
-        <v-alert
-          type="error"
-          dismissible
-        >
-          {{ localErrorMessage }}
-        </v-alert>
-      </span>
       <gokb-button
         v-if="!!reviewComponent"
         class="mr-4"
-        icon-id="add"
+        icon-id="mdi-plus"
         color="primary"
         @click="showAddReviewPopup"
       >
@@ -76,13 +68,29 @@
       </span>
       <gokb-button
         class="mr-4"
-        icon-id="check"
+        icon-id="mdi-check"
         :disabled="bulkEditDisabled"
         color="primary"
         @click="confirmBulkClose"
       >
         {{ bulkCloseLabel }}
       </gokb-button>
+      <span v-if="errorMsg">
+        <v-alert
+          type="error"
+          dismissible
+        >
+          {{ localErrorMessage }}
+        </v-alert>
+      </span>
+      <span v-if="successMessage">
+        <v-alert
+          type="success"
+          dismissible
+        >
+          {{ successMessage }}
+        </v-alert>
+      </span>
     </template>
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
@@ -96,8 +104,10 @@
       :total-number-of-items="totalNumberOfReviews"
       :options.sync="reviewsOptions"
       :actions="showEditActions"
-      @selected-items="selectedItems = $event"
+      :show-loading="loading"
+      @selected-items="selectedItems"
       @paginate="retrieveReviews"
+      @edit="handlePopupChange"
       @close-review="closeReview"
     />
   </gokb-section>
@@ -158,7 +168,9 @@
         addReviewPopupVisible: undefined,
         allPagesSelected: false,
         enableBulkCheck: false,
+        successMessage: undefined,
         errorMsg: undefined,
+        loading: false,
         selectedItems: [],
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -259,7 +271,7 @@
         ]
         const defaultConfig = [
           {
-            text: this.$i18n.t('component.review.componentToReview'),
+            text: this.$i18n.t('component.review.componentToReview.label'),
             align: 'left',
             sortable: false,
             value: 'popup'
@@ -328,6 +340,8 @@
       },
       async retrieveReviews () {
         this.selectedItems = []
+        this.loading = true
+
         const searchParams = {}
 
         Object.keys(this.searchFilters).forEach(key => {
@@ -363,6 +377,8 @@
         if (this.rawReviews?.data) {
           this.$emit('update', this.rawReviews.data.data.length)
         }
+
+        this.loading = false
       },
       async closeReview (item) {
         this.allPagesSelected = false
@@ -379,6 +395,7 @@
 
         this.reviewsOptions.page = 1
         this.retrieveReviews()
+        this.successMessage = this.$i18n.tc('component.review.edit.success.closed')
       },
       showAddReviewPopup () {
         this.addReviewPopupVisible = 1
@@ -399,6 +416,8 @@
       async _executeBulkAction ({ field, value }) {
         const searchParams = {}
 
+        this.loading = true
+
         Object.keys(this.searchFilters).forEach(key => {
           if (this.searchFilters[key] instanceof String || typeof this.searchFilters[key] === 'number') {
             searchParams[key] = this.searchFilters[key]
@@ -416,11 +435,14 @@
           instance: this
         })
 
-        if (response.status === 403) {
+        if (response.status < 400) {
+          this.successMessage = this.$i18n.tc('component.review.edit.success.closed', response.data.report.data, { count: response.data.report.data })
+        } else if (response.status === 403) {
           this.errorMsg = 'error.bulkUpdate.403'
         }
 
-        this.selectedItems = []
+        this.loading = false
+
         this.reviewsOptions.page = 1
         this.retrieveReviews()
       },
@@ -428,6 +450,7 @@
         if (this.allPagesSelected) {
           this.allPagesSelected = false
         } else {
+          this.loading = true
           await Promise.all(this.selectedItems.map(({ id }) =>
             this.catchError({
               promise: reviewServices.closeReview(id, this.cancelToken.token),
@@ -435,11 +458,17 @@
             })
           ))
 
-          this.selectedItems = []
+          this.successMessage = this.$i18n.tc('component.review.edit.success.closed', this.selectedItems.length, { count: this.selectedItems.length })
           this.reviewsOptions.page = 1
+          this.loading = false
+
           this.retrieveReviews()
         }
       },
+      handlePopupChange (type) {
+        this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
+        this.retrieveReviews()
+      }
     }
   }
 </script>

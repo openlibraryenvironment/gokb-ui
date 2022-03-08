@@ -73,6 +73,10 @@
       "create": "Create Package Title",
       "search": "Package Titles"
     },
+    "platform": {
+      "edit": "Edit Platform",
+      "create": "Create Platform"
+    },
     "provider": {
       "edit": "Edit Provider",
       "create": "Create Provider",
@@ -161,13 +165,18 @@
     }
   },
   "validation": {
+    "hasErrors": "The entered information is not valid. Please fix the remaining issues before saving.",
+    "valueNotUnique": "This value is already in use.",
     "missingValue": "Please fill this field.",
     "missingSelection": "Please select a value from the list.",
     "missingName": "Please provide a name.",
     "missingEmail": "Please provide a valid email address.",
+    "urlNotUnique": "This URL is already in use",
+    "nameNotUnique": "This name is already in use.",
     "urlForm": "Please provide a valid URL.",
     "numberFormat": "Please enter a number.",
     "dateFormat": "Invalid Date",
+    "dateRange": "The end date must be after the start date.",
     "passwordLength": "The password must be between 6 and 64 characters of length."
   },
   "job": {
@@ -217,7 +226,7 @@
       "PlatformCleanup": "Platform Cleanup",
       "RecalculateStatistics": "Recalculate Statistics",
       "PackageUpdateTipps": "Package KBART Update",
-      "KBARTIngest": "KBART Import"
+      "KBARTIngest": "KBART Package Ingest"
     }
   },
   "kbart": {
@@ -574,6 +583,9 @@
         },
         "In Progress": {
           "label": "In Progress"
+        },
+        "error": {
+          "openReviews": "All connected requests for review must be closed before the package can be marked as checked."
         }
       },
       "breakable": "Content may be split",
@@ -743,7 +755,16 @@
       "label": "Organization | Organizations"
     },
     "platform": {
-      "label": "Platform | Platforms"
+      "label": "Platform | Platforms",
+      "name": "Platform name",
+      "url": "Platform URL",
+      "conflict": {
+        "providerLink": "The provider for this platform is:",
+        "url": "This URL is already in use for platform {0}. ",
+        "name": "This Name is already in use in another platform. ",
+        "general": "These values are already in use in another platform. ",
+        "noProvider": "The platform could not be created because of conflicts with another platform in the system (ID {0}). Please report this to an administrator."
+      }
     },
     "provider": {
       "label": "Provider | Providers",
@@ -826,11 +847,21 @@
     },
     "review": {
       "label": "Review | Reviews",
-      "request": "Request",
-      "action": "Action taken",
-      "type": "Type",
-      "cause": "Cause",
-      "componentToReview": "Component",
+      "request": {
+        "label": "Request"
+      },
+      "action": {
+        "label": "Action taken"
+      },
+      "type": {
+        "label":"Type"
+      },
+      "cause": {
+        "label": "Cause"
+      },
+      "componentToReview": {
+        "label": "Component"
+      },
       "additionalInfo": {
         "label": "Structured info"
       },
@@ -845,6 +876,15 @@
         "label": "Candidates"
       },
       "showClosed": "Show closed requests",
+      "edit": {
+        "success": {
+          "created": "A new request was successfully created.",
+          "edited": "Request was successfully edited.",
+          "escalated" : "The request has been successfully escalated.",
+          "deescalated" : "The request has been successfully deescalated.",
+          "closed": "Request marked as closed | {0} requests marked as closed"
+        }
+      },
       "status": {
         "label": "Status",
         "Open": {
@@ -1015,6 +1055,12 @@
         "No ZDB Results": {
           "label": "No ZDB Matches",
           "info": "No ZDB-IDs found for given ISSNs",
+          "action": "Skipped ZDB enrichment",
+          "toDo": ""
+        },
+        "Merged ZDB titles": {
+          "label": "Multiple ZDB-IDs Linked",
+          "info": "ZDB synchronisation skipped because the title has multiple ZDB-IDs linked",
           "action": "Skipped ZDB enrichment",
           "toDo": ""
         },

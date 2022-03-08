@@ -125,7 +125,13 @@
         resultOptions: {
           page: 1,
           sortBy: [],
-          desc: [false],
+          desc: false,
+          itemsPerPage: ROWS_PER_PAGE
+        },
+        requestOptions: {
+          page: 1,
+          sortBy: [],
+          desc: false,
           itemsPerPage: ROWS_PER_PAGE
         },
         totalNumberOfItems: -1,
@@ -197,17 +203,25 @@
       },
       resultPaginate (options) {
         const page = options.page
-        if (options.sortBy) {
+
+        if (typeof options.sortBy === 'Array' && options.sortBy.length > 0 && options.sortBy !== this.requestOptions.sortBy) {
+          this.requestOptions.sortBy = options.sortBy
           this.resultOptions.sortBy = options.sortBy
+        } else if (typeof options.sortBy === 'string') {
+          this.requestOptions.sortBy = [options.sortBy]
+          this.resultOptions.sortBy = [options.sortBy]
         }
 
-        if (this.sortMappings?.link && this.resultOptions.sortBy.includes('link')) {
-          this.resultOptions.sortBy = [this.sortMappings.link]
-        } else if (this.sortMappings?.linkTwo && this.resultOptions.sortBy.includes('linkTwo')) {
-          this.resultOptions.sortBy = [this.sortMappings.linkTwo]
+        if (options.sortBy && this.sortMappings?.link && this.requestOptions.sortBy.includes('link')) {
+          this.requestOptions.sortBy = [this.sortMappings.link]
+        } else if (options.sortBy && this.sortMappings?.linkTwo && this.requestOptions.sortBy.includes('linkTwo')) {
+          this.requestOptions.sortBy = [this.sortMappings.linkTwo]
         }
 
-        if (options.desc) {
+        this.requestOptions.page = page
+
+        if (typeof options.desc === 'boolean' && options.desc != this.requestOptions.desc) {
+          this.requestOptions.desc = options.desc
           this.resultOptions.desc = options.desc
         }
         this.search({ page })
@@ -255,21 +269,21 @@
             return result
           }, {})
         // console.log(this.searchInputFields, this.searchParameters)
-        const sort = this.resultOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.resultOptions.sortBy[0]] || this.resultOptions.sortBy[0]) : undefined
-        const desc = this.resultOptions.desc[0] ? 'desc' : 'asc'
+        const sort = this.requestOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.requestOptions.sortBy[0]] || this.requestOptions.sortBy[0]) : undefined
+        const desc = typeof this.requestOptions.desc === 'Array' ? this.requestOptions.desc[0] : this.requestOptions.desc
 
         const componentOptions = this.staticParams
 
         const esTypedParams = {
           es: true,
           ...((sort && { sort: sort }) || {}),
-          ...((sort && { order: desc }) || {}),
+          ...((sort && { order: (desc ? 'desc' : 'asc') }) || {}),
           max: this.resultOptions.itemsPerPage
         }
 
         const dbTypedParams = {
           ...((sort && { _sort: sort }) || {}),
-          ...((sort && { _order: desc }) || {}),
+          ...((sort && { _order: (desc ? 'desc' : 'asc') }) || {}),
           limit: this.resultOptions.itemsPerPage
         }
 
@@ -282,7 +296,7 @@
             ...(this.searchByEs ? esTypedParams : dbTypedParams),
             ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
             ...((this.searchServiceEmbeds && { _embed: this.searchServiceEmbeds }) || {}),
-            offset: page ? (page - 1) * this.resultOptions.itemsPerPage : 0,
+            offset: page ? (page - 1) * this.requestOptions.itemsPerPage : 0,
           }, this.cancelToken.token),
           instance: this
         })
@@ -291,7 +305,9 @@
           // console.log(data, _pagination, _links)
           if (!page) {
             this.resultOptions.page = 1
+            this.requestOptions.page = 1
           }
+
           this.selectedItems = []
           this.totalNumberOfItems = _pagination.total
           this.resultItems = this._transformForTable(data)

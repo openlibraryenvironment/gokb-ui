@@ -93,7 +93,7 @@
               <v-col cols="6">
                 <gokb-text-field
                   v-model="localAction"
-                  :label="$t('component.review.action')"
+                  :label="$t('component.review.action.label')"
                   disabled
                 />
               </v-col>
@@ -103,7 +103,7 @@
               style="display:block;font-size:0.9em;"
               for="stdDesc"
             >
-              {{ $t('component.review.cause') }}
+              {{ $t('component.review.cause.label') }}
             </label>
             <i18n
               id="stdDesc"
@@ -171,7 +171,7 @@
             v-model="reviewItem.description"
             required
             :disabled="isEdit"
-            :label="$i18n.t('component.review.cause')"
+            :label="$i18n.t('component.review.cause.label')"
           />
           <div
             v-if="additionalInfo && additionalInfo.candidates"
@@ -225,7 +225,7 @@
                   small
                   @click="removeOtherComponent(oc.id)"
                 >
-                  close
+                  mdi-close
                 </v-icon>
               </v-col>
             </v-row>
@@ -291,7 +291,7 @@
             v-model="reviewItem.request"
             required
             :disabled="isEdit"
-            :label="$i18n.t('component.review.request')"
+            :label="$i18n.t('component.review.request.label')"
           />
         </template>
       </v-col>
@@ -314,13 +314,13 @@
         v-if="escalatable"
         @click="escalate"
       >
-        {{ $t('btn.escalate') }}
+        {{ $t('btn.escalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
       </gokb-button>
       <gokb-button
         v-if="deescalatable"
         @click="deescalate"
       >
-        {{ $t('btn.deescalate') }}
+        {{ $t('btn.deescalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
       </gokb-button>
       <v-spacer />
       <gokb-button
@@ -381,6 +381,7 @@
         deleteUrl: undefined,
         escalatable: false,
         deescalatable: false,
+        escalationTarget: undefined,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,
@@ -438,7 +439,7 @@
         return this.reviewItem?.component?.type || undefined
       },
       cmpLabel () {
-        return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview'))
+        return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.review.label')]) : undefined
@@ -481,6 +482,7 @@
         })
           .then(response => {
             this.escalatable = response.data.isEscalatable
+            this.escalationTarget = response.data.escalationTargetGroup
           })
       },
       async isDeescalatable () {
@@ -490,6 +492,7 @@
         })
           .then(response => {
             this.deescalatable = response.data.isDeescalatable
+            this.escalationTarget = response.data.escalationTargetGroup
           })
       },
       async escalate () {
@@ -498,7 +501,7 @@
           instance: this
         })
         if (response.status === 200) {
-          this.$emit('paginate', response.data)
+          this.$emit('edit', 'escalated')
           this.close()
         }
       },
@@ -508,7 +511,7 @@
           instance: this
         })
         if (response.status === 200) {
-          this.$emit('paginate', response.data)
+          this.$emit('edit', 'deescalated')
           this.close()
         }
       },
@@ -569,10 +572,10 @@
         })
 
         if (response?.status === 200) {
-          this.$emit('edit', this.selectedItem)
+          this.$emit('edit', 'edited')
           this.close()
         } else if (response?.status === 201) {
-          this.$emit('added', response.data)
+          this.$emit('edit', 'created')
           this.close()
         } else {
           if (response.status === 409) {

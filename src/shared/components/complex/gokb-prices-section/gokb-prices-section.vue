@@ -14,7 +14,7 @@
     <template #buttons>
       <gokb-button
         v-if="isEditable"
-        icon-id="add"
+        icon-id="mdi-plus"
         color="primary"
         @click="showAddItemPopup"
       >
@@ -25,7 +25,7 @@
         :disabled="selectedItems.length == 0"
         class="ml-4"
         color="primary"
-        icon-id="delete"
+        icon-id="mdi-delete"
         @click="confirmDeleteSelectedItems"
       >
         {{ $t('btn.delete') }}
@@ -117,8 +117,8 @@
           .map(item => ({
             ...item,
             localCurrency: (item.currency && item.currency.name),
-            localStart: item.startDate && item.startDate.substr(2, 10),
-            localEnd: item.endDate && item.endDate.substr(2, 10),
+            startDate: this.buildDateString(item.startDate),
+            endDate: this.buildDateString(item.endDate),
             localType: (item.priceType && this.$i18n.t('component.tipp.prices.priceType.' + (item.priceType.value || item.priceType.name) + '.label'))
           }))
       },
@@ -135,8 +135,8 @@
         return [
           { text: this.$i18n.tc('component.tipp.prices.price.label'), align: 'left', value: 'price', sortable: true },
           { text: this.$i18n.tc('component.tipp.prices.currency.label'), align: 'left', value: 'localCurrency', sortable: true, width: '15%' },
-          { text: this.$i18n.tc('component.tipp.prices.startDate.label'), align: 'left', value: 'localStart', sortable: true, width: '15%' },
-          { text: this.$i18n.tc('component.tipp.prices.endDate.label'), align: 'left', value: 'localEnd', sortable: true, width: '15%' },
+          { text: this.$i18n.tc('component.tipp.prices.startDate.label'), align: 'left', value: 'startDate', sortable: true, width: '15%' },
+          { text: this.$i18n.tc('component.tipp.prices.endDate.label'), align: 'left', value: 'endDate', sortable: true, width: '15%' },
         ]
       },
       title () {

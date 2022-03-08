@@ -30,7 +30,7 @@
         @click="stopAutoUpdate"
       >
         <v-icon>
-          sync_disabled
+          mdi-sync-off
         </v-icon>
       </v-btn>
     </template>

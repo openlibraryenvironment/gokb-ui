@@ -74,6 +74,10 @@
       "create": "Pakettitel anlegen",
       "search": "Pakettitel"
     },
+    "platform": {
+      "edit": "Plattform bearbeiten",
+      "create": "Plattform anlegen"
+    },
     "provider": {
       "edit": "Anbieter bearbeiten",
       "create": "Anbieter anlegen",
@@ -162,13 +166,17 @@
     }
   },
   "validation": {
+    "hasErrors": "Fehlerhafte Angaben entdeckt! Bitte beheben Sie die verbleibenden Fehler vor dem Speichern.",
+    "valueNotUnique": "Dieser Wert wird bereits verwendet.",
     "missingValue": "Bitte füllen Sie dieses Feld aus.",
     "missingSelection": "Bitte wählen Sie einen Wert aus der Liste aus.",
+    "urlNotUnique": "Diese URL wird bereits verwendet.",
     "missingName": "Bitte geben Sie einen Namen an.",
     "missingEmail": "Bitte geben Sie eine gültige E-Mail-Adresse an.",
     "urlForm": "Bitte geben Sie eine gültige URL an.",
     "numberFormat": "Dieses Feld erwartet eine Zahl.",
     "dateFormat": "Ungültiges Datum",
+    "dateRange": "Das Enddatum muss nach dem Anfangsdatum liegen.",
     "passwordLength": "Das Passwort muss zwischen 6 und 64 Zeichen haben."
   },
   "job": {
@@ -218,7 +226,7 @@
       "PlatformCleanup": "Platform Cleanup",
       "RecalculateStatistics": "Recalculate Statistics",
       "PackageUpdateTipps": "KBART Update",
-      "KBARTIngest": "KBART Import"
+      "KBARTIngest": "KBART-Import"
     }
   },
   "kbart": {
@@ -575,6 +583,9 @@
         },
         "In Progress": {
           "label": "In Bearbeitung"
+        },
+        "error": {
+          "openReviews": "Alle verknüpften Prüfanfragen müssen geschlossen sein bevor das Paket als geprüft markiert werden kann."
         }
       },
       "breakable": "Einzeltitelauswahl möglich",
@@ -644,10 +655,10 @@
           }
         },
         "startDate": {
-          "label": "Startdatum"
+          "label": "Gültigkeitsbeginn"
         },
         "endDate": {
-          "label": "Enddatum"
+          "label": "Gültigkeitsende"
         }
       },
       "name": "Paketspezifischer Titel",
@@ -744,7 +755,16 @@
       "label": "Organisation | Organisationen"
     },
     "platform": {
-      "label": "Plattform | Plattformen"
+      "label": "Plattform | Plattformen",
+      "name": "Plattform-Name",
+      "url": "Plattform-URL",
+      "conflict": {
+        "providerLink": "Der Provider für diese Plattform ist:",
+        "url": "Die angegebene URL wird bereits von der Platform {0} verwendet. ",
+        "name": "Der angegebene Name wird bereits verwendet. ",
+        "general": "Die angegebenen Werte werden bereits in einer anderen Plattform verwendet. ",
+        "noProvider": "Die Plattform konnte nicht angelegt werden, da ein Konflikt mit einer anderen Plattform vorliegt (ID {0}). Bitte melden Sie dies an einen Administrator."
+      }
     },
     "provider": {
       "label": "Anbieter | Anbieter",
@@ -827,11 +847,21 @@
     },
     "review": {
       "label": "Prüfanfrage | Prüfanfragen",
-      "request": "Anfrage",
-      "action": "Durchgeführte Aktion",
-      "type": "Typ",
-      "cause": "Ursache",
-      "componentToReview": "Komponente",
+      "request": {
+        "label": "Anfrage"
+      },
+      "action": {
+        "label": "Durchgeführte Aktion"
+      },
+      "type": {
+        "label": "Typ"
+      },
+      "cause": {
+        "label": "Ursache"
+      },
+      "componentToReview": {
+        "label": "Komponente"
+      },
       "additionalInfo": {
         "label": "Strukturierte Detailansicht"
       },
@@ -846,6 +876,15 @@
         "label": "Kandidaten"
       },
       "showClosed": "Abgeschlossene anzeigen",
+      "edit": {
+        "success": {
+          "created": "Eine neue Prüfanfrage wurde erfolgreich angelegt.",
+          "edited": "Prüfanfrage erfolgreich bearbeitet.",
+          "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
+          "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
+          "closed": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
+        }
+      },
       "status": {
         "label": "Status",
         "Open": {
@@ -1016,6 +1055,12 @@
         "No ZDB Results": {
           "label": "Keine ZDB-Aufnahme gefunden",
           "info": "Für die gegebenen ISSNs wurde keine ZDB-Aufnahme gefunden.",
+          "action": "ZDB-Anreicherung übersprungen",
+          "toDo": ""
+        },
+        "Merged ZDB titles": {
+          "label": "Mehrere ZDB-IDs",
+          "info": "Der Referenztitel hat mehrere verknüpfte ZDB-IDs.",
           "action": "ZDB-Anreicherung übersprungen",
           "toDo": ""
         },

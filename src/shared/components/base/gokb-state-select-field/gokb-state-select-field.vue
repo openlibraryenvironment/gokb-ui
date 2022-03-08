@@ -9,35 +9,35 @@
     </template>
     <v-radio
       value="Current"
-      on-icon="check_circle"
+      on-icon="mdi-check-circle"
       color="success"
       :label="$t('component.general.status.Current.label')"
-      off-icon="check_circle_outline"
+      off-icon="mdi-check-circle-outline"
       :readonly="!editable"
     />
     <v-radio
       value="Retired"
-      on-icon="cancel"
+      on-icon="mdi-close-circle"
       color="amber"
       :label="$t('component.general.status.Retired.label')"
       :readonly="!editable"
-      off-icon="close"
+      off-icon="mdi-close"
     />
     <v-radio
       value="Expected"
-      on-icon="watch_later"
+      on-icon="mdi-clock"
       color="info"
       :label="$t('component.general.status.Expected.label')"
       :readonly="!editable"
-      off-icon="schedule"
+      off-icon="mdi-clock-outline"
     />
     <v-radio
       value="Deleted"
-      on-icon="delete"
+      on-icon="mdi-delete"
       color="red"
       :label="$t('component.general.status.Deleted.label')"
       :readonly="!deletable"
-      off-icon="delete_outline"
+      off-icon="mdi-delete-outline"
     />
   </v-radio-group>
 </template>

@@ -421,6 +421,10 @@
                       this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
                     }
                   })
+                } else if (orderedVals[columns.indexOf('publication_title')]?.indexOf('�') >= 0) {
+                  hasErrors = true
+                  this.loadedFile.errors.single.push({ row: idxr, column: 'publication_title', reason: this.$i18n.t('kbart.errors.encoding'), value: orderedVals[columns.indexOf('publication_title')] })
+                  break
                 }
 
                 if (hasErrors) {

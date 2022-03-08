@@ -28,7 +28,7 @@
       resultActionButtons () {
         return [
           {
-            icon: 'clear',
+            icon: 'mdi-close',
             label: this.$i18n.t('btn.close'),
             disabled: 'isCloseSelectedDisabled',
             action: '_confirmCloseSelectedItems',
@@ -41,13 +41,13 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.review.componentToReview'),
+            text: this.$i18n.t('component.review.componentToReview.label'),
             align: 'left',
             sortable: true,
             value: 'popup'
           },
           {
-            text: this.$i18n.t('component.review.type'),
+            text: this.$i18n.t('component.review.type.label'),
             align: 'left',
             sortable: true,
             value: 'type'
@@ -74,7 +74,7 @@
               type: 'GokbTextField',
               name: 'cause',
               properties: {
-                label: this.$i18n.t('component.review.cause')
+                label: this.$i18n.t('component.review.cause.label')
               }
             },
             {
@@ -94,7 +94,7 @@
               name: 'componentToReview',
               value: 'componentToReview',
               properties: {
-                label: this.$i18n.t('component.review.componentToReview'),
+                label: this.$i18n.t('component.review.componentToReview.label'),
               }
             },
             {

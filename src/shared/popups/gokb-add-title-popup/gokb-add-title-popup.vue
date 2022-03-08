@@ -175,7 +175,7 @@
           <v-toolbar-items class="pa-2">
             <gokb-button
               v-if="!isReadonly && coverageExpanded"
-              icon-id="add"
+              icon-id="mdi-plus"
               @click="addNewCoverage"
             >
               {{ $t('btn.add') }}
@@ -219,7 +219,7 @@
                       @click="removeCoverage(idx)"
                     >
                       <v-icon>
-                        delete
+                        mdi-delete
                       </v-icon>
                     </v-btn>
                   </v-col>
@@ -735,7 +735,7 @@
           if (response.status < 400) {
             const edited = {
               ...this.packageTitleItem,
-              statusLocal: this.$i18n.t('component.general.status.' + this.packageTitleItem.name + '.label'),
+              statusLocal: this.$i18n.t('component.general.status.' + this.packageTitleItem.status.name + '.label'),
               popup: { value: (this.pkg ? (this.packageTitleItem.title ? this.packageTitleItem.title.name : this.packageTitleItem.name) : this.packageTitleItem.pkg.name), label: 'tipp', type: 'GokbAddTitlePopup' },
               hostPlatformName: this.packageTitleItem.hostPlatform?.name,
               titleType: this.title.type,
