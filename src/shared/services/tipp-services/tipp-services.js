@@ -18,14 +18,14 @@ const api = (baseServices) => ({
   },
   archiveTipp (url, cancelToken) {
     return baseServices.request({
-      method: 'PATCH',
-      url: baseServices.relativeUrl(url),
+      method: 'POST',
+      url: baseServices.relativeUrl(url) + '/retire',
       data: { status: 'Retired' }
     }, cancelToken)
   },
   deleteTipp (url, cancelToken) {
     return baseServices.request({
-      method: 'DELETE',
+      method: 'GET',
       url: baseServices.relativeUrl(url),
     }, cancelToken)
   },

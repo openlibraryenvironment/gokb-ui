@@ -176,6 +176,7 @@
             <gokb-button
               v-if="!isReadonly && coverageExpanded"
               icon-id="mdi-plus"
+              default
               @click="addNewCoverage"
             >
               {{ $t('btn.add') }}

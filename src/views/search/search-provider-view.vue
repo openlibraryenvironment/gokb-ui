@@ -126,34 +126,16 @@
       },
       _confirmArchiveSelectedItems () {
         this.actionToConfirm = '_archiveSelectedItems'
-        this.messageToConfirm = this.$i18n.t('popups.confirm.retire')
+        this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.provider.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       _confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = this.$i18n.t('popups.confirm.delete')
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.provider.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
-      },
-      async _archiveSelectedItems () {
-        await Promise.all(this.selectedItems.map(({ retireUrl }) =>
-          this.catchError({
-            promise: providerServices.archiveProvider(retireUrl, this.cancelToken.token),
-            instance: this
-          })
-        ))
-        this.resultPaginate(this.resultOptions.page)
-      },
-      async _deleteSelectedItems () {
-        await Promise.all(this.selectedItems.map(({ deleteUrl }) =>
-          this.catchError({
-            promise: providerServices.deleteProvider(deleteUrl, this.cancelToken.token),
-            instance: this
-          })
-        ))
-        this.resultPaginate(this.resultOptions.page)
-      },
+      }
     }
   }
 </script>
