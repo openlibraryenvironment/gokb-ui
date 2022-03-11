@@ -226,7 +226,8 @@
       "PlatformCleanup": "Platform Cleanup",
       "RecalculateStatistics": "Recalculate Statistics",
       "PackageUpdateTipps": "KBART Update",
-      "KBARTIngest": "KBART-Import"
+      "KBARTIngest": "KBART-Import",
+      "KBART Ingest": "KBART-Import"
     }
   },
   "kbart": {

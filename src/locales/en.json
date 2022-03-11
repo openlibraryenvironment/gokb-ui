@@ -226,7 +226,8 @@
       "PlatformCleanup": "Platform Cleanup",
       "RecalculateStatistics": "Recalculate Statistics",
       "PackageUpdateTipps": "Package KBART Update",
-      "KBARTIngest": "KBART Package Ingest"
+      "KBARTIngest": "KBART Package Ingest",
+      "KBART Ingest": "KBART Package Ingest"
     }
   },
   "kbart": {
