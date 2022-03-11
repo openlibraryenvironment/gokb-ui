@@ -50,7 +50,7 @@ const api = (http, utils) => ({
   },
 
   relativeUrl (url) {
-    return utils.isProduction() ? url : url.replace(process.env.VUE_APP_API_BASE_URL, '')
+    return url.indexOf('http') == 0 ? url : new URL(url, process.env.VUE_APP_API_BASE_URL)
   },
 })
 

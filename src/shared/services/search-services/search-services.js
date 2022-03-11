@@ -11,7 +11,7 @@ const api = baseServices =>
 
   delete (url, cancelToken) {
     return baseServices.request({
-      method: 'DELETE',
+      method: 'GET',
       url,
     }, cancelToken)
   },

@@ -92,7 +92,7 @@ export default {
       type: Object,
       default: function() {
         return {
-          locale: "pt-BR",
+          locale: "en",
           prefix: "",
           suffix: "",
           length: 11,

@@ -48,12 +48,12 @@ const api = (baseServices) => ({
   archivePackage (url, cancelToken) {
     return baseServices.request({
       method: 'POST',
-      url: baseServices.relativeUrl(url),
+      url: baseServices.relativeUrl(url) + '/retire',
     }, cancelToken)
   },
   deletePackage (url, cancelToken) {
     return baseServices.request({
-      method: 'DELETE',
+      method: 'GET',
       url: baseServices.relativeUrl(url),
     }, cancelToken)
   }

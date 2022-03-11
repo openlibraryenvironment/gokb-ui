@@ -163,27 +163,12 @@
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      async _deleteSelectedItems () {
-        await Promise.all(this.selectedItems.map(({ deleteUrl }) =>
-          this._executeDeleteItemService(deleteUrl)
-        ))
-        this.resultPaginate(this.resultOptions.page)
-      },
       _confirmRetireSelectedItems () {
         this.actionToConfirm = '_retireSelectedItems'
         this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.title.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
-      },
-      async _retireSelectedItems () {
-        await Promise.all(this.selectedItems.map(({ updateUrl }) =>
-          this.catchError({
-            promise: this.searchServices.retire(updateUrl, this.cancelToken.token),
-            instance: this
-          })
-        ))
-        this.resultPaginate(this.resultOptions.page)
-      },
+      }
     }
   }
 </script>

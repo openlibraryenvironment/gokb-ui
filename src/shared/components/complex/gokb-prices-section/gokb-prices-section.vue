@@ -119,7 +119,8 @@
             localCurrency: (item.currency && item.currency.name),
             startDate: this.buildDateString(item.startDate),
             endDate: this.buildDateString(item.endDate),
-            localType: (item.priceType && this.$i18n.t('component.tipp.prices.priceType.' + (item.priceType.value || item.priceType.name) + '.label'))
+            localType: (item.priceType && this.$i18n.t('component.tipp.prices.priceType.' + (item.priceType.value || item.priceType.name) + '.label')),
+            localPrice: Number(item.price).toLocaleString(this.$i18n.locale, { maximumFractionDigits: 2, minimumFractionDigits: 2})
           }))
       },
       isDeleteSelectedDisabled () {
@@ -133,10 +134,10 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.tipp.prices.price.label'), align: 'left', value: 'price', sortable: true },
-          { text: this.$i18n.tc('component.tipp.prices.currency.label'), align: 'left', value: 'localCurrency', sortable: true, width: '15%' },
-          { text: this.$i18n.tc('component.tipp.prices.startDate.label'), align: 'left', value: 'startDate', sortable: true, width: '15%' },
-          { text: this.$i18n.tc('component.tipp.prices.endDate.label'), align: 'left', value: 'endDate', sortable: true, width: '15%' },
+          { text: this.$i18n.tc('component.tipp.prices.price.label'), align: 'left', value: 'localPrice', sortable: true },
+          { text: this.$i18n.tc('component.tipp.prices.currency.label'), align: 'left', value: 'localCurrency', sortable: true },
+          { text: this.$i18n.tc('component.tipp.prices.startDate.label'), align: 'left', value: 'startDate', sortable: true },
+          { text: this.$i18n.tc('component.tipp.prices.endDate.label'), align: 'left', value: 'endDate', sortable: true, width: '20%' },
         ]
       },
       title () {

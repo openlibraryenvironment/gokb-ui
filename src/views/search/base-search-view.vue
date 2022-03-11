@@ -236,6 +236,12 @@
         await this._executeDeleteItemService(deleteUrl)
         this.resultPaginate(this.resultOptions.page)
       },
+      async _deleteSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ deleteUrl }) =>
+          this._executeDeleteItemService(deleteUrl)
+        ))
+        this.resultPaginate(this.resultOptions.page)
+      },
       confirmRetireItem ({ updateUrl }) {
         this.actionToConfirm = 'retireItem'
         this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)] }
@@ -244,6 +250,12 @@
       },
       async retireItem (updateUrl) {
         await this._executeRetireItemService(updateUrl)
+        this.resultPaginate(this.resultOptions.page)
+      },
+      async _retireSelectedItems () {
+        await Promise.all(this.selectedItems.map(({ updateUrl }) =>
+          this._executeRetireItemService(updateUrl)
+        ))
         this.resultPaginate(this.resultOptions.page)
       },
       _executeDeleteItemService (deleteUrl) {
