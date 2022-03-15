@@ -5,9 +5,10 @@
     :title="title"
     @valid="valid = $event"
     @submit="update"
+    @setsuccessmsg="setsuccessmsg"
   >
     <gokb-error-component :value="error" />
-    <span v-if="successMsg">
+    <span v-show="successMsg">
       <v-alert
         type="success"
         dismissible
@@ -444,6 +445,9 @@
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
+      },
+      setsuccessmsg ( msg ) {
+        this.successMsg = msg
       },
       async update () {
         var isUpdate = !!this.id

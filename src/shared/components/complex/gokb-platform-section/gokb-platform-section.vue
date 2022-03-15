@@ -182,11 +182,14 @@
           // edit existing platform
           existingPlatform.name = value.name
           existingPlatform.primaryUrl = value.primaryUrl
+          this.successMsg = 'success.update'
           this.localValue[index] = existingPlatform
         } else {
           // add new platform
+          this.successMsg = 'success.create'
           this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: value.id, isDeletable: true })
         }
+        this.$emit('setsuccessmsg', this.successMsg)
       }
     }
   }
