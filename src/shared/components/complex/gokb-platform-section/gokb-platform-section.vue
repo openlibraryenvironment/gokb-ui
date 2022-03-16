@@ -10,7 +10,7 @@
       v-if="editPlatformPopupVisible"
       v-model="editPlatformPopupVisible"
       :provider-id="providerId"
-      @edit="editPlatform"
+      @edit="addPlatform"
     />
     <template #buttons>
       <gokb-button
@@ -170,23 +170,28 @@
         this.editPlatformPopupVisible = true
       },
       editPlatform (value) {
+        var existingPlatform = getExistingPlatform(value)
+        if (existingPlatform) {
+          const index = this.localValue.indexOf(existingPlatform)
+          existingPlatform.name = value.name
+          existingPlatform.primaryUrl = value.primaryUrl
+          this.localValue[index] = existingPlatform
+        }
+      },
+      addPlatform (value) {
+        var existingPlatform = getExistingPlatform(value)
+        if (!existingPlatform) {
+          this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: value.id, isDeletable: true })
+        }
+      },
+      getExistingPlatform (value) {
         const platformMatch = this.localValue.filter(({ id }) => id === value.id)
         var existingPlatform
 
         if (platformMatch.length === 1) {
           existingPlatform = platformMatch[0]
         }
-
-        if (existingPlatform) {
-          const index = this.localValue.indexOf(existingPlatform)
-          // edit existing platform
-          existingPlatform.name = value.name
-          existingPlatform.primaryUrl = value.primaryUrl
-          this.localValue[index] = existingPlatform
-        } else {
-          // add new platform
-          this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: value.id, isDeletable: true })
-        }
+        return existingPlatform
       }
     }
   }
