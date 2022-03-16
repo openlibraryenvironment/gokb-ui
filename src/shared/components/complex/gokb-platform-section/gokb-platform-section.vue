@@ -170,7 +170,7 @@
         this.editPlatformPopupVisible = true
       },
       editPlatform (value) {
-        var existingPlatform = getExistingPlatform(value)
+        var existingPlatform = this.getExistingPlatform(value)
         if (existingPlatform) {
           const index = this.localValue.indexOf(existingPlatform)
           existingPlatform.name = value.name
@@ -179,9 +179,10 @@
         }
       },
       addPlatform (value) {
-        var existingPlatform = getExistingPlatform(value)
+        var existingPlatform = this.getExistingPlatform(value)
         if (!existingPlatform) {
-          this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: value.id, isDeletable: true })
+          this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: value.id, isDeletable: true, _pending: 'added'  })
+          this.$emit('update', 'platforms')
         }
       },
       getExistingPlatform (value) {
