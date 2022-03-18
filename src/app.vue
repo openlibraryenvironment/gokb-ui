@@ -138,7 +138,7 @@
           </span>
         </v-btn>
       </v-toolbar-title>
-      <v-autocomplete
+      <!-- <v-autocomplete
         v-model="globalSearchSelected"
         :items="globalSearchItems"
         :loading="globalSearchIsLoading"
@@ -168,7 +168,8 @@
             <v-list-item-title v-text="item.name" />
           </v-list-item-content>
         </template>
-      </v-autocomplete>
+      </v-autocomplete> -->
+      <v-spacer/>
       <v-btn
         class="mr-2"
         icon
