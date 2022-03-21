@@ -762,8 +762,8 @@
           const newTipp = {
             ...this.packageTitleItem,
             id: this.tempId(),
-            connectedTitleId: this.packageTitleItem.title.id,
-            ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
+            connectedTitleId: this.packageTitleItem.title?.id || null,
+            ids: this.packageTitleItem.ids.map(ido => ({ value: ido.value, type: ido.namespace })),
             prices: this.packageTitleItem.prices.map(price => ({ ...price, type: price.priceType, id: (typeof price.id === 'number' ? price.id : null) })),
             variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),

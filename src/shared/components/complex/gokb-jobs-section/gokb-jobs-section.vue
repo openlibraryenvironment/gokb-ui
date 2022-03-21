@@ -217,8 +217,8 @@
                 link: linkedItem ? { value: linkedItem?.name, route: componentRoutes[linkedItem.type.toLowerCase()], id: 'componentId' } : {},
                 progress,
                 messages,
-                startTime: new Date(startTime).toLocaleString(this.$i18n.locale),
-                endTime: endTime ? new Date(endTime).toLocaleString(this.$i18n.locale) : '',
+                startTime: new Date(startTime).toLocaleString('sv'),
+                endTime: endTime ? new Date(endTime).toLocaleString('sv') : '',
                 status: (begun ? (endTime ? (cancelled ? (this.$i18n.t('job.cancelled') + ' (' + progress + '%)') : this.$i18n.t('job.finished')) : progress + '%') : this.$i18n.t('job.waiting'))
               }
             )
@@ -256,8 +256,8 @@
                 componentId: linkedItem?.id || null,
                 componentType: linkedItem && this.$i18n.tc('component.' + linkedItem.type.toLowerCase() + '.label'),
                 link: linkedItem ? { value: linkedItem?.name, route: componentRoutes[linkedItem.type.toLowerCase()], id: 'componentId' } : {},
-                startTime: new Date(startTime).toLocaleString(this.$i18n.locale),
-                endTime: new Date(endTime).toLocaleString(this.$i18n.locale),
+                startTime: new Date(startTime).toLocaleString('sv'),
+                endTime: endTime ? new Date(endTime).toLocaleString('sv') : '',
                 status: this.$i18n.t('job.' + status.toLowerCase())
               }
             )
