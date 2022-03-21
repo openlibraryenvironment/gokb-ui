@@ -250,8 +250,7 @@
           if (response.data.error) {
             this.handleApiErrors(response.data.error)
           } else if (!response.data.to_create) {
-            const problem = response.data.matches[0]
-            this.handleApiErrors(problem)
+            this.handleApiErrors(response.data.conflicts)
           } else {
             this.$emit('edit', newPlatform)
             this.close()
