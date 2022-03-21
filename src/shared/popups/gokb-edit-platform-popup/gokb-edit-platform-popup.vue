@@ -2,7 +2,7 @@
   <gokb-dialog
     value=""
     :title="localTitle"
-    @submit="save"
+    v-on="isEdit ? { submit: save } : { submit: check }"
   >
     <gokb-error-component :value="error" />
     <span v-if="errorMsg">
@@ -230,6 +230,43 @@
           }
         }
       },
+      async check () {
+        this.errors = {}
+        this.conflictLinks = []
+        const activeGroup = accountModel.activeGroup()
+        const newPlatform = {
+          id: this.platform.id,
+          name: this.platform.name,
+          primaryUrl: this.platform.primaryUrl,
+          version: this.version,
+          activeGroup
+        }
+
+        const response = await this.catchError({
+          promise: platformServices.checkPlatformFields(newPlatform, ['name', 'primaryUrl'], this.cancelToken.token),
+          instance: this
+        })
+        if (response?.status < 300 && response.data) {
+          if (response.data.error) {
+            this.handleApiErrors(response.data.error)
+          } else if (!response.data.to_create) {
+            const problem = response.data.matches[0]
+            this.handleApiErrors(problem)
+          } else {
+            this.$emit('edit', newPlatform)
+            this.close()
+          }
+        } else {
+          if (response?.status === 409) {
+            this.errorMsg = 'error.update.409'
+            this.errors = response?.data?.error
+          } else if (response?.status === 500) {
+            this.errorMsg = 'error.general.500'
+          } else if (response.data?.error) {
+            this.handleApiErrors(response.data.error)
+          }
+        }
+      },
       async handleApiErrors (errors) {
         var conflictProviders = {}
         this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
@@ -247,7 +284,6 @@
             }
           }
         }
-
         if (errors.primaryUrl) {
           for (const eu of errors.primaryUrl) {
             if (eu.matches) {
@@ -269,11 +305,9 @@
             }
           }
         }
-
         for (const cp in conflictProviders) {
           this.conflictLinks.push(conflictProviders[cp])
         }
-
         this.errors = errors
       }
     }
