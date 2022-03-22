@@ -105,7 +105,7 @@
       :options.sync="reviewsOptions"
       :actions="showEditActions"
       :show-loading="loading"
-      @selected-items="selectedItems"
+      @selected-items="selectedItems = $event"
       @paginate="retrieveReviews"
       @edit="handlePopupChange"
       @close-review="closeReview"
@@ -329,9 +329,9 @@
         if (length >= 10) {
           this.enableBulkCheck = true
         } else {
-          this.allPagesSelected = false
           this.enableBulkCheck = false
         }
+        this.allPagesSelected = false
       }
     },
     methods: {
