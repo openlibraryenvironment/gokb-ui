@@ -256,9 +256,8 @@
                 componentId: linkedItem?.id || null,
                 componentType: linkedItem && this.$i18n.tc('component.' + linkedItem.type.toLowerCase() + '.label'),
                 link: linkedItem ? { value: linkedItem?.name, route: componentRoutes[linkedItem.type.toLowerCase()], id: 'componentId' } : {},
-                messages,
                 startTime: new Date(startTime).toLocaleString('sv'),
-                endTime: new Date(endTime).toLocaleString('sv'),
+                endTime: endTime ? new Date(endTime).toLocaleString('sv') : '',
                 status: this.$i18n.t('job.' + status.toLowerCase())
               }
             )

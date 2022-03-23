@@ -1118,6 +1118,12 @@
           "info": "Eine KBART-Einspielung hat stattgefunden. Entnehmen Sie genauere Informationen bitte den Details.",
           "action": "Paket eingespielt",
           "toDo": ""
+        },
+        "Invalid Name": {
+          "label": "Fehlerhafter Name",
+          "info": "Der Name dieses Titels enhält fehlerhafte Zeichen.",
+          "action": "",
+          "toDo": "Korrigieren Sie den Namen des Titels (evtl. basierend auf der Verzeichung in externen Quellen). Bitte überprüfen Sie auch die verknüpften Referenztitel/Pakettitel."
         }
       }
     },

@@ -1,6 +1,6 @@
 {
   "name": "gokb-client",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --modern --mode local",
@@ -37,10 +37,10 @@
     "@babel/plugin-proposal-export-default-from": "^7.16.7",
     "@mdi/font": "^6.5.95",
     "@mdi/js": "^6.5.95",
-    "@vue/cli-plugin-babel": "^5.0.1",
-    "@vue/cli-plugin-pwa": "^5.0.1",
-    "@vue/cli-plugin-router": "^5.0.1",
-    "@vue/cli-service": "^5.0.1",
+    "@vue/cli-plugin-babel": "^5.0.3",
+    "@vue/cli-plugin-pwa": "^5.0.3",
+    "@vue/cli-plugin-router": "^5.0.3",
+    "@vue/cli-service": "^5.0.3",
     "@vue/eslint-config-standard": "^6.1.0",
     "core-js": "^3.21.1",
     "css-loader": "^5.2.7",
