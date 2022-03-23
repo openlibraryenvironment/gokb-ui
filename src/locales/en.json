@@ -1110,6 +1110,12 @@
           "info": "A KBART File has been imported. Please check the details for further information.",
           "action": "Package imported",
           "toDo": ""
+        },
+        "Invalid Name": {
+          "label": "Invalid Name",
+          "info": "The name of this title contains invalid characters.",
+          "action": "",
+          "toDo": "Correct the name of the title (check external sources if necessary). Please also check linked Package/Reference titles."
         }
       }
     },

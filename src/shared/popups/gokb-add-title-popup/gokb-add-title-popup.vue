@@ -720,6 +720,7 @@
 
           const newTipp = {
             ...this.packageTitleItem,
+            name: this.allNames.name,
             ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
             prices: this.packageTitleItem.prices.map(price => ({ ...price, id: (typeof price.id === 'number' ? price.id : null) })),
             publicationType: (this.packageTitleItem.publicationType ? this.packageTitleItem.publicationType.name : null),
