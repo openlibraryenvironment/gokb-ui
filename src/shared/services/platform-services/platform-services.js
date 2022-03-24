@@ -16,13 +16,10 @@ const api = (baseServices) => ({
       data,
     }, cancelToken)
   },
-  checkPlatformFields (data, fieldList, cancelToken) {
-    const filteredData = Object.keys(data)
-    .filter(key => fieldList.includes(key))
-    .reduce((obj, key) => {
-      obj[key] = data[key];
-      return obj;
-    }, {});
+  checkPlatform (data, cancelToken) {
+    const filteredData = {}
+    filteredData['name'] = data['name']
+    filteredData['primaryUrl'] = data['primaryUrl']
     const queryParameters = baseServices.createQueryParameters(filteredData)
     const url = process.env.VUE_APP_API_BASE_URL + `${PLATFORM_URL}/match?${queryParameters}`
     return baseServices.request({
