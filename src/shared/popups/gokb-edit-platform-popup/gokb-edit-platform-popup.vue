@@ -45,8 +45,8 @@
       :key="c.id"
       dense
     >
-      <v-col v-if="c.id">
-        {{ $t('component.platform.conflict.noProvider', [c.id]) }}
+      <v-col v-if="!c.id">
+        {{ $t('component.platform.conflict.noProvider', [c.platformId]) }}
       </v-col>
       <v-col v-else>
         {{ $t('component.platform.conflict.' + c.type, [c.platformName]) }}
