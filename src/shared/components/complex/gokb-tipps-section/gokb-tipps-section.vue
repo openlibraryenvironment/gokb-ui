@@ -342,10 +342,10 @@
       },
       statusTypes () {
         return [
-          { id: 'Current', text: this.$i18n.tc('component.general.status.Current.label'), icon: 'check' },
-          { id: 'Retired', text: this.$i18n.tc('component.general.status.Retired.label'), icon: 'close' },
-          { id: 'Expected', text: this.$i18n.tc('component.general.status.Expected.label'), icon: 'mdi-clock' },
-          { id: 'Deleted', text: this.$i18n.tc('component.general.status.Deleted.label'), icon: 'delete' },
+          { id: 'Current', text: this.$i18n.tc('component.general.status.Current.label'), icon: 'mdi-check-circle-outline' },
+          { id: 'Retired', text: this.$i18n.tc('component.general.status.Retired.label'), icon: 'mdi-close' },
+          { id: 'Expected', text: this.$i18n.tc('component.general.status.Expected.label'), icon: 'mdi-clock-outline' },
+          { id: 'Deleted', text: this.$i18n.tc('component.general.status.Deleted.label'), icon: 'mdi-delete-outline' },
         ]
       },
       loggedIn () {

@@ -37,6 +37,7 @@
         <v-col>
           <gokb-name-field
             v-model="allNames"
+            :disabled="isReadonly"
             :label="$tc('component.tipp.name')"
           />
         </v-col>
