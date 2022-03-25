@@ -15,6 +15,17 @@ const api = (baseServices) => ({
       url,
       data,
     }, cancelToken)
+  },
+  checkPlatform (data, cancelToken) {
+    const filteredData = {}
+    filteredData['name'] = data['name']
+    filteredData['primaryUrl'] = data['primaryUrl']
+    const queryParameters = baseServices.createQueryParameters(filteredData)
+    const url = process.env.VUE_APP_API_BASE_URL + `${PLATFORM_URL}/match?${queryParameters}`
+    return baseServices.request({
+      method: 'GET',
+      url
+    }, cancelToken)
   }
 })
 
