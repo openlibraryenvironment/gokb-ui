@@ -39,7 +39,9 @@
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
-    <v-expansion-panels v-model="jobPanel">
+    <v-expansion-panels
+      v-model="openJobPanels"
+      multiple>
       <v-expansion-panel>
         <v-expansion-panel-header>
           <h4>{{ $t('job.active.label') }}</h4>
@@ -60,7 +62,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
       <v-expansion-panel>
-        <v-expansion-panel-header click="toggleOldResults">
+        <v-expansion-panel-header>
           <h4>{{ $t('job.archived.label') }}</h4>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -128,7 +130,8 @@
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
         interval: null,
-        autoJobRefresh: true
+        autoJobRefresh: true,
+        openJobPanels: [0, 1]
       }
     },
     computed: {
@@ -164,6 +167,7 @@
       if (this.autoJobRefresh) {
         this.interval = setInterval(function () {
           this.fetchJobs()
+          this.fetchOldResults()
         }.bind(this), 1000)
       }
     },
@@ -284,6 +288,7 @@
 
         this.interval = setInterval(function () {
           this.fetchJobs()
+          this.fetchOldResults()
         }.bind(this), 1000)
       },
       stopAutoUpdate () {

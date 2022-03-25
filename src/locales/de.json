@@ -189,6 +189,31 @@
     "archived": {
       "label": "Archivierte Ergebnisse"
     },
+    "dryRun": {
+      "label": "Trockenlauf"
+    },
+    "report": {
+      "label": "Ergebnis",
+      "dryRunLabel": "Erwartetes Ergebnis",
+      "numRows": {
+        "label": "Zeilenanzahl"
+      },
+      "invalid": {
+        "label": "Fehlerhaft"
+      },
+      "matched": {
+        "label": "Treffer"
+      },
+      "retired": {
+        "label": "Archiviert"
+      },
+      "created": {
+        "label": "Erstellt"
+      },
+      "previous": {
+        "label": "Bisherige Anzahl"
+      }
+    },
     "ok": "Erfolgreich",
     "error": "Fehlerhaft",
     "description": "Beschreibung",
@@ -227,7 +252,8 @@
       "RecalculateStatistics": "Recalculate Statistics",
       "PackageUpdateTipps": "KBART Update",
       "KBARTIngest": "KBART-Import",
-      "KBART Ingest": "KBART-Import"
+      "KBART Ingest": "KBART-Import",
+      "KBARTSourceIngest": "Automatisierter KBART-Import"
     }
   },
   "kbart": {

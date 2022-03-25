@@ -47,6 +47,22 @@
         />
       </v-col>
     </v-row>
+    <v-row v-if="selectedItem.results && selectedItem.results.report">
+      <v-col>
+        <div
+          class="primary--text"
+        >
+          {{ selectedItem.dryRun ? $i18n.t('job.report.dryRunLabel') : $i18n.t('job.report.label') }}
+        </div>
+        <v-chip-group>
+          <v-chip>{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.report.invalid }}/{{ selectedItem.results.report.numRows }}</v-chip>
+          <v-chip>{{ $i18n.t('job.report.previous.label') }}: {{ selectedItem.results.report.previous }}</v-chip>
+          <v-chip>{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</v-chip>
+          <v-chip>{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</v-chip>
+          <v-chip v-if="!selectedItem.dryRun">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</v-chip>
+        </v-chip-group>
+      </v-col>
+    </v-row>
     <v-row v-if="selectedItem.messages">
       <v-col>
         <div
@@ -59,7 +75,7 @@
             v-for="(m, idx) in selectedItem.messages"
             :key="idx"
           >
-            {{ (typeof m === String ? m : m.message) }}
+            {{ (typeof m === "string" ? m : m.message) }}
           </li>
         </ul>
       </v-col>
@@ -118,6 +134,7 @@
           startDate: undefined,
           endDate: undefined,
           results: undefined,
+          dryRun: false,
           messages: []
         },
         items: []
@@ -133,7 +150,7 @@
         }
       },
       localType () {
-        return this.selectedItem.type ? this.$i18n.t('job.jobTypes.' + this.selectedItem.type.name) : null
+        return this.selectedItem.type ? this.$i18n.t('job.jobTypes.' + this.selectedItem.type.name) + (this.selectedItem.dryRun ? (' (' + this.$i18n.t('job.dryRun.label') + ')') : '') : null
       }
     },
     async created () {
@@ -167,14 +184,18 @@
 
         if (record.finished) {
           this.selectedItem.results = record.job_result
+
+          if (record.job_result.dryRun) {
+            this.selectedItem.dryRun = true
+          }
         }
 
-        if (record.messages) {
+        if (!!record.messages) {
           this.selectedItem.messages = record.messages
-        } else if (record.job_result) {
-          if (record.job_result.message) {
+        } else if (!!record.job_result) {
+          if (!!record.job_result.message) {
             this.selectedItem.messages = [record.job_result.message]
-          } else if (record.job_result.messages) {
+          } else if (!!record.job_result.messages) {
             this.selectedItem.messages = record.job_result.messages
           }
         }

@@ -28,7 +28,7 @@
         type="success"
         dismissible
       >
-        {{ $t('kbart.transmission.success') }}
+        {{ $t('kbart.transmission.success') }} <gokb-button style="margin-top:-2px" label="Show Results" @click="editJobPopupVisible = !editJobPopupVisible">Show Results</gokb-button>
       </v-alert>
     </span>
     <span v-else-if="kbartResult === 'started'">
@@ -53,6 +53,11 @@
         {{ $t('kbart.transmission.failure') }}
       </v-alert>
     </span>
+    <gokb-edit-job-popup
+      v-if="editJobPopupVisible"
+      v-model="editJobPopupVisible"
+      :selected="kbartJobInfo"
+    />
     <v-stepper
       v-model="step"
       alt-labels
@@ -575,6 +580,7 @@
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
   import { HOME_ROUTE } from '@/router/route-paths'
   import packageServices from '@/shared/services/package-services'
   import jobServices from '@/shared/services/job-services'
@@ -611,7 +617,8 @@
       GokbCuratoryGroupSection,
       GokbMaintenanceCycleField,
       GokbAlternateNamesSection,
-      GokbConfirmationPopup
+      GokbConfirmationPopup,
+      GokbEditJobPopup
     },
     extends: BaseComponent,
     props: {
@@ -653,6 +660,7 @@
         isCurator: false,
         showSubmitConfirm: false,
         submitConfirmationMessage: undefined,
+        editJobPopupVisible: false,
         urlUpdate: false,
         currentName: undefined,
         lastUpdated: undefined,
@@ -789,6 +797,9 @@
       },
       step3Error () {
         return (this.isEdit && this.errors.variantNames && this.errors.ids) || (!this.isEdit && this.errors.tipps)
+      },
+      kbartJobInfo () {
+        return { id: this.kbartJobId, archived: (this.kbartResult == 'success' || this.kbartResult == 'error') }
       }
     },
     watch: {
@@ -1076,6 +1087,7 @@
       },
       async loadJobStatus (jobId) {
         var finished = false
+        this.kbartJobId = jobId
 
         while (!finished) {
           const jobResult = await this.catchError({

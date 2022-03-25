@@ -189,6 +189,31 @@
     "archived": {
       "label": "Archived Results"
     },
+    "dryRun": {
+      "label": "Dry run"
+    },
+    "report": {
+      "label": "Result",
+      "dryRunLabel": "Expected Result",
+      "numRows": {
+        "label": "Rows"
+      },
+      "invalid": {
+        "label": "Invalid"
+      },
+      "matched": {
+        "label": "Matched"
+      },
+      "retired": {
+        "label": "Retired"
+      },
+      "created": {
+        "label": "Created"
+      },
+      "previous": {
+        "label": "Previous count"
+      }
+    },
     "ok": "Successful",
     "error": "Errors",
     "description": "Description",
@@ -227,7 +252,8 @@
       "RecalculateStatistics": "Recalculate Statistics",
       "PackageUpdateTipps": "Package KBART Update",
       "KBARTIngest": "KBART Package Ingest",
-      "KBART Ingest": "KBART Package Ingest"
+      "KBART Ingest": "KBART Package Ingest",
+      "KBARTSourceIngest": "Automated KBART Ingest"
     }
   },
   "kbart": {
