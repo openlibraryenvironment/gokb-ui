@@ -137,7 +137,6 @@
     data () {
       return {
         error: undefined,
-        charsetError: false,
         selectedNamespace: undefined,
         cancelValidation: false,
         useProprietaryNamespace: false,
@@ -329,11 +328,11 @@
       },
       doImport () {
         this.error = undefined
-        this.charsetError = false
         this.importRunning = true
         this.completion = 0
         this.charsetReader = new FileReader()
         this.charsetReader.onload = this._checkCharset
+        this._checkLinesLength
 
         this.charsetReader.readAsBinaryString(this.options.selectedFile)
 
@@ -341,16 +340,35 @@
         this.readerForImport.onload = this._importCompleted
         this.readerForImport.onprogress = this._importProgress
 
-        this.readerForImport.readAsText(this.options.selectedFile)
+        if (!this.error){
+          this.readerForImport.readAsText(this.options.selectedFile)
+        }
       },
       _checkCharset () {
-        const csvResult = this.charsetReader.result.split(/\r|\n|\r\n/)
+        const csvResult = this.charsetReader.result.split(/\r\n|\n|\r/)
         const encoding = jschardet.detect(csvResult.toString()).encoding
 
         if (encoding !== 'UTF-8' && encoding !== 'ascii') {
           console.log(jschardet.detectAll(csvResult.toString()))
-          this.charsetError = true
           this.error = this.$i18n.t('kbart.errors.encoding')
+        }
+      },
+      _checkLinesLength () {
+        const csvDataRows = this.readerForImport.result.split(/\r?\n/)
+          .filter(row => row.trim())
+        if (csvDataRows.length < 2) {
+          return
+        }
+        const columnsCount = csvDataRows[0].split(/\t/).length
+        const wrongColumnSizes = {}
+        csvDataRows.forEach(function (row, i) {
+          var rowLength = row.split(/\t/).length
+          if (rowLength != columnsCount)
+          wrongColumnSizes[i] = rowLength
+        });
+        if (wrongColumnSizes.length != 0) {
+          console.log(this.$i18n.t('kbart.errors.containsDifferentLengthedRows'))
+          this.error = this.$i18n.t('kbart.errors.containsDifferentLengthedRows')
         }
       },
       async _importCompleted () {
