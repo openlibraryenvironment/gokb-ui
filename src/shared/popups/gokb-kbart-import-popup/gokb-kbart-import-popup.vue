@@ -331,8 +331,7 @@
         this.importRunning = true
         this.completion = 0
         this.charsetReader = new FileReader()
-        this.charsetReader.onload = this._checkCharset
-        this._checkLinesLength
+        this.charsetReader.onload = this._checkFile
 
         this.charsetReader.readAsBinaryString(this.options.selectedFile)
 
@@ -344,6 +343,10 @@
           this.readerForImport.readAsText(this.options.selectedFile)
         }
       },
+      _checkFile () {
+        this._checkCharset()
+        this._checkLinesLength()
+      },
       _checkCharset () {
         const csvResult = this.charsetReader.result.split(/\r\n|\n|\r/)
         const encoding = jschardet.detect(csvResult.toString()).encoding
@@ -354,20 +357,20 @@
         }
       },
       _checkLinesLength () {
-        const csvDataRows = this.readerForImport.result.split(/\r?\n/)
+        const csvDataRows = this.charsetReader.result.split(/\r?\n/)
           .filter(row => row.trim())
         if (csvDataRows.length < 2) {
           return
         }
         const columnsCount = csvDataRows[0].split(/\t/).length
-        const wrongColumnSizes = {}
+        const wrongColumnSizes = new Map()
         csvDataRows.forEach(function (row, i) {
           var rowLength = row.split(/\t/).length
           if (rowLength != columnsCount)
-          wrongColumnSizes[i] = rowLength
+          wrongColumnSizes.set(i, rowLength)
         });
-        if (wrongColumnSizes.length != 0) {
-          console.log(this.$i18n.t('kbart.errors.containsDifferentLengthedRows'))
+        if (wrongColumnSizes.size != 0) {
+          console.log('kbart.errors.containsDifferentLengthedRows :', this.$i18n.t('kbart.errors.containsDifferentLengthedRows'))
           this.error = this.$i18n.t('kbart.errors.containsDifferentLengthedRows')
         }
       },
