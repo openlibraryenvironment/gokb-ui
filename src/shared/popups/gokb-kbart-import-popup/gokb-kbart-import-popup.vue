@@ -32,8 +32,8 @@
       <div
         v-if="error"
         class="ma-2"
-      >
-        {{ error }}
+        style="white-space: pre"
+      >{{ error }}
       </div>
       <div
         v-else-if="completion === 100"
@@ -137,6 +137,7 @@
     data () {
       return {
         error: undefined,
+        errors: [],
         selectedNamespace: undefined,
         cancelValidation: false,
         useProprietaryNamespace: false,
@@ -307,6 +308,9 @@
         this.loadedFile.lineStats.error = 0
         this.options.addOnly = false
         this.options.selectedFile = file
+      },
+      errors () {
+        this.error = this.errors.join("\n")
       }
     },
     mounted () {
@@ -328,6 +332,7 @@
       },
       doImport () {
         this.error = undefined
+        this.errors = []
         this.importRunning = true
         this.completion = 0
         this.charsetReader = new FileReader()
@@ -353,7 +358,7 @@
 
         if (encoding !== 'UTF-8' && encoding !== 'ascii') {
           console.log(jschardet.detectAll(csvResult.toString()))
-          this.error = this.$i18n.t('kbart.errors.encoding')
+          this.errors.push(this.$i18n.t('kbart.errors.encoding'))
         }
       },
       _checkLinesLength () {
@@ -371,7 +376,7 @@
         });
         if (wrongColumnSizes.size != 0) {
           console.log('kbart.errors.containsDifferentLengthedRows :', this.$i18n.t('kbart.errors.containsDifferentLengthedRows'))
-          this.error = this.$i18n.t('kbart.errors.containsDifferentLengthedRows')
+          this.errors.push(this.$i18n.t('kbart.errors.containsDifferentLengthedRows'))
         }
       },
       async _importCompleted () {
@@ -392,7 +397,7 @@
           })
 
           if (this.loadedFile.errors.missingColumns.length > 0) {
-            this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
+            this.errors.push(this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns]))
           } else {
             var idxr = 0
             var row
@@ -421,9 +426,8 @@
                       this.loadedFile.errors.missingColumns.push(key)
                       hasErrors = true
                     }
-
                     if (hasErrors) {
-                      this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
+                      this.errors.push(this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns]))
                     }
                   })
                 } else if (type === 'monograph') {
@@ -434,7 +438,7 @@
                     }
 
                     if (hasErrors) {
-                      this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
+                      this.errors.push(this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns]))
                     }
                   })
                 } else if (orderedVals[columns.indexOf('publication_title')]?.indexOf('�') >= 0) {
@@ -496,7 +500,7 @@
 
                   if (this.cancelValidation) {
                     this.cancelValidation = false
-                    this.error = this.$i18n.t('kbart.processing.cancelled', [idxr])
+                    this.errors.push(this.$i18n.t('kbart.processing.cancelled', [idxr]))
                     break
                   }
 
@@ -517,7 +521,7 @@
         try {
           this.options.lineCount = csvDataRows.length - 1
         } catch (exception) {
-          this.error = exception
+          this.errors.push(exception)
         } finally {
           this.completion = 100
           this.importRunning = false
