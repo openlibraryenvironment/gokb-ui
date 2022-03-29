@@ -528,14 +528,13 @@
         }
       },
       ensureFieldCounter (colName, severity, type) {
-        if (!this.loadedFile[severity][colName]) {
-          this.loadedFile[severity][colName] = {}
+        if (!this.loadedFile[severity][type]) {
+          this.loadedFile[severity][type] = {}
         }
-
-        if (!this.loadedFile[severity][colName][type]) {
-          this.loadedFile[severity][colName][type] = 1
+        if (!this.loadedFile[severity][type][colName]) {
+          this.loadedFile[severity][type][colName] = 1
         } else {
-          this.loadedFile[severity][colName][type]++
+          this.loadedFile[severity][type][colName]++
         }
       },
       _importProgress ({ loaded, total }) {
