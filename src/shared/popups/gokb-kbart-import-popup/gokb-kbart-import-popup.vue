@@ -30,10 +30,14 @@
         </template>
       </v-progress-linear>
       <div
-        v-if="error"
-        class="ma-2"
-        style="white-space: pre"
-      >{{ error }}
+        v-if="errors.length > 0"
+      >
+        <div
+          v-for="er in errors"
+          :key="er"
+          class="ma-2">
+          {{ er }}
+        </div>
       </div>
       <div
         v-else-if="completion === 100"
@@ -136,7 +140,6 @@
     },
     data () {
       return {
-        error: undefined,
         errors: [],
         selectedNamespace: undefined,
         cancelValidation: false,
@@ -280,7 +283,7 @@
         }
       },
       progressColor () {
-        return this.error ? 'error' : 'primary'
+        return this.errors?.length > 0 ? 'error' : 'primary'
       },
       errorHeaders () {
         return [
@@ -308,9 +311,6 @@
         this.loadedFile.lineStats.error = 0
         this.options.addOnly = false
         this.options.selectedFile = file
-      },
-      errors () {
-        this.error = this.errors.join("\n")
       }
     },
     mounted () {
@@ -331,7 +331,6 @@
         }
       },
       doImport () {
-        this.error = undefined
         this.errors = []
         this.importRunning = true
         this.completion = 0
@@ -344,7 +343,7 @@
         this.readerForImport.onload = this._importCompleted
         this.readerForImport.onprogress = this._importProgress
 
-        if (!this.error){
+        if (this.errors?.length == 0){
           this.readerForImport.readAsText(this.options.selectedFile)
         }
       },
