@@ -254,7 +254,7 @@
     },
     "errors": {
       "encoding": "The encoding of this file is not UTF-8. Please correct this before importing!",
-      "tabsCount": "This file is containing rows with a length deviating from the header cells length!",
+      "tabsCount": "This file contains rows with a different column count than defined by the provided headings!",
       "missingVal": "Missing value in column '{0}'!",
       "missingCols": "Missing columns: {0}",
       "illegalVal": "Value {0} is not valid!",
