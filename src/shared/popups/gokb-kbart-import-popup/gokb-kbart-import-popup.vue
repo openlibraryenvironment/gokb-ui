@@ -374,7 +374,6 @@
           wrongColumnSizes.set(i, rowLength)
         });
         if (wrongColumnSizes.size != 0) {
-          console.log('kbart.errors.containsDifferentLengthedRows :', this.$i18n.t('kbart.errors.containsDifferentLengthedRows'))
           this.errors.push(this.$i18n.t('kbart.errors.containsDifferentLengthedRows'))
         }
       },
