@@ -374,7 +374,7 @@
           wrongColumnSizes.set(i, rowLength)
         });
         if (wrongColumnSizes.size != 0) {
-          this.errors.push(this.$i18n.t('kbart.errors.containsDifferentLengthedRows'))
+          this.errors.push(this.$i18n.t('kbart.errors.tabsCount'))
         }
       },
       async _importCompleted () {
