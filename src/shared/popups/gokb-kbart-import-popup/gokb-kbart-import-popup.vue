@@ -370,11 +370,15 @@
         const wrongColumnSizes = new Map()
         csvDataRows.forEach(function (row, i) {
           var rowLength = row.split(/\t/).length
-          if (rowLength != columnsCount)
-          wrongColumnSizes.set(i, rowLength)
+          if (rowLength != columnsCount) {
+            wrongColumnSizes.set(i, rowLength)
+            this.loadedFile.errors.single.push(
+              { row: i, column: this.$i18n.t('kbart.column.count.label'),
+              reason: this.$i18n.t('kbart.errors.tabsCountRow', [rowLength, columnsCount]), value: rowLength })
+          }
         });
         if (wrongColumnSizes.size != 0) {
-          this.errors.push(this.$i18n.t('kbart.errors.tabsCount'))
+          this.errors.push(this.$i18n.t('kbart.errors.tabsCountFile'))
         }
       },
       async _importCompleted () {
