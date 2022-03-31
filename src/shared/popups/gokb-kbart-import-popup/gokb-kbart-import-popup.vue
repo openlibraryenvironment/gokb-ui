@@ -30,10 +30,14 @@
         </template>
       </v-progress-linear>
       <div
-        v-if="error"
-        class="ma-2"
+        v-if="errors.length > 0"
       >
-        {{ error }}
+        <div
+          v-for="er in errors"
+          :key="er"
+          class="ma-2">
+          {{ er }}
+        </div>
       </div>
       <div
         v-else-if="completion === 100"
@@ -136,8 +140,7 @@
     },
     data () {
       return {
-        error: undefined,
-        charsetError: false,
+        errors: [],
         selectedNamespace: undefined,
         cancelValidation: false,
         useProprietaryNamespace: false,
@@ -280,7 +283,7 @@
         }
       },
       progressColor () {
-        return this.error ? 'error' : 'primary'
+        return this.errors?.length > 0 ? 'error' : 'primary'
       },
       errorHeaders () {
         return [
@@ -328,12 +331,11 @@
         }
       },
       doImport () {
-        this.error = undefined
-        this.charsetError = false
+        this.errors = []
         this.importRunning = true
         this.completion = 0
         this.charsetReader = new FileReader()
-        this.charsetReader.onload = this._checkCharset
+        this.charsetReader.onload = this._checkFile
 
         this.charsetReader.readAsBinaryString(this.options.selectedFile)
 
@@ -341,16 +343,44 @@
         this.readerForImport.onload = this._importCompleted
         this.readerForImport.onprogress = this._importProgress
 
-        this.readerForImport.readAsText(this.options.selectedFile)
+        if (this.errors?.length == 0){
+          this.readerForImport.readAsText(this.options.selectedFile)
+        }
+      },
+      _checkFile () {
+        this._checkCharset()
+        this._checkLinesLength()
       },
       _checkCharset () {
-        const csvResult = this.charsetReader.result.split(/\r|\n|\r\n/)
+        const csvResult = this.charsetReader.result.split(/\r\n|\n|\r/)
         const encoding = jschardet.detect(csvResult.toString()).encoding
 
         if (encoding !== 'UTF-8' && encoding !== 'ascii') {
           console.log(jschardet.detectAll(csvResult.toString()))
-          this.charsetError = true
-          this.error = this.$i18n.t('kbart.errors.encoding')
+          this.errors.push(this.$i18n.t('kbart.errors.encoding'))
+        }
+      },
+      _checkLinesLength () {
+        const csvDataRows = this.charsetReader.result.split(/\r?\n/)
+          .filter(row => row.trim())
+        if (csvDataRows.length < 2) {
+          return
+        }
+        const columnsCount = csvDataRows[0].split(/\t/).length
+        const wrongColumnSizes = new Map()
+        csvDataRows.forEach((row, i) => {
+          this.loadedFile.lineStats.total++
+          var rowLength = row.split(/\t/).length
+          if (rowLength != columnsCount) {
+            wrongColumnSizes.set(i, rowLength)
+            this.loadedFile.errors.single.push(
+              { row: i, column: this.$i18n.t('kbart.column.count.label'),
+              reason: this.$i18n.t('kbart.errors.tabsCountRow', [rowLength, columnsCount]), value: rowLength })
+            this.loadedFile.lineStats.error++
+          }
+        });
+        if (wrongColumnSizes.size != 0) {
+          this.errors.push(this.$i18n.t('kbart.errors.tabsCountFile'))
         }
       },
       async _importCompleted () {
@@ -371,7 +401,7 @@
           })
 
           if (this.loadedFile.errors.missingColumns.length > 0) {
-            this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
+            this.errors.push(this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns]))
           } else {
             var idxr = 0
             var row
@@ -380,8 +410,6 @@
               if (idxr > 0) {
                 var hasErrors = false
                 var hasWarnings = false
-
-                this.loadedFile.lineStats.total++
 
                 const orderedVals = row.split(/\t/)
                 var type = orderedVals[columns.indexOf('publication_type')]?.toLowerCase() || null
@@ -400,9 +428,8 @@
                       this.loadedFile.errors.missingColumns.push(key)
                       hasErrors = true
                     }
-
                     if (hasErrors) {
-                      this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
+                      this.errors.push(this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns]))
                     }
                   })
                 } else if (type === 'monograph') {
@@ -413,7 +440,7 @@
                     }
 
                     if (hasErrors) {
-                      this.error = this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns])
+                      this.errors.push(this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns]))
                     }
                   })
                 } else if (orderedVals[columns.indexOf('publication_title')]?.indexOf('�') >= 0) {
@@ -475,7 +502,7 @@
 
                   if (this.cancelValidation) {
                     this.cancelValidation = false
-                    this.error = this.$i18n.t('kbart.processing.cancelled', [idxr])
+                    this.errors.push(this.$i18n.t('kbart.processing.cancelled', [idxr]))
                     break
                   }
 
@@ -496,21 +523,20 @@
         try {
           this.options.lineCount = csvDataRows.length - 1
         } catch (exception) {
-          this.error = exception
+          this.errors.push(exception)
         } finally {
           this.completion = 100
           this.importRunning = false
         }
       },
       ensureFieldCounter (colName, severity, type) {
-        if (!this.loadedFile[severity][colName]) {
-          this.loadedFile[severity][colName] = {}
+        if (!this.loadedFile[severity]['type'][colName]) {
+          this.loadedFile[severity]['type'][colName] = {}
         }
-
-        if (!this.loadedFile[severity][colName][type]) {
-          this.loadedFile[severity][colName][type] = 1
+        if (!this.loadedFile[severity]['type'][colName][type]) {
+          this.loadedFile[severity]['type'][colName][type] = 1
         } else {
-          this.loadedFile[severity][colName][type]++
+          this.loadedFile[severity]['type'][colName][type]++
         }
       },
       _importProgress ({ loaded, total }) {

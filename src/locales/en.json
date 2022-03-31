@@ -249,11 +249,18 @@
       "label": "Namespace for title_id values"
     },
     "addOnly": "Partial Update",
+    "column": {
+      "count": {
+        "label": "Row length"
+      }
+    },
     "row": {
       "label": "Row | Rows"
     },
     "errors": {
       "encoding": "The encoding of this file is not UTF-8. Please correct this before importing!",
+      "tabsCountFile": "This file contains rows with a different column count than defined by the provided headings!",
+      "tabsCountRow": "This line contains {0} columns instead of {1} columns, as defined by the headings!",
       "missingVal": "Missing value in column '{0}'!",
       "missingCols": "Missing columns: {0}",
       "illegalVal": "Value {0} is not valid!",
