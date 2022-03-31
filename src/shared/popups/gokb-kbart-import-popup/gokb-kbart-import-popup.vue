@@ -368,13 +368,15 @@
         }
         const columnsCount = csvDataRows[0].split(/\t/).length
         const wrongColumnSizes = new Map()
-        csvDataRows.forEach(function (row, i) {
+        csvDataRows.forEach((row, i) => {
+          this.loadedFile.lineStats.total++
           var rowLength = row.split(/\t/).length
           if (rowLength != columnsCount) {
             wrongColumnSizes.set(i, rowLength)
             this.loadedFile.errors.single.push(
               { row: i, column: this.$i18n.t('kbart.column.count.label'),
               reason: this.$i18n.t('kbart.errors.tabsCountRow', [rowLength, columnsCount]), value: rowLength })
+            this.loadedFile.lineStats.error++
           }
         });
         if (wrongColumnSizes.size != 0) {
@@ -408,8 +410,6 @@
               if (idxr > 0) {
                 var hasErrors = false
                 var hasWarnings = false
-
-                this.loadedFile.lineStats.total++
 
                 const orderedVals = row.split(/\t/)
                 var type = orderedVals[columns.indexOf('publication_type')]?.toLowerCase() || null
