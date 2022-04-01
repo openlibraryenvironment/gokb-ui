@@ -281,11 +281,19 @@
     "dryRun": {
       "label": "Testdurchlauf"
     },
+    "column": {
+      "label": "Spalte | Spalten",
+      "count": {
+        "label": "Spaltenanzahl"
+      }
+    },
     "row": {
       "label": "Zeile | Zeilen"
     },
     "errors": {
       "encoding": "Diese Datei ist nicht in UTF-8 codiert. Bitte beheben Sie dies vor dem Import!",
+      "tabsCountFile": "Diese Datei enthält Datenzeilen mit einer vom Datei-Header abweichenden Anzahl von Spalten!",
+      "tabsCountRow": "Diese Zeile enthält {0} Spalten anstatt dem Datei-Header entsprechend {1} Spalten!",
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
       "missingCols": "Fehlende Spalten: {0}",
       "replacementChars": "Die Datei enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",

@@ -281,11 +281,19 @@
     "dryRun": {
       "label": "Dry Run"
     },
+    "column": {
+      "label": "Column | Columns",
+      "count": {
+        "label": "No. of columns"
+      }
+    },
     "row": {
       "label": "Row | Rows"
     },
     "errors": {
       "encoding": "The encoding of this file is not UTF-8. Please correct this before importing!",
+      "tabsCountFile": "This file contains rows with a different column count than defined by the provided headings!",
+      "tabsCountRow": "This line contains {0} columns instead of {1} columns, as defined by the headings!",
       "missingVal": "Missing value in column '{0}'!",
       "missingCols": "Missing columns: {0}",
       "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
