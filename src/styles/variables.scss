@@ -8,6 +8,9 @@ $material-light: (
         background-color:'inherit';
     }
 };
+.v-data-table-header th {
+    white-space: nowrap;
+};
 $input-top-spacing: '0px';
 
 .material-icons {

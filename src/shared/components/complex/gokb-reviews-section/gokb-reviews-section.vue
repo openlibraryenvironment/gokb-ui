@@ -7,6 +7,11 @@
     :items-total="totalNumberOfReviews"
   >
     <template #buttons>
+      <v-switch
+        v-model="fetchTitleReviews"
+        class="pt-4 pr-6"
+        :label="$tc('component.title.label', 2)"
+      />
       <gokb-state-field
         v-model="searchFilters.stdDesc"
         class="mr-4 mt-4"
@@ -174,6 +179,7 @@
         selectedItems: [],
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
+        fetchTitleReviews: false,
         messageToConfirm: undefined,
         reviewsOptions: {
           page: 1,
@@ -226,8 +232,9 @@
           const deleteUrl = entry?._links.delete.href
           const popup = { value: this.reviewComponent ? stdDescLabel : (component.name || type + ' ' + component.id), label: 'review', type: 'GokbAddReviewPopup' }
           const link = { value: component.name, route: componentRoutes[entry?.componentToReview?.type?.toLowerCase()], id: 'componentId' }
+          const groupsList = entry.allocatedGroups.map(ag => ag.name)
           const isClosable = !!(status?.name === 'Open' && updateUrl)
-          return { id, name, status, dateCreated, statusLabel, stdDescLabel, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
+          return { id, name, status, dateCreated, statusLabel, stdDescLabel, groupsList, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
         })
       },
       totalNumberOfReviews () {
@@ -240,10 +247,13 @@
         return this.reviews && (this.reviews?.filter(item => (item.updateUrl)).length > 0)
       },
       bulkEditDisabled () {
-        return !this.reviews || this.selectedItems.length === 0 || this.selectedItems.includes(item => (!!item.updateUrl))
+        return !this.reviews || this.selectedItems.length === 0 || this.selectedItems.some(item => (item.updateUrl === null))
       },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label', 2)]) : undefined
+      },
+      isPackageComponent () {
+        return this.reviewComponent?.type === 'package'
       },
       localizedReviewHeaders () {
         const compConfig = [
@@ -253,6 +263,35 @@
             sortable: false,
             width: '100%',
             value: 'popup'
+          },
+          {
+            text: this.$i18n.t('component.general.status.label'),
+            align: 'left',
+            sortable: false,
+            width: '10%',
+            value: 'statusLabel'
+          },
+          {
+            text: this.$i18n.t('component.general.dateCreated'),
+            align: 'right',
+            sortable: false,
+            width: '10%',
+            value: 'dateCreated'
+          }
+        ]
+        const pkgTitlesConfig = [
+          {
+            text: this.$i18n.tc('component.review.stdDesc.label'),
+            align: 'left',
+            sortable: false,
+            width: '100%',
+            value: 'popup'
+          },
+          {
+            text: this.$i18n.tc('component.curatoryGroup.label', 2),
+            align: 'left',
+            sortable: false,
+            value: 'groupsList'
           },
           {
             text: this.$i18n.t('component.general.status.label'),
@@ -305,7 +344,7 @@
           }
         ]
 
-        return this.reviewComponent ? compConfig : defaultConfig
+        return this.reviewComponent ? (this.fetchTitleReviews ? pkgTitlesConfig : compConfig) : defaultConfig
       },
       title () {
         return this.showTitle ? (this.group ? this.$i18n.tc('component.review.label', 2) + ' (' + this.group.name + ')' : this.$i18n.tc('component.review.label', 2)) : undefined
@@ -332,6 +371,9 @@
           this.enableBulkCheck = false
         }
         this.allPagesSelected = false
+      },
+      fetchTitleReviews () {
+        this.retrieveReviews()
       }
     },
     methods: {
@@ -362,6 +404,10 @@
 
         if (this.reviewComponent) {
           searchParams.componentToReview = this.reviewComponent.id
+        }
+
+        if (this.fetchTitleReviews) {
+          searchParams.titlereviews = true
         }
 
         const parameters = {
