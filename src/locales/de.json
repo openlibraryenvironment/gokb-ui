@@ -180,7 +180,7 @@
     "passwordLength": "Das Passwort muss zwischen 6 und 64 Zeichen haben."
   },
   "job": {
-    "label": "Import | Imports",
+    "label": "Import | Importe",
     "finished": "Fertig",
     "cancelled": "Abgebrochen",
     "active": {
@@ -188,6 +188,10 @@
     },
     "archived": {
       "label": "Archivierte Ergebnisse"
+    },
+    "context": {
+      "group": "Alle Jobs für die ausgewählte Gruppe anzeigen",
+      "profile": "Nur eigene Jobs anzeigen"
     },
     "dryRun": {
       "label": "Trockenlauf"
@@ -253,7 +257,8 @@
       "PackageUpdateTipps": "KBART Update",
       "KBARTIngest": "KBART-Import",
       "KBART Ingest": "KBART-Import",
-      "KBARTSourceIngest": "Automatisierter KBART-Import"
+      "KBARTSourceIngest": "Automatisierter KBART-Import",
+      "KBARTIngestDryRun": "KBART-Import (Testlauf)"
     }
   },
   "kbart": {

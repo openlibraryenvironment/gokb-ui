@@ -189,6 +189,10 @@
     "archived": {
       "label": "Archived Results"
     },
+    "context": {
+      "group": "Show jobs for the active curatory group",
+      "profile": "Only show your own jobs"
+    },
     "dryRun": {
       "label": "Dry run"
     },
@@ -253,7 +257,8 @@
       "PackageUpdateTipps": "Package KBART Update",
       "KBARTIngest": "KBART Package Ingest",
       "KBART Ingest": "KBART Package Ingest",
-      "KBARTSourceIngest": "Automated KBART Ingest"
+      "KBARTSourceIngest": "Automated KBART Ingest",
+      "KBARTIngestDryRun": "KBART Package Ingest (Dry Run)"
     }
   },
   "kbart": {

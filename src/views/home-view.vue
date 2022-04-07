@@ -35,7 +35,10 @@
         :editable="true"
         :user="true"
       />
-      <gokb-jobs-section v-model="groupId" />
+      <gokb-jobs-section
+        v-model="groupId"
+        :group="activeGroup"
+      />
     </div>
     <gokb-packages-section
       v-else
