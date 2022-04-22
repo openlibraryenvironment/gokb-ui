@@ -39,9 +39,12 @@
         <span>
           {{ $t('kbart.transmission.started') }}
           <v-progress-linear
-            v-if="kbartProgress"
+            v-if="!!kbartProgress"
             v-model="kbartProgress"
           />
+          <div v-else>
+            Preparing...
+          </div>
         </span>
       </v-alert>
     </span>
