@@ -1,8 +1,6 @@
 <template>
   <gokb-section
     :expandable="expandable"
-    :hide-default="!expanded"
-    :filters="filterAlign"
     :title="title"
     :sub-title="subTitle"
     :items-total="totalNumberOfItems"
@@ -32,6 +30,8 @@
       >
         {{ $t('btn.delete') }}
       </gokb-button>
+    </template>
+    <template #actions>
     </template>
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
