@@ -1,5 +1,6 @@
-const {gitDescribe, gitDescribeSync} = require('git-describe')
-process.env.VUE_APP_GIT_HASH = gitDescribeSync().hash
+process.env.VUE_APP_GIT_HASH = require('child_process')
+  .execSync('git rev-parse --short HEAD')
+  .toString().trim()
 
 module.exports = {
   publicPath: process.env.VUE_APP_PUBLIC_PATH || '/', // base path for the application
