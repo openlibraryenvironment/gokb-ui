@@ -505,15 +505,14 @@
           } else if (response.status === 403) {
             this.errorMsg = 'error.bulkUpdate.403'
           }
-
-          this.reviewsOptions.page = 1
-          this.retrieveReviews()
-          this.$emit('update', true)
         }
         else {
           this.errorMsg = 'error.bulkUpdate.403'
         }
 
+        this.reviewsOptions.page = 1
+        this.retrieveReviews()
+        this.$emit('update', true)
         this.loading = false
       },
       async _closeSelectedItems () {
