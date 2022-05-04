@@ -3,6 +3,7 @@
     :expandable="expandable"
     :filters="showEditActions"
     :sub-title="title"
+    :errors="!!apiErrors"
     :show-actions="showEditActions"
     :items-total="totalNumberOfReviews"
   >
@@ -164,6 +165,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      apiErrors: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -442,6 +448,7 @@
         this.reviewsOptions.page = 1
         this.retrieveReviews()
         this.successMessage = this.$i18n.tc('component.review.edit.success.closed')
+        this.$emit('update', true)
       },
       showAddReviewPopup () {
         this.addReviewPopupVisible = 1
@@ -491,6 +498,7 @@
 
         this.reviewsOptions.page = 1
         this.retrieveReviews()
+        this.$emit('update', true)
       },
       async _closeSelectedItems () {
         if (this.allPagesSelected) {
@@ -509,11 +517,13 @@
           this.loading = false
 
           this.retrieveReviews()
+          this.$emit('update', true)
         }
       },
       handlePopupChange (type) {
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
         this.retrieveReviews()
+        this.$emit('update', true)
       }
     }
   }
