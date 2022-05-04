@@ -468,6 +468,7 @@
       },
       async _executeBulkAction ({ field, value }) {
         const searchParams = {}
+        var missingContext = false
 
         this.loading = true
 
@@ -483,22 +484,37 @@
           }
         })
 
-        const response = await this.catchError({
-          promise: reviewServices.bulkUpdate(searchParams, field, value, this.cancelToken.token),
-          instance: this
-        })
+        if (this.reviewComponent) {
+          searchParams.componentToReview = this.reviewComponent
+        }
+        else if (this.group) {
+          searchParams.allocatedGroups = this.group
+        }
+        else {
+          missingContext = true
+        }
 
-        if (response.status < 400) {
-          this.successMessage = this.$i18n.tc('component.review.edit.success.closed', response.data.report.data, { count: response.data.report.data })
-        } else if (response.status === 403) {
+        if (!missingContext) {
+          const response = await this.catchError({
+            promise: reviewServices.bulkUpdate(searchParams, field, value, this.cancelToken.token),
+            instance: this
+          })
+
+          if (response.status < 400) {
+            this.successMessage = this.$i18n.tc('component.review.edit.success.closed', response.data.report.total, { count: response.data.report.total })
+          } else if (response.status === 403) {
+            this.errorMsg = 'error.bulkUpdate.403'
+          }
+
+          this.reviewsOptions.page = 1
+          this.retrieveReviews()
+          this.$emit('update', true)
+        }
+        else {
           this.errorMsg = 'error.bulkUpdate.403'
         }
 
         this.loading = false
-
-        this.reviewsOptions.page = 1
-        this.retrieveReviews()
-        this.$emit('update', true)
       },
       async _closeSelectedItems () {
         if (this.allPagesSelected) {
