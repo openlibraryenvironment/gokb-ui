@@ -9,6 +9,7 @@
   >
     <template #buttons>
       <v-switch
+        v-if="isPackageComponent"
         v-model="fetchTitleReviews"
         class="pt-4 pr-6"
         :label="$tc('component.title.label', 2)"
@@ -486,6 +487,10 @@
 
         if (this.reviewComponent) {
           searchParams.componentToReview = this.reviewComponent
+
+          if (this.fetchTitleReviews) {
+            searchParams.titlereviews = true
+          }
         }
         else if (this.group) {
           searchParams.allocatedGroups = this.group
