@@ -5,7 +5,7 @@
     :sub-title="title"
     :errors="!!apiErrors"
     :show-actions="showEditActions"
-    :items-total="totalNumberOfReviews"
+    :items-total="totalNumberOfItems"
   >
     <template #buttons>
       <v-switch
@@ -108,7 +108,7 @@
       :items="reviews"
       :headers="localizedReviewHeaders"
       :editable="showEditActions"
-      :total-number-of-items="totalNumberOfReviews"
+      :total-number-of-items="totalNumberOfItems"
       :options.sync="reviewsOptions"
       :actions="showEditActions"
       :show-loading="loading"
@@ -187,6 +187,7 @@
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         fetchTitleReviews: false,
+        totalNumberOfItems: 0,
         messageToConfirm: undefined,
         reviewsOptions: {
           page: 1,
@@ -211,7 +212,7 @@
         ]
       },
       bulkCloseLabel () {
-        return this.$i18n.t('btn.bulkCloseReview', [(this.allPagesSelected ? this.totalNumberOfReviews : this.selectedItems.length)])
+        return this.$i18n.t('btn.bulkCloseReview', [(this.allPagesSelected ? this.totalNumberOfItems : this.selectedItems.length)])
       },
       reviews () {
         const componentRoutes = {
@@ -243,9 +244,6 @@
           const isClosable = !!(status?.name === 'Open' && updateUrl)
           return { id, name, status, dateCreated, statusLabel, stdDescLabel, groupsList, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
         })
-      },
-      totalNumberOfReviews () {
-        return this.rawReviews?.data?._pagination?.total || 0
       },
       isContrib () {
         return account.loggedIn() && account.hasRole('ROLE_CONTRIBUTOR')
@@ -428,7 +426,8 @@
         })
 
         if (this.rawReviews?.data) {
-          this.$emit('update', this.rawReviews.data.data.length)
+          this.totalNumberOfItems = this.rawReviews?.data?._pagination?.total
+          this.$emit('update', this.totalNumberOfItems)
         }
 
         this.loading = false
@@ -449,7 +448,6 @@
         this.reviewsOptions.page = 1
         this.retrieveReviews()
         this.successMessage = this.$i18n.tc('component.review.edit.success.closed')
-        this.$emit('update', true)
       },
       showAddReviewPopup () {
         this.addReviewPopupVisible = 1
@@ -457,7 +455,7 @@
       confirmBulkClose () {
         if (this.allPagesSelected) {
           this.actionToConfirm = '_executeBulkAction'
-          this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.totalNumberOfReviews, this.$i18n.tc('component.review.label', this.selectedItems.length)] }
+          this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.totalNumberOfItems, this.$i18n.tc('component.review.label', this.selectedItems.length)] }
           this.parameterToConfirm = { field: 'status', value: 'Closed' }
           this.confirmationPopUpVisible = true
         } else {
@@ -517,7 +515,6 @@
 
         this.reviewsOptions.page = 1
         this.retrieveReviews()
-        this.$emit('update', true)
         this.loading = false
       },
       async _closeSelectedItems () {
@@ -537,13 +534,11 @@
           this.loading = false
 
           this.retrieveReviews()
-          this.$emit('update', true)
         }
       },
       handlePopupChange (type) {
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
         this.retrieveReviews()
-        this.$emit('update', true)
       }
     }
   }
