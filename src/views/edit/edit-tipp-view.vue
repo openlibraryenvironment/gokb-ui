@@ -122,7 +122,7 @@
               v-if="id"
               class="ma-2"
             >
-              {{ reviewsTotal }}
+              {{ reviewsCount }}
             </v-chip>
           </v-tab>
           <v-tab
@@ -336,6 +336,7 @@
             <gokb-reviews-section
               :review-component="packageTitleItem"
               :api-errors="errors.reviewRequests"
+              @update="refreshReviewsCount"
             />
           </v-tab-item>
           <v-tab-item
@@ -568,6 +569,7 @@
         pprops: undefined,
         pendingChanges: {},
         platformSelection: [],
+        reviewsCount: undefined,
         version: undefined,
         errors: {},
         notFound: false,
@@ -593,6 +595,7 @@
         status: undefined,
         items: [],
         allNames: {},
+        titleType: undefined,
         importId: undefined,
         lastUpdated: undefined,
         dateCreated: undefined,
@@ -645,7 +648,7 @@
         return this.$i18n.tc('component.title.label') + ' (' + this.typeLabel + ')'
       },
       typeLabel () {
-        return this.packageTitleItem.publicationType ? this.$i18n.tc('component.title.type.' + this.packageTitleItem.publicationType.name) : this.$i18n.tc('component.title.type.' + this.packageTitleItem.title?.type)
+        return this.titleType ? this.$i18n.tc('component.title.type.' + this.titleType) : undefined
       },
       isEdit () {
         return !!this.id
@@ -685,9 +688,6 @@
       },
       idsTotal () {
         return this.packageTitleItem.ids?.length
-      },
-      reviewsTotal () {
-        return this.reviewRequests?.length
       },
       localValue: {
         get () {
@@ -829,6 +829,8 @@
         this.history = data.history
         this.allNames = { name: data.name, alts: data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })) }
 
+        this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
+
         if (data._embedded.coverageStatements?.length) {
           this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
             startDate: this.buildDateString(startDate),
@@ -853,6 +855,8 @@
             currency
           }))
         }
+
+        this.titleType = data.title?.type || data.publicationType?.name
 
         document.title = this.$i18n.tc('component.tipp.label') + ' – ' + (data.name || data.title?.name)
       },
@@ -883,6 +887,9 @@
         if (this.packageTitleItem.coverageStatements.length === 0) {
           this.packageTitleItem.coverageStatements.push(this.coverageObject)
         }
+      },
+      refreshReviewsCount (count) {
+        this.reviewsCount = count
       }
     },
   }

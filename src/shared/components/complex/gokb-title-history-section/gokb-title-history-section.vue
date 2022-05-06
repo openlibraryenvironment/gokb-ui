@@ -109,7 +109,7 @@
                 small
                 @click="confirmDeleteItem(event)"
               >
-                delete
+                mdi-delete
               </v-icon>
             </td>
           </tr>

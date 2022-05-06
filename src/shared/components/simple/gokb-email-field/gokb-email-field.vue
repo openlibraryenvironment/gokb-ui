@@ -23,7 +23,7 @@
       prependIcon: {
         type: String,
         required: false,
-        default: 'email',
+        default: 'mdi-email',
       },
       autocomplete: {
         type: String,
