@@ -43,7 +43,7 @@
             v-model="kbartProgress"
           />
           <div v-else>
-            Preparing...
+            {{ $t('kbart.transmission.preparing') }}
           </div>
         </span>
       </v-alert>
