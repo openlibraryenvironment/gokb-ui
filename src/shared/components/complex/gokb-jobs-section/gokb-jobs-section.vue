@@ -2,6 +2,7 @@
   <gokb-section
     expandable
     :sub-title="title"
+    :items-total="totalNumberOfItems"
   >
     <template #buttons>
       <v-btn
@@ -164,9 +165,11 @@
     },
     deactivated () {
       clearInterval(this.interval)
+      this.interval = undefined
     },
     preDestroy () {
       clearInterval(this.interval)
+      this.interval = undefined
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -268,6 +271,7 @@
       stopAutoUpdate () {
         this.autoJobRefresh = false
         clearInterval(this.interval)
+        this.interval = undefined
       }
     }
   }
