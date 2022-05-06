@@ -398,8 +398,8 @@
             <v-row v-if="id">
               <v-col cols="3">
                 <gokb-state-field
-                  v-model="packageItem.contentType"
-                  :init-item="packageItem.contentType"
+                  v-model="overviewStates.contentType"
+                  :init-item="overviewStates.contentType"
                   message-path="component.package.contentType"
                   url="refdata/categories/Package.ContentType"
                   :label="$t('component.package.contentType.label')"
@@ -417,11 +417,12 @@
               </v-col>
               <v-col cols="3">
                 <gokb-state-field
-                  v-model="packageItem.listStatus"
-                  :init-item="packageItem.listStatus"
+                  v-model="overviewStates.listStatus"
+                  :init-item="overviewStates.listStatus"
                   message-path="component.package.listStatus"
                   url="refdata/categories/Package.ListStatus"
                   :label="$t('component.package.listStatus.label')"
+                  :api-errors="errors.listStatus"
                   dense
                   readonly
                 />
@@ -479,6 +480,8 @@
                 v-if="id && isContrib"
                 :expandable="false"
                 :review-component="packageItem"
+                :api-errors="errors.listStatus"
+                @update=reload
               />
             </v-col>
           </v-row>
@@ -692,6 +695,10 @@
           ids: [],
           provider: undefined, // organisation
           nominalPlatform: undefined,
+        },
+        overviewStates: {
+          contentType: undefined,
+          listStatus: undefined
         },
         allCuratoryGroups: [],
         sourceItem: undefined,
@@ -1036,6 +1043,7 @@
       async reload () {
         if (this.isEdit) {
           loading.startLoading()
+          this.errors = {}
           this.newTipps = []
           this.errors = {}
           this.successMsg = undefined
@@ -1156,6 +1164,9 @@
         }
         this.lastUpdated = data.lastUpdated
         this.dateCreated = data.dateCreated
+
+        this.overviewStates.listStatus = data.listStatus
+        this.overviewStates.contentType = data.contentType
 
         document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
       },

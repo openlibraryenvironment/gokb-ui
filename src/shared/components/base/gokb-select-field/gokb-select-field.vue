@@ -1,11 +1,15 @@
 <template>
-  <gokb-text-field
-    v-if="readonly"
-    v-model="localName"
-    :label="label"
-    :dense="dense"
-    disabled
-  />
+  <div v-if="readonly">
+    <gokb-text-field
+      v-if="readonly"
+      v-model="localName"
+      :label="label"
+      :dense="dense"
+      disabled
+    />
+    <div style="color:red;" v-if="localErrorMessage.length > 0"> {{ localErrorMessage }} </div>
+  </div>
+
   <v-select
     v-else-if="items"
     v-model="localValue"
@@ -88,6 +92,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      apiErrors: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -110,6 +119,9 @@
       },
       rules () {
         return [value => (!!this.required && !!value) || !this.required || this.$i18n.t('validation.missingSelection')]
+      },
+      localErrorMessage () {
+        return this.apiErrors ? this.$i18n.t(this.apiErrors[0].messageCode) : []
       }
     },
     async mounted () {

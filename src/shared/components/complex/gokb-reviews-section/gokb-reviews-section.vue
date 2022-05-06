@@ -3,11 +3,13 @@
     :expandable="expandable"
     :filters="showEditActions"
     :sub-title="title"
+    :errors="!!apiErrors"
     :show-actions="showEditActions"
     :items-total="totalNumberOfReviews"
   >
     <template #buttons>
       <v-switch
+        v-if="isPackageComponent"
         v-model="fetchTitleReviews"
         class="pt-4 pr-6"
         :label="$tc('component.title.label', 2)"
@@ -164,6 +166,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      apiErrors: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -442,6 +449,7 @@
         this.reviewsOptions.page = 1
         this.retrieveReviews()
         this.successMessage = this.$i18n.tc('component.review.edit.success.closed')
+        this.$emit('update', true)
       },
       showAddReviewPopup () {
         this.addReviewPopupVisible = 1
@@ -461,6 +469,7 @@
       },
       async _executeBulkAction ({ field, value }) {
         const searchParams = {}
+        var missingContext = false
 
         this.loading = true
 
@@ -476,21 +485,40 @@
           }
         })
 
-        const response = await this.catchError({
-          promise: reviewServices.bulkUpdate(searchParams, field, value, this.cancelToken.token),
-          instance: this
-        })
+        if (this.reviewComponent) {
+          searchParams.componentToReview = this.reviewComponent
 
-        if (response.status < 400) {
-          this.successMessage = this.$i18n.tc('component.review.edit.success.closed', response.data.report.data, { count: response.data.report.data })
-        } else if (response.status === 403) {
+          if (this.fetchTitleReviews) {
+            searchParams.titlereviews = true
+          }
+        }
+        else if (this.group) {
+          searchParams.allocatedGroups = this.group
+        }
+        else {
+          missingContext = true
+        }
+
+        if (!missingContext) {
+          const response = await this.catchError({
+            promise: reviewServices.bulkUpdate(searchParams, field, value, this.cancelToken.token),
+            instance: this
+          })
+
+          if (response.status < 400) {
+            this.successMessage = this.$i18n.tc('component.review.edit.success.closed', response.data.report.total, { count: response.data.report.total })
+          } else if (response.status === 403) {
+            this.errorMsg = 'error.bulkUpdate.403'
+          }
+        }
+        else {
           this.errorMsg = 'error.bulkUpdate.403'
         }
 
-        this.loading = false
-
         this.reviewsOptions.page = 1
         this.retrieveReviews()
+        this.$emit('update', true)
+        this.loading = false
       },
       async _closeSelectedItems () {
         if (this.allPagesSelected) {
@@ -509,11 +537,13 @@
           this.loading = false
 
           this.retrieveReviews()
+          this.$emit('update', true)
         }
       },
       handlePopupChange (type) {
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
         this.retrieveReviews()
+        this.$emit('update', true)
       }
     }
   }
