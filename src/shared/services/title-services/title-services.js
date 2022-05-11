@@ -24,6 +24,14 @@ const api = (baseServices) => ({
       data,
     }, cancelToken)
   },
+  mergeTitle (id, parameter, cancelToken) {
+    const urlParameter = baseServices.createQueryParameters(parameter)
+
+    return baseServices.request({
+      method: 'GET',
+      url: process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}/merge?${urlParameter}`
+    }, cancelToken)
+  },
   updateHistory (id, data, cancelToken) {
     const url = process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}/history`
     return baseServices.request({

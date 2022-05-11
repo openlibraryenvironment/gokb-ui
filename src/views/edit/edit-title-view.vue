@@ -6,6 +6,11 @@
     @submit="update"
   >
     <gokb-error-component :value="error" />
+    <gokb-merge-title-popup
+      v-if="showMergeTitlePopup"
+      v-model="showMergeTitlePopup"
+      :component="titleItem"
+    />
     <span v-if="successMsg">
       <v-alert
         type="success"
@@ -55,6 +60,14 @@
             :editable="!!updateUrl"
             :api-errors="errors.status"
           />
+        </v-col>
+        <v-col>
+          <gokb-button
+            v-if="isEdit && !isReadonly"
+            @click="toggleMergeTitlePopup"
+          >
+            Merge
+          </gokb-button>
         </v-col>
       </v-row>
       <v-row>
@@ -176,7 +189,7 @@
           >
             {{ $tc('component.identifier.label', 2) }}
             <v-chip class="ma-2">
-              {{ ids.length }}
+              {{ titleItem.ids.length }}
             </v-chip>
             <v-icon
               v-if="pendingChanges.ids"
@@ -271,7 +284,7 @@
             class="mt-4"
           >
             <gokb-identifier-section
-              v-model="ids"
+              v-model="titleItem.ids"
               :show-title="false"
               :target-type="currentType"
               :disabled="isReadonly"
@@ -346,7 +359,7 @@
     </v-row>
     <div v-else>
       <gokb-identifier-section
-        v-model="ids"
+        v-model="titleItem.ids"
         :disabled="isReadonly"
         :target-type="currentType"
         :api-errors="errors.ids"
@@ -450,6 +463,7 @@
   import BaseComponent from '@/shared/components/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
+  import GokbMergeTitlePopup from '@/shared/popups/gokb-merge-title-popup'
   import titleServices from '@/shared/services/title-services'
   import accountModel from '@/shared/models/account-model'
   import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
@@ -457,7 +471,7 @@
 
   export default {
     name: 'EditTitleView',
-    components: { GokbErrorComponent, GokbAlternateNamesSection },
+    components: { GokbErrorComponent, GokbAlternateNamesSection, GokbMergeTitlePopup },
     extends: BaseComponent,
     props: {
       id: {
@@ -472,6 +486,7 @@
         pendingChanges: {},
         reviewsCount: undefined,
         tippCount: undefined,
+        showMergeTitlePopup: false,
         shortTitleMap: { name: undefined, id: undefined, uuid: undefined, type: undefined },
         titleItem: {
           id: undefined,
@@ -489,7 +504,9 @@
           volumeNumber: undefined,
           OAStatus: undefined,
           medium: undefined,
-          type: undefined
+          type: undefined,
+          ids: [],
+          tipps: [],
         },
         dateCreated: undefined,
         lastUpdated: undefined,
@@ -502,8 +519,6 @@
         version: undefined,
         reference: undefined,
         errors: {},
-        ids: [],
-        tipps: [],
         allAlternateNames: [],
         allCuratoryGroups: [],
         currentType: undefined,
@@ -600,7 +615,7 @@
         const data = {
           id: this.titleItem.id,
           name: this.allNames.name,
-          ids: this.ids.map(id => ({ value: id.value, type: id.namespace })),
+          ids: this.titleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
           variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
           publishedFrom: this.titleItem.publishedFrom,
           publishedTo: this.titleItem.publishedTo,
@@ -696,7 +711,7 @@
         this.titleItem.publishedFrom = this.buildDateString(data.publishedFrom)
         this.titleItem.publishedTo = this.buildDateString(data.publishedTo)
         this.publishers = data._embedded.publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!this.updateUrl }))
-        this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
+        this.titleItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
         this.tipps = data._embedded.tipps || []
         this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
         this.allNames = { name: data.name, alts: this.allAlternateNames }
@@ -740,6 +755,15 @@
       },
       updateTippCount (count) {
         this.tippCount = count
+      },
+      async submitTitleMerge (params) {
+        const tippsResult = await this.catchError({
+          promise: titleServices.mergeTitle(this.id, params, this.cancelToken.token),
+          instance: this
+        })
+      },
+      toggleMergeTitlePopup () {
+        this.showMergeTitlePopup = !this.showMergeTitlePopup
       }
     },
   }
