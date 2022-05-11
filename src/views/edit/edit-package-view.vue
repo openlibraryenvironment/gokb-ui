@@ -939,8 +939,7 @@
             fixed: utils.asYesNo(this.packageItem.fixed),
             nominalPlatform: this.packageItem.nominalPlatform?.id,
             provider: this.packageItem.provider?.id,
-            activeGroup: this.activeGroup,
-            urlUpdate: this.urlU
+            activeGroup: this.activeGroup
           }
 
           if (!this.isUpdate || this.kbart || this.urlUpdate) {
