@@ -282,9 +282,9 @@
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
-      addNewRole ({ id, name }) {
-        // console.log('addNewRole', id, name)
-        !this.allRoles.find(({ id: idInAll }) => id === idInAll) && !this.addedRoles.find(({ id: idInAll }) => id === idInAll) && this.addedRoles.push({ id, name, isDeletable: true })
+      addNewRole (role) {
+        console.log(role)
+        !this.allRoles.find(({ id: idInAll }) => role.id === idInAll) && !this.addedRoles.find(({ id: idInAll }) => role.id === idInAll) && this.addedRoles.push({ id: role.id, name: role.value, isDeletable: true })
       },
       showAddNewRole () {
         this.addRolePopupVisible = true
