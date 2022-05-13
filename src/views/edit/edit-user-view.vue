@@ -283,7 +283,6 @@
         this[actionMethodName](actionMethodParameter)
       },
       addNewRole (role) {
-        console.log(role)
         !this.allRoles.find(({ id: idInAll }) => role.id === idInAll) && !this.addedRoles.find(({ id: idInAll }) => role.id === idInAll) && this.addedRoles.push({ id: role.id, name: role.value, isDeletable: true })
       },
       showAddNewRole () {
