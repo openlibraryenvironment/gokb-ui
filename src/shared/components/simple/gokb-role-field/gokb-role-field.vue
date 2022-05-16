@@ -17,7 +17,7 @@
     methods: {
       transform (result) {
         const { data: { data: values } } = result
-        return values.map(({ id, authority }) => ({ id, name: this.$i18n.t('component.user.role.' + authority) }))
+        return values.map(({ id, authority }) => ({ id, name: this.$i18n.t('component.user.role.' + authority), value: authority }))
       }
     }
   }
