@@ -48,12 +48,21 @@
         </v-col>
       </v-row>
       <v-row v-if="id">
-        <v-col>
+        <v-col cols="6">
           <gokb-state-select-field
             v-model="titleItem.status"
             :deletable="!!deleteUrl"
             :editable="!!updateUrl"
             :api-errors="errors.status"
+          />
+        </v-col>
+        <v-col cols="6" xl="3">
+          <gokb-uuid-field
+            v-if="id"
+            :label="$t('component.general.uuid.label')"
+            :value="titleItem.uuid"
+            path="/title"
+            dense
           />
         </v-col>
       </v-row>
@@ -475,6 +484,7 @@
         shortTitleMap: { name: undefined, id: undefined, uuid: undefined, type: undefined },
         titleItem: {
           id: undefined,
+          uuid: undefined,
           name: undefined,
           source: undefined,
           publishedFrom: undefined,
@@ -705,6 +715,7 @@
         this.dateCreated = data.dateCreated
         this.lastUpdated = data.lastUpdated
         this.titleItem.id = data.id
+        this.titleItem.uuid = data.uuid
         this.titleItem.firstAuthor = data.firstAuthor
         this.titleItem.firstEditor = data.firstEditor
         this.titleItem.medium = data.medium

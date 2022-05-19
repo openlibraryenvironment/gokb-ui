@@ -1200,6 +1200,13 @@
       "lastUpdated": "Letzte Änderung",
       "language": {
           "label": "Sprache"
+      },
+      "uuid": {
+        "label": "UUID",
+        "copy": {
+          "label": "Stabile URL in die Zwischenablage kopieren",
+          "success": "Die stabile URL wurde in die Zwischenablage kopiert!"
+        }
       }
     }
   }

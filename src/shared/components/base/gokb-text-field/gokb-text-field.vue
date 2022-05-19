@@ -2,8 +2,8 @@
   <v-text-field
     ref="textField"
     v-model="localValue"
-    :disabled="disabled"
-    :readonly="readonly"
+    :disabled="disabled || readonly"
+    :readonly="readonly || disabled"
     :autocomplete="autocomplete"
     :full-width="fw"
     :label="label"
@@ -17,9 +17,10 @@
     :placeholder="placeholder"
     :append-icon="appendIcon"
     validate-on-blur
-    :clearable="!readonly"
+    :clearable="!readonly && !disabled"
     :dense="dense"
     @click:append="$emit('click:append', $event)"
+    :class="[ (disabled ? 'v-input--is-disabled' : '') ]"
   >
     <template #label>
       {{ label }}
