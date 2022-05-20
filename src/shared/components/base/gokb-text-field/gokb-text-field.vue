@@ -20,6 +20,7 @@
     :clearable="!readonly && !disabled"
     :dense="dense"
     @click:append="$emit('click:append', $event)"
+    @click:prepend="iconAction"
     :class="[ (disabled ? 'v-input--is-disabled' : '') ]"
   >
     <template #label>
@@ -136,6 +137,11 @@
     methods: {
       validate () {
         return this.$refs.textField.validate()
+      },
+      iconAction () {
+        if (this.type == 'email' && this.value && this.validate()) {
+          window.location.href = 'mailto:' + this.value
+        }
       }
     }
   }
