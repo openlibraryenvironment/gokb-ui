@@ -2,8 +2,8 @@
   <v-text-field
     ref="textField"
     v-model="localValue"
-    :disabled="disabled"
-    :readonly="readonly"
+    :disabled="disabled || readonly"
+    :readonly="readonly || disabled"
     :autocomplete="autocomplete"
     :full-width="fw"
     :label="label"
@@ -17,9 +17,11 @@
     :placeholder="placeholder"
     :append-icon="appendIcon"
     validate-on-blur
-    :clearable="!readonly"
+    :clearable="!readonly && !disabled"
     :dense="dense"
     @click:append="$emit('click:append', $event)"
+    @click:prepend="iconAction"
+    :class="[ (disabled ? 'v-input--is-disabled' : '') ]"
   >
     <template #label>
       {{ label }}
@@ -135,6 +137,11 @@
     methods: {
       validate () {
         return this.$refs.textField.validate()
+      },
+      iconAction () {
+        if (this.type == 'email' && this.value && this.validate()) {
+          window.location.href = 'mailto:' + this.value
+        }
       }
     }
   }

@@ -30,6 +30,16 @@
         >
           <v-row dense>
             <v-col>
+              <gokb-name-field
+                v-model="allNames"
+                :disabled="isReadonly"
+                dense
+                :label="$tc('component.tipp.name')"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="6">
               <gokb-state-select-field
                 v-if="status"
                 v-model="packageTitleItem.status"
@@ -37,14 +47,13 @@
                 :editable="!!updateUrl"
               />
             </v-col>
-          </v-row>
-          <v-row dense>
-            <v-col>
-              <gokb-name-field
-                v-model="allNames"
-                :disabled="isReadonly"
+            <v-col cols="6">
+              <gokb-uuid-field
+                v-if="id"
+                :label="$t('component.general.uuid.label')"
+                :value="uuid"
+                path="/package-title"
                 dense
-                :label="$tc('component.tipp.name')"
               />
             </v-col>
           </v-row>
@@ -540,6 +549,7 @@
         version: undefined,
         items: [],
         id: undefined,
+        uuid: undefined,
         allNames: { name: undefined, alts: [] },
         lastUpdated: undefined,
         dateCreated: undefined,
@@ -701,6 +711,7 @@
           }))
         }
         this.id = this.selectedItem.id
+        this.uuid = this.selectedItem.uuid
         this.packageTitleItem.id = this.id
         if (this.selectedItem.title?.type) {
           this.title.type = this.selectedItem.title.type

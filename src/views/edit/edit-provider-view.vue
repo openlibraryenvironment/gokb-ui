@@ -36,23 +36,32 @@
         </v-col>
       </v-row>
       <v-row v-if="id">
-        <v-col>
+        <v-col cols="6">
           <gokb-state-select-field
             v-model="providerObject.status"
             :deletable="!!deleteUrl"
             :editable="!!updateUrl"
           />
         </v-col>
+        <v-col cols="6" xl="3">
+          <gokb-uuid-field
+            v-if="id"
+            :label="$t('component.general.uuid.label')"
+            :value="uuid"
+            path="/provider"
+            dense
+          />
+        </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col cols="6">
           <gokb-text-field
             v-model="providerObject.homepage"
             :label="$t('component.provider.homepage')"
             :disabled="isReadonly"
           />
         </v-col>
-        <v-col lg="2">
+        <v-col cols="3" xl="2">
           <gokb-namespace-field
             v-model="providerObject.titleNamespace"
             target-type="Title"
@@ -60,7 +69,7 @@
             :label="$t('component.provider.titleNamespace')"
           />
         </v-col>
-        <v-col lg="2">
+        <v-col cols="3" xl="2">
           <gokb-namespace-field
             v-model="providerObject.packageNamespace"
             target-type="Package"
@@ -350,6 +359,7 @@
     data () {
       return {
         tab: null,
+        uuid: undefined,
         pendingChanges: {},
         valid: true,
         notFound: false,
@@ -545,6 +555,7 @@
         this.dateCreated = data.dateCreated
         this.lastUpdated = data.lastUpdated
         this.providerObject.status = data.status
+        this.uuid = data.uuid
 
         document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
       }
