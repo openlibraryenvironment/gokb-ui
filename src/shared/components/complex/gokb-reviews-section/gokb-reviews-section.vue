@@ -427,7 +427,6 @@
 
         if (this.rawReviews?.data) {
           this.totalNumberOfItems = this.rawReviews?.data?._pagination?.total
-          this.$emit('update', this.totalNumberOfItems)
         }
 
         this.loading = false
@@ -448,6 +447,7 @@
         this.reviewsOptions.page = 1
         this.retrieveReviews()
         this.successMessage = this.$i18n.tc('component.review.edit.success.closed')
+        this.$emit('update', this.totalNumberOfItems)
       },
       showAddReviewPopup () {
         this.addReviewPopupVisible = 1
@@ -515,6 +515,7 @@
 
         this.reviewsOptions.page = 1
         this.retrieveReviews()
+        this.$emit('update', this.totalNumberOfItems)
         this.loading = false
       },
       async _closeSelectedItems () {
@@ -534,11 +535,13 @@
           this.loading = false
 
           this.retrieveReviews()
+          this.$emit('update', this.totalNumberOfItems)
         }
       },
       handlePopupChange (type) {
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
         this.retrieveReviews()
+        this.$emit('update', this.totalNumberOfItems)
       }
     }
   }

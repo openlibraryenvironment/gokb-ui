@@ -28,7 +28,8 @@
         type="success"
         dismissible
       >
-        {{ $t('kbart.transmission.success') }} <gokb-button style="margin-top:-2px" label="Show Results" @click="editJobPopupVisible = !editJobPopupVisible">Show Results</gokb-button>
+        {{ $t('kbart.transmission.success') }}
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="editJobPopupVisible = !editJobPopupVisible">{{ $t('kbart.transmission.showResults') }}</gokb-button>
       </v-alert>
     </span>
     <span v-else-if="kbartResult === 'started'">
@@ -1117,6 +1118,7 @@
                 this.kbartResult = 'success'
               }
               finished = true
+              this.reload()
             } else {
               await this.wait(500)
             }

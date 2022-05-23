@@ -9,7 +9,7 @@
         v-if="showGroupJobs"
         icon
         :title="$t('job.context.profile')"
-        @click="showGroupJobs = !showGroupJobs"
+        @click="switchContext"
       >
         <v-icon>
           mdi-account

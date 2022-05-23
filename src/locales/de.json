@@ -326,10 +326,11 @@
       }
     },
     "transmission": {
-      "started": "Der KBART-Import wurde gestartet. Den Status können Sie über Ihr Dashboard verfolgen.",
+      "started": "Der KBART-Import wurde gestartet..",
       "failure": "KBART-Prozessierung fehlgeschlagen! Falls Sie eine URL für automatische Updates angegeben haben, versuchen Sie bitte stattdessen einen manuellen KBART-Import durchzuführen.",
       "success": "Der KBART-Import wurde erfolgreich abgeschlossen!",
-      "preparing": "Vorbereitung..."
+      "preparing": "Vorbereitung...",
+      "showResults": "Bericht anzeigen"
     }
   },
   "profile": {

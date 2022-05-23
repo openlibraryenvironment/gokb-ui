@@ -329,7 +329,8 @@
       "started": "The KBART Import has started.",
       "failure": "Unable to process the provided KBART File! If you provided an URL for automatic updating, please try a direct upload instead.",
       "success": "The KBART Import has successfully finished.",
-      "preparing": "Preparing..."
+      "preparing": "Preparing...",
+      "showResults": "Show Report"
     }
   },
   "profile": {

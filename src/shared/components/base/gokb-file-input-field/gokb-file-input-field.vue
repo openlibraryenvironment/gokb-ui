@@ -4,7 +4,7 @@
     :label="label"
     prepend-icon="mdi-file-delimited"
     :disabled="disabled"
-    accept=".txt,.tsv"
+    accept=".txt,.tsv,.csv"
     show-size
   />
 </template>

@@ -150,7 +150,7 @@
         }
       },
       localType () {
-        return this.selectedItem.type ? this.$i18n.t('job.jobTypes.' + this.selectedItem.type.name) + (this.selectedItem.dryRun ? (' (' + this.$i18n.t('job.dryRun.label') + ')') : '') : null
+        return this.selectedItem.type ? this.$i18n.t('job.jobTypes.' + this.selectedItem.type.name) : null
       }
     },
     async created () {
