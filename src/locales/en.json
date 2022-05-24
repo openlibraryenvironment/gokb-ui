@@ -1242,6 +1242,13 @@
       "lastUpdated": "Last Updated",
       "language": {
         "label": "Language"
+      },
+      "uuid": {
+        "label": "UUID",
+        "copy": {
+          "label": "Copy stable URL to clipboard",
+          "success": "The stable URL has been copied to your clipboard!"
+        }
       }
     }
   }

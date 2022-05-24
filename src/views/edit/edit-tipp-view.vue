@@ -23,8 +23,17 @@
       </v-alert>
     </span>
     <gokb-section :sub-title="$t('component.general.general')">
-      <v-row dense>
+      <v-row>
         <v-col>
+          <gokb-name-field
+            v-model="allNames"
+            :disabled="isReadonly"
+            :label="$tc('component.tipp.name')"
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="6">
           <gokb-state-select-field
             v-if="status"
             v-model="packageTitleItem.status"
@@ -32,13 +41,13 @@
             :editable="!!updateUrl"
           />
         </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <gokb-name-field
-            v-model="allNames"
-            :disabled="isReadonly"
-            :label="$tc('component.tipp.name')"
+        <v-col cols="6" xl="3">
+          <gokb-uuid-field
+            v-if="id"
+            :label="$t('component.general.uuid.label')"
+            :value="uuid"
+            path="/title"
+            dense
           />
         </v-col>
       </v-row>
@@ -605,6 +614,7 @@
         importId: undefined,
         lastUpdated: undefined,
         dateCreated: undefined,
+        uuid: undefined,
         packageTitleItem: {
           id: undefined,
           title: undefined,
@@ -835,6 +845,7 @@
         this.reviewRequests = data._embedded.reviewRequests
         this.editionStatement = data.editionStatement
         this.importId = data.importId
+        this.uuid = data.uuid
         this.dateCreated = data.dateCreated
         this.lastUpdated = data.lastUpdated
         this.packageTitleItem.paymentType = data.paymentType

@@ -358,13 +358,22 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col>
+              <v-col cols="6">
                 <gokb-state-select-field
                   v-if="packageItem.status"
                   v-model="packageItem.status"
                   dense
                   :deletable="!!deleteUrl"
                   :editable="!!updateUrl"
+                />
+              </v-col>
+              <v-col cols="3">
+                <gokb-uuid-field
+                  v-if="uuid"
+                  label="UUID"
+                  :value="uuid"
+                  path="/package"
+                  dense
                 />
               </v-col>
             </v-row>
@@ -664,6 +673,7 @@
         notFound: false,
         version: undefined,
         errors: {},
+        uuid: undefined,
         isCurator: false,
         showSubmitConfirm: false,
         submitConfirmationMessage: undefined,
@@ -1130,6 +1140,7 @@
       },
       mapRecord (data) {
         this.packageItem.id = data.id
+        this.uuid = data.uuid
         this.currentName = data.name
         this.packageItem.name = data.name
         this.packageItem.source = data.source
