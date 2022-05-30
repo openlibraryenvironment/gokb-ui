@@ -23,16 +23,16 @@
         {{ localErrorMessage }}
       </v-alert>
     </span>
-    <span v-if="kbartResult === 'success'">
+    <span v-if="importJob.result === 'success'">
       <v-alert
         type="success"
         dismissible
       >
         {{ $t('kbart.transmission.success') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="editJobPopupVisible = !editJobPopupVisible">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
       </v-alert>
     </span>
-    <span v-else-if="kbartResult === 'started'">
+    <span v-else-if="importJob.result === 'started'">
       <v-alert
         type="info"
         dismissible
@@ -40,8 +40,8 @@
         <span>
           {{ $t('kbart.transmission.started') }}
           <v-progress-linear
-            v-if="!!kbartProgress"
-            v-model="kbartProgress"
+            v-if="!!importJob.progress"
+            v-model="importJob.progress"
           />
           <div v-else>
             {{ $t('kbart.transmission.preparing') }}
@@ -49,18 +49,52 @@
         </span>
       </v-alert>
     </span>
-    <span v-else-if="kbartResult === 'error' || kbartStatus === 'error'">
+    <span v-if="matchingJob.result === 'success'">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ $t('kbart.titleMatch.success') }}
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+      </v-alert>
+    </span>
+    <span v-else-if="matchingJob.result === 'started'">
+      <v-alert
+        type="info"
+        dismissible
+      >
+        <span>
+          {{ $t('kbart.titleMatch.started') }}
+          <v-progress-linear
+            v-if="!!matchingJob.progress"
+            v-model="matchingJob.progress"
+          />
+          <div v-else>
+            {{ $t('kbart.titleMatch.preparing') }}
+          </div>
+        </span>
+      </v-alert>
+    </span>
+    <span v-if="importJob.result === 'error'">
       <v-alert
         type="error"
         dismissible
       >
-        {{ $t('kbart.transmission.failure') }}
+        {{ importJob.messageCode ? $t(importJob.messageCode) : $t('kbart.transmission.failure') }}
+      </v-alert>
+    </span>
+    <span v-if="importJob.result === 'error' && !!matchingJob.messageCode">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ $t(matchingJob.messageCode) }}
       </v-alert>
     </span>
     <gokb-edit-job-popup
       v-if="editJobPopupVisible"
       v-model="editJobPopupVisible"
-      :selected="kbartJobInfo"
+      :selected="selectedJob"
     />
     <v-stepper
       v-model="step"
@@ -648,11 +682,6 @@
         required: false,
         default: false
       },
-      kbartStatus: {
-        type: String,
-        required: false,
-        default: undefined
-      },
       kbartJob: {
         type: String,
         required: false,
@@ -683,6 +712,9 @@
         lastUpdated: undefined,
         listVerifiedDate: undefined,
         dateCreated: undefined,
+        importJob: {},
+        matchingJob: {},
+        selectedJob: undefined,
         kbartProgress: undefined,
         providerTitleNamespace: undefined,
         newTipps: [],
@@ -818,9 +850,6 @@
       },
       step3Error () {
         return (this.isEdit && this.errors.variantNames && this.errors.ids) || (!this.isEdit && this.errors.tipps)
-      },
-      kbartJobInfo () {
-        return { id: this.kbartJobId, archived: (this.kbartResult == 'success' || this.kbartResult == 'error') }
       }
     },
     watch: {
@@ -856,8 +885,9 @@
       }
 
       if (this.kbartJob) {
-        this.kbartResult = this.kbartStatus
-        this.loadJobStatus(this.kbartJob)
+        this.loadImportJobStatus(this.kbartJob)
+      } else if (this.isEdit && this.accessible) {
+        this.getActiveJobs()
       }
     },
     methods: {
@@ -904,6 +934,10 @@
           }
           this.showSubmitConfirm = true
         }
+      },
+      showJobPopup(uuid) {
+        this.selectedJob = { id: uuid, archived: false }
+        this.editJobPopupVisible = true
       },
       async createPackage () {
         loading.startLoading()
@@ -978,9 +1012,7 @@
                 instance: this
               })
 
-              if (kbartResult.status < 400) {
-                this.kbartResult = 'started'
-              } else {
+              if (kbartResult.status >= 400) {
                 this.kbartResult = 'error'
               }
 
@@ -991,10 +1023,10 @@
                 this.step = 1
                 this.reload()
                 if (kbartResult?.data?.jobId) {
-                  this.loadJobStatus(kbartResult?.data?.jobId)
+                  this.loadImportJobStatus(kbartResult?.data?.jobId)
                 }
               } else {
-                this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartStatus: this.kbartResult, kbartJob: kbartResult?.data?.jobId, initMessageCode: 'success.create' } })
+                this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartJob: kbartResult?.data?.jobId, initMessageCode: 'success.create' } })
               }
             } else if (this.urlUpdate) {
               const updateParams = {
@@ -1005,9 +1037,7 @@
                 instance: this
               })
 
-              if (sourceUpdateResult.status < 400) {
-                this.kbartResult = 'started'
-              } else {
+              if (sourceUpdateResult.status != 400) {
                 this.kbartResult = 'error'
               }
 
@@ -1017,10 +1047,10 @@
                 this.step = 1
                 this.reload()
                 if (sourceUpdateResult?.data?.jobId) {
-                  this.loadJobStatus(sourceUpdateResult?.data?.jobId)
+                  this.loadImportJobStatus(sourceUpdateResult?.data?.jobId)
                 }
               } else {
-                this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartStatus: this.kbartResult, kbartJob: sourceUpdateResult?.data?.jobId, initMessageCode: 'success.create' } })
+                this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartJob: sourceUpdateResult?.data?.jobId, initMessageCode: 'success.create' } })
               }
             } else {
               loading.stopLoading()
@@ -1106,9 +1136,14 @@
           }
         }
       },
-      async loadJobStatus (jobId) {
+      async loadImportJobStatus (jobId) {
         var finished = false
-        this.kbartJobId = jobId
+        var jobInfo = {
+          id: jobId,
+          progress: undefined,
+          result: 'started',
+          dismissed: false
+        }
 
         while (!finished) {
           const jobResult = await this.catchError({
@@ -1117,24 +1152,97 @@
           })
 
           if (jobResult.status < 400) {
-            this.kbartProgress = jobResult.data.progress
+            jobInfo.progress = jobResult.data.progress
 
             if (jobResult.data.finished) {
-              this.kbartProgress = undefined
+              jobInfo.progress = undefined
 
-              if (jobResult.data.status === 'ERROR') {
-                this.kbartResult = 'error'
+              if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
+                jobInfo.result = 'error'
               } else {
-                this.kbartResult = 'success'
+                jobInfo.result = 'success'
+
+                if (jobResult.data.job_result.matchingJob) {
+                  this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
+                }
               }
-              finished = true
               this.reload()
+
+              finished = true
             } else {
               await this.wait(500)
             }
           } else {
-            this.kbartResult = 'error'
+            jobInfo.result = 'error'
             finished = true
+          }
+
+          this.importJob = jobInfo
+        }
+      },
+      async loadMatchingJobStatus (jobId) {
+        var finished = false
+        var jobInfo = {
+          id: jobId,
+          progress: undefined,
+          result: 'started',
+          messageCode: undefined,
+          dismissed: false
+        }
+
+        while (!finished) {
+          const jobResult = await this.catchError({
+            promise: jobServices.getJob(jobId, false, this.cancelToken.token),
+            instance: this
+          })
+
+          if (jobResult.status < 400) {
+            jobInfo.progress = jobResult.data.progress
+
+            if (jobResult.data.finished) {
+              jobInfo.progress = undefined
+
+              if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
+                jobInfo.result = 'error'
+                jobInfo.messageCode = jobResult.data.job_result?.messageCode
+              } else {
+                jobInfo.result = 'success'
+              }
+
+              finished = true
+            } else {
+              await this.wait(500)
+            }
+          } else {
+            jobInfo.result = 'error'
+            finished = true
+          }
+
+          this.matchingJob = jobInfo
+        }
+      },
+      async getActiveJobs () {
+        const jobResult = await this.catchError({
+          promise: jobServices.get({ linkedItem: this.id }, this.cancelToken.token),
+          instance: this
+        })
+
+        if (jobResult.status < 400) {
+          if (jobResult.data?.data.length > 0) {
+            console.log("Got active jobs!")
+            this.activeJobs = true
+
+            for (job in jobResult.data.data) {
+              if (job.type.value === 'PackageTitleMatch') {
+                loadMatchingJobStatus(job.uuid, job.type.value)
+              }
+              else {
+                loadImportJobStatus(job.uuid, job.type.value)
+              }
+            }
+          }
+          else {
+            console.log("No active jobs!")
           }
         }
       },

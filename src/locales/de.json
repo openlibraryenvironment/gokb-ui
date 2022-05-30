@@ -183,6 +183,7 @@
     "label": "Import | Importe",
     "finished": "Fertig",
     "cancelled": "Abgebrochen",
+    "details": "Import-Status",
     "active": {
       "label": "Aktive Jobs"
     },
@@ -258,7 +259,8 @@
       "KBARTIngest": "KBART-Import",
       "KBART Ingest": "KBART-Import",
       "KBARTSourceIngest": "Automatisierter KBART-Import",
-      "KBARTIngestDryRun": "KBART-Import (Testlauf)"
+      "KBARTIngestDryRun": "KBART-Import (Testlauf)",
+      "PackageTitleMatch": "Referenztitel-Abgleich"
     }
   },
   "kbart": {
@@ -297,6 +299,7 @@
     },
     "errors": {
       "encoding": "Diese Datei ist nicht in UTF-8 codiert. Bitte beheben Sie dies vor dem Import!",
+      "alreadyRunning": "Ein KBART-Import für dieses Paket ist bereits aktiv. Bitte warten Sie bis der vorherige Import abgeschlossen ist.",
       "tabsCountFile": "Diese Datei enthält Datenzeilen mit einer vom Datei-Header abweichenden Anzahl von Spalten!",
       "tabsCountRow": "Diese Zeile enthält {0} Spalten anstatt dem Datei-Header entsprechend {1} Spalten!",
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
@@ -331,6 +334,11 @@
       "success": "Der KBART-Import wurde erfolgreich abgeschlossen!",
       "preparing": "Vorbereitung...",
       "showResults": "Bericht anzeigen"
+    },
+    "titleMatch": {
+      "started": "Die Referenztitel-Verknüpfung für neue Pakettitel wurde gestartet..",
+      "failure": "Beim Abgleich neuer Pakettitel mit ihren Referenztiteln sind Fehler aufgetreten!",
+      "success": "Die Referenztitel-Verknüpfung wurde abgeschlossen."
     }
   },
   "profile": {

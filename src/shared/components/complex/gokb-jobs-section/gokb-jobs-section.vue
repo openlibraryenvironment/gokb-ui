@@ -104,6 +104,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      autoRefresh: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     data () {
@@ -156,6 +161,8 @@
     },
     activated () {
       clearInterval(this.interval)
+
+      this.autoJobRefresh = this.autoRefresh
 
       if (this.autoJobRefresh) {
         this.interval = setInterval(function () {

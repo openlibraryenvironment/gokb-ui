@@ -180,9 +180,10 @@
     "passwordLength": "The password must be between 6 and 64 characters of length."
   },
   "job": {
-    "label": "Job | Jobs",
+    "label": "Import | Imports",
     "finished": "Finished",
     "cancelled": "Cancelled",
+    "details": "Import Details",
     "active": {
       "label": "Active Jobs"
     },
@@ -258,7 +259,8 @@
       "KBARTIngest": "KBART Package Ingest",
       "KBART Ingest": "KBART Package Ingest",
       "KBARTSourceIngest": "Automated KBART Ingest",
-      "KBARTIngestDryRun": "KBART Package Ingest (Dry Run)"
+      "KBARTIngestDryRun": "KBART Package Ingest (Dry Run)",
+      "PackageTitleMatch": "Reference Title Matching"
     }
   },
   "kbart": {
@@ -297,6 +299,7 @@
     },
     "errors": {
       "encoding": "The encoding of this file is not UTF-8. Please correct this before importing!",
+      "alreadyRunning": "A KBART-Import for this Package is already in progress. Please wait for this job to be finished.",
       "tabsCountFile": "This file contains rows with a different column count than defined by the provided headings!",
       "tabsCountRow": "This line contains {0} columns instead of {1} columns, as defined by the headings!",
       "missingVal": "Missing value in column '{0}'!",
@@ -326,11 +329,16 @@
       }
     },
     "transmission": {
-      "started": "The KBART Import has started.",
+      "started": "The KBART Import has started..",
       "failure": "Unable to process the provided KBART File! If you provided an URL for automatic updating, please try a direct upload instead.",
       "success": "The KBART Import has successfully finished.",
       "preparing": "Preparing...",
       "showResults": "Show Report"
+    },
+    "titleMatch": {
+      "started": "Matching new package titles to global reference items..",
+      "failure": "There have been errors matching the package titles!",
+      "success": "Reference matching complete."
     }
   },
   "profile": {

@@ -348,7 +348,7 @@
         this.readerForImport.onload = this._importCompleted
         this.readerForImport.onprogress = this._importProgress
 
-        if (this.errors?.length == 0){
+        if (this.errors?.length == 0) {
           this.readerForImport.readAsText(this.options.selectedFile)
         }
       },
@@ -526,7 +526,7 @@
         }
 
         try {
-          this.options.lineCount = csvDataRows.length - 1
+          this.options.lineCount = csvDataRows.length - 2
         } catch (exception) {
           this.errors.push(exception)
         } finally {

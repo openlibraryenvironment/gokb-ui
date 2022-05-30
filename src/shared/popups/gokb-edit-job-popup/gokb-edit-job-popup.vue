@@ -1,7 +1,7 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    title="Job-Details"
+    :title="$t('job.details')"
     width="70%"
     @submit="close"
   >
