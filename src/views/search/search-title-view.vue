@@ -103,19 +103,27 @@
         return [
           {
             text: this.$i18n.t('component.general.name'),
-            align: 'left',
+            align: 'start',
             sortable: true,
             value: 'link'
           },
           {
+            text: this.$i18n.tc('component.title.publisher.label'),
+            align: 'start',
+            width: '25%',
+            sortable: true,
+            value: 'publisher'
+          },
+          {
             text: this.$i18n.t('component.title.type.label'),
-            align: 'left',
+            align: 'start',
+            width: '150px',
             sortable: false,
             value: 'type'
           },
           {
             text: this.$i18n.t('component.title.publishStart'),
-            algin: 'left',
+            algin: 'end',
             width: '150px',
             sortable: false,
             value: 'startDate'
@@ -125,7 +133,6 @@
     },
     async created () {
       this.searchServicesUrl = 'rest/titles'
-      this.searchServiceEmbeds = 'ids'
       this.initVals = {
         status: 'setInit'
       }
@@ -144,6 +151,7 @@
           publisher,
           dateFirstInPrint,
           dateFirstOnline,
+          _embedded,
           _links
         }) => ({
           id,
@@ -151,7 +159,7 @@
           startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
           linkTwo: publisher ? { value: publisher.name, route: EDIT_PROVIDER_ROUTE, id: 'publisherId' } : undefined,
-          publisherId: publisher?.id || undefined,
+          publisher: _embedded.publisher.map(pub => pub.name),
           status: status?.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined

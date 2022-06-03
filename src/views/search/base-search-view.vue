@@ -7,7 +7,10 @@
     <gokb-error-component :value="error" />
     <gokb-section :sub-title="searchHeader">
       <template v-for="(row, rowIndex) of searchInputFields">
-        <v-row :key="`${title}_${rowIndex}`">
+        <v-row
+          :key="`${title}_${rowIndex}`"
+          dense
+        >
           <v-col
             v-for="(column, columnIndex) of row"
             :key="`${rowIndex}_${columnIndex}`"
@@ -29,7 +32,10 @@
           </v-col>
         </v-row>
       </template>
-      <v-row justify="end">
+      <v-row
+        justify="end"
+        dense
+      >
         <v-spacer />
         <v-spacer />
         <v-col

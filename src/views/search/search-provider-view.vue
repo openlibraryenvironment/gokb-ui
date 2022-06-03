@@ -91,7 +91,7 @@
         return [
           {
             text: this.$i18n.t('component.general.name'),
-            align: 'left',
+            align: 'start',
             width: '100%',
             sortable: true,
             value: 'link'
