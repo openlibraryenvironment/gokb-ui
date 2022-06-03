@@ -70,7 +70,7 @@
             v-model="matchingJob.progress"
           />
           <div v-else>
-            {{ $t('kbart.titleMatch.preparing') }}
+            {{ $t('kbart.transmission.preparing') }}
           </div>
         </span>
       </v-alert>

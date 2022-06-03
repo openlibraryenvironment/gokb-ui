@@ -142,17 +142,17 @@
         </v-menu>
       </template>
       <template #search>
-        <gokb-title-field
+        <gokb-text-field
           v-if="pkg"
-          v-model="searchFilters.title"
+          v-model="searchFilters.q"
           class="ms-4"
           :label="$tc('component.title.name.label')"
         />
-        <gokb-title-ids-field
+        <gokb-text-field
           v-if="pkg"
-          v-model="searchFilters.title"
+          v-model="searchFilters.ids"
           class="ms-4"
-          :label="$tc('component.title.ids.label')"
+          :label="$tc('component.identifier.label')"
         />
         <gokb-search-package-field
           v-else
@@ -293,7 +293,8 @@
         bulkSelect: false,
         searchFilters: {
           status: undefined,
-          title: undefined,
+          q: undefined,
+          ids: undefined,
           pkg: undefined
         },
         newTipps: [],
@@ -517,9 +518,11 @@
           const searchParams = {}
 
           Object.keys(this.searchFilters).forEach(key => {
-            if (this.searchFilters[key] instanceof String || typeof this.searchFilters[key] === 'number') {
+            if (!this.searchFilters[key]) {
+
+            } else if (typeof this.searchFilters[key] === 'string' || typeof this.searchFilters[key] === 'number') {
               searchParams[key] = this.searchFilters[key]
-            } else if (this.searchFilters[key] instanceof Object) {
+            } else if (typeof this.searchFilters[key] === 'object') {
               if (this.searchFilters[key].id) {
                 searchParams[key] = this.searchFilters[key].id
               } else if (this.searchFilters[key].value) {
