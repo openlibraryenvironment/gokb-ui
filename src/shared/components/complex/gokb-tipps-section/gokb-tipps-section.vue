@@ -19,7 +19,7 @@
       <gokb-kbart-import-popup
         v-if="kbartImportPopupVisible"
         v-model="kbartImportPopupVisible"
-        :default-title-namespace="defaultTitleNamespace"
+        :provider="provider"
         @kbart="addKbartFile"
       />
       <gokb-add-title-popup
@@ -231,12 +231,12 @@
         default: false
       },
       pkg: {
-        type: Number,
+        type: [Number, String],
         required: false,
         default: undefined
       },
       ttl: {
-        type: Number,
+        type: [Number, String],
         required: false,
         default: undefined
       },
@@ -260,7 +260,7 @@
         required: false,
         default: undefined
       },
-      defaultTitleNamespace: {
+      provider: {
         type: Object,
         required: false,
         default: undefined
@@ -329,7 +329,7 @@
       },
       tableHeaders () {
         return [
-          { text: (this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.title.label')), align: 'left', value: 'popup', sortable: false },
+          { text: (this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.tipp.label')), align: 'left', value: 'popup', sortable: false },
           { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
           { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
           { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
@@ -337,7 +337,7 @@
       },
       newTableHeaders () {
         return [
-          { text: this.$i18n.tc('component.title.label'), align: 'left', value: 'popup', sortable: false },
+          { text: this.$i18n.tc('component.tipp.label'), align: 'left', value: 'popup', sortable: false },
           { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
           { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
           { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }

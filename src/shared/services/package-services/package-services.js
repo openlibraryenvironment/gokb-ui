@@ -15,6 +15,15 @@ const api = (baseServices) => ({
       url: process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}/tipps?${urlParameter}`,
     }, cancelToken)
   },
+  getJobs (parameter, cancelToken) {
+    const urlParameter = baseServices.createQueryParameters(parameter)
+    const url = process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${parameter.id}/jobs?${urlParameter}`
+
+    return baseServices.request({
+      method: 'GET',
+      url: url,
+    }, cancelToken)
+  },
   createOrUpdatePackage (data, cancelToken) {
     const { id } = data
     const url = id ? process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}` : process.env.VUE_APP_API_BASE_URL + PACKAGE_URL

@@ -286,7 +286,8 @@
       "label": "Partial Update"
     },
     "dryRun": {
-      "label": "Dry Run"
+      "label": "Dry Run",
+      "success": "The KBART dry run has successfully finished."
     },
     "column": {
       "label": "Column | Columns",

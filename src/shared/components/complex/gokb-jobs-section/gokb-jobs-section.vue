@@ -3,10 +3,11 @@
     expandable
     :sub-title="title"
     :items-total="totalNumberOfItems"
+    :hide-default="hideDefault"
   >
     <template #buttons>
       <v-btn
-        v-if="showGroupJobs"
+        v-if="group && showGroupJobs"
         icon
         :title="$t('job.context.profile')"
         @click="switchContext"
@@ -16,7 +17,7 @@
         </v-icon>
       </v-btn>
       <v-btn
-        v-else
+        v-else-if="group"
         icon
         :title="$t('job.context.group')"
         @click="switchContext"
@@ -79,6 +80,7 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import profileServices from '@/shared/services/profile-services'
   import groupServices from '@/shared/services/curatory-group-services'
+  import packageServices from '@/shared/services/package-services'
   import BaseComponent from '@/shared/components/base-component'
 
   const ROWS_PER_PAGE = 10
@@ -90,11 +92,6 @@
     },
     extends: BaseComponent,
     props: {
-      value: {
-        type: Number,
-        required: true,
-        default: undefined
-      },
       disabled: {
         type: Boolean,
         required: false,
@@ -109,6 +106,16 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      linkedComponent: {
+        type: [String, Number],
+        required: false,
+        default: undefined
+      },
+      hideDefault: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -127,8 +134,7 @@
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
         interval: null,
-        autoJobRefresh: true,
-        openJobPanels: [0, 1]
+        autoJobRefresh: true
       }
     },
     computed: {
@@ -139,13 +145,22 @@
         return !this.disabled
       },
       tableHeaders () {
-        return [
-          { text: this.$i18n.t('job.type'), align: 'left', value: 'popup', sortable: false, width: '25%' },
-          { text: this.$i18n.t('job.linkedComponent'), align: 'left', value: 'link', sortable: false, width: '40%' },
-          { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '10%' },
-          { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '10%' },
-          { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '10%' },
-        ]
+        if (this.linkedComponent) {
+          return [
+            { text: this.$i18n.t('job.type'), align: 'left', value: 'popup', sortable: false },
+            { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '15%' },
+            { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '15%' },
+            { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '15%' },
+          ]
+        } else {
+          return [
+            { text: this.$i18n.t('job.type'), align: 'left', value: 'popup', sortable: false, width: '25%' },
+            { text: this.$i18n.t('job.linkedComponent'), align: 'left', value: 'link', sortable: false, width: '40%' },
+            { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '10%' },
+            { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '10%' },
+            { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '10%' },
+          ]
+        }
       },
       title () {
         return this.$i18n.tc('job.label', 2) + (this.showGroupJobs ? (' (' + this.group.name + ')') : '')
@@ -158,9 +173,19 @@
     },
     created () {
       this.fetchJobs()
+      this.interval = undefined
+
+      this.autoJobRefresh = this.autoRefresh
+
+      if (this.autoJobRefresh) {
+        this.interval = setInterval(function () {
+          this.fetchJobs()
+        }.bind(this), 1000)
+      }
     },
     activated () {
       clearInterval(this.interval)
+      this.interval = undefined
 
       this.autoJobRefresh = this.autoRefresh
 
@@ -186,12 +211,19 @@
         this.fetchJobs({ page })
       },
       async fetchJobs ({ page } = { page: undefined }) {
-        const lookupService = this.showGroupJobs ? groupServices : profileServices
+        let lookupService = profileServices
+
+        if (this.linkedComponent) {
+          lookupService = packageServices
+        } else if (this.showGroupJobs) {
+          lookupService = groupServices
+        }
 
         const result = await this.catchError({
           promise: lookupService.getJobs({
             offset: this.options.page ? (this.options.page - 1) * this.options.itemsPerPage : 0,
             ...(this.showGroupJobs ? { id: this.group.id } : {}),
+            ...(this.linkedComponent ? { id: this.linkedComponent } : {}),
             combined: true,
             limit: this.options.itemsPerPage
           }, this.cancelToken.token),
@@ -207,7 +239,7 @@
           database: '/title'
         }
 
-        if (result.status === 200) {
+        if (result?.status === 200) {
           this.jobs = result.data?.data?.map(record => (
               {
                 id: record.uuid,

@@ -286,7 +286,8 @@
       "label": "Teil-Update"
     },
     "dryRun": {
-      "label": "Testdurchlauf"
+      "label": "Testdurchlauf",
+      "success": "Der Testlauf des KBART-Imports wurde erfolgreich abgeschlossen."
     },
     "column": {
       "label": "Spalte | Spalten",

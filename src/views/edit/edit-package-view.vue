@@ -28,7 +28,7 @@
         type="success"
         dismissible
       >
-        {{ $t('kbart.transmission.success') }}
+        {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
         <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
       </v-alert>
     </span>
@@ -354,6 +354,14 @@
                 @click:close="kbart = undefined"
               >
                 {{ kbart.selectedFile.name }} ({{ kbart.lineCount }} {{ $tc('kbart.row.label', kbart.lineCount) }})
+                <v-icon
+                  v-if="kbart.dryRun"
+                  class="ml-1"
+                  :title="$t('kbart.dryRun.label')"
+                  small
+                >
+                  mdi-content-save-off
+                </v-icon>
               </v-chip>
             </v-col>
           </v-row>
@@ -362,7 +370,7 @@
             :pkg="parseInt(id)"
             :filter-align="isEdit"
             :platform="packageItem.nominalPlatform"
-            :default-title-namespace="providerTitleNamespace"
+            :provider="packageItem.provider"
             :disabled="isReadonly"
             :api-errors="errors.tipps"
             @kbart="setKbart"
@@ -485,7 +493,7 @@
               <v-col v-if="kbart && kbart.selectedFile">
                 <gokb-text-field
                   v-model="kbart.selectedFile.name"
-                  label="KBART"
+                  :label="kbartLabel"
                   dense
                   disabled
                 />
@@ -526,6 +534,15 @@
                 :review-component="packageItem"
                 :api-errors="errors.listStatus"
                 @update=reload
+              />
+            </v-col>
+          </v-row>
+          <v-row v-if="id && !isReadonly">
+            <v-col>
+              <gokb-jobs-section
+                :linked-component="id"
+                :hide-default="true"
+                :auto-refresh="false"
               />
             </v-col>
           </v-row>
@@ -840,7 +857,7 @@
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
       },
       currentStepValid () {
-        return this.isReadonly || (this.isEdit && (this.step !== 2 || (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider))) || (!this.isEdit && (this.step !== 1 || (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)))
+        return this.isReadonly || (this.isEdit && (this.step !== 2 || this.isValid)) || (!this.isEdit && (this.step !== 1 || this.isValid))
       },
       isValid () {
         return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
@@ -850,6 +867,9 @@
       },
       step3Error () {
         return (this.isEdit && this.errors.variantNames && this.errors.ids) || (!this.isEdit && this.errors.tipps)
+      },
+      kbartLabel () {
+        return 'KBART' + (this.kbart?.dryRun ? ' (' + this.$i18n.t('kbart.dryRun.label') + ')' : '')
       }
     },
     watch: {
@@ -868,6 +888,11 @@
           this.step2Error = true
         } else {
           this.step2Error = false
+        }
+      },
+      'packageItem.provider' (prov) {
+        if (prov) {
+          this.fetchDefaultNamespace(prov.id)
         }
       }
     },
@@ -890,6 +915,12 @@
         this.getActiveJobs()
       }
     },
+    mounted () {
+      document.addEventListener('keydown', this.handleKeyboardNav.bind(this))
+    },
+    beforeDestroy() {
+      document.removeEventListener("keydown", this.handleKeyboardNav)
+    },
     methods: {
       go2NextStep () {
         this.step < 4 && this.step++
@@ -905,6 +936,18 @@
       },
       updateNewTipps (tipps) {
         this.newTipps = tipps
+      },
+      handleKeyboardNav (e) {
+        if (this.step > 1 && e.key === "ArrowLeft" && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault()
+            this.go2PreviousStep()
+        } else if (this.step < 4 && e.key === "ArrowRight" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault()
+          this.go2NextStep()
+        } else if (['1', '2', '3', '4'].includes(e.key) && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault()
+          this.step = e.key
+        }
       },
       setKbart (options) {
         this.kbart = options
@@ -1136,12 +1179,27 @@
           }
         }
       },
+      async fetchDefaultNamespace (providerId) {
+        const providerResult = await this.catchError({
+          promise: providerServices.getProvider(providerId, this.cancelToken.token),
+          instance: this
+        })
+
+        if (providerResult?.status === 200) {
+          const fullProvider = providerResult.data
+
+          if (fullProvider.titleNamespace) {
+            this.providerTitleNamespace= fullProvider.titleNamespace
+          }
+        }
+      },
       async loadImportJobStatus (jobId) {
         var finished = false
         var jobInfo = {
           id: jobId,
           progress: undefined,
           result: 'started',
+          dryRun: undefined,
           dismissed: false
         }
 
@@ -1156,6 +1214,7 @@
 
             if (jobResult.data.finished) {
               jobInfo.progress = undefined
+              jobInfo.dryRun = jobResult.data.job_result.dryRun
 
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
@@ -1229,7 +1288,6 @@
 
         if (jobResult.status < 400) {
           if (jobResult.data?.data.length > 0) {
-            console.log("Got active jobs!")
             this.activeJobs = true
 
             for (job in jobResult.data.data) {
@@ -1240,9 +1298,6 @@
                 loadImportJobStatus(job.uuid, job.type.value)
               }
             }
-          }
-          else {
-            console.log("No active jobs!")
           }
         }
       },
