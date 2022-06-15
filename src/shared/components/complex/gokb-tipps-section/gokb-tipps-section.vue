@@ -334,9 +334,9 @@
       },
       packageTypes () {
         return [
-          { id: 'Book', text: this.$i18n.tc('component.title.type.Book') },
+          { id: 'Monograph', text: this.$i18n.tc('component.title.type.Book') },
           { id: 'Database', text: this.$i18n.tc('component.title.type.Database') },
-          { id: 'Journal', text: this.$i18n.tc('component.title.type.Journal') },
+          { id: 'Serial', text: this.$i18n.tc('component.title.type.Journal') },
           { id: 'Other', text: this.$i18n.tc('component.title.type.Other') },
         ]
       },
