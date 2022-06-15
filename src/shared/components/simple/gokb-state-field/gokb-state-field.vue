@@ -24,7 +24,7 @@
         type: Boolean,
         required: false,
         default: false
-      }
+      },
     },
     computed: {
       localName () {
@@ -38,6 +38,7 @@
     },
     created () {
       this.entityName = this.url
+      this.stateLabel = this.url.split('/')[2]
     },
     methods: {
       transform (result) {

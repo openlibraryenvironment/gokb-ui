@@ -762,12 +762,6 @@
         },
         allCuratoryGroups: [],
         sourceItem: undefined,
-        packageTypes: [
-          { id: 'book', text: 'Buch' },
-          { id: 'database', text: 'Datenbank' },
-          { id: 'journal', text: 'Journal' },
-          { id: 'mixed', text: 'Gemischt' },
-        ],
         successMsg: undefined,
         warningMsg: undefined,
         errorMsg: undefined,
@@ -1016,7 +1010,7 @@
 
           const newPackage = {
             ...this.packageItem,
-            ...(this.newTipps.length > 0 ? { tipps: this.newTipps.map(tipp => ({ ...tipp, id: null })) } : {}),
+            ...(this.newTipps.length > 0 ? { tipps: this.newTipps.map(tipp => ({ ...tipp, id: typeof id === 'number' ? id : null })) } : {}),
             name: this.allNames.name,
             version: this.version,
             variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),

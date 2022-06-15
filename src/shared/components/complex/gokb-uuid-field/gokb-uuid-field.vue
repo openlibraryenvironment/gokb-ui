@@ -7,7 +7,10 @@
     disabled
     readonly
   >
-    <template v-slot:append-outer>
+    <template
+      v-slot:append-outer
+      v-if="!!urlBase"
+    >
       <v-btn
         :title="$t('component.general.uuid.copy.label')"
         class="mt-n2"
@@ -54,11 +57,14 @@
     computed: {
       messages () {
         return this.copied ? [this.$i18n.t('component.general.uuid.copy.success')] : []
+      },
+      urlBase () {
+        return process.env.VUE_APP_BASE_URL
       }
     },
     methods: {
       copyUrl () {
-        const url = process.env.VUE_APP_API_BASE_URL + this.path + '/' + this.value
+        const url = process.env.VUE_APP_BASE_URL + this.path + '/' + this.value
         navigator.clipboard.writeText(url)
         this.copied = true
       }

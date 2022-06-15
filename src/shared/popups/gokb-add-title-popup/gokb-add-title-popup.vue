@@ -366,7 +366,7 @@
             <v-col>
               <gokb-state-field
                 v-model="packageTitleItem.publicationType"
-                :init-item="packageTitleItem.publicationType"
+                :init-item="packageTitleItem.publicationType || titleType"
                 width="100%"
                 dense
                 return-object
@@ -602,7 +602,7 @@
         return this.title?.type ? this.$i18n.tc('component.title.type.' + (typeof this.title.type === 'object' ? this.title.type.id : this.title.type)) : this.$i18n.tc('component.title.label')
       },
       isEdit () {
-        return !!this.id
+        return !!this.id && !!this.version
       },
       isReadonly () {
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
@@ -721,8 +721,9 @@
       } else {
         this.title.type = this.titleType
         this.packageTitleItem.hostPlatform = this.parentPlatform
+        this.publicationType = this.titleType
       }
-      this.coverageExpanded = !this.isEdit && (this.title.type === 'Journal' || this.title.type === 'serial')
+      this.coverageExpanded = !this.isEdit && (this.title.type === 'Serial' || this.title.type === 'serial')
     },
     methods: {
       async submitTipp () {

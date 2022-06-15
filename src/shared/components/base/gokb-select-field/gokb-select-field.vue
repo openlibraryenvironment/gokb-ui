@@ -30,6 +30,7 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import genericEntityServices from '@/shared/services/generic-entity-services'
+  import states from '@/shared/models/states-model'
 
   export default {
     name: 'GokbSelectField',
@@ -101,7 +102,8 @@
     },
     data () {
       return {
-        items: []
+        items: [],
+        stateLabel: undefined
       }
     },
     computed: {
@@ -142,7 +144,7 @@
             selected = this.items.filter(item => (item.id === this.initItem))
           } else if (this.initItem instanceof Object) {
             if (this.initItem.id) {
-              selected = this.items.filter(item => item.id === this.initItem.id)
+              selected = this.items.filter(item => item.id === this.initItem.id || item.value === this.initItem.id)
             }
             if (!selected && this.initItem.value) {
               selected = this.items.filter(item => (item.name === this.initItem.value || item.value === this.initItem.value))
@@ -159,15 +161,23 @@
       },
       async fetch () {
         if (this.entityName) {
-          const entityService = genericEntityServices(this.entityName)
-          const parameters = { _sort: 'name', _order: 'asc', ...this.searchParams }
-          const response = await this.catchError({
-            promise: entityService.get({ parameters }, this.cancelToken.token),
-            instance: this
-          })
+          if (!!this.stateLabel && states.hasCategory(this.stateLabel)) {
+            this.items = states.getCategory(this.stateLabel)
+          } else {
+            const entityService = genericEntityServices(this.entityName)
+            const parameters = { _sort: 'name', _order: 'asc', ...this.searchParams }
+            const response = await this.catchError({
+              promise: entityService.get({ parameters }, this.cancelToken.token),
+              instance: this
+            })
 
-          if (response) {
-            this.items = this.transform(response)
+            if (response) {
+              this.items = this.transform(response)
+
+              if (this.stateLabel) {
+                states.addCategory(this.stateLabel, this.items)
+              }
+            }
           }
 
           if (this.initItem) {
@@ -176,7 +186,7 @@
         } else if (this.$attrs.items) {
           this.items = this.$attrs.items
         }
-      },
+      }
     }
   }
 </script>
