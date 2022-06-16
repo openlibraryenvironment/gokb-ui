@@ -173,6 +173,7 @@
     },
     created () {
       this.fetchJobs()
+      clearInterval(this.interval)
       this.interval = undefined
 
       this.autoJobRefresh = this.autoRefresh
@@ -248,7 +249,7 @@
                 componentId: record.linkedItem?.id || null,
                 componentType: record.linkedItem && this.$i18n.tc('component.' + record.linkedItem.type.toLowerCase() + '.label'),
                 link: record.linkedItem ? { value: record.linkedItem?.name, route: componentRoutes[record.linkedItem.type.toLowerCase()], id: 'componentId' } : {},
-                archived: !!record.progress || true,
+                archived: !!record.status || false,
                 progress: record.progress,
                 messages: record.messages,
                 startTime: new Date(record.startTime).toLocaleString('sv'),
@@ -263,7 +264,9 @@
       determineStatusText (record) {
         let result = undefined
 
-        if (!!record.progress) {
+        if (record.status) {
+          result = this.$i18n.t('job.' + record.status.toLowerCase())
+        } else {
           if (record.begun) {
             if (record.endTime) {
               if (record.cancelled) {
@@ -277,8 +280,6 @@
           } else {
             result = this.$i18n.t('job.waiting')
           }
-        } else {
-          result = this.$i18n.t('job.' + record.status.toLowerCase())
         }
 
         return result
