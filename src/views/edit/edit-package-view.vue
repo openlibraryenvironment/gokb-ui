@@ -38,7 +38,7 @@
         dismissible
       >
         <span>
-          {{ $t('kbart.transmission.started') }}
+          {{ importJob.dryRun ? $t('kbart.transmission.started') : $t('kbart.dryRun.started') }}
           <v-progress-linear
             v-if="!!importJob.progress"
             v-model="importJob.progress"
@@ -80,7 +80,7 @@
         type="error"
         dismissible
       >
-        {{ importJob.messageCode ? $t(importJob.messageCode) : $t('kbart.transmission.failure') }}
+        {{ importJob.messageCode ? $t(importJob.messageCode) : (importJob.dryRun ? $t('kbart.dryRun.started') : $t('kbart.transmission.failure')) }}
       </v-alert>
     </span>
     <span v-if="importJob.result === 'error' && !!matchingJob.messageCode">

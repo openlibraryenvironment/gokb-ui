@@ -285,10 +285,6 @@
     "addOnly": {
       "label": "Teil-Update"
     },
-    "dryRun": {
-      "label": "Testdurchlauf",
-      "success": "Der Testlauf des KBART-Imports wurde erfolgreich abgeschlossen."
-    },
     "column": {
       "label": "Spalte | Spalten",
       "count": {
@@ -335,6 +331,12 @@
       "success": "Der KBART-Import wurde erfolgreich abgeschlossen!",
       "preparing": "Vorbereitung...",
       "showResults": "Bericht anzeigen"
+    },
+    "dryRun": {
+      "label": "Testdurchlauf",
+      "started": "Der KBART-Testlauf wurde gestartet..",
+      "success": "Der Testlauf des KBART-Imports wurde erfolgreich abgeschlossen.",
+      "failure": "Bei der Prozessierung des KBART-Testlaufs sind Fehler aufgetreten."
     },
     "titleMatch": {
       "started": "Die Referenztitel-Verknüpfung für neue Pakettitel wurde gestartet..",

@@ -285,10 +285,6 @@
     "addOnly": {
       "label": "Partial Update"
     },
-    "dryRun": {
-      "label": "Dry Run",
-      "success": "The KBART dry run has successfully finished."
-    },
     "column": {
       "label": "Column | Columns",
       "count": {
@@ -335,6 +331,12 @@
       "success": "The KBART Import has successfully finished.",
       "preparing": "Preparing...",
       "showResults": "Show Report"
+    },
+    "dryRun": {
+      "label": "Dry Run",
+      "started": "The KBART dry run has started..",
+      "success": "The KBART dry run has successfully finished.",
+      "failure": "There have been errors processing the KBART file."
     },
     "titleMatch": {
       "started": "Matching new package titles to global reference items..",
