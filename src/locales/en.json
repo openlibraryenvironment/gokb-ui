@@ -339,6 +339,7 @@
       "failure": "There have been errors processing the KBART file."
     },
     "titleMatch": {
+      "label": "Reference matching",
       "started": "Matching new package titles to global reference items..",
       "failure": "There have been errors matching the package titles!",
       "success": "Reference matching complete."

@@ -38,7 +38,7 @@
         dismissible
       >
         <span>
-          {{ importJob.dryRun ? $t('kbart.transmission.started') : $t('kbart.dryRun.started') }}
+          {{ importJob.dryRun ? $t('kbart.dryRun.started') : $t('kbart.transmission.started') }} {{ '(' + importJob.progress + '%)' }}
           <v-progress-linear
             v-if="!!importJob.progress"
             v-model="importJob.progress"
@@ -64,7 +64,7 @@
         dismissible
       >
         <span>
-          {{ $t('kbart.titleMatch.started') }}
+          {{ $t('kbart.titleMatch.started') }} {{ '(' + matchingJob.progress + '%)' }}
           <v-progress-linear
             v-if="!!matchingJob.progress"
             v-model="matchingJob.progress"
@@ -1284,14 +1284,15 @@
           if (jobResult.data?.data.length > 0) {
             this.activeJobs = true
 
-            for (job in jobResult.data.data) {
-              if (job.type.value === 'PackageTitleMatch') {
-                loadMatchingJobStatus(job.uuid, job.type.value)
+            jobResult.data.data.forEach((job) => {
+              console.log(job)
+              if (job.type?.value === 'PackageTitleMatch') {
+                this.loadMatchingJobStatus(job.uuid, job.type.value)
               }
               else {
-                loadImportJobStatus(job.uuid, job.type.value)
+                this.loadImportJobStatus(job.uuid, job.type.value)
               }
-            }
+            })
           }
         }
       },

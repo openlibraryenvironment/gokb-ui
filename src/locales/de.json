@@ -339,6 +339,7 @@
       "failure": "Bei der Prozessierung des KBART-Testlaufs sind Fehler aufgetreten."
     },
     "titleMatch": {
+      "label": "Referenztitel-Abgleich",
       "started": "Die Referenztitel-Verknüpfung für neue Pakettitel wurde gestartet..",
       "failure": "Beim Abgleich neuer Pakettitel mit ihren Referenztiteln sind Fehler aufgetreten!",
       "success": "Die Referenztitel-Verknüpfung wurde abgeschlossen."

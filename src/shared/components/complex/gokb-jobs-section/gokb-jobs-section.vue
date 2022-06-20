@@ -224,7 +224,7 @@
           promise: lookupService.getJobs({
             offset: this.options.page ? (this.options.page - 1) * this.options.itemsPerPage : 0,
             ...(this.showGroupJobs ? { id: this.group.id } : {}),
-            ...(this.linkedComponent ? { id: this.linkedComponent } : {}),
+            ...(!!this.linkedComponent ? { id: this.linkedComponent } : {}),
             combined: true,
             limit: this.options.itemsPerPage
           }, this.cancelToken.token),
