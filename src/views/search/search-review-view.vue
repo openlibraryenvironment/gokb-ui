@@ -42,25 +42,25 @@
         return [
           {
             text: this.$i18n.t('component.review.componentToReview.label'),
-            align: 'left',
+            align: 'start',
             sortable: true,
             value: 'popup'
           },
           {
             text: this.$i18n.t('component.review.type.label'),
-            align: 'left',
+            align: 'start',
             sortable: true,
             value: 'type'
           },
           {
             text: this.$i18n.tc('component.review.stdDesc.label'),
-            align: 'left',
+            align: 'start',
             sortable: true,
             value: 'localDesc'
           },
           {
             text: this.$i18n.t('component.general.dateCreated'),
-            align: 'left',
+            align: 'end',
             width: '150px',
             sortable: true,
             value: 'dateCreated'

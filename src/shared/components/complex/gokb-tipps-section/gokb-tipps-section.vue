@@ -333,19 +333,19 @@
       },
       tableHeaders () {
         return [
-          { text: (this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.tipp.label')), align: 'left', value: 'popup', sortable: true },
-          { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.platform.label'), align: 'right', value: 'hostPlatformName', sortable: false, width: '20%' },
-          { text: this.$i18n.tc('component.general.lastUpdated'), align: 'right', value: 'lastUpdated', sortable: true }
+          { text: (this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.tipp.label')), align: 'start', value: 'popup', width: '50%', sortable: true },
+          { text: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' },
+          { text: this.$i18n.tc('component.general.lastUpdated'), align: 'end', value: 'lastUpdated', sortable: true }
         ]
       },
       newTableHeaders () {
         return [
-          { text: this.$i18n.tc('component.tipp.label'), align: 'left', value: 'popup', sortable: false },
-          { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
+          { text: this.$i18n.tc('component.tipp.label'), align: 'start', value: 'popup', sortable: false },
+          { text: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' }
         ]
       },
       packageTypes () {

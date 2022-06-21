@@ -123,7 +123,7 @@
           },
           {
             text: this.$i18n.t('component.title.publishStart'),
-            algin: 'end',
+            align: 'end',
             width: '150px',
             sortable: false,
             value: 'startDate'

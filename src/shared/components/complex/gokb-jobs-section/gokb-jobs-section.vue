@@ -147,18 +147,18 @@
       tableHeaders () {
         if (this.linkedComponent) {
           return [
-            { text: this.$i18n.t('job.type'), align: 'left', value: 'popup', sortable: false },
-            { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '15%' },
-            { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '15%' },
-            { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '15%' },
+            { text: this.$i18n.t('job.type'), align: 'start', value: 'popup', sortable: false },
+            { text: this.$i18n.t('job.status'), align: 'start', value: 'status', sortable: false, width: '15%' },
+            { text: this.$i18n.t('job.startTime'), align: 'start', value: 'startTime', sortable: false, width: '15%' },
+            { text: this.$i18n.t('job.endTime'), align: 'start', value: 'endTime', sortable: false, width: '15%' },
           ]
         } else {
           return [
-            { text: this.$i18n.t('job.type'), align: 'left', value: 'popup', sortable: false, width: '25%' },
-            { text: this.$i18n.t('job.linkedComponent'), align: 'left', value: 'link', sortable: false, width: '40%' },
-            { text: this.$i18n.t('job.status'), align: 'left', value: 'status', sortable: false, width: '10%' },
-            { text: this.$i18n.t('job.startTime'), align: 'left', value: 'startTime', sortable: false, width: '10%' },
-            { text: this.$i18n.t('job.endTime'), align: 'left', value: 'endTime', sortable: false, width: '10%' },
+            { text: this.$i18n.t('job.type'), align: 'start', value: 'popup', sortable: false, width: '25%' },
+            { text: this.$i18n.t('job.linkedComponent'), align: 'start', value: 'link', sortable: false, width: '40%' },
+            { text: this.$i18n.t('job.status'), align: 'start', value: 'status', sortable: false, width: '10%' },
+            { text: this.$i18n.t('job.startTime'), align: 'start', value: 'startTime', sortable: false, width: '10%' },
+            { text: this.$i18n.t('job.endTime'), align: 'start', value: 'endTime', sortable: false, width: '10%' },
           ]
         }
       },

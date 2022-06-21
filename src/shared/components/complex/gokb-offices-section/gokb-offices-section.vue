@@ -126,10 +126,10 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.office.type.label'), align: 'left', value: 'function.name', sortable: false, width: '15%' },
-          { text: this.$i18n.tc('component.office.name'), align: 'left', value: 'name', sortable: false, width: '15%' },
-          { text: this.$i18n.tc('component.general.language.label'), align: 'left', value: 'language.name', sortable: false, width: '15%' },
-          { text: this.$i18n.tc('component.office.email'), align: 'left', value: 'email', sortable: false }
+          { text: this.$i18n.tc('component.office.type.label'), align: 'start', value: 'function.name', sortable: false, width: '15%' },
+          { text: this.$i18n.tc('component.office.name'), align: 'start', value: 'name', sortable: false, width: '15%' },
+          { text: this.$i18n.tc('component.general.language.label'), align: 'start', value: 'language.name', sortable: false, width: '15%' },
+          { text: this.$i18n.tc('component.office.email'), align: 'start', value: 'email', sortable: false }
         ]
       },
       title () {

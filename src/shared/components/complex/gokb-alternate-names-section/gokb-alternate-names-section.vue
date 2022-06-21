@@ -146,8 +146,8 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.general.name'), align: 'left', value: 'variantName', sortable: false, width: '100%' },
-          { text: this.$i18n.t('component.general.language.label'), align: 'left', value: 'locale', sortable: false },
+          { text: this.$i18n.tc('component.general.name'), align: 'start', value: 'variantName', sortable: false, width: '100%' },
+          { text: this.$i18n.t('component.general.language.label'), align: 'start', value: 'locale', sortable: false },
         ]
       },
       title () {
