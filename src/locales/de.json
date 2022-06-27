@@ -305,7 +305,13 @@
       "illegalVal": "Wert {0} ist fehlerhaft!",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
-      "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format."
+      "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
+      "url": {
+        "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
+        "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
+        "notFound": "Unter der angegebenen URL wurde keine KBART-Datei gefunden!",
+        "protocol": "Das Protokoll der KBART-URL wird nicht unterstützt!"
+      }
     },
     "processing": {
       "cancelled": "KBART-Prozessierung wurde nach {0} Reihen abgebrochen!",

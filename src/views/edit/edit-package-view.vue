@@ -1096,7 +1096,7 @@
                 this.step = 1
                 this.reload()
               } else {
-                this.$router.push({ name: '/package/', params: { id: this.packageItem.id, initMessageCode: 'success.create' } })
+                this.$router.push({ name: '/package', params: { id: this.packageItem.id, initMessageCode: 'success.create' } })
               }
             }
           } else {

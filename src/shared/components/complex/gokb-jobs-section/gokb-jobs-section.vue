@@ -177,12 +177,6 @@
       this.interval = undefined
 
       this.autoJobRefresh = this.autoRefresh
-
-      if (this.autoJobRefresh) {
-        this.interval = setInterval(function () {
-          this.fetchJobs()
-        }.bind(this), 1000)
-      }
     },
     activated () {
       clearInterval(this.interval)
