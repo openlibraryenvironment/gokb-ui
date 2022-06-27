@@ -18,6 +18,14 @@
       class="mt-4"
     >
       <v-col>
+        <gokb-search-platform-field
+          v-model="platform"
+          :items="platformSelection"
+          :readonly="isReadonly"
+          :label="$tc('component.general.name')"
+          :allowNewValues="true"
+          return-object
+        />
         <gokb-text-field
           ref="name"
           v-model="platform.name"
@@ -81,10 +89,14 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import platformServices from '@/shared/services/platform-services'
+  import GokbSearchPlatformField from '@/shared/components/simple/gokb-search-platform-field'
   import 'vue-json-pretty/lib/styles.css'
 
   export default {
     name: 'GokbEditPlatformPopup',
+    components: {
+      GokbSearchPlatformField
+    },
     extends: BaseComponent,
     props: {
       selected: {
@@ -127,6 +139,9 @@
       },
       platformId () {
         return this.selected?.id ? this.selected.id : undefined
+      },
+      platformSelection () {
+        return this.platformSelect
       },
       isReadonly () {
         return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
