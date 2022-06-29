@@ -27,14 +27,6 @@
           :allow-new-values="true"
           return-object
         />
-        <gokb-text-field
-          ref="name"
-          v-model="platform.name"
-          :label="$tc('component.general.name')"
-          :api-errors="errors.name"
-          required
-          dense
-        />
       </v-col>
     </v-row>
     <v-row>
