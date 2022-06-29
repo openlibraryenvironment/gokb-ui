@@ -74,6 +74,7 @@
       "search": "Package Titles"
     },
     "platform": {
+      "add": "Add Platform",
       "edit": "Edit Platform",
       "create": "Create Platform"
     },

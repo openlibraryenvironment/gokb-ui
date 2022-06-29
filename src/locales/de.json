@@ -75,6 +75,7 @@
       "search": "Pakettitel"
     },
     "platform": {
+      "add": "Plattform hinzufügen",
       "edit": "Plattform bearbeiten",
       "create": "Plattform anlegen"
     },

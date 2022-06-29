@@ -160,13 +160,13 @@
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.platform.label')]) : undefined
       },
       submitButtonLabel () {
-        return this.isEdit ? this.$i18n.tc('route.platform.edit') : this.$i18n.tc('route.platform.create')
+        return this.isEdit ? this.$i18n.tc('route.platform.edit') : this.$i18n.tc('route.platform.add')
       },
       localTitle () {
         if (this.isEdit) {
           return this.$i18n.tc('component.platform.label') + (this.platform?.stdDesc ? (' – ' + this.$i18n.t('component.platform.stdDesc.' + (this.platform.stdDesc.value || this.platform.stdDesc.name) + '.label')) : '')
         } else {
-          return this.$i18n.tc('route.platform.create')
+          return this.$i18n.tc('route.platform.add')
         }
       }
     },
