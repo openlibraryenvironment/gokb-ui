@@ -20,10 +20,11 @@
       <v-col>
         <gokb-search-platform-field
           v-model="platform"
+          :local-value="platform.name"
           :items="platformSelection"
           :readonly="isReadonly"
           :label="$tc('component.general.name')"
-          :allowNewValues="true"
+          :allow-new-values="true"
           return-object
         />
         <gokb-text-field
