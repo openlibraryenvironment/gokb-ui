@@ -19,8 +19,7 @@
     >
       <v-col>
         <gokb-search-platform-field
-          v-model="platform"
-          :local-value="platform.name"
+          v-model="platform.name"
           :items="platformSelection"
           :readonly="isReadonly"
           :label="$tc('component.general.name')"
@@ -168,6 +167,16 @@
         this.platform.name = this.selected.name
         this.platform.primaryUrl = this.selected.primaryUrl
         this.platform.id = this.selected.id
+      }
+    },
+    watch: {
+      'platform.name'(val) {
+        if (typeof val === 'object') {
+          let pltObj = val
+          this.platform.name = pltObj.name
+          this.platform.primaryUrl = pltObj.primaryUrl
+          this.platform.id = pltObj.id
+        }
       }
     },
     methods: {
