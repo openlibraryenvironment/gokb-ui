@@ -489,6 +489,6 @@
     color: white;
   }
 </style>
-<style lang="sass">
+<style lang="scss">
   @import '../node_modules/typeface-roboto/index.css'
 </style>
