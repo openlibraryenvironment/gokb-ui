@@ -38,6 +38,7 @@
           :label="$tc('component.platform.url')"
           :allow-new-values="true"
           :rules="urlRules"
+          :query-fields="urlField"
           required
           return-object
         />
@@ -122,7 +123,8 @@
           primaryUrl: undefined
         },
         urlRules:
-          [v => (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || this.$i18n.t('component.tipp.url.error')]
+          [v => (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || this.$i18n.t('component.tipp.url.error')],
+        urlField: Array(1).fill('primaryUrl')
       }
     },
     computed: {
