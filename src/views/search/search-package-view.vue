@@ -130,7 +130,7 @@
               name: 'status',
               value: 'status',
               properties: {
-                initItem: this.$i18n.t('component.general.status.Current.label'),
+                initItem: 'Current',
                 width: '100%',
                 messagePath: 'component.general.status'
               }
