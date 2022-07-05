@@ -238,8 +238,8 @@
         return this.knownRoutes[this.value?.type || this.value?.componentType] || null
       },
       activeRules () {
-        if (typeof rules !== 'undefined' && !!rules){
-          return rules
+        if (typeof this.rules !== 'undefined' && !!this.rules){
+          return this.rules
         }
         return [v => !!v || !this.required || this.$i18n.t('validation.missingSelection')]
       }
