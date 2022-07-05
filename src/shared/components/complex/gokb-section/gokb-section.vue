@@ -221,11 +221,11 @@
   }
 </script>
 
-<style scoped>
-  /deep/ .controls {
+<style scoped lang="scss">
+  ::v-deep .controls {
     background-color: #f2f2f2;
   }
-  /deep/ .controls-dark {
+  ::v-deep .controls-dark {
     background-color: #1e1e1e;
   }
 </style>

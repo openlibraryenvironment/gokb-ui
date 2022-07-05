@@ -18,7 +18,7 @@
       messagePath: {
         type: String,
         required: false,
-        default: undefined
+        default: 'component.general.status'
       },
       dense: {
         type: Boolean,
@@ -28,8 +28,11 @@
     },
     computed: {
       localName () {
-        return (this.messagePath && this.localValue) ? this.$i18n.t(this.messagePath + '.' + (this.localValue?.value || this.localValue?.name) + '.label') : this.localValue?.name
+        return (!!this.messagePath && !!this.localValue) ? this.$i18n.t(this.messagePath + '.' + (this.localValue?.value || this.localValue?.name) + '.label') : this.localValue?.name
       },
+      localizedItems () {
+        return this.items.map(({ id, value, type }) => ({ id, value, name: !!value ? this.$i18n.t(this.messagePath + '.' + value + '.label') : undefined, type: 'Refdata Value' }))
+      }
     },
     watch: {
       '$i18n.locale' (l) {
@@ -44,7 +47,7 @@
       transform (result) {
         if (result?.data?._embedded) {
           const { data: { _embedded: { values } } } = result
-          return values.map(({ id, value, type }) => ({ id, name: (this.messagePath ? this.$i18n.t(this.messagePath + '.' + value + '.label') : value), value, type: 'Refdata Value' }))
+          return values
         } else {
           return []
         }

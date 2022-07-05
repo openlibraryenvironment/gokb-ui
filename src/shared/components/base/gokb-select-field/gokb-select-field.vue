@@ -13,7 +13,7 @@
   <v-select
     v-else-if="items"
     v-model="localValue"
-    :items="items"
+    :items="localizedItems"
     :label="label"
     :placeholder="placeholder"
     item-text="name"
@@ -124,6 +124,9 @@
       },
       localErrorMessage () {
         return this.apiErrors ? this.$i18n.t(this.apiErrors[0].messageCode) : []
+      },
+      localizedItems () {
+        return this.items
       }
     },
     async mounted () {
@@ -139,7 +142,7 @@
 
         if (this.initItem) {
           if (typeof this.initItem === 'string') {
-            selected = this.items.filter(item => (item.name === this.initItem))
+            selected = this.items.filter(item => (item.name === this.initItem || item.value === this.initItem))
           } else if (typeof this.initItem === 'number') {
             selected = this.items.filter(item => (item.id === this.initItem))
           } else if (this.initItem instanceof Object) {
