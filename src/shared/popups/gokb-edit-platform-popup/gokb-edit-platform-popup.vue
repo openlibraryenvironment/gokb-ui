@@ -39,6 +39,7 @@
           :allow-new-values="true"
           :rules="urlRules"
           :query-fields="urlField"
+          :itemText="urlField"
           required
           return-object
         />
@@ -178,6 +179,14 @@
     },
     watch: {
       'platform.name'(val) {
+        if (typeof val === 'object') {
+          let pltObj = val
+          this.platform.name = pltObj.name
+          this.platform.primaryUrl = pltObj.primaryUrl
+          this.platform.id = pltObj.id
+        }
+      },
+      'platform.primaryUrl'(val) {
         if (typeof val === 'object') {
           let pltObj = val
           this.platform.name = pltObj.name
