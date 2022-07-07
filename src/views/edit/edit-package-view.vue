@@ -7,32 +7,63 @@
     @submit="showCreatePackageConfirm"
   >
     <gokb-error-component :value="error" />
-    <span v-if="successMsg">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ localSuccessMessage }}
-      </v-alert>
-    </span>
+    <v-snackbar
+      :value="!!successMsg"
+      color="success"
+      timeout="-1"
+    >
+      {{ localSuccessMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          icon
+          color="white"
+          @click="successMsg = undefined"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
     <span v-if="errorMsg">
-      <v-alert
-        type="error"
-        dismissible
+      <v-snackbar
+        :value="!!errorMsg"
+        color="error"
+        timeout="-1"
       >
         {{ localErrorMessage }}
-      </v-alert>
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            icon
+            color="white"
+            @click="errorMsg = undefined"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
     </span>
     <span v-if="importJob.result === 'success'">
-      <v-alert
-        type="success"
-        dismissible
+      <v-snackbar
+        :value="!!importJob"
+        color="success"
+        timeout="-1"
       >
         {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
         <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
-      </v-alert>
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            icon
+            color="white"
+            @click="importJob = {}"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
     </span>
-    <span v-else-if="importJob.result === 'started'">
+    <span v-else-if="importJob.result === 'info'">
       <v-alert
         type="info"
         dismissible
@@ -58,7 +89,7 @@
         <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
       </v-alert>
     </span>
-    <span v-else-if="matchingJob.result === 'started'">
+    <span v-else-if="matchingJob.result === 'info'">
       <v-alert
         type="info"
         dismissible
@@ -76,20 +107,43 @@
       </v-alert>
     </span>
     <span v-if="importJob.result === 'error'">
-      <v-alert
-        type="error"
-        dismissible
+      <v-snackbar
+        :value="importJob.result"
+        color="error"
+        timeout="-1"
       >
-        {{ importJob.messageCode ? $t(importJob.messageCode) : (importJob.dryRun ? $t('kbart.dryRun.started') : $t('kbart.transmission.failure')) }}
-      </v-alert>
+        {{ localErrorMessage }}
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            icon
+            color="white"
+            @click="importJob = {}"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
     </span>
     <span v-if="importJob.result === 'error' && !!matchingJob.messageCode">
-      <v-alert
-        type="error"
-        dismissible
+      <v-snackbar
+        :value="importJob.result"
+        color="error"
+        timeout="-1"
       >
         {{ $t(matchingJob.messageCode) }}
-      </v-alert>
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            icon
+            color="white"
+            @click="matchingJob = {}"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
     </span>
     <gokb-edit-job-popup
       v-if="editJobPopupVisible"
@@ -980,8 +1034,16 @@
         loading.startLoading()
         var isUpdate = !!this.id
         this.successMsg = undefined
+        this.warningMsg = undefined
         this.errorMsg = undefined
-        this.kbartResult = undefined
+
+        if (this.importJob?.status !== 'info') {
+          this.importJob = {}
+        }
+
+        if (this.matchingJob?.status !== 'info') {
+          this.matchingJob = {}
+        }
 
         if (this.isValid) {
           if (this.sourceItem) {
@@ -1034,7 +1096,6 @@
           })
 
           if (response?.status < 400) {
-            this.successMsg = this.isEdit ? 'success.update' : 'success.create'
             this.packageItem.id = response.data.id
 
             if (this.kbart) {
@@ -1049,16 +1110,20 @@
                 instance: this
               })
 
-              if (kbartResult.status >= 400) {
-                this.kbartResult = 'error'
-              }
-
               this.kbart = undefined
               loading.stopLoading()
+
+              if (kbartResult.status === 403) {
+                this.errorMsg = 'kbart.transmission.error.denied'
+              } else if (kbartResult.status >= 400) {
+                this.errorMsg = 'kbart.transmission.error.unknown'
+              }
 
               if (isUpdate) {
                 this.step = 1
                 this.reload()
+                this.successMsg = this.isEdit ? 'success.update' : 'success.create'
+
                 if (kbartResult?.data?.jobId) {
                   this.loadImportJobStatus(kbartResult?.data?.jobId)
                 }
@@ -1074,8 +1139,10 @@
                 instance: this
               })
 
-              if (sourceUpdateResult.status != 400) {
-                this.kbartResult = 'error'
+              if (sourceUpdateResult.status === 403) {
+                this.errorMsg = 'kbart.transmission.error.denied'
+              } else if (sourceUpdateResult.status >= 400) {
+                this.errorMsg = 'kbart.transmission.error.unknown'
               }
 
               loading.stopLoading()
@@ -1083,6 +1150,8 @@
               if (isUpdate) {
                 this.step = 1
                 this.reload()
+                this.successMsg = this.isEdit ? 'success.update' : 'success.create'
+
                 if (sourceUpdateResult?.data?.jobId) {
                   this.loadImportJobStatus(sourceUpdateResult?.data?.jobId)
                 }
@@ -1095,6 +1164,7 @@
               if (isUpdate) {
                 this.step = 1
                 this.reload()
+                this.successMsg = this.isEdit ? 'success.update' : 'success.create'
               } else {
                 this.$router.push({ name: '/package', params: { id: this.packageItem.id, initMessageCode: 'success.create' } })
               }
@@ -1192,7 +1262,7 @@
         var jobInfo = {
           id: jobId,
           progress: undefined,
-          result: 'started',
+          result: 'info',
           dryRun: undefined,
           dismissed: false
         }
@@ -1238,7 +1308,7 @@
         var jobInfo = {
           id: jobId,
           progress: undefined,
-          result: 'started',
+          result: 'info',
           messageCode: undefined,
           dismissed: false
         }

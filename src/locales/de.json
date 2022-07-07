@@ -336,7 +336,11 @@
       "failure": "KBART-Prozessierung fehlgeschlagen! Falls Sie eine URL für automatische Updates angegeben haben, versuchen Sie bitte stattdessen einen manuellen KBART-Import durchzuführen.",
       "success": "Der KBART-Import wurde erfolgreich abgeschlossen!",
       "preparing": "Vorbereitung...",
-      "showResults": "Bericht anzeigen"
+      "showResults": "Bericht anzeigen",
+      "errors": {
+        "denied": "Der KBART-Import ist auf Grund von fehlenden Berechtigungen fehlgeschlagen.",
+        "unknown": "Der KBART-Import ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
+      }
     },
     "dryRun": {
       "label": "Testdurchlauf",
