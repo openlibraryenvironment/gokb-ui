@@ -76,7 +76,15 @@
       </span>
     </template>
     <template #item="{ item }">
-      <div :style="{ color: (item.disabled ? '#888888' : 'inherit') }">{{ item[itemText] }}</div>
+      <div :style="{ color: (item.disabled ? '#888888' : 'inherit') }">
+        {{ item[itemText] }}
+        <v-chip
+          v-if="item.disabled"
+          color="error"
+        >
+          <span> {{ $t(item.disabledMessage) }} </span>
+        </v-chip>
+      </div>
     </template>
   </v-combobox>
   <v-autocomplete
