@@ -60,6 +60,7 @@
     :search-input.sync="search"
     :item-text="itemText"
     :item-value="itemValue"
+    :item-disabled="itemDisabled"
     :return-object="returnObject"
     clearable
     hide-details
@@ -75,6 +76,9 @@
         *
       </span>
     </template>
+    <template #item>
+      <div :style="{ color: (itemDisabled ? '#888888' : 'inherit') }">{{ itemText || itemValue }}</div>
+    </template>
   </v-combobox>
   <v-autocomplete
     v-else
@@ -89,6 +93,7 @@
     :search-input.sync="search"
     :item-text="itemText"
     :item-value="itemValue"
+    :item-disabled="itemDisabled"
     :return-object="returnObject"
     no-filter
     clearable
@@ -161,6 +166,11 @@
         type: String,
         required: false,
         default: 'id'
+      },
+      itemDisabled: {
+        type: String,
+        required: false,
+        default: null
       },
       dense: {
         type: Boolean,

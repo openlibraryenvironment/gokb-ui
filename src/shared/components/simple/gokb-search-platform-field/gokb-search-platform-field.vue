@@ -24,6 +24,6 @@
       if (this.queryFields.length > 0 && this.queryFields[0].length > 0){
         this.searchParams["qfields"] = this.queryFields.join("&")
       }
-    },
+    }
   }
 </script>
