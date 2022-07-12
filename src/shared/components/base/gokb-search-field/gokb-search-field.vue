@@ -79,7 +79,7 @@
       <div :style="{ color: (item.disabled ? '#888888' : 'inherit') }">
         {{ item[itemText] }}
         <v-chip
-          v-if="item.disabled"
+          v-if="item.disabled && !!item.disabledMessage"
           color="error"
         >
           <span> {{ $t(item.disabledMessage) }} </span>

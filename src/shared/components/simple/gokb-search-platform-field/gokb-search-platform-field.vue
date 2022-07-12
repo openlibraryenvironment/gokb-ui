@@ -28,7 +28,7 @@
     methods: {
       transform (result) {
         const { data: { data } } = result
-        return data.map(item => ({ ...item, disabled: (!!item.provider ? true : false), disabledMessage: (!!item.provider ? 'component.platform.conflict.alreadyLinked' : null) }))
+        return data?.map(item => ({ ...item, disabled: (!!item.provider ? true : false), disabledMessage: (!!item.provider ? 'component.platform.conflict.alreadyLinked' : null) }))
       },
     }
   }
