@@ -207,6 +207,12 @@
             value: 'count'
           },
           {
+            text: this.$i18n.tc('component.curatoryGroup.label'),
+            align: 'center',
+            sortable: false,
+            value: 'curatoryGroups'
+          },
+          {
             text: this.$i18n.tc('component.general.lastUpdated'),
             align: 'start',
             sortable: true,
@@ -241,6 +247,7 @@
           nominalPlatform,
           tippCount,
           _tippCount,
+          _embedded,
           _links
         }) => ({
           id,
@@ -252,6 +259,7 @@
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
           count: _tippCount || tippCount,
+          curatoryGroups: _embedded.curatoryGroups.map(cg => cg.name),
           status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined

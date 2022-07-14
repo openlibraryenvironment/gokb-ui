@@ -18,7 +18,11 @@
       />
       <gokb-checkbox-field
         v-model="options.addOnly"
-        :label="$t('kbart.addOnly')"
+        :label="$t('kbart.addOnly.label')"
+      />
+      <gokb-checkbox-field
+        v-model="options.dryRun"
+        :label="$t('kbart.dryRun.label')"
       />
       <v-progress-linear
         height="25"
@@ -121,6 +125,7 @@
   import math from '@/shared/utils/math'
   import jschardet from 'jschardet'
   import GokbNamespaceField from '@/shared/components/simple/gokb-namespace-field'
+  import providerServices from '@/shared/services/provider-services'
 
   export default {
     name: 'GokbKbartImportPopup',
@@ -133,6 +138,11 @@
         default: true
       },
       defaultTitleNamespace: {
+        type: Object,
+        required: false,
+        default: undefined
+      },
+      provider: {
         type: Object,
         required: false,
         default: undefined
@@ -269,7 +279,8 @@
           selectedFile: undefined,
           selectedNamespace: undefined,
           lineCount: undefined,
-          addOnly: false
+          addOnly: false,
+          dryRun: false
         }
       }
     },
@@ -314,13 +325,27 @@
       }
     },
     mounted () {
-      if (this.defaultTitleNamespace) {
-        this.options.selectedNamespace = this.defaultTitleNamespace
+      if (this.provider) {
+        this.fetchDefaultNamespace()
       }
     },
     methods: {
       close () {
         this.localValue = false
+      },
+      async fetchDefaultNamespace () {
+        const providerResult = await this.catchError({
+          promise: providerServices.getProvider(this.provider.id, this.cancelToken.token),
+          instance: this
+        })
+
+        if (providerResult?.status === 200) {
+          const fullProvider = providerResult.data
+
+          if (fullProvider.titleNamespace) {
+            this.options.selectedNamespace = fullProvider.titleNamespace
+          }
+        }
       },
       importKbart () {
         if (this.completion === 100) {
@@ -343,7 +368,7 @@
         this.readerForImport.onload = this._importCompleted
         this.readerForImport.onprogress = this._importProgress
 
-        if (this.errors?.length == 0){
+        if (this.errors?.length == 0) {
           this.readerForImport.readAsText(this.options.selectedFile)
         }
       },
@@ -363,14 +388,19 @@
       _checkLinesLength () {
         const csvDataRows = this.charsetReader.result.split(/\r?\n/)
           .filter(row => row.trim())
+
         if (csvDataRows.length < 2) {
           return
         }
         const columnsCount = csvDataRows[0].split(/\t/).length
         const wrongColumnSizes = new Map()
+
         csvDataRows.forEach((row, i) => {
-          this.loadedFile.lineStats.total++
+          if (i > 0) {
+            this.loadedFile.lineStats.total++
+          }
           var rowLength = row.split(/\t/).length
+
           if (rowLength != columnsCount) {
             wrongColumnSizes.set(i, rowLength)
             this.loadedFile.errors.single.push(
@@ -378,7 +408,8 @@
               reason: this.$i18n.t('kbart.errors.tabsCountRow', [rowLength, columnsCount]), value: rowLength })
             this.loadedFile.lineStats.error++
           }
-        });
+        })
+
         if (wrongColumnSizes.size != 0) {
           this.errors.push(this.$i18n.t('kbart.errors.tabsCountFile'))
         }
@@ -386,6 +417,7 @@
       async _importCompleted () {
         const csvDataRows = this.readerForImport.result.split(/\r?\n/)
           .filter(row => row.trim())
+
         if (csvDataRows.length < 2) {
           return
         } else {
@@ -521,7 +553,7 @@
         }
 
         try {
-          this.options.lineCount = csvDataRows.length - 1
+          this.options.lineCount = this.loadedFile.lineStats.total
         } catch (exception) {
           this.errors.push(exception)
         } finally {

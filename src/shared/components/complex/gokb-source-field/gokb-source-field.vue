@@ -39,21 +39,13 @@
     <v-row>
       <v-col>
         <v-checkbox
-          v-model="ezbMatch"
-          class="mr-5"
-          :readonly="readonly"
-          :label="$t('component.source.ezbMatch')"
-        />
-      </v-col>
-      <v-col class="d-flex flex-row-reverse">
-        <v-checkbox
           v-model="automaticUpdates"
           class="mr-5"
           :readonly="readonly"
           :label="$t('component.source.enableUpdate')"
         />
       </v-col>
-      <v-col class="d-flex flex-row-reverse">
+      <v-col>
         <v-checkbox
           v-model="update"
           class="mr-5"
@@ -110,7 +102,6 @@
           frequency: undefined,
           url: undefined,
           targetNamespace: undefined,
-          ezbMatch: undefined,
           automaticUpdates: undefined,
           update: false
         },
@@ -145,15 +136,6 @@
           this.$emit('input', this.item)
         }
       },
-      ezbMatch: {
-        get () {
-          return this.item.ezbMatch
-        },
-        set (val) {
-          this.item.ezbMatch = val
-          this.$emit('input', this.item)
-        }
-      },
       automaticUpdates: {
         get () {
           return this.item.automaticUpdates
@@ -175,7 +157,7 @@
     },
     watch: {
       defaultTitleNamespace (val) {
-        if (val && !this.targetNamespace) {
+        if (val && (!this.value?.id || !this.item.targetNamespace)) {
           this.targetNamespace = this.defaultTitleNamespace
         }
       }
@@ -195,13 +177,12 @@
 
           if (result?.status === 200) {
             this.item.id = result.data.id
-            this.lastRun = (result.data.lastRun ? new Date(result.data.lastRun).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' }) : undefined)
+            this.lastRun = (result.data.lastRun ? new Date(result.data.lastRun).toLocaleString('sv') : undefined)
             this.item.targetNamespace = result.data.targetNamespace
             this.item.frequency = result.data.frequency
             this.item.name = result.data.name
             this.item.url = result.data.url
             this.item.automaticUpdates = result.data.automaticUpdates
-            this.item.ezbMatch = result.data.ezbMatch
           }
         }
       }

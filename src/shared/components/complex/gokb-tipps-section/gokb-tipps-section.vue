@@ -19,7 +19,7 @@
       <gokb-kbart-import-popup
         v-if="kbartImportPopupVisible"
         v-model="kbartImportPopupVisible"
-        :default-title-namespace="defaultTitleNamespace"
+        :provider="provider"
         @kbart="addKbartFile"
       />
       <gokb-add-title-popup
@@ -70,6 +70,16 @@
             </template>
           </v-list>
         </v-menu>
+        <v-btn
+          icon
+          :title="$t('btn.refresh')"
+          style="margin-top:-4px"
+          @click="fetchTipps"
+        >
+          <v-icon>
+            mdi-refresh
+          </v-icon>
+        </v-btn>
       </template>
       <gokb-confirmation-popup
         v-model="confirmationPopUpVisible"
@@ -132,17 +142,17 @@
         </v-menu>
       </template>
       <template #search>
-        <gokb-title-field
+        <gokb-text-field
           v-if="pkg"
-          v-model="searchFilters.title"
+          v-model="searchFilters.q"
           class="ms-4"
           :label="$tc('component.title.name.label')"
         />
-        <gokb-title-ids-field
+        <gokb-text-field
           v-if="pkg"
-          v-model="searchFilters.title"
+          v-model="searchFilters.ids"
           class="ms-4"
-          :label="$tc('component.title.ids.label')"
+          :label="$tc('component.identifier.label')"
         />
         <gokb-search-package-field
           v-else
@@ -169,7 +179,7 @@
         :selected-items="selectedItems"
         :total-number-of-items="totalNumberOfItems"
         :show-loading="isLoading"
-        :options.sync="options"
+        :options.sync="searchOptions"
         @selected-items="selectedItems = $event"
         @paginate="resultPaginate"
         @edit="editTitle"
@@ -221,12 +231,12 @@
         default: false
       },
       pkg: {
-        type: Number,
+        type: [Number, String],
         required: false,
         default: undefined
       },
       ttl: {
-        type: Number,
+        type: [Number, String],
         required: false,
         default: undefined
       },
@@ -250,7 +260,7 @@
         required: false,
         default: undefined
       },
-      defaultTitleNamespace: {
+      provider: {
         type: Object,
         required: false,
         default: undefined
@@ -268,11 +278,12 @@
     },
     data () {
       return {
-        options: {
+        searchOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE,
-          sortBy: ['popup'],
-          desc: [false]
+          mustSort: true,
+          sortBy: ['lastUpdated'],
+          desc: true
         },
         newOptions: {
           page: 1,
@@ -281,9 +292,13 @@
         selectedItems: [],
         selectedNewItems: [],
         bulkSelect: false,
+        linkSearchParameterValues: {
+          popup: 'name'
+        },
         searchFilters: {
           status: undefined,
-          title: undefined,
+          q: undefined,
+          ids: undefined,
           pkg: undefined
         },
         newTipps: [],
@@ -318,18 +333,19 @@
       },
       tableHeaders () {
         return [
-          { text: (this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.title.label')), align: 'left', value: 'popup', sortable: false },
-          { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
+          { text: (this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.tipp.label')), align: 'start', value: 'popup', width: '50%', sortable: true },
+          { text: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' },
+          { text: this.$i18n.tc('component.general.lastUpdated'), align: 'end', value: 'lastUpdated', sortable: true }
         ]
       },
       newTableHeaders () {
         return [
-          { text: this.$i18n.tc('component.title.label'), align: 'left', value: 'popup', sortable: false },
-          { text: this.$i18n.tc('component.general.status.label'), align: 'left', value: 'statusLocal', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.title.type.label'), align: 'left', value: 'titleType', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.platform.label'), align: 'left', value: 'hostPlatformName', sortable: false, width: '20%' }
+          { text: this.$i18n.tc('component.tipp.label'), align: 'start', value: 'popup', sortable: false },
+          { text: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
+          { text: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' }
         ]
       },
       packageTypes () {
@@ -364,13 +380,13 @@
     watch: {
       loggedIn (value) {
         if (value) {
-          this.fetchTipps(this.options)
+          this.fetchTipps(this.searchOptions)
         }
       },
       searchFilters: {
         handler (val) {
-          this.options.page = 1
-          this.fetchTipps(this.options)
+          this.searchOptions.page = 1
+          this.fetchTipps(this.searchOptions)
         },
         deep: true
       },
@@ -384,7 +400,7 @@
     },
     async created () {
       if (this.ttl) {
-        this.fetchTipps(this.options)
+        this.fetchTipps(this.searchOptions)
       }
     },
     methods: {
@@ -441,7 +457,7 @@
         this.loading = false
 
         this.selectedItems = []
-        this.options.page = 1
+        this.searchOptions.page = 1
         this.fetchTipps()
       },
       async _updateSelectedItems (status) {
@@ -462,7 +478,7 @@
         }
 
         this.selectedItems = []
-        this.options.page = 1
+        this.searchOptions.page = 1
         this.fetchTipps()
       },
       showAddNewTitlePopup (titleType) {
@@ -476,7 +492,7 @@
       },
       editTitle (tipp) {
         this.successMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label'), (tipp.name || tipp.title?.name)])
-        this.fetchTipps(this.options)
+        this.fetchTipps(this.searchOptions)
       },
       addNewTitle (tipp) {
         this.successMessage = this.$i18n.t('success.add', [this.$i18n.tc('component.tipp.label'), (tipp.name || tipp.title?.name)])
@@ -491,9 +507,15 @@
       },
       resultPaginate (options) {
         this.successMessage = false
+        if (options.sortBy) {
+          this.searchOptions.sortBy = [options.sortBy]
+        }
+        if (typeof options.desc === 'boolean') {
+          this.searchOptions.desc = options.desc
+        }
 
         if (this.ttl || this.pkg) {
-          this.fetchTipps(this.options)
+          this.fetchTipps(options)
         }
       },
       resultNewPaginate (page) {
@@ -507,9 +529,11 @@
           const searchParams = {}
 
           Object.keys(this.searchFilters).forEach(key => {
-            if (this.searchFilters[key] instanceof String || typeof this.searchFilters[key] === 'number') {
+            if (!this.searchFilters[key]) {
+
+            } else if (typeof this.searchFilters[key] === 'string' || typeof this.searchFilters[key] === 'number') {
               searchParams[key] = this.searchFilters[key]
-            } else if (this.searchFilters[key] instanceof Object) {
+            } else if (typeof this.searchFilters[key] === 'object') {
               if (this.searchFilters[key].id) {
                 searchParams[key] = this.searchFilters[key].id
               } else if (this.searchFilters[key].value) {
@@ -523,8 +547,10 @@
           const result = await this.catchError({
             promise: searchService.getTipps(reqId, {
               ...(searchParams || {}),
-              offset: (options ? (options.page - 1) * this.options.itemsPerPage : 0),
-              limit: this.options.itemsPerPage
+              _sort: (this.linkSearchParameterValues[this.searchOptions.sortBy[0]] || this.searchOptions.sortBy[0]),
+              _order: (this.searchOptions.desc ? 'desc' : 'asc'),
+              offset: ((this.searchOptions?.page || this.searchOptions.page) - 1) * this.searchOptions.itemsPerPage,
+              limit: this.searchOptions.itemsPerPage
             }, this.cancelToken.token),
             instance: this
           })
@@ -540,6 +566,7 @@
                   accessStartDate: tipp.accessStartDate && this.buildDateString(tipp.accessStartDate),
                   accessEndDate: tipp.accessEndDate && this.buildDateString(tipp.accessEndDate),
                   variantNames: tipp._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })),
+                  lastUpdated: this.buildDateString(tipp.lastUpdated),
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
                   titleType: this.title?.type ? this.$i18n.tc('component.title.type.' + tipp.title.type) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),

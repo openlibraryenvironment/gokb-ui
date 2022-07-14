@@ -7,6 +7,15 @@ const api = (baseServices) => ({
       url: process.env.VUE_APP_API_BASE_URL + `${ENDPOINT}/${id}`,
     }, cancelToken)
   },
+  getJobs (parameter, cancelToken) {
+    const urlParameter = baseServices.createQueryParameters(parameter)
+    const url = process.env.VUE_APP_API_BASE_URL + `${ENDPOINT}/${parameter.id}/jobs?${urlParameter}`
+
+    return baseServices.request({
+      method: 'GET',
+      url: url,
+    }, cancelToken)
+  },
   createOrUpdateGroup (data, cancelToken) {
     const { id } = data
     const url = id ? process.env.VUE_APP_API_BASE_URL + `${ENDPOINT}/${id}` : process.env.VUE_APP_API_BASE_URL + ENDPOINT

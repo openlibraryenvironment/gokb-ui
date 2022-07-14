@@ -140,7 +140,7 @@
       },
       curatoryGroupsTableHeaders () {
         return [
-          { text: this.$i18n.t('component.general.name'), align: 'left', width: '100%', value: 'popup', sortable: false }
+          { text: this.$i18n.t('component.general.name'), align: 'start', width: '100%', value: 'popup', sortable: false }
         ]
       }
     },

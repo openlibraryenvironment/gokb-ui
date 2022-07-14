@@ -7,38 +7,149 @@
     @submit="showCreatePackageConfirm"
   >
     <gokb-error-component :value="error" />
-    <span v-if="successMsg">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ localSuccessMessage }}
-      </v-alert>
-    </span>
+    <v-snackbar
+      :value="!!successMsg"
+      color="success"
+      timeout="-1"
+    >
+      {{ localSuccessMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          icon
+          color="white"
+          @click="successMsg = undefined"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
     <span v-if="errorMsg">
-      <v-alert
-        type="error"
-        dismissible
+      <v-snackbar
+        :value="!!errorMsg"
+        color="error"
+        timeout="-1"
       >
         {{ localErrorMessage }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            icon
+            color="white"
+            @click="errorMsg = undefined"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </span>
+    <span v-if="importJob.result === 'success'">
+      <v-snackbar
+        :value="!!importJob"
+        color="success"
+        timeout="-1"
+      >
+        {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            icon
+            color="white"
+            @click="importJob = {}"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </span>
+    <span v-else-if="importJob.result === 'info'">
+      <v-alert
+        type="info"
+        dismissible
+      >
+        <span>
+          {{ importJob.dryRun ? $t('kbart.dryRun.started') : $t('kbart.transmission.started') }} {{ '(' + importJob.progress + '%)' }}
+          <v-progress-linear
+            v-if="!!importJob.progress"
+            v-model="importJob.progress"
+          />
+          <div v-else>
+            {{ $t('kbart.transmission.preparing') }}
+          </div>
+        </span>
       </v-alert>
     </span>
-    <span v-if="kbartResult === 'success' || kbartStatus === 'success'">
+    <span v-if="matchingJob.result === 'success'">
       <v-alert
         type="success"
         dismissible
       >
-        {{ $t('kbart.transmission.started') }}
+        {{ $t('kbart.titleMatch.success') }}
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
       </v-alert>
     </span>
-    <span v-else-if="kbartResult === 'error' || kbartStatus === 'error'">
+    <span v-else-if="matchingJob.result === 'info'">
       <v-alert
-        type="error"
+        type="info"
         dismissible
       >
-        {{ $t('kbart.transmission.failure') }}
+        <span>
+          {{ $t('kbart.titleMatch.started') }} {{ '(' + matchingJob.progress + '%)' }}
+          <v-progress-linear
+            v-if="!!matchingJob.progress"
+            v-model="matchingJob.progress"
+          />
+          <div v-else>
+            {{ $t('kbart.transmission.preparing') }}
+          </div>
+        </span>
       </v-alert>
     </span>
+    <span v-if="importJob.result === 'error'">
+      <v-snackbar
+        :value="importJob.result"
+        color="error"
+        timeout="-1"
+      >
+        {{ localErrorMessage }}
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            icon
+            color="white"
+            @click="importJob = {}"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </span>
+    <span v-if="importJob.result === 'error' && !!matchingJob.messageCode">
+      <v-snackbar
+        :value="importJob.result"
+        color="error"
+        timeout="-1"
+      >
+        {{ $t(matchingJob.messageCode) }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            icon
+            color="white"
+            @click="matchingJob = {}"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </span>
+    <gokb-edit-job-popup
+      v-if="editJobPopupVisible"
+      v-model="editJobPopupVisible"
+      :selected="selectedJob"
+    />
     <v-stepper
       v-model="step"
       alt-labels
@@ -297,6 +408,14 @@
                 @click:close="kbart = undefined"
               >
                 {{ kbart.selectedFile.name }} ({{ kbart.lineCount }} {{ $tc('kbart.row.label', kbart.lineCount) }})
+                <v-icon
+                  v-if="kbart.dryRun"
+                  class="ml-1"
+                  :title="$t('kbart.dryRun.label')"
+                  small
+                >
+                  mdi-content-save-off
+                </v-icon>
               </v-chip>
             </v-col>
           </v-row>
@@ -305,7 +424,7 @@
             :pkg="parseInt(id)"
             :filter-align="isEdit"
             :platform="packageItem.nominalPlatform"
-            :default-title-namespace="providerTitleNamespace"
+            :provider="packageItem.provider"
             :disabled="isReadonly"
             :api-errors="errors.tipps"
             @kbart="setKbart"
@@ -428,7 +547,7 @@
               <v-col v-if="kbart && kbart.selectedFile">
                 <gokb-text-field
                   v-model="kbart.selectedFile.name"
-                  label="KBART"
+                  :label="kbartLabel"
                   dense
                   disabled
                 />
@@ -469,6 +588,15 @@
                 :review-component="packageItem"
                 :api-errors="errors.listStatus"
                 @update=reload
+              />
+            </v-col>
+          </v-row>
+          <v-row v-if="id && !isReadonly">
+            <v-col>
+              <gokb-jobs-section
+                :linked-component="id"
+                :hide-default="true"
+                :auto-refresh="false"
               />
             </v-col>
           </v-row>
@@ -573,13 +701,13 @@
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
   import { HOME_ROUTE } from '@/router/route-paths'
   import packageServices from '@/shared/services/package-services'
+  import jobServices from '@/shared/services/job-services'
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
-  import baseServices from '@/shared/services/base-services'
   import loading from '@/shared/models/loading'
-  import axios from 'axios'
 
   const ROWS_PER_PAGE = 10
 
@@ -610,7 +738,8 @@
       GokbCuratoryGroupSection,
       GokbMaintenanceCycleField,
       GokbAlternateNamesSection,
-      GokbConfirmationPopup
+      GokbConfirmationPopup,
+      GokbEditJobPopup
     },
     extends: BaseComponent,
     props: {
@@ -624,7 +753,12 @@
         required: false,
         default: false
       },
-      kbartStatus: {
+      kbartJob: {
+        type: String,
+        required: false,
+        default: undefined
+      },
+      initMessageCode: {
         type: String,
         required: false,
         default: undefined
@@ -643,11 +777,16 @@
         isCurator: false,
         showSubmitConfirm: false,
         submitConfirmationMessage: undefined,
+        editJobPopupVisible: false,
         urlUpdate: false,
         currentName: undefined,
         lastUpdated: undefined,
         listVerifiedDate: undefined,
         dateCreated: undefined,
+        importJob: {},
+        matchingJob: {},
+        selectedJob: undefined,
+        kbartProgress: undefined,
         providerTitleNamespace: undefined,
         newTipps: [],
         packageItem: {
@@ -678,6 +817,7 @@
         allCuratoryGroups: [],
         sourceItem: undefined,
         successMsg: undefined,
+        warningMsg: undefined,
         errorMsg: undefined,
         kbartResult: undefined,
         titlesHeader: TITLES_HEADER,
@@ -755,6 +895,9 @@
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
       },
+      localWarningMessage () {
+        return this.warningMsg ? this.$i18n.t(this.warningMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
+      },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.package.label')]) : undefined
       },
@@ -762,7 +905,7 @@
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
       },
       currentStepValid () {
-        return this.isReadonly || (this.isEdit && (this.step !== 2 || (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider))) || (!this.isEdit && (this.step !== 1 || (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)))
+        return this.isReadonly || (this.isEdit && (this.step !== 2 || this.isValid)) || (!this.isEdit && (this.step !== 1 || this.isValid))
       },
       isValid () {
         return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
@@ -772,6 +915,9 @@
       },
       step3Error () {
         return (this.isEdit && this.errors.variantNames && this.errors.ids) || (!this.isEdit && this.errors.tipps)
+      },
+      kbartLabel () {
+        return 'KBART' + (this.kbart?.dryRun ? ' (' + this.$i18n.t('kbart.dryRun.label') + ')' : '')
       }
     },
     watch: {
@@ -791,10 +937,37 @@
         } else {
           this.step2Error = false
         }
+      },
+      'packageItem.provider' (prov) {
+        if (prov) {
+          this.fetchDefaultNamespace(prov.id)
+        }
       }
     },
     async created () {
       this.reload()
+
+      if (this.initMessageCode) {
+        if (this.initMessageCode.includes('success')) {
+          this.successMsg = this.initMessageCode
+        } else if (this.initMessageCode.includes('failure')) {
+          this.errorMsg = this.initMessageCode
+        } else if (this.initMessageCode.includes('warning')) {
+          this.warningMsg = this.initMessageCode
+        }
+      }
+
+      if (this.kbartJob) {
+        this.loadImportJobStatus(this.kbartJob)
+      } else if (this.isEdit && this.accessible) {
+        this.getActiveJobs()
+      }
+    },
+    mounted () {
+      document.addEventListener('keydown', this.handleKeyboardNav.bind(this))
+    },
+    beforeDestroy() {
+      document.removeEventListener("keydown", this.handleKeyboardNav)
     },
     methods: {
       go2NextStep () {
@@ -811,6 +984,18 @@
       },
       updateNewTipps (tipps) {
         this.newTipps = tipps
+      },
+      handleKeyboardNav (e) {
+        if (this.step > 1 && e.key === "ArrowLeft" && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault()
+            this.go2PreviousStep()
+        } else if (this.step < 4 && e.key === "ArrowRight" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault()
+          this.go2NextStep()
+        } else if (['1', '2', '3', '4'].includes(e.key) && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault()
+          this.step = e.key
+        }
       },
       setKbart (options) {
         this.kbart = options
@@ -841,12 +1026,24 @@
           this.showSubmitConfirm = true
         }
       },
+      showJobPopup(uuid) {
+        this.selectedJob = { id: uuid, archived: false }
+        this.editJobPopupVisible = true
+      },
       async createPackage () {
         loading.startLoading()
         var isUpdate = !!this.id
         this.successMsg = undefined
+        this.warningMsg = undefined
         this.errorMsg = undefined
-        this.kbartResult = undefined
+
+        if (this.importJob?.status !== 'info') {
+          this.importJob = {}
+        }
+
+        if (this.matchingJob?.status !== 'info') {
+          this.matchingJob = {}
+        }
 
         if (this.isValid) {
           if (this.sourceItem) {
@@ -899,74 +1096,77 @@
           })
 
           if (response?.status < 400) {
-            this.successMsg = this.isEdit ? 'success.update' : 'success.create'
             this.packageItem.id = response.data.id
 
-            if (this.kbart || this.urlUpdate) {
-              const namespace = (this.kbart?.selectedNamespace?.value ? { titleIdNamespace: this.kbart?.selectedNamespace?.value } : {})
-              var pars = {
-                processOption: 'kbart',
-                ...namespace,
-                pkgId: response.data.id,
-                activeGroup: this.activeGroup?.id || null
+            if (this.kbart) {
+              const kbartPars = {
+                activeGroup: this.activeGroup?.id,
+                titleIdNamespace: this.sourceItem?.targetNamespace?.id,
+                dryRun: this.kbart.dryRun,
+                addOnly: this.kbart.addOnly
               }
-
-              if (this.kbart) {
-                pars.addOnly = this.kbart.addOnly ? 'true' : 'false'
-                pars.localFile = 'true'
-              } else if (this.urlUpdate) {
-                pars.urlUpdate = 'true'
-              }
-
-              if (response.data.updateToken) {
-                pars.updateToken = response.data.updateToken
-              }
-
-              const file = this.kbart?.selectedFile || null
-
-              const ygorResponse = await this.catchError({
-                promise: this.sendKbartUpdateRquest(pars, file),
+              const kbartResult = await this.catchError({
+                promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, kbartPars, this.cancelToken.token),
                 instance: this
               })
 
-              if (ygorResponse?.status === 'STARTED') {
-                const ygorJobStatusResponse = await this.catchError({
-                  promise: this.getYgorJobStatus(ygorResponse.jobId),
-                  instance: this
-                })
-
-                if (ygorJobStatusResponse.status === 400) {
-                  this.kbartResult = 'error'
-                } else {
-                  this.kbartResult = 'success'
-                }
-
-                this.kbart = undefined
-                loading.stopLoading()
-
-                if (isUpdate) {
-                  this.step = 1
-                  this.reload()
-                } else {
-                  this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
-                }
-              } else {
-                loading.stopLoading()
-                this.kbartResult = 'error'
-                if (isUpdate) {
-                  this.step = 1
-                  this.reload()
-                } else {
-                  this.$router.push({ path: '/package/' + this.packageItem.id, props: { kbartStatus: this.kbartResult } })
-                }
-              }
-            } else {
+              this.kbart = undefined
               loading.stopLoading()
+
+              if (kbartResult.status === 403) {
+                this.errorMsg = 'kbart.transmission.error.denied'
+              } else if (kbartResult.status >= 400) {
+                this.errorMsg = 'kbart.transmission.error.unknown'
+              }
+
               if (isUpdate) {
                 this.step = 1
                 this.reload()
+                this.successMsg = this.isEdit ? 'success.update' : 'success.create'
+
+                if (kbartResult?.data?.jobId) {
+                  this.loadImportJobStatus(kbartResult?.data?.jobId)
+                }
               } else {
-                this.$router.push('/package/' + this.packageItem.id)
+                this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartJob: kbartResult?.data?.jobId, initMessageCode: 'success.create' } })
+              }
+            } else if (this.urlUpdate) {
+              const updateParams = {
+                activeGroup: this.activeGroup?.id
+              }
+              const sourceUpdateResult = await this.catchError({
+                promise: packageServices.triggerSourceUpdate(response.data.id, updateParams, this.cancelToken.token),
+                instance: this
+              })
+
+              if (sourceUpdateResult.status === 403) {
+                this.errorMsg = 'kbart.transmission.error.denied'
+              } else if (sourceUpdateResult.status >= 400) {
+                this.errorMsg = 'kbart.transmission.error.unknown'
+              }
+
+              loading.stopLoading()
+
+              if (isUpdate) {
+                this.step = 1
+                this.reload()
+                this.successMsg = this.isEdit ? 'success.update' : 'success.create'
+
+                if (sourceUpdateResult?.data?.jobId) {
+                  this.loadImportJobStatus(sourceUpdateResult?.data?.jobId)
+                }
+              } else {
+                this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartJob: sourceUpdateResult?.data?.jobId, initMessageCode: 'success.create' } })
+              }
+            } else {
+              loading.stopLoading()
+
+              if (isUpdate) {
+                this.step = 1
+                this.reload()
+                this.successMsg = this.isEdit ? 'success.update' : 'success.create'
+              } else {
+                this.$router.push({ name: '/package', params: { id: this.packageItem.id, initMessageCode: 'success.create' } })
               }
             }
           } else {
@@ -992,6 +1192,11 @@
           loading.startLoading()
           this.errors = {}
           this.newTipps = []
+          this.errors = {}
+          this.successMsg = undefined
+          this.warningMsg = undefined
+          this.errorMsg = undefined
+
           const result = await this.catchError({
             promise: packageServices.getPackage(this.id, this.cancelToken.token),
             instance: this
@@ -1038,6 +1243,129 @@
           }
         }
       },
+      async fetchDefaultNamespace (providerId) {
+        const providerResult = await this.catchError({
+          promise: providerServices.getProvider(providerId, this.cancelToken.token),
+          instance: this
+        })
+
+        if (providerResult?.status === 200) {
+          const fullProvider = providerResult.data
+
+          if (fullProvider.titleNamespace) {
+            this.providerTitleNamespace= fullProvider.titleNamespace
+          }
+        }
+      },
+      async loadImportJobStatus (jobId) {
+        var finished = false
+        var jobInfo = {
+          id: jobId,
+          progress: undefined,
+          result: 'info',
+          dryRun: undefined,
+          dismissed: false
+        }
+
+        while (!finished) {
+          const jobResult = await this.catchError({
+            promise: jobServices.getJob(jobId, false, this.cancelToken.token),
+            instance: this
+          })
+
+          if (jobResult.status < 400) {
+            jobInfo.progress = jobResult.data.progress
+
+            if (jobResult.data.finished) {
+              jobInfo.progress = undefined
+              jobInfo.dryRun = jobResult.data.job_result.dryRun
+
+              if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
+                jobInfo.result = 'error'
+              } else {
+                jobInfo.result = 'success'
+
+                if (jobResult.data.job_result.matchingJob) {
+                  this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
+                }
+              }
+              this.reload()
+
+              finished = true
+            } else {
+              await this.wait(500)
+            }
+          } else {
+            jobInfo.result = 'error'
+            finished = true
+          }
+
+          this.importJob = jobInfo
+        }
+      },
+      async loadMatchingJobStatus (jobId) {
+        var finished = false
+        var jobInfo = {
+          id: jobId,
+          progress: undefined,
+          result: 'info',
+          messageCode: undefined,
+          dismissed: false
+        }
+
+        while (!finished) {
+          const jobResult = await this.catchError({
+            promise: jobServices.getJob(jobId, false, this.cancelToken.token),
+            instance: this
+          })
+
+          if (jobResult.status < 400) {
+            jobInfo.progress = jobResult.data.progress
+
+            if (jobResult.data.finished) {
+              jobInfo.progress = undefined
+
+              if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
+                jobInfo.result = 'error'
+                jobInfo.messageCode = jobResult.data.job_result?.messageCode
+              } else {
+                jobInfo.result = 'success'
+              }
+
+              finished = true
+            } else {
+              await this.wait(500)
+            }
+          } else {
+            jobInfo.result = 'error'
+            finished = true
+          }
+
+          this.matchingJob = jobInfo
+        }
+      },
+      async getActiveJobs () {
+        const jobResult = await this.catchError({
+          promise: jobServices.get({ linkedItem: this.id }, this.cancelToken.token),
+          instance: this
+        })
+
+        if (jobResult.status < 400) {
+          if (jobResult.data?.data.length > 0) {
+            this.activeJobs = true
+
+            jobResult.data.data.forEach((job) => {
+              console.log(job)
+              if (job.type?.value === 'PackageTitleMatch') {
+                this.loadMatchingJobStatus(job.uuid, job.type.value)
+              }
+              else {
+                this.loadImportJobStatus(job.uuid, job.type.value)
+              }
+            })
+          }
+        }
+      },
       mapRecord (data) {
         this.packageItem.id = data.id
         this.uuid = data.uuid
@@ -1081,37 +1409,6 @@
         this.overviewStates.contentType = data.contentType
 
         document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
-      },
-      async sendKbartUpdateRquest (parameters, file) {
-        const urlParameters = baseServices.createQueryParameters(parameters)
-        const data = new FormData()
-
-        if (file) {
-          data.append('uploadFile', file)
-        }
-
-        const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/processGokbPackage?${urlParameters}`
-
-        const resp = await axios.post(url, data).then(response => response.data)
-        console.log(resp)
-
-        return resp
-      },
-      async getYgorJobStatus (jobId) {
-        const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/getStatus?jobId=${jobId}`
-        let resp = {}
-        let status = 'PREPARATION'
-        this.waiting = true
-
-        while (status === 'PREPARATION') {
-          resp = axios.get(url).then(
-            response => response.data,
-            await this.wait(1000)
-          )
-          status = resp.status
-        }
-
-        return resp
       },
       triggerUpdate (checked) {
         this.urlUpdate = checked

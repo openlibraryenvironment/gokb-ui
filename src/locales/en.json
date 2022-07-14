@@ -180,14 +180,44 @@
     "passwordLength": "The password must be between 6 and 64 characters of length."
   },
   "job": {
-    "label": "Job | Jobs",
+    "label": "Import | Imports",
     "finished": "Finished",
     "cancelled": "Cancelled",
+    "details": "Import Details",
     "active": {
       "label": "Active Jobs"
     },
     "archived": {
       "label": "Archived Results"
+    },
+    "context": {
+      "group": "Show jobs for the active curatory group",
+      "profile": "Only show your own jobs"
+    },
+    "dryRun": {
+      "label": "Dry run"
+    },
+    "report": {
+      "label": "Result",
+      "dryRunLabel": "Expected Result",
+      "numRows": {
+        "label": "Rows"
+      },
+      "invalid": {
+        "label": "Invalid"
+      },
+      "matched": {
+        "label": "Matched"
+      },
+      "retired": {
+        "label": "Retired"
+      },
+      "created": {
+        "label": "Created"
+      },
+      "previous": {
+        "label": "Previous count"
+      }
     },
     "ok": "Successful",
     "error": "Errors",
@@ -226,7 +256,11 @@
       "PlatformCleanup": "Platform Cleanup",
       "RecalculateStatistics": "Recalculate Statistics",
       "PackageUpdateTipps": "Package KBART Update",
-      "KBARTIngest": "KBART Package Ingest"
+      "KBARTIngest": "KBART Package Ingest",
+      "KBART Ingest": "KBART Package Ingest",
+      "KBARTSourceIngest": "Automated KBART Ingest",
+      "KBARTIngestDryRun": "KBART Package Ingest (Dry Run)",
+      "PackageTitleMatch": "Reference Title Matching"
     }
   },
   "kbart": {
@@ -248,10 +282,13 @@
     "propId": {
       "label": "Namespace for title_id values"
     },
-    "addOnly": "Partial Update",
+    "addOnly": {
+      "label": "Partial Update"
+    },
     "column": {
+      "label": "Column | Columns",
       "count": {
-        "label": "Row length"
+        "label": "No. of columns"
       }
     },
     "row": {
@@ -259,14 +296,22 @@
     },
     "errors": {
       "encoding": "The encoding of this file is not UTF-8. Please correct this before importing!",
+      "alreadyRunning": "A KBART-Import for this Package is already in progress. Please wait for this job to be finished.",
       "tabsCountFile": "This file contains rows with a different column count than defined by the provided headings!",
       "tabsCountRow": "This line contains {0} columns instead of {1} columns, as defined by the headings!",
       "missingVal": "Missing value in column '{0}'!",
       "missingCols": "Missing columns: {0}",
+      "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "illegalVal": "Value {0} is not valid!",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
-      "illegalPrintId": "Value for print identifier '{0}' is not valid."
+      "illegalPrintId": "Value for print identifier '{0}' is not valid.",
+      "url": {
+        "mimeType": "KBART URL returned a wrong content type!",
+        "unknown": "There were errors saving the KBART file!",
+        "notFound": "No KBART file was found for the provided URL!",
+        "protocol": "KBART URL has an unsupported protocol!"
+      }
     },
     "processing": {
       "cancelled": "KBART processing was cancelled after {0} rows!",
@@ -287,8 +332,27 @@
       }
     },
     "transmission": {
-      "started": "The KBART Import has started. You may check its status via your dashboard.",
-      "failure": "Unable to process the provided KBART File! If you provided an URL for automatic updating, please try a direct upload instead."
+      "started": "The KBART Import has started..",
+      "failure": "Unable to process the provided KBART File! If you provided an URL for automatic updating, please try a direct upload instead.",
+      "success": "The KBART Import has successfully finished.",
+      "preparing": "Preparing...",
+      "showResults": "Show Report",
+      "errors": {
+        "denied": "KBART import failed due to insufficient permissions.",
+        "unknown": "KBART import failed due to internal errors. Please report this to an administator!"
+      }
+    },
+    "dryRun": {
+      "label": "Dry Run",
+      "started": "The KBART dry run has started..",
+      "success": "The KBART dry run has successfully finished.",
+      "failure": "There have been errors processing the KBART file."
+    },
+    "titleMatch": {
+      "label": "Reference matching",
+      "started": "Matching new package titles to global reference items..",
+      "failure": "There have been errors matching the package titles!",
+      "success": "Reference matching complete."
     }
   },
   "profile": {

@@ -134,10 +134,10 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.tipp.prices.price.label'), align: 'left', value: 'localPrice', sortable: true },
-          { text: this.$i18n.tc('component.tipp.prices.currency.label'), align: 'left', value: 'localCurrency', sortable: true },
-          { text: this.$i18n.tc('component.tipp.prices.startDate.label'), align: 'left', value: 'startDate', sortable: true },
-          { text: this.$i18n.tc('component.tipp.prices.endDate.label'), align: 'left', value: 'endDate', sortable: true, width: '20%' },
+          { text: this.$i18n.tc('component.tipp.prices.price.label'), align: 'start', value: 'localPrice', sortable: true },
+          { text: this.$i18n.tc('component.tipp.prices.currency.label'), align: 'start', value: 'localCurrency', sortable: true },
+          { text: this.$i18n.tc('component.tipp.prices.startDate.label'), align: 'start', value: 'startDate', sortable: true },
+          { text: this.$i18n.tc('component.tipp.prices.endDate.label'), align: 'start', value: 'endDate', sortable: true },
         ]
       },
       title () {

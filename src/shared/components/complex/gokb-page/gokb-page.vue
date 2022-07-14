@@ -10,8 +10,9 @@
           flat
         >
           <div class="ml-3">
-            <v-toolbar-title class="text-h4">
-              {{ title }}
+            <v-toolbar-title>
+              <p class="text-h4">{{ title }}</p>
+              <p v-if="subTitle">{{ subTitle }}</p>
             </v-toolbar-title>
           </div>
         </v-toolbar>
@@ -34,6 +35,11 @@
         type: String,
         required: false,
         default: 'missing title for page'
+      },
+      subTitle: {
+        type: String,
+        required: false,
+        default: undefined
       },
       width: {
         type: String,

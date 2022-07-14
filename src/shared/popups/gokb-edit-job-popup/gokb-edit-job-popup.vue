@@ -1,7 +1,7 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    title="Job-Details"
+    :title="$t('job.details')"
     width="70%"
     @submit="close"
   >
@@ -47,6 +47,22 @@
         />
       </v-col>
     </v-row>
+    <v-row v-if="selectedItem.results && selectedItem.results.report">
+      <v-col>
+        <div
+          class="primary--text"
+        >
+          {{ selectedItem.dryRun ? $i18n.t('job.report.dryRunLabel') : $i18n.t('job.report.label') }}
+        </div>
+        <v-chip-group>
+          <v-chip>{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.report.invalid }}/{{ selectedItem.results.report.numRows }}</v-chip>
+          <v-chip>{{ $i18n.t('job.report.previous.label') }}: {{ selectedItem.results.report.previous }}</v-chip>
+          <v-chip>{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</v-chip>
+          <v-chip>{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</v-chip>
+          <v-chip v-if="!selectedItem.dryRun">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</v-chip>
+        </v-chip-group>
+      </v-col>
+    </v-row>
     <v-row v-if="selectedItem.messages">
       <v-col>
         <div
@@ -59,7 +75,7 @@
             v-for="(m, idx) in selectedItem.messages"
             :key="idx"
           >
-            {{ m.message }}
+            {{ (typeof m === "string" ? m : m.message) }}
           </li>
         </ul>
       </v-col>
@@ -118,6 +134,7 @@
           startDate: undefined,
           endDate: undefined,
           results: undefined,
+          dryRun: false,
           messages: []
         },
         items: []
@@ -137,7 +154,7 @@
       }
     },
     async created () {
-      if (this.selected.archived) {
+      if (this.selected) {
         const componentRoutes = {
           package: '/package',
           org: '/provider',
@@ -150,7 +167,7 @@
         this.id = this.selected.id
 
         const result = await this.catchError({
-          promise: jobServices.getJob(this.id, true, this.cancelToken.token),
+          promise: jobServices.getJob(this.id, this.selected.archived, this.cancelToken.token),
           instance: this
         })
 
@@ -162,12 +179,26 @@
         this.selectedItem.type = record.type
         this.selectedItem.description = record.description
         this.selectedItem.status = record.status
-        this.selectedItem.startTime = new Date(record.startTime).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
-        this.selectedItem.endTime = new Date(record.endTime).toLocaleString(this.$i18n.locale, { timeZone: 'UTC' })
-        this.selectedItem.results = record.job_result
-        this.selectedItem.messages = record.job_result ? [{ message: record.job_result.message }] : []
-      } else {
-        this.selectedItem = this.selected
+        this.selectedItem.startTime = new Date(record.startTime).toLocaleString('sv')
+        this.selectedItem.endTime = new Date(record.endTime).toLocaleString('sv')
+
+        if (record.finished) {
+          this.selectedItem.results = record.job_result
+
+          if (record.job_result.dryRun) {
+            this.selectedItem.dryRun = true
+          }
+        }
+
+        if (!!record.messages) {
+          this.selectedItem.messages = record.messages
+        } else if (!!record.job_result) {
+          if (!!record.job_result.message) {
+            this.selectedItem.messages = [record.job_result.message]
+          } else if (!!record.job_result.messages) {
+            this.selectedItem.messages = record.job_result.messages
+          }
+        }
       }
     },
     methods: {

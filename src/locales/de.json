@@ -180,14 +180,44 @@
     "passwordLength": "Das Passwort muss zwischen 6 und 64 Zeichen haben."
   },
   "job": {
-    "label": "Import | Imports",
+    "label": "Import | Importe",
     "finished": "Fertig",
     "cancelled": "Abgebrochen",
+    "details": "Import-Status",
     "active": {
       "label": "Aktive Jobs"
     },
     "archived": {
       "label": "Archivierte Ergebnisse"
+    },
+    "context": {
+      "group": "Alle Jobs für die ausgewählte Gruppe anzeigen",
+      "profile": "Nur eigene Jobs anzeigen"
+    },
+    "dryRun": {
+      "label": "Trockenlauf"
+    },
+    "report": {
+      "label": "Ergebnis",
+      "dryRunLabel": "Erwartetes Ergebnis",
+      "numRows": {
+        "label": "Zeilenanzahl"
+      },
+      "invalid": {
+        "label": "Fehlerhaft"
+      },
+      "matched": {
+        "label": "Treffer"
+      },
+      "retired": {
+        "label": "Archiviert"
+      },
+      "created": {
+        "label": "Erstellt"
+      },
+      "previous": {
+        "label": "Bisherige Anzahl"
+      }
     },
     "ok": "Erfolgreich",
     "error": "Fehlerhaft",
@@ -226,7 +256,11 @@
       "PlatformCleanup": "Platform Cleanup",
       "RecalculateStatistics": "Recalculate Statistics",
       "PackageUpdateTipps": "KBART Update",
-      "KBARTIngest": "KBART-Import"
+      "KBARTIngest": "KBART-Import",
+      "KBART Ingest": "KBART-Import",
+      "KBARTSourceIngest": "Automatisierter KBART-Import",
+      "KBARTIngestDryRun": "KBART-Import (Testlauf)",
+      "PackageTitleMatch": "Referenztitel-Abgleich"
     }
   },
   "kbart": {
@@ -248,8 +282,11 @@
     "propId": {
       "label": "Namensraum für title_id"
     },
-    "addOnly": "Teil-Update",
+    "addOnly": {
+      "label": "Teil-Update"
+    },
     "column": {
+      "label": "Spalte | Spalten",
       "count": {
         "label": "Spaltenanzahl"
       }
@@ -259,14 +296,22 @@
     },
     "errors": {
       "encoding": "Diese Datei ist nicht in UTF-8 codiert. Bitte beheben Sie dies vor dem Import!",
+      "alreadyRunning": "Ein KBART-Import für dieses Paket ist bereits aktiv. Bitte warten Sie bis der vorherige Import abgeschlossen ist.",
       "tabsCountFile": "Diese Datei enthält Datenzeilen mit einer vom Datei-Header abweichenden Anzahl von Spalten!",
       "tabsCountRow": "Diese Zeile enthält {0} Spalten anstatt dem Datei-Header entsprechend {1} Spalten!",
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
       "missingCols": "Fehlende Spalten: {0}",
+      "replacementChars": "Die Datei enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
       "illegalVal": "Wert {0} ist fehlerhaft!",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
-      "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format."
+      "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
+      "url": {
+        "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
+        "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
+        "notFound": "Unter der angegebenen URL wurde keine KBART-Datei gefunden!",
+        "protocol": "Das Protokoll der KBART-URL wird nicht unterstützt!"
+      }
     },
     "processing": {
       "cancelled": "KBART-Prozessierung wurde nach {0} Reihen abgebrochen!",
@@ -287,8 +332,27 @@
       }
     },
     "transmission": {
-      "started": "Der KBART-Import wurde gestartet. Den Status können Sie über Ihr Dashboard verfolgen.",
-      "failure": "KBART-Prozessierung fehlgeschlagen! Falls Sie eine URL für automatische Updates angegeben haben, versuchen Sie bitte stattdessen einen manuellen KBART-Import durchzuführen."
+      "started": "Der KBART-Import wurde gestartet..",
+      "failure": "KBART-Prozessierung fehlgeschlagen! Falls Sie eine URL für automatische Updates angegeben haben, versuchen Sie bitte stattdessen einen manuellen KBART-Import durchzuführen.",
+      "success": "Der KBART-Import wurde erfolgreich abgeschlossen!",
+      "preparing": "Vorbereitung...",
+      "showResults": "Bericht anzeigen",
+      "errors": {
+        "denied": "Der KBART-Import ist auf Grund von fehlenden Berechtigungen fehlgeschlagen.",
+        "unknown": "Der KBART-Import ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
+      }
+    },
+    "dryRun": {
+      "label": "Testdurchlauf",
+      "started": "Der KBART-Testlauf wurde gestartet..",
+      "success": "Der Testlauf des KBART-Imports wurde erfolgreich abgeschlossen.",
+      "failure": "Bei der Prozessierung des KBART-Testlaufs sind Fehler aufgetreten."
+    },
+    "titleMatch": {
+      "label": "Referenztitel-Abgleich",
+      "started": "Die Referenztitel-Verknüpfung für neue Pakettitel wurde gestartet..",
+      "failure": "Beim Abgleich neuer Pakettitel mit ihren Referenztiteln sind Fehler aufgetreten!",
+      "success": "Die Referenztitel-Verknüpfung wurde abgeschlossen."
     }
   },
   "profile": {

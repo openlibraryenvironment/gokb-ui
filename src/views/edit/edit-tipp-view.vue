@@ -570,6 +570,11 @@
         type: [Number, String],
         required: false,
         default: undefined
+      },
+      initMessageCode: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -587,6 +592,7 @@
         selectedTitle: undefined,
         selectedItem: undefined,
         successMsg: undefined,
+        warningMsg: undefined,
         errorMsg: undefined,
         coverageObject: {
           coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
@@ -690,6 +696,9 @@
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
       },
+      localWarningMessage () {
+        return this.warningMsg ? this.$i18n.t(this.warningMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
+      },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
       },
@@ -734,6 +743,16 @@
     },
     async mounted () {
       this.reload()
+
+      if (this.initMessageCode) {
+        if (this.initMessageCode.includes('success')) {
+          this.successMsg = this.initMessageCode
+        } else if (this.initMessageCode.includes('failure')) {
+          this.errorMsg = this.initMessageCode
+        } else if (this.initMessageCode.includes('warning')) {
+          this.warningMsg = this.initMessageCode
+        }
+      }
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -762,8 +781,12 @@
         })
 
         if (response.status < 400) {
-          this.successMsg = this.isEdit ? 'success.update' : 'success.create'
-          this.reload()
+          if (this.isEdit) {
+            this.successMsg = 'success.update'
+            this.reload()
+          } else {
+            this.$router.push({ name: '/package-title', params: { id: response.data?.id, initMessageCode: 'success.create' } })
+          }
         } else {
           if (response.status === 409) {
             this.errorMsg = 'error.update.409'
@@ -777,7 +800,12 @@
       },
       async reload () {
         loading.startLoading()
+        this.errors = {}
         this.pendingChanges = {}
+        this.successMsg = undefined
+        this.warningMsg = undefined
+        this.errorMsg = undefined
+
         const result = await this.catchError({
           promise: tippServices.getTipp(this.id, this.cancelToken.token),
           instance: this

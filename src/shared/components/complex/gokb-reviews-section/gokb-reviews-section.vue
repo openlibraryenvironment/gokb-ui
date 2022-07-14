@@ -264,87 +264,87 @@
         const compConfig = [
           {
             text: this.$i18n.tc('component.review.stdDesc.label'),
-            align: 'left',
+            align: 'start',
             sortable: false,
-            width: '100%',
             value: 'popup'
           },
           {
             text: this.$i18n.t('component.general.status.label'),
-            align: 'left',
+            align: 'end',
             sortable: false,
             width: '10%',
             value: 'statusLabel'
           },
           {
             text: this.$i18n.t('component.general.dateCreated'),
-            align: 'right',
+            align: 'end',
             sortable: false,
-            width: '10%',
+            width: '20%',
             value: 'dateCreated'
           }
         ]
         const pkgTitlesConfig = [
           {
             text: this.$i18n.tc('component.review.stdDesc.label'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             width: '100%',
             value: 'popup'
           },
           {
             text: this.$i18n.tc('component.curatoryGroup.label', 2),
-            align: 'left',
+            align: 'start',
             sortable: false,
             value: 'groupsList'
           },
           {
             text: this.$i18n.t('component.general.status.label'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             width: '10%',
             value: 'statusLabel'
           },
           {
             text: this.$i18n.t('component.general.dateCreated'),
-            align: 'right',
+            align: 'end',
             sortable: false,
-            width: '10%',
+            width: '15%',
             value: 'dateCreated'
           }
         ]
         const defaultConfig = [
           {
             text: this.$i18n.t('component.review.componentToReview.label'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             value: 'popup'
           },
           {
             text: this.$i18n.t('component.title.type.label'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             width: '10%',
             value: 'type'
           },
           {
             text: this.$i18n.tc('component.review.stdDesc.label'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             width: '20%',
             value: 'stdDescLabel'
           },
           {
             text: this.$i18n.t('component.general.status.label'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             width: '10%',
             value: 'statusLabel'
           },
           {
             text: this.$i18n.t('component.general.dateCreated'),
-            align: 'right',
+            align: 'end',
             sortable: false,
+            width: '15%',
             value: 'dateCreated'
           }
         ]
@@ -427,7 +427,6 @@
 
         if (this.rawReviews?.data) {
           this.totalNumberOfItems = this.rawReviews?.data?._pagination?.total
-          this.$emit('update', this.totalNumberOfItems)
         }
 
         this.loading = false
@@ -448,6 +447,7 @@
         this.reviewsOptions.page = 1
         this.retrieveReviews()
         this.successMessage = this.$i18n.tc('component.review.edit.success.closed')
+        this.$emit('update', this.totalNumberOfItems)
       },
       showAddReviewPopup () {
         this.addReviewPopupVisible = 1
@@ -515,6 +515,7 @@
 
         this.reviewsOptions.page = 1
         this.retrieveReviews()
+        this.$emit('update', this.totalNumberOfItems)
         this.loading = false
       },
       async _closeSelectedItems () {
@@ -534,11 +535,13 @@
           this.loading = false
 
           this.retrieveReviews()
+          this.$emit('update', this.totalNumberOfItems)
         }
       },
       handlePopupChange (type) {
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
         this.retrieveReviews()
+        this.$emit('update', this.totalNumberOfItems)
       }
     }
   }
