@@ -75,6 +75,17 @@
         *
       </span>
     </template>
+    <template #item="{ item }">
+      <div :style="{ color: (item.disabled ? '#888888' : 'inherit') }">
+        {{ item[itemText] }}
+        <v-chip
+          v-if="item.disabled && !!item.disabledMessage"
+          color="error"
+        >
+          <span> {{ $t(item.disabledMessage) }} </span>
+        </v-chip>
+      </div>
+    </template>
   </v-combobox>
   <v-autocomplete
     v-else
@@ -270,7 +281,11 @@
           instance: this
         })
         this.loading = false
-        this.items = result?.data?.data
+        this.items = this.transform(result)
+      },
+      transform (result) {
+        const { data: { data } } = result
+        return data
       },
       clear () {
         this.search = null

@@ -764,7 +764,8 @@
         "url": "This URL is already in use for platform {0}. ",
         "name": "This Name is already in use in another platform. ",
         "general": "These values are already in use in another platform. ",
-        "noProvider": "The platform could not be created because of conflicts with another platform in the system (ID {0}). Please report this to an administrator."
+        "noProvider": "The platform could not be created because of conflicts with another platform in the system (ID {0}). Please report this to an administrator.",
+        "alreadyLinked": "Already linked"
       }
     },
     "provider": {
