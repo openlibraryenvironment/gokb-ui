@@ -18,25 +18,30 @@
       class="mt-4"
     >
       <v-col>
-        <gokb-text-field
-          ref="name"
+        <gokb-search-platform-field
           v-model="platform.name"
+          :items="platformSelection"
+          :readonly="isReadonly"
           :label="$tc('component.general.name')"
-          :api-errors="errors.name"
+          :allow-new-values="true"
           required
-          dense
+          return-object
         />
       </v-col>
     </v-row>
     <v-row>
       <v-col>
-        <gokb-url-field
-          ref="platformUrl"
+        <gokb-search-platform-field
           v-model="platform.primaryUrl"
+          :items="platformSelection"
+          :readonly="isReadonly"
           :label="$tc('component.platform.url')"
-          :api-errors="errors.primaryUrl"
+          :allow-new-values="true"
+          :rules="urlRules"
+          :query-fields="queryFields"
+          itemText="primaryUrl"
           required
-          dense
+          return-object
         />
       </v-col>
     </v-row>
@@ -81,10 +86,14 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import platformServices from '@/shared/services/platform-services'
+  import GokbSearchPlatformField from '@/shared/components/simple/gokb-search-platform-field'
   import 'vue-json-pretty/lib/styles.css'
 
   export default {
     name: 'GokbEditPlatformPopup',
+    components: {
+      GokbSearchPlatformField
+    },
     extends: BaseComponent,
     props: {
       selected: {
@@ -113,7 +122,10 @@
           id: undefined,
           name: undefined,
           primaryUrl: undefined
-        }
+        },
+        urlRules:
+          [v => (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || this.$i18n.t('component.tipp.url.error')],
+        queryFields: ['primaryUrl']
       }
     },
     computed: {
@@ -127,6 +139,9 @@
       },
       platformId () {
         return this.selected?.id ? this.selected.id : undefined
+      },
+      platformSelection () {
+        return this.platformSelect
       },
       isReadonly () {
         return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
@@ -144,13 +159,13 @@
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.platform.label')]) : undefined
       },
       submitButtonLabel () {
-        return this.isEdit ? this.$i18n.tc('route.platform.edit') : this.$i18n.tc('route.platform.create')
+        return this.isEdit ? this.$i18n.tc('route.platform.edit') : this.$i18n.tc('route.platform.add')
       },
       localTitle () {
         if (this.isEdit) {
           return this.$i18n.tc('component.platform.label') + (this.platform?.stdDesc ? (' – ' + this.$i18n.t('component.platform.stdDesc.' + (this.platform.stdDesc.value || this.platform.stdDesc.name) + '.label')) : '')
         } else {
-          return this.$i18n.tc('route.platform.create')
+          return this.$i18n.tc('route.platform.add')
         }
       }
     },
@@ -160,6 +175,24 @@
         this.platform.name = this.selected.name
         this.platform.primaryUrl = this.selected.primaryUrl
         this.platform.id = this.selected.id
+      }
+    },
+    watch: {
+      'platform.name'(val) {
+        if (typeof val === 'object') {
+          let pltObj = val
+          this.platform.name = pltObj.name
+          this.platform.primaryUrl = pltObj.primaryUrl
+          this.platform.id = pltObj.id
+        }
+      },
+      'platform.primaryUrl'(val) {
+        if (typeof val === 'object') {
+          let pltObj = val
+          this.platform.name = pltObj.name
+          this.platform.primaryUrl = pltObj.primaryUrl
+          this.platform.id = pltObj.id
+        }
       }
     },
     methods: {

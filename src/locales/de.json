@@ -75,6 +75,7 @@
       "search": "Pakettitel"
     },
     "platform": {
+      "add": "Plattform hinzufügen",
       "edit": "Plattform bearbeiten",
       "create": "Plattform anlegen"
     },
@@ -827,7 +828,8 @@
         "url": "Die angegebene URL wird bereits von der Platform {0} verwendet. ",
         "name": "Der angegebene Name wird bereits verwendet. ",
         "general": "Die angegebenen Werte werden bereits in einer anderen Plattform verwendet. ",
-        "noProvider": "Die Plattform konnte nicht angelegt werden, da ein Konflikt mit einer anderen Plattform vorliegt (ID {0}). Bitte melden Sie dies an einen Administrator."
+        "noProvider": "Die Plattform konnte nicht angelegt werden, da ein Konflikt mit einer anderen Plattform vorliegt (ID {0}). Bitte melden Sie dies an einen Administrator.",
+        "alreadyLinked": "Bereits verknüpft"
       }
     },
     "provider": {
