@@ -39,7 +39,7 @@
           :allow-new-values="true"
           :rules="urlRules"
           :query-fields="queryFields"
-          :itemText="urlField"
+          itemText="primaryUrl"
           required
           return-object
         />
@@ -125,8 +125,7 @@
         },
         urlRules:
           [v => (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || this.$i18n.t('component.tipp.url.error')],
-        urlField: 'primaryUrl',
-        queryFields: Array(1).fill('primaryUrl')
+        queryFields: ['primaryUrl']
       }
     },
     computed: {
