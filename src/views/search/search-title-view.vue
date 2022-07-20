@@ -133,6 +133,7 @@
     },
     async created () {
       this.searchServicesUrl = 'rest/titles'
+      this.searchByEs = true
       this.initVals = {
         status: 'setInit'
       }
