@@ -51,7 +51,7 @@
           [
             {
               type: 'GokbTextField',
-              name: 'name',
+              name: 'label',
               properties: {
                 label: this.$i18n.t('component.general.name')
               }
