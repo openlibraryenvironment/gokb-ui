@@ -16,6 +16,11 @@
         default() {
           return []
         }
+      },
+      disableIfLinked: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     created () {
@@ -28,7 +33,7 @@
     methods: {
       transform (result) {
         const { data: { data } } = result
-        return data?.map(item => ({ ...item, disabled: (!!item.provider ? true : false), disabledMessage: (!!item.provider ? 'component.platform.conflict.alreadyLinked' : null) }))
+        return data?.map(item => ({ ...item, disabled: (this.disableIfLinked && !!item.provider ? true : false), disabledMessage: (this.disableIfLinked && !!item.provider ? 'component.platform.conflict.alreadyLinked' : null) }))
       },
     }
   }
