@@ -157,6 +157,7 @@
                     :items="platformSelection"
                     :label="$tc('component.platform.label')"
                     :readonly="isEdit || isReadonly"
+                    :query-fields="platformQueryFields"
                     return-object
                   />
                 </v-col>
@@ -653,7 +654,8 @@
           editionStatement: undefined,
           medium: undefined,
           lastChangedExternal: undefined
-        }
+        },
+        platformQueryFields: ['name', 'primaryUrl']
       }
     },
     computed: {

@@ -237,6 +237,7 @@
                   v-model="packageItem.nominalPlatform"
                   :items="platformSelection"
                   :readonly="isReadonly"
+                  :query-fields="platformQueryFields"
                   return-object
                 />
               </gokb-section>
@@ -834,7 +835,8 @@
         maintenanceCycle: undefined,
         updateUrl: undefined,
         deleteUrl: undefined,
-        kbart: undefined
+        kbart: undefined,
+        platformQueryFields: ['name', 'primaryUrl']
       }
     },
     computed: {

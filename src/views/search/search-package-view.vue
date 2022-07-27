@@ -24,7 +24,7 @@
           link: 'name',
           linkTwo: 'provider'
         },
-        platformQueryFields: ['name', 'primaryUrl'],
+        platformQueryFields: ['name', 'primaryUrl']
       }
     },
     computed: {

@@ -124,6 +124,7 @@
             <gokb-search-platform-field
               v-model="packageItem.nominalPlatform"
               label="Name"
+              :query-fields="platformQueryFields"
               return-object
             />
           </gokb-section>
@@ -347,6 +348,7 @@
     extends: BaseComponent,
     data () {
       return {
+        platformQueryFields: ['name', 'primaryUrl'],
         valid: undefined,
         kbartImportPopupVisible: false,
         step: 1,
