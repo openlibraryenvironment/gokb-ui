@@ -24,6 +24,7 @@
           :readonly="isReadonly"
           :label="$tc('component.general.name')"
           :allow-new-values="true"
+          :disableIfLinked="true"
           required
           return-object
         />
@@ -39,6 +40,7 @@
           :allow-new-values="true"
           :rules="urlRules"
           :query-fields="queryFields"
+          :disableIfLinked="true"
           itemText="primaryUrl"
           required
           return-object
