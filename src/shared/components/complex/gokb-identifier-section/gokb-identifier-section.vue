@@ -146,6 +146,7 @@
       tableHeaders () {
         return [
           { text: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'nslabel', sortable: false, width: '15%' },
+          { text: '', icon: 'launch', align: 'start', value: 'extlink', sortable: false, width: '10%' },
           { text: this.$i18n.t('component.identifier.value'), align: 'start', value: 'value', sortable: false, width: '100%' },
         ]
       },
