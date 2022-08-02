@@ -154,6 +154,15 @@
           >
             mdi-check-bold
           </v-icon>
+          <v-btn icon :to="{ name: extlink, params: { id:id }}">
+            <v-icon
+              style="cursor:pointer"
+              :title="$t('btn.linkext')"
+              small
+            >
+              mdi-pencil
+            </v-icon>
+          </v-btn>
         </div>
       </template>
     </v-data-table>
