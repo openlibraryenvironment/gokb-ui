@@ -23,8 +23,7 @@
         sortMappings: {
           link: 'name',
           linkTwo: 'provider'
-        },
-        platformQueryFields: ['name', 'primaryUrl']
+        }
       }
     },
     computed: {
@@ -121,8 +120,7 @@
               name: 'nominalPlatform',
               value: 'platformId',
               properties: {
-                label: this.$i18n.tc('component.platform.label'),
-                queryFields: this.platformQueryFields
+                label: this.$i18n.tc('component.platform.label')
               }
             }
           ],

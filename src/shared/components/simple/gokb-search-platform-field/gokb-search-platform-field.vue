@@ -13,8 +13,8 @@
       queryFields: {
         type: Array,
         required: false,
-        default() {
-          return []
+        default()  {
+          return ['name', 'primaryUrl']
         }
       },
       disableIfLinked: {
@@ -26,9 +26,6 @@
     created () {
       this.searchServicesResourceUrl = 'rest/platforms'
       this.searchParams = { max: 20, es: true }
-      if (this.queryFields.length > 0 && this.queryFields[0].length > 0){
-        this.searchParams["qfields"] = this.queryFields.join("&")
-      }
     },
     methods: {
       transform (result) {

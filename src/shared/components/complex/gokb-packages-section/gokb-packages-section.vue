@@ -20,7 +20,6 @@
       <gokb-search-platform-field
         v-model="searchFilters.nominalPlatform"
         :label="$tc('component.platform.label')"
-        :query-fields="platformQueryFields"
       />
       <v-spacer class="ms-4" />
       <gokb-search-provider-field
@@ -125,8 +124,7 @@
           status: undefined,
           provider: undefined,
           nominalPlatform: undefined
-        },
-        platformQueryFields: ['name', 'primaryUrl']
+        }
       }
     },
     computed: {
