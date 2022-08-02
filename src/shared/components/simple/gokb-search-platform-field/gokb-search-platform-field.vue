@@ -21,13 +21,6 @@
         type: Boolean,
         required: false,
         default: false
-      },
-      additionalDisplayProps: {
-        type: Array,
-        required: false,
-        default() {
-          return ['primaryUrl']
-        }
       }
     },
     created () {
