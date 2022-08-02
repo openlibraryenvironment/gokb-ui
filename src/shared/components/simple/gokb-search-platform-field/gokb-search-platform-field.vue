@@ -14,7 +14,7 @@
         type: Array,
         required: false,
         default()  {
-          return ['q', 'primaryUrl']
+          return ['name', 'altname', 'suggest', 'primaryUrl']
         }
       },
       disableIfLinked: {
