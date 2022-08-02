@@ -563,7 +563,7 @@
         this.providerObject.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
         this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
         this.allCuratoryGroups = data._embedded.curatoryGroups.map(group => ({ ...group, isDeletable: !!this.updateUrl }))
-        this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({ ...platform, isDeletable: !!this.updateUrl }))
+        this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({ ...platform, updateUrl: platform._links.update.href, isDeletable: !!this.updateUrl }))
         this.providerObject.titleNamespace = data.titleNamespace
         this.providerObject.packageNamespace = data.packageNamespace
         this.allPackages = data._embedded.providedPackages

@@ -14,13 +14,20 @@
         type: Array,
         required: false,
         default()  {
-          return ['name', 'primaryUrl']
+          return ['q', 'primaryUrl']
         }
       },
       disableIfLinked: {
         type: Boolean,
         required: false,
         default: false
+      },
+      additionalDisplayProps: {
+        type: Array,
+        required: false,
+        default() {
+          return ['primaryUrl']
+        }
       }
     },
     created () {
