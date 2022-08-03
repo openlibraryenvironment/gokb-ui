@@ -13,22 +13,24 @@
       queryFields: {
         type: Array,
         required: false,
-        default() {
-          return []
+        default()  {
+          return ['name', 'altname', 'suggest', 'primaryUrl']
         }
+      },
+      disableIfLinked: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     created () {
       this.searchServicesResourceUrl = 'rest/platforms'
       this.searchParams = { max: 20, es: true }
-      if (this.queryFields.length > 0 && this.queryFields[0].length > 0){
-        this.searchParams["qfields"] = this.queryFields.join("&")
-      }
     },
     methods: {
       transform (result) {
         const { data: { data } } = result
-        return data?.map(item => ({ ...item, disabled: (!!item.provider ? true : false), disabledMessage: (!!item.provider ? 'component.platform.conflict.alreadyLinked' : null) }))
+        return data?.map(item => ({ ...item, disabled: (this.disableIfLinked && !!item.provider ? true : false), disabledMessage: (this.disableIfLinked && !!item.provider ? 'component.platform.conflict.alreadyLinked' : null) }))
       },
     }
   }

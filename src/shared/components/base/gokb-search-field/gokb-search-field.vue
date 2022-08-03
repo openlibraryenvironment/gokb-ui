@@ -209,6 +209,13 @@
         default() {
           return []
         }
+      },
+      queryFields: {
+        type: Array,
+        required: false,
+        default() {
+          return []
+        }
       }
     },
     data () {
@@ -272,6 +279,10 @@
         this.loading = true
         var primaryParam = {}
         primaryParam[this.mainParam] = text || this.value?.id
+
+        if (this.queryFields?.length > 0) {
+          this.searchParams['qfields'] = this.queryFields
+        }
 
         const result = await this.catchError({
           promise: this.searchServices.search({

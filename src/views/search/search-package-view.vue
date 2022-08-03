@@ -120,7 +120,7 @@
               name: 'nominalPlatform',
               value: 'platformId',
               properties: {
-                label: this.$i18n.tc('component.platform.label'),
+                label: this.$i18n.tc('component.platform.label')
               }
             }
           ],

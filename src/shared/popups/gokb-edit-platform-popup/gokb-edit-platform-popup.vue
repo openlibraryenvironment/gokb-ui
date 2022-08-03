@@ -20,28 +20,31 @@
       <v-col>
         <gokb-search-platform-field
           v-model="platform.name"
-          :items="platformSelection"
+          :items="items"
           :readonly="isReadonly"
           :label="$tc('component.general.name')"
-          :allow-new-values="true"
+          :query-fields="[]"
           required
           return-object
+          allow-new-values
+          disable-if-linked
         />
       </v-col>
     </v-row>
     <v-row>
       <v-col>
         <gokb-search-platform-field
-          v-model="platform.primaryUrl"
-          :items="platformSelection"
+          v-model="platformUrl"
+          :items="items"
           :readonly="isReadonly"
           :label="$tc('component.platform.url')"
-          :allow-new-values="true"
           :rules="urlRules"
-          :query-fields="queryFields"
-          itemText="primaryUrl"
+          :query-fields="['primaryUrl']"
+          item-text="primaryUrl"
           required
           return-object
+          allow-new-values
+          disable-if-linked
         />
       </v-col>
     </v-row>
@@ -117,6 +120,8 @@
         errorMsg: undefined,
         errors: {},
         conflictLinks: [],
+        platformUrl: undefined,
+        items: [],
         updateUrl: undefined,
         platform: {
           id: undefined,
@@ -125,7 +130,8 @@
         },
         urlRules:
           [v => (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || this.$i18n.t('component.tipp.url.error')],
-        queryFields: ['primaryUrl']
+        queryFields: ['primaryUrl'],
+        disableIfLinked: true
       }
     },
     computed: {
@@ -137,20 +143,14 @@
           this.$emit('input', localValue)
         }
       },
-      platformId () {
-        return this.selected?.id ? this.selected.id : undefined
-      },
-      platformSelection () {
-        return this.platformSelect
-      },
       isReadonly () {
-        return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
+        return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !!this.platform?._links && !this.platform?._links?.update?.href)
       },
       isEdit () {
-        return !!this.platformId
+        return !!this.selected
       },
       isValid () {
-        return !!this.platform.name && !!this.platform.primaryUrl
+        return !!this.platform?.name && !!this.platform?.primaryUrl
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.platform.label')]) : undefined
@@ -172,26 +172,32 @@
     created () {
       if (this.selected) {
         // edit existing platform
-        this.platform.name = this.selected.name
-        this.platform.primaryUrl = this.selected.primaryUrl
-        this.platform.id = this.selected.id
+        this.platform = {
+          name: this.selected.name,
+          primaryUrl: this.selected.primaryUrl,
+          id: this.selected.id
+        }
+        this.platformUrl = this.selected.primaryUrl
+
+        this.updateUrl = this.selected.updateUrl
+        this.items = [this.platform]
       }
     },
     watch: {
       'platform.name'(val) {
-        if (typeof val === 'object') {
-          let pltObj = val
-          this.platform.name = pltObj.name
-          this.platform.primaryUrl = pltObj.primaryUrl
-          this.platform.id = pltObj.id
+        if (!!val && typeof val === 'object') {
+          this.platform = val
+          this.platformUrl = val.primaryUrl
         }
       },
-      'platform.primaryUrl'(val) {
-        if (typeof val === 'object') {
-          let pltObj = val
-          this.platform.name = pltObj.name
-          this.platform.primaryUrl = pltObj.primaryUrl
-          this.platform.id = pltObj.id
+      'platformUrl'(val) {
+        if (!!val) {
+          if (typeof val === 'object') {
+            this.platform = val
+          }
+          else if (this.platform?.primaryUrl !== val) {
+            this.platform.primaryUrl = val
+          }
         }
       }
     },
