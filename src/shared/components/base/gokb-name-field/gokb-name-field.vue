@@ -128,7 +128,8 @@
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
         cancelToken: undefined,
-        inValidName: undefined
+        inValidName: undefined,
+        hasMalformedEnding: false
       }
     },
     computed: {
@@ -149,7 +150,8 @@
       rules () {
         return [
           value => value?.length > 0 || this.$i18n.t('validation.missingName'),
-          value => !this.inValidName || value.trim().toLowerCase() !== this.inValidName || this.$i18n.t('error.general.name.notUnique')
+          value => !this.inValidName || value.trim().toLowerCase() !== this.inValidName || this.$i18n.t('error.general.name.notUnique'),
+          value => !this.hasMalformedEnding || this.$i18n.t('error.general.name.malformedEnding')
         ]
       },
       valid () {
@@ -185,6 +187,9 @@
       async selectNewName () {
         this.editedVal = this.editedVal.trim()
 
+        if (!this.hasValidSyntax()){
+          return
+        }
         if (this.checkDupes) {
           this.inValidName = undefined
           var dupes = await this.checkForDupes(this.checkDupes)
@@ -206,6 +211,14 @@
         this.currentName = this.editedVal
         this.localValue.name = this.editedVal
         this.editNamePopupVisible = false
+      },
+      hasValidSyntax () {
+        var malformedStringEndings = ["-", "(", "()", "!", "?"]
+        if (malformedStringEndings.some(mse => this.editedVal.endsWith(mse))) {
+          this.hasMalformedEnding = true
+          return false
+        }
+        return true
       },
       async checkForDupes (type) {
         this.cancelToken = createCancelToken()
