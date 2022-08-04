@@ -339,8 +339,9 @@
       "preparing": "Preparing...",
       "showResults": "Show Report",
       "errors": {
-        "denied": "KBART import failed due to insufficient permissions.",
-        "unknown": "KBART import failed due to internal errors. Please report this to an administator!"
+        "denied": "KBART processing failed due to insufficient permissions.",
+        "processing": "KBART processing was cancelled due to errors!",
+        "unknown": "KBART processing failed due to internal errors. Please report this to an administator!"
       }
     },
     "dryRun": {
@@ -387,6 +388,7 @@
     "delete": "Successfully deleted {0} {1}!"
   },
   "error": {
+    "label": "Error | Errors",
     "update": {
       "400": "{0} update contained errors!",
       "403": "{0} could not be updated due to missing user permissions.",
@@ -404,6 +406,10 @@
     },
     "bulkUpdate": {
       "403": "Not all {0} could be updated!"
+    },
+    "search": {
+      "unknown": "There have been errors while processing the search request!",
+      "input": "Could not complete search due to one or more search field inputs!"
     }
   },
   "header": {
@@ -592,6 +598,9 @@
         "confirm": {
           "kbartLocal": {
             "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'."
+          },
+          "kbartDryRun": {
+            "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'. The file is only processed as a dry run!"
           },
           "sourceUpdate": {
             "label": "Please confirm your changes to the package {0} and the processing of the KBART file located at '{1}'."

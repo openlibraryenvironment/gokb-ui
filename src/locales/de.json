@@ -339,8 +339,9 @@
       "preparing": "Vorbereitung...",
       "showResults": "Bericht anzeigen",
       "errors": {
-        "denied": "Der KBART-Import ist auf Grund von fehlenden Berechtigungen fehlgeschlagen.",
-        "unknown": "Der KBART-Import ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
+        "denied": "Der KBART-Verarbeitung ist auf Grund von fehlenden Berechtigungen fehlgeschlagen.",
+        "processing": "Die KBART-Verarbeitung ist fehlgeschlagen!",
+        "unknown": "Der KBART-Verarbeitung ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
       }
     },
     "dryRun": {
@@ -387,6 +388,7 @@
     "delete": "{0} {1} wurde gelöscht!"
   },
   "error": {
+    "label": "Fehler | Fehler",
     "update": {
       "400": "Bei der Aktualisierung sind Fehler aufgetreten!",
       "403": "{0} konnte nicht aktualisiert werden, da dieser Benutzer nicht dazu berechtigt ist.",
@@ -404,6 +406,10 @@
     },
     "bulkUpdate": {
       "403": "Nicht alle {0} konnten geändert werden!"
+    },
+    "search": {
+      "unknown": "Es gab Fehler bei der Verarbeitung der Suchanfrage!",
+      "input": "Es gab Probleme bei der Verarbeitung der Suchfilterangaben!"
     }
   },
   "header": {
@@ -592,6 +598,9 @@
         "confirm": {
           "kbartLocal": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}."
+          },
+          "kbartDryRun": {
+            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}. Beachten Sie, dass die Datei lediglich als Testdurchlauf verarbeitet wird!"
           },
           "sourceUpdate": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei unter der Adresse {1}."

@@ -7,22 +7,7 @@
     @submit="update"
   >
     <gokb-error-component :value="error" />
-    <span v-if="successMsg">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ localSuccessMessage }}
-      </v-alert>
-    </span>
-    <span v-if="errorMsg">
-      <v-alert
-        type="error"
-        dismissible
-      >
-        {{ localErrorMessage }}
-      </v-alert>
-    </span>
+    <v-snackbars :objects.sync="eventMessages"></v-snackbars>
     <gokb-section :no-tool-bar="true">
       <v-row>
         <v-col md="12">
@@ -344,10 +329,11 @@
   import providerServices from '@/shared/services/provider-services'
   import accountModel from '@/shared/models/account-model'
   import loading from '@/shared/models/loading'
+  import VSnackbars from 'v-snackbars'
 
   export default {
     name: 'EditProviderView',
-    components: { GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection },
+    components: { GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection, VSnackbars },
     extends: BaseComponent,
     props: {
       id: {
@@ -380,10 +366,8 @@
         offices: [],
         errors: {},
         updateUrl: undefined,
-        successMsg: undefined,
-        warningMsg: undefined,
+        eventMessages: [],
         version: undefined,
-        errorMsg: undefined,
         providerObject: {
           id: undefined,
           ids: [],
@@ -420,15 +404,6 @@
       localLastUpdated () {
         return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
-      localSuccessMessage () {
-        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.provider.label'), this.name]) : undefined
-      },
-      localWarningMessage () {
-        return this.warningMsg ? this.$i18n.t(this.warningMsg, [this.$i18n.tc('component.provider.label'), this.name]) : undefined
-      },
-      localErrorMessage () {
-        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.provider.label')]) : undefined
-      },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
       },
@@ -458,11 +433,11 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.successMsg = this.initMessageCode
+          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name]), color: 'success' })
         } else if (this.initMessageCode.includes('failure')) {
-          this.errorMsg = this.initMessageCode
+          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label')]), color: 'error', timeout: -1 })
         } else if (this.initMessageCode.includes('warning')) {
-          this.warningMsg = this.initMessageCode
+          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name]), color: 'warning', timeout: -1 })
         }
       }
 
@@ -476,6 +451,7 @@
       },
       async update () {
         var isUpdate = !!this.id
+        this.eventMessages = []
         const activeGroup = accountModel.activeGroup()
 
         const data = {
@@ -497,17 +473,17 @@
         if (response?.status < 400) {
           if (isUpdate) {
             this.reload()
-            this.successMsg = 'success.update'
+            this.eventMessages.push({ message: this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.allNames.name]), color: 'success' })
           } else {
             this.$router.push({ name: '/provider', params: { id: response.data?.id, initMessageCode: 'success.create' } })
           }
         } else {
           if (response.status === 409) {
-            this.errorMsg = 'error.update.409'
+            this.eventMessages.push({ message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.provider.label')]), color: 'error' })
           } else if (response.status === 500) {
-            this.errorMsg = 'error.general.500'
+            this.eventMessages.push({ message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.provider.label')]), color: 'error' })
           } else {
-            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+            this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.provider.label')]), color: 'error' })
             this.errors = response.data.error
           }
         }
@@ -517,9 +493,6 @@
           loading.startLoading()
           this.errors = {}
           this.pendingChanges = {}
-          this.successMsg = undefined
-          this.warningMsg = undefined
-          this.errorMsg = undefined
 
           const result = await this.catchError({
             promise: providerServices.getProvider(this.id, this.cancelToken.token),

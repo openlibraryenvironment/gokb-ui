@@ -5,14 +5,7 @@
     @submit="update"
   >
     <gokb-error-component :value="error" />
-    <span v-if="successMsg">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ localSuccessMessage }}
-      </v-alert>
-    </span>
+    <v-snackbars :objects.sync="eventMessages"></v-snackbars>
     <gokb-section :sub-title="$t('component.general.general')">
       <v-row>
         <v-col
@@ -173,6 +166,7 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
+  import VSnackbars from 'v-snackbars'
 
   import userServices from '@/shared/services/user-services'
 
@@ -180,7 +174,7 @@
 
   export default {
     name: 'EditUserView',
-    components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent, GokbCuratoryGroupSection },
+    components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent, GokbCuratoryGroupSection, VSnackbars },
     extends: BaseComponent,
     props: {
       id: {
@@ -255,9 +249,6 @@
       },
       valid () {
         return this.username && (this.isEdit || (this.password?.length > 5 && this.password?.length < 64))
-      },
-      localSuccessMessage () {
-        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.user.label'), this.username]) : undefined
       }
     },
     watch: {
@@ -274,7 +265,7 @@
         }
 
         if (this.isCreated) {
-          this.successMsg = 'success.create'
+          this.eventMessages.push(this.$i18n.t('success.create', [this.$i18n.tc('component.user.label'), this.username]))
         }
       }
     },
@@ -308,7 +299,7 @@
         // todo: check error code
         if (response.status < 400) {
           if (this.isEdit) {
-            this.successMsg = 'success.update'
+            this.eventMessages.push(this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username]))
             this.fetch()
           } else {
             this.$router.put({ path: '/user/', props: { id: response.data.id, isCreated: true } })
