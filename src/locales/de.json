@@ -399,7 +399,7 @@
     "general": {
       "500": "Die Anfrage ist fehlgeschlagen, bitte melden Sie den Vorfall oder versuchen Sie es später noch einmal.",
       "name": {
-        "malformedEnding" : "Das Ende dieses Namens ist nicht zulässig.",
+        "malformedEnding" : "Bitte entfernen sie alle Sonderzeichen am Ende des Namens.",
         "notUnique": "Dieser Name ist bereits vergeben!"
       }
     },

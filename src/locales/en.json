@@ -399,7 +399,7 @@
     "general": {
       "500": "The request failed, please report this to an admin or try again later.",
       "name": {
-        "malformedEnding" : "This name's end is malformed.",
+        "malformedEnding" : "Please remove all trailing special characters from the name.",
         "notUnique": "This name is already in use!"
       }
     },
