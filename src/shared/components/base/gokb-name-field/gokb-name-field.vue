@@ -129,7 +129,6 @@
         messageToConfirm: undefined,
         cancelToken: undefined,
         inValidName: undefined,
-        hasMalformedEnding: false
       }
     },
     computed: {
@@ -186,7 +185,6 @@
       },
       async selectNewName () {
         this.editedVal = this.editedVal.trim()
-        this.hasMalformedEnding = false
 
         if (this.checkDupes) {
           this.inValidName = undefined
