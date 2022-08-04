@@ -218,6 +218,7 @@
           this.hasMalformedEnding = true
           return false
         }
+        this.hasMalformedEnding = false
         return true
       },
       async checkForDupes (type) {
