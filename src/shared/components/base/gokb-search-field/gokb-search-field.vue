@@ -275,7 +275,7 @@
       this.items = this.value ? [this.value] : []
     },
     methods: {
-      async query ({ id, text }) {
+      async query ({ text }) {
         this.loading = true
         var primaryParam = {}
         primaryParam[this.mainParam] = text || this.value?.id
@@ -303,6 +303,7 @@
         this.items = []
         this.localValue = undefined
         this.$refs.autocomplete.lazyValue = undefined
+        this.$refs.autocomplete.cachedItems = []
       }
     }
   }

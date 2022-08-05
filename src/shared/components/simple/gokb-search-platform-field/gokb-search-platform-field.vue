@@ -21,11 +21,23 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      provider: {
+        type: Number,
+        required: false,
+        default: undefined
       }
     },
     created () {
       this.searchServicesResourceUrl = 'rest/platforms'
       this.searchParams = { max: 20, es: true }
+    },
+    watch: {
+      provider (val) {
+        this.searchParams['provider'] = val
+        this.clear()
+        this.query({ text: "" })
+      }
     },
     methods: {
       transform (result) {

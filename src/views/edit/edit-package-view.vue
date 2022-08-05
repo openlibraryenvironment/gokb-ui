@@ -170,6 +170,7 @@
                   v-model="packageItem.nominalPlatform"
                   :items="platformSelection"
                   :readonly="isReadonly"
+                  :provider="packageItem.provider?.id"
                   return-object
                 />
               </gokb-section>
