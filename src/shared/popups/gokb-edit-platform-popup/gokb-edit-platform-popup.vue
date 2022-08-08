@@ -189,13 +189,18 @@
           this.platform = val
           this.platformUrl = val.primaryUrl
         }
+        else{
+          this.platform.id = undefined
+        }
       },
       'platformUrl'(val) {
-        if (!!val) {
-          if (typeof val === 'object') {
-            this.platform = val
-          }
-          else if (this.platform?.primaryUrl !== val) {
+        if (!!val && typeof val === 'object') {
+          this.platform = val
+          this.platformUrl = val.primaryUrl
+        }
+        else {
+          this.platform.id = undefined
+          if (this.platform?.primaryUrl !== val) {
             this.platform.primaryUrl = val
           }
         }
