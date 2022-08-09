@@ -208,7 +208,7 @@
         }
       },
       'platformUrl'(val) {
-        if (!!val && typeof val === 'object') {
+        if (!this.selected && !!val && typeof val === 'object') {
           this.platformName = val
         }
         else if (this.platform?.primaryUrl !== val) {
