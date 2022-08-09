@@ -48,6 +48,7 @@
           disable-if-linked
         />
         <gokb-url-field
+          v-else
           v-model="platformUrl"
           required
         />
