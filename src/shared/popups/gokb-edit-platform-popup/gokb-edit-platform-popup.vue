@@ -19,9 +19,9 @@
     >
       <v-col>
         <gokb-search-platform-field
-          v-model="platform.name"
+          v-model="platformName"
           :items="items"
-          :readonly="isReadonly"
+          :readonly="isReadonly || !!selected"
           :label="$tc('component.general.name')"
           :query-fields="[]"
           required
@@ -34,6 +34,7 @@
     <v-row>
       <v-col>
         <gokb-search-platform-field
+          v-if="!selected"
           v-model="platformUrl"
           :items="items"
           :readonly="isReadonly"
@@ -45,6 +46,10 @@
           return-object
           allow-new-values
           disable-if-linked
+        />
+        <gokb-url-field
+          v-model="platformUrl"
+          required
         />
       </v-col>
     </v-row>
@@ -121,6 +126,7 @@
         errors: {},
         conflictLinks: [],
         platformUrl: undefined,
+        platformName: undefined,
         items: [],
         updateUrl: undefined,
         platform: {
@@ -172,32 +178,41 @@
     created () {
       if (this.selected) {
         // edit existing platform
-        this.platform = {
-          name: this.selected.name,
-          primaryUrl: this.selected.primaryUrl,
-          id: this.selected.id
-        }
-        this.platformUrl = this.selected.primaryUrl
+        this.platformName = this.selected
 
         this.updateUrl = this.selected.updateUrl
         this.items = [this.platform]
       }
     },
     watch: {
-      'platform.name'(val) {
-        if (!!val && typeof val === 'object') {
-          this.platform = val
-          this.platformUrl = val.primaryUrl
-        }
-      },
-      'platformUrl'(val) {
+      'platformName'(val) {
         if (!!val) {
           if (typeof val === 'object') {
             this.platform = val
+            this.platformUrl = val.primaryUrl
+          } else if (val !== this.platform.name) {
+            this.platform = {
+              name: val,
+              primaryUrl: undefined,
+              id: undefined
+            }
+            this.platformUrl = undefined
           }
-          else if (this.platform?.primaryUrl !== val) {
-            this.platform.primaryUrl = val
+        }
+        else {
+          this.platform = {
+            name: undefined,
+            primaryUrl: undefined,
+            id: undefined
           }
+        }
+      },
+      'platformUrl'(val) {
+        if (!!val && typeof val === 'object') {
+          this.platformName = val
+        }
+        else if (this.platform?.primaryUrl !== val) {
+          this.platform.primaryUrl = val
         }
       }
     },
