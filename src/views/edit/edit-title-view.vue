@@ -6,6 +6,7 @@
     @submit="update"
   >
     <gokb-error-component :value="error" />
+    <v-snackbars :objects.sync="eventMessages"></v-snackbars>
     <span v-if="successMsg">
       <v-alert
         type="success"
@@ -463,10 +464,11 @@
   import accountModel from '@/shared/models/account-model'
   import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
   import loading from '@/shared/models/loading'
+  import VSnackbars from 'v-snackbars'
 
   export default {
     name: 'EditTitleView',
-    components: { GokbErrorComponent, GokbAlternateNamesSection },
+    components: { GokbErrorComponent, GokbAlternateNamesSection, VSnackbars },
     extends: BaseComponent,
     props: {
       id: {
@@ -524,9 +526,7 @@
         currentType: undefined,
         updateUrl: undefined,
         deleteUrl: undefined,
-        successMsg: undefined,
-        warningMsg: undefined,
-        errorMsg: undefined,
+        eventMessages: [],
         allTypes: [
           { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
           { name: this.$i18n.tc('component.title.type.Book'), id: 'Book' },
@@ -562,15 +562,6 @@
       },
       localLastUpdated () {
         return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
-      },
-      localSuccessMessage () {
-        return this.successMsg ? this.$i18n.t(this.successMsg, [this.typeDisplay, this.allNames.name]) : undefined
-      },
-      localWarningMessage () {
-        return this.warningMsg ? this.$i18n.t(this.warningMsg, [this.typeDisplay, this.allNames.name]) : undefined
-      },
-      localErrorMessage () {
-        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.typeDisplay]) : undefined
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
@@ -608,11 +599,11 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.successMsg = this.initMessageCode
+          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]), color: 'success' })
         } else if (this.initMessageCode.includes('failure')) {
-          this.errorMsg = this.initMessageCode
+          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]), color: 'error', timeout: -1 })
         } else if (this.initMessageCode.includes('warning')) {
-          this.warningMsg = this.initMessageCode
+          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]), color: 'warning', timeout: -1 })
         }
       }
     },
@@ -666,18 +657,18 @@
           } else {
             if (isUpdate) {
               this.reload()
-              this.successMsg = 'success.update'
+              this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]), color: 'success' })
             } else {
               this.$router.push({ name: '/title', params: { id: response.data?.id, initMessageCode: 'success.create' } })
             }
           }
         } else {
           if (response.status === 409) {
-            this.errorMsg = 'error.update.409'
+            this.eventMessages.push({ message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.title.label')]), color: 'error', timeout: -1 })
           } else if (response.status === 500) {
-            this.errorMsg = 'error.general.500'
+            this.eventMessages.push({ message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.title.label')]), color: 'error', timeout: -1 })
           } else {
-            this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+            this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.title.label')]), color: 'error', timeout: -1 })
             this.errors = response.data.error
           }
         }

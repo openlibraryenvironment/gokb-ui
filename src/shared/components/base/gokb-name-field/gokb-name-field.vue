@@ -128,7 +128,7 @@
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
         cancelToken: undefined,
-        inValidName: undefined
+        inValidName: undefined,
       }
     },
     computed: {
@@ -149,6 +149,7 @@
       rules () {
         return [
           value => value?.length > 0 || this.$i18n.t('validation.missingName'),
+          value => !/.*([(\-]|\(\))$/.test(value) || this.$i18n.t('error.general.name.malformedEnding'),
           value => !this.inValidName || value.trim().toLowerCase() !== this.inValidName || this.$i18n.t('error.general.name.notUnique')
         ]
       },

@@ -7,63 +7,26 @@
     @submit="showCreatePackageConfirm"
   >
     <gokb-error-component :value="error" />
-    <v-snackbar
-      :value="!!successMsg"
-      color="success"
-      timeout="-1"
-    >
-      {{ localSuccessMessage }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          icon
-          color="white"
-          @click="successMsg = undefined"
-        >
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
-    <span v-if="errorMsg">
-      <v-snackbar
-        :value="!!errorMsg"
-        color="error"
-        timeout="-1"
-      >
-        {{ localErrorMessage }}
-
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            icon
-            color="white"
-            @click="errorMsg = undefined"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
-    </span>
-    <span v-if="importJob.result === 'success'">
-      <v-snackbar
-        :value="!!importJob"
-        color="success"
-        timeout="-1"
+    <v-snackbars ref="snackbars" :objects.sync="eventMessages"></v-snackbars>
+    <span v-if="importJob?.result === 'success'">
+      <v-alert
+        type="success"
+        dismissible
       >
         {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
         <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
-
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            icon
-            color="white"
-            @click="importJob = {}"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
+      </v-alert>
     </span>
-    <span v-else-if="importJob.result === 'info'">
+    <span v-if="importJob?.result === 'error'">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ $t('kbart.transmission.error.processing') }}
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+      </v-alert>
+    </span>
+    <span v-else-if="importJob?.result === 'info'">
       <v-alert
         type="info"
         dismissible
@@ -80,7 +43,7 @@
         </span>
       </v-alert>
     </span>
-    <span v-if="matchingJob.result === 'success'">
+    <span v-if="matchingJob?.result === 'success'">
       <v-alert
         type="success"
         dismissible
@@ -89,7 +52,16 @@
         <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
       </v-alert>
     </span>
-    <span v-else-if="matchingJob.result === 'info'">
+    <span v-if="matchingJob?.result === 'error'">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ $t(matchingJob.messageCode) }}
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+      </v-alert>
+    </span>
+    <span v-else-if="matchingJob?.result === 'info'">
       <v-alert
         type="info"
         dismissible
@@ -105,45 +77,6 @@
           </div>
         </span>
       </v-alert>
-    </span>
-    <span v-if="importJob.result === 'error'">
-      <v-snackbar
-        :value="importJob.result"
-        color="error"
-        timeout="-1"
-      >
-        {{ localErrorMessage }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
-
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            icon
-            color="white"
-            @click="importJob = {}"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
-    </span>
-    <span v-if="importJob.result === 'error' && !!matchingJob.messageCode">
-      <v-snackbar
-        :value="importJob.result"
-        color="error"
-        timeout="-1"
-      >
-        {{ $t(matchingJob.messageCode) }}
-
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            icon
-            color="white"
-            @click="matchingJob = {}"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
     </span>
     <gokb-edit-job-popup
       v-if="editJobPopupVisible"
@@ -708,6 +641,7 @@
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
+  import VSnackbars from 'v-snackbars'
 
   const ROWS_PER_PAGE = 10
 
@@ -739,7 +673,8 @@
       GokbMaintenanceCycleField,
       GokbAlternateNamesSection,
       GokbConfirmationPopup,
-      GokbEditJobPopup
+      GokbEditJobPopup,
+      VSnackbars
     },
     extends: BaseComponent,
     props: {
@@ -773,6 +708,7 @@
         notFound: false,
         version: undefined,
         errors: {},
+        eventMessages: [],
         uuid: undefined,
         isCurator: false,
         showSubmitConfirm: false,
@@ -816,9 +752,6 @@
         },
         allCuratoryGroups: [],
         sourceItem: undefined,
-        successMsg: undefined,
-        warningMsg: undefined,
-        errorMsg: undefined,
         kbartResult: undefined,
         titlesHeader: TITLES_HEADER,
         titlesOptions: {
@@ -892,15 +825,6 @@
       localListVerifiedDate () {
         return this.listVerifiedDate ? this.buildDateString(this.listVerifiedDate) : ''
       },
-      localSuccessMessage () {
-        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
-      },
-      localWarningMessage () {
-        return this.warningMsg ? this.$i18n.t(this.warningMsg, [this.$i18n.tc('component.package.label'), this.packageItem.name]) : undefined
-      },
-      localErrorMessage () {
-        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.package.label')]) : undefined
-      },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
       },
@@ -925,11 +849,15 @@
         if (value) {
           this.reload()
         }
+
+        this.eventMessages = []
       },
       '$i18n.locale' (l) {
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.package.label') + ' – ' + this.allNames.name
         }
+
+        this.eventMessages = []
       },
       isValid (valid) {
         if (this.isEdit && !this.isReadonly && !valid) {
@@ -949,11 +877,11 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.successMsg = this.initMessageCode
+          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success' })
         } else if (this.initMessageCode.includes('failure')) {
-          this.errorMsg = this.initMessageCode
+          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
         } else if (this.initMessageCode.includes('warning')) {
-          this.warningMsg = this.initMessageCode
+          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]), color: 'warning', timeout: -1 })
         }
       }
 
@@ -1017,7 +945,8 @@
       showCreatePackageConfirm (form) {
         if (this.isValid) {
           if (this.kbart?.selectedFile) {
-            this.submitConfirmationMessage = { text: 'component.package.navigation.confirm.kbartLocal.label', vars: [this.allNames.name, this.kbart.selectedFile.name] }
+            let code = this.kbart.dryRun ? 'component.package.navigation.confirm.kbartDryRun.label' : 'component.package.navigation.confirm.kbartLocal.label'
+            this.submitConfirmationMessage = { text: code, vars: [this.allNames.name, this.kbart.selectedFile.name] }
           } else if (this.urlUpdate) {
             this.submitConfirmationMessage = { text: 'component.package.navigation.confirm.sourceUpdate.label', vars: [this.allNames.name, this.sourceItem.url] }
           } else {
@@ -1033,9 +962,7 @@
       async createPackage () {
         loading.startLoading()
         var isUpdate = !!this.id
-        this.successMsg = undefined
-        this.warningMsg = undefined
-        this.errorMsg = undefined
+        this.eventMessages = []
 
         if (this.importJob?.status !== 'info') {
           this.importJob = {}
@@ -1111,18 +1038,19 @@
               })
 
               this.kbart = undefined
-              loading.stopLoading()
 
               if (kbartResult.status === 403) {
-                this.errorMsg = 'kbart.transmission.error.denied'
-              } else if (kbartResult.status >= 400) {
-                this.errorMsg = 'kbart.transmission.error.unknown'
+                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.denied'), color: 'error', timeout: -1 })
+              } else if (kbartResult.status >= 400 && kbartResult.status < 500) {
+                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.processing'), color: 'error', timeout: -1 })
+              } else if (kbartResult.status >= 500) {
+                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.unknown'), color: 'error', timeout: -1 })
               }
 
               if (isUpdate) {
                 this.step = 1
+                this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success' })
                 this.reload()
-                this.successMsg = this.isEdit ? 'success.update' : 'success.create'
 
                 if (kbartResult?.data?.jobId) {
                   this.loadImportJobStatus(kbartResult?.data?.jobId)
@@ -1140,17 +1068,17 @@
               })
 
               if (sourceUpdateResult.status === 403) {
-                this.errorMsg = 'kbart.transmission.error.denied'
-              } else if (sourceUpdateResult.status >= 400) {
-                this.errorMsg = 'kbart.transmission.error.unknown'
+                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.denied', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+              } else if (sourceUpdateResult.status >= 400 && sourceUpdateResult.status < 500) {
+                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.processing', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+              } else if (sourceUpdateResult.status >= 500) {
+                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.unknown', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
               }
-
-              loading.stopLoading()
 
               if (isUpdate) {
                 this.step = 1
+                this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success' })
                 this.reload()
-                this.successMsg = this.isEdit ? 'success.update' : 'success.create'
 
                 if (sourceUpdateResult?.data?.jobId) {
                   this.loadImportJobStatus(sourceUpdateResult?.data?.jobId)
@@ -1159,43 +1087,43 @@
                 this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartJob: sourceUpdateResult?.data?.jobId, initMessageCode: 'success.create' } })
               }
             } else {
-              loading.stopLoading()
 
               if (isUpdate) {
                 this.step = 1
                 this.reload()
-                this.successMsg = this.isEdit ? 'success.update' : 'success.create'
+                this.eventMessages.push({ message: this.$i18n.t((this.isEdit ? 'success.update' : 'success.create'), [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success', timeout: -1 })
               } else {
                 this.$router.push({ name: '/package', params: { id: this.packageItem.id, initMessageCode: 'success.create' } })
               }
             }
           } else {
-            loading.stopLoading()
             if (response.status === 409) {
-              this.errorMsg = 'error.update.409'
+              this.eventMessages.push({ message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
             } else if (response.status === 500) {
-              this.errorMsg = 'error.general.500'
+              this.eventMessages.push({ message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
             } else {
-              this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+              this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
               this.errors = response.data.error
               this.step = 1
             }
           }
         }
         else {
+          this.eventMessages.push({message: this.$i18n.t('validation.hasErrors'), color: 'error', timeout: -1})
+        }
+
+        if (loading.isLoading()) {
           loading.stopLoading()
-          this.errorMsg = 'validation.hasErrors'
         }
       },
       async reload () {
         if (this.isEdit) {
-          loading.startLoading()
+          if(!loading.isLoading()) {
+            loading.startLoading()
+          }
+
           this.errors = {}
           this.newTipps = []
-          this.errors = {}
-          this.successMsg = undefined
-          this.warningMsg = undefined
-          this.errorMsg = undefined
 
           const result = await this.catchError({
             promise: packageServices.getPackage(this.id, this.cancelToken.token),
@@ -1282,8 +1210,10 @@
 
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
+                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.processing'), color: 'error', importResult: true })
               } else {
                 jobInfo.result = 'success'
+                this.eventMessages.push({ message: this.$i18n.t(jobInfo.dryRun ? 'kbart.dryRun.success' : 'kbart.transmission.success'), color: 'success', importResult: true })
 
                 if (jobResult.data.job_result.matchingJob) {
                   this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
@@ -1328,8 +1258,10 @@
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
                 jobInfo.messageCode = jobResult.data.job_result?.messageCode
+                this.eventMessages.push({ message: this.$i18n.t(jobResult.data.job_result?.messageCode), color: 'error', timeout: -1, matchingResult: true })
               } else {
                 jobInfo.result = 'success'
+                this.eventMessages.push({ message: this.$i18n.t('kbart.titleMatch.success'), color: 'success', timeout: -1, importResult: true })
               }
 
               finished = true

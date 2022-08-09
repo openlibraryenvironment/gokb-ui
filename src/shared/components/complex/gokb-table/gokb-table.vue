@@ -16,7 +16,7 @@
       :item-key="itemKey"
       :loading="showLoading"
       :show-select="showSelect"
-      :must-sort="true"
+      :must-sort="mustSort"
       dense
       @update:sort-by="changeSortBy"
       @update:sort-desc="changeSortOrder"
@@ -242,6 +242,11 @@
         required: false,
         default: false
       },
+      mustSort: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
       showLoading: {
         type: Boolean,
         required: false,
@@ -262,7 +267,7 @@
         return [...this.headers, { value: '_pending', sortable: false }, { value: 'action', sortable: false }].filter(header => ((!this.editable ? header.value !== '_pending' : true) && (!this.actions ? header.value !== 'action' : true))) // with delete icon
       },
       pages () {
-        return Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage)
+        return Math.min(Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage), this.options.page + 10, 1000)
       },
       showSelect () {
         return this.editable || !this.hideSelect

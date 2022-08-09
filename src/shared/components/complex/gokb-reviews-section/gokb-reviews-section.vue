@@ -9,7 +9,7 @@
   >
     <template #buttons>
       <v-switch
-        v-if="isPackageComponent"
+        v-if="!!reviewComponent"
         v-model="fetchTitleReviews"
         class="pt-4 pr-6"
         :label="$tc('component.title.label', 2)"

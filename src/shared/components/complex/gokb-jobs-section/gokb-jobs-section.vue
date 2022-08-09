@@ -184,10 +184,11 @@
 
       this.autoJobRefresh = this.autoRefresh
 
-      if (this.autoJobRefresh) {
-        this.interval = setInterval(function () {
-          this.fetchJobs()
-        }.bind(this), 1000)
+      this.startAutoUpdate()
+    },
+    activated () {
+      if (this.autoJobRefresh && !this.interval) {
+        this.startAutoUpdate()
       }
     },
     deactivated () {

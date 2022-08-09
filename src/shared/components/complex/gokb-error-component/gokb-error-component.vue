@@ -13,48 +13,36 @@
     <v-dialog v-model="show">
       <v-card class="elevation-12">
         <v-toolbar color="error">
-          <v-toolbar-title>Fehler</v-toolbar-title>
+          <v-toolbar-title>{{ $tc('error.label') }}</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
+          <div class="my-6">
+            <vue-json-pretty :data="response.data" />
+          </div>
           <v-expansion-panels>
             <v-expansion-panel>
               <v-expansion-panel-header>
-                <div class="text-h6">Message</div>
+                <div class="text-h6">Details</div>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <code>{{ message }}</code>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-            <v-expansion-panel>
-              <v-expansion-panel-header>
-                <div class="text-h6">Stack</div>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <code>{{ stack }}</code>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-            <v-expansion-panel>
-              <v-expansion-panel-header>
-                <div class="text-h6">Config</div>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <vue-json-pretty :data="config" />
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-            <v-expansion-panel>
-              <v-expansion-panel-header>
-                <div class="text-h6">Request</div>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <vue-json-pretty :data="request" />
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-            <v-expansion-panel>
-              <v-expansion-panel-header>
-                <div class="text-h6">Response</div>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <vue-json-pretty :data="response" />
+                <v-expansion-panels>
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>
+                      <div class="text-h6">Request</div>
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                      <vue-json-pretty :data="request" />
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>
+                      <div class="text-h6">Response</div>
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                      <vue-json-pretty :data="response" />
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -77,6 +65,7 @@
 <script>
   import VueJsonPretty from 'vue-json-pretty'
   import 'vue-json-pretty/lib/styles.css'
+  import accountModel from '@/shared/models/account-model'
 
   export default {
     name: 'GokbErrorComponent',
@@ -108,6 +97,9 @@
       },
       stack () {
         return this.value?.response?.data?.StackTrace || this.value?.stack
+      },
+      showDetails() {
+        return accountModel.loggedIn() && accountModel.hasRole('ROLE_SUPERUSER')
       }
     },
     methods: {

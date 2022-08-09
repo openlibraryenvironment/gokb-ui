@@ -48,7 +48,7 @@
           [
             {
               type: 'GokbTextField',
-              name: 'label',
+              name: 'qsName',
               properties: {
                 label: this.$i18n.t('component.general.name')
               }

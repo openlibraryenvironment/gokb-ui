@@ -5,6 +5,7 @@
     @submit="search"
   >
     <gokb-error-component :value="error" />
+    <v-snackbars ref="snackbars" :objects.sync="eventMessages"></v-snackbars>
     <gokb-section :sub-title="searchHeader">
       <template v-for="(row, rowIndex) of searchInputFields">
         <v-row
@@ -116,12 +117,13 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import selection from '@/shared/models/selection'
   import accountModel from '@/shared/models/account-model'
+  import VSnackbars from 'v-snackbars'
 
   const ROWS_PER_PAGE = 10
 
   export default {
     name: 'BaseSearch',
-    components: { GokbErrorComponent, GokbConfirmationPopup },
+    components: { GokbErrorComponent, GokbConfirmationPopup, VSnackbars },
     extends: BaseComponent,
     data () {
       return {
@@ -147,7 +149,8 @@
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
         accessible: true,
-        loading: false
+        loading: false,
+        eventMessages: []
       }
     },
     computed: {
@@ -318,7 +321,8 @@
           }, this.cancelToken.token),
           instance: this
         })
-        if (result.status === 200) {
+
+        if (result?.status === 200) {
           const { data: { data, _pagination } } = result
           // console.log(data, _pagination, _links)
           if (!page) {
@@ -329,6 +333,11 @@
           this.selectedItems = []
           this.totalNumberOfItems = _pagination.total
           this.resultItems = this._transformForTable(data)
+        }
+        else {
+          this.selectedItems = []
+          this.totalNumberOfItems = 0
+          this.eventMessages.push({ message: this.$i18n.t(result?.data?.messageCode || 'error.search.unknown'), color: 'error' })
         }
 
         this.loading = false
