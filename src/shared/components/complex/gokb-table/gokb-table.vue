@@ -154,14 +154,16 @@
           >
             mdi-check-bold
           </v-icon>
-          <a href="extlink">
-            v:if="!!extlink
+          <a
+            v:if="!!extlink"
+            href="extlink"
+          >
             <v-icon
               style="cursor:pointer"
               :title="$t('btn.linkext')"
               small
             >
-              mdi-pencil
+              mdi-open-in-new
             </v-icon>
           </a>
         </div>
@@ -201,6 +203,11 @@
         type: Boolean,
         required: false,
         default: false,
+      },
+      extlink: {
+        type: String,
+        required: false,
+        default: undefined
       },
       headers: {
         type: Array,
