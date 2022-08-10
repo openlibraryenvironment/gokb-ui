@@ -1320,11 +1320,11 @@
         this.packageItem.editStatus = data.editStatus
         this.version = data.version
         this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
+        this.updateUrl = data._links?.update?.href || null
+        this.deleteUrl = data._links?.delete?.href || null
         this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
         this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!this.updateUrl }))
         this.reviewRequests = data._embedded.reviewRequests
-        this.updateUrl = data._links?.update?.href || null
-        this.deleteUrl = data._links?.delete?.href || null
         this.providerSelect = data.provider
         this.platformSelect = data.nominalPlatform
         this.titleCount = data._tippCount

@@ -156,7 +156,7 @@
           </v-icon>
           <a
             v:if="!!extlink"
-            href="extlink"
+            :href="extlink"
           >
             <v-icon
               style="cursor:pointer"

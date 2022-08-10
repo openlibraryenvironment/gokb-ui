@@ -132,6 +132,7 @@
       },
       identifiers () {
         return [...this.value]
+          .map(item => ({ ...item, extlink: item.namespace?.baseurl ? item.namespace.baseurl+item.id : undefined }))
           .sort(({ value: first }, { value: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
