@@ -10,10 +10,9 @@ const requestNamespaces = (baseServices, cancelToken) => {
 }
 
 const api = (baseServices) => ({
-  fetchNamespacesList (cancelToken) {
-    var allNss = requestNamespaces(baseServices, cancelToken)
-    for (ns of allNss.data) {
-      console.log("Adding namespace: " + JSON.stringify(ns))
+  async fetchNamespacesList (cancelToken) {
+    var allNss = await requestNamespaces(baseServices, cancelToken)
+    for (const ns of allNss.data?.data) {
       namespacesModel.addNamespace(ns)
     }
   },
