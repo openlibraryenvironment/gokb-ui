@@ -354,7 +354,7 @@
           </v-row>
           <gokb-tipps-section
             ref="tipps"
-            :pkg="parseInt(id)"
+            :pkg="id"
             :filter-align="isEdit"
             :platform="packageItem.nominalPlatform"
             :provider="packageItem.provider"
