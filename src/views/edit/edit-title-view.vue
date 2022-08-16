@@ -331,7 +331,7 @@
             class="mt-4"
           >
             <gokb-tipps-section
-              :ttl="parseInt(id)"
+              :ttl="id"
               :show-title="false"
               :disabled="true"
               :api-errors="errors.tipps"
@@ -378,7 +378,7 @@
       />
       <gokb-tipps-section
         v-if="id"
-        :ttl="parseInt(id)"
+        :ttl="id"
         :disabled="true"
         :api-errors="errors.tipps"
       />
