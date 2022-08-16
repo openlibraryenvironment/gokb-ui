@@ -155,6 +155,7 @@
             mdi-check-bold
           </v-icon>
           <a
+            v-if="extlink(item)"
             :href="extlink(item)"
           >
             <v-icon
