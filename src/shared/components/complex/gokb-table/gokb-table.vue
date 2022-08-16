@@ -155,8 +155,7 @@
             mdi-check-bold
           </v-icon>
           <a
-            v:if="!!extlink"
-            :href="extlink"
+            :href="extlink(item)"
           >
             <v-icon
               style="cursor:pointer"
@@ -203,11 +202,6 @@
         type: Boolean,
         required: false,
         default: false,
-      },
-      extlink: {
-        type: String,
-        required: false,
-        default: undefined
       },
       headers: {
         type: Array,
@@ -318,6 +312,9 @@
       },
       checkEditItemPopupVisible (oid) {
         return this.editItemPopupVisible === oid
+      },
+      extlink (item) {
+        return item.extlink
       }
     }
   }

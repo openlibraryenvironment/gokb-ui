@@ -56,6 +56,7 @@
 <script>
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import namespaceServices from '@/shared/services/namespace-services'
 
   const ROWS_PER_PAGE = 10
 
@@ -132,7 +133,7 @@
       },
       identifiers () {
         return [...this.value]
-          .map(item => ({ ...item, extlink: item.namespace?.baseurl ? item.namespace.baseurl+item.id : undefined }))
+          .map(item => ({ ...item, extlink: namespaceServices.getBaseurl(item.namespace) ? namespaceServices.getBaseurl(item.namespace)+item.id : undefined }))
           .sort(({ value: first }, { value: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
