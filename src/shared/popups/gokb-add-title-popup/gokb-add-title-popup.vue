@@ -608,7 +608,7 @@
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isJournal () {
-        return this.title?.type === 'Journal' || this.title?.type?.id === 'journal' || this.titleType?.id === 'Journal' || this.packageTitleItem.publicationType?.name === 'Serial'
+        return this.title?.type === 'Journal' || this.title?.type === 'Serial' || this.title?.type?.id === 'journal' || this.titleType?.id === 'Journal' || this.packageTitleItem.publicationType?.name === 'Serial'
       },
       isBook () {
         return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph' || this.packageTitleItem.publicationType?.name === 'Monograph'
