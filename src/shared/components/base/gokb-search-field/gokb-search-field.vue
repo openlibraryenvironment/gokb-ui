@@ -80,10 +80,10 @@
         <div :style="{ color: (item.disabled ? '#888888' : 'inherit') }">
           {{ item[itemText] }}
           <span>
-            <v-icon :color= "statusColor('{{ item.status }}')"
+            <v-icon :color="STATUS_CONFIG[item.status.name].color"
               v-if="!!item"
             >
-              {{ statusIcon(item.status) }}
+              {{ STATUS_CONFIG[item.status.name].icon }}
             </v-icon>
           </span>
           <v-chip
@@ -279,6 +279,14 @@
         text && text !== this.value?.value && text.length > 2 && this.query({ text })
       }
     },
+    created () {
+      this.STATUS_CONFIG = {
+        Current: { icon: 'mdi-check-circle', color: 'success'},
+        Retired: { icon: 'mdi-close-circle', color: 'amber'},
+        Deleted: { icon: 'mdi-delete', color: 'error'},
+        Expected: { icon: 'mdi-clock', color: 'info'}
+      }
+    },
     mounted () {
       this.searchServices = searchServices(this.searchServicesResourceUrl)
       this.items = this.value ? [this.value] : []
@@ -312,20 +320,6 @@
         this.items = []
         this.localValue = undefined
         this.$refs.autocomplete.lazyValue = undefined
-      },
-      statusColor (status) {
-        if (status?.name == "Current") return "success"
-        if (status?.name == "Deleted") return "red"
-        if (status?.name == "Expected") return "info"
-        if (status?.name == "Retired") return "amber"
-        return "default"
-      },
-      statusIcon (status) {
-        if (status?.name == "Current") return "mdi-check-circle"
-        if (status?.name == "Deleted") return "mdi-delete"
-        if (status?.name == "Expected") return "mdi-clock"
-        if (status?.name == "Retired") return "mdi-close-circle"
-        return undefined
       }
     }
   }
