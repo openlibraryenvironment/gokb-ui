@@ -461,6 +461,7 @@
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import titleServices from '@/shared/services/title-services'
+  import namespaceServices from '@/shared/services/namespace-services'
   import accountModel from '@/shared/models/account-model'
   import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
   import loading from '@/shared/models/loading'
