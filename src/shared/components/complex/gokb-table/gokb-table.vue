@@ -112,6 +112,18 @@
           @edit="editItem"
         />
         <div style="white-space:nowrap">
+          <a
+            v-if="!!item.extlink"
+            :href="item.extlink"
+          >
+            <v-icon
+              style="cursor:pointer"
+              :title="$t('btn.linkext')"
+              small
+            >
+              mdi-open-in-new
+            </v-icon>
+          </a>
           <v-icon
             v-if="item.popup"
             class="mr-2"
@@ -154,18 +166,6 @@
           >
             mdi-check-bold
           </v-icon>
-          <a
-            v-if="!!item.extlink"
-            :href="item.extlink"
-          >
-            <v-icon
-              style="cursor:pointer"
-              :title="$t('btn.linkext')"
-              small
-            >
-              mdi-open-in-new
-            </v-icon>
-          </a>
         </div>
       </template>
     </v-data-table>

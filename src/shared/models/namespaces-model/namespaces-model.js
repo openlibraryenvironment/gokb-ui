@@ -8,7 +8,7 @@ const api = (vue) => {
       }
     },
     isValid (ns) {
-      if (!ns || !ns.name || !ns.value) {
+      if (!ns || !ns.value) {
         return false
       }
       return true
