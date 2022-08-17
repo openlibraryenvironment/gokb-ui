@@ -721,7 +721,7 @@
         this.titleItem.publishedFrom = this.buildDateString(data.publishedFrom)
         this.titleItem.publishedTo = this.buildDateString(data.publishedTo)
         this.publishers = data._embedded.publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!this.updateUrl }))
-        this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), extlink: !!(namespaceServices.getBaseurl(namespace)) ? namespaceServices.getBaseurl(namespace)+"foo"+value : undefined, isDeletable: !!this.updateUrl }))
+        this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
         this.tipps = data._embedded.tipps || []
         this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
         this.allNames = { name: data.name, alts: this.allAlternateNames }
