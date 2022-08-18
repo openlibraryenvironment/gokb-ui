@@ -79,10 +79,10 @@
       <span>
         <div :style="{ color: (item.disabled ? '#888888' : 'inherit') }">
           {{ item[itemText] }}
-          <span>
-            <v-icon :color= "statusColor('{{ item.status }}')"
-              v-if="!!item"
-            >
+          <span
+            v-if="!!item.status"
+          >
+            <v-icon :color= "statusColor(item.status)">
               {{ statusIcon(item.status) }}
             </v-icon>
           </span>
@@ -146,6 +146,15 @@
         >
           {{ data.item[itemText] }}
         </span>
+      </span>
+    </template>
+    <template #item="{ item }">
+      <span
+        v-if="!!item.status"
+      >
+        <v-icon :color= "statusColor(item.status)">
+          {{ statusIcon(item.status) }}
+        </v-icon>
       </span>
     </template>
   </v-autocomplete>
