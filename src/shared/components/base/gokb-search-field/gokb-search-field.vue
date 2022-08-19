@@ -82,7 +82,7 @@
           <span
             v-if="!!item.status"
           >
-            <v-icon :color= "statusColor(item.status)">
+            <v-icon :color="statusColor(item.status)">
               {{ statusIcon(item.status) }}
             </v-icon>
           </span>
@@ -149,10 +149,11 @@
       </span>
     </template>
     <template #item="{ item }">
+      {{ item[itemText] }}
       <span
         v-if="!!item.status"
       >
-        <v-icon :color= "statusColor(item.status)">
+        <v-icon :color="statusColor(item.status)">
           {{ statusIcon(item.status) }}
         </v-icon>
       </span>
