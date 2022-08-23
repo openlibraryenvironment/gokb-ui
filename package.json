@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "axios": "^0.25.0",
-    "core-js": "^3.21.0",
+    "core-js": "^3.24.1",
     "jschardet": "^3.0.0",
     "register-service-worker": "^1.7.2",
     "v-snackbars": "^3.2.7",
@@ -43,7 +43,6 @@
     "@vue/cli-plugin-router": "^5.0.3",
     "@vue/cli-service": "^5.0.3",
     "@vue/eslint-config-standard": "^6.1.0",
-    "core-js": "^3.21.1",
     "css-loader": "^5.2.7",
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.25.4",
