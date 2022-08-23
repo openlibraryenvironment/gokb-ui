@@ -396,7 +396,7 @@
                   :editable="!!updateUrl"
                 />
               </v-col>
-              <v-col cols="3">
+              <v-col cols="6" xl="3">
                 <gokb-uuid-field
                   v-if="uuid"
                   label="UUID"
