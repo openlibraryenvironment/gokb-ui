@@ -339,7 +339,7 @@
       "success": "Der KBART-Import wurde erfolgreich abgeschlossen!",
       "preparing": "Vorbereitung...",
       "showResults": "Bericht anzeigen",
-      "errors": {
+      "error": {
         "denied": "Der KBART-Verarbeitung ist auf Grund von fehlenden Berechtigungen fehlgeschlagen.",
         "processing": "Die KBART-Verarbeitung ist fehlgeschlagen!",
         "unknown": "Der KBART-Verarbeitung ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
@@ -461,7 +461,8 @@
         "Book": "Monographie | Monographien",
         "Database": "Datenbank | Datenbanken",
         "Other": "Andere | Andere",
-        "Title": "Andere | Andere"
+        "Title": "Andere | Andere",
+        "Any": "Alle | Alle"
       },
       "OAStatus": {
         "label": "OA-Status",

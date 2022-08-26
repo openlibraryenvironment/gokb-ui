@@ -339,7 +339,7 @@
       "success": "The KBART Import has successfully finished.",
       "preparing": "Preparing...",
       "showResults": "Show Report",
-      "errors": {
+      "error": {
         "denied": "KBART processing failed due to insufficient permissions.",
         "processing": "KBART processing was cancelled due to errors!",
         "unknown": "KBART processing failed due to internal errors. Please report this to an administator!"
@@ -461,7 +461,8 @@
         "Book": "Monograph | Monographs",
         "Database": "Database | Databases",
         "Other": "Other | Other",
-        "Title": "Other | Other"
+        "Title": "Other | Other",
+        "Any": "Any | Any"
       },
       "OAStatus": {
         "label": "OA Status",
