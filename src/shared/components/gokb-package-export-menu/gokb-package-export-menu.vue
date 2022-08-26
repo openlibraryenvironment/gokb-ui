@@ -37,6 +37,13 @@
   export default {
     name: 'GokbPackageExportMenu',
     components: { GokbButton },
+    props: {
+      pkgId: {
+        type: [Number, String],
+        required: false,
+        default: undefined
+      }
+    },
     data () {
       return {
         dataUrl: undefined,
@@ -45,7 +52,7 @@
     },
     computed: {
       disabled () {
-        return !this.selectedItems || this.selectedItems?.length < 1
+        return !this.pkgId && (!this.selectedItems || this.selectedItems?.length < 1)
       },
       selectedItems () {
         return selection.get()
@@ -71,7 +78,9 @@
       currentTippUrl () {
         var fullUrl = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`
 
-        if (this.selectedItems?.length === 1) {
+        if (this.pkgId) {
+          fullUrl = fullUrl + `/${this.pkgId}` + `?exportType=tipp`
+        } else if (this.selectedItems?.length === 1) {
           fullUrl = fullUrl + `/${this.selectedItems[0].uuid}` + `?exportType=tipp`
         } else if (this.selectedItems) {
           fullUrl = fullUrl + `?exportType=tipp`
@@ -86,7 +95,9 @@
       currentTitleUrl () {
         var fullUrl = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`
 
-        if (this.selectedItems?.length === 1) {
+        if (this.pkgId) {
+          fullUrl = fullUrl + `/${this.pkgId}` + `?exportType=title`
+        } else if (this.selectedItems?.length === 1) {
           fullUrl = fullUrl + `/${this.selectedItems[0].uuid}` + `?exportType=title`
         } else if (this.selectedItems) {
           fullUrl = fullUrl + `?exportType=title`
