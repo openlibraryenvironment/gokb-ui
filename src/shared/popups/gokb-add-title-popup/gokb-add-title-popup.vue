@@ -483,6 +483,25 @@
 
   const URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/
 
+  const TARGET_TYPES = {
+    'Journal': 'Journal',
+    'JournalInstance': 'Journal',
+    'journal': 'Journal',
+    'Serial': 'Journal',
+    'serial': 'Journal',
+    'Book': 'Book',
+    'BookInstance': 'Book',
+    'book': 'Book',
+    'Monograph': 'Book',
+    'monograph': 'Book',
+    'Database': 'Database',
+    'DatabaseInstance': 'Database',
+    'database': 'Database',
+    'Other': 'Title',
+    'OtherInstance': 'Title',
+    'other': 'Title'
+  }
+
   export default {
     name: 'GokbAddTitlePopup',
     extends: BaseComponent,
@@ -608,7 +627,7 @@
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isJournal () {
-        return this.title?.type === 'Journal' || this.title?.type === 'Serial' || this.title?.type?.id === 'journal' || this.titleType?.id === 'Journal' || this.packageTitleItem.publicationType?.name === 'Serial'
+        return this.title?.type === 'Journal' || this.title?.type === 'Serial' || this.title?.type?.id === 'journal' || this.titleType?.id === 'Journal' || this.titleType?.id === 'Serial' || this.packageTitleItem.publicationType?.name === 'Serial'
       },
       isBook () {
         return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph' || this.packageTitleItem.publicationType?.name === 'Monograph'
@@ -617,7 +636,7 @@
         return !!this.allNames.name && !!this.packageTitleItem.hostPlatform && (this.isEdit || this.packageTitleItem.ids.length > 0) && this.packageTitleItem.url && URL_REGEX.test(this.packageTitleItem.url)
       },
       titleTypeString () {
-        return (typeof this.title?.type === 'object' ? this.title.type.id : this.title?.type || this.packageTitleItem.publicationType.name)
+        return (typeof this.title?.type === 'object' ? TARGET_TYPES[this.title.type.id] : TARGET_TYPES[this.title?.type] || TARGET_TYPES[this.packageTitleItem?.publicationType?.name])
       },
       titleTypeId () {
         return this.title?.type?.id || this.packageTitleItem.publicationType?.name || this.titleType?.id
