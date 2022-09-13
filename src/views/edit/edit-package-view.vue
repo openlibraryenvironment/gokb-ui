@@ -838,7 +838,7 @@
         return this.loggedIn && accountModel.activeGroup()
       },
       step3Error () {
-        return (this.isEdit && this.errors.variantNames && this.errors.ids) || (!this.isEdit && this.errors.tipps)
+        return (this.isEdit && this.errors?.variantNames && this.errors?.ids) || (!this.isEdit && this.errors?.tipps)
       },
       kbartLabel () {
         return 'KBART' + (this.kbart?.dryRun ? ' (' + this.$i18n.t('kbart.dryRun.label') + ')' : '')

@@ -340,9 +340,12 @@
       "preparing": "Vorbereitung...",
       "showResults": "Bericht anzeigen",
       "error": {
-        "denied": "Der KBART-Verarbeitung ist auf Grund von fehlenden Berechtigungen fehlgeschlagen.",
+        "denied": "Die KBART-Verarbeitung ist auf Grund von fehlenden Berechtigungen fehlgeschlagen.",
         "processing": "Die KBART-Verarbeitung ist fehlgeschlagen!",
-        "unknown": "Der KBART-Verarbeitung ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
+        "unknown": "Die KBART-Verarbeitung ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
+      },
+      "skipped": {
+        "noChange": "Die KBART-Prozessierung wurde übersprungen, da sich die Datei im Vergleich zum letzten Import nicht verändert hat."
       }
     },
     "dryRun": {

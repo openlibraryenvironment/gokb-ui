@@ -343,6 +343,9 @@
         "denied": "KBART processing failed due to insufficient permissions.",
         "processing": "KBART processing was cancelled due to errors!",
         "unknown": "KBART processing failed due to internal errors. Please report this to an administator!"
+      },
+      "skipped": {
+        "noChange": "Automated KBART processing was skipped, since the same file was already processed last time."
       }
     },
     "dryRun": {
