@@ -161,7 +161,8 @@
         "400": "Die eingebebenen Informationen sind nicht korrekt.",
         "401": "Die eingebebenen Informationen sind nicht korrekt.",
         "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
-      }
+      },
+      "expired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an."
     },
     "logout": {
       "label": "Ausloggen"

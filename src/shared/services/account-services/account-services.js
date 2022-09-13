@@ -14,6 +14,7 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
       } catch (exception) {
         baseServices.deleteAuthorization()
         log.info('saved token invalid', token, exception)
+        tokenModel.removeToken()
         return
       }
       return token
