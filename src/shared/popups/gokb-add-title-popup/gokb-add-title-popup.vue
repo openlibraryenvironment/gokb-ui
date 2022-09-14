@@ -497,9 +497,9 @@
     'Database': 'Database',
     'DatabaseInstance': 'Database',
     'database': 'Database',
-    'Other': 'Title',
-    'OtherInstance': 'Title',
-    'other': 'Title'
+    'Other': 'Other',
+    'OtherInstance': 'Other',
+    'other': 'Other'
   }
 
   export default {
