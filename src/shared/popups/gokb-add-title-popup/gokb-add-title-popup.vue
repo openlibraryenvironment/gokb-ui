@@ -64,7 +64,7 @@
             <v-col>
               <gokb-title-field
                 v-model="packageTitleItem.title"
-                :type-filter="titleTypeId"
+                :type-filter="titleTypeString"
                 :label="$tc('component.title.label')"
                 dense
                 show-link
@@ -484,22 +484,13 @@
   const URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/
 
   const TARGET_TYPES = {
-    'Journal': 'Journal',
-    'JournalInstance': 'Journal',
-    'journal': 'Journal',
-    'Serial': 'Journal',
-    'serial': 'Journal',
-    'Book': 'Book',
-    'BookInstance': 'Book',
-    'book': 'Book',
-    'Monograph': 'Book',
-    'monograph': 'Book',
-    'Database': 'Database',
-    'DatabaseInstance': 'Database',
-    'database': 'Database',
-    'Other': 'Other',
-    'OtherInstance': 'Other',
-    'other': 'Other'
+    "Serial": "Journal",
+    "Journal": "Journal",
+    "Monograph": "Book",
+    "Book": "Book",
+    "Database": "Database",
+    "Title": "Other",
+    "Other": "Other"
   }
 
   export default {
@@ -538,17 +529,8 @@
         urlValid: false,
         platformSelection: [],
         coverageExpanded: false,
-        title: {
-          id: undefined,
-          title: undefined,
-          type: undefined,
-          ids: [],
-          publisher: undefined,
-          publishedFrom: undefined,
-          publishedTo: undefined
-        },
-        selectedTitle: undefined,
         selectedItem: undefined,
+        titleTypeString: undefined,
         coverageObject: {
           coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
           startDate: undefined,
@@ -618,7 +600,7 @@
         return !this.isReadonly ? (this.id ? (this.$i18n.t('header.edit.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel) : (this.$i18n.t('header.add.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel)) : (this.typeLabel + ' – ' + this.$i18n.tc('component.tipp.label'))
       },
       typeLabel () {
-        return this.title?.type ? this.$i18n.tc('component.title.type.' + (typeof this.title.type === 'object' ? this.title.type.id : this.title.type)) : this.$i18n.tc('component.title.label')
+        return this.titleTypeString ? this.$i18n.tc('component.title.type.' + this.titleTypeString) : this.$i18n.tc('component.title.label')
       },
       isEdit () {
         return !!this.id && !!this.version
@@ -627,19 +609,13 @@
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       },
       isJournal () {
-        return this.title?.type === 'Journal' || this.title?.type === 'Serial' || this.title?.type?.id === 'journal' || this.titleType?.id === 'Journal' || this.titleType?.id === 'Serial' || this.packageTitleItem.publicationType?.name === 'Serial'
+        return this.titleTypeString === 'Journal' || this.packageTitleItem.publicationType?.name === 'Serial'
       },
       isBook () {
-        return this.title?.type === 'Book' || this.title?.type?.id === 'book' || this.title?.type === 'Monograph' || this.title?.type?.id === 'monograph' || this.packageTitleItem.publicationType?.name === 'Monograph'
+        return this.titleTypeString === 'Book' || this.packageTitleItem.publicationType?.name === 'Monograph'
       },
       isValid () {
         return !!this.allNames.name && !!this.packageTitleItem.hostPlatform && (this.isEdit || this.packageTitleItem.ids.length > 0) && this.packageTitleItem.url && URL_REGEX.test(this.packageTitleItem.url)
-      },
-      titleTypeString () {
-        return (typeof this.title?.type === 'object' ? TARGET_TYPES[this.title.type.id] : TARGET_TYPES[this.title?.type] || TARGET_TYPES[this.packageTitleItem?.publicationType?.name])
-      },
-      titleTypeId () {
-        return this.title?.type?.id || this.packageTitleItem.publicationType?.name || this.titleType?.id
       },
       expansionIcon () {
         return this.coverageExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
@@ -726,17 +702,19 @@
         this.id = this.selectedItem.id
         this.uuid = this.selectedItem.uuid
         this.packageTitleItem.id = this.id
+
         if (this.selectedItem.title?.type) {
-          this.title.type = this.selectedItem.title.type
-        } else {
-          this.title.type = this.titleType
+          this.titleTypeString = this.selectedItem.title.type
+        }
+        else {
+          this.titleTypeString = this.packageTitleItem.publicationType ? TARGET_TYPES[this.packageTitleItem.publicationType.name] : undefined
         }
       } else {
-        this.title.type = this.titleType
+        this.titleTypeString = TARGET_TYPES[this.titleType.id]
         this.packageTitleItem.hostPlatform = this.parentPlatform
-        this.publicationType = this.titleType
+        this.packageTitleItem.publicationType = this.titleType
       }
-      this.coverageExpanded = !this.isEdit && (this.title.type === 'Serial' || this.title.type === 'serial')
+      this.coverageExpanded = !this.isEdit && this.titleTypeString === 'Serial'
     },
     methods: {
       async submitTipp () {
