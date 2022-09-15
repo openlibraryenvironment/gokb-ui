@@ -160,7 +160,8 @@
         "400": "The entered login information is not valid.",
         "401": "The entered login information is not valid.",
         "500": "There was an error processing the login request. Please try again later."
-      }
+      },
+      "expired": "Your login has timed out, please login again."
     },
     "logout": {
       "label": "Log out"
