@@ -485,7 +485,7 @@
           this.loginExpiredMsg = true
         } else {
 
-          this.groups = result.data.data
+          this.groups = result.data.data.curatoryGroups
 
           if (!this.activeGroup && this.groups.length > 0) {
             this.activeGroup = this.groups[0]
