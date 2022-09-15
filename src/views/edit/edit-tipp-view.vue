@@ -744,6 +744,7 @@
           ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
           prices: this.packageTitleItem.prices.map(price => ({ ...price, type: (price.type || price.priceType), id: (typeof price.id === 'number' ? price.id : null) })),
           variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
+          status: typeof this.packageTitleItem.status === 'string' ? { name: this.packageTitleItem.status } : this.packageTitleItem.status,
           name: this.allNames.name,
           version: this.version,
           publicationType: this.packageTitleItem.publicationType && this.packageTitleItem.publicationType.name,
