@@ -454,6 +454,7 @@
     },
     created () {
       this.HOME_ROUTE = HOME_ROUTE
+      namespaceServices.fetchNamespacesList(this.cancelToken)
     },
     methods: {
       toggleDarkMode () {
