@@ -160,7 +160,8 @@
         "400": "The entered login information is not valid.",
         "401": "The entered login information is not valid.",
         "500": "There was an error processing the login request. Please try again later."
-      }
+      },
+      "expired": "Your login has timed out, please login again."
     },
     "logout": {
       "label": "Log out"
@@ -339,10 +340,13 @@
       "success": "The KBART Import has successfully finished.",
       "preparing": "Preparing...",
       "showResults": "Show Report",
-      "errors": {
+      "error": {
         "denied": "KBART processing failed due to insufficient permissions.",
         "processing": "KBART processing was cancelled due to errors!",
         "unknown": "KBART processing failed due to internal errors. Please report this to an administator!"
+      },
+      "skipped": {
+        "noChange": "Automated KBART processing was skipped, since the same file was already processed last time."
       }
     },
     "dryRun": {
@@ -461,7 +465,8 @@
         "Book": "Monograph | Monographs",
         "Database": "Database | Databases",
         "Other": "Other | Other",
-        "Title": "Other | Other"
+        "Title": "Other | Other",
+        "Any": "Any | Any"
       },
       "OAStatus": {
         "label": "OA Status",

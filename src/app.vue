@@ -37,6 +37,16 @@
         </template>
       </v-list>
       <template v-slot:append>
+        <v-row v-if="loginExpiredMsg">
+          <v-col>
+            <v-alert
+              type="warn"
+              dismissible
+            >
+              {{ $t('popup.login.expired') }}
+            </v-alert>
+          </v-col>
+        </v-row>
         <v-row v-if="updateExists">
           <v-col>
             <v-btn
@@ -278,6 +288,7 @@
   import { createCancelToken } from '@/shared/services/http'
   import searchServices from '@/shared/services/search-services'
   import baseServices from '@/shared/services/base-services'
+  import namespaceServices from '@/shared/services/namespace-services'
 
   // const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
 
@@ -294,6 +305,7 @@
       appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
       appVersion: pkg.version || process.env.VUE_APP_VERSION,
       gitCommit: process.env.VUE_APP_GIT_HASH,
+      loginExpiredMsg: false,
       globalSearchSelected: undefined,
       globalSearchField: undefined,
       globalSearchItems: undefined,
@@ -451,6 +463,10 @@
       if (accountModel.loggedIn()) {
         this.$vuetify.theme.dark = accountModel.darkMode()
       }
+
+      this.cancelToken = createCancelToken()
+
+      namespaceServices.fetchNamespacesList(this.cancelToken.token)
     },
     created () {
       this.HOME_ROUTE = HOME_ROUTE
@@ -464,18 +480,17 @@
       async loadGroups () {
         this.cancelToken = createCancelToken()
 
-        const {
-          data: {
-            data: {
-              curatoryGroups
-            }
+        const result = await profileServices.getProfile(this.cancelToken.token)
+
+        if (result.status == 401) {
+          this.loginExpiredMsg = true
+        } else {
+
+          this.groups = result.data.data.curatoryGroups
+
+          if (!this.activeGroup && this.groups.length > 0) {
+            this.activeGroup = this.groups[0]
           }
-        } = await profileServices.getProfile(this.cancelToken.token)
-
-        this.groups = curatoryGroups
-
-        if (!this.activeGroup && this.groups.length > 0) {
-          this.activeGroup = curatoryGroups[0]
         }
       }
     },

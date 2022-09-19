@@ -76,7 +76,7 @@
                 { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
                 { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
                 { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
-                { name: this.$i18n.tc('component.title.type.Other'), id: 'other' },
+                { name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
               ]
             }
           ],

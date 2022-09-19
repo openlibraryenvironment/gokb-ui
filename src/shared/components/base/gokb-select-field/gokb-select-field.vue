@@ -188,6 +188,10 @@
           }
         } else if (this.$attrs.items) {
           this.items = this.$attrs.items
+
+          if (this.initItem) {
+            this.setInit()
+          }
         }
       }
     }

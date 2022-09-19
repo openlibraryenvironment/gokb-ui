@@ -161,7 +161,8 @@
         "400": "Die eingebebenen Informationen sind nicht korrekt.",
         "401": "Die eingebebenen Informationen sind nicht korrekt.",
         "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
-      }
+      },
+      "expired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an."
     },
     "logout": {
       "label": "Ausloggen"
@@ -339,10 +340,13 @@
       "success": "Der KBART-Import wurde erfolgreich abgeschlossen!",
       "preparing": "Vorbereitung...",
       "showResults": "Bericht anzeigen",
-      "errors": {
-        "denied": "Der KBART-Verarbeitung ist auf Grund von fehlenden Berechtigungen fehlgeschlagen.",
+      "error": {
+        "denied": "Die KBART-Verarbeitung ist auf Grund von fehlenden Berechtigungen fehlgeschlagen.",
         "processing": "Die KBART-Verarbeitung ist fehlgeschlagen!",
-        "unknown": "Der KBART-Verarbeitung ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
+        "unknown": "Die KBART-Verarbeitung ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
+      },
+      "skipped": {
+        "noChange": "Die KBART-Prozessierung wurde übersprungen, da sich die Datei im Vergleich zum letzten Import nicht verändert hat."
       }
     },
     "dryRun": {
@@ -461,7 +465,8 @@
         "Book": "Monographie | Monographien",
         "Database": "Datenbank | Datenbanken",
         "Other": "Andere | Andere",
-        "Title": "Andere | Andere"
+        "Title": "Andere | Andere",
+        "Any": "Alle | Alle"
       },
       "OAStatus": {
         "label": "OA-Status",

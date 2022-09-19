@@ -76,15 +76,24 @@
       </span>
     </template>
     <template #item="{ item }">
-      <div :style="{ color: (item.disabled ? '#888888' : 'inherit') }">
-        {{ item[itemText] }}
-        <v-chip
-          v-if="item.disabled && !!item.disabledMessage"
-          color="error"
-        >
-          <span> {{ $t(item.disabledMessage) }} </span>
-        </v-chip>
-      </div>
+      <span>
+        <div :style="{ color: (item.disabled ? '#888888' : 'inherit') }">
+          {{ item[itemText] }}
+          <span
+            v-if="!!item.status"
+          >
+            <v-icon :color="statusColor(item.status)">
+              {{ statusIcon(item.status) }}
+            </v-icon>
+          </span>
+          <v-chip
+            v-if="item.disabled && !!item.disabledMessage"
+            color="error"
+          >
+            <span> {{ $t(item.disabledMessage) }} </span>
+          </v-chip>
+        </div>
+      </span>
     </template>
   </v-combobox>
   <v-autocomplete
@@ -137,6 +146,16 @@
         >
           {{ data.item[itemText] }}
         </span>
+      </span>
+    </template>
+    <template #item="{ item }">
+      {{ item[itemText] }}
+      <span
+        v-if="!!item.status"
+      >
+        <v-icon :color="statusColor(item.status)">
+          {{ statusIcon(item.status) }}
+        </v-icon>
       </span>
     </template>
   </v-autocomplete>
@@ -303,6 +322,20 @@
         this.items = []
         this.localValue = undefined
         this.$refs.autocomplete.lazyValue = undefined
+      },
+      statusColor (status) {
+        if (status?.name == "Current") return "success"
+        if (status?.name == "Deleted") return "red"
+        if (status?.name == "Expected") return "info"
+        if (status?.name == "Retired") return "amber"
+        return "default"
+      },
+      statusIcon (status) {
+        if (status?.name == "Current") return "mdi-check-circle"
+        if (status?.name == "Deleted") return "mdi-delete"
+        if (status?.name == "Expected") return "mdi-clock"
+        if (status?.name == "Retired") return "mdi-close-circle"
+        return undefined
       }
     }
   }

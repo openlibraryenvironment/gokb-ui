@@ -32,17 +32,22 @@
         @edit="addTippChangeEvent"
       />
       <template
-        v-if="isEditable"
         #buttons
       >
+        <gokb-package-export-menu
+          v-if="pkg"
+          :pkg-id="pkg"
+        />
         <gokb-button
-          class="mr-4"
+          v-if="isEditable"
+          class="mx-4"
           color="primary"
           @click="showKbartImportPopup"
         >
           KBART Import
         </gokb-button>
         <v-menu
+          v-if="isEditable"
           offset-y
           open-on-hover
         >
