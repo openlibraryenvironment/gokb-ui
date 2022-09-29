@@ -123,6 +123,7 @@
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
+  import GokbReviewPopup from '@/shared/popups/gokb-review-popup'
   import reviewServices from '@/shared/services/review-services'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'

@@ -1,5 +1,9 @@
 <template>
-
+  <v-row align="stretch" class="ma-2">
+    <v-col md="4" class="pa-3" v-for="i in allComponents" :key="i.id">
+      <GokbReviewsTitlesCard :item="i" />
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -26,7 +30,13 @@
     data () {
       return {}
     },
-    computed: {},
+    computed: {
+      allComponents () {
+        var comps = [this.reviewedComponent]
+        comps.push.apply(this.referenceComponents)
+        return comps 
+      }
+    },
     watch: {},
     methods: {}
   }

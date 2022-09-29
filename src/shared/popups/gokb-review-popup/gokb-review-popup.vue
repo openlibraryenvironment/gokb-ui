@@ -80,8 +80,13 @@ import GokbReviewsHeader from '../../components/complex/gokb-reviews-header/gokb
         required: false,
         default: false
       },
-      component: {
+      reviewedComponent: {
         type: Object,
+        required: false,
+        default: undefined
+      },
+      referenceComponents: {
+        type: Array,
         required: false,
         default: undefined
       }
