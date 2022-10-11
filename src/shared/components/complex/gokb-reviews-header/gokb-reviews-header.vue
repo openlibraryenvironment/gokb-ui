@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-row
-      v-if="isEdit"
       align="center"
     >
       <v-col cols="3">
@@ -16,7 +15,7 @@
           v-model="reviewItem.status"
           :init-item="reviewItem.status"
           :clearable="false"
-          :readonly="isReadonly"
+          :readonly="true"
           return-object
           message-path="component.review.status"
           url="refdata/categories/ReviewRequest.Status"
@@ -54,7 +53,7 @@
       <v-col md="12">
         <gokb-entity-field
           v-model="reviewItem.component"
-          :readonly="isEdit || isReadonly || !!component"
+          :readonly="!!component"
           :init-item="component"
           :type-filter="cmpType"
           :show-link="true"
@@ -148,7 +147,7 @@
             v-else
             v-model="reviewItem.description"
             required
-            :disabled="isEdit"
+            :disabled="true"
             :label="$i18n.t('component.review.cause.label')"
           />
         </template>
@@ -166,6 +165,11 @@
     components: {},
     extends: BaseComponent,
     props: {
+      component: {
+        type: Object,
+        required: false,
+        default: undefined
+      },
       reviewComponent: {
         type: Object,
         required: false,
@@ -173,9 +177,27 @@
       }
     },
     data () {
-      return {}
+      return {
+        reviewItem: {
+          status: undefined,
+          stdDesc: undefined,
+          request: undefined,
+          allocatedGroups: [],
+          description: undefined,
+          dateCreated: undefined,
+          component: undefined,
+          otherComponents: []
+        }
+      }
     },
-    computed: {},
+    computed: {
+      cmpType () {
+        return this.reviewItem?.component?.type || undefined
+      },
+      cmpLabel () {
+        return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+      }
+    },
     watch: {},
     methods: {}
   }

@@ -25,7 +25,11 @@
 
     <gokb-reviews-header :value="error" />
 
-    <gokb-reviews-titles-section :value="error" />
+    <gokb-reviews-titles-section
+      :value="error"
+      :reviewedComponent="undefined"
+      :referenceComponents="undefined"
+    />
 
     <template #buttons>
       <gokb-button
@@ -74,6 +78,11 @@
         required: false,
         default: undefined
       },
+      component: {
+        type: Object,
+        required: false,
+        default: undefined
+      },
       readonly: {
         type: Boolean,
         required: false,
@@ -91,10 +100,77 @@
       }
     },
     data () {
-      return {}
+      return {
+        successMsg: undefined,
+        errorMsg: undefined,
+        escalatable: false,
+        deescalatable: false,
+        reviewItem: {
+          status: undefined,
+          stdDesc: undefined,
+          request: undefined,
+          allocatedGroups: [],
+          description: undefined,
+          dateCreated: undefined,
+          component: undefined,
+          otherComponents: []
+        }
+      }
     },
-    computed: {},
+    computed: {
+      localValue: {
+        get () {
+          return this.value || true
+        },
+        set (localValue) {
+          this.$emit('input', localValue)
+        }
+      },
+      cmpType () {
+        return this.reviewItem?.component?.type || undefined
+      },
+      cmpLabel () {
+        return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+      },
+      isReadonly () {
+        return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
+      },
+      isEdit () {
+        return !!this.id
+      },
+      isValid () {
+        return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
+      },
+      localTitle () {
+        return this.$i18n.tc('component.review.label') + (this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
+      }
+    },
     created () {},
-    methods: {}
+    methods: {
+      close () {
+        this.localValue = false
+      },
+      async isEscalatable () {
+        await this.catchError({
+          promise: reviewServices.escalatable(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+          .then(response => {
+            this.escalatable = response.data.isEscalatable
+            this.escalationTarget = response.data.escalationTargetGroup
+          })
+      },
+      async isDeescalatable () {
+        await this.catchError({
+          promise: reviewServices.deescalatable(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+          .then(response => {
+            this.deescalatable = response.data.isDeescalatable
+            this.escalationTarget = response.data.escalationTargetGroup
+          })
+      },
+      save () {}
+    }
   }
 </script>
