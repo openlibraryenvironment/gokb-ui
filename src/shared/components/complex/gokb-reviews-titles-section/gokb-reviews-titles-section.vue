@@ -8,6 +8,7 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
+  import GokbReviewsTitleCard from '@/shared/components/complex/gokb-reviews-title-card'
 
   export default {
     name: 'GokbReviewsTitlesSection',

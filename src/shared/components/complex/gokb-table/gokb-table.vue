@@ -186,12 +186,12 @@
   import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
   import GokbEditPlatformPopup from '@/shared/popups/gokb-edit-platform-popup'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
-  import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
+  import GokbReviewPopup from '@/shared/popups/gokb-review-popup'
   import GokbCuratoryGroupPopup from '@/shared/popups/gokb-curatory-group-popup'
 
   export default {
     name: 'GokbTable',
-    components: { GokbEditJobPopup, GokbEditPlatformPopup, GokbAddTitlePopup, GokbAddReviewPopup, GokbCuratoryGroupPopup },
+    components: { GokbEditJobPopup, GokbEditPlatformPopup, GokbAddTitlePopup, GokbReviewPopup, GokbCuratoryGroupPopup },
     extends: BaseComponent,
     props: {
       disabled: {

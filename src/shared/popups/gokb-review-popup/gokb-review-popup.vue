@@ -61,13 +61,12 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import reviewServices from '@/shared/services/review-services'
-  import VueJsonPretty from 'vue-json-pretty'
   import 'vue-json-pretty/lib/styles.css'
-import GokbReviewsHeader from '../../components/complex/gokb-reviews-header/gokb-reviews-header.vue'
+  import GokbReviewsHeader from '../../components/complex/gokb-reviews-header/gokb-reviews-header.vue'
 
   export default {
     name: 'GokbReviewPopup',
-    components: { VueJsonPrettyGokbReviewsHeader },
+    components: { GokbReviewsHeader },
     extends: BaseComponent,
     props: {
       selected: {

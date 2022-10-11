@@ -122,7 +122,6 @@
 
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
-  import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
   import GokbReviewPopup from '@/shared/popups/gokb-review-popup'
   import reviewServices from '@/shared/services/review-services'
   import BaseComponent from '@/shared/components/base-component'
@@ -134,7 +133,7 @@
     name: 'GokbReviewsSection',
     components: {
       GokbConfirmationPopup,
-      GokbAddReviewPopup
+      GokbReviewPopup
     },
     extends: BaseComponent,
     props: {
@@ -239,7 +238,7 @@
           const stdDescLabel = entry?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + entry?.stdDesc.name + '.label') : this.$i18n.t('component.review.stdDesc.none.label')
           const updateUrl = entry?._links.update.href
           const deleteUrl = entry?._links.delete.href
-          const popup = { value: this.reviewComponent ? stdDescLabel : (component.name || type + ' ' + component.id), label: 'review', type: 'GokbAddReviewPopup' }
+          const popup = { value: this.reviewComponent ? stdDescLabel : (component.name || type + ' ' + component.id), label: 'review', type: 'GokbReviewPopup' }
           const link = { value: component.name, route: componentRoutes[entry?.componentToReview?.type?.toLowerCase()], id: 'componentId' }
           const groupsList = entry.allocatedGroups.map(ag => ag.name)
           const isClosable = !!(status?.name === 'Open' && updateUrl)
