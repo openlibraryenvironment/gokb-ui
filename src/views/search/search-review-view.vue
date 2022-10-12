@@ -178,7 +178,7 @@
           status,
           stdDesc,
           localDesc: stdDesc?.name ? this.$i18n.tc('component.review.stdDesc.' + stdDesc.name + '.label') : undefined,
-          popup: { value: (componentToReview.name || componentToReview.type + ' ' + componentToReview.id), label: 'review', type: 'GokbReviewPopup' },
+          popup: { component: componentToReview, value: (componentToReview.name || componentToReview.type + ' ' + componentToReview.id), label: 'review', type: 'GokbReviewPopup' },
           link: { value: componentToReview.name, route: componentRoutes[componentToReview.type.toLowerCase()], id: 'componentId' },
           updateUrl: _links?.update?.href,
           deleteUrl: _links?.delete?.href

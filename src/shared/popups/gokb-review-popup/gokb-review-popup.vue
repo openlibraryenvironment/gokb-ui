@@ -27,8 +27,8 @@
 
     <gokb-reviews-titles-section
       :value="error"
-      :reviewedComponent="undefined"
-      :referenceComponents="undefined"
+      :reviewedComponent="reviewItem"
+      :referenceComponents="referenceComponents"
     />
 
     <template #buttons>
@@ -80,23 +80,16 @@
       },
       component: {
         type: Object,
-        required: false,
-        default: undefined
+        required: true
+      },
+      referenceComponents: {
+        type: Array,
+        required: true
       },
       readonly: {
         type: Boolean,
         required: false,
         default: false
-      },
-      reviewedComponent: {
-        type: Object,
-        required: false,
-        default: undefined
-      },
-      referenceComponents: {
-        type: Array,
-        required: false,
-        default: undefined
       }
     },
     data () {
@@ -145,7 +138,16 @@
         return this.$i18n.tc('component.review.label') + (this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
       }
     },
-    created () {},
+    created () {
+      if (this.component) {
+        this.reviewItem.component = this.component
+      }
+      this.selectedItem = this.selected
+      if (this.selectedItem) {
+        this.isEscalatable()
+        this.isDeescalatable()
+      }
+    },
     methods: {
       close () {
         this.localValue = false
