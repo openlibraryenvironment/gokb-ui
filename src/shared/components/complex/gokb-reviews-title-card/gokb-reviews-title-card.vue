@@ -22,7 +22,7 @@
   import BaseComponent from '@/shared/components/base-component'
 
   export default {
-    name: 'GokbReviewsTitlesCard',
+    name: 'GokbReviewsTitleCard',
     components: {},
     extends: BaseComponent,
     props: {

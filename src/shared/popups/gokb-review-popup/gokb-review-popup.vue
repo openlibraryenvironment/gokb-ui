@@ -27,8 +27,8 @@
 
     <gokb-reviews-titles-section
       :value="error"
-      :reviewedComponent="reviewItem"
-      :referenceComponents="referenceComponents"
+      :reviewedComponent="reviewItem.component"
+      :referenceComponents="reviewItem.otherComponents"
     />
 
     <template #buttons>
@@ -80,11 +80,8 @@
       },
       component: {
         type: Object,
-        required: true
-      },
-      referenceComponents: {
-        type: Array,
-        required: true
+        required: false,
+        default: undefined
       },
       readonly: {
         type: Boolean,
@@ -139,16 +136,56 @@
       }
     },
     created () {
+      this.selectedItem = this.selected
+      if (this.selected) {
+        this.id = this.selected.id
+        this.fetch(this.id)
+      }
       if (this.component) {
         this.reviewItem.component = this.component
       }
-      this.selectedItem = this.selected
       if (this.selectedItem) {
         this.isEscalatable()
         this.isDeescalatable()
       }
     },
     methods: {
+      async fetch (rid) {
+        const {
+          data: {
+            status,
+            stdDesc,
+            reviewRequest,
+            descriptionOfCause,
+            dateCreated,
+            version,
+            componentToReview,
+            allocatedGroups,
+            additionalInfo,
+            _links
+          }
+        } = await this.catchError({
+          promise: reviewServices.getReview(rid, this.cancelToken.token),
+          instance: this
+        })
+        this.additionalInfo = additionalInfo
+        this.reviewItem.status = status
+        this.reviewItem.stdDesc = stdDesc
+        this.reviewItem.request = reviewRequest
+        this.reviewItem.description = descriptionOfCause
+        this.reviewItem.dateCreated = dateCreated ? new Date(dateCreated).toLocaleString('sv') : ''
+        this.reviewItem.component = componentToReview
+        this.reviewItem.allocatedGroups = allocatedGroups
+        this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(oc => ({
+          name: oc.name,
+          id: (oc.oid ? oc.oid.split(':')[1] : oc.id),
+          type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
+          route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
+        })) : []
+        this.updateUrl = _links?.update?.href || undefined
+        this.deleteUrl = _links?.delete?.href || undefined
+        this.version = version
+      },
       close () {
         this.localValue = false
       },
