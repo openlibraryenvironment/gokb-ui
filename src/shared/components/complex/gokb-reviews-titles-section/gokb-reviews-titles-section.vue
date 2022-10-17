@@ -19,8 +19,7 @@
     props: {
       reviewedComponent: {
         type: Object,
-        required: false,
-        default: undefined
+        required: true
       },
       referenceComponents: {
         type: Array,

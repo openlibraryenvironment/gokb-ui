@@ -25,7 +25,7 @@
 
     <gokb-reviews-header :value="error" />
 
-    <gokb-reviews-titles-section
+    <gokb-reviews-titles-section v-if="finishedLoading"
       :value="error"
       :reviewedComponent="reviewItem.component"
       :referenceComponents="reviewItem.otherComponents"
@@ -104,7 +104,8 @@
           dateCreated: undefined,
           component: undefined,
           otherComponents: []
-        }
+        },
+        finishedLoading: false
       }
     },
     computed: {
@@ -138,11 +139,13 @@
     created () {
       this.selectedItem = this.selected
       if (this.selected) {
+        this.finishedLoading = false
         this.id = this.selected.id
         this.fetch(this.id)
       }
-      if (this.component) {
+      else if (this.component) {
         this.reviewItem.component = this.component
+        this.finishedLoading = true
       }
       if (this.selectedItem) {
         this.isEscalatable()
@@ -185,6 +188,7 @@
         this.updateUrl = _links?.update?.href || undefined
         this.deleteUrl = _links?.delete?.href || undefined
         this.version = version
+        this.finishedLoading = true
       },
       close () {
         this.localValue = false
