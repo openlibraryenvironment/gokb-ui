@@ -4,8 +4,8 @@
       <h5 class="titlecard-headline">{{ titleName }}</h5>
     </v-card-title>
 
-    <v-card-text class="flex">
-      <div class="titlecard-ids">{{ identifiers }}</div>
+    <v-card-text class="flex" v-for="i in identifiers" :key="i.id">
+      <div class="titlecard-ids" :class="i.namespace.value">{{ i.value }}</div>
     </v-card-text>
 
     <v-card-text class="flex" v-if="!!history">
@@ -17,7 +17,7 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import titleServices from '@/shared/services/title-services'
-  
+
   export default {
     name: 'GokbReviewsTitleCard',
     components: {},
@@ -42,14 +42,8 @@
       identifiersMap () {
         const ids = []
         const title = this.fetchTitle(this.id)
-        if (!!title && this.finishedLoading){
-          console.log("1")
-          for (let [key, value] of Object.entries(title)) {
-            console.log(key, value)
-          }
-          console.log("2")
-          for (let id in title._embedded.ids){
-            console.log("id:" + id)
+        if (!!title){
+          for (let id in title._embedded?.ids){
             ids.push({id: id.id, namespace: id.namespace.value, value: id.value})
           }
         }
@@ -77,10 +71,6 @@
           promise: titleServices.getTitle(tid, this.cancelToken.token),
           instance: this
         })
-        console.log("3")
-        for (let [key, value] of Object.entries(_embedded)) {
-          console.log(key, value);
-        }
         this.titleName = name
         this.history = history
         this.publishedFrom = publishedFrom
