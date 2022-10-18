@@ -25,6 +25,7 @@
 
     <gokb-reviews-header
       :value="error"
+      :reviewComponent="reviewItem"
       :component="reviewItem.component"
     />
 

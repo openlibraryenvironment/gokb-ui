@@ -5,15 +5,15 @@
     >
       <v-col cols="3">
         <gokb-text-field
-          v-model="reviewItem.dateCreated"
+          v-model="reviewComponent.dateCreated"
           disabled
           :label="$t('component.general.dateCreated')"
         />
       </v-col>
       <v-col cols="3">
         <gokb-state-field
-          v-model="reviewItem.status"
-          :init-item="reviewItem.status"
+          v-model="reviewComponent.status"
+          :init-item="reviewComponent.status"
           :clearable="false"
           :readonly="true"
           return-object
@@ -23,7 +23,7 @@
         />
       </v-col>
       <v-col
-        v-if="reviewItem.allocatedGroups.length > 0"
+        v-if="reviewComponent.allocatedGroups.length > 0"
         cols="3"
       >
         <div
@@ -38,7 +38,7 @@
         <div style="margin-top:-6px">
           <v-chip-group>
             <v-chip
-              v-for="group in reviewItem.allocatedGroups"
+              v-for="group in reviewComponent.allocatedGroups"
               :key="group.name"
               class="font-weight-medium"
               pill
@@ -49,10 +49,10 @@
         </div>
       </v-col>
     </v-row>
-    <v-row dense>
+    <v-row dense style="margin-top:-8px">
       <v-col md="12">
         <gokb-entity-field
-          v-model="reviewItem.component"
+          v-model="reviewComponent.component"
           :readonly="!!component"
           :init-item="component"
           :type-filter="cmpType"
@@ -65,7 +65,7 @@
     <v-row>
       <v-col md="12">
         <template>
-          <div v-if="reviewItem.stdDesc">
+          <div v-if="reviewComponent.stdDesc">
             <v-row dense>
               <v-col cols="6">
                 <gokb-text-field
@@ -85,30 +85,30 @@
             <i18n
               id="stdDesc"
               :style="{ fontSize: '1.2em' }"
-              :path="'component.review.stdDesc.' + (reviewItem.stdDesc.value || reviewItem.stdDesc.name) + '.info'"
+              :path="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.info'"
             >
               <template v-slot:0>
                 <router-link
                   v-if="numMessageVars > 0 && typeof additionalInfo.vars[0] === 'number'"
-                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
+                  :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
                   :style="{ color: 'primary' }"
                 >
-                  {{ additionalInfo.vars[0] === reviewItem.component.id ? reviewItem.component.name : additionalInfo.vars[1] }}
+                  {{ additionalInfo.vars[0] === reviewComponent.component.id ? reviewComponent.component.name : additionalInfo.vars[1] }}
                 </router-link>
                 <b v-else-if="numMessageVars > 0">{{ additionalInfo.vars[0] }}</b>
                 <router-link
-                  v-else-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
-                  :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
+                  v-else-if="reviewComponent.otherComponents && reviewComponent.otherComponents.length > 0"
+                  :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
                   :style="{ color: 'primary' }"
                 >
-                  {{ reviewItem.otherComponents[0].name }}
+                  {{ reviewComponent.otherComponents[0].name }}
                 </router-link>
                 <router-link
-                  v-else-if="reviewItem.component"
-                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
+                  v-else-if="reviewComponent.component"
+                  :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': reviewComponent.component.id } }"
                   :style="{ color: 'primary' }"
                 >
-                  {{ reviewItem.component.name }}
+                  {{ reviewComponent.component.name }}
                 </router-link>
               </template>
               <template v-slot:1>
@@ -145,7 +145,7 @@
           </div>
           <gokb-text-field
             v-else
-            v-model="reviewItem.description"
+            v-model="reviewComponent.description"
             required
             :disabled="true"
             :label="$i18n.t('component.review.cause.label')"
@@ -176,28 +176,15 @@
         default: undefined
       }
     },
-    data () {
-      return {
-        reviewItem: {
-          status: undefined,
-          stdDesc: undefined,
-          request: undefined,
-          allocatedGroups: [],
-          description: undefined,
-          dateCreated: undefined,
-          component: undefined,
-          otherComponents: []
-        }
-      }
-    },
     computed: {
       cmpType () {
-        return this.reviewItem?.component?.type || undefined
+        return this.reviewComponent?.component?.type || undefined
       },
       cmpLabel () {
-        return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+        return (this.isEdit && this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       }
     },
+    created: {},
     watch: {},
     methods: {}
   }
