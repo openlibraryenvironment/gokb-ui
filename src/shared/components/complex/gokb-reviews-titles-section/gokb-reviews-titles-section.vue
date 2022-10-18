@@ -1,7 +1,9 @@
 <template>
   <v-row align="stretch" class="ma-2">
     <v-col md="4" class="pa-3" v-for="i in allComponents" :key="i.id">
-      <GokbReviewsTitle Card :item="i" />
+      <GokbReviewsTitleCard
+        :id="i.id.toString()"
+      />
     </v-col>
   </v-row>
 </template>
@@ -29,18 +31,12 @@
     },
     data () {
       return {
-        allComponents: []
+        allComponents: [],
+        finishedLoading: false
       }
     },
-    computed: {
-      allComponentsOld () {
-        var comps = [this.reviewedComponent]
-        comps.push.apply(this.referenceComponents)
-      }
-    },
+    computed: {},
     mounted () {
-      console.log("this.reviewedComponent: " + this.reviewedComponent)
-      console.log("this.referenceComponents: " + this.referenceComponents)
       this.allComponents = [this.reviewedComponent]
       this.allComponents.push.apply(this.referenceComponents)
     },

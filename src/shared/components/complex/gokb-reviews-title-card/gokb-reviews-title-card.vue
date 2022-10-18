@@ -1,52 +1,94 @@
 <template>
-  <v-card class="elevation-5 flex d-flex flex-column">
+  <v-card class="elevation-4 flex d-flex flex-column">
     <v-card-title primary-title>
-      <h3 class="titlecard-headline">{{ name }}</h3>
+      <h5 class="titlecard-headline">{{ titleName }}</h5>
     </v-card-title>
 
     <v-card-text class="flex">
-      <div class="titlecard-ids">{{ ids }}</div>
-      <v-divider light style="margin-top:15px;"></v-divider>
-      <v-divider light></v-divider>
+      <div class="titlecard-ids">{{ identifiers }}</div>
     </v-card-text>
 
-    <v-card-text class="flex" v-if="!!additionalInfo">
-      <div class="titlecard-additional">{{ ids }}</div>
-      <v-divider light style="margin-top:15px;"></v-divider>
-      <v-divider light></v-divider>
+    <v-card-text class="flex" v-if="!!history">
+      <div class="titlecard-history">{{ history }}</div>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
-
+  import titleServices from '@/shared/services/title-services'
+  
   export default {
     name: 'GokbReviewsTitleCard',
     components: {},
     extends: BaseComponent,
     props: {
-      name: {
+      id: {
         type: String,
-        required: true,
-        default: undefined
-      },
-      ids: {
-        type: Map,
-        required: true,
-        default: undefined
-      },
-      additionalInfo: {
-        type: Map,
-        required: false,
-        default: undefined
+        required: true
       }
     },
     data () {
-      return {}
+      return {
+        titleName: undefined,
+        history: undefined,
+        publishedFrom: undefined,
+        publishedTo: undefined,
+        type: undefined,
+        identifiers: []
+      }
     },
-    computed: {},
+    computed: {
+      identifiersMap () {
+        const ids = []
+        const title = this.fetchTitle(this.id)
+        if (!!title && this.finishedLoading){
+          console.log("1")
+          for (let [key, value] of Object.entries(title)) {
+            console.log(key, value)
+          }
+          console.log("2")
+          for (let id in title._embedded.ids){
+            console.log("id:" + id)
+            ids.push({id: id.id, namespace: id.namespace.value, value: id.value})
+          }
+        }
+        return ids
+      }
+    },
     watch: {},
-    methods: {}
+    mounted () {
+      this.identifiers = this.identifiersMap
+    },
+    methods: {
+      async fetchTitle (tid) {
+        this.finishedLoading = false
+        const {
+          data: {
+            name,
+            history,
+            publishedFrom,
+            publishedTo,
+            type,
+            _embedded,
+            _links
+          }
+        } = await this.catchError({
+          promise: titleServices.getTitle(tid, this.cancelToken.token),
+          instance: this
+        })
+        console.log("3")
+        for (let [key, value] of Object.entries(_embedded)) {
+          console.log(key, value);
+        }
+        this.titleName = name
+        this.history = history
+        this.publishedFrom = publishedFrom
+        this.publishedTo = publishedTo
+        this.type = type
+        this.identifiers = _embedded.ids
+        this.finishedLoading = true
+      }
+    }
   }
 </script>

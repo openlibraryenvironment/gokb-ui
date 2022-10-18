@@ -23,7 +23,10 @@
       </v-alert>
     </span>
 
-    <gokb-reviews-header :value="error" />
+    <gokb-reviews-header
+      :value="error"
+      :component="reviewItem.component"
+    />
 
     <gokb-reviews-titles-section v-if="finishedLoading"
       :value="error"
@@ -141,7 +144,7 @@
       if (this.selected) {
         this.finishedLoading = false
         this.id = this.selected.id
-        this.fetch(this.id)
+        this.fetchReview(this.id)
       }
       else if (this.component) {
         this.reviewItem.component = this.component
@@ -153,7 +156,7 @@
       }
     },
     methods: {
-      async fetch (rid) {
+      async fetchReview (rid) {
         const {
           data: {
             status,
