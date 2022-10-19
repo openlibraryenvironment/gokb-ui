@@ -86,62 +86,7 @@
               id="stdDesc"
               :style="{ fontSize: '1.2em' }"
               :path="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.info'"
-            >
-              <template v-slot:0>
-                <router-link
-                  v-if="numMessageVars > 0 && typeof additionalInfo.vars[0] === 'number'"
-                  :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
-                  :style="{ color: 'primary' }"
-                >
-                  {{ additionalInfo.vars[0] === reviewComponent.component.id ? reviewComponent.component.name : additionalInfo.vars[1] }}
-                </router-link>
-                <b v-else-if="numMessageVars > 0">{{ additionalInfo.vars[0] }}</b>
-                <router-link
-                  v-else-if="reviewComponent.otherComponents && reviewComponent.otherComponents.length > 0"
-                  :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
-                  :style="{ color: 'primary' }"
-                >
-                  {{ reviewComponent.otherComponents[0].name }}
-                </router-link>
-                <router-link
-                  v-else-if="reviewComponent.component"
-                  :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': reviewComponent.component.id } }"
-                  :style="{ color: 'primary' }"
-                >
-                  {{ reviewComponent.component.name }}
-                </router-link>
-              </template>
-              <template v-slot:1>
-                <b v-if="numMessageVars > 1">
-                  <span v-if="typeof additionalInfo.vars[1] === 'string' || typeof additionalInfo.vars[1] === 'number'">
-                    {{ additionalInfo.vars[1] }}
-                  </span>
-                  <span v-else-if="Array.isArray(additionalInfo.vars[1])">
-                    (
-                    <span
-                      v-for="(entry, idx) in additionalInfo.vars[1]"
-                      :key="idx"
-                    >
-                      <span v-if="typeof entry === 'string'">
-                        {{ entry }}
-                      </span>
-                      <span v-else>
-                        <span
-                          v-for="(value, namespace) in entry"
-                          :key="namespace + '_' + value"
-                        >
-                          {{ namespace }}:{{ value }}
-                        </span>
-                      </span>
-                    </span>
-                    )
-                  </span>
-                </b>
-              </template>
-              <template v-slot:2>
-                <b v-if="numMessageVars > 2">{{ additionalInfo.vars[2] }}</b>
-              </template>
-            </i18n>
+            />
           </div>
           <gokb-text-field
             v-else
@@ -157,7 +102,6 @@
 </template>
 
 <script>
-  import reviewServices from '@/shared/services/review-services'
   import BaseComponent from '@/shared/components/base-component'
 
   export default {
@@ -211,6 +155,7 @@
       }
     },
     created () {},
+    mounted () {},
     watch: {},
     methods: {}
   }
