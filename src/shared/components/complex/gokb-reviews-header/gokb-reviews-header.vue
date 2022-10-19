@@ -176,15 +176,41 @@
         default: undefined
       }
     },
+    data () {
+      return {
+        componentRoutes: {
+          package: '/package',
+          org: '/provider',
+          organization: '/provider',
+          tipp: '/package-title',
+          titleinstancepackageplatform: '/package-title',
+          title: '/title',
+          journal: '/title',
+          book: '/title',
+          database: '/title',
+          titleinstance: '/title',
+          journalinstance: '/title',
+          bookinstance: '/title',
+          databaseinstance: '/title',
+          otherinstance: '/title'
+        }
+      }
+    },
     computed: {
       cmpType () {
         return this.reviewComponent?.component?.type || undefined
       },
       cmpLabel () {
         return (this.isEdit && this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+      },
+      numMessageVars () {
+        return this.additionalInfo?.vars ? this.additionalInfo.vars.length : 0
+      },
+      localAction () {
+        return this.reviewItem?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.action') : undefined
       }
     },
-    created: {},
+    created () {},
     watch: {},
     methods: {}
   }
