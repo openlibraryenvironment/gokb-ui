@@ -32,6 +32,7 @@
     data () {
       return {
         allComponents: [],
+        allHtmlClasses: [],
         finishedLoading: false
       }
     },
@@ -39,8 +40,25 @@
     mounted () {
       this.allComponents = [this.reviewedComponent]
       this.allComponents.push.apply(this.allComponents, this.referenceComponents)
+      this.allHtmlClasses = this.getAllHtmlClasses()
     },
     watch: {},
-    methods: {}
+    methods: {
+      getAllHtmlClasses () {
+        this.allHtmlClasses.push("titlecard-headline")
+        console.log(this.allComponents)
+        for (const component of this.allComponents) {
+          // console.log("key : " + key)
+          console.log("component : " + component)
+          for (const [fieldKey, fieldValue] of Object.entries(component)) {
+            console.log("key : " + fieldKey)
+            if (!(fieldKey in ["name", "identifiers"])) {
+              this.allHtmlClasses.push("titlecard-" + fieldKey)
+            }
+          }
+        }
+        console.log(this.allHtmlClasses)
+      }
+    }
   }
 </script>

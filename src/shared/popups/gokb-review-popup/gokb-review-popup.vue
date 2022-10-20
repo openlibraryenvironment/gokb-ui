@@ -23,10 +23,10 @@
       </v-alert>
     </span>
 
-    <gokb-reviews-header
+    <gokb-reviews-header v-if="typeof reviewItem?.component !== 'undefined'"
       :value="error"
-      :reviewComponent="reviewItem"
       :component="reviewItem.component"
+      :reviewComponent="reviewItem"
     />
 
     <gokb-reviews-titles-section v-if="finishedLoading"
@@ -202,9 +202,13 @@
         this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(oc => ({
           name: oc.name,
           id: (oc.oid ? oc.oid.split(':')[1] : oc.id),
-          type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
+          type: (oc.type ? oc.type.niceName : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
           route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
         })) : []
+        console.log("Other Components:")
+        for (let [key, value] of Object.entries(this.reviewItem.otherComponents)) {
+          console.log(key, value);
+        }
         this.updateUrl = _links?.update?.href || undefined
         this.deleteUrl = _links?.delete?.href || undefined
         this.version = version

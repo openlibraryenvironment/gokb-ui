@@ -30,28 +30,40 @@
     },
     data () {
       return {
+        title: undefined,
         titleName: undefined,
         history: undefined,
         publishedFrom: undefined,
         publishedTo: undefined,
         type: undefined,
-        identifiers: []
+        identifiers: [],
+        wantedFields: ["name", "identifiers", "history"]
       }
     },
     computed: {
       identifiersMap () {
         const ids = []
-        const title = this.fetchTitle(this.id)
-        if (!!title){
-          for (let id in title._embedded?.ids){
+        if (!!this.title) {
+          for (let id in title._embedded?.ids) {
             ids.push({id: id.id, namespace: id.namespace.value, value: id.value})
           }
         }
         return ids
+      },
+      getUsedKeys () {
+        if (!!this.title) {
+          let usedKeys = []
+          for (let [key, value] of Object.entries(this.title)) {
+            if (!!value && key in this.wantedFields) {
+              usedKeys.push(key)
+            }
+          }
+        }
       }
     },
     watch: {},
     mounted () {
+      this.title = this.fetchTitle(this.id)
       this.identifiers = this.identifiersMap
     },
     methods: {

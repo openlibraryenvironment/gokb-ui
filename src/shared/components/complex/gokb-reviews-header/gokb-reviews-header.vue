@@ -111,19 +111,21 @@
     props: {
       component: {
         type: Object,
-        required: false,
-        default: undefined
+        required: true
       },
       reviewComponent: {
         type: Object,
-        required: false,
-        default: undefined
+        required: true
       }
     },
-    data () {},
+    data () {
+      return {
+        error: undefined
+      }
+    },
     computed: {
       cmpType () {
-        return this.reviewComponent?.component?.type || undefined
+        return  this.reviewComponent?.component?.type || undefined
       },
       cmpLabel () {
         return (this.isEdit && this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
