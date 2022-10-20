@@ -38,7 +38,7 @@
     computed: {},
     mounted () {
       this.allComponents = [this.reviewedComponent]
-      this.allComponents.push.apply(this.referenceComponents)
+      this.allComponents.push.apply(this.allComponents, this.referenceComponents)
     },
     watch: {},
     methods: {}

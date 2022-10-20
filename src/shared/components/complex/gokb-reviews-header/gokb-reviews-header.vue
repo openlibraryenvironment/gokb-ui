@@ -120,26 +120,7 @@
         default: undefined
       }
     },
-    data () {
-      return {
-        componentRoutes: {
-          package: '/package',
-          org: '/provider',
-          organization: '/provider',
-          tipp: '/package-title',
-          titleinstancepackageplatform: '/package-title',
-          title: '/title',
-          journal: '/title',
-          book: '/title',
-          database: '/title',
-          titleinstance: '/title',
-          journalinstance: '/title',
-          bookinstance: '/title',
-          databaseinstance: '/title',
-          otherinstance: '/title'
-        }
-      }
-    },
+    data () {},
     computed: {
       cmpType () {
         return this.reviewComponent?.component?.type || undefined

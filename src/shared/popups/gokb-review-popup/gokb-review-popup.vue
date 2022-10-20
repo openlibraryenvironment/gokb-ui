@@ -109,7 +109,23 @@
           component: undefined,
           otherComponents: []
         },
-        finishedLoading: false
+        finishedLoading: false,
+        componentRoutes: {
+          package: '/package',
+          org: '/provider',
+          organization: '/provider',
+          tipp: '/package-title',
+          titleinstancepackageplatform: '/package-title',
+          title: '/title',
+          journal: '/title',
+          book: '/title',
+          database: '/title',
+          titleinstance: '/title',
+          journalinstance: '/title',
+          bookinstance: '/title',
+          databaseinstance: '/title',
+          otherinstance: '/title'
+        }
       }
     },
     computed: {
