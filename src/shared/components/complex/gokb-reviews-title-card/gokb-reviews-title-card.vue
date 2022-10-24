@@ -1,15 +1,15 @@
 <template>
-  <v-card class="elevation-4 flex d-flex flex-column">
+  <v-card class="elevation-4 flex d-flex flex-column" v-if="!!title?.name"> 
     <v-card-title primary-title>
-      <h5 class="titlecard-headline">{{ titleName }}</h5>
+      <h5 class="titlecard-headline">{{ title.name }}</h5>
     </v-card-title>
 
-    <v-card-text class="flex" v-for="i in identifiers" :key="i.id">
+    <v-card-text class="flex" v-for="i in title.identifiers" :key="i.id">
       <div class="titlecard-ids" :class="i.namespace.value">{{ i.value }}</div>
     </v-card-text>
 
-    <v-card-text class="flex" v-if="!!history">
-      <div class="titlecard-history">{{ history }}</div>
+    <v-card-text class="flex" v-if="!!title?.history">
+      <div class="titlecard-history">{{ title.history }}</div>
     </v-card-text>
   </v-card>
 </template>
@@ -31,39 +31,34 @@
     data () {
       return {
         title: undefined,
-        titleName: undefined,
-        history: undefined,
-        publishedFrom: undefined,
-        publishedTo: undefined,
-        type: undefined,
-        identifiers: [],
         wantedFields: ["name", "identifiers", "history"]
       }
     },
     computed: {
       identifiersMap () {
         const ids = []
-        if (!!this.title) {
-          for (let id in title._embedded?.ids) {
+        if (this.hasTitle) {
+          for (let id in this.title?._embedded?.ids) {
             ids.push({id: id.id, namespace: id.namespace.value, value: id.value})
           }
         }
         return ids
       },
       getUsedKeys () {
-        if (!!this.title) {
-          let usedKeys = []
+        let usedKeys = []
+        if (this.hasTitle) {
           for (let [key, value] of Object.entries(this.title)) {
-            if (!!value && key in this.wantedFields) {
+            if (!!value && this.wantedFields.includes(key)) {
               usedKeys.push(key)
             }
           }
         }
+        return usedKeys
       }
     },
     watch: {},
-    mounted () {
-      this.title = this.fetchTitle(this.id)
+    async mounted () {
+      this.fetchTitle(this.id)
       this.identifiers = this.identifiersMap
     },
     methods: {
@@ -83,13 +78,19 @@
           promise: titleServices.getTitle(tid, this.cancelToken.token),
           instance: this
         })
-        this.titleName = name
-        this.history = history
-        this.publishedFrom = publishedFrom
-        this.publishedTo = publishedTo
-        this.type = type
-        this.identifiers = _embedded.ids
+        this.title = {
+          name: name,
+          history: history,
+          publishedFrom: publishedFrom,
+          publishedTo: publishedTo,
+          type: type,
+          identifiers: _embedded?.ids
+        }
         this.finishedLoading = true
+        this.$emit('keys', this.getUsedKeys)
+      },
+      hasTitle () {
+        return (!!this.titleName && !!this.identifiers && this.finishedLoading)
       }
     }
   }

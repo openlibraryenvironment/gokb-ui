@@ -1,8 +1,9 @@
 <template>
   <v-row align="stretch" class="ma-2">
     <v-col md="4" class="pa-3" v-for="i in allComponents" :key="i.id">
-      <GokbReviewsTitleCard
+      <gokb-reviews-title-card
         :id="i.id.toString()"
+        @keys="addkeyFields"
       />
     </v-col>
   </v-row>
@@ -33,6 +34,7 @@
       return {
         allComponents: [],
         allHtmlClasses: [],
+        allFieldKeys: new Set(),
         finishedLoading: false
       }
     },
@@ -46,18 +48,16 @@
     methods: {
       getAllHtmlClasses () {
         this.allHtmlClasses.push("titlecard-headline")
-        console.log(this.allComponents)
         for (const component of this.allComponents) {
-          // console.log("key : " + key)
-          console.log("component : " + component)
           for (const [fieldKey, fieldValue] of Object.entries(component)) {
-            console.log("key : " + fieldKey)
             if (!(fieldKey in ["name", "identifiers"])) {
               this.allHtmlClasses.push("titlecard-" + fieldKey)
             }
           }
         }
-        console.log(this.allHtmlClasses)
+      },
+      addkeyFields (keys) {
+        keys.forEach(key => this.allFieldKeys.add(key))
       }
     }
   }
