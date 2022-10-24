@@ -886,6 +886,7 @@
       "value": "Value",
       "namespace": "Namespace | Namespaces",
       "validation": {
+        "generic": "This identifier value is invalid!",
         "pattern": "The entered value does not meet the format requirements."
       }
     },

@@ -886,6 +886,7 @@
       "value": "Wert",
       "namespace": "Namensraum | Namensräume",
       "validation": {
+        "generic": "Dieser Wert ist ungültig!",
         "pattern": "Der eingegebene Wert hat ein ungültiges Format."
       }
     },
