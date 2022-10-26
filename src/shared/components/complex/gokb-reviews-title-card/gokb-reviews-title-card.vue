@@ -4,11 +4,13 @@
       <h5 class="titlecard-headline">{{ title.name }}</h5>
     </v-card-title>
 
-    <v-card-text class="flex" v-for="i in title.identifiers" :key="i.id">
-      <div class="titlecard-ids" :class="i.namespace.value">{{ i.value }}</div>
+    <v-card-text class="flex" v-for="(i, count) in title.identifiers" :key="i.id">
+      <div v-if="count == 0">{{ $tc('component.identifier.label', 2) }}</div>
+      <div class="titlecard-ids" :class="i.namespace.value">{{ i.namespace.value }}: {{ i.value }}</div>
     </v-card-text>
 
     <v-card-text class="flex" v-if="!!title?.history">
+      <div class="titlecard-history">{{ $t('component.title.history.label') }}</div>
       <div class="titlecard-history">{{ title.history }}</div>
     </v-card-text>
   </v-card>
@@ -45,6 +47,7 @@
         return ids
       },
       getUsedKeys () {
+        // TODO: delete this function (incl. the emit) again in case it will not be needed
         let usedKeys = []
         if (this.hasTitle) {
           for (let [key, value] of Object.entries(this.title)) {
@@ -87,7 +90,7 @@
           identifiers: _embedded?.ids
         }
         this.finishedLoading = true
-        this.$emit('keys', this.getUsedKeys)
+        // this.$emit('keys', this.getUsedKeys) TODO: reactivate or delete
       },
       hasTitle () {
         return (!!this.titleName && !!this.identifiers && this.finishedLoading)
