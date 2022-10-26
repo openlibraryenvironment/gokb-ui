@@ -266,7 +266,6 @@
         this.errors = []
         this.importRunning = true
         this.completion = 0
-        console.log(this.options.selectedFile?.size)
         var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
 
         const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, this.cancelToken.token)
