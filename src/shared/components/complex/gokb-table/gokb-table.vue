@@ -115,6 +115,7 @@
           <a
             v-if="!!item.extlink"
             :href="item.extlink"
+            target="_blank"
           >
             <v-icon
               style="cursor:pointer"

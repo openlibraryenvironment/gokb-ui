@@ -1,16 +1,5 @@
 
 const api = (baseServices) => ({
-    upload (file, parameters, cancelToken) {
-      const urlParameters = baseServices.createQueryParameters(parameters)
-      const data = new FormData().append('file', file)
-      const url = process.env.VUE_APP_YGOR_BASE_URL + `/enrichment/processCompleteWithToken?${urlParameters}`
-      const result = baseServices.request({
-        method: 'POST',
-        url,
-        data
-      }, cancelToken)
-      return result
-    },
     export (ids, type, cancelToken) {
       if (ids.length > 1) {
         const url = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart${type === 'title' ? '?exportType=title' : ''}`
@@ -28,6 +17,17 @@ const api = (baseServices) => ({
           url
         }, cancelToken)
       }
+    },
+    validate (file, namespace, cancelToken) {
+      const data = new FormData()
+      data.append('submissionFile', file)
+      const url = process.env.VUE_APP_API_BASE_URL + `/validation/kbart` + (namespace ? `?namespace=${namespace}` : '')
+      const result = baseServices.request({
+        method: 'POST',
+        url,
+        data
+      }, cancelToken)
+      return result
     }
 })
 

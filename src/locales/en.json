@@ -28,6 +28,7 @@
     "search": "Search",
     "submit": "Submit",
     "update": "Update",
+    "validate": "Validate",
     "bulkSelect": "Set Status of {0} entries to ...",
     "bulkCloseReview": "Mark {0} reviews as done"
   },
@@ -304,6 +305,7 @@
       "tabsCountRow": "This line contains {0} columns instead of {1} columns, as defined by the headings!",
       "missingVal": "Missing value in column '{0}'!",
       "missingCols": "Missing columns: {0}",
+      "correctedVal": "Value '{0}' will be automatically replaced by '{1}'",
       "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "illegalVal": "Value {0} is not valid!",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
@@ -314,10 +316,14 @@
         "unknown": "There were errors saving the KBART file!",
         "notFound": "No KBART file was found for the provided URL!",
         "protocol": "KBART URL has an unsupported protocol!"
+      },
+      "reason": {
+        "label": "Reason | Reasons"
       }
     },
     "processing": {
       "cancelled": "KBART processing was cancelled after {0} rows!",
+      "started": "KBART is being validated...",
       "summary": "Summary",
       "rowStats": "Row Statistics",
       "total": {
@@ -880,6 +886,7 @@
       "value": "Value",
       "namespace": "Namespace | Namespaces",
       "validation": {
+        "generic": "This identifier value is invalid!",
         "pattern": "The entered value does not meet the format requirements."
       }
     },

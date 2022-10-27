@@ -7,10 +7,10 @@
     :mark-required="markRequired"
     :errors="!!apiErrors"
   >
-    <gokb-add-item-popup
+    <gokb-add-identifier-popup
       v-if="addIdentifierPopupVisible"
       v-model="addIdentifierPopupVisible"
-      :component="{ type: 'GokbIdentifierField', name: $tc('component.identifier.label'), properties: { targetType: targetType } }"
+      :target-type="targetType"
       @add="addNewIdentifier"
     />
     <template #buttons>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-  import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
+  import GokbAddIdentifierPopup from '@/shared/popups/gokb-add-identifier-popup'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import namespaceServices from '@/shared/services/namespace-services'
 
@@ -63,7 +63,7 @@
   export default {
     name: 'GokbIdentifierSection',
     components: {
-      GokbAddItemPopup,
+      GokbAddIdentifierPopup,
       GokbConfirmationPopup
     },
     props: {
