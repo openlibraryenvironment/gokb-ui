@@ -62,7 +62,7 @@
         />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row style="margin-bottom: 20px">
       <v-col md="12">
         <template>
           <div v-if="reviewComponent.stdDesc">

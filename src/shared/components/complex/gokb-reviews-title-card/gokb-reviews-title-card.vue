@@ -6,11 +6,23 @@
 
     <v-card-text class="flex" v-if="!!title?.identifiers?.length > 0">
       <gokb-table
-        :headers="tableHeaders"
+        :headers="idHeaders"
         :items="idsVisible"
         :editable="idsEditable"
         :options.sync="variantNameOptions"
         :total-number-of-items="totalNumberOfIds"
+        :hide-select="true"
+        :hide-pagination="true"
+      />
+    </v-card-text>
+
+    <v-card-text class="flex" >
+      <gokb-table
+        :headers="historyHeaders"
+        :items="getHistory"
+        :editable="historyEditable"
+        :options.sync="variantNameOptions"
+        :total-number-of-items="getHistory.length"
         :hide-select="true"
         :hide-pagination="true"
       />
@@ -72,16 +84,32 @@
         }
         return usedKeys
       },
-      tableHeaders () {
+      idHeaders () {
         return [
-          { text: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'namepsace', sortable: false },
-          { text: this.$i18n.tc('component.identifier.label', 1), align: 'start', value: 'value', sortable: false },
+          { text: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'namespace', sortable: false },
+          { text: this.$i18n.tc('component.identifier.label', 1), align: 'start', value: 'value', sortable: false }
         ]
       },
       idsVisible () {
         return [...this.title?.identifiers]
           .map(item => ({
-            ...item,
+            namespace: item.namespace.value,
+            value: item.value
+          }))
+      },
+      idsEditable () {
+        return false
+      },
+      historyHeaders () {
+        return [
+          { text: this.$i18n.tc('component.title.history.date.label'), align: 'start', value: 'date', sortable: false },
+          { text: this.$i18n.tc('component.title.history.from', 1), align: 'start', value: 'from', sortable: false },
+          { text: this.$i18n.tc('component.title.history.to', 1), align: 'start', value: 'to', sortable: false }
+        ]
+      },
+      historyVisible () {
+        return [...this.title?.history]
+          .map(item => ({
             namespace: item.namespace.value,
             value: item.value
           }))
@@ -89,8 +117,29 @@
       totalNumberOfIds () {
         return !!(this.title?.identifiers) ? this.title.identifiers.length : 0
       },
-      idsEditable () {
+      historyEditable () {
         return false
+      },
+      getHistory () {
+        let result = []
+        if (!!this.title?.history){
+          for (let h of this.title?.history?.entries()) {
+            console.log("h: " + h.id)
+            if (!!h.from){
+              for (let [subItem, count] of h.from?.entries()) {
+                console.log("subItem: " + subItem)
+                console.log("count: " + count)
+                result.push({
+                  date: h.date,
+                  from: h.from[count],
+                  to  : h.to[count]
+                })
+              }
+            }
+          }
+        }
+        // TODO: add Coverage
+        return result
       }
     },
     watch: {},

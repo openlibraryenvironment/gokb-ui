@@ -580,7 +580,9 @@
           "changedTo": {
             "label": "wurde zu"
           }
-        }
+        },
+        "from": "von",
+        "to": "nach"
       }
     },
     "journal": {
