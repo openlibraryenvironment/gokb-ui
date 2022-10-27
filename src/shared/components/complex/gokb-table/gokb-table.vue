@@ -169,7 +169,7 @@
         </div>
       </template>
     </v-data-table>
-    <div class="text-center pt-2">
+    <div v-if="!hidePagination" class="text-center pt-2">
       <v-pagination
         v-model="options.page"
         color="secondary"
@@ -230,6 +230,11 @@
         type: Boolean,
         required: false,
         default: true,
+      },
+      hidePagination: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
       totalNumberOfItems: {
         type: Number,

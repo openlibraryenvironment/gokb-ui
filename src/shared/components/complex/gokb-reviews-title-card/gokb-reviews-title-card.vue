@@ -8,23 +8,12 @@
       <gokb-table
         :headers="tableHeaders"
         :items="idsVisible"
-        :editable="isEditable"
+        :editable="idsEditable"
         :options.sync="variantNameOptions"
         :total-number-of-items="totalNumberOfIds"
+        :hide-select="true"
+        :hide-pagination="true"
       />
-    </v-card-text>
-
-    <v-card-text class="flex" v-for="i in title.identifiers" :key="i.id">
-      <gokb-identifier-field
-        :value="{value:i.value, namespace:i.namespace.value}"
-        :allowNewValues="true"
-        :draggable="true"
-        :label="i.namespace.value"
-      />
-    </v-card-text>
-
-    <v-card-text class="flex" v-for="i in title.identifiers" :key="i.id">
-      <div class="titlecard-ids" :class="i.namespace.value">{{ i.namespace.value }}: {{ i.value }}</div>
     </v-card-text>
 
     <v-card-text class="flex" v-if="!!title?.history">
@@ -100,8 +89,8 @@
       totalNumberOfIds () {
         return !!(this.title?.identifiers) ? this.title.identifiers.length : 0
       },
-      isEditable () {
-        return !this.disabled
+      idsEditable () {
+        return false
       }
     },
     watch: {},
