@@ -1,13 +1,7 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col md="3" cols="3" class="pa-1" v-for="i in allComponents" :key="i.id">
-        <gokb-reviews-title-card
-          :id="i.id.toString()"
-          @keys="addkeyFields"
-        />
-      </v-col>
-      <v-col md="3" cols="3" class="pa-1" v-for="i in allComponents" :key="i.id">
+      <v-col :md="colGridWidth" :cols="colGridWidth" class="pa-1" v-for="i in allComponents" :key="i.id">
         <gokb-reviews-title-card
           :id="i.id.toString()"
           @keys="addkeyFields"
@@ -46,7 +40,11 @@
         finishedLoading: false
       }
     },
-    computed: {},
+    computed: {
+      colGridWidth () {
+        return 12 / this.allComponents.length > 3 ? 12 / this.allComponents.length : 3
+      }
+    },
     mounted () {
       this.allComponents = [this.reviewedComponent]
       this.allComponents.push.apply(this.allComponents, this.referenceComponents)

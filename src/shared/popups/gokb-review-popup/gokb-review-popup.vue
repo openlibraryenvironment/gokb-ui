@@ -2,7 +2,7 @@
   <gokb-dialog
     v-model="localValue"
     :title="localTitle"
-    :width="max-width"
+    width="max-width"
     @submit="save"
   >
     <gokb-error-component :value="error" />
