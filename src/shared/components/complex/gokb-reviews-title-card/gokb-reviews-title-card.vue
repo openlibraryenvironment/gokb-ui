@@ -4,8 +4,26 @@
       <h5 class="titlecard-headline">{{ title.name }}</h5>
     </v-card-title>
 
-    <v-card-text class="flex" v-for="(i, count) in title.identifiers" :key="i.id">
-      <div v-if="count == 0">{{ $tc('component.identifier.label', 2) }}</div>
+    <v-card-text class="flex" v-if="!!title?.identifiers?.length > 0">
+      <gokb-table
+        :headers="tableHeaders"
+        :items="idsVisible"
+        :editable="isEditable"
+        :options.sync="variantNameOptions"
+        :total-number-of-items="totalNumberOfIds"
+      />
+    </v-card-text>
+
+    <v-card-text class="flex" v-for="i in title.identifiers" :key="i.id">
+      <gokb-identifier-field
+        :value="{value:i.value, namespace:i.namespace.value}"
+        :allowNewValues="true"
+        :draggable="true"
+        :label="i.namespace.value"
+      />
+    </v-card-text>
+
+    <v-card-text class="flex" v-for="i in title.identifiers" :key="i.id">
       <div class="titlecard-ids" :class="i.namespace.value">{{ i.namespace.value }}: {{ i.value }}</div>
     </v-card-text>
 
@@ -19,10 +37,13 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import titleServices from '@/shared/services/title-services'
+  import GokbTitleIdsField from '../../simple/gokb-title-ids-field/gokb-title-ids-field.vue'
+
+  const ROWS_PER_PAGE = 10
 
   export default {
     name: 'GokbReviewsTitleCard',
-    components: {},
+    components: {GokbTitleIdsField},
     extends: BaseComponent,
     props: {
       id: {
@@ -33,7 +54,11 @@
     data () {
       return {
         title: undefined,
-        wantedFields: ["name", "identifiers", "history"]
+        wantedFields: ["name", "identifiers", "history"],
+        variantNameOptions: {
+          page: 1,
+          itemsPerPage: ROWS_PER_PAGE
+        }
       }
     },
     computed: {
@@ -57,6 +82,26 @@
           }
         }
         return usedKeys
+      },
+      tableHeaders () {
+        return [
+          { text: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'namepsace', sortable: false },
+          { text: this.$i18n.tc('component.identifier.label', 1), align: 'start', value: 'value', sortable: false },
+        ]
+      },
+      idsVisible () {
+        return [...this.title?.identifiers]
+          .map(item => ({
+            ...item,
+            namespace: item.namespace.value,
+            value: item.value
+          }))
+      },
+      totalNumberOfIds () {
+        return !!(this.title?.identifiers) ? this.title.identifiers.length : 0
+      },
+      isEditable () {
+        return !this.disabled
       }
     },
     watch: {},
