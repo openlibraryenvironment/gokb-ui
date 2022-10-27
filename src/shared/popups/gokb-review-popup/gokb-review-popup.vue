@@ -2,7 +2,7 @@
   <gokb-dialog
     v-model="localValue"
     :title="localTitle"
-    :width="1000"
+    :width="max-width"
     @submit="save"
   >
     <gokb-error-component :value="error" />
@@ -202,7 +202,7 @@
         this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(oc => ({
           name: oc.name,
           id: (oc.oid ? oc.oid.split(':')[1] : oc.id),
-          type: (oc.type ? oc.type.niceName : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
+          type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
           route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
         })) : []
         console.log("Other Components:")

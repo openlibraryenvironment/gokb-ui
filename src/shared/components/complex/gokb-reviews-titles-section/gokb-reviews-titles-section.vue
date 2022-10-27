@@ -1,12 +1,20 @@
 <template>
-  <v-row align="stretch" class="ma-2">
-    <v-col md="4" class="pa-3" v-for="i in allComponents" :key="i.id">
-      <gokb-reviews-title-card
-        :id="i.id.toString()"
-        @keys="addkeyFields"
-      />
-    </v-col>
-  </v-row>
+  <v-container fluid>
+    <v-row>
+      <v-col md="3" cols="3" class="pa-1" v-for="i in allComponents" :key="i.id">
+        <gokb-reviews-title-card
+          :id="i.id.toString()"
+          @keys="addkeyFields"
+        />
+      </v-col>
+      <v-col md="3" cols="3" class="pa-1" v-for="i in allComponents" :key="i.id">
+        <gokb-reviews-title-card
+          :id="i.id.toString()"
+          @keys="addkeyFields"
+        />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
