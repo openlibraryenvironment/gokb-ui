@@ -122,21 +122,17 @@
       },
       getHistory () {
         let result = []
-        if (!!this.title?.history){
-          for (let h of this.title?.history?.entries()) {
-            console.log("h: " + h.id)
-            if (!!h.from){
-              for (let [subItem, count] of h.from?.entries()) {
-                console.log("subItem: " + subItem)
-                console.log("count: " + count)
-                result.push({
-                  date: h.date,
-                  from: h.from[count],
-                  to  : h.to[count]
-                })
-              }
-            }
-          }
+        if (!!this.title?.history) {
+          this.title?.history.forEach(h => {
+            h.from.forEach((from, i) => {
+              result.push({
+                id  : h.id,
+                date: h.date,
+                from: h.from[i].name,
+                to  : h.to[i]?.name
+              })
+            })
+          })
         }
         // TODO: add Coverage
         return result
