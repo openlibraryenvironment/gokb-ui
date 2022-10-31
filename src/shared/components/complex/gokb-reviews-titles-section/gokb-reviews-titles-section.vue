@@ -4,6 +4,7 @@
       <v-col :md="colGridWidth" :cols="colGridWidth" class="pa-1" v-for="i in allComponents" :key="i.id">
         <gokb-reviews-title-card
           :id="i.id.toString()"
+          :role="cardRole(i.id)"
           @keys="addkeyFields"
         />
       </v-col>
@@ -14,6 +15,11 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import GokbReviewsTitleCard from '@/shared/components/complex/gokb-reviews-title-card'
+
+  const RR_COMPONENT_ROLES = Object.freeze({
+    REVIEWED_COMPONENT: "reviewedComponent",
+    CANDIDATE_COMPONENT: "candidateComponent"
+  })
 
   export default {
     name: 'GokbReviewsTitlesSection',
@@ -64,6 +70,12 @@
       },
       addkeyFields (keys) {
         keys.forEach(key => this.allFieldKeys.add(key))
+      },
+      cardRole (cardComponentId) {
+        if (cardComponentId == this.reviewedComponent.id) {
+          return RR_COMPONENT_ROLES.REVIEWED_COMPONENT
+        }
+        return RR_COMPONENT_ROLES.CANDIDATE_COMPONENT
       }
     }
   }

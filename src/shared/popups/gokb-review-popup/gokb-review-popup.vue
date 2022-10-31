@@ -205,10 +205,6 @@
           type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
           route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
         })) : []
-        console.log("Other Components:")
-        for (let [key, value] of Object.entries(this.reviewItem.otherComponents)) {
-          console.log(key, value);
-        }
         this.updateUrl = _links?.update?.href || undefined
         this.deleteUrl = _links?.delete?.href || undefined
         this.version = version

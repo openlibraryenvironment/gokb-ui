@@ -1,5 +1,5 @@
 <template>
-  <v-card class="elevation-4 flex d-flex flex-column" v-if="!!title?.name"> 
+  <v-card class="elevation-4 flex d-flex flex-column" :class="roleToClass(role)" v-if="!!title?.name">
     <v-card-title primary-title>
       <h5 class="titlecard-headline">{{ title.name }}</h5>
     </v-card-title>
@@ -16,6 +16,10 @@
       />
     </v-card-text>
 
+    <v-card-text class="flex" v-if="!!title?.history">
+      <div class="titlecard-history">{{ $t('component.title.history.label') }}</div>
+    </v-card-text>
+
     <v-card-text class="flex" >
       <gokb-table
         :headers="historyHeaders"
@@ -27,11 +31,6 @@
         :hide-pagination="true"
       />
     </v-card-text>
-
-    <v-card-text class="flex" v-if="!!title?.history">
-      <div class="titlecard-history">{{ $t('component.title.history.label') }}</div>
-      <div class="titlecard-history">{{ title.history }}</div>
-    </v-card-text>
   </v-card>
 </template>
 
@@ -39,6 +38,7 @@
   import BaseComponent from '@/shared/components/base-component'
   import titleServices from '@/shared/services/title-services'
   import GokbTitleIdsField from '../../simple/gokb-title-ids-field/gokb-title-ids-field.vue'
+  import RR_COMPONENT_ROLES from '../../components/complex/gokb-reviews-titles-section/gokb-reviews-titles-section.vue'
 
   const ROWS_PER_PAGE = 10
 
@@ -50,6 +50,15 @@
       id: {
         type: String,
         required: true
+      },
+      role: {
+        type: String,
+        required: false
+      },
+      selected: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -173,6 +182,14 @@
       },
       hasTitle () {
         return (!!this.titleName && !!this.identifiers && this.finishedLoading)
+      },
+      roleToClass (roleName) {
+        if (roleName == RR_COMPONENT_ROLES.REVIEWED_COMPONENT) {
+          return "card-reviewed"
+        }
+        if (roleName == RR_COMPONENT_ROLES.CANDIDATE_COMPONENT && this.selected) {
+          return "card-candidate-selected"
+        }
       }
     }
   }
