@@ -26,7 +26,9 @@
     "reset": "Zurücksetzen",
     "retire": "Archivieren",
     "search": "Suchen",
+    "select": "Auswählen",
     "submit": "Abschicken",
+    "unselect": "Zurücklegen",
     "update": "Aktualisieren",
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
     "bulkCloseReview": "{0} als erledigt markieren"

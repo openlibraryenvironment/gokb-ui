@@ -31,6 +31,16 @@
         :hide-pagination="true"
       />
     </v-card-text>
+    <gokb-button v-if="!selected && role!='reviewedComponent'"
+      @click="selectCard"
+    >
+      {{ $i18n.t('btn.select') }}
+    </gokb-button>
+    <gokb-button v-if="selected && role!='reviewedComponent'"
+      @click="unselectCard"
+    >
+      {{ $i18n.t('btn.unselect') }}
+    </gokb-button>
   </v-card>
 </template>
 
@@ -189,6 +199,12 @@
       },
       hasTitle () {
         return (!!this.titleName && !!this.identifiers && this.finishedLoading)
+      },
+      selectCard () {
+        this.selected = true
+      },
+      unselectCard () {
+        this.selected = false
       }
     }
   }

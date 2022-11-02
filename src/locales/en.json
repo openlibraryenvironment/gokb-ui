@@ -26,7 +26,9 @@
     "reset": "Reset",
     "retire": "Retire",
     "search": "Search",
+    "select": "Select",
     "submit": "Submit",
+    "unselect": "Unselect",
     "update": "Update",
     "bulkSelect": "Set Status of {0} entries to ...",
     "bulkCloseReview": "Mark {0} reviews as done"
