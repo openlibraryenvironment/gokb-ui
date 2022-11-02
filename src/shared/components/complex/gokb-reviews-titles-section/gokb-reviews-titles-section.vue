@@ -16,11 +16,6 @@
   import BaseComponent from '@/shared/components/base-component'
   import GokbReviewsTitleCard from '@/shared/components/complex/gokb-reviews-title-card'
 
-  const RR_COMPONENT_ROLES = Object.freeze({
-    REVIEWED_COMPONENT: "reviewedComponent",
-    CANDIDATE_COMPONENT: "candidateComponent"
-  })
-
   export default {
     name: 'GokbReviewsTitlesSection',
     components: {
@@ -73,9 +68,9 @@
       },
       cardRole (cardComponentId) {
         if (cardComponentId == this.reviewedComponent.id) {
-          return RR_COMPONENT_ROLES.REVIEWED_COMPONENT
+          return "reviewedComponent"
         }
-        return RR_COMPONENT_ROLES.CANDIDATE_COMPONENT
+        return "candidateComponent"
       }
     }
   }

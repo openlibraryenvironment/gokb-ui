@@ -1,5 +1,5 @@
 <template>
-  <v-card class="elevation-4 flex d-flex flex-column" :class="roleToClass(role)" v-if="!!title?.name">
+  <v-card class="elevation-4 flex d-flex flex-column" :color="roleColor" v-if="!!title?.name">
     <v-card-title primary-title>
       <h5 class="titlecard-headline">{{ title.name }}</h5>
     </v-card-title>
@@ -38,7 +38,6 @@
   import BaseComponent from '@/shared/components/base-component'
   import titleServices from '@/shared/services/title-services'
   import GokbTitleIdsField from '../../simple/gokb-title-ids-field/gokb-title-ids-field.vue'
-  import RR_COMPONENT_ROLES from '../../components/complex/gokb-reviews-titles-section/gokb-reviews-titles-section.vue'
 
   const ROWS_PER_PAGE = 10
 
@@ -145,6 +144,14 @@
         }
         // TODO: add Coverage
         return result
+      },
+      roleColor () {
+        if (this.role == "reviewedComponent") {
+          return "#ffc1c1"
+        }
+        if (this.role == "candidateComponent" && this.selected) {
+          return "#c1ffc1"
+        }
       }
     },
     watch: {},
@@ -182,14 +189,6 @@
       },
       hasTitle () {
         return (!!this.titleName && !!this.identifiers && this.finishedLoading)
-      },
-      roleToClass (roleName) {
-        if (roleName == RR_COMPONENT_ROLES.REVIEWED_COMPONENT) {
-          return "card-reviewed"
-        }
-        if (roleName == RR_COMPONENT_ROLES.CANDIDATE_COMPONENT && this.selected) {
-          return "card-candidate-selected"
-        }
       }
     }
   }
