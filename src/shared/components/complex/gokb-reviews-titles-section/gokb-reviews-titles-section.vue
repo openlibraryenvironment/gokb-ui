@@ -5,7 +5,9 @@
         <gokb-reviews-title-card
           :id="i.id.toString()"
           :role="cardRole(i.id)"
+          :selected-card-id="selectedCardId"
           @keys="addkeyFields"
+          @set-active="setSelectedCardId"
         />
       </v-col>
     </v-row>
@@ -38,7 +40,8 @@
         allComponents: [],
         allHtmlClasses: [],
         allFieldKeys: new Set(),
-        finishedLoading: false
+        finishedLoading: false,
+        selectedCardId: undefined
       }
     },
     computed: {
@@ -71,6 +74,10 @@
           return "reviewedComponent"
         }
         return "candidateComponent"
+      },
+      setSelectedCardId (id) {
+        this.selectedCardId = id
+        console.log("setSelectedCardId: " + id)
       }
     }
   }

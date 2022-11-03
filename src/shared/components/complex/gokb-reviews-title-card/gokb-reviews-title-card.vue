@@ -11,7 +11,7 @@
         :editable="idsEditable"
         :options.sync="variantNameOptions"
         :total-number-of-items="totalNumberOfIds"
-        :hide-select="true"
+        :hide-select="!isSelected"
         :hide-pagination="true"
       />
     </v-card-text>
@@ -27,19 +27,24 @@
         :editable="historyEditable"
         :options.sync="variantNameOptions"
         :total-number-of-items="getHistory.length"
-        :hide-select="true"
+        :hide-select="!isSelected"
         :hide-pagination="true"
       />
     </v-card-text>
-    <gokb-button v-if="!selected && role!='reviewedComponent'"
+    <gokb-button v-if="!isSelected && !isOtherCardSelected && role!='reviewedComponent'"
       @click="selectCard"
     >
       {{ $i18n.t('btn.select') }}
     </gokb-button>
-    <gokb-button v-if="selected && role!='reviewedComponent'"
+    <gokb-button v-if="isSelected && role!='reviewedComponent'"
       @click="unselectCard"
     >
       {{ $i18n.t('btn.unselect') }}
+    </gokb-button>
+    <gokb-button v-if="isSelected && role!='reviewedComponent'"
+      @click="confirmCard"
+    >
+      {{ $i18n.t('btn.confirm') }}
     </gokb-button>
   </v-card>
 </template>
@@ -60,14 +65,19 @@
         type: String,
         required: true
       },
+      selectedCardId: {
+        type: String,
+        required: false,
+        default: undefined
+      },
       role: {
         type: String,
         required: false
       },
-      selected: {
+      enabled: {
         type: Boolean,
         required: false,
-        default: false
+        default: true
       }
     },
     data () {
@@ -77,7 +87,8 @@
         variantNameOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
-        }
+        },
+        selCardId: undefined
       }
     },
     computed: {
@@ -159,12 +170,23 @@
         if (this.role == "reviewedComponent") {
           return "#ffc1c1"
         }
-        if (this.role == "candidateComponent" && this.selected) {
+        if (this.role == "candidateComponent" && this.isSelected) {
           return "#c1ffc1"
         }
+      },
+      isSelected () {
+        return !!this.id && this.id == this.selCardId
+      },
+      isOtherCardSelected () {
+        return !!this.id && !!this.selCardId && this.id != this.selCardId
       }
     },
-    watch: {},
+    watch: {
+      selectedCardId () {
+        this.selCardId = this.selectedCardId
+        console.log("Changed selected to: " + this.selCardId + " for card " + this.id)
+      }
+    },
     async mounted () {
       this.fetchTitle(this.id)
       this.identifiers = this.identifiersMap
@@ -201,10 +223,12 @@
         return (!!this.titleName && !!this.identifiers && this.finishedLoading)
       },
       selectCard () {
-        this.selected = true
+        this.selCardId = this.id
+        this.$emit('set-active', this.id)
       },
       unselectCard () {
-        this.selected = false
+        this.selCardId = undefined
+        this.$emit('set-active', undefined)
       }
     }
   }
