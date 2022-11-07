@@ -11,8 +11,10 @@
         :editable="idsEditable"
         :options.sync="variantNameOptions"
         :total-number-of-items="totalNumberOfIds"
-        :hide-select="!isSelected"
         :hide-pagination="true"
+        :hide-select="!isOtherCardSelected"
+        :actions="isReviewedCard ? null : true"
+        @delete-item="deleteId"
       />
     </v-card-text>
 
@@ -27,25 +29,29 @@
         :editable="historyEditable"
         :options.sync="variantNameOptions"
         :total-number-of-items="getHistory.length"
-        :hide-select="!isSelected"
+        :hide-select="true"
         :hide-pagination="true"
       />
     </v-card-text>
-    <gokb-button v-if="!isSelected && !isOtherCardSelected && role!='reviewedComponent'"
-      @click="selectCard"
-    >
-      {{ $i18n.t('btn.select') }}
-    </gokb-button>
-    <gokb-button v-if="isSelected && role!='reviewedComponent'"
-      @click="unselectCard"
-    >
-      {{ $i18n.t('btn.unselect') }}
-    </gokb-button>
-    <gokb-button v-if="isSelected && role!='reviewedComponent'"
-      @click="confirmCard"
-    >
-      {{ $i18n.t('btn.confirm') }}
-    </gokb-button>
+    <v-row>
+      <v-col>
+        <gokb-button v-if="!isSelected && !isOtherCardSelected && role!='reviewedComponent'"
+          @click="selectCard"
+        >
+          {{ $i18n.t('btn.select') }}
+        </gokb-button>
+        <gokb-button v-if="isSelected && role!='reviewedComponent'"
+          @click="unselectCard"
+        >
+          {{ $i18n.t('btn.unselect') }}
+        </gokb-button>
+        <gokb-button v-if="isSelected && role!='reviewedComponent'"
+          @click="confirmCard"
+        >
+          {{ $i18n.t('btn.confirm') }}
+        </gokb-button>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 
@@ -88,7 +94,9 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
-        selCardId: undefined
+        selCardId: undefined,
+        isSelected: false,
+        isReviewedCard: undefined
       }
     },
     computed: {
@@ -123,11 +131,12 @@
         return [...this.title?.identifiers]
           .map(item => ({
             namespace: item.namespace.value,
-            value: item.value
+            value: item.value,
+            isDeletable: true
           }))
       },
       idsEditable () {
-        return false
+        return this.isSelected || (this.role != "candidateComponent" && this.isOtherCardSelected)
       },
       historyHeaders () {
         return [
@@ -174,18 +183,20 @@
           return "#c1ffc1"
         }
       },
-      isSelected () {
-        return !!this.id && this.id == this.selCardId
-      },
       isOtherCardSelected () {
         return !!this.id && !!this.selCardId && this.id != this.selCardId
       }
     },
     watch: {
+      selCardId () {
+        this.isSelected = !!this.id && this.id == this.selCardId
+      },
       selectedCardId () {
         this.selCardId = this.selectedCardId
-        console.log("Changed selected to: " + this.selCardId + " for card " + this.id)
       }
+    },
+    created () {
+      this.isReviewedCard = this.role == "reviewedComponent"
     },
     async mounted () {
       this.fetchTitle(this.id)
@@ -229,6 +240,14 @@
       unselectCard () {
         this.selCardId = undefined
         this.$emit('set-active', undefined)
+      },
+      confirmCard () {
+        console.log("confirmCard")
+        // TODO
+      },
+      deleteId (id) {
+        console.log("deleteId: " + id.value)
+        // TODO
       }
     }
   }
