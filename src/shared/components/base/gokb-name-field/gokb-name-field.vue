@@ -70,7 +70,8 @@
 
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
-  import searchServices from '@/shared/services/search-services'
+  import genericServices from '@/shared/services/generic-entity-services'
+
   import { createCancelToken } from '@/shared/services/http'
 
   export default {
@@ -210,18 +211,14 @@
       },
       async checkForDupes (type) {
         this.cancelToken = createCancelToken()
-        var response = await searchServices('rest/entities').search({
-          name: this.editedVal,
-          status: 'Current',
-          componentType: type,
-          es: 'true',
-          max: 20
-        }, this.cancelToken.token)
+        var response = await genericServices('rest/entities').checkNewName(
+          this.editedVal,
+          type,
+          this.cancelToken.token
+        )
 
         if (response?.status < 400) {
-          var dupes = response.data?.data.filter(res => (res.name.toLowerCase() === this.editedVal.toLowerCase() && (!this.itemId || (this.itemId !== res.id))))
-
-          if (dupes?.length > 0) {
+          if (response.data.result === 'ERROR') {
             return true
           } else {
             return false

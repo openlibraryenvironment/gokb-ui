@@ -16,7 +16,7 @@
     maxlength="255"
     :placeholder="placeholder"
     :append-icon="appendIcon"
-    validate-on-blur
+    :validate-on-blur="validateOnBlur"
     :clearable="!readonly && !disabled"
     :dense="dense"
     @click:append="$emit('click:append', $event)"
@@ -70,6 +70,11 @@
         type: String,
         required: false,
         default: 'text',
+      },
+      validateOnBlur: {
+        type: Boolean,
+        required: true,
+        default: false,
       },
       required: {
         type: Boolean,
