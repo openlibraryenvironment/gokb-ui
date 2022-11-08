@@ -277,7 +277,6 @@
         return Math.min(Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage), this.options.page + 10, 1000)
       },
       showSelect () {
-        // TODO: check side effects of changing from "this.editable || !this.hideSelect" on instances outside of gokb-reviews-title-card
         return this.editable && !this.hideSelect
       }
     },

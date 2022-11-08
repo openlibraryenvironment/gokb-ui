@@ -201,7 +201,7 @@
         :editable="isEditable"
         :total-number-of-items="totalNumberOfNewItems"
         :options.sync="newOptions"
-        hide-select
+        :hide-select="!isEditable"
         @paginate="resultNewPaginate"
         @edit="editTitle"
       />
