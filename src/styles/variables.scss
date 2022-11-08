@@ -28,3 +28,10 @@ $input-top-spacing: '0px';
     -moz-font-feature-settings: 'liga';
     -moz-osx-font-smoothing: grayscale;
 };
+
+:empty .text-start .v-data-table__selected .rr-id-reviewed-striked {};
+
+:empty .text-start .rr-id-reviewed-striked {
+    text-decoration: line-through;
+    font-weight: lighter;
+};

@@ -6,6 +6,7 @@
 
     <v-card-text class="flex" v-if="!!title?.identifiers?.length > 0">
       <gokb-table
+        :class="tableClass"
         :headers="idHeaders"
         :items="idsVisible"
         :editable="idsEditable"
@@ -96,7 +97,9 @@
         },
         selCardId: undefined,
         isCardSelected: false,
-        isReviewedCard: undefined
+        isOtherCardSelected: false,
+        isReviewedCard: undefined,
+        tableClass: undefined
       }
     },
     computed: {
@@ -128,17 +131,13 @@
         ]
       },
       idsVisible () {
-        let val = [...this.title?.identifiers]
+        return [...this.title?.identifiers]
           .map(item => ({
             id: item.id,
             namespace: item.namespace.value,
             value: item.value,
             isDeletable: true
           }))
-        for (let [key, value] of Object.entries(val)) {
-          console.log(key, value)
-        }
-        return val
       },
       idsEditable () {
         return this.isCardSelected || (this.role != "candidateComponent" && this.isOtherCardSelected)
@@ -187,14 +186,23 @@
         if (this.role == "candidateComponent" && this.isCardSelected) {
           return "#c1ffc1"
         }
-      },
-      isOtherCardSelected () {
-        return !!this.id && !!this.selCardId && this.id != this.selCardId
       }
     },
     watch: {
       selCardId () {
-        this.isCardSelected = !!this.id && this.id == this.selCardId
+        this.isCardSelected = !!this.id && this.selCardId && this.id == this.selCardId
+        if (typeof this.isCardSelected == 'undefined' || this.isCardSelected == true){
+          this.isOtherCardSelected = false
+        }
+        else {
+          this.isOtherCardSelected = true
+        }
+        if (this.role == "reviewedComponent" && this.isOtherCardSelected) {
+          this.tableClass = "rr-id-reviewed-striked"
+        }
+        else {
+          this.tableClass = undefined
+        }
       },
       selectedCardId () {
         this.selCardId = this.selectedCardId
