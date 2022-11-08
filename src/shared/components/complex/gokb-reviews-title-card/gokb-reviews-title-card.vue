@@ -35,17 +35,17 @@
     </v-card-text>
     <v-row>
       <v-col>
-        <gokb-button v-if="!isSelected && !isOtherCardSelected && role!='reviewedComponent'"
+        <gokb-button v-if="!isCardSelected && !isOtherCardSelected && role!='reviewedComponent'"
           @click="selectCard"
         >
           {{ $i18n.t('btn.select') }}
         </gokb-button>
-        <gokb-button v-if="isSelected && role!='reviewedComponent'"
+        <gokb-button v-if="isCardSelected && role!='reviewedComponent'"
           @click="unselectCard"
         >
           {{ $i18n.t('btn.unselect') }}
         </gokb-button>
-        <gokb-button v-if="isSelected && role!='reviewedComponent'"
+        <gokb-button v-if="isCardSelected && role!='reviewedComponent'"
           @click="confirmCard"
         >
           {{ $i18n.t('btn.confirm') }}
@@ -95,7 +95,7 @@
           itemsPerPage: ROWS_PER_PAGE
         },
         selCardId: undefined,
-        isSelected: false,
+        isCardSelected: false,
         isReviewedCard: undefined
       }
     },
@@ -128,15 +128,20 @@
         ]
       },
       idsVisible () {
-        return [...this.title?.identifiers]
+        let val = [...this.title?.identifiers]
           .map(item => ({
+            id: item.id,
             namespace: item.namespace.value,
             value: item.value,
             isDeletable: true
           }))
+        for (let [key, value] of Object.entries(val)) {
+          console.log(key, value)
+        }
+        return val
       },
       idsEditable () {
-        return this.isSelected || (this.role != "candidateComponent" && this.isOtherCardSelected)
+        return this.isCardSelected || (this.role != "candidateComponent" && this.isOtherCardSelected)
       },
       historyHeaders () {
         return [
@@ -179,7 +184,7 @@
         if (this.role == "reviewedComponent") {
           return "#ffc1c1"
         }
-        if (this.role == "candidateComponent" && this.isSelected) {
+        if (this.role == "candidateComponent" && this.isCardSelected) {
           return "#c1ffc1"
         }
       },
@@ -189,7 +194,7 @@
     },
     watch: {
       selCardId () {
-        this.isSelected = !!this.id && this.id == this.selCardId
+        this.isCardSelected = !!this.id && this.id == this.selCardId
       },
       selectedCardId () {
         this.selCardId = this.selectedCardId
