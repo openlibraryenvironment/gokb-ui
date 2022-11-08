@@ -14,6 +14,24 @@ const api = (baseServices) =>
       CACHE[url] = result
       return result
     },
+
+    checkNewName (name, type, cancelToken) {
+      const url = process.env.VUE_APP_API_BASE_URL + `/validation/componentName?value=${name}&componentType=${type}`
+      const result = baseServices.request({
+        method: 'GET',
+        url
+      }, cancelToken)
+      return result
+    },
+
+    checkIdentifier (value, namespace, cancelToken) {
+      const url = process.env.VUE_APP_API_BASE_URL + `/validation/identifier?value=${value}&namespace=${namespace}`
+      const result = baseServices.request({
+        method: 'GET',
+        url
+      }, cancelToken)
+      return result
+    }
 })
 
 export default api

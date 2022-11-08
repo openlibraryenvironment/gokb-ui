@@ -24,15 +24,10 @@
         v-model="options.dryRun"
         :label="$t('kbart.dryRun.label')"
       />
-      <v-progress-linear
-        height="25"
-        :color="progressColor"
-        :value="completion"
-      >
-        <template #default="{ value: v }">
-          <strong>{{ v }}%</strong>
-        </template>
-      </v-progress-linear>
+      <div v-if="importRunning">
+        <v-progress-circular indeterminate />
+        {{ $t('kbart.processing.started') }}
+      </div>
       <div
         v-if="errors.length > 0"
       >
@@ -50,12 +45,12 @@
         <h4>
           {{ $t('kbart.processing.rowStats') }}
         </h4>
-        {{ $t('kbart.processing.total.label') }}: {{ loadedFile.lineStats.total || '0' }} –
-        {{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.lineStats.warning || '0' }} –
-        {{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.lineStats.error || '0' }}
+        {{ $t('kbart.processing.total.label') }}: {{ loadedFile.rows.total || '0' }} –
+        {{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }} –
+        {{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}
       </div>
       <div
-        v-if="loadedFile.lineStats.error > 0 || loadedFile.lineStats.warning > 0"
+        v-if="loadedFile.rows.error > 0"
         class="ma-2"
       >
         <h4>
@@ -65,12 +60,28 @@
           v-for="(val, col) in loadedFile.errors.type"
           :key="col"
         >
-          <li v-if="val.empty > 0 || val.invalid > 0">
-            <b>{{ col }}</b> - {{ $t('kbart.processing.error.empty') }}: {{ val.empty }}, {{ $t('kbart.processing.error.invalid') }}: {{ val.invalid }}
+          <li>
+            <b>{{ col }}</b> - {{ val }}
           </li>
         </ul>
       </div>
-      <div v-if="loadedFile.lineStats.error > 0 || loadedFile.lineStats.warning > 0">
+      <div
+        v-if="loadedFile.rows.warning > 0"
+        class="ma-2"
+      >
+        <h4>
+          {{ $t('kbart.processing.warning.fields') }}
+        </h4>
+        <ul
+          v-for="(val, col) in loadedFile.warnings.type"
+          :key="col"
+        >
+          <li>
+            <b>{{ col }}</b> - {{ val }}
+          </li>
+        </ul>
+      </div>
+      <div v-if="loadedFile.rows.error > 0 || loadedFile.rows.warning > 0">
         <v-expansion-panels>
           <v-expansion-panel>
             <v-expansion-panel-header>
@@ -114,7 +125,7 @@
         default
         :disabled="!options.selectedFile || importRunning"
       >
-        {{ completion === 100 ? $t('btn.close') : $t('btn.confirm') }}
+        {{ completion === 100 ? $t('btn.confirm') : $t('btn.validate') }}
       </gokb-button>
     </template>
   </gokb-dialog>
@@ -126,6 +137,7 @@
   import jschardet from 'jschardet'
   import GokbNamespaceField from '@/shared/components/simple/gokb-namespace-field'
   import providerServices from '@/shared/services/provider-services'
+  import kbartServices from '@/shared/services/kbart-services'
 
   export default {
     name: 'GokbKbartImportPopup',
@@ -155,109 +167,7 @@
         cancelValidation: false,
         useProprietaryNamespace: false,
         importRunning: undefined,
-        kbartStd: {
-          mandatoryColumns: {
-            publication_title: {
-              rules: {
-                notEmpty: true
-              }
-            },
-            title_id: {
-              rules: {
-                notEmpty: true
-              }
-            },
-            online_identifier: {
-              rules: {
-                serial: /^\d{4}-\d{3}[\dxX]$/,
-                monograph: /^(?=[0-9]{13}$|(?=(?:[0-9]+-){4})[0-9-]{17}$)97[89]-?[0-9]{1,5}-?[0-9]+-?[0-9]+-?[0-9]$/
-              }
-            },
-            print_identifier: {
-              rules: {
-                serial: /^\d{4}-\d{3}[\dxX]$/,
-                monograph: /^(?=[0-9]{13}$|(?=(?:[0-9]+-){4})[0-9-]{17}$)97[89]-?[0-9]{1,5}-?[0-9]+-?[0-9]+-?[0-9]$/
-              }
-            },
-            title_url: {
-              rules: {
-                notEmpty: true,
-                general: /^http[s]?:\/\/.*$/
-              }
-            },
-            publication_type: {
-              rules: {
-                general: /^([Mm]onograph)|([Ss]erial)|([Dd]atabase)|([Oo]ther)$/
-              }
-            }
-          },
-          monograph: {
-            date_monograph_published_print: {
-              rules: {
-                general: /^[1-9][0-9]{3}(-[01][0-9]?(-[0-3][0-9])?)?([T\s][0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z?)?$/
-              }
-            },
-            date_monograph_published_online: {
-              rules: {
-                general: /^[1-9][0-9]{3}(-[01][0-9]?(-[0-3][0-9])?)?([T\s][0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z?)?$/
-              }
-            },
-            monograph_volume: {
-              rules: {}
-            },
-            monograph_edition: {
-              rules: {}
-            },
-            first_author: {
-              rules: {}
-            },
-            first_editor: {
-              rules: {}
-            }
-          },
-          serial: {
-            date_first_issue_online: {
-              type: 'date',
-              rules: {
-                general: /^[1-9][0-9]{3}(-[01][0-9]?(-[0-3][0-9])?)?([T\s][0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z?)?$/
-              }
-            },
-            num_first_vol_online: {
-              rules: {}
-            },
-            num_first_issue_online: {
-              rules: {}
-            },
-            date_last_issue_online: {
-              type: 'date',
-              rules: {
-                general: /^[1-9][0-9]{3}(-[01][0-9]?(-[0-3][0-9])?)?([T\s][0-2][0-9]:[0-5][0-9]:[0-5][0-9](\.[0-9]+)?Z?)?$/
-              }
-            },
-            num_last_vol_online: {
-              rules: {}
-            },
-            num_last_issue_online: {
-              rules: {}
-            }
-          },
-          database: {},
-          other: {},
-          general: {
-            access_type: {
-              rules: {
-                general: /^(P|F)$/
-              }
-            },
-            coverage_depth: {
-              rules: {
-                general: /^[Ff]ulltext$/
-              }
-            }
-          }
-        },
         loadedFile: {
-          columns: [],
           errors: {
             missingColumns: [],
             single: [],
@@ -267,7 +177,7 @@
             single: [],
             type: {}
           },
-          lineStats: {
+          rows: {
             total: 0,
             warning: 0,
             error: 0
@@ -298,28 +208,25 @@
       },
       errorHeaders () {
         return [
-          { text: 'Row', align: 'start', width: '10%', value: 'row', groupable: false },
-          { text: 'Column', align: 'start', width: '15%', value: 'column' },
-          { text: 'Reason', align: 'start', value: 'reason' },
+          { text: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
+          { text: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
+          { text: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
         ]
       },
       expandWidth () {
-        return (this.loadedFile.lineStats.error > 0 || this.loadedFile.lineStats.warning > 0) ? 1000 : 400
+        return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 400
       }
     },
     watch: {
       selectedFile (file) {
         this.options.lineCount = undefined
         this.completion = 0
-        this.loadedFile.columns = []
+        this.loadedFile.rows = { total: 0, warning: 0, error: 0 }
         this.loadedFile.errors.missingColumns = []
         this.loadedFile.errors.single = []
         this.loadedFile.errors.type = {}
         this.loadedFile.warnings.single = []
         this.loadedFile.warnings.type = {}
-        this.loadedFile.lineStats.total = 0
-        this.loadedFile.lineStats.warning = 0
-        this.loadedFile.lineStats.error = 0
         this.options.addOnly = false
         this.options.selectedFile = file
       }
@@ -355,211 +262,39 @@
           this.doImport()
         }
       },
-      doImport () {
+      async doImport () {
         this.errors = []
         this.importRunning = true
         this.completion = 0
-        this.charsetReader = new FileReader()
-        this.charsetReader.onload = this._checkFile
+        var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
 
-        this.charsetReader.readAsBinaryString(this.options.selectedFile)
+        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, this.cancelToken.token)
 
-        this.readerForImport = new FileReader()
-        this.readerForImport.onload = this._importCompleted
-        this.readerForImport.onprogress = this._importProgress
+        if (validationResult.status === 200 && validationResult?.data?.report) {
+          this.loadedFile = validationResult.data.report
 
-        if (this.errors?.length == 0) {
-          this.readerForImport.readAsText(this.options.selectedFile)
-        }
-      },
-      _checkFile () {
-        this._checkCharset()
-        this._checkLinesLength()
-      },
-      _checkCharset () {
-        const csvResult = this.charsetReader.result.split(/\r\n|\n|\r/)
-        const encoding = jschardet.detect(csvResult.toString()).encoding
+          this.loadedFile.errors.single = []
+          Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) =>
+            Object.entries(colobj).forEach(([colname, eo]) =>
+              this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+            )
+          )
 
-        if (encoding !== 'UTF-8' && encoding !== 'ascii') {
-          console.log(jschardet.detectAll(csvResult.toString()))
-          this.errors.push(this.$i18n.t('kbart.errors.encoding'))
-        }
-      },
-      _checkLinesLength () {
-        const csvDataRows = this.charsetReader.result.split(/\r?\n/)
-          .filter(row => row.trim())
+          this.loadedFile.warnings.single = []
+          Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) =>
+            Object.entries(colobj).forEach(([colname, wo]) =>
+              this.loadedFile.warnings.single.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
+            )
+          )
 
-        if (csvDataRows.length < 2) {
-          return
-        }
-        const columnsCount = csvDataRows[0].split(/\t/).length
-        const wrongColumnSizes = new Map()
-
-        csvDataRows.forEach((row, i) => {
-          if (i > 0) {
-            this.loadedFile.lineStats.total++
-          }
-          var rowLength = row.split(/\t/).length
-
-          if (rowLength != columnsCount) {
-            wrongColumnSizes.set(i, rowLength)
-            this.loadedFile.errors.single.push(
-              { row: i, column: this.$i18n.t('kbart.column.count.label'),
-              reason: this.$i18n.t('kbart.errors.tabsCountRow', [rowLength, columnsCount]), value: rowLength })
-            this.loadedFile.lineStats.error++
-          }
-        })
-
-        if (wrongColumnSizes.size != 0) {
-          this.errors.push(this.$i18n.t('kbart.errors.tabsCountFile'))
-        }
-      },
-      async _importCompleted () {
-        const csvDataRows = this.readerForImport.result.split(/\r?\n/)
-          .filter(row => row.trim())
-
-        if (csvDataRows.length < 2) {
-          return
-        } else {
-          const columns = csvDataRows[0].split(/\t/).map(col => col.toLowerCase())
-          columns.forEach(v => {
-            this.loadedFile.errors.type[v] = { empty: 0, invalid: 0 }
-          })
-
-          Object.keys(this.kbartStd.mandatoryColumns).forEach(key => {
-            if (!columns.includes(key)) {
-              this.loadedFile.errors.missingColumns.push(key)
-            }
-          })
-
-          if (this.loadedFile.errors.missingColumns.length > 0) {
-            this.errors.push(this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns]))
-          } else {
-            var idxr = 0
-            var row
-
-            for (row of csvDataRows) {
-              if (idxr > 0) {
-                var hasErrors = false
-                var hasWarnings = false
-
-                const orderedVals = row.split(/\t/)
-                var type = orderedVals[columns.indexOf('publication_type')]?.toLowerCase() || null
-
-                if (!type) {
-                  this.loadedFile.errors.type.publication_type.empty++
-                  this.loadedFile.errors.single.push({ row: idxr, column: 'publication_type', reason: this.$i18n.t('kbart.errors.missingVal', ['publication_type']) })
-                  hasErrors = true
-                } else if (!['serial', 'monograph', 'database', 'other'].includes(type)) {
-                  this.loadedFile.errors.type.publication_type.invalid++
-                  this.loadedFile.errors.single.push({ row: idxr, column: 'publication_type', reason: this.$i18n.t('kbart.errors.illegalType') })
-                  hasErrors = true
-                } else if (type === 'serial') {
-                  Object.keys(this.kbartStd.serial).forEach(key => {
-                    if (!columns.includes(key)) {
-                      this.loadedFile.errors.missingColumns.push(key)
-                      hasErrors = true
-                    }
-                    if (hasErrors) {
-                      this.errors.push(this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns]))
-                    }
-                  })
-                } else if (type === 'monograph') {
-                  Object.keys(this.kbartStd.monograph).forEach(key => {
-                    if (!columns.includes(key)) {
-                      this.loadedFile.errors.missingColumns.push(key)
-                      hasErrors = true
-                    }
-
-                    if (hasErrors) {
-                      this.errors.push(this.$i18n.t('kbart.errors.missingCols', [this.loadedFile.errors.missingColumns]))
-                    }
-                  })
-                } else if (orderedVals[columns.indexOf('publication_title')]?.indexOf('�') >= 0) {
-                  hasErrors = true
-                  this.loadedFile.errors.single.push({ row: idxr, column: 'publication_title', reason: this.$i18n.t('kbart.errors.encoding'), value: orderedVals[columns.indexOf('publication_title')] })
-                  break
-                }
-
-                if (hasErrors) {
-                  this.loadedFile.lineStats.error++
-                  break
-                } else {
-                  orderedVals.forEach((col, idxc) => {
-                    var colName = columns[idxc]
-                    var colRules = this.kbartStd.mandatoryColumns[colName]?.rules
-
-                    if (colRules?.notEmpty && col.trim().length === 0) {
-                      if (colRules?.notEmpty === 'warn') {
-                        this.ensureFieldCounter(colName, 'warnings', 'empty')
-                        this.loadedFile.warnings.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
-                        hasWarnings = true
-                      } else {
-                        this.ensureFieldCounter(colName, 'errors', 'empty')
-                        this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
-                        hasErrors = true
-                      }
-                    }
-
-                    if (col.trim().length > 0 && this.kbartStd.general[colName]?.rules.general && !this.kbartStd.general[colName]?.rules.general?.test(col.trim())) {
-                      this.ensureFieldCounter(colName, 'errors', 'invalid')
-                      this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalVal', [col]) })
-                      hasErrors = true
-                    }
-
-                    if (colName === 'online_identifier') {
-                      if (col.trim().length > 0 && !this.kbartStd.mandatoryColumns.online_identifier.rules[type]?.test(col.trim())) {
-                        this.ensureFieldCounter(colName, 'errors', 'invalid')
-                        this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalOnlineId', [col]) })
-                        hasErrors = true
-                      }
-                    } else if (colName === 'print_identifier') {
-                      if (col.trim().length > 0 && !this.kbartStd.mandatoryColumns.print_identifier.rules[type]?.test(col.trim())) {
-                        this.ensureFieldCounter(colName, 'errors', 'invalid')
-                        this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalPrintId', [col]) })
-                        hasErrors = true
-                      }
-                    } else if (this.kbartStd[type][colName]) {
-                      if (col.trim().length === 0 && this.kbartStd[type][colName]?.rules?.notEmpty) {
-                        this.ensureFieldCounter(colName, 'errors', 'empty')
-                        this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.missingVal', [colName]) })
-                        hasErrors = true
-                      } else if (col.trim().length > 0 && this.kbartStd[type][colName]?.rules.general && !this.kbartStd[type][colName]?.rules.general?.test(col.trim())) {
-                        this.ensureFieldCounter(colName, 'errors', 'invalid')
-                        this.loadedFile.errors.single.push({ row: idxr, column: colName, reason: this.$i18n.t('kbart.errors.illegalVal', [col]) })
-                        hasErrors = true
-                      }
-                    }
-                  })
-
-                  if (this.cancelValidation) {
-                    this.cancelValidation = false
-                    this.errors.push(this.$i18n.t('kbart.processing.cancelled', [idxr]))
-                    break
-                  }
-
-                  if (hasErrors === true) {
-                    this.loadedFile.lineStats.error++
-                  }
-
-                  if (hasWarnings === true) {
-                    this.loadedFile.lineStats.warning++
-                  }
-                }
-              }
-              idxr++
-            }
-          }
-        }
-
-        try {
-          this.options.lineCount = this.loadedFile.lineStats.total
-        } catch (exception) {
-          this.errors.push(exception)
-        } finally {
+          this.options.lineCount = validationResult.data.report.rows.total
           this.completion = 100
-          this.importRunning = false
+        } else {
+          this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))
+          this.completion = 100
         }
+
+        this.importRunning = false
       },
       ensureFieldCounter (colName, severity, type) {
         if (!this.loadedFile[severity]['type'][colName]) {
