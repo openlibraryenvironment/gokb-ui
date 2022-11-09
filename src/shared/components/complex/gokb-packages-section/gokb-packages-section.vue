@@ -30,7 +30,7 @@
       <gokb-state-field
         v-model="searchFilters.status"
         width="150px"
-        :init-item="$t('component.general.status.Current.label')"
+        init-item="Current"
         message-path="component.general.status"
         :label="$t('component.general.status.label')"
         return-object
