@@ -98,6 +98,7 @@
             :label="$t('component.title.firstAuthor.label')"
             :disabled="isReadonly"
             :api-errors="errors.firstAuthor"
+            :validate-on-blur="false"
             dense
           />
         </v-col>
@@ -107,6 +108,7 @@
             :label="$t('component.title.firstEditor.label')"
             :disabled="isReadonly"
             :api-errors="errors.firstEditor"
+            :validate-on-blur="false"
             dense
           />
         </v-col>
@@ -145,6 +147,7 @@
             :label="$t('component.title.editionStatement')"
             :disabled="isReadonly"
             :api-errors="errors.editionStatement"
+            :validate-on-blur="false"
             dense
           />
         </v-col>

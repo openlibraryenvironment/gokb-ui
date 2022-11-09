@@ -44,6 +44,7 @@
             v-model="providerObject.homepage"
             :label="$t('component.provider.homepage')"
             :disabled="isReadonly"
+            :validate-on-blur="false"
           />
         </v-col>
         <v-col cols="3" xl="2">

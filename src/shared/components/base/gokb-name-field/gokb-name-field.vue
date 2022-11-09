@@ -28,6 +28,7 @@
             ref="nameTextField"
             v-model="editedVal"
             :rules="rules"
+            :validate-on-blur="false"
           />
           <template #buttons>
             <v-checkbox

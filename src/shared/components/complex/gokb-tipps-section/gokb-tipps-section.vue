@@ -158,6 +158,7 @@
           v-model="searchFilters.ids"
           class="ms-4"
           :label="$tc('component.identifier.label')"
+          :validate-on-blur="false"
         />
         <gokb-search-package-field
           v-else

@@ -283,6 +283,7 @@
                   v-model="packageItem.globalNote"
                   :label="$t('component.package.globalNote.label')"
                   :disabled="isReadonly"
+                  :validate-on-blur="false"
                 />
               </v-col>
             </v-row>
@@ -411,6 +412,7 @@
                 <gokb-text-field
                   v-model="providerName"
                   :label="$t('component.package.provider')"
+                  :validate-on-blur="false"
                   dense
                   disabled
                 />
@@ -419,6 +421,7 @@
                 <gokb-text-field
                   v-model="platformName"
                   :label="$t('component.package.platform')"
+                  :validate-on-blur="false"
                   dense
                   disabled
                 />
@@ -471,6 +474,7 @@
                   v-if="listVerifiedDate"
                   v-model="localListVerifiedDate"
                   :label="$t('component.package.listVerifiedDate.label')"
+                  :validate-on-blur="false"
                   dense
                   disabled
                 />
@@ -481,6 +485,7 @@
                 <gokb-text-field
                   v-model="kbart.selectedFile.name"
                   :label="kbartLabel"
+                  :validate-on-blur="false"
                   dense
                   disabled
                 />

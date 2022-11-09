@@ -10,6 +10,7 @@
           v-model="selectedItem.name"
           disabled
           :label="$i18n.t('component.general.name')"
+          :validate-on-blur="false"
         />
       </v-col>
     </v-row>

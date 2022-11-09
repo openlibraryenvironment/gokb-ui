@@ -5,6 +5,7 @@
       v-model="localName"
       :label="label"
       :dense="dense"
+      :validate-on-blur="false"
       disabled
     />
     <div style="color:red;" v-if="localErrorMessage.length > 0"> {{ localErrorMessage }} </div>

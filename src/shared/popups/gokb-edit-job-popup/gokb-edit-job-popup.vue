@@ -11,6 +11,7 @@
           v-model="localType"
           disabled
           :label="$i18n.t('job.type')"
+          :validate-on-blur="false"
         />
       </v-col>
     </v-row>
@@ -37,6 +38,7 @@
           v-model="selectedItem.startTime"
           disabled
           :label="$i18n.t('job.startTime')"
+          :validate-on-blur="false"
         />
       </v-col>
       <v-col md="4">
@@ -44,6 +46,7 @@
           v-model="selectedItem.endTime"
           disabled
           :label="$i18n.t('job.endTime')"
+          :validate-on-blur="false"
         />
       </v-col>
     </v-row>

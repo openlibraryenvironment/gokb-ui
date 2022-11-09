@@ -29,6 +29,7 @@
           required
           :label="'Name'"
           :append-icon="deleteIcon"
+          :validate-on-blur="false"
           @click:append="$emit('delete', value)"
         />
       </v-col>

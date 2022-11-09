@@ -13,7 +13,10 @@
       <gokb-select-field label="ISSN" />
     </gokb-section>
     <gokb-section sub-title="Allgemein">
-      <gokb-text-field label="Titel" />
+      <gokb-text-field
+        label="Titel"
+        :validate-on-blur="false"
+      />
       <v-row>
         <v-col>
           <gokb-number-field label="Band" />
@@ -22,7 +25,10 @@
           <gokb-number-field label="Auflage" />
         </v-col>
         <v-col>
-          <gokb-text-field label="Merkmal (Auflage)" />
+          <gokb-text-field
+            label="Merkmal (Auflage)"
+            :validate-on-blur="false"
+          />
         </v-col>
       </v-row>
       <v-row>
@@ -34,7 +40,10 @@
         </v-col>
       </v-row>
       <gokb-textarea-field label="Zusammenfassung" />
-      <gokb-text-field label="Buch Cover" />
+      <gokb-text-field
+        label="Buch Cover"
+        :validate-on-blur="false"
+      />
     </gokb-section>
     <gokb-section sub-title="Impressum">
       <gokb-select-field label="Impressum" />

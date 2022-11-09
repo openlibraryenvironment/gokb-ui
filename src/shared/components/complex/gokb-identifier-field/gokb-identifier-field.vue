@@ -17,6 +17,7 @@
         :label="namespaceFixed ? localNamespace.name : $tc('component.identifier.label')"
         :rules="namespaceRules"
         :append-icon="deleteIcon"
+        :validate-on-blur="false"
         @click:append="$emit('delete', value)"
       />
     </v-col>

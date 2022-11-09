@@ -31,6 +31,7 @@
           v-model="reviewItem.dateCreated"
           disabled
           :label="$t('component.general.dateCreated')"
+          :validate-on-blur="false"
         />
       </v-col>
       <v-col cols="3">
@@ -94,6 +95,7 @@
                 <gokb-text-field
                   v-model="localAction"
                   :label="$t('component.review.action.label')"
+                  :validate-on-blur="false"
                   disabled
                 />
               </v-col>
@@ -172,6 +174,7 @@
             required
             :disabled="isEdit"
             :label="$i18n.t('component.review.cause.label')"
+            :validate-on-blur="false"
           />
           <div
             v-if="additionalInfo && additionalInfo.candidates"

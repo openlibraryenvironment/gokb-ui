@@ -5,6 +5,7 @@
         v-model="variant"
         :disabled="disabled"
         :label="$tc('component.variantName.label')"
+        :validate-on-blur="false"
         required
       />
     </v-col>

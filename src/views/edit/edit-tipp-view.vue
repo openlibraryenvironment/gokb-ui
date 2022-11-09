@@ -262,6 +262,7 @@
                         :disabled="isReadonly"
                         dense
                         :label="$t('component.tipp.coverage.startVolume')"
+                        :validate-on-blur="false"
                       />
                     </v-col>
                     <v-col cols="4">
@@ -270,6 +271,7 @@
                         :disabled="isReadonly"
                         dense
                         :label="$t('component.tipp.coverage.startIssue')"
+                        :validate-on-blur="false"
                       />
                     </v-col>
                   </v-row>
@@ -291,6 +293,7 @@
                         :disabled="isReadonly"
                         dense
                         :label="$t('component.tipp.coverage.endVolume')"
+                        :validate-on-blur="false"
                       />
                     </v-col>
                     <v-col cols="4">
@@ -299,6 +302,7 @@
                         :disabled="isReadonly"
                         dense
                         :label="$t('component.tipp.coverage.endIssue')"
+                        :validate-on-blur="false"
                       />
                     </v-col>
                   </v-row>
@@ -344,6 +348,7 @@
                     v-model="packageTitleItem.publisherName"
                     :disabled="isReadonly"
                     :label="$tc('component.title.publisher.label')"
+                    :validate-on-blur="false"
                   />
                 </v-col>
                 <v-col>
@@ -351,6 +356,7 @@
                     v-model="packageTitleItem.series"
                     :disabled="isReadonly"
                     :label="$t('component.tipp.series.label')"
+                    :validate-on-blur="false"
                   />
                 </v-col>
               </v-row>
@@ -361,6 +367,7 @@
                     :disabled="isReadonly"
                     dense
                     :label="$t('component.tipp.subjectArea.label')"
+                    :validate-on-blur="false"
                   />
                 </v-col>
                 <v-col>
@@ -383,6 +390,7 @@
                     disabled
                     dense
                     :label="$t('component.tipp.importId.label')"
+                    :validate-on-blur="false"
                   />
                 </v-col>
                 <v-col>
@@ -433,6 +441,7 @@
                     :disabled="isReadonly"
                     dense
                     :label="$t('component.title.volumeNumber')"
+                    :validate-on-blur="false"
                   />
                 </v-col>
               </v-row>
@@ -446,6 +455,7 @@
                     :disabled="isReadonly"
                     dense
                     :label="$t('component.title.firstAuthor.label')"
+                    :validate-on-blur="false"
                   />
                 </v-col>
                 <v-col>
@@ -454,6 +464,7 @@
                     :disabled="isReadonly"
                     dense
                     :label="$t('component.title.firstEditor.label')"
+                    :validate-on-blur="false"
                   />
                 </v-col>
                 <v-col>
@@ -462,6 +473,7 @@
                     :disabled="isReadonly"
                     dense
                     :label="$t('component.title.editionStatement')"
+                    :validate-on-blur="false"
                   />
                 </v-col>
               </v-row>
