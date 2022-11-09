@@ -73,7 +73,7 @@
       },
       validateOnBlur: {
         type: Boolean,
-        required: true,
+        required: false,
         default: false,
       },
       required: {
