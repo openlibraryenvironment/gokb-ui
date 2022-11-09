@@ -38,26 +38,6 @@
       </template>
 
       <template #item="{ item }">
-        <router-link v-if="!!item.link"
-          :style="{ color: 'primary' }"
-          :to="{ name: item.link.route, params: { 'id': item[item.link.id] } }"
-        >
-          {{ item.link.value }}
-        </router-link>
-        <router-link v-if="!!item.linkTwo"
-          :style="{ color: 'primary' }"
-          :to="{ name: item.linkTwo.route, params: { 'id': item[item.linkTwo.id] } }"
-        >
-          {{ item.linkTwo.value }}
-        </router-link>
-        <a
-          v-if="!!item.popup"
-          :href="$route.query.page"
-          :style="{ color: 'primary', textDecoration: 'underline' }"
-          @click="editItemPopupVisible = item.id"
-        >
-          {{ item.popup.value }}
-        </a>
         <component
           :is="item.popup.type"
           v-if="!!item.popup && editItemPopupVisible == item.id"
@@ -68,102 +48,120 @@
           :selected="item"
           @edit="editItem"
         />
-
-        <div v-if="!!item._pending">
-          <v-icon
-            v-if="item.markError"
-            class="mr-6"
-            color="red"
-            :title="item.markError"
-          >
-            mdi-alert
-          </v-icon>
-          <v-icon
-            v-else-if="item._pending === 'added'"
-            class="mr-6"
-            color="green"
-            :title="$t('pending.item.added')"
-          >
-            mdi-plus
-          </v-icon>
-          <v-icon
-            v-else-if="item._pending === 'removed'"
-            class="mr-6"
-            small
-          >
-            mdi-minus
-          </v-icon>
-        </div>
-
-        <div v-if="actions">
-          <component
-            :is="item.popup.type"
-            v-if="editItemPopupVisible == item.id"
-            :key="`${item.popup.label}_${item.id}`"
-            v-model="editItemPopupVisible"
-            :items="items"
-            :pprops="item.popup.otherProps"
-            :selected="item"
-            @edit="editItem"
-          />
-          <div style="white-space:nowrap">
-            <a
-              v-if="!!item.extlink"
-              :href="item.extlink"
-              target="_blank"
+        <tr>
+          <td v-if="showSelect">
+            <v-checkbox />
+          </td>
+          <td v-for="h in localHeaders">
+            <router-link v-if="h.value === 'link'"
+              :style="{ color: 'primary' }"
+              :to="{ name: item.link.route, params: { 'id': item[item.link.id] } }"
             >
-              <v-icon
-                style="cursor:pointer"
-                :title="$t('btn.linkext')"
-                small
-              >
-                mdi-open-in-new
-              </v-icon>
-            </a>
-            <v-icon
-              v-if="item.popup"
-              class="mr-2"
-              style="cursor:pointer"
-              :title="item.updateUrl ? $t('btn.edit') : $t('btn.details')"
-              small
+              {{ item.link.value }}
+            </router-link>
+            <router-link v-else-if="h.value === 'linkTwo'"
+              :style="{ color: 'primary' }"
+              :to="{ name: item.linkTwo.route, params: { 'id': item[item.linkTwo.id] } }"
+            >
+              {{ item.linkTwo.value }}
+            </router-link>
+            <a
+              v-else-if="h.value === 'popup'"
+              :href="$route.query.page"
+              :style="{ color: 'primary', textDecoration: 'underline' }"
               @click="editItemPopupVisible = item.id"
             >
-              {{ item.updateUrl ? 'mdi-pencil' : 'mdi-arrow-top-left' }}
-            </v-icon>
-            <v-icon
-              v-if="editable && item.isRetireable !== undefined"
-              class="mr-2"
-              :disabled="disabled || !item.isRetireable"
-              style="cursor:pointer"
-              :title="$t('btn.retire')"
-              small
-              @click="retireItem(item)"
-            >
-              mdi-close
-            </v-icon>
-            <v-icon
-              v-if="editable && item.isDeletable !== undefined"
-              :disabled="disabled || !item.isDeletable"
-              style="cursor:pointer"
-              :title="$t('btn.delete')"
-              small
-              @click="deleteItem(item)"
-            >
-              mdi-delete
-            </v-icon>
-            <v-icon
-              v-if="editable && item.isClosable"
-              :disabled="disabled"
-              style="cursor:pointer"
-              class="font-weight-bold"
-              :title="$t('btn.close')"
-              small
-              @click="closeReview(item)"
-            >
-              mdi-check-bold
-            </v-icon>
-          </div>
-        </div>
+              {{ item.popup.value }}
+            </a>
+            <div v-else-if="h.value === '_pending'">
+              <v-icon
+                v-if="item.markError"
+                class="mr-6"
+                color="red"
+                :title="item.markError"
+              >
+                mdi-alert
+              </v-icon>
+              <v-icon
+                v-else-if="item._pending === 'added'"
+                class="mr-6"
+                color="green"
+                :title="$t('pending.item.added')"
+              >
+                mdi-plus
+              </v-icon>
+              <v-icon
+                v-else-if="item._pending === 'removed'"
+                class="mr-6"
+                small
+              >
+                mdi-minus
+              </v-icon>
+            </div>
+            <div v-else-if="h.value === 'actions'">
+              <div style="white-space:nowrap">
+                <a
+                  v-if="!!item.extlink"
+                  :href="item.extlink"
+                  target="_blank"
+                >
+                  <v-icon
+                    style="cursor:pointer"
+                    :title="$t('btn.linkext')"
+                    small
+                  >
+                    mdi-open-in-new
+                  </v-icon>
+                </a>
+                <v-icon
+                  v-if="item.popup"
+                  class="mr-2"
+                  style="cursor:pointer"
+                  :title="item.updateUrl ? $t('btn.edit') : $t('btn.details')"
+                  small
+                  @click="editItemPopupVisible = item.id"
+                >
+                  {{ item.updateUrl ? 'mdi-pencil' : 'mdi-arrow-top-left' }}
+                </v-icon>
+                <v-icon
+                  v-if="editable && item.isRetireable !== undefined"
+                  class="mr-2"
+                  :disabled="disabled || !item.isRetireable"
+                  style="cursor:pointer"
+                  :title="$t('btn.retire')"
+                  small
+                  @click="retireItem(item)"
+                >
+                  mdi-close
+                </v-icon>
+                <v-icon
+                  v-if="editable && item.isDeletable !== undefined"
+                  :disabled="disabled || !item.isDeletable"
+                  style="cursor:pointer"
+                  :title="$t('btn.delete')"
+                  small
+                  @click="deleteItem(item)"
+                >
+                  mdi-delete
+                </v-icon>
+                <v-icon
+                  v-if="editable && item.isClosable"
+                  :disabled="disabled"
+                  style="cursor:pointer"
+                  class="font-weight-bold"
+                  :title="$t('btn.close')"
+                  small
+                  @click="closeReview(item)"
+                >
+                  mdi-check-bold
+                </v-icon>
+              </div>
+            </div>
+            <div v-else>
+              {{ item[h.value] instanceof Array ? (item[h.value].length === 0 ? '' : item[h.value].join(',')) : item[h.value] }}
+            </div>
+          </td>
+        </tr>
       </template>
     </v-data-table>
     <div v-if="!hidePagination" class="text-center pt-2">
@@ -268,9 +266,15 @@
         set (value) { this.$emit('selected-items', value) }
       },
       localHeaders () {
-        return [...this.headers, { value: '_pending', sortable: false }, { value: 'action', sortable: false }]
-                 .filter(header => ((!this.editable ? header.value !== '_pending' : true) && (!this.actions ? header.value !== 'action' : true)))
-                 // with delete icon
+        return [
+          ...this.headers,
+          { value: '_pending', sortable: false },
+          { value: 'action', sortable: false }
+        ]
+        .filter(header => (
+          (!this.editable ? header.value !== '_pending' : true) &&
+          (!this.actions ? header.value !== 'action' : true)
+        ))
       },
       pages () {
         return Math.min(Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage), this.options.page + 10, 1000)
