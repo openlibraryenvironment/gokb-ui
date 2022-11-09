@@ -133,7 +133,8 @@
             id: item.id,
             namespace: item.namespace.value,
             value: item.value,
-            isDeletable: true
+            isDeletable: true,
+            textEffects: this.idItemTextEffects
           }))
         for (let [key, value] of Object.entries(val)) {
           console.log(key, value)
@@ -190,6 +191,9 @@
       },
       isOtherCardSelected () {
         return !!this.id && !!this.selCardId && this.id != this.selCardId
+      },
+      idItemTextEffects (item) {
+        return "text-decoration=\"line-through\""
       }
     },
     watch: {

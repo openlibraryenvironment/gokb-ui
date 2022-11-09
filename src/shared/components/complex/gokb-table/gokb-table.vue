@@ -169,6 +169,14 @@
           </v-icon>
         </div>
       </template>
+      <template #item.textEffects="{ item }">
+        <router-link
+          v-if="item.textEffects"
+          :style="item.textEffects"
+        >
+          {{ item.textEffects }}
+        </router-link>
+      </template>
     </v-data-table>
     <div v-if="!hidePagination" class="text-center pt-2">
       <v-pagination
