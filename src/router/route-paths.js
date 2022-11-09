@@ -32,3 +32,5 @@ export const CREATE_TITLE_ROUTE = '/create-title'
 
 export const ERROR_ROUTE = '/error'
 export const NO_ACCESS_ROUTE = '/no-access'
+
+export const VALIDATOR_ROUTE = '/kbart-validator'

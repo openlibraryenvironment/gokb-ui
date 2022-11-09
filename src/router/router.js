@@ -2,7 +2,7 @@ import {
   HOME_ROUTE, PROFILE_ROUTE, REGISTER_ROUTE, TITLE_ROUTE, PACKAGE_ROUTE, PROVIDER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
   SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
   SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_USER_ROUTE, EDIT_USER_ROUTE, ERROR_ROUTE, EDIT_PACKAGE_ROUTE,
-  EDIT_PROVIDER_ROUTE, ADD_PROVIDER_ROUTE, EDIT_TITLE_ROUTE, NO_ACCESS_ROUTE, EDIT_TIPP_ROUTE
+  EDIT_PROVIDER_ROUTE, ADD_PROVIDER_ROUTE, EDIT_TITLE_ROUTE, NO_ACCESS_ROUTE, EDIT_TIPP_ROUTE, VALIDATOR_ROUTE
 } from './route-paths'
 
 const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
@@ -197,6 +197,14 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
           code: 'route.noaccess'
         },
         component: () => import('@/views/no-access-view.vue')
+      },
+      {
+        path: VALIDATOR_ROUTE,
+        name: VALIDATOR_ROUTE,
+        meta: {
+          code: 'route.kbartValidator'
+        },
+        component: () => import('@/views/kbart-validator-view.vue')
       },
       {
         path: '*',
