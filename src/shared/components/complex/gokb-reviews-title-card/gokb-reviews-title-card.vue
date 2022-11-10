@@ -14,6 +14,8 @@
         :hide-pagination="true"
         :hide-select="!isOtherCardSelected"
         :actions="isReviewedCard ? null : true"
+        :selected-items="selectedItems"
+        @selected-items="selectedItems = $event"
         @delete-item="deleteId"
       />
     </v-card-text>
@@ -96,7 +98,8 @@
         },
         selCardId: undefined,
         isCardSelected: false,
-        isReviewedCard: undefined
+        isReviewedCard: undefined,
+        selectedItems: []
       }
     },
     computed: {

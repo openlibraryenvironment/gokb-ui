@@ -18,6 +18,7 @@
       :show-select="showSelect"
       :must-sort="mustSort"
       dense
+      @toggle-select-all="toggleSelections"
       @update:sort-by="changeSortBy"
       @update:sort-desc="changeSortOrder"
     >
@@ -50,7 +51,9 @@
         />
         <tr>
           <td v-if="showSelect">
-            <v-checkbox />
+            <v-simple-checkbox
+              v-model="item.isSelected"
+            />
           </td>
           <td v-for="h in localHeaders">
             <router-link v-if="h.value === 'link'"
@@ -321,6 +324,20 @@
       },
       checkEditItemPopupVisible (oid) {
         return this.editItemPopupVisible === oid
+      },
+      toggleSelections (selection) {
+        console.log("toggled. selection: " + selection)
+        for (let [key, value] of Object.entries(selection)) {
+          console.log(key, value)
+        }
+        this.localSelectedItems = selection.items.map(item => ({
+          ...item,
+          isSelected: selection.value
+        }))
+        /* this.items = selection.items.map(item => ({
+          ...item,
+          isSelected: selection.value
+        })) */
       }
     }
   }
