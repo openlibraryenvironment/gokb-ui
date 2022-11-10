@@ -25,7 +25,7 @@
         v-model="searchFilters.status"
         class="mr-4 mt-4"
         width="200px"
-        :init-item="$t('component.review.status.Open.label')"
+        init-item="Open"
         message-path="component.review.status"
         url="refdata/categories/ReviewRequest.Status"
         :label="$t('component.general.status.label')"
