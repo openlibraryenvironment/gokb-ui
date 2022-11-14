@@ -15,7 +15,7 @@
         :hide-pagination="true"
         :hide-select="!isOtherCardSelected"
         :actions="!isReviewedCard"
-        :_pending="true"
+        _pending="empty"
         @delete-item="deleteId"
         @selected-items="selectedIdItems = $event"
       />
@@ -106,7 +106,8 @@
         selCardIds: [],
         isCardSelected: false,
         isReviewedCard: undefined,
-        selectedIdItems: []
+        selectedIdItems: [],
+        deletedIdItems: []
       }
     },
     computed: {
@@ -144,7 +145,7 @@
             namespace: item.namespace.value,
             value: item.value,
             isDeletable: this.isItemDeletable,
-            _pending: this.mergeStatus(item.id)
+            _pending: this.pendingStatus(item.id)
           }))
         for (let [key, value] of Object.entries(val)) {
           console.log(key, value)
@@ -218,6 +219,9 @@
       },
       selectedCardIds () {
         this.selCardIds = this.selectedCardIds
+      },
+      deletedIdItems () {
+        
       }
     },
     created () {
@@ -267,6 +271,7 @@
       unselectCard () {
         this.selCard = undefined
         this.selCardIds = []
+        this.deletedIdItems = []
         this.$emit('set-active', undefined)
         this.$emit('set-selected-ids', [])
       },
@@ -275,26 +280,38 @@
         // TODO
       },
       deleteId (id) {
+        this.deletedIdItems.push(id)
+
         console.log("deleteId: " + id.value)
-        // TODO
+        console.log("... deletedIdItems: " + this.deletedIdItems)
+
+
       },
-      mergeStatus (id) {
+      pendingStatus (id) {
+        console.log("pendingStatus.id: " + id)
         if ( this.isReviewedCard ){
-          for (const [i, idItem] of this.selectedCardIds.entries()) {
-            if (idItem.id == id) {
-              return 'existing'
-            }
-          }
-          for (const [i, idItem] of this.selectedIdItems.entries()) {
-            if (idItem.id == id) {
-              return 'selected'
-            }
-          }
-          return 'unselected'
+          return this.mergeStatus(id)
         }
         else {
-          return null
+          return this.deletedStatus(id)
         }
+      },
+      deletedStatus (id) {
+        console.log("deletedStatus.id: " + id)
+        return 'removed'
+      },
+      mergeStatus (id) {
+        for (const [i, idItem] of this.selectedCardIds.entries()) {
+          if (idItem.id == id) {
+            return 'existing'
+          }
+        }
+        for (const [i, idItem] of this.selectedIdItems.entries()) {
+          if (idItem.id == id) {
+            return 'selected'
+          }
+        }
+        return 'unselected'
       }
     }
   }
