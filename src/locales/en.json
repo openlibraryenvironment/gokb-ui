@@ -49,6 +49,9 @@
     "false": "No",
     "all": "All",
     "ISOdateHint": "YYYY-MM-DD",
+    "error": {
+      "label": "Error | Errors"
+    },
     "404": {
       "title": "Unknown Path",
       "text": "The resource you are looking for cannot be found."
@@ -309,7 +312,7 @@
       "correctedVal": "Value '{0}' will be automatically replaced by '{1}'",
       "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
-      "illegalVal": "Value {0} is not valid!",
+      "illegalVal": "Value '{0}' is not valid!",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
       "illegalPrintId": "Value for print identifier '{0}' is not valid.",

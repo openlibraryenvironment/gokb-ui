@@ -10,6 +10,7 @@
             v-model="selectedFile"
             :label="$t('kbart.file.label')"
             :disabled="importRunning"
+            :truncateLength="80"
           />
         </v-col>
       </v-row>
@@ -42,20 +43,22 @@
     >
       <v-row
         v-if="errors.length > 0"
-        class="px-4"
+        class="pa-4"
       >
         <v-col>
-          <div
-            v-for="er in errors"
-            :key="er"
-            class="ma-2">
-            {{ er }}
-          </div>
+          <h4>{{ $tc('default.error.label', 2) }}</h4>
+          <ul>
+            <li
+              v-for="er in errors"
+              :key="er">
+              {{ er }}
+            </li>
+          </ul>
         </v-col>
       </v-row>
       <v-row
         v-else-if="completion === 100"
-        class="px-4"
+        class="pa-4"
       >
         <v-col>
           <h4>
@@ -149,7 +152,7 @@
       </gokb-button>
       <gokb-button
         default
-        :disabled="!options.selectedFile || importRunning"
+        :disabled="!options.selectedFile || importRunning || completion === 100"
       >
         {{ $t('btn.validate') }}
       </gokb-button>
@@ -231,9 +234,13 @@
         this.completion = 0
         var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
 
-        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, this.cancelToken.token)
+        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, true, this.cancelToken.token)
 
         if (validationResult.status === 200 && validationResult?.data?.report) {
+          if (validationResult.data.errors.missingColumns?.length > 0) {
+            this.errors.push(this.$i18n.t('kbart.errors.missingCols', [validationResult.data.errors.missingColumns.join(',')]))
+          }
+
           this.loadedFile = validationResult.data.report
 
           this.loadedFile.errors.single = []
