@@ -96,6 +96,29 @@
         >
           mdi-minus
         </v-icon>
+        <v-icon
+          v-else-if="item._pending === 'existing'"
+          class="mr-2"
+          color="green"
+          small
+        >
+          mdi-check-bold
+        </v-icon>
+        <v-icon
+          v-else-if="item._pending === 'selected'"
+          class="mr-2"
+          small
+        >
+          mdi-arrow-right-bold
+        </v-icon>
+        <v-icon
+          v-else-if="item._pending === 'unselected'"
+          class="mr-2"
+          color="red"
+          small
+        >
+          mdi-close-thick
+        </v-icon>
       </template>
       <template
         v-if="actions"
@@ -166,30 +189,6 @@
             @click="closeReview(item)"
           >
             mdi-check-bold
-          </v-icon>
-          <v-icon
-            v-if="item.mergeStatus && item.mergeStatus == 'existing'"
-            class="mr-2"
-            style="cursor:pointer"
-            small
-          >
-            mdi-check-bold
-          </v-icon>
-          <v-icon
-            v-if="item.mergeStatus && item.mergeStatus == 'selected'"
-            class="mr-2"
-            style="cursor:pointer"
-            small
-          >
-            mdi-arrow-right-bold
-          </v-icon>
-          <v-icon
-            v-if="item.mergeStatus && item.mergeStatus == 'unselected'"
-            class="mr-2"
-            style="cursor:pointer"
-            small
-          >
-            mdi-close-bold
           </v-icon>
         </div>
       </template>
