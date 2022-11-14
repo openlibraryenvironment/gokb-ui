@@ -8,13 +8,15 @@
       <gokb-table
         :headers="idHeaders"
         :items="idsVisible"
+        :selected-items="selectedItems"
         :editable="idsEditable"
         :options.sync="variantNameOptions"
         :total-number-of-items="totalNumberOfIds"
         :hide-pagination="true"
         :hide-select="!isOtherCardSelected"
-        :actions="isReviewedCard ? null : true"
+        :actions="true"
         @delete-item="deleteId"
+        @selected-items="selectedItems = $event"
       />
     </v-card-text>
 
@@ -96,7 +98,8 @@
         },
         selCardId: undefined,
         isCardSelected: false,
-        isReviewedCard: undefined
+        isReviewedCard: undefined,
+        selectedItems: []
       }
     },
     computed: {
@@ -129,11 +132,12 @@
       },
       idsVisible () {
         let val = [...this.title?.identifiers]
-          .map(item => ({
+          .map((item, i) => ({
             id: item.id,
             namespace: item.namespace.value,
             value: item.value,
-            isDeletable: true
+            isDeletable: this.isItemDeletable,
+            mergeStatus: this.mergeStatus(i)
           }))
         for (let [key, value] of Object.entries(val)) {
           console.log(key, value)
@@ -190,6 +194,12 @@
       },
       isOtherCardSelected () {
         return !!this.id && !!this.selCardId && this.id != this.selCardId
+      },
+      isItemDeletable () {
+        if (this.isReviewedCard) {
+          return undefined
+        }
+        else return true
       }
     },
     watch: {
@@ -253,6 +263,14 @@
       deleteId (id) {
         console.log("deleteId: " + id.value)
         // TODO
+      },
+      mergeStatus (itemPosition) {
+        if ( this.isReviewedCard ){
+          return 'existing'
+        }
+        else {
+          return null
+        }
       }
     }
   }

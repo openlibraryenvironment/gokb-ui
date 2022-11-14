@@ -167,6 +167,30 @@
           >
             mdi-check-bold
           </v-icon>
+          <v-icon
+            v-if="item.mergeStatus && item.mergeStatus == 'existing'"
+            class="mr-2"
+            style="cursor:pointer"
+            small
+          >
+            mdi-check-bold
+          </v-icon>
+          <v-icon
+            v-if="item.mergeStatus && item.mergeStatus == 'selected'"
+            class="mr-2"
+            style="cursor:pointer"
+            small
+          >
+            mdi-arrow-right-bold
+          </v-icon>
+          <v-icon
+            v-if="item.mergeStatus && item.mergeStatus == 'unselected'"
+            class="mr-2"
+            style="cursor:pointer"
+            small
+          >
+            mdi-close-bold
+          </v-icon>
         </div>
       </template>
     </v-data-table>
