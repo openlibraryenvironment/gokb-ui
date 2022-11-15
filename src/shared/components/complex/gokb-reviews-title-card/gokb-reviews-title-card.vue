@@ -107,50 +107,16 @@
         isCardSelected: false,
         isReviewedCard: undefined,
         selectedIdItems: [],
-        deletedIdItems: []
+        pendingStatuses: {},
+        idsVisible: undefined
       }
     },
     computed: {
-      identifiersMap () {
-        const ids = []
-        if (this.hasTitle) {
-          for (let id in this.title?._embedded?.ids) {
-            ids.push({id: id.id, namespace: id.namespace.value, value: id.value})
-          }
-        }
-        return ids
-      },
-      getUsedKeys () {
-        // TODO: delete this function (incl. the emit) again in case it will not be needed
-        let usedKeys = []
-        if (this.hasTitle) {
-          for (let [key, value] of Object.entries(this.title)) {
-            if (!!value && this.wantedFields.includes(key)) {
-              usedKeys.push(key)
-            }
-          }
-        }
-        return usedKeys
-      },
       idHeaders () {
         return [
           { text: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'namespace', sortable: false },
           { text: this.$i18n.tc('component.identifier.label', 1), align: 'start', value: 'value', sortable: false }
         ]
-      },
-      idsVisible () {
-        let val = [...this.title?.identifiers]
-          .map((item) => ({
-            id: item.id,
-            namespace: item.namespace.value,
-            value: item.value,
-            isDeletable: this.isItemDeletable,
-            _pending: this.pendingStatus(item.id)
-          }))
-        for (let [key, value] of Object.entries(val)) {
-          console.log(key, value)
-        }
-        return val
       },
       idsEditable () {
         return this.isCardSelected || (this.role != "candidateComponent" && this.isOtherCardSelected)
@@ -219,9 +185,6 @@
       },
       selectedCardIds () {
         this.selCardIds = this.selectedCardIds
-      },
-      deletedIdItems () {
-        
       }
     },
     created () {
@@ -229,7 +192,9 @@
     },
     async mounted () {
       this.fetchTitle(this.id)
-      this.identifiers = this.identifiersMap
+    },
+    beforeUpdate () {
+      this.idsVisible = this.visibleIdentifiers()
     },
     methods: {
       async fetchTitle (tid) {
@@ -257,7 +222,6 @@
           identifiers: _embedded?.ids
         }
         this.finishedLoading = true
-        // this.$emit('keys', this.getUsedKeys) TODO: reactivate or delete
       },
       hasTitle () {
         return (!!this.titleName && !!this.identifiers && this.finishedLoading)
@@ -271,24 +235,18 @@
       unselectCard () {
         this.selCard = undefined
         this.selCardIds = []
-        this.deletedIdItems = []
         this.$emit('set-active', undefined)
         this.$emit('set-selected-ids', [])
       },
       confirmCard () {
-        console.log("confirmCard")
+        console.log("TODO: confirmCard")
         // TODO
       },
       deleteId (id) {
-        this.deletedIdItems.push(id)
-
-        console.log("deleteId: " + id.value)
-        console.log("... deletedIdItems: " + this.deletedIdItems)
-
-
+        this.pendingStatuses[id.id] = 'removed'
+        this.idsVisible = this.visibleIdentifiers()
       },
       pendingStatus (id) {
-        console.log("pendingStatus.id: " + id)
         if ( this.isReviewedCard ){
           return this.mergeStatus(id)
         }
@@ -297,7 +255,6 @@
         }
       },
       deletedStatus (id) {
-        console.log("deletedStatus.id: " + id)
         return 'removed'
       },
       mergeStatus (id) {
@@ -312,6 +269,17 @@
           }
         }
         return 'unselected'
+      },
+      visibleIdentifiers () {
+        let val = [...this.title?.identifiers]
+          .map((item) => ({
+            id: item.id,
+            namespace: item.namespace.value,
+            value: item.value,
+            isDeletable: this.isItemDeletable,
+            _pending: this.pendingStatuses[item.id]
+          }))
+        return val
       }
     }
   }
