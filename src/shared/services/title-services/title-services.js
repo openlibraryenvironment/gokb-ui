@@ -43,6 +43,21 @@ const api = (baseServices) => ({
       method: 'GET',
       url: baseServices.relativeUrl(url),
     }, cancelToken)
+  },
+  mergeTitle (data, cancelToken) {
+    const { id } = data
+    const url = process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}/merge`
+    const parameterData = {}
+    parameterData['target'] = data['target']
+    parameterData['ids'] = data['ids']
+    parameterData['mergeTipps'] = true
+    const queryParameters = baseServices.createQueryParameters(parameterData)
+    console.log("queryParameters: " + queryParameters)
+    /* return baseServices.request({
+      method: 'PUT',
+      url,
+      data,
+    }, cancelToken) */
   }
 })
 

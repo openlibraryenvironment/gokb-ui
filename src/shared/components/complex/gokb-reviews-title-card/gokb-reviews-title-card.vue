@@ -1,10 +1,10 @@
 <template>
-  <v-card class="elevation-4 flex d-flex flex-column" :color="roleColor" v-if="!!title?.name">
+  <v-card class="elevation-4 flex d-flex flex-column" :color="roleColor" v-if="!!originalRecord?.name">
     <v-card-title primary-title>
-      <h5 class="titlecard-headline">{{ title.name }}</h5>
+      <h5 class="titlecard-headline">{{ originalRecord.name }}</h5>
     </v-card-title>
 
-    <v-card-text class="flex" v-if="!!title?.identifiers?.length > 0">
+    <v-card-text class="flex" v-if="!!originalRecord?._embedded?.ids?.length > 0">
       <gokb-table
         :headers="idHeaders"
         :items="idsVisible"
@@ -21,7 +21,7 @@
       />
     </v-card-text>
 
-    <v-card-text class="flex" v-if="!!title?.history">
+    <v-card-text class="flex" v-if="!!originalRecord?.history">
       <div class="titlecard-history">{{ $t('component.title.history.label') }}</div>
     </v-card-text>
 
@@ -96,6 +96,7 @@
     },
     data () {
       return {
+        originalRecord: undefined,
         title: undefined,
         wantedFields: ["name", "identifiers", "history"],
         variantNameOptions: {
@@ -129,22 +130,22 @@
         ]
       },
       historyVisible () {
-        return [...this.title?.history]
+        return [...this.originalRecord?.history]
           .map(item => ({
             namespace: item.namespace.value,
             value: item.value
           }))
       },
       totalNumberOfIds () {
-        return !!(this.title?.identifiers) ? this.title.identifiers.length : 0
+        return !!(this.originalRecord?._embedded?.ids) ? this.originalRecord._embedded.ids.length : 0
       },
       historyEditable () {
         return false
       },
       getHistory () {
         let result = []
-        if (!!this.title?.history) {
-          this.title?.history.forEach(h => {
+        if (!!this.originalRecord?.history) {
+          this.originalRecord.history.forEach(h => {
             h.from.forEach((from, i) => {
               result.push({
                 id  : h.id,
@@ -199,48 +200,48 @@
     methods: {
       async fetchTitle (tid) {
         this.finishedLoading = false
-        const {
-          data: {
-            name,
-            history,
-            publishedFrom,
-            publishedTo,
-            type,
-            _embedded,
-            _links
-          }
-        } = await this.catchError({
+        const response = await this.catchError({
           promise: titleServices.getTitle(tid, this.cancelToken.token),
           instance: this
         })
-        this.title = {
-          name: name,
-          history: history,
-          publishedFrom: publishedFrom,
-          publishedTo: publishedTo,
-          type: type,
-          identifiers: _embedded?.ids
+        if (response.status < 400) {
+          this.originalRecord = response.data
+          this.finishedLoading = true
         }
-        this.finishedLoading = true
       },
       hasTitle () {
         return (!!this.titleName && !!this.identifiers && this.finishedLoading)
       },
       selectCard () {
         this.selCard = this.id
-        this.selCardIds = this.title?.identifiers
+        this.selCardIds = this.originalRecord?._embedded?.ids
         this.$emit('set-active', this.id)
-        this.$emit('set-selected-ids', this.title?.identifiers)
+        this.$emit('set-selected-ids', this.originalRecord?._embedded?.ids)
       },
       unselectCard () {
         this.selCard = undefined
         this.selCardIds = []
+        this.pendingStatuses = {}
+        this.idsVisible = this.visibleIdentifiers
         this.$emit('set-active', undefined)
         this.$emit('set-selected-ids', [])
       },
-      confirmCard () {
-        console.log("TODO: confirmCard")
-        // TODO
+      async confirmCard () {
+        let putData = this.originalRecord
+        putData._embedded.ids = putData._embedded.ids.filter(id => this.pendingStatuses[id.id] != 'removed')
+        for (let [key, value] of Object.entries(putData)) {
+          console.log(key, value)
+        }
+        /*
+        const putResponse = await this.catchError({
+          promise: titleServices.createOrUpdateTitle(data, this.cancelToken.token),
+          instance: this
+        })
+        if (putResponse.status < 400) {
+        */
+        
+          this.$emit('merge', putData)
+        // }
       },
       deleteId (id) {
         this.pendingStatuses[id.id] = 'removed'
@@ -271,7 +272,7 @@
         return 'unselected'
       },
       visibleIdentifiers () {
-        let val = [...this.title?.identifiers]
+        let val = [...this.originalRecord?._embedded?.ids]
           .map((item) => ({
             id: item.id,
             namespace: item.namespace.value,
@@ -279,6 +280,9 @@
             isDeletable: this.isItemDeletable,
             _pending: this.pendingStatuses[item.id]
           }))
+        for (const [i, value] of val.entries()) {
+          console.log('%d: %s', i, value.id + " : " + value._pending);
+        }
         return val
       }
     }

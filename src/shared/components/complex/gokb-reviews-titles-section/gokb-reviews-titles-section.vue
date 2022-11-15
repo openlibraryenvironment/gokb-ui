@@ -10,6 +10,7 @@
           @keys="addkeyFields"
           @set-active="setSelectedCard"
           @set-selected-ids="setSelectedCardIds"
+          @merge="mergeCards"
         />
       </v-col>
     </v-row>
@@ -83,6 +84,23 @@
       },
       setSelectedCardIds (ids) {
         this.selectedCardIds = ids
+      },
+      mergeCards (targetData) {
+        let mergeData = {}
+        mergeData["id"] = this.reviewedComponent.id
+        mergeData["target"] = targetData.id
+        console.log("reviewedComponent")
+        for (let [key, value] of Object.entries(this.reviewedComponent)) {
+          console.log(key, value)
+        }
+
+        // mergeData[ids] = reviewedComponent
+        /*
+        const mergeResponse = await this.catchError({
+          promise: titleServices.mergeTitle(mergeData, this.cancelToken.token),
+          instance: this
+        })
+        */
       }
     }
   }
