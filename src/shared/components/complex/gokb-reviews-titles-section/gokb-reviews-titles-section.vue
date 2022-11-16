@@ -11,6 +11,7 @@
           @set-active="setSelectedCard"
           @set-selected-ids="setSelectedCardIds"
           @merge="mergeCards"
+          @reviewedCardSelectedIds="setSelectedIdItems"
         />
       </v-col>
     </v-row>
@@ -20,6 +21,7 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import GokbReviewsTitleCard from '@/shared/components/complex/gokb-reviews-title-card'
+  import titleServices from '@/shared/services/title-services'
 
   export default {
     name: 'GokbReviewsTitlesSection',
@@ -45,7 +47,8 @@
         allFieldKeys: new Set(),
         finishedLoading: false,
         selectedCard: undefined,
-        selectedCardIds: undefined
+        selectedCardIds: undefined,
+        selectedIdItems: []
       }
     },
     computed: {
@@ -85,22 +88,16 @@
       setSelectedCardIds (ids) {
         this.selectedCardIds = ids
       },
-      mergeCards (targetData) {
-        let mergeData = {}
-        mergeData["id"] = this.reviewedComponent.id
-        mergeData["target"] = targetData.id
-        console.log("reviewedComponent")
-        for (let [key, value] of Object.entries(this.reviewedComponent)) {
-          console.log(key, value)
-        }
-
-        // mergeData[ids] = reviewedComponent
-        /*
+      setSelectedIdItems (ids) {
+        this.selectedIdItems = ids
+      },
+      async mergeCards (targetData) {
+        let mergeData = { id: this.reviewedComponent.id, target: targetData.id, ids: this.selectedIdItems }
         const mergeResponse = await this.catchError({
           promise: titleServices.mergeTitle(mergeData, this.cancelToken.token),
           instance: this
         })
-        */
+        this.$emit('close')
       }
     }
   }

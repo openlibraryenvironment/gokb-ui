@@ -186,6 +186,9 @@
       },
       selectedCardIds () {
         this.selCardIds = this.selectedCardIds
+      },
+      selectedIdItems () {
+        this.$emit('reviewedCardSelectedIds', this.selectedIdItems)
       }
     },
     created () {
@@ -228,20 +231,14 @@
       },
       async confirmCard () {
         let putData = this.originalRecord
-        putData._embedded.ids = putData._embedded.ids.filter(id => this.pendingStatuses[id.id] != 'removed')
-        for (let [key, value] of Object.entries(putData)) {
-          console.log(key, value)
-        }
-        /*
+        putData.ids = putData._embedded.ids.filter(id => this.pendingStatuses[id.id] != 'removed')
         const putResponse = await this.catchError({
-          promise: titleServices.createOrUpdateTitle(data, this.cancelToken.token),
+          promise: titleServices.createOrUpdateTitle(putData, this.cancelToken.token),
           instance: this
         })
         if (putResponse.status < 400) {
-        */
-        
           this.$emit('merge', putData)
-        // }
+        }
       },
       deleteId (id) {
         this.pendingStatuses[id.id] = 'removed'
@@ -280,9 +277,6 @@
             isDeletable: this.isItemDeletable,
             _pending: this.pendingStatuses[item.id]
           }))
-        for (const [i, value] of val.entries()) {
-          console.log('%d: %s', i, value.id + " : " + value._pending);
-        }
         return val
       }
     }
