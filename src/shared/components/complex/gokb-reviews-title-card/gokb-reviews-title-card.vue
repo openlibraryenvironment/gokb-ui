@@ -278,6 +278,11 @@
         return 'unselected'
       },
       visibleIdentifiers () {
+        if (this.isReviewedCard) {
+          for (const id of this.originalRecord?._embedded?.ids) {
+            this.pendingStatuses[id.id] = this.pendingStatus(id.id)
+          }
+        }
         let val = [...this.originalRecord?._embedded?.ids]
           .map((item) => ({
             id: item.id,
