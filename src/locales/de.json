@@ -316,6 +316,7 @@
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
+      "noIds": "Diese Zeile enthält keine Idenitifikatoren und wird daher nicht prozessiert!",
       "url": {
         "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
         "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",

@@ -316,6 +316,7 @@
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
       "illegalPrintId": "Value for print identifier '{0}' is not valid.",
+      "noIds": "This line contains no usable identifiers and will no be processed!",
       "url": {
         "mimeType": "KBART URL returned a wrong content type!",
         "unknown": "There were errors saving the KBART file!",
