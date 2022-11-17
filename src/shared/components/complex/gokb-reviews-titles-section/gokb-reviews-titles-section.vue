@@ -11,8 +11,8 @@
           @set-active="setSelectedCard"
           @set-selected-ids="setSelectedCardIds"
           @merge="mergeCards"
-          @feedbackResponse="feedbackResponse"
-          @reviewedCardSelectedIds="setSelectedIdItems"
+          @feedback-response="feedbackResponse"
+          @reviewed-card-selected-ids="setSelectedIdItems"
         />
       </v-col>
     </v-row>
@@ -44,7 +44,6 @@
     data () {
       return {
         allComponents: [],
-        allHtmlClasses: [],
         allFieldKeys: new Set(),
         finishedLoading: false,
         selectedCard: undefined,
@@ -60,20 +59,9 @@
     mounted () {
       this.allComponents = [this.reviewedComponent]
       this.allComponents.push.apply(this.allComponents, this.referenceComponents)
-      this.allHtmlClasses = this.getAllHtmlClasses()
     },
     watch: {},
     methods: {
-      getAllHtmlClasses () {
-        this.allHtmlClasses.push("titlecard-headline")
-        for (const component of this.allComponents) {
-          for (const [fieldKey, fieldValue] of Object.entries(component)) {
-            if (!(fieldKey in ["name", "identifiers"])) {
-              this.allHtmlClasses.push("titlecard-" + fieldKey)
-            }
-          }
-        }
-      },
       addkeyFields (keys) {
         keys.forEach(key => this.allFieldKeys.add(key))
       },

@@ -27,8 +27,7 @@
         cols="3"
       >
         <div
-          class="v-select__slot"
-          style="margin-top:-8px"
+          class="v-select__slot mt-n2"
         >
           <label
             class="v-label"
@@ -49,7 +48,7 @@
         </div>
       </v-col>
     </v-row>
-    <v-row dense style="margin-top:-8px">
+    <v-row dense mt-n2>
       <v-col md="12">
         <gokb-entity-field
           v-model="reviewComponent.component"
@@ -62,7 +61,7 @@
         />
       </v-col>
     </v-row>
-    <v-row style="margin-bottom: 20px">
+    <v-row class="mb-5">
       <v-col md="12">
         <template>
           <div v-if="reviewComponent.stdDesc">

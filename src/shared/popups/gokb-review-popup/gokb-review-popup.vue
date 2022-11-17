@@ -23,18 +23,18 @@
       </v-alert>
     </span>
 
-    <gokb-reviews-header v-if="typeof reviewItem?.component !== 'undefined'"
+    <gokb-reviews-header v-if="typeof reviewItem?.component"
       :value="error"
       :component="reviewItem.component"
-      :reviewComponent="reviewItem"
+      :review-component="reviewItem"
     />
 
     <gokb-reviews-titles-section v-if="finishedLoading"
       :value="error"
       :reviewedComponent="reviewItem.component"
       :referenceComponents="reviewItem.otherComponents"
-      @feedbackResponse="showResponse"
-      @closeReview="closeReview"
+      @feedback-response="showResponse"
+      @close-review="closeReview"
     />
 
     <template #buttons>
@@ -72,7 +72,7 @@
   import accountModel from '@/shared/models/account-model'
   import reviewServices from '@/shared/services/review-services'
   import 'vue-json-pretty/lib/styles.css'
-  import GokbReviewsHeader from '../../components/complex/gokb-reviews-header/gokb-reviews-header.vue'
+  import GokbReviewsHeader from '@/shared/components/complex/gokb-reviews-header/gokb-reviews-header.vue'
 
   export default {
     name: 'GokbReviewPopup',
@@ -225,7 +225,6 @@
       },
       close () {
         this.localValue = false
-        this.save()
       },
       showResponse (response) {
         if (typeof response === 'string' || response instanceof String) {

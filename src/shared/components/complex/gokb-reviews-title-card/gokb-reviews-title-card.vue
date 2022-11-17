@@ -61,7 +61,7 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import titleServices from '@/shared/services/title-services'
-  import GokbTitleIdsField from '../../simple/gokb-title-ids-field/gokb-title-ids-field.vue'
+  import GokbTitleIdsField from '@/shared/components/simple/gokb-title-ids-field/gokb-title-ids-field.vue'
 
   const ROWS_PER_PAGE = 10
 
