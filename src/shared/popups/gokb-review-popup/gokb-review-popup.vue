@@ -33,6 +33,8 @@
       :value="error"
       :reviewedComponent="reviewItem.component"
       :referenceComponents="reviewItem.otherComponents"
+      @feedbackResponse="showResponse"
+      @closeReview="closeReview"
     />
 
     <template #buttons>
@@ -52,7 +54,7 @@
       <gokb-button
         @click="close"
       >
-        {{ $t('btn.cancel') }}
+        {{ reviewItem.isClosed ? $t('btn.close') : $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         v-if="!isReadonly"
@@ -107,7 +109,8 @@
           description: undefined,
           dateCreated: undefined,
           component: undefined,
-          otherComponents: []
+          otherComponents: [],
+          isClosed: false
         },
         finishedLoading: false,
         componentRoutes: {
@@ -154,6 +157,9 @@
       },
       localTitle () {
         return this.$i18n.tc('component.review.label') + (this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
+      },
+      localErrorMessage () {
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label')]) : undefined
       }
     },
     created () {
@@ -210,8 +216,40 @@
         this.version = version
         this.finishedLoading = true
       },
+      closeReview () {
+        reviewServices.closeReview(this.id, this.cancelToken)
+        this.reviewItem.isClosed = true
+      },
       close () {
         this.localValue = false
+      },
+      showResponse (response) {
+        if (typeof response === 'string' || response instanceof String) {
+          this.errorMsg = response
+        }
+        else {
+          if (response.status < 400) {
+            this.errorMsg = undefined
+            // this.localSuccessMessage = this.$i18n.tc('component.review.edit.success.closed')
+            this.localSuccessMessage = "Success."
+          }
+          else {
+            this.localSuccessMessage = undefined
+            this.errors = response.data.error
+            if (response.status === 403) {
+              this.errorMsg = 'error.update.403'
+            }
+            else if (response.status === 409) {
+              this.errorMsg = 'error.update.409'
+            }
+            else if (response.status === 500) {
+              this.errorMsg = 'error.general.500'
+            }
+            else {
+              this.errorMsg = 'error.update.400'
+            }
+          }
+        }
       },
       async isEscalatable () {
         await this.catchError({

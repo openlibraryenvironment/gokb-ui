@@ -11,6 +11,7 @@
           @set-active="setSelectedCard"
           @set-selected-ids="setSelectedCardIds"
           @merge="mergeCards"
+          @feedbackResponse="feedbackResponse"
           @reviewedCardSelectedIds="setSelectedIdItems"
         />
       </v-col>
@@ -97,7 +98,19 @@
           promise: titleServices.mergeTitle(mergeData, this.cancelToken.token),
           instance: this
         })
-        this.$emit('close')
+        console.log("mergeResponse: " + mergeResponse + ", type: " + typeof mergeResponse)
+        if (typeof mergeResponse == 'undefined') {
+          this.feedbackResponse('error.general.500')
+        }
+        else {
+          if (mergeResponse.status < 400) {
+            this.$emit('closeReview')
+          }
+          this.feedbackResponse(mergeResponse)
+        }
+      },
+      feedbackResponse (response) {
+        this.$emit('feedbackResponse', response)
       }
     }
   }

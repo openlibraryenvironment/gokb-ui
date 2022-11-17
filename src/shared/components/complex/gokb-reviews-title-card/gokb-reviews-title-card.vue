@@ -38,17 +38,17 @@
     </v-card-text>
     <v-row>
       <v-col>
-        <gokb-button v-if="!isCardSelected && !isOtherCardSelected && role!='reviewedComponent'"
+        <gokb-button v-if="!isChanged && !isCardSelected && !isOtherCardSelected && isCandidate"
           @click="selectCard"
         >
           {{ $i18n.t('btn.select') }}
         </gokb-button>
-        <gokb-button v-if="isCardSelected && role!='reviewedComponent'"
+        <gokb-button v-if="!isChanged && isCardSelected && isCandidate"
           @click="unselectCard"
         >
           {{ $i18n.t('btn.unselect') }}
         </gokb-button>
-        <gokb-button v-if="isCardSelected && role!='reviewedComponent'"
+        <gokb-button v-if="!isChanged && isCardSelected && isCandidate"
           @click="confirmCard"
         >
           {{ $i18n.t('btn.confirm') }}
@@ -109,7 +109,8 @@
         isReviewedCard: undefined,
         selectedIdItems: [],
         pendingStatuses: {},
-        idsVisible: undefined
+        idsVisible: undefined,
+        isChanged: false
       }
     },
     computed: {
@@ -175,6 +176,9 @@
           return undefined
         }
         else return true
+      },
+      isCandidate () {
+        return this.role != 'reviewedComponent'
       }
     },
     watch: {
@@ -239,6 +243,10 @@
         if (putResponse.status < 400) {
           this.$emit('merge', putData)
         }
+        else {
+          this.$emit('feedbackResponse', putResponse)
+        }
+        this.isChanged = true
       },
       deleteId (id) {
         this.pendingStatuses[id.id] = 'removed'
