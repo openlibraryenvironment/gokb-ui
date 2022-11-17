@@ -86,19 +86,18 @@
           promise: titleServices.mergeTitle(mergeData, this.cancelToken.token),
           instance: this
         })
-        console.log("mergeResponse: " + mergeResponse + ", type: " + typeof mergeResponse)
         if (typeof mergeResponse == 'undefined') {
           this.feedbackResponse('error.general.500')
         }
         else {
           if (mergeResponse.status < 400) {
-            this.$emit('closeReview')
+            this.$emit('close-review')
           }
           this.feedbackResponse(mergeResponse)
         }
       },
       feedbackResponse (response) {
-        this.$emit('feedbackResponse', response)
+        this.$emit('feedback-response', response)
       }
     }
   }

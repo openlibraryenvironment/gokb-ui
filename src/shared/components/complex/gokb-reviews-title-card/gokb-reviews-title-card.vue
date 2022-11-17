@@ -245,7 +245,7 @@
           this.$emit('merge', putData)
         }
         else {
-          this.$emit('feedbackResponse', putResponse)
+          this.$emit('feedback-response', putResponse)
         }
         this.isChanged = true
       },
