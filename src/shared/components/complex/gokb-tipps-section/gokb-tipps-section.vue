@@ -169,7 +169,7 @@
           v-model="searchFilters.status"
           width="150px"
           class="ms-4"
-          :init-item="$t('component.general.status.Current.label')"
+          init-item="Current"
           message-path="component.general.status"
           :label="$t('component.general.status.label')"
           return-object

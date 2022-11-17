@@ -18,10 +18,17 @@ const api = (baseServices) => ({
         }, cancelToken)
       }
     },
-    validate (file, namespace, cancelToken) {
+    validate (file, namespace, strict, cancelToken) {
       const data = new FormData()
       data.append('submissionFile', file)
-      const url = process.env.VUE_APP_API_BASE_URL + `/validation/kbart` + (namespace ? `?namespace=${namespace}` : '')
+      if (namespace) {
+        data.append('namespace', namespace)
+      }
+      if (strict) {
+        data.append('strict', strict)
+      }
+
+      const url = process.env.VUE_APP_API_BASE_URL + `/validation/kbart`
       const result = baseServices.request({
         method: 'POST',
         url,
