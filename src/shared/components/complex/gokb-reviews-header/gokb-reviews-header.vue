@@ -86,6 +86,18 @@
               :style="{ fontSize: '1.2em' }"
               :path="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.info'"
             />
+            <label
+              class="v-label"
+              style="display:block;font-size:0.9em;"
+              for="todo"
+            >
+              {{ $t('component.review.todo.label') }}
+            </label>
+            <i18n
+              id="todo"
+              :style="{ fontSize: '1.2em' }"
+              :path="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.toDo'"
+            />
           </div>
           <gokb-text-field
             v-else
