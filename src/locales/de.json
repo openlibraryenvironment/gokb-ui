@@ -49,6 +49,9 @@
     "false": "Nein",
     "all": "Alle",
     "ISOdateHint": "JJJJ-MM-TT",
+    "error": {
+      "label": "Fehler | Fehler"
+    },
     "404": {
       "title": "Unbekannter Pfad",
       "text": "Die von Ihnen gesuchte Ressource konnte nicht gefunden werden."
@@ -104,7 +107,8 @@
     "home": "GOKb",
     "profile": "Profil",
     "register": "Registrierung",
-    "noaccess": "Kein Zugang"
+    "noaccess": "Kein Zugang",
+    "kbartValidator": "KBART-Validator"
   },
   "pending": {
     "lists": {
@@ -284,7 +288,7 @@
       }
     },
     "propId": {
-      "label": "Namensraum für title_id"
+      "label": "Namensraum für title_id (optional)"
     },
     "addOnly": {
       "label": "Teil-Update"
@@ -307,7 +311,8 @@
       "missingCols": "Fehlende Spalten: {0}",
       "correctedVal": "Wert '{0}' wird automatisch durch '{1}' ersetzt werden.",
       "replacementChars": "Die Datei enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
-      "illegalVal": "Wert {0} ist fehlerhaft!",
+      "replacementCharsRow": "Diese Zeile enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
+      "illegalVal": "Wert '{0}' ist fehlerhaft!",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",

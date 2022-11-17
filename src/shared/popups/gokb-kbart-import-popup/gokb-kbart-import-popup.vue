@@ -295,20 +295,7 @@
         }
 
         this.importRunning = false
-      },
-      ensureFieldCounter (colName, severity, type) {
-        if (!this.loadedFile[severity]['type'][colName]) {
-          this.loadedFile[severity]['type'][colName] = {}
-        }
-        if (!this.loadedFile[severity]['type'][colName][type]) {
-          this.loadedFile[severity]['type'][colName][type] = 1
-        } else {
-          this.loadedFile[severity]['type'][colName][type]++
-        }
-      },
-      _importProgress ({ loaded, total }) {
-        this.completion = math.asPercent(loaded / total)
-      },
+      }
     }
   }
 </script>

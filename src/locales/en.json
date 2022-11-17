@@ -49,6 +49,9 @@
     "false": "No",
     "all": "All",
     "ISOdateHint": "YYYY-MM-DD",
+    "error": {
+      "label": "Error | Errors"
+    },
     "404": {
       "title": "Unknown Path",
       "text": "The resource you are looking for cannot be found."
@@ -103,7 +106,8 @@
     "home": "GOKb",
     "profile": "Profile",
     "register": "Registration",
-    "noaccess": "No Access"
+    "noaccess": "No Access",
+    "kbartValidator": "KBART Validator"
   },
   "pending": {
     "lists": {
@@ -284,7 +288,7 @@
       }
     },
     "propId": {
-      "label": "Namespace for title_id values"
+      "label": "Namespace for title_id values (optional)"
     },
     "addOnly": {
       "label": "Partial Update"
@@ -307,7 +311,8 @@
       "missingCols": "Missing columns: {0}",
       "correctedVal": "Value '{0}' will be automatically replaced by '{1}'",
       "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
-      "illegalVal": "Value {0} is not valid!",
+      "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
+      "illegalVal": "Value '{0}' is not valid!",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
       "illegalPrintId": "Value for print identifier '{0}' is not valid.",
