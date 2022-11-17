@@ -160,6 +160,9 @@
       },
       localErrorMessage () {
         return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label')]) : undefined
+      },
+      localSuccessMessage () {
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.review.label')]) : undefined
       }
     },
     created () {
@@ -231,8 +234,7 @@
         else {
           if (response.status < 400) {
             this.errorMsg = undefined
-            // this.localSuccessMessage = this.$i18n.tc('component.review.edit.success.closed')
-            this.localSuccessMessage = "Success."
+            this.successMsg = 'component.review.edit.success.edited'
           }
           else {
             this.localSuccessMessage = undefined
