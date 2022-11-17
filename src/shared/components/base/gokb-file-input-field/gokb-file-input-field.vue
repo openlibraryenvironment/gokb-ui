@@ -3,6 +3,7 @@
     v-model="localSelectedFile"
     :label="label"
     prepend-icon="mdi-file-delimited"
+    :truncate-length="truncateLength"
     :disabled="disabled"
     accept=".txt,.tsv,.csv"
     show-size
@@ -28,6 +29,11 @@
         required: false,
         default: undefined,
       },
+      truncateLength: {
+        type: Number,
+        required: false,
+        default: 22
+      }
     },
     computed: {
       localSelectedFile: {
