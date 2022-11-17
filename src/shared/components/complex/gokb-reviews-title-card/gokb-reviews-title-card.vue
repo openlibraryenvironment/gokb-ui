@@ -240,6 +240,7 @@
           promise: titleServices.createOrUpdateTitle(putData, this.cancelToken.token),
           instance: this
         })
+        this.unselectCard()
         if (putResponse.status < 400) {
           this.$emit('merge', putData)
         }

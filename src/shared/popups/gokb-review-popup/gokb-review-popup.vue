@@ -222,6 +222,7 @@
       },
       close () {
         this.localValue = false
+        this.save()
       },
       showResponse (response) {
         if (typeof response === 'string' || response instanceof String) {
@@ -271,7 +272,9 @@
             this.escalationTarget = response.data.escalationTargetGroup
           })
       },
-      save () {}
+      save () {
+        this.$emit('edit', 'edited')
+      }
     }
   }
 </script>

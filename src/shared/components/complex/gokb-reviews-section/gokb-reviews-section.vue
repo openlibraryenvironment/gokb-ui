@@ -41,7 +41,7 @@
           mdi-refresh
         </v-icon>
       </v-btn>
-      <gokb-add-review-popup
+      <gokb-review-popup
         v-if="addReviewPopupVisible"
         v-model="addReviewPopupVisible"
         :component="reviewComponent"
