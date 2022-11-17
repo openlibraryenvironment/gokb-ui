@@ -1,6 +1,11 @@
 <template>
   <v-card class="elevation-4 flex d-flex flex-column" :color="roleColor" v-if="!!originalRecord?.name">
-    <v-card-title primary-title>
+    <v-card-title
+      primary-title
+      :id="titleName"
+      :contenteditable="singleCardReview"
+      @input="event => onTitleNameInput(event)"
+    >
       <h5 class="titlecard-headline">{{ originalRecord.name }}</h5>
     </v-card-title>
 
@@ -53,6 +58,11 @@
         >
           {{ $i18n.t('btn.confirm') }}
         </gokb-button>
+        <gokb-button v-if="singleCardReview"
+          @click="saveSingleCardReview"
+        >
+          {{ $i18n.t('btn.confirm') }}
+        </gokb-button>
       </v-col>
     </v-row>
   </v-card>
@@ -92,12 +102,16 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      singleCardReview: {
+        type: Boolean,
+        required: true
       }
     },
     data () {
       return {
         originalRecord: undefined,
-        title: undefined,
+        titleName: undefined,
         wantedFields: ["name", "identifiers", "history"],
         variantNameOptions: {
           page: 1,
@@ -197,6 +211,7 @@
     },
     created () {
       this.isReviewedCard = this.role == "reviewedComponent"
+      this.titleName = this.originalRecord.name
     },
     async mounted () {
       this.fetchTitle(this.id)
@@ -292,6 +307,31 @@
             _pending: this.pendingStatuses[item.id]
           }))
         return val
+      },
+      async saveSingleCardReview () {
+        let putData = this.originalRecord
+        putData.ids = putData._embedded.ids
+        console.log("titleName: " + this.titleName)
+        if (!!this.titleName && this.titleName != this.originalRecord?.name) {
+          putData.name = this.titleName
+        }
+        for (const [k,v] of Object.entries(putData)) {
+          console.log(k,v)
+        }
+        const putResponse = await this.catchError({
+          promise: titleServices.createOrUpdateTitle(putData, this.cancelToken.token),
+          instance: this
+        })
+        if (putResponse.status < 400) {
+          console.log("response status < 400")
+        }
+        else {
+          console.log("response status >= 400")
+          // this.$emit('feedback-response', putResponse)
+        }
+      },
+      onTitleNameInput (event) {
+        this.titleName = event.target.innerText
       }
     }
   }

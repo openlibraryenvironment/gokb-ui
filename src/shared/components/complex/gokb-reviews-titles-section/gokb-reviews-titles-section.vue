@@ -7,6 +7,7 @@
           :role="cardRole(i.id)"
           :selected-card="selectedCard"
           :selected-card-ids="selectedCardIds"
+          :single-card-review="isSingleCardReview"
           @keys="addkeyFields"
           @set-active="setSelectedCard"
           @set-selected-ids="setSelectedCardIds"
@@ -54,6 +55,10 @@
     computed: {
       colGridWidth () {
         return 12 / this.allComponents.length > 3 ? 12 / this.allComponents.length : 3
+      },
+      isSingleCardReview () {
+        console.log("this.allComponents.length : " + this.allComponents.length)
+        return this.allComponents.length < 2
       }
     },
     mounted () {
