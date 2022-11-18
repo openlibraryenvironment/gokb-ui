@@ -23,7 +23,7 @@
       </v-alert>
     </span>
 
-    <gokb-reviews-header v-if="typeof reviewItem?.component"
+    <gokb-reviews-header v-if="reviewItem?.component"
       :value="error"
       :component="reviewItem.component"
       :review-component="reviewItem"

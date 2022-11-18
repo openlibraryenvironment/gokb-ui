@@ -54,12 +54,12 @@
           {{ $i18n.t('btn.unselect') }}
         </gokb-button>
         <gokb-button v-if="!isChanged && isCardSelected && isCandidate"
-          @click="confirmCard"
+          @click="confirmSelectedCard"
         >
           {{ $i18n.t('btn.confirm') }}
         </gokb-button>
         <gokb-button v-if="singleCardReview"
-          @click="saveSingleCardReview"
+          @click="confirmSingleCard"
         >
           {{ $i18n.t('btn.confirm') }}
         </gokb-button>
@@ -207,11 +207,13 @@
       },
       selectedIdItems () {
         this.$emit('reviewedCardSelectedIds', this.selectedIdItems)
+      },
+      originalRecord () {
+        this.titleName = this.originalRecord.name
       }
     },
     created () {
       this.isReviewedCard = this.role == "reviewedComponent"
-      this.titleName = this.originalRecord.name
     },
     async mounted () {
       this.fetchTitle(this.id)
@@ -248,7 +250,7 @@
         this.$emit('set-active', undefined)
         this.$emit('set-selected-ids', [])
       },
-      async confirmCard () {
+      async confirmSelectedCard () {
         let putData = this.originalRecord
         putData.ids = putData._embedded.ids.filter(id => this.pendingStatuses[id.id] != 'removed')
         const putResponse = await this.catchError({
@@ -308,7 +310,7 @@
           }))
         return val
       },
-      async saveSingleCardReview () {
+      async confirmSingleCard () {
         let putData = this.originalRecord
         putData.ids = putData._embedded.ids
         console.log("titleName: " + this.titleName)
