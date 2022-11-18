@@ -65,39 +65,201 @@
       <v-col md="12">
         <template>
           <div v-if="reviewComponent.stdDesc">
-            <v-row dense>
-              <v-col cols="6">
-                <gokb-text-field
-                  v-model="localAction"
-                  :label="$t('component.review.action.label')"
-                  disabled
-                />
+            <v-row>
+              <v-col md="12">
+                <template>
+                  <div v-if="reviewComponent.stdDesc">
+                    <v-row dense>
+                      <v-col cols="6">
+                        <gokb-text-field
+                          v-model="localAction"
+                          :label="$t('component.review.action.label')"
+                          disabled
+                        />
+                      </v-col>
+                    </v-row>
+                    <label
+                      class="v-label"
+                      style="display:block;font-size:0.9em;"
+                      for="stdDesc"
+                    >
+                      {{ $t('component.review.cause.label') }}
+                    </label>
+                    <i18n
+                      id="stdDesc"
+                      :style="{ fontSize: '1.2em' }"
+                      :path="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.info'"
+                    >
+                      <template v-slot:0>
+                        <router-link
+                          v-if="numMessageVars > 0 && typeof reviewComponent.additionalInfo.vars[0] === 'number'"
+                          :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': reviewComponent.additionalInfo.vars[0] } }"
+                          :style="{ color: 'primary' }"
+                        >
+                          {{ reviewComponent.additionalInfo.vars[0] === reviewComponent.component.id ? reviewComponent.component.name : reviewComponent.additionalInfo.vars[1] }}
+                        </router-link>
+                        <b v-else-if="numMessageVars > 0">{{ reviewComponent.additionalInfo.vars[0] }}</b>
+                        <router-link
+                          v-else-if="reviewComponent.otherComponents && reviewComponent.otherComponents.length > 0"
+                          :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
+                          :style="{ color: 'primary' }"
+                        >
+                          {{ reviewComponent.otherComponents[0].name }}
+                        </router-link>
+                        <router-link
+                          v-else-if="reviewComponent.component"
+                          :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': reviewComponent.component.id } }"
+                          :style="{ color: 'primary' }"
+                        >
+                          {{ reviewComponent.component.name }}
+                        </router-link>
+                      </template>
+                      <template v-slot:1>
+                        <b v-if="numMessageVars > 1">
+                          <span v-if="typeof reviewComponent.additionalInfo.vars[1] === 'string' || typeof reviewComponent.additionalInfo.vars[1] === 'number'">
+                            {{ reviewComponent.additionalInfo.vars[1] }}
+                          </span>
+                          <span v-else-if="Array.isArray(reviewComponent.additionalInfo.vars[1])">
+                            (
+                            <span
+                              v-for="(entry, idx) in reviewComponent.additionalInfo.vars[1]"
+                              :key="idx"
+                            >
+                              <span v-if="typeof entry === 'string'">
+                                {{ entry }}
+                              </span>
+                              <span v-else>
+                                <span
+                                  v-for="(value, namespace) in entry"
+                                  :key="namespace + '_' + value"
+                                >
+                                  {{ namespace }}:{{ value }}
+                                </span>
+                              </span>
+                            </span>
+                            )
+                          </span>
+                        </b>
+                      </template>
+                      <template v-slot:2>
+                        <b v-if="numMessageVars > 2">{{ reviewComponent.additionalInfo.vars[2] }}</b>
+                      </template>
+                    </i18n>
+                  </div>
+                  <gokb-text-field
+                    v-else
+                    v-model="reviewComponent.description"
+                    required
+                    :disabled="isEdit"
+                    :label="$i18n.t('component.review.cause.label')"
+                  />
+                  <div
+                    v-if="reviewComponent.additionalInfo && reviewComponent.additionalInfo.candidates"
+                    class="pt-3"
+                  >
+                    <label
+                      class="v-label"
+                      style="display:block;font-size:0.9em;"
+                      for="otherComponents"
+                    >
+                      {{ $t('component.review.candidates.label') }}
+                    </label>
+                    <v-row dense>
+                      <v-col
+                        v-for="(c, idx) in reviewComponent.additionalInfo.candidates"
+                        :key="idx"
+                      >
+                        {{ c.title }} ({{ c.id }})
+                      </v-col>
+                    </v-row>
+                  </div>
+                  <div class="pt-3">
+                    <label
+                      class="v-label"
+                      style="display:block;font-size:0.9em;"
+                      for="otherComponents"
+                    >
+                      {{ $tc('component.review.otherComponents.label') }}
+                    </label>
+                    <v-row
+                      v-for="(oc, idx) in reviewComponent.otherComponents"
+                      :key="idx"
+                      dense
+                    >
+                      <v-col>
+                        <router-link
+                          v-if="oc.route"
+                          :style="{ color: 'primary', fontSize: '1.2em', marginRight: '4px' }"
+                          :to="{ name: oc.route, params: { 'id': oc.id } }"
+                        >
+                          {{ oc.name }}
+                        </router-link>
+                        <span v-else>
+                          {{ oc.name }} ({{ oc.type }})
+                        </span>
+                      </v-col>
+                    </v-row>
+                  </div>
+                </template>
               </v-col>
             </v-row>
-            <label
-              class="v-label"
-              style="display:block;font-size:0.9em;"
-              for="stdDesc"
-            >
-              {{ $t('component.review.cause.label') }}
-            </label>
-            <i18n
-              id="stdDesc"
-              :style="{ fontSize: '1.2em' }"
-              :path="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.info'"
-            />
-            <label
-              class="v-label"
-              style="display:block;font-size:0.9em;"
-              for="todo"
-            >
-              {{ $t('component.review.todo.label') }}
-            </label>
-            <i18n
-              id="todo"
-              :style="{ fontSize: '1.2em' }"
-              :path="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.toDo'"
-            />
+            <v-row>
+              <v-col md="12">
+                <template>
+                  <div v-if="reviewComponent.stdDesc">
+                    <label
+                      class="v-label"
+                      style="display:block;font-size:0.9em;"
+                      for="todo"
+                    >
+                      {{ $t('component.review.todo.label') }}
+                    </label>
+                    <i18n
+                      id="todo"
+                      :style="{ fontSize: '1.2em'}"
+                      :path="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.toDo'"
+                    >
+                      <template v-slot:0>
+                        <router-link
+                          v-if="reviewComponent.otherComponents && reviewComponent.otherComponents.size > 0"
+                          :style="{ color: 'primary' }"
+                          :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
+                          color="primary"
+                        >
+                          {{ reviewComponent.otherComponents[0].name }}
+                        </router-link>
+                        <router-link
+                          v-else-if="reviewComponent.component"
+                          :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': reviewComponent.component.id } }"
+                          :style="{ color: 'primary' }"
+                        >
+                          {{ reviewComponent.component.name }}
+                        </router-link>
+                      </template>
+                    </i18n>
+                  </div>
+                  <gokb-textarea-field
+                    v-else
+                    v-model="reviewComponent.request"
+                    required
+                    :disabled="isEdit"
+                    :label="$i18n.t('component.review.request.label')"
+                  />
+                </template>
+              </v-col>
+            </v-row>
+            <v-row v-if="reviewComponent.additionalInfo">
+              <v-col md="12">
+                <v-expansion-panels accordion>
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>{{ $t('component.review.additionalInfo.label') }}</v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                      <vue-json-pretty :data="reviewComponent.additionalInfo" />
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
+              </v-col>
+            </v-row>
           </div>
           <gokb-text-field
             v-else
@@ -114,6 +276,7 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
+  import accountModel from '@/shared/models/account-model'
 
   export default {
     name: 'GokbReviewsHeader',
@@ -131,7 +294,23 @@
     },
     data () {
       return {
-        error: undefined
+        error: undefined,
+        componentRoutes: {
+          package: '/package',
+          org: '/provider',
+          organization: '/provider',
+          tipp: '/package-title',
+          titleinstancepackageplatform: '/package-title',
+          title: '/title',
+          journal: '/title',
+          book: '/title',
+          database: '/title',
+          titleinstance: '/title',
+          journalinstance: '/title',
+          bookinstance: '/title',
+          databaseinstance: '/title',
+          otherinstance: '/title'
+        }
       }
     },
     computed: {
@@ -142,15 +321,19 @@
         return (this.isEdit && this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       numMessageVars () {
-        return this.additionalInfo?.vars ? this.additionalInfo.vars.length : 0
+        return this.reviewComponent.additionalInfo?.vars ? this.reviewComponent.additionalInfo.vars.length : 0
       },
       localAction () {
-        return this.reviewItem?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.action') : undefined
+        return this.reviewComponent?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewComponent.stdDesc.value || this.reviewComponent.stdDesc.name) + '.action') : undefined
       }
     },
     created () {},
     mounted () {},
     watch: {},
-    methods: {}
+    methods: {
+      isReadonly () {
+        return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
+      }
+    }
   }
 </script>
