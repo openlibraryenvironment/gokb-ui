@@ -12,6 +12,7 @@
           @set-active="setSelectedCard"
           @set-selected-ids="setSelectedCardIds"
           @merge="mergeCards"
+          @prepare-close="prepareClose"
           @feedback-response="feedbackResponse"
           @reviewed-card-selected-ids="setSelectedIdItems"
         />
@@ -96,13 +97,16 @@
         }
         else {
           if (mergeResponse.status < 400) {
-            this.$emit('close-review')
+            this.prepareClose()
           }
           this.feedbackResponse(mergeResponse)
         }
       },
       feedbackResponse (response) {
         this.$emit('feedback-response', response)
+      },
+      prepareClose () {
+        this.$emit('close-review')
       }
     }
   }

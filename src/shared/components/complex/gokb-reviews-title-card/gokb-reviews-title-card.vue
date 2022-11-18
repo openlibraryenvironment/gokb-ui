@@ -58,7 +58,7 @@
         >
           {{ $i18n.t('btn.confirm') }}
         </gokb-button>
-        <gokb-button v-if="singleCardReview"
+        <gokb-button v-if="!isChanged && singleCardReview"
           @click="confirmSingleCard"
         >
           {{ $i18n.t('btn.confirm') }}
@@ -266,6 +266,20 @@
         }
         this.isChanged = true
       },
+      async confirmSingleCard () {
+        let putData = this.originalRecord
+        putData.ids = putData._embedded.ids
+        if (!!this.titleName && this.titleName != this.originalRecord?.name) {
+          putData.name = this.titleName
+        }
+        const putResponse = await this.catchError({
+          promise: titleServices.createOrUpdateTitle(putData, this.cancelToken.token),
+          instance: this
+        })
+        this.$emit('feedback-response', putResponse)
+        this.$emit('prepare-close')
+        this.isChanged = true
+      },
       deleteId (id) {
         this.pendingStatuses[id.id] = 'removed'
         this.idsVisible = this.visibleIdentifiers()
@@ -309,28 +323,6 @@
             _pending: this.pendingStatuses[item.id]
           }))
         return val
-      },
-      async confirmSingleCard () {
-        let putData = this.originalRecord
-        putData.ids = putData._embedded.ids
-        console.log("titleName: " + this.titleName)
-        if (!!this.titleName && this.titleName != this.originalRecord?.name) {
-          putData.name = this.titleName
-        }
-        for (const [k,v] of Object.entries(putData)) {
-          console.log(k,v)
-        }
-        const putResponse = await this.catchError({
-          promise: titleServices.createOrUpdateTitle(putData, this.cancelToken.token),
-          instance: this
-        })
-        if (putResponse.status < 400) {
-          console.log("response status < 400")
-        }
-        else {
-          console.log("response status >= 400")
-          // this.$emit('feedback-response', putResponse)
-        }
       },
       onTitleNameInput (event) {
         this.titleName = event.target.innerText
