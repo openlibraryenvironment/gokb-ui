@@ -27,12 +27,15 @@
       :value="error"
       :component="reviewItem.component"
       :review-component="reviewItem"
+      :additional-vars="reviewItem.additionalVars"
     />
 
     <gokb-reviews-titles-section v-if="finishedLoading"
       :value="error"
-      :reviewedComponent="reviewItem.component"
-      :referenceComponents="reviewItem.otherComponents"
+      :reviewed-component="reviewItem.component"
+      :reference-components="reviewItem.otherComponents"
+      :review-type="localTitle.replace('Review – ', '')"
+      :additional-vars="reviewItem.additionalVars"
       @feedback-response="showResponse"
       @close-review="closeReview"
     />
@@ -110,7 +113,8 @@
           dateCreated: undefined,
           component: undefined,
           otherComponents: [],
-          isClosed: false
+          isClosed: false,
+          additionalVars: undefined
         },
         finishedLoading: false,
         componentRoutes: {
@@ -208,6 +212,7 @@
         this.reviewItem.dateCreated = dateCreated ? new Date(dateCreated).toLocaleString('sv') : ''
         this.reviewItem.component = componentToReview
         this.reviewItem.allocatedGroups = allocatedGroups
+        this.reviewItem.additionalVars = additionalInfo?.vars
         this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(oc => ({
           name: oc.name,
           id: (oc.oid ? oc.oid.split(':')[1] : oc.id),

@@ -3,13 +3,13 @@
     <v-card-title
       primary-title
       :id="titleName"
-      :contenteditable="singleCardReview"
+      :contenteditable="singleCardReview && fieldsToBeEdited.includes('name')"
       @input="event => onTitleNameInput(event)"
     >
       <h5 class="titlecard-headline">{{ originalRecord.name }}</h5>
     </v-card-title>
 
-    <v-card-text class="flex" v-if="!!originalRecord?._embedded?.ids?.length > 0">
+    <v-card-text class="flex" v-if="!!ids?.length > 0">
       <gokb-table
         :headers="idHeaders"
         :items="idsVisible"
@@ -19,7 +19,7 @@
         :total-number-of-items="totalNumberOfIds"
         :hide-pagination="true"
         :hide-select="!isOtherCardSelected"
-        :actions="!isReviewedCard"
+        :actions="showActions"
         _pending="empty"
         @delete-item="deleteId"
         @selected-items="selectedIdItems = $event"
@@ -71,7 +71,10 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import titleServices from '@/shared/services/title-services'
+  import identifierServices from '@/shared/services/identifier-services'
+  import genericEntityServices from '@/shared/services/generic-entity-services'
   import GokbTitleIdsField from '@/shared/components/simple/gokb-title-ids-field/gokb-title-ids-field.vue'
+  import namespacesModel from '@/shared/models/namespaces-model'
 
   const ROWS_PER_PAGE = 10
 
@@ -111,11 +114,22 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      fieldsToBeEdited: {
+        type: Array,
+        required: false,
+        default: () => []
+      },
+      additionalVars: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {
       return {
         originalRecord: undefined,
+        ids: [],
         titleName: undefined,
         wantedFields: ["name", "identifiers", "history"],
         variantNameOptions: {
@@ -129,7 +143,8 @@
         selectedIdItems: [],
         pendingStatuses: {},
         idsVisible: undefined,
-        isChanged: false
+        isChanged: false,
+        mismatchIdentifiers: []
       }
     },
     computed: {
@@ -140,7 +155,9 @@
         ]
       },
       idsEditable () {
-        return this.isCardSelected || (this.role != "candidateComponent" && this.isOtherCardSelected)
+        return this.isCardSelected ||
+          (this.role != "candidateComponent" && this.isOtherCardSelected) ||
+          (this.singleCardReview && this.fieldsToBeEdited.includes("ids"))
       },
       historyHeaders () {
         return [
@@ -157,7 +174,7 @@
           }))
       },
       totalNumberOfIds () {
-        return !!(this.originalRecord?._embedded?.ids) ? this.originalRecord._embedded.ids.length : 0
+        return !!(this.ids) ? this.ids.length : 0
       },
       historyEditable () {
         return false
@@ -193,13 +210,16 @@
         return !!this.id && !!this.selCard && this.id != this.selCard
       },
       isItemDeletable () {
-        if (this.isReviewedCard) {
+        if (this.isReviewedCard && (!this.singleCardReview && !this.fieldsToBeEdited.includes("ids"))) {
           return undefined
         }
         else return true
       },
       isCandidate () {
         return this.role != 'reviewedComponent'
+      },
+      showActions () {
+        return !this.isReviewedCard || (this.singleCardReview && this.fieldsToBeEdited.includes('ids'))
       }
     },
     watch: {
@@ -224,6 +244,9 @@
     },
     async mounted () {
       this.fetchTitle(this.id)
+      if (this.singleCardReview && this.fieldsToBeEdited.includes("ids")) {
+        this.fetchReviewMismatchIds()
+      }
     },
     beforeUpdate () {
       this.idsVisible = this.visibleIdentifiers()
@@ -245,21 +268,21 @@
       },
       selectCard () {
         this.selCard = this.id
-        this.selCardIds = this.originalRecord?._embedded?.ids
-        this.$emit('set-active', this.id)
-        this.$emit('set-selected-ids', this.originalRecord?._embedded?.ids)
+        this.selCardIds = this.ids
+        this.$emit('set-active', this.selCard)
+        this.$emit('set-selected-ids', this.selCardIds)
       },
       unselectCard () {
         this.selCard = undefined
         this.selCardIds = []
         this.pendingStatuses = {}
-        this.idsVisible = this.visibleIdentifiers
+        this.idsVisible = this.visibleIdentifiers()
         this.$emit('set-active', undefined)
         this.$emit('set-selected-ids', [])
       },
       async confirmSelectedCard () {
         let putData = this.originalRecord
-        putData.ids = putData._embedded.ids.filter(id => this.pendingStatuses[id.id] != 'removed')
+        putData.ids = this.ids.filter(id => this.pendingStatuses[id.id] != 'removed')
         const putResponse = await this.catchError({
           promise: titleServices.createOrUpdateTitle(putData, this.cancelToken.token),
           instance: this
@@ -275,7 +298,7 @@
       },
       async confirmSingleCard () {
         let putData = this.originalRecord
-        putData.ids = putData._embedded.ids
+        putData.ids = [...this.ids, ...this.mismatchIdentifiers].filter(id => this.pendingStatuses[id.id] != 'removed')
         if (!!this.titleName && this.titleName != this.originalRecord?.name) {
           putData.name = this.titleName
         }
@@ -292,11 +315,11 @@
         this.idsVisible = this.visibleIdentifiers()
       },
       pendingStatus (id) {
-        if ( this.isReviewedCard ){
-          return this.mergeStatus(id)
+        if ( !this.isReviewedCard || (this.singleCardReview && this.fieldsToBeEdited.includes('ids'))){
+          return this.deletedStatus(id)
         }
         else {
-          return this.deletedStatus(id)
+          return this.mergeStatus(id)
         }
       },
       deletedStatus (id) {
@@ -316,7 +339,8 @@
         return 'unselected'
       },
       visibleIdentifiers () {
-        if (this.isReviewedCard) {
+        this.ids = this.originalRecord._embedded.ids
+        if (this.isReviewedCard && !this.singleCardReview) {
           for (const id of this.originalRecord?._embedded?.ids) {
             this.pendingStatuses[id.id] = this.pendingStatus(id.id)
           }
@@ -329,10 +353,51 @@
             isDeletable: this.isItemDeletable,
             _pending: this.pendingStatuses[item.id]
           }))
+        for (const [count, id] of this.mismatchIdentifiers.entries()) {
+          val.push({
+            id: id.id,
+            namespace: id.namespace.value,
+            value: id.value,
+            isDeletable: this.isItemDeletable,
+            _pending: this.pendingStatuses[id.id]
+          })
+        }
         return val
       },
       onTitleNameInput (event) {
         this.titleName = event.target.innerText
+      },
+      fetchReviewMismatchIds () {
+        for (const [count, idItem] of this.additionalVars[1].entries()) {
+          for (const [namespace, id] of Object.entries(idItem)) {
+            this.addReviewMismatchId(namespace, id)
+          }
+        }
+      },
+      async addReviewMismatchId (namespace, id) {
+        const namespaceItem = namespacesModel.getNamespace(namespace)
+        if (!!namespaceItem) {
+          const parameters = { value: id, namespace: namespaceItem.id }
+          const response = await this.catchError({
+            promise: genericEntityServices("identifiers").get({ parameters }, this.cancelToken.token),
+            instance: this
+          })
+          const { data : { data } } = response
+          if (!!data && !!data[0]) {
+            this.mismatchIdentifiers.push(data[0])
+          }
+          else this.addNewReviewMismatchId(parameters)
+        }
+      },
+      async addNewReviewMismatchId(parameters) {
+        const response = await this.catchError({
+          promise: identifierServices.createOrUpdateIdentifier(parameters, this.cancelToken.token),
+          instance: this
+        })
+        const { data } = response
+        if (!!data) {
+          this.mismatchIdentifiers.push(data)
+        }
       }
     }
   }

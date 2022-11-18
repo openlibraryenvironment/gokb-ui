@@ -92,13 +92,13 @@
                     >
                       <template v-slot:0>
                         <router-link
-                          v-if="numMessageVars > 0 && typeof reviewComponent.additionalInfo.vars[0] === 'number'"
-                          :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': reviewComponent.additionalInfo.vars[0] } }"
+                          v-if="numMessageVars > 0 && typeof additionalVars[0] === 'number'"
+                          :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': additionalVars[0] } }"
                           :style="{ color: 'primary' }"
                         >
-                          {{ reviewComponent.additionalInfo.vars[0] === reviewComponent.component.id ? reviewComponent.component.name : reviewComponent.additionalInfo.vars[1] }}
+                          {{ additionalVars[0] === reviewComponent.component.id ? reviewComponent.component.name : additionalVars[1] }}
                         </router-link>
-                        <b v-else-if="numMessageVars > 0">{{ reviewComponent.additionalInfo.vars[0] }}</b>
+                        <b v-else-if="numMessageVars > 0">{{ additionalVars[0] }}</b>
                         <router-link
                           v-else-if="reviewComponent.otherComponents && reviewComponent.otherComponents.length > 0"
                           :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
@@ -116,13 +116,13 @@
                       </template>
                       <template v-slot:1>
                         <b v-if="numMessageVars > 1">
-                          <span v-if="typeof reviewComponent.additionalInfo.vars[1] === 'string' || typeof reviewComponent.additionalInfo.vars[1] === 'number'">
-                            {{ reviewComponent.additionalInfo.vars[1] }}
+                          <span v-if="typeof additionalVars[1] === 'string' || typeof additionalVars[1] === 'number'">
+                            {{ additionalVars[1] }}
                           </span>
-                          <span v-else-if="Array.isArray(reviewComponent.additionalInfo.vars[1])">
+                          <span v-else-if="Array.isArray(additionalVars[1])">
                             (
                             <span
-                              v-for="(entry, idx) in reviewComponent.additionalInfo.vars[1]"
+                              v-for="(entry, idx) in additionalVars[1]"
                               :key="idx"
                             >
                               <span v-if="typeof entry === 'string'">
@@ -142,7 +142,7 @@
                         </b>
                       </template>
                       <template v-slot:2>
-                        <b v-if="numMessageVars > 2">{{ reviewComponent.additionalInfo.vars[2] }}</b>
+                        <b v-if="numMessageVars > 2">{{ additionalVars[2] }}</b>
                       </template>
                     </i18n>
                   </div>
@@ -290,6 +290,11 @@
       reviewComponent: {
         type: Object,
         required: true
+      },
+      additionalVars: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -321,7 +326,7 @@
         return (this.isEdit && this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       numMessageVars () {
-        return this.reviewComponent.additionalInfo?.vars ? this.reviewComponent.additionalInfo.vars.length : 0
+        return this.additionalVars ? this.additionalVars.length : 0
       },
       localAction () {
         return this.reviewComponent?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewComponent.stdDesc.value || this.reviewComponent.stdDesc.name) + '.action') : undefined

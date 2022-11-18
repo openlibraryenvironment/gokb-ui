@@ -9,6 +9,8 @@
           :selected-card-ids="selectedCardIds"
           :single-card-review="isSingleCardReview"
           :is-merged="isMerged"
+          :fields-to-be-edited="fieldsPerType[reviewType]"
+          :additional-vars="additionalVars"
           @keys="addkeyFields"
           @set-active="setSelectedCard"
           @set-selected-ids="setSelectedCardIds"
@@ -42,6 +44,16 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      reviewType: {
+        type: String,
+        required: false,
+        default: undefined
+      },
+      additionalVars: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -52,7 +64,11 @@
         selectedCard: undefined,
         selectedCardIds: undefined,
         selectedIdItems: [],
-        isMerged: false
+        isMerged: false,
+        fieldsPerType: {
+          "Invalid Name" : ["name"],
+          "Minor Identifier Mismatch" : ["ids"]
+        }
       }
     },
     computed: {
@@ -60,7 +76,6 @@
         return 12 / this.allComponents.length > 3 ? 12 / this.allComponents.length : 3
       },
       isSingleCardReview () {
-        console.log("this.allComponents.length : " + this.allComponents.length)
         return this.allComponents.length < 2
       }
     },
