@@ -106,6 +106,11 @@
       singleCardReview: {
         type: Boolean,
         required: true
+      },
+      isMerged: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -176,6 +181,8 @@
       },
       roleColor () {
         if (this.role == "reviewedComponent") {
+          if (this.isChanged) return "#c1ffc1"
+          if (this.isMerged) return null
           return "#ffc1c1"
         }
         if (this.role == "candidateComponent" && this.isCardSelected) {
@@ -260,11 +267,11 @@
         this.unselectCard()
         if (putResponse.status < 400) {
           this.$emit('merge', putData)
+          this.isChanged = true
         }
         else {
           this.$emit('feedback-response', putResponse)
         }
-        this.isChanged = true
       },
       async confirmSingleCard () {
         let putData = this.originalRecord

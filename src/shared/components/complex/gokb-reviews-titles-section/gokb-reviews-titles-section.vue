@@ -8,6 +8,7 @@
           :selected-card="selectedCard"
           :selected-card-ids="selectedCardIds"
           :single-card-review="isSingleCardReview"
+          :is-merged="isMerged"
           @keys="addkeyFields"
           @set-active="setSelectedCard"
           @set-selected-ids="setSelectedCardIds"
@@ -50,7 +51,8 @@
         finishedLoading: false,
         selectedCard: undefined,
         selectedCardIds: undefined,
-        selectedIdItems: []
+        selectedIdItems: [],
+        isMerged: false
       }
     },
     computed: {
@@ -97,6 +99,7 @@
         }
         else {
           if (mergeResponse.status < 400) {
+            this.isMerged = true
             this.prepareClose()
           }
           this.feedbackResponse(mergeResponse)

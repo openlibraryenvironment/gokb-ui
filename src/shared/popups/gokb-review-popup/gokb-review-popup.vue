@@ -220,7 +220,7 @@
         this.finishedLoading = true
       },
       closeReview () {
-        reviewServices.closeReview(this.id, this.cancelToken)
+        reviewServices.closeReview(this.id, this.cancelToken.token)
         this.reviewItem.isClosed = true
       },
       close () {
