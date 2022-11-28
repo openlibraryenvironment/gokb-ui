@@ -330,7 +330,9 @@
           >
             <gokb-reviews-section
               :review-component="packageTitleItem"
+              :show-title="false"
               :api-errors="errors.reviewRequests"
+              :expandable="false"
               @update="refreshReviewsCount"
             />
           </v-tab-item>

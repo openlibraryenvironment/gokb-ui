@@ -41,6 +41,7 @@
       </span>
       <v-toolbar
         v-else-if="!title && subTitle"
+        height="63"
         dense
         flat
       >
@@ -78,6 +79,7 @@
       </v-toolbar>
       <v-toolbar
         v-if="filters && expanded"
+        height="63"
         class="pt-1"
         flat
       >
@@ -98,6 +100,7 @@
       </v-toolbar>
       <v-toolbar
         v-else-if="!subTitle && !title && !noToolBar"
+        height="63"
         dense
         flat
       >

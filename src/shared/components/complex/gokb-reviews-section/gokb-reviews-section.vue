@@ -533,14 +533,13 @@
           this.successMessage = this.$i18n.tc('component.review.edit.success.closed', this.selectedItems.length, { count: this.selectedItems.length })
           this.reviewsOptions.page = 1
           this.loading = false
-
-          this.retrieveReviews()
+          const newList = await this.retrieveReviews()
           this.$emit('update', this.totalNumberOfItems)
         }
       },
-      handlePopupChange (type) {
+      async handlePopupChange (type) {
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
-        this.retrieveReviews()
+        const newList = await this.retrieveReviews()
         this.$emit('update', this.totalNumberOfItems)
       }
     }
