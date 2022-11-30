@@ -806,23 +806,11 @@
       },
       "paymentType": {
         "label": "Zugiffstyp",
-        "Complimentary": {
-          "label": "Complimentary"
-        },
         "OA": {
-          "label": "Open Access"
+          "label": "Free"
         },
         "Paid": {
           "label": "Paid"
-        },
-        "Limited Promotion": {
-          "label": "Limited Promotion"
-        },
-        "Opt Out Promotion": {
-          "label": "Opt Out Promotion"
-        },
-        "Uncharged": {
-          "label": "Uncharged"
         },
         "Unknown": {
           "label": "Unknown"
