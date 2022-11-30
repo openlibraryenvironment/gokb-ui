@@ -111,7 +111,7 @@
           :selected="item"
           @edit="editItem"
         />
-        <div style="white-space:nowrap">
+        <div class="table-action-icons">
           <a
             v-if="!!item.extlink"
             :href="item.extlink"
@@ -120,6 +120,7 @@
             <v-icon
               style="cursor:pointer"
               :title="$t('btn.linkext')"
+              right
               small
             >
               mdi-open-in-new
@@ -130,6 +131,7 @@
             class="mr-2"
             style="cursor:pointer"
             :title="item.updateUrl ? $t('btn.edit') : $t('btn.details')"
+            right
             small
             @click="editItemPopupVisible = item.id"
           >
@@ -141,6 +143,7 @@
             :disabled="disabled || !item.isRetireable"
             style="cursor:pointer"
             :title="$t('btn.retire')"
+            right
             small
             @click="retireItem(item)"
           >
@@ -152,6 +155,7 @@
             style="cursor:pointer"
             :title="$t('btn.delete')"
             small
+            right
             @click="deleteItem(item)"
           >
             mdi-delete
@@ -162,6 +166,7 @@
             style="cursor:pointer"
             class="font-weight-bold"
             :title="$t('btn.close')"
+            right
             small
             @click="closeReview(item)"
           >
@@ -318,3 +323,9 @@
     }
   }
 </script>
+<style scoped>
+  .table-action-icons {
+    white-space: nowrap;
+    text-align: right;
+  }
+</style>
