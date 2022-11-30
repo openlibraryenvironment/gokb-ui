@@ -111,7 +111,7 @@
           :selected="item"
           @edit="editItem"
         />
-        <div style="white-space:nowrap">
+        <div class="table-action-icons">
           <a
             v-if="!!item.extlink"
             :href="item.extlink"
@@ -323,3 +323,9 @@
     }
   }
 </script>
+<style scoped>
+  .table-action-icons {
+    white-space: nowrap;
+    text-align: right;
+  }
+</style>
