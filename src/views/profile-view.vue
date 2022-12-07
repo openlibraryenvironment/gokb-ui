@@ -197,7 +197,7 @@
             }
           }
         } = await this.catchError({
-          promise: profileServices.getProfile(this.cancelToken.token),
+          promise: profileServices.get(this.cancelToken.token),
           instance: this
         })
         this.updateProfileUrl = updateProfileUrl
@@ -209,7 +209,7 @@
         this.successMsgShown = false
 
         const result = await this.catchError({
-          promise: profileServices.updateProfile(this.updateProfileUrl, {
+          promise: profileServices.update(this.updateProfileUrl, {
             email: this.email,
             ...(this.origpass ? { password: this.origpass } : {}),
             ...(this.newpass ? { new_password: this.newpass } : {}),
@@ -231,7 +231,7 @@
       },
       async _removeProfile () {
         await this.catchError({
-          promise: profileServices.deleteProfile(this.deleteProfileUrl, this.cancelToken.token),
+          promise: profileServices.delete(this.deleteProfileUrl, this.cancelToken.token),
           instance: this
         })
         await account.logout()

@@ -1,13 +1,13 @@
 const TIPP_PATH = '/rest/tipps'
 
 const api = (baseServices) => ({
-  getTipp (id, cancelToken) {
+  get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
       url: process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/${id}`,
     }, cancelToken)
   },
-  createOrUpdateTipp (data, cancelToken) {
+  createOrUpdate (data, cancelToken) {
     const { id } = data
     const url = id ? process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/${id}` : process.env.VUE_APP_API_BASE_URL + TIPP_PATH
     return baseServices.request({
@@ -16,14 +16,14 @@ const api = (baseServices) => ({
       data,
     }, cancelToken)
   },
-  archiveTipp (url, cancelToken) {
+  archive (url, cancelToken) {
     return baseServices.request({
       method: 'POST',
       url: baseServices.relativeUrl(url) + '/retire',
       data: { status: 'Retired' }
     }, cancelToken)
   },
-  deleteTipp (url, cancelToken) {
+  delete (url, cancelToken) {
     return baseServices.request({
       method: 'GET',
       url: baseServices.relativeUrl(url),

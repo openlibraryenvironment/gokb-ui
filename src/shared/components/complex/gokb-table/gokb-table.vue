@@ -295,7 +295,14 @@
         set (value) { this.$emit('selected-items', value) }
       },
       localHeaders () {
-        return [...this.headers, { value: '_pending', sortable: false }, { value: 'action', sortable: false }].filter(header => ((!this.editable ? header.value !== '_pending' : true) && (!this.actions ? header.value !== 'action' : true))) // with delete icon
+        return [
+          ...this.headers,
+          { value: '_pending', sortable: false },
+          { value: 'action', sortable: false }
+        ].filter(header => (
+          (!this.editable ? header.value !== '_pending' : true) &&
+          (!this.actions ? header.value !== 'action' : true)
+        )) // with delete icon
       },
       pages () {
         return Math.min(Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage), this.options.page + 10, 1000)

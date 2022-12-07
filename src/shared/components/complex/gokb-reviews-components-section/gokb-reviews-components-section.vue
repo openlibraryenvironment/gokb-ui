@@ -1,23 +1,42 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col :md="colGridWidth" :cols="colGridWidth" class="pa-1" v-for="i in allComponents" :key="i.id">
+      <v-col :md="colGridWidth" :cols="colGridWidth" xl="3" class="pa-1 mr-3">
+        <h3 class="mb-1"> {{ $t('component.review.componentToReview.label') }}</h3>
         <gokb-reviews-title-card
-          :id="i.id.toString()"
-          :role="cardRole(i.id)"
+          :id="reviewedComponent.id.toString()"
+          role="reviewedComponent"
+          :route="reviewedComponent.route"
           :selected-card="selectedCard"
           :selected-card-ids="selectedCardIds"
           :single-card-review="isSingleCardReview"
+          :merge-enabled="isMergeEnabled"
           :is-merged="isMerged"
+          :editable="editable"
           :fields-to-be-edited="fieldsPerType[reviewType]"
           :additional-vars="additionalVars"
-          @keys="addkeyFields"
+          @feedback-response="feedbackResponse"
+          @reviewed-card-selected-ids="setSelectedReviewItemIds"
+        />
+      </v-col>
+      <v-col :md="colGridWidth" :cols="colGridWidth" xl="3" class="pa-1" v-for="i in referenceComponents" :key="i.id">
+        <h3 class="mb-1">{{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label') : $t('component.review.edit.components.merge.unselected.label') }}</h3>
+        <gokb-reviews-title-card
+          :id="i.id.toString()"
+          role="candidateComponent"
+          :route="i.route"
+          :selected-card="selectedCard"
+          :selected-card-ids="selectedCardIds"
+          :single-card-review="isSingleCardReview"
+          :merge-enabled="isMergeEnabled"
+          :is-merged="isMerged"
+          :editable="editable"
+          :fields-to-be-edited="fieldsPerType[reviewType]"
+          :additional-vars="additionalVars"
           @set-active="setSelectedCard"
           @set-selected-ids="setSelectedCardIds"
           @merge="mergeCards"
-          @prepare-close="prepareClose"
           @feedback-response="feedbackResponse"
-          @reviewed-card-selected-ids="setSelectedIdItems"
         />
       </v-col>
     </v-row>
@@ -30,7 +49,7 @@
   import titleServices from '@/shared/services/title-services'
 
   export default {
-    name: 'GokbReviewsTitlesSection',
+    name: 'GokbReviewsComponentsSection',
     components: {
       GokbReviewsTitleCard
     },
@@ -54,59 +73,54 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      editable: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
       return {
-        allComponents: [],
-        allFieldKeys: new Set(),
         finishedLoading: false,
         selectedCard: undefined,
         selectedCardIds: undefined,
+        selectedReviewItemIds: [],
         selectedIdItems: [],
         isMerged: false,
         fieldsPerType: {
-          "Invalid Name" : ["name"],
-          "Minor Identifier Mismatch" : ["ids"]
+          "Invalid Name": ["name"],
+          "Minor Identifier Mismatch": ["ids"],
+          "Major Identifier Mismatch": ["ids"],
+          "Critical Identifier Conflict": ["ids"]
         }
       }
     },
     computed: {
       colGridWidth () {
-        return 12 / this.allComponents.length > 3 ? 12 / this.allComponents.length : 3
+        return 12 / (this.referenceComponents.length + 1 > 3 ? (12 / this.referenceComponents.length + 1) : 3)
       },
       isSingleCardReview () {
-        return this.allComponents.length < 2
+        return this.referenceComponents.length === 0
+      },
+      isMergeEnabled () {
+        return (this.reviewedComponent.route === '/title')
       }
     },
-    mounted () {
-      this.allComponents = [this.reviewedComponent]
-      this.allComponents.push.apply(this.allComponents, this.referenceComponents)
-    },
-    watch: {},
     methods: {
-      addkeyFields (keys) {
-        keys.forEach(key => this.allFieldKeys.add(key))
-      },
-      cardRole (cardComponentId) {
-        if (cardComponentId == this.reviewedComponent.id) {
-          return "reviewedComponent"
-        }
-        return "candidateComponent"
-      },
       setSelectedCard (id) {
         this.selectedCard = id
       },
       setSelectedCardIds (ids) {
         this.selectedCardIds = ids
       },
-      setSelectedIdItems (ids) {
-        this.selectedIdItems = ids
+      setSelectedReviewItemIds (ids) {
+        this.selectedReviewItemIds = ids
       },
-      async mergeCards (targetData) {
-        let mergeData = { id: this.reviewedComponent.id, target: targetData.id, ids: this.selectedIdItems }
+      async mergeCards (targetId) {
+        let mergeData = { id: this.reviewedComponent.id, target: targetId, ids: this.selectedReviewItemIds }
         const mergeResponse = await this.catchError({
-          promise: titleServices.mergeTitle(mergeData, this.cancelToken.token),
+          promise: titleServices.merge(mergeData, this.cancelToken.token),
           instance: this
         })
         if (typeof mergeResponse == 'undefined') {
@@ -115,16 +129,12 @@
         else {
           if (mergeResponse.status < 400) {
             this.isMerged = true
-            this.prepareClose()
           }
           this.feedbackResponse(mergeResponse)
         }
       },
       feedbackResponse (response) {
         this.$emit('feedback-response', response)
-      },
-      prepareClose () {
-        this.$emit('close-review')
       }
     }
   }

@@ -15,7 +15,7 @@
           v-model="reviewComponent.status"
           :init-item="reviewComponent.status"
           :clearable="false"
-          :readonly="true"
+          readonly
           return-object
           message-path="component.review.status"
           url="refdata/categories/ReviewRequest.Status"
@@ -52,12 +52,12 @@
       <v-col md="12">
         <gokb-entity-field
           v-model="reviewComponent.component"
-          :readonly="!!component"
           :init-item="component"
           :type-filter="cmpType"
-          :show-link="true"
           :label="cmpLabel"
           return-object
+          show-link
+          readonly
         />
       </v-col>
     </v-row>
@@ -150,7 +150,7 @@
                     v-else
                     v-model="reviewComponent.description"
                     required
-                    :disabled="isEdit"
+                    disabled
                     :label="$i18n.t('component.review.cause.label')"
                   />
                   <div
@@ -242,7 +242,7 @@
                     v-else
                     v-model="reviewComponent.request"
                     required
-                    :disabled="isEdit"
+                    disabled
                     :label="$i18n.t('component.review.request.label')"
                   />
                 </template>
@@ -265,7 +265,7 @@
             v-else
             v-model="reviewComponent.description"
             required
-            :disabled="true"
+            disabled
             :label="$i18n.t('component.review.cause.label')"
           />
         </template>
@@ -323,21 +323,13 @@
         return this.reviewComponent?.component?.type || undefined
       },
       cmpLabel () {
-        return (this.isEdit && this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+        return (this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       numMessageVars () {
         return this.additionalVars ? this.additionalVars.length : 0
       },
       localAction () {
         return this.reviewComponent?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewComponent.stdDesc.value || this.reviewComponent.stdDesc.name) + '.action') : undefined
-      }
-    },
-    created () {},
-    mounted () {},
-    watch: {},
-    methods: {
-      isReadonly () {
-        return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
       }
     }
   }
