@@ -130,15 +130,8 @@
           >
             {{ $tc('component.package.label', 2) }}
             <v-chip class="ma-2">
-              {{ allPackages ? allPackages.length : 0 }}
+              {{ packageCount }}
             </v-chip>
-            <v-icon
-              v-if="pendingChanges.packages"
-              :title="$t('pending.lists.changed')"
-              small
-            >
-              mdi-alert-decagram
-            </v-icon>
           </v-tab>
           <v-tab
             key="curators"
@@ -218,12 +211,11 @@
             class="mt-4"
           >
             <gokb-packages-section
-              v-model="allPackages"
               :show-title="false"
-              :disabled="isReadonly"
+              disabled
               :api-errors="errors.providedPackages"
-              :filteredProviderId="providerObject.id.toString()"
-              @update="addPendingChange"
+              :provider-id="providerObject.id"
+              @update="updatePackageCount"
             />
           </v-tab-item>
           <v-tab-item
@@ -271,10 +263,9 @@
         :disabled="isReadonly"
       />
       <gokb-packages-section
-        v-model="allPackages"
-        :expanded="allPackages.length > 0"
         :sub-title="$tc('component.package.label', 2)"
-        :disabled="isReadonly"
+        :expanded="packageCount > 0"
+        disabled
       />
       <gokb-curatory-group-section
         v-model="allCuratoryGroups"
@@ -362,6 +353,7 @@
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import providerServices from '@/shared/services/provider-services'
+  import searchServices from '@/shared/services/search-services'
   import accountModel from '@/shared/models/account-model'
   import loading from '@/shared/models/loading'
   import VSnackbars from 'v-snackbars'
@@ -395,7 +387,7 @@
         deleteUrl: undefined,
         allAlternateNames: [],
         allCuratoryGroups: [],
-        allPackages: [],
+        packageCount: 0,
         allNames: { name: undefined, alts: [] },
         allPlatforms: [],
         offices: [],
@@ -560,7 +552,7 @@
           this.pendingChanges[prop] = true
         }
       },
-      mapRecord (data) {
+      async mapRecord (data) {
         this.name = data.name
         this.providerObject.source = data.source
         this.providerObject.homepage = data.homepage
@@ -574,7 +566,6 @@
         this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({ ...platform, updateUrl: platform._links.update.href, isDeletable: !!this.updateUrl }))
         this.providerObject.titleNamespace = data.titleNamespace
         this.providerObject.packageNamespace = data.packageNamespace
-        this.allPackages = data._embedded.providedPackages
         this.allNames = { name: data.name, alts: this.allAlternateNames }
         this.offices = data._embedded.offices?.map(office => ({ ...office, typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined), localLanguage: (office.language?.value && office.language.value), isDeletable: !!this.updateUrl })) || []
         this.dateCreated = data.dateCreated
@@ -583,6 +574,18 @@
         this.uuid = data.uuid
 
         document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
+
+        const pkgResult = await this.catchError({
+          promise: searchServices('rest/packages').search({ status: 'Current', provider: data.id, es: true }, this.cancelToken.token),
+          instance: this
+        })
+
+        if (pkgResult.status === 200) {
+          this.packageCount = pkgResult.data._pagination.total
+        }
+      },
+      updatePackageCount (count) {
+        this.packageCount = count
       }
     }
   }
