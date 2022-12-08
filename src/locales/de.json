@@ -28,7 +28,7 @@
     "search": "Suchen",
     "select": "Auswählen",
     "submit": "Abschicken",
-    "unselect": "Zurücklegen",
+    "unselect": "Auswahl aufheben",
     "update": "Aktualisieren",
     "validate": "Validieren",
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
@@ -962,7 +962,7 @@
         "label": "Ursache"
       },
       "componentToReview": {
-        "label": "Komponente"
+        "label": "Betroffene Komponente"
       },
       "additionalInfo": {
         "label": "Strukturierte Detailansicht"
@@ -985,6 +985,34 @@
           "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
           "closed": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
+        },
+        "close": {
+          "label": "Anfrage Abschließen"
+        },
+        "components": {
+          "merge": {
+            "selectTarget": {
+              "label": "Ziel Auswählen"
+            },
+            "confirm": {
+              "label": "Zusammenführung Bestätigen",
+              "message": "Bitte bestätigen Sie die Zusammenführung. Die Prüfanfrage wird geschlossen und der Prüftitel wird gelöscht."
+            },
+            "selectIds": "Wählen Sie Identifikatoren um sie dem selektierten Titel hinzuzufügen.",
+            "selected": {
+              "label": "Zielkomponente"
+            },
+            "unselected": {
+              "label": "Weitere Komponente"
+            }
+          },
+          "single": {
+            "selectIds": "Wählen Sie die zu löschenden Identifikatoren.",
+            "confirm": {
+              "label": "Änderungen abschicken",
+              "message": "Bitte bestätigen Sie die vorgemerkten Änderungen am Prüftitel."
+            }
+          }
         }
       },
       "status": {

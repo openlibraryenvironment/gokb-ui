@@ -482,7 +482,7 @@
       async loadGroups () {
         this.cancelToken = createCancelToken()
 
-        const result = await profileServices.getProfile(this.cancelToken.token)
+        const result = await profileServices.get(this.cancelToken.token)
 
         if (result.status == 401) {
           this.loginExpiredMsg = true

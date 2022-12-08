@@ -3,41 +3,29 @@
     v-model="localValue"
     :title="localTitle"
     width="max-width"
-    @submit="save"
   >
     <gokb-error-component :value="error" />
-    <span v-if="successMsg">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ localSuccessMessage }}
-      </v-alert>
-    </span>
-    <span v-if="errorMsg">
-      <v-alert
-        type="error"
-        dismissible
-      >
-        {{ localErrorMessage }}
-      </v-alert>
-    </span>
+    <v-snackbar v-model="showSuccessMsg" color="success" :timeout="2000"> {{ localSuccessMessage }} </v-snackbar>
+    <v-snackbar v-model="showErrorMsg" color="error" :timeout="2000"> {{ localErrorMessage }} </v-snackbar>
 
-    <gokb-reviews-header v-if="reviewItem?.component"
+    <gokb-reviews-header
+      v-if="reviewItem?.component"
       :value="error"
       :component="reviewItem.component"
+      :editable="!isReadonly"
       :review-component="reviewItem"
       :additional-vars="reviewItem.additionalVars"
     />
 
-    <gokb-reviews-titles-section v-if="finishedLoading"
+    <gokb-reviews-components-section
+      v-if="finishedLoading"
       :value="error"
       :reviewed-component="reviewItem.component"
       :reference-components="reviewItem.otherComponents"
-      :review-type="localTitle.replace('Review – ', '')"
+      :review-type="reviewItem.stdDesc.name"
+      :editable="!isReadonly"
       :additional-vars="reviewItem.additionalVars"
       @feedback-response="showResponse"
-      @close-review="closeReview"
     />
 
     <template #buttons>
@@ -55,16 +43,16 @@
       </gokb-button>
       <v-spacer />
       <gokb-button
-        @click="close"
+        @click="closePopup"
       >
-        {{ reviewItem.isClosed ? $t('btn.close') : $t('btn.cancel') }}
+        {{ $t('btn.close') }}
       </gokb-button>
       <gokb-button
-        v-if="!isReadonly"
-        :disabled="!isValid"
-        default
+        v-if="!isReadonly && !reviewItem.isClosed"
+        color="primary"
+        @click="closeReview"
       >
-        {{ isEdit ? $t('btn.update') : $t('btn.create') }}
+        {{ $t('component.review.edit.close.label')}}
       </gokb-button>
     </template>
   </gokb-dialog>
@@ -101,8 +89,12 @@
     data () {
       return {
         successMsg: undefined,
+        showSuccessMsg: false,
+        showErrorMsg: false,
         errorMsg: undefined,
         escalatable: false,
+        updateUrl: undefined,
+        deleteUrl: undefined,
         deescalatable: false,
         reviewItem: {
           status: undefined,
@@ -151,10 +143,7 @@
         return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       isReadonly () {
-        return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
-      },
-      isEdit () {
-        return !!this.id
+        return !this.updateUrl
       },
       isValid () {
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
@@ -177,7 +166,12 @@
         this.fetchReview(this.id)
       }
       else if (this.component) {
-        this.reviewItem.component = this.component
+        this.reviewItem.component = {
+          name: this.component.name,
+          id: this.component.id,
+          type: this.component.type.toLowerCase(),
+          route: this.componentRoutes[this.component.type.toLowerCase()]
+        }
         this.finishedLoading = true
       }
       if (this.selectedItem) {
@@ -187,48 +181,53 @@
     },
     methods: {
       async fetchReview (rid) {
-        const {
-          data: {
-            status,
-            stdDesc,
-            reviewRequest,
-            descriptionOfCause,
-            dateCreated,
-            version,
-            componentToReview,
-            allocatedGroups,
-            additionalInfo,
-            _links
-          }
-        } = await this.catchError({
-          promise: reviewServices.getReview(rid, this.cancelToken.token),
+        const response = await this.catchError({
+          promise: reviewServices.get(rid, this.cancelToken.token),
           instance: this
         })
-        this.additionalInfo = additionalInfo
-        this.reviewItem.status = status
-        this.reviewItem.stdDesc = stdDesc
-        this.reviewItem.request = reviewRequest
-        this.reviewItem.description = descriptionOfCause
-        this.reviewItem.dateCreated = dateCreated ? new Date(dateCreated).toLocaleString('sv') : ''
-        this.reviewItem.component = componentToReview
-        this.reviewItem.allocatedGroups = allocatedGroups
-        this.reviewItem.additionalVars = additionalInfo?.vars
-        this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(oc => ({
+
+        if (response.status === 200) {
+          this.mapRecord(response.data)
+        } else {
+
+        }
+        this.finishedLoading = true
+      },
+      mapRecord (record) {
+        this.additionalInfo = record.additionalInfo
+        this.reviewItem.status = record.status
+        this.reviewItem.stdDesc = record.stdDesc
+        this.reviewItem.request = record.reviewRequest
+        this.reviewItem.description = record.descriptionOfCause
+        this.reviewItem.dateCreated = record.dateCreated ? new Date(record.dateCreated).toLocaleString('sv') : ''
+        this.reviewItem.component = {
+          ...record.componentToReview,
+          route: this.componentRoutes[record.componentToReview.type.toLowerCase()]
+        }
+        this.reviewItem.isClosed = record.status.name === 'Closed'
+        this.reviewItem.allocatedGroups = record.allocatedGroups
+        this.reviewItem.additionalVars = record.additionalInfo?.vars
+        this.reviewItem.otherComponents = record.additionalInfo?.otherComponents ? record.additionalInfo.otherComponents.map(oc => ({
           name: oc.name,
           id: (oc.oid ? oc.oid.split(':')[1] : oc.id),
           type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
           route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
         })) : []
-        this.updateUrl = _links?.update?.href || undefined
-        this.deleteUrl = _links?.delete?.href || undefined
-        this.version = version
-        this.finishedLoading = true
+        this.updateUrl = record._links?.update?.href || undefined
+        this.deleteUrl = record._links?.delete?.href || undefined
+        this.version = record.version
       },
-      closeReview () {
-        reviewServices.closeReview(this.id, this.cancelToken.token)
-        this.reviewItem.isClosed = true
+      async closeReview () {
+        const resp = await reviewServices.close(this.id, this.cancelToken.token)
+
+        if (resp.status === 200) {
+          this.$emit('edit', 'closed')
+          this.closePopup()
+        } else {
+          this.errorMsg = 'error.update.400'
+        }
       },
-      close () {
+      closePopup () {
         this.localValue = false
       },
       showResponse (response) {
@@ -238,6 +237,7 @@
         else {
           if (response.status < 400) {
             this.errorMsg = undefined
+            this.showSuccessMsg = true
             this.successMsg = 'component.review.edit.success.edited'
           }
           else {
@@ -245,15 +245,19 @@
             this.errors = response.data.error
             if (response.status === 403) {
               this.errorMsg = 'error.update.403'
+              this.showErrorMsg = true
             }
             else if (response.status === 409) {
               this.errorMsg = 'error.update.409'
+              this.showErrorMsg = true
             }
             else if (response.status === 500) {
               this.errorMsg = 'error.general.500'
+              this.showErrorMsg = true
             }
             else {
               this.errorMsg = 'error.update.400'
+              this.showErrorMsg = true
             }
           }
         }
