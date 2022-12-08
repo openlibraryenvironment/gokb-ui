@@ -22,10 +22,10 @@
     },
     computed: {
       isDeleteSelectedDisabled () {
-        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.deleteUrl === false)).length > 0
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.some(item => (item.deleteUrl === false))
       },
       isRetiredSelectedDisabled () {
-        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.retireUrl === false)).length > 0
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.some(item => (item.retireUrl === false))
       },
       title () {
         return this.$i18n.tc('component.title.label', 2)
