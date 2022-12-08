@@ -19,7 +19,6 @@
     <template #search>
       <gokb-search-platform-field
         v-model="searchFilters.nominalPlatform"
-        :provider-id="providerId"
         :label="$tc('component.platform.label')"
       />
       <v-spacer class="ms-4" />
