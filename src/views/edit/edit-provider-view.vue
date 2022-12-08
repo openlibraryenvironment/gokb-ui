@@ -125,6 +125,22 @@
             </v-icon>
           </v-tab>
           <v-tab
+            key="packages"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.package.label', 2) }}
+            <v-chip class="ma-2">
+              {{ allPackages ? allPackages.length : 0 }}
+            </v-chip>
+            <v-icon
+              v-if="pendingChanges.packages"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
+          </v-tab>
+          <v-tab
             key="curators"
             :active-class="tabClass"
           >
@@ -198,6 +214,19 @@
             />
           </v-tab-item>
           <v-tab-item
+            key="packages"
+            class="mt-4"
+          >
+            <gokb-packages-section
+              v-model="allPackages"
+              :show-title="false"
+              :disabled="isReadonly"
+              :api-errors="errors.providedPackages"
+              :filteredProviderId="providerObject.id.toString()"
+              @update="addPendingChange"
+            />
+          </v-tab-item>
+          <v-tab-item
             key="curators"
             class="mt-4"
           >
@@ -239,6 +268,12 @@
         v-model="allPlatforms"
         :expanded="allPlatforms.length > 0"
         :sub-title="$tc('component.platform.label', 2)"
+        :disabled="isReadonly"
+      />
+      <gokb-packages-section
+        v-model="allPackages"
+        :expanded="allPackages.length > 0"
+        :sub-title="$tc('component.package.label', 2)"
         :disabled="isReadonly"
       />
       <gokb-curatory-group-section

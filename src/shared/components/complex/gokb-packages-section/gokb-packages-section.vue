@@ -103,6 +103,11 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      filteredProviderId: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -223,7 +228,9 @@
       if (this.defaultSortField) {
         this.resultOptions.sortBy[0] = this.defaultSortField
       }
-
+    },
+    mounted () {
+      this.searchFilters.provider = this.filteredProviderId
       this.retrievePackages()
     },
     methods: {
