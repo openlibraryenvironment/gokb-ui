@@ -185,6 +185,7 @@
         :total-number-of-items="totalNumberOfItems"
         :show-loading="isLoading"
         :options.sync="searchOptions"
+        :hide-select="!isEditable"
         @selected-items="selectedItems = $event"
         @paginate="resultPaginate"
         @edit="editTitle"
@@ -403,7 +404,7 @@
         }
       }
     },
-    async created () {
+    async mounted () {
       if (this.ttl) {
         this.fetchTipps(this.searchOptions)
       }

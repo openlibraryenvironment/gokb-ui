@@ -38,7 +38,7 @@
       </v-col>
     </v-row>
     <gokb-section
-      sub-title="Results"
+      :sub-title="$t('header.results')"
       v-if="completion === 100"
     >
       <v-row
@@ -64,9 +64,9 @@
           <h4>
             {{ $t('kbart.processing.rowStats') }}
           </h4>
-          <div>{{ $t('kbart.processing.total.label') }}: {{ loadedFile.rows.total || '0' }} </div>
-          <div>{{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }} </div>
-          <div>{{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }} </div>
+          <span class="mr-4">{{ $t('kbart.processing.total.label') }}: {{ loadedFile.rows.total || '0' }}</span>
+          <span class="mr-4">{{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }}</span>
+          <span class="mr-4">{{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}</span>
         </v-col>
       </v-row>
       <v-row
@@ -222,11 +222,16 @@
         this.loadedFile.warnings.single = []
         this.loadedFile.warnings.type = {}
         this.options.selectedFile = file
+      },
+      '$i18n.locale' (l) {
+        if (this.selectedFile) {
+          this.doImport()
+        }
       }
     },
     methods: {
       reset() {
-        this.selectedFile = undefined
+        this.selectedFile = null
       },
       async doImport () {
         this.errors = []
