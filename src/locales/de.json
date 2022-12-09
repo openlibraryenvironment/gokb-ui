@@ -278,12 +278,12 @@
     "export": {
       "type": {
         "tipp": {
-          "label":"Lokal",
-          "description": "Bevorzugt Informationen aus eingehendem KBART in allen Spalten"
+          "label":"Original",
+          "description": "Informationen werden bevorzugt aus dem ursprünglichen KBART entnommen"
         },
         "title": {
-          "label":"Global",
-          "description": "Spalten werden bevorzugt aus Informationen zum Referenztitel erzeugt"
+          "label":"Angereichert",
+          "description": "Spalten werden bevorzugt aus Informationen zum angereicherten Referenztitel erzeugt"
         }
       }
     },
