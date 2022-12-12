@@ -23,7 +23,7 @@
     },
     computed: {
       isCloseSelectedDisabled () {
-        return this.isReadonly || !this.selectedItems.length || this.selectedItems.filter(item => (item.updateUrl === false)).length > 0
+        return this.isReadonly || !this.selectedItems.length || this.selectedItems.some(item => (item.updateUrl === false))
       },
       resultActionButtons () {
         return [

@@ -1,5 +1,6 @@
 <template>
   <v-file-input
+    ref="input"
     v-model="localSelectedFile"
     :label="label"
     prepend-icon="mdi-file-delimited"
@@ -24,10 +25,10 @@
         required: false,
         default: false,
       },
-      selectedFile: {
-        type: String,
+      value: {
+        type: File,
         required: false,
-        default: undefined,
+        default: null,
       },
       truncateLength: {
         type: Number,
@@ -38,7 +39,7 @@
     computed: {
       localSelectedFile: {
         get () {
-          return this.selectedFile
+          return this.value
         },
         set (value) {
           this.$emit('input', value)

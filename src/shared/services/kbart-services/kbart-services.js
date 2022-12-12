@@ -25,7 +25,7 @@ const api = (baseServices) => ({
         data.append('namespace', namespace)
       }
       if (strict) {
-        data.append('strict', strict)
+        data.append('strict', 'true')
       }
 
       const url = process.env.VUE_APP_API_BASE_URL + `/validation/kbart`

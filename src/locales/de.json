@@ -280,12 +280,12 @@
     "export": {
       "type": {
         "tipp": {
-          "label":"Lokal",
-          "description": "Bevorzugt Informationen aus eingehendem KBART in allen Spalten"
+          "label":"Original",
+          "description": "Informationen werden bevorzugt aus dem ursprünglichen KBART entnommen"
         },
         "title": {
-          "label":"Global",
-          "description": "Spalten werden bevorzugt aus Informationen zum Referenztitel erzeugt"
+          "label":"Angereichert",
+          "description": "Spalten werden bevorzugt aus Informationen zum angereicherten Referenztitel erzeugt"
         }
       }
     },
@@ -318,6 +318,7 @@
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
+      "shortRow": "Diese Zeile enthält weniger Spalten als im Datei-Header definiert wurden!",
       "noIds": "Diese Zeile enthält keine Idenitifikatoren und wird daher nicht prozessiert!",
       "url": {
         "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
@@ -810,23 +811,11 @@
       },
       "paymentType": {
         "label": "Zugiffstyp",
-        "Complimentary": {
-          "label": "Complimentary"
-        },
         "OA": {
-          "label": "Open Access"
+          "label": "Free"
         },
         "Paid": {
           "label": "Paid"
-        },
-        "Limited Promotion": {
-          "label": "Limited Promotion"
-        },
-        "Opt Out Promotion": {
-          "label": "Opt Out Promotion"
-        },
-        "Uncharged": {
-          "label": "Uncharged"
         },
         "Unknown": {
           "label": "Unknown"
