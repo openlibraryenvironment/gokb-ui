@@ -2,7 +2,7 @@
   <gokb-section
     expandable
     filters
-    :sub-title="$tc('component.package.label', 2)"
+    :sub-title="localTitle"
     :errors="!!apiErrors"
   >
     <template #buttons>
@@ -23,6 +23,7 @@
       />
       <v-spacer class="ms-4" />
       <gokb-search-provider-field
+        v-if="!providerId"
         v-model="searchFilters.provider"
         :label="$tc('component.provider.label')"
       />
@@ -48,7 +49,7 @@
       :show-loading="isLoading"
       :options.sync="resultOptions"
       @selected-items="selectedItems = $event"
-      @paginate="retrievePackages"
+      @paginate="resultPaginate"
     />
   </gokb-section>
 </template>
@@ -94,6 +95,11 @@
         required: false,
         default: false
       },
+      showTitle: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
       title: {
         type: String,
         required: false,
@@ -101,6 +107,11 @@
       },
       apiErrors: {
         type: Array,
+        required: false,
+        default: undefined
+      },
+      providerId: {
+        type: Number,
         required: false,
         default: undefined
       }
@@ -116,8 +127,9 @@
         messageToConfirm: undefined,
         resultOptions: {
           page: 1,
-          sortBy: [],
-          desc: [false],
+          mustSort: true,
+          sortBy: ['name'],
+          desc: false,
           itemsPerPage: ROWS_PER_PAGE
         },
         searchFilters: {
@@ -132,7 +144,7 @@
         return !this.selectedItems.length
       },
       localTitle () {
-        return this.title || this.$i18n.tc('component.package.label', 2)
+        return this.showTitle ? (this.title || this.$i18n.tc('component.package.label', 2)) : undefined
       },
       packages () {
         const packages = this.rawPackages?.data?.data
@@ -149,7 +161,7 @@
         }) => ({
           id,
           uuid,
-          lastUpdated,
+          lastUpdated: lastUpdated ? new Date(lastUpdated).toLocaleString('sv').substr(0, 10) : undefined,
           status,
           link: { value: name, route: EDIT_PACKAGE_ROUTE, id: 'id' },
           linkTwo: provider ? { value: provider.name, route: EDIT_PROVIDER_ROUTE, id: 'providerId' } : undefined,
@@ -168,35 +180,67 @@
         return this.loggedIn && account.hasRole('ROLE_CONTRIBUTOR')
       },
       resultHeaders () {
-        return [
-          {
-            text: this.$i18n.t('component.general.name'),
-            align: 'start',
-            sortable: true,
-            value: 'link'
-          },
-          {
-            text: this.$i18n.tc('component.provider.label'),
-            align: 'start',
-            sortable: true,
-            width: '20%',
-            value: 'linkTwo'
-          },
-          {
-            text: this.$i18n.tc('component.package.contentType.label'),
-            align: 'start',
-            sortable: true,
-            width: '15%',
-            value: 'contentType'
-          },
-          {
-            text: this.$i18n.tc('component.general.lastUpdated'),
-            align: 'end',
-            sortable: true,
-            width: '18%',
-            value: 'lastUpdated'
-          }
-        ]
+        if (this.providerId) {
+          return [
+            {
+              text: this.$i18n.t('component.general.name'),
+              align: 'start',
+              sortable: true,
+              value: 'link'
+            },
+            {
+              text: this.$i18n.tc('component.platform.label'),
+              align: 'start',
+              sortable: true,
+              width: '20%',
+              value: 'nominalPlatform'
+            },
+            {
+              text: this.$i18n.tc('component.package.contentType.label'),
+              align: 'start',
+              sortable: true,
+              width: '15%',
+              value: 'contentType'
+            },
+            {
+              text: this.$i18n.tc('component.general.lastUpdated'),
+              align: 'end',
+              sortable: true,
+              width: '18%',
+              value: 'lastUpdated'
+            }
+          ]
+        } else {
+          return [
+            {
+              text: this.$i18n.t('component.general.name'),
+              align: 'start',
+              sortable: true,
+              value: 'link'
+            },
+            {
+              text: this.$i18n.tc('component.provider.label'),
+              align: 'start',
+              sortable: true,
+              width: '20%',
+              value: 'linkTwo'
+            },
+            {
+              text: this.$i18n.tc('component.package.contentType.label'),
+              align: 'start',
+              sortable: true,
+              width: '15%',
+              value: 'contentType'
+            },
+            {
+              text: this.$i18n.tc('component.general.lastUpdated'),
+              align: 'end',
+              sortable: true,
+              width: '18%',
+              value: 'lastUpdated'
+            }
+          ]
+        }
       },
       isLoading () {
         return this.loading
@@ -223,14 +267,26 @@
       if (this.defaultSortField) {
         this.resultOptions.sortBy[0] = this.defaultSortField
       }
-
+    },
+    mounted () {
+      this.searchFilters.provider = this.providerId
       this.retrievePackages()
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
-      async retrievePackages () {
+      resultPaginate (options) {
+        if (options.sortBy) {
+          this.resultOptions.sortBy = [options.sortBy]
+        }
+        if (typeof options.desc === 'boolean') {
+          this.resultOptions.desc = options.desc
+        }
+
+        this.retrievePackages(options)
+      },
+      async retrievePackages (options) {
         const sort = this.resultOptions.sortBy.length > 0 ? (this.linkSearchParameterValues[this.resultOptions.sortBy[0]] || this.resultOptions.sortBy[0]) : this.defaultSortField
         const order = this.resultOptions.desc[0] ? 'desc' : 'asc'
         const searchServiceIncludes = 'id,uuid,name,status,provider,nominalPlatform,_links,contentType,lastUpdated'
@@ -254,13 +310,15 @@
           promise: searchServices('rest/packages').search({
             ...(searchParams || {}),
             ...((sort && { _sort: sort }) || {}),
-            ...({ _order: order }),
+            _order: (this.resultOptions.desc ? 'desc' : 'asc'),
             _include: searchServiceIncludes,
             offset: this.resultOptions.page ? (this.resultOptions.page - 1) * this.resultOptions.itemsPerPage : 0,
             limit: this.resultOptions.itemsPerPage
           }, this.cancelToken.token),
           instance: this
         })
+
+        this.$emit('update', this.totalNumberOfResults)
 
         this.loading = false
       }

@@ -2,7 +2,7 @@
   <gokb-section
     expandable
     :hide-default="!expanded"
-    :sub-title="$tc('component.platform.label', 2)"
+    :sub-title="localTitle"
     :items-total="totalNumberOfItems"
     :errors="!!apiErrors"
   >
@@ -79,6 +79,16 @@
         required: false,
         default: false
       },
+      showTitle: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
+      title: {
+        type: String,
+        required: false,
+        default: undefined
+      },
       expanded: {
         type: Boolean,
         required: false,
@@ -134,6 +144,9 @@
       },
       isEditable () {
         return !this.disabled
+      },
+      localTitle () {
+        return this.showTitle ? (this.title || this.$i18n.tc('component.platform.label', 2)) : undefined
       }
     },
     created () {
