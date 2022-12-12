@@ -1,5 +1,5 @@
 <template>
-  <v-menu offset-y>
+  <v-menu id="export-menu" offset-y>
     <template v-slot:activator="{ on }">
       <gokb-button
         icon-id="mdi-swap-vertical"
@@ -19,11 +19,13 @@
           <a
             download
             :href="exportType.url"
-            :title="exportType.description"
             :type="type"
           >
             {{ exportType.label }}
           </a>
+          <gokb-tooltip
+            :code="exportType.description"
+          />
         </v-list-item-title>
       </v-list-item>
     </v-list>
@@ -63,14 +65,14 @@
             url: this.currentTippUrl,
             flavour: 'tipp',
             label: this.$i18n.t('kbart.export.type.tipp.label'),
-            description: this.$i18n.t('kbart.export.type.tipp.description'),
+            description: 'kbart.export.type.tipp.description',
             type: 'text/tab-separated-values'
           },
           KBART_TITLE: {
             url: this.currentTitleUrl,
             flavour: 'title',
             label: this.$i18n.t('kbart.export.type.title.label'),
-            description: this.$i18n.t('kbart.export.type.title.description'),
+            description: 'kbart.export.type.title.description',
             type: 'text/tab-separated-values'
           }
         }
