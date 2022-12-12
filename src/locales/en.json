@@ -279,7 +279,7 @@
       "type": {
         "tipp": {
           "label":"Raw",
-          "description": "Prefers original KBART info for all columns"
+          "description": "Prefer original KBART info for all columns"
         },
         "title": {
           "label":"Processed",
