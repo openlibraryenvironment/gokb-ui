@@ -41,7 +41,7 @@
           mdi-refresh
         </v-icon>
       </v-btn>
-      <gokb-review-popup
+      <gokb-add-review-popup
         v-if="addReviewPopupVisible"
         v-model="addReviewPopupVisible"
         :component="reviewComponent"
@@ -123,6 +123,7 @@
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbReviewPopup from '@/shared/popups/gokb-review-popup'
+  import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
   import reviewServices from '@/shared/services/review-services'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
@@ -133,6 +134,7 @@
     name: 'GokbReviewsSection',
     components: {
       GokbConfirmationPopup,
+      GokbAddReviewPopup,
       GokbReviewPopup
     },
     extends: BaseComponent,
@@ -421,7 +423,7 @@
           limit: this.reviewsOptions.itemsPerPage
         }
         this.rawReviews = await this.catchError({
-          promise: reviewServices.get({ parameters }, this.cancelToken.token),
+          promise: reviewServices.search({ parameters }, this.cancelToken.token),
           instance: this
         })
 
@@ -436,7 +438,7 @@
         this.selectedItems = []
 
         const response = await this.catchError({
-          promise: reviewServices.closeReview(item.id, this.cancelToken.token),
+          promise: reviewServices.close(item.id, this.cancelToken.token),
           instance: this
         })
 
@@ -525,7 +527,7 @@
           this.loading = true
           await Promise.all(this.selectedItems.map(({ id }) =>
             this.catchError({
-              promise: reviewServices.closeReview(id, this.cancelToken.token),
+              promise: reviewServices.close(id, this.cancelToken.token),
               instance: this
             })
           ))
@@ -538,6 +540,7 @@
         }
       },
       async handlePopupChange (type) {
+        console.log("Changed popup:" + type)
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
         const newList = await this.retrieveReviews()
         this.$emit('update', this.totalNumberOfItems)

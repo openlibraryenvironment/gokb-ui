@@ -673,7 +673,7 @@
           }
 
           const response = await this.catchError({
-            promise: tippServices.createOrUpdateTipp(newTipp, this.cancelToken.token),
+            promise: tippServices.createOrUpdate(newTipp, this.cancelToken.token),
             instance: this
           })
 

@@ -1,21 +1,65 @@
 <template>
-  <v-card class="elevation-4 flex d-flex flex-column" :color="roleColor" v-if="!!originalRecord?.name">
+  <v-card
+    v-if="!!originalRecord?.name"
+    :color="roleColor"
+    :class="elevationClass"
+  >
+    <gokb-confirmation-popup
+      v-model="showSubmitConfirm"
+      :message="submitConfirmationMessage"
+      @confirmed="triggerConfirmedAction"
+    />
     <v-card-title
       primary-title
       :id="titleName"
       :contenteditable="singleCardReview && fieldsToBeEdited.includes('name')"
       @input="event => onTitleNameInput(event)"
     >
-      <h5 class="titlecard-headline">{{ originalRecord.name }}</h5>
+      <h5 class="titlecard-headline">
+        <router-link
+          :style="{ color: 'primary' }"
+          :to="{ name: route, params: { 'id': originalRecord.id } }"
+        >
+          {{ originalRecord.name }}
+        </router-link>
+      </h5>
     </v-card-title>
 
-    <v-card-text class="flex" v-if="!!ids?.length > 0">
+    <v-card-text>
+      <span>{{ $t('component.general.status.label') }}: </span>
+      <span v-if="!!status">
+        {{ $t('component.general.status.' + status + '.label') }}
+        <v-icon
+          :color="statusIcons[status].color"
+          class="mt-n1"
+          dense
+        >
+          {{ statusIcons[status].icon }}
+        </v-icon>
+      </span>
+    </v-card-text>
+
+    <v-card-text v-if="!!ids?.length > 0">
+      <v-chip
+        v-if="singleCardReview && editable"
+        class="mb-1"
+        pill
+      >
+          {{ $t('component.review.edit.components.single.selectIds') }}
+      </v-chip>
+      <v-chip
+        v-else-if="isOtherCardSelected && mergeEnabled && editable"
+        class="mb-1"
+        pill
+      >
+          {{ $t('component.review.edit.components.merge.selectIds') }}
+        </v-chip>
       <gokb-table
         :headers="idHeaders"
         :items="idsVisible"
         :selected-items="selectedIdItems"
         :editable="idsEditable"
-        :options.sync="variantNameOptions"
+        :options.sync="idOptions"
         :total-number-of-items="totalNumberOfIds"
         :hide-pagination="true"
         :hide-select="!isOtherCardSelected"
@@ -26,61 +70,74 @@
       />
     </v-card-text>
 
-    <v-card-text class="flex" v-if="!!originalRecord?.history">
+    <v-card-text v-if="!!originalRecord?.history">
       <div class="titlecard-history">{{ $t('component.title.history.label') }}</div>
     </v-card-text>
 
-    <v-card-text class="flex" >
+    <v-card-text>
       <gokb-table
         :headers="historyHeaders"
         :items="getHistory"
         :editable="historyEditable"
-        :options.sync="variantNameOptions"
+        :options.sync="historyOptions"
         :total-number-of-items="getHistory.length"
         :hide-select="true"
         :hide-pagination="true"
       />
     </v-card-text>
-    <v-row>
-      <v-col>
-        <gokb-button v-if="!isChanged && !isCardSelected && !isOtherCardSelected && isCandidate"
-          @click="selectCard"
-        >
-          {{ $i18n.t('btn.select') }}
-        </gokb-button>
-        <gokb-button v-if="!isChanged && isCardSelected && isCandidate"
-          @click="unselectCard"
-        >
-          {{ $i18n.t('btn.unselect') }}
-        </gokb-button>
-        <gokb-button v-if="!isChanged && isCardSelected && isCandidate"
-          @click="confirmSelectedCard"
-        >
-          {{ $i18n.t('btn.confirm') }}
-        </gokb-button>
-        <gokb-button v-if="!isChanged && singleCardReview"
-          @click="confirmSingleCard"
-        >
-          {{ $i18n.t('btn.confirm') }}
-        </gokb-button>
-      </v-col>
-    </v-row>
+    <v-card-actions v-if="editable">
+      <v-spacer />
+      <gokb-button v-if="!isChanged && !isCardSelected && !isOtherCardSelected && isMergeCandidate"
+        @click="selectCard"
+      >
+        {{ $i18n.t('component.review.edit.components.merge.selectTarget.label') }}
+      </gokb-button>
+      <gokb-button v-if="!isChanged && isCardSelected && isMergeCandidate"
+        @click="unselectCard"
+      >
+        {{ $i18n.t('btn.unselect') }}
+      </gokb-button>
+      <gokb-button
+        v-if="!isChanged && isCardSelected && isMergeCandidate"
+        primary
+        @click="showConfirmSelectedCard"
+      >
+        {{ $i18n.t('component.review.edit.components.merge.confirm.label') }}
+      </gokb-button>
+      <gokb-button
+        v-if="!isChanged && singleCardReview"
+        :disabled="selectedIdItems.length === 0"
+        @click="showConfirmSelectedCard"
+      >
+        {{ $i18n.t('component.review.edit.components.single.confirm.label') }}
+      </gokb-button>
+      <v-spacer />
+    </v-card-actions>
   </v-card>
 </template>
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import titleServices from '@/shared/services/title-services'
+  import tippServices from '@/shared/services/tipp-services'
   import identifierServices from '@/shared/services/identifier-services'
   import genericEntityServices from '@/shared/services/generic-entity-services'
   import GokbTitleIdsField from '@/shared/components/simple/gokb-title-ids-field/gokb-title-ids-field.vue'
+  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import namespacesModel from '@/shared/models/namespaces-model'
 
   const ROWS_PER_PAGE = 10
 
+  const STATUS_ICONS = {
+    'Current': { icon: "mdi-check-circle", color: 'success'},
+    'Retired': { icon: "mdi-close-circle", color: 'amber'},
+    'Expected': { icon: "mdi-clock", color: 'info'},
+    'Deleted': { icon: "mdi-delete", color: 'red'}
+  }
+
   export default {
     name: 'GokbReviewsTitleCard',
-    components: {GokbTitleIdsField},
+    components: {GokbTitleIdsField, GokbConfirmationPopup},
     extends: BaseComponent,
     props: {
       id: {
@@ -101,13 +158,22 @@
         type: String,
         required: false
       },
-      enabled: {
+      editable: {
         type: Boolean,
         required: false,
-        default: true
+        default: false
       },
       singleCardReview: {
         type: Boolean,
+        required: true
+      },
+      mergeEnabled: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      route: {
+        type: String,
         required: true
       },
       isMerged: {
@@ -129,10 +195,16 @@
     data () {
       return {
         originalRecord: undefined,
+        activeService: undefined,
         ids: [],
         titleName: undefined,
+        status: undefined,
         wantedFields: ["name", "identifiers", "history"],
-        variantNameOptions: {
+        idOptions: {
+          page: 1,
+          itemsPerPage: ROWS_PER_PAGE
+        },
+        historyOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
@@ -144,7 +216,9 @@
         pendingStatuses: {},
         idsVisible: undefined,
         isChanged: false,
-        mismatchIdentifiers: []
+        mismatchIdentifiers: [],
+        showSubmitConfirm: false,
+        submitConfirmationMessage: undefined
       }
     },
     computed: {
@@ -155,9 +229,26 @@
         ]
       },
       idsEditable () {
-        return this.isCardSelected ||
-          (this.role != "candidateComponent" && this.isOtherCardSelected) ||
-          (this.singleCardReview && this.fieldsToBeEdited.includes("ids"))
+        return this.isReviewedCard || (this.isCardSelected && this.fieldsToBeEdited.includes("ids"))
+      },
+      roleColor () {
+        if (this.role == "reviewedComponent") {
+          if (this.mergeEnabled) {
+            return "#f2d2d2"
+          }
+          return null
+        }
+        if (this.role == "candidateComponent" && this.isCardSelected) {
+          return "#d2f2d2"
+        }
+      },
+      statusIcons () {
+        return {
+          'Current': { icon: "mdi-check-circle", color: 'success'},
+          'Retired': { icon: "mdi-close-circle", color: 'amber'},
+          'Expected': { icon: "mdi-clock", color: 'info'},
+          'Deleted': { icon: "mdi-delete", color: 'red'}
+        }
       },
       historyHeaders () {
         return [
@@ -166,12 +257,8 @@
           { text: this.$i18n.tc('component.title.history.to', 1), align: 'start', value: 'to', sortable: false }
         ]
       },
-      historyVisible () {
-        return [...this.originalRecord?.history]
-          .map(item => ({
-            namespace: item.namespace.value,
-            value: item.value
-          }))
+      elevationClass () {
+        return (this.isReviewedCard || this.isCardSelected) ? 'elevation-4' : 'elevation-1'
       },
       totalNumberOfIds () {
         return !!(this.ids) ? this.ids.length : 0
@@ -196,75 +283,69 @@
         // TODO: add Coverage
         return result
       },
-      roleColor () {
-        if (this.role == "reviewedComponent") {
-          if (this.isChanged) return "#c1ffc1"
-          if (this.isMerged) return null
-          return "#ffc1c1"
-        }
-        if (this.role == "candidateComponent" && this.isCardSelected) {
-          return "#c1ffc1"
-        }
-      },
       isOtherCardSelected () {
-        return !!this.id && !!this.selCard && this.id != this.selCard
+        return this.singleCardReview || (!!this.id && !!this.selCard && this.id != this.selCard)
       },
       isItemDeletable () {
-        if (this.isReviewedCard && (!this.singleCardReview && !this.fieldsToBeEdited.includes("ids"))) {
+        if (this.isReviewedCard || (!this.singleCardReview && !this.fieldsToBeEdited.includes("ids"))) {
           return undefined
         }
         else return true
       },
-      isCandidate () {
-        return this.role != 'reviewedComponent'
+      isMergeCandidate () {
+        return this.role != 'reviewedComponent' && this.mergeEnabled
       },
       showActions () {
-        return !this.isReviewedCard || (this.singleCardReview && this.fieldsToBeEdited.includes('ids'))
+        return this.isCardSelected && this.fieldsToBeEdited.includes('ids')
       }
     },
     watch: {
       selCard () {
-        this.isCardSelected = !!this.id && this.id == this.selCard
+        this.isCardSelected = (!!this.id && this.id == this.selCard)
       },
       selectedCard () {
         this.selCard = this.selectedCard
+        this.idsVisible = this.updateVisibleIdentifiers()
       },
       selectedCardIds () {
         this.selCardIds = this.selectedCardIds
       },
       selectedIdItems () {
-        this.$emit('reviewedCardSelectedIds', this.selectedIdItems)
+        this.$emit('reviewed-card-selected-ids', this.selectedIdItems)
       },
-      originalRecord () {
-        this.titleName = this.originalRecord.name
+      isMerged (){
+        this.fetchTitle()
       }
     },
     created () {
-      this.isReviewedCard = this.role == "reviewedComponent"
+      this.isReviewedCard = this.role === "reviewedComponent"
+      this.activeService = this.route === '/title' ? titleServices : tippServices
     },
     async mounted () {
-      this.fetchTitle(this.id)
+      this.fetchTitle()
       if (this.singleCardReview && this.fieldsToBeEdited.includes("ids")) {
         this.fetchReviewMismatchIds()
       }
     },
     beforeUpdate () {
-      this.idsVisible = this.visibleIdentifiers()
+      this.idsVisible = this.updateVisibleIdentifiers()
     },
     methods: {
-      async fetchTitle (tid) {
+      async fetchTitle () {
         this.finishedLoading = false
-        const response = await this.catchError({
-          promise: titleServices.getTitle(tid, this.cancelToken.token),
+
+        let response = await this.catchError({
+          promise: this.activeService.get(this.id, this.cancelToken.token),
           instance: this
         })
-        if (response.status < 400) {
+
+        if (response?.status < 400) {
           this.originalRecord = response.data
+          this.titleName = response.data.name
+          this.status = response.data.status.name
           this.finishedLoading = true
+          this.idsVisible = this.updateVisibleIdentifiers()
         }
-      },
-      hasTitle () {
-        return (!!this.titleName && !!this.identifiers && this.finishedLoading)
       },
       selectCard () {
         this.selCard = this.id
@@ -276,20 +357,37 @@
         this.selCard = undefined
         this.selCardIds = []
         this.pendingStatuses = {}
-        this.idsVisible = this.visibleIdentifiers()
+        this.idsVisible = this.updateVisibleIdentifiers()
         this.$emit('set-active', undefined)
         this.$emit('set-selected-ids', [])
+      },
+      showConfirmSelectedCard () {
+        if (this.isMergeCandidate) {
+          this.submitConfirmationMessage = { text: 'component.review.edit.components.merge.confirm.message', vars: [] }
+        } else {
+          this.submitConfirmationMessage = { text: 'component.review.edit.components.single.confirm.message', vars: [] }
+        }
+        this.showSubmitConfirm = true
+      },
+      triggerConfirmedAction () {
+        if (this.isMergeCandidate) {
+          this.confirmSelectedCard()
+        }
+        else {
+          this.confirmSingleCard()
+        }
       },
       async confirmSelectedCard () {
         let putData = this.originalRecord
         putData.ids = this.ids.filter(id => this.pendingStatuses[id.id] != 'removed')
+
         const putResponse = await this.catchError({
-          promise: titleServices.createOrUpdateTitle(putData, this.cancelToken.token),
+          promise: this.activeService.createOrUpdate(putData, this.cancelToken.token),
           instance: this
         })
         this.unselectCard()
         if (putResponse.status < 400) {
-          this.$emit('merge', putData)
+          this.$emit('merge', putData.id)
           this.isChanged = true
         }
         else {
@@ -298,34 +396,33 @@
       },
       async confirmSingleCard () {
         let putData = this.originalRecord
-        putData.ids = [...this.ids, ...this.mismatchIdentifiers].filter(id => this.pendingStatuses[id.id] != 'removed')
+        putData.ids = this.ids.filter(ido => !this.selectedIdItems.some(sel => sel.id == ido.id))
         if (!!this.titleName && this.titleName != this.originalRecord?.name) {
           putData.name = this.titleName
         }
         const putResponse = await this.catchError({
-          promise: titleServices.createOrUpdateTitle(putData, this.cancelToken.token),
+          promise: this.activeService.createOrUpdate(putData, this.cancelToken.token),
           instance: this
         })
         this.$emit('feedback-response', putResponse)
-        this.$emit('prepare-close')
         this.isChanged = true
       },
       deleteId (id) {
         this.pendingStatuses[id.id] = 'removed'
-        this.idsVisible = this.visibleIdentifiers()
+        this.idsVisible = this.updateVisibleIdentifiers()
       },
-      pendingStatus (id) {
+      getPendingStatus (id) {
         if ( !this.isReviewedCard || (this.singleCardReview && this.fieldsToBeEdited.includes('ids'))){
           return this.deletedStatus(id)
         }
         else {
-          return this.mergeStatus(id)
+          return this.getMergeStatus(id)
         }
       },
-      deletedStatus (id) {
+      getDeletedStatus (id) {
         return 'removed'
       },
-      mergeStatus (id) {
+      getMergeStatus (id) {
         for (const [i, idItem] of this.selectedCardIds.entries()) {
           if (idItem.id == id) {
             return 'existing'
@@ -338,11 +435,11 @@
         }
         return 'unselected'
       },
-      visibleIdentifiers () {
+      updateVisibleIdentifiers () {
         this.ids = this.originalRecord._embedded.ids
-        if (this.isReviewedCard && !this.singleCardReview) {
+        if (this.isReviewedCard && !this.singleCardReview && this.isOtherCardSelected) {
           for (const id of this.originalRecord?._embedded?.ids) {
-            this.pendingStatuses[id.id] = this.pendingStatus(id.id)
+            this.pendingStatuses[id.id] = this.getPendingStatus(id.id)
           }
         }
         let val = [...this.originalRecord?._embedded?.ids]
@@ -363,9 +460,6 @@
           })
         }
         return val
-      },
-      onTitleNameInput (event) {
-        this.titleName = event.target.innerText
       },
       fetchReviewMismatchIds () {
         for (const [count, idItem] of this.additionalVars[1].entries()) {
@@ -391,7 +485,7 @@
       },
       async addNewReviewMismatchId(parameters) {
         const response = await this.catchError({
-          promise: identifierServices.createOrUpdateIdentifier(parameters, this.cancelToken.token),
+          promise: identifierServices.createOrUpdate(parameters, this.cancelToken.token),
           instance: this
         })
         const { data } = response

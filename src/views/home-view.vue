@@ -100,7 +100,7 @@
             }
           }
         } = await this.catchError({
-          promise: profileServices.getProfile(this.cancelToken.token),
+          promise: profileServices.get(this.cancelToken.token),
           instance: this
         })
         this.groups = curatoryGroups

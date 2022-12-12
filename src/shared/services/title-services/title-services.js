@@ -1,7 +1,7 @@
 const PROVIDER_URL = '/rest/titles'
 
 const api = (baseServices) => ({
-  getTitle (id, cancelToken) {
+  get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
       url: process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}?history=true`,
@@ -15,7 +15,7 @@ const api = (baseServices) => ({
       url: process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}/tipps?${urlParameter}`,
     }, cancelToken)
   },
-  createOrUpdateTitle (data, cancelToken) {
+  createOrUpdate (data, cancelToken) {
     const { id } = data
     const url = id ? process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}` : process.env.VUE_APP_API_BASE_URL + PROVIDER_URL
     return baseServices.request({
@@ -32,19 +32,19 @@ const api = (baseServices) => ({
       data,
     }, cancelToken)
   },
-  archiveTitle (url, cancelToken) {
+  archive (url, cancelToken) {
     return baseServices.request({
       method: 'POST',
       url: baseServices.relativeUrl(url) + '/retire',
     }, cancelToken)
   },
-  deleteTitle (url, cancelToken) {
+  delete (url, cancelToken) {
     return baseServices.request({
       method: 'GET',
       url: baseServices.relativeUrl(url),
     }, cancelToken)
   },
-  mergeTitle (data, cancelToken) {
+  merge (data, cancelToken) {
     const { id, target, ids } = data
     const parameterData = { target: target, ids: ids.map(id => id.id), mergeTipps: true }
     const queryParameters = baseServices.createQueryParameters(parameterData)

@@ -293,7 +293,7 @@
           // organisation: this.organisation
         }
         const response = await this.catchError({
-          promise: userServices.createOrUpdateUser(this.id, data, this.cancelToken.token),
+          promise: userServices.createOrUpdate(this.id, data, this.cancelToken.token),
           instance: this
         })
         // todo: check error code
@@ -330,7 +330,7 @@
             }
           }
         } = await this.catchError({
-          promise: userServices.getUser(this.id, this.cancelToken.token),
+          promise: userServices.get(this.id, this.cancelToken.token),
           instance: this
         })
 
