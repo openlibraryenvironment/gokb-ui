@@ -358,6 +358,9 @@
         "processing": "KBART processing was cancelled due to errors!",
         "unknown": "KBART processing failed due to internal errors. Please report this to an administator!"
       },
+      "warn": {
+        "skipped": "The KBART import has finished, but at least one title has been skipped!"
+      },
       "skipped": {
         "noChange": "Automated KBART processing was skipped, since the same file was already processed last time."
       }

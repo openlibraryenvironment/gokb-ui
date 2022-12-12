@@ -358,6 +358,9 @@
         "processing": "Die KBART-Verarbeitung ist fehlgeschlagen!",
         "unknown": "Die KBART-Verarbeitung ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
       },
+      "warn": {
+        "skipped": "Die KBART-Prozessierung ist abgeschlossen, aber mindestens ein Titel wurde übersprungen."
+      },
       "skipped": {
         "noChange": "Die KBART-Prozessierung wurde übersprungen, da sich die Datei im Vergleich zum letzten Import nicht verändert hat."
       }

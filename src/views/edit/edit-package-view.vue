@@ -26,6 +26,15 @@
         <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
       </v-alert>
     </span>
+    <span v-if="importJob?.result === 'warn'">
+      <v-alert
+        type="warning"
+        dismissible
+      >
+        {{ $t('kbart.transmission.warn.skipped') }}
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+      </v-alert>
+    </span>
     <span v-else-if="importJob?.result === 'info'">
       <v-alert
         type="info"
@@ -58,7 +67,7 @@
         dismissible
       >
         {{ $t(matchingJob.messageCode) }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
       </v-alert>
     </span>
     <span v-else-if="matchingJob?.result === 'info'">
@@ -1211,6 +1220,13 @@
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
                 this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.processing'), color: 'error', importResult: true })
+              } else if (jobResult.data.job_result?.badrows) {
+                jobInfo.result = 'warn'
+                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.warn.skipped'), color: 'warn', importResult: true })
+
+                if (jobResult.data.job_result.matchingJob) {
+                  this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
+                }
               } else {
                 jobInfo.result = 'success'
                 this.eventMessages.push({ message: this.$i18n.t(jobInfo.dryRun ? 'kbart.dryRun.success' : 'kbart.transmission.success'), color: 'success', importResult: true })
@@ -1257,7 +1273,7 @@
 
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
-                jobInfo.messageCode = jobResult.data.job_result?.messageCode
+                jobInfo.messageCode = jobResult.data.job_result?.messageCode || 'kbart.titleMatch.failure'
                 this.eventMessages.push({ message: this.$i18n.t(jobResult.data.job_result?.messageCode), color: 'error', timeout: -1, matchingResult: true })
               } else {
                 jobInfo.result = 'success'
