@@ -62,7 +62,7 @@
             v-if="id"
             :label="$t('component.general.uuid.label')"
             :value="titleItem.uuid"
-            path="/title"
+            path="/#/title"
             dense
           />
         </v-col>
