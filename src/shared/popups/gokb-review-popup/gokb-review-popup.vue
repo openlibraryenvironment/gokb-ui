@@ -45,7 +45,7 @@
       <gokb-button
         @click="closePopup"
       >
-        {{ $t('btn.close') }}
+        {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         v-if="!isReadonly && !reviewItem.isClosed"

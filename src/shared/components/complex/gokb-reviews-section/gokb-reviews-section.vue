@@ -112,6 +112,7 @@
       :options.sync="reviewsOptions"
       :actions="showEditActions"
       :show-loading="loading"
+      :hide-select="!showEditActions"
       @selected-items="selectedItems = $event"
       @paginate="retrieveReviews"
       @edit="handlePopupChange"

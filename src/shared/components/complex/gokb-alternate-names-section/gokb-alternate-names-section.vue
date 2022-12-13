@@ -54,6 +54,7 @@
       :selected-items="selectedVariantNames"
       :total-number-of-items="totalNumberOfItems"
       :options.sync="variantNameOptions"
+      :hide-select="!isEditable"
       @selected-items="selectedVariantNames = $event"
       @delete-item="confirmDeleteItem"
     />
