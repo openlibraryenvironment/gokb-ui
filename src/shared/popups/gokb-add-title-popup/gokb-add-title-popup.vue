@@ -52,7 +52,7 @@
                 v-if="id"
                 :label="$t('component.general.uuid.label')"
                 :value="uuid"
-                path="/package-title"
+                path="/#/package-title"
                 dense
               />
             </v-col>

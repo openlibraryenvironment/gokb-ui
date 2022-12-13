@@ -410,7 +410,7 @@
                   v-if="uuid"
                   label="UUID"
                   :value="uuid"
-                  path="/package"
+                  path="/#/package"
                   dense
                 />
               </v-col>
