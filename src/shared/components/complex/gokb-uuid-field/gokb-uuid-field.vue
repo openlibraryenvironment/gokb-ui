@@ -59,12 +59,12 @@
         return this.copied ? [this.$i18n.t('component.general.uuid.copy.success')] : []
       },
       urlBase () {
-        return process.env.VUE_APP_BASE_URL
+        return process.env.VUE_APP_PUBLIC_BASE_URL
       }
     },
     methods: {
       copyUrl () {
-        const url = process.env.VUE_APP_BASE_URL + this.path + '/' + this.value
+        const url = process.env.VUE_APP_PUBLIC_BASE_URL + this.path + '/' + this.value
         navigator.clipboard.writeText(url)
         this.copied = true
       }
