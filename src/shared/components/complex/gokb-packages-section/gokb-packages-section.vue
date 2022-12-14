@@ -17,6 +17,11 @@
       </v-btn>
     </template>
     <template #search>
+      <gokb-search-package-field
+        v-model="searchFilters.pkg"
+        :label="$tc('component.package.label')"
+      />
+      <v-spacer class="ms-4" />
       <gokb-search-platform-field
         v-model="searchFilters.nominalPlatform"
         :label="$tc('component.platform.label')"
@@ -135,7 +140,8 @@
         searchFilters: {
           status: undefined,
           provider: undefined,
-          nominalPlatform: undefined
+          nominalPlatform: undefined,
+          pkg: undefined
         }
       }
     },
