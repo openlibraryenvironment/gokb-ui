@@ -261,7 +261,7 @@
         linkTwo: 'provider'
       }
       if (this.defaultSortOrder === 'desc') {
-        this.resultOptions.desc[0] = true
+        this.resultOptions.desc = true
       }
 
       if (this.defaultSortField) {

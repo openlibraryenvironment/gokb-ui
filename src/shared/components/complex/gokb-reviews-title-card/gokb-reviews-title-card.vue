@@ -41,7 +41,7 @@
 
     <v-card-text v-if="!!ids?.length > 0">
       <v-chip
-        v-if="singleCardReview && editable"
+        v-if="reviewedCardDeleteEnabled"
         class="mb-1"
         pill
       >
@@ -62,7 +62,7 @@
         :options.sync="idOptions"
         :total-number-of-items="totalNumberOfIds"
         :hide-pagination="true"
-        :hide-select="!isOtherCardSelected"
+        :hide-select="hideTableSelects"
         :actions="showActions"
         _pending="empty"
         @delete-item="deleteId"
@@ -105,7 +105,7 @@
         {{ $i18n.t('component.review.edit.components.merge.confirm.label') }}
       </gokb-button>
       <gokb-button
-        v-if="!isChanged && singleCardReview"
+        v-if="!isChanged && (singleCardReview || reviewedCardDeleteEnabled)"
         :disabled="selectedIdItems.length === 0"
         @click="showConfirmSelectedCard"
       >
@@ -266,6 +266,12 @@
       historyEditable () {
         return false
       },
+      reviewedCardDeleteEnabled () {
+        return this.editable && (this.singleCardReview || (this.isReviewedCard && !this.isOtherCardSelected))
+      },
+      hideTableSelects () {
+        return !this.editable || !this.isReviewedCard
+      },
       getHistory () {
         let result = []
         if (!!this.originalRecord?.history) {
@@ -303,8 +309,13 @@
       selCard () {
         this.isCardSelected = (!!this.id && this.id == this.selCard)
       },
-      selectedCard () {
+      selectedCard (val) {
         this.selCard = this.selectedCard
+
+        Object.entries(this.pendingStatuses).forEach(([key, val]) => {
+          this.pendingStatuses[key] = false
+        })
+
         this.idsVisible = this.updateVisibleIdentifiers()
       },
       selectedCardIds () {
@@ -356,7 +367,11 @@
       unselectCard () {
         this.selCard = undefined
         this.selCardIds = []
-        this.pendingStatuses = {}
+
+        Object.entries(this.pendingStatuses).forEach(idkey => {
+          this.pendingStatuses[idkey] = false
+        })
+
         this.idsVisible = this.updateVisibleIdentifiers()
         this.$emit('set-active', undefined)
         this.$emit('set-selected-ids', [])
@@ -374,7 +389,7 @@
           this.confirmSelectedCard()
         }
         else {
-          this.confirmSingleCard()
+          this.confirmReviewedItemCard()
         }
       },
       async confirmSelectedCard () {
@@ -394,7 +409,7 @@
           this.$emit('feedback-response', putResponse)
         }
       },
-      async confirmSingleCard () {
+      async confirmReviewedItemCard () {
         let putData = this.originalRecord
         putData.ids = this.ids.filter(ido => !this.selectedIdItems.some(sel => sel.id == ido.id))
         if (!!this.titleName && this.titleName != this.originalRecord?.name) {
@@ -412,8 +427,8 @@
         this.idsVisible = this.updateVisibleIdentifiers()
       },
       getPendingStatus (id) {
-        if ( !this.isReviewedCard || (this.singleCardReview && this.fieldsToBeEdited.includes('ids'))){
-          return this.deletedStatus(id)
+        if ( !this.isReviewedCard || (this.isReviewedCard && this.isOtherCardSelected) || (this.singleCardReview && this.fieldsToBeEdited.includes('ids'))){
+          return this.getDeletedStatus(id)
         }
         else {
           return this.getMergeStatus(id)
