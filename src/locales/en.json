@@ -376,6 +376,10 @@
       "started": "Matching new package titles to global reference items..",
       "failure": "There have been errors matching the package titles!",
       "success": "Reference matching complete."
+    },
+    "validator": {
+      "label": "KBART Validator",
+      "info": "This general KBART validator is stricter than the KBART upload validation, since we do not allow values that are automatically interpolated by GOKb."
     }
   },
   "profile": {
@@ -1210,6 +1214,18 @@
           "info": "The name of this title contains invalid characters.",
           "action": "",
           "toDo": "Correct the name of the title (check external sources if necessary). Please also check linked Package/Reference titles."
+        },
+        "Information": {
+          "label": "Information",
+          "info": "",
+          "action": "",
+          "toDo": ""
+        },
+        "Manual Request": {
+          "label": "Manual Request",
+          "info": "",
+          "action": "",
+          "toDo": ""
         }
       }
     },

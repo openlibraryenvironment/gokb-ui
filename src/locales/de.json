@@ -376,6 +376,10 @@
       "started": "Die Referenztitel-Verknüpfung für neue Pakettitel wurde gestartet..",
       "failure": "Beim Abgleich neuer Pakettitel mit ihren Referenztiteln sind Fehler aufgetreten!",
       "success": "Die Referenztitel-Verknüpfung wurde abgeschlossen."
+    },
+    "validator": {
+      "label": "KBART-Validator",
+      "info": "Dieser allgemeine KBART-Validator ist strikter als die GOKb-Importvalidierung, da er keine durch die GOKb automatisch interpolierten Werte akzeptiert."
     }
   },
   "profile": {
@@ -1210,6 +1214,18 @@
           "info": "Der Name dieses Titels enhält fehlerhafte Zeichen.",
           "action": "",
           "toDo": "Korrigieren Sie den Namen des Titels (evtl. basierend auf der Verzeichung in externen Quellen). Bitte überprüfen Sie auch die verknüpften Referenztitel/Pakettitel."
+        },
+        "Information": {
+          "label": "Information",
+          "info": "",
+          "action": "",
+          "toDo": ""
+        },
+        "Manual Request": {
+          "label": "Manuelle Anfrage",
+          "info": "",
+          "action": "",
+          "toDo": ""
         }
       }
     },

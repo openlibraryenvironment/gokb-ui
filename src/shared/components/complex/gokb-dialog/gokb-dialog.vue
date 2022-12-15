@@ -5,38 +5,41 @@
     :fullscreen="fullscreen"
     :width="width"
     :retain-focus="false"
+    scrollable
     @keydown="closeWithEscape"
   >
-    <v-card class="elevation-12">
-      <v-form
-        ref="form"
-        :value="isValid"
-        @submit.prevent="doSubmit"
-      >
-        <v-toolbar
-          :color="appColor"
-          dark
-        >
-          <v-toolbar-title>
-            {{ title }}
-          </v-toolbar-title>
-          <v-spacer />
-          <v-btn
-            icon
-            right
-            @click="localValue = false"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-card-text>
-          <slot />
-        </v-card-text>
-        <v-card-actions>
-          <slot name="buttons" />
-        </v-card-actions>
-      </v-form>
-    </v-card>
+    <v-form
+      ref="form"
+      :value="isValid"
+      @submit.prevent="doSubmit"
+    >
+      <v-card class="elevation-12">
+          <v-card-title class="pt-0 px-0">
+            <v-toolbar
+              :color="appColor"
+              dark
+            >
+              <v-toolbar-title>
+                {{ title }}
+              </v-toolbar-title>
+              <v-spacer />
+              <v-btn
+                icon
+                right
+                @click="localValue = false"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-toolbar>
+          </v-card-title>
+          <v-card-text>
+            <slot />
+          </v-card-text>
+          <v-card-actions>
+            <slot name="buttons" />
+          </v-card-actions>
+      </v-card>
+    </v-form>
   </v-dialog>
 </template>
 

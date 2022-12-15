@@ -1,8 +1,13 @@
 <template>
   <gokb-page
-    title="KBART Validator"
+    :title="$t('kbart.validator.label')"
     @submit="doImport"
   >
+    <v-container fluid>
+      <v-alert type="info">
+        {{ $t('kbart.validator.info') }}
+      </v-alert>
+    </v-container>
     <gokb-section>
       <v-row class="px-4">
         <v-col xl="6">
