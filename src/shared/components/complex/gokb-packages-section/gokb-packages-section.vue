@@ -17,6 +17,11 @@
       </v-btn>
     </template>
     <template #search>
+      <gokb-text-field
+        v-model="searchFilters.q"
+        :label="$t('component.general.name')"
+      />
+      <v-spacer class="ms-4" />
       <gokb-search-platform-field
         v-model="searchFilters.nominalPlatform"
         :label="$tc('component.platform.label')"
@@ -135,7 +140,8 @@
         searchFilters: {
           status: undefined,
           provider: undefined,
-          nominalPlatform: undefined
+          nominalPlatform: undefined,
+          q: undefined
         }
       }
     },
@@ -271,7 +277,7 @@
         const searchParams = {}
 
         Object.keys(this.searchFilters).forEach(key => {
-          if (this.searchFilters[key] instanceof String || typeof this.searchFilters[key] === 'number') {
+          if (typeof this.searchFilters[key] === 'string' || typeof this.searchFilters[key] === 'number') {
             searchParams[key] = this.searchFilters[key]
           } else if (this.searchFilters[key] instanceof Object) {
             if (this.searchFilters[key].id) {
