@@ -1243,6 +1243,18 @@
           "info": "Der Name dieses Titels enhält fehlerhafte Zeichen.",
           "action": "",
           "toDo": "Korrigieren Sie den Namen des Titels (evtl. basierend auf der Verzeichung in externen Quellen). Bitte überprüfen Sie auch die verknüpften Referenztitel/Pakettitel."
+        },
+        "Information": {
+          "label": "Information",
+          "info": "",
+          "action": "",
+          "toDo": ""
+        },
+        "Manual Request": {
+          "label": "Manuelle Anfrage",
+          "info": "",
+          "action": "",
+          "toDo": ""
         }
       }
     },
