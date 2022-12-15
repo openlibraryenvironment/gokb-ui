@@ -973,7 +973,8 @@
           "edited": "Request was successfully edited.",
           "escalated" : "The request has been successfully escalated.",
           "deescalated" : "The request has been successfully deescalated.",
-          "closed": "Request marked as closed | {0} requests marked as closed"
+          "closed": "Request marked as closed",
+          "closedBulk": "Request marked as closed | {0} requests marked as closed"
         },
         "close": {
           "label": "Close review"

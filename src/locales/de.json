@@ -973,7 +973,8 @@
           "edited": "Prüfanfrage erfolgreich bearbeitet.",
           "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
-          "closed": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
+          "closed": "Prüfanfrage als geschlossen markiert",
+          "closedBulk": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
         },
         "close": {
           "label": "Anfrage Abschließen"

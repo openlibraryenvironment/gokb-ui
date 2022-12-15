@@ -507,7 +507,7 @@
           })
 
           if (response.status < 400) {
-            this.successMessage = this.$i18n.tc('component.review.edit.success.closed', response.data.report.total, { count: response.data.report.total })
+            this.successMessage = this.$i18n.tc('component.review.edit.success.closedBulk', response.data.report.total, { count: response.data.report.total })
           } else if (response.status === 403) {
             this.errorMsg = 'error.bulkUpdate.403'
           }
@@ -533,7 +533,7 @@
             })
           ))
 
-          this.successMessage = this.$i18n.tc('component.review.edit.success.closed', this.selectedItems.length, { count: this.selectedItems.length })
+          this.successMessage = this.$i18n.tc('component.review.edit.success.closedBulk', this.selectedItems.length, { count: this.selectedItems.length })
           this.reviewsOptions.page = 1
           this.loading = false
           const newList = await this.retrieveReviews()
