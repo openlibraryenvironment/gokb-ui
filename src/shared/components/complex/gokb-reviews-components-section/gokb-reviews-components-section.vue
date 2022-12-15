@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row>
+    <v-row v-if="isTitleReview">
       <v-col :md="colGridWidth" :cols="colGridWidth" xl="3" class="pa-1 mr-3">
         <h3 class="mb-1"> {{ $t('component.review.componentToReview.label') }}</h3>
         <gokb-reviews-title-card
@@ -92,7 +92,8 @@
           "Invalid Name": ["name"],
           "Minor Identifier Mismatch": ["ids"],
           "Major Identifier Mismatch": ["ids"],
-          "Critical Identifier Conflict": ["ids"]
+          "Critical Identifier Conflict": ["ids"],
+          "Ambiguous Title Matches": ["ids"]
         }
       }
     },
@@ -105,6 +106,9 @@
       },
       isMergeEnabled () {
         return (this.reviewedComponent.route === '/title')
+      },
+      isTitleReview () {
+        return (this.reviewedComponent.route === '/title' || this.reviewedComponent.route === '/package-title')
       }
     },
     methods: {

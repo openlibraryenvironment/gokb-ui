@@ -22,7 +22,7 @@
       :value="error"
       :reviewed-component="reviewItem.component"
       :reference-components="reviewItem.otherComponents"
-      :review-type="reviewItem.stdDesc.name"
+      :review-type="reviewItem.stdDesc?.name"
       :editable="!isReadonly"
       :additional-vars="reviewItem.additionalVars"
       @feedback-response="showResponse"
@@ -45,7 +45,7 @@
       <gokb-button
         @click="closePopup"
       >
-        {{ $t('btn.cancel') }}
+        {{ isReadonly ? $t('btn.close') : $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         v-if="!isReadonly && !reviewItem.isClosed"
