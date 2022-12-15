@@ -82,7 +82,7 @@
           >
             {{ $tc('component.variantName.label', 2) }}
             <v-chip class="ma-2">
-              {{ allAlternateNames.length }}
+              {{ allNames.alts.length }}
             </v-chip>
             <v-icon
               v-if="pendingChanges.variants"
@@ -248,7 +248,7 @@
     <div v-else>
       <gokb-alternate-names-section
         v-model="allNames.alts"
-        :expanded="allAlternateNames.length > 0"
+        :expanded="allNames.alts.length > 0"
         :disabled="isReadonly"
       />
       <gokb-identifier-section
