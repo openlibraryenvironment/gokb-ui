@@ -359,7 +359,8 @@
         "unknown": "KBART processing failed due to internal errors. Please report this to an administator!"
       },
       "warn": {
-        "skipped": "The KBART import has finished, but at least one title has been skipped!"
+        "skipped": "The KBART import has finished, but at least one title has been skipped!",
+        "sourceNamespaceConflict": "The namespace for the column 'title_id' you selected differs from the one selected for the automated import. Please check both selections before submitting the kbart!"
       },
       "skipped": {
         "noChange": "Automated KBART processing was skipped, since the same file was already processed last time."
@@ -1199,7 +1200,7 @@
         },
         "Import Identifier Mismatch": {
           "label": "Import Identifier Mismatch",
-          "info": "A KBART record has been matched on an existing package title by some identifiers ({0}), but not by other important identifiers ({1}).",
+          "info": "A KBART record has been matched on an existing package title by some identifiers, but other important identifiers conflict.",
           "action": "New package title created",
           "toDo": "Check the package titles and merge them if necessary."
         },

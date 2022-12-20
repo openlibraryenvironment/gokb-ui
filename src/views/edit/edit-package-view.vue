@@ -949,6 +949,12 @@
             duration: undefined,
             unit: undefined,
           }
+        } else if (!!this.sourceItem.targetNamespace &&
+                    !!this.sourceItem.update &&
+                    !!options.selectedNamespace &&
+                    options.selectedNamespace.id != this.sourceItem.targetNamespace.id
+        ) {
+          this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict'), color: 'warn', timeout: -1 })
         }
       },
       showCreatePackageConfirm (form) {
@@ -1037,7 +1043,7 @@
             if (this.kbart) {
               const kbartPars = {
                 activeGroup: this.activeGroup?.id,
-                titleIdNamespace: this.sourceItem?.targetNamespace?.id,
+                titleIdNamespace: this.kbart.selectedNamespace?.id || this.sourceItem?.targetNamespace?.id,
                 dryRun: this.kbart.dryRun,
                 addOnly: this.kbart.addOnly
               }
