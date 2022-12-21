@@ -268,7 +268,7 @@
         this.completion = 0
         var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
 
-        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, this.cancelToken.token)
+        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, this.cancelToken.token)
 
         if (validationResult.status === 200 && validationResult?.data?.report) {
           this.loadedFile = validationResult.data.report
