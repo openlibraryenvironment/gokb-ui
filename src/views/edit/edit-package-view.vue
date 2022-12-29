@@ -1033,7 +1033,7 @@
           }
 
           const response = await this.catchError({
-            promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
+            promise: packageServices.createOrUpdate(newPackage, this.cancelToken.token),
             instance: this
           })
 
@@ -1163,7 +1163,7 @@
           this.newTipps = []
 
           const result = await this.catchError({
-            promise: packageServices.getPackage(this.id, this.cancelToken.token),
+            promise: packageServices.get(this.id, this.cancelToken.token),
             instance: this
           })
 
@@ -1172,7 +1172,7 @@
           } else if (result.status === 401) {
             accountModel.logout()
             const retry = await this.catchError({
-              promise: packageServices.getPackage(this.id, this.cancelToken.token),
+              promise: packageServices.get(this.id, this.cancelToken.token),
               instance: this
             })
 
@@ -1187,7 +1187,7 @@
 
           if (this.providerSelect) {
             const providerResult = await this.catchError({
-              promise: providerServices.getProvider(this.providerSelect.id, this.cancelToken.token),
+              promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
               instance: this
             })
 
@@ -1210,7 +1210,7 @@
       },
       async fetchDefaultNamespace (providerId) {
         const providerResult = await this.catchError({
-          promise: providerServices.getProvider(providerId, this.cancelToken.token),
+          promise: providerServices.get(providerId, this.cancelToken.token),
           instance: this
         })
 
@@ -1234,7 +1234,7 @@
 
         while (!finished) {
           const jobResult = await this.catchError({
-            promise: jobServices.getJob(jobId, false, this.cancelToken.token),
+            promise: jobServices.get(jobId, false, this.cancelToken.token),
             instance: this
           })
 
@@ -1289,7 +1289,7 @@
 
         while (!finished) {
           const jobResult = await this.catchError({
-            promise: jobServices.getJob(jobId, false, this.cancelToken.token),
+            promise: jobServices.get(jobId, false, this.cancelToken.token),
             instance: this
           })
 
@@ -1322,7 +1322,7 @@
       },
       async getActiveJobs () {
         const jobResult = await this.catchError({
-          promise: jobServices.get({ linkedItem: this.id }, this.cancelToken.token),
+          promise: jobServices.search({ linkedItem: this.id }, this.cancelToken.token),
           instance: this
         })
 

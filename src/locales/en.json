@@ -26,7 +26,9 @@
     "reset": "Reset",
     "retire": "Retire",
     "search": "Search",
+    "select": "Select",
     "submit": "Submit",
+    "unselect": "Unselect",
     "update": "Update",
     "validate": "Validate",
     "bulkSelect": "Set Status of {0} entries to ...",
@@ -601,7 +603,9 @@
           "changedTo": {
             "label": "changed to"
           }
-        }
+        },
+        "from": "from",
+        "to": "to"
       }
     },
     "journal": {
@@ -948,11 +952,14 @@
       "type": {
         "label":"Type"
       },
+      "todo": {
+        "label": "ToDo"
+      },
       "cause": {
         "label": "Cause"
       },
       "componentToReview": {
-        "label": "Component"
+        "label": "Component to review"
       },
       "additionalInfo": {
         "label": "Structured info"
@@ -974,7 +981,36 @@
           "edited": "Request was successfully edited.",
           "escalated" : "The request has been successfully escalated.",
           "deescalated" : "The request has been successfully deescalated.",
-          "closed": "Request marked as closed | {0} requests marked as closed"
+          "closed": "Request marked as closed",
+          "closedBulk": "Request marked as closed | {0} requests marked as closed"
+        },
+        "close": {
+          "label": "Close review"
+        },
+        "components": {
+          "merge": {
+            "selectTarget": {
+              "label": "Select Merge Target"
+            },
+            "confirm": {
+              "label": "Confirm Merge",
+              "message": "Please confirm that you want to merge the reviewed title into the selected one. The review will be closed and the reviewed title will be deleted."
+            },
+            "selectIds": "Select IDs to add to the merged title.",
+            "selected": {
+              "label": "Merge Candidate"
+            },
+            "unselected": {
+              "label": "Other Component"
+            }
+          },
+          "single": {
+            "selectIds": "Select IDs to mark them for removal.",
+            "confirm": {
+              "label": "Confirm Changes",
+              "message": "Please confirm the updates you have prepared for this title."
+            }
+          }
         }
       },
       "status": {
@@ -1170,7 +1206,7 @@
         },
         "Critical Identifier Conflict": {
           "label": "Identifier Conflict (New Title)",
-          "info": "Reference title {0} matched an existing reference title on one identifier, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs badly.",
+          "info": "Reference title {0} matched an existing reference title on one identifier, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs significantly.",
           "action": "New reference title created",
           "toDo": "Check if the new reference title is correct or if it is a duplicate. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
         },

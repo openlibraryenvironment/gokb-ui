@@ -348,6 +348,9 @@
       },
       isButtonDisabled (attributeName) {
         return this[attributeName]
+      },
+      editItem (value) {
+        this.search()
       }
     }
   }

@@ -1,13 +1,13 @@
 const USER_URL = '/rest/users'
 
 const api = (baseServices) => ({
-  getUser (id, cancelToken) {
+  get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
       url: process.env.VUE_APP_API_BASE_URL + `${USER_URL}/${id}`,
     }, cancelToken)
   },
-  createOrUpdateUser (id, data, cancelToken) {
+  createOrUpdate (id, data, cancelToken) {
     const url = id ? process.env.VUE_APP_API_BASE_URL + `${USER_URL}/${id}` : process.env.VUE_APP_API_BASE_URL + USER_URL
     return baseServices.request({
       method: id ? 'PUT' : 'POST',
@@ -15,7 +15,7 @@ const api = (baseServices) => ({
       data,
     }, cancelToken)
   },
-  deactivateUser (url, cancelToken) {
+  deactivate (url, cancelToken) {
     return baseServices.request({
       method: 'PUT',
       url,

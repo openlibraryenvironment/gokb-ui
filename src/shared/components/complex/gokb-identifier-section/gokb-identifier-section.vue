@@ -46,6 +46,7 @@
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
       :options.sync="options"
+      :hide-select="!isEditable"
       @selected-items="selectedItems = $event"
       @delete-item="confirmDeleteItem"
       actions

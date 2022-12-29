@@ -5,6 +5,12 @@
     name: 'GokbTitleIdsField',
     extends: GokbSearchField,
     props: {
+      value: {
+        required: true,
+        validator: function (value) {
+          return value === undefined || typeof value === 'string' || typeof value === 'number'
+        }
+      },
       label: {
         type: String,
         required: false,

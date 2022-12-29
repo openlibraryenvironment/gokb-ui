@@ -291,7 +291,7 @@
       },
       async _cancelJob (id) {
         this.catchError({
-          promise: profileServices.cancelJob(id, this.cancelToken.token),
+          promise: profileServices.cancel(id, this.cancelToken.token),
           instance: this
         })
       },
