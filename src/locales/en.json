@@ -1234,7 +1234,16 @@
       "label": "Maintenance | Maintenance"
     },
     "curatoryGroup": {
-      "label": "Curatory Group | Curatory Groups"
+      "label": "Curatory Group | Curatory Groups",
+      "organisationType": {
+        "label": "Organisation type",
+        "Library": {
+          "label": "Library"
+        },
+        "Provider": {
+          "label": "Provider"
+        }
+      }
     },
     "variantName": {
       "label": "Name Variant | Name Variants",
