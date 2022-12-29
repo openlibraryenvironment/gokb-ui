@@ -101,8 +101,9 @@
 
         this.selectedItem.name = record.name
         this.selectedItem.email = record.email
-        this.selectedItem.organisationType = this.$i18n.t('component.curatoryGroup.organisationType.' + record.organizationType?.name + '.label')
-
+        if (record.organizationType?.name) {
+          this.selectedItem.organisationType = this.$i18n.t('component.curatoryGroup.organisationType.' + record.organizationType?.name + '.label')
+        }
         if (record._embedded?.users) {
           this.selectedItem.users = record._embedded?.users
         }
