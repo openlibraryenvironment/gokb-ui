@@ -380,7 +380,8 @@
     },
     "validator": {
       "label": "KBART Validator",
-      "info": "This general KBART validator is stricter than the KBART upload validation, since we do not allow values that are automatically interpolated by GOKb."
+      "info": "In strict mode, this validator is stricter than the KBART upload validation, since we do not allow values that are automatically interpolated by GOKb. In non-strict mode, the validation is the same as on KBART upload.",
+      "mode": "Strict mode"
     }
   },
   "profile": {
