@@ -382,7 +382,8 @@
     },
     "validator": {
       "label": "KBART-Validator",
-      "info": "Dieser allgemeine KBART-Validator ist strikter als die GOKb-Importvalidierung, da er keine durch die GOKb automatisch interpolierten Werte akzeptiert."
+      "info": "Im strikten Modus ist dieser allgemeine KBART-Validator strikter als die GOKb-Importvalidierung, da er keine durch die GOKb automatisch interpolierten Werte akzeptiert. Im nicht-strikten Modus entspricht dieser Validator der KBART-Importvalidierung.",
+      "mode": "Strikter Modus"
     }
   },
   "profile": {
