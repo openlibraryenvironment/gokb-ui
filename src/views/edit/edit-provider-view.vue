@@ -125,6 +125,7 @@
             </v-icon>
           </v-tab>
           <v-tab
+            v-if="!!id"
             key="packages"
             :active-class="tabClass"
           >
@@ -207,6 +208,7 @@
             />
           </v-tab-item>
           <v-tab-item
+            v-if="!!id"
             key="packages"
             class="mt-4"
           >
@@ -263,6 +265,7 @@
         :disabled="isReadonly"
       />
       <gokb-packages-section
+        v-if="!!id"
         :sub-title="$tc('component.package.label', 2)"
         :expanded="packageCount > 0"
         disabled
