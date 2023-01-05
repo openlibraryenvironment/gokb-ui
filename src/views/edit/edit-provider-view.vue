@@ -286,7 +286,7 @@
     <template #buttons>
       <gokb-button
         v-if="!isReadonly"
-        @click="reload"
+        @click="reset"
       >
         {{ $t('btn.reset') }}
       </gokb-button>
@@ -517,6 +517,37 @@
             this.errors = response.data.error
           }
         }
+      },
+      reset () {
+        this.tab = null
+        this.uuid = undefined
+        this.pendingChanges = {}
+        this.valid = true
+        this.notFound = false
+        this.tabsView = true
+        this.dateCreated = undefined
+        this.lastUpdated = undefined
+        this.deleteUrl = undefined
+        this.allAlternateNames = []
+        this.allCuratoryGroups = []
+        this.packageCount = 0
+        this.allNames = { name: undefined, alts: [] }
+        this.allPlatforms = []
+        this.offices = []
+        this.errors = {}
+        this.updateUrl = undefined
+        this.eventMessages = []
+        this.version = undefined
+        this.providerObject = {
+          id: undefined,
+          ids: [],
+          status: undefined,
+          source: undefined,
+          titleNamespace: undefined,
+          packageNamespac: undefined,
+          homepage: undefined
+        }
+        this.reload()
       },
       async reload () {
         if (this.isEdit) {
