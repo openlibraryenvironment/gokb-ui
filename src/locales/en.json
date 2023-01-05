@@ -380,7 +380,7 @@
     },
     "validator": {
       "label": "KBART Validator",
-      "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, values automatically interpolated by the GOKb are also accepted (according to the validation during packet upload).",
+      "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, values automatically interpolated by the GOKb are also accepted (according to the validation during package upload).",
       "mode": "Strict mode"
     }
   },
