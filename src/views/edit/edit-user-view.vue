@@ -280,6 +280,8 @@
         this.addRolePopupVisible = true
       },
       async update () {
+        this.eventMessages = []
+
         const data = {
           username: this.username,
           password: this.password,

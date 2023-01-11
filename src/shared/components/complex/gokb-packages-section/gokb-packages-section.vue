@@ -17,6 +17,11 @@
       </v-btn>
     </template>
     <template #search>
+      <gokb-text-field
+        v-model="searchFilters.q"
+        :label="$t('component.general.name')"
+      />
+      <v-spacer class="ms-4" />
       <gokb-search-platform-field
         v-model="searchFilters.nominalPlatform"
         :label="$tc('component.platform.label')"
@@ -135,7 +140,8 @@
         searchFilters: {
           status: undefined,
           provider: undefined,
-          nominalPlatform: undefined
+          nominalPlatform: undefined,
+          q: undefined
         }
       }
     },
@@ -157,6 +163,8 @@
           status,
           contentType,
           nominalPlatform,
+          tippcount,
+          _tippCount,
           _links
         }) => ({
           id,
@@ -169,6 +177,7 @@
           statusLabel: status ? this.$i18n.t('component.general.status.' + status.name + '.label') : undefined,
           nominalPlatform: nominalPlatform?.name || undefined,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
+          count: _tippCount || tippcount,
           deleteUrl: undefined,
           retireUrl: undefined
         }))
@@ -180,67 +189,42 @@
         return this.loggedIn && account.hasRole('ROLE_CONTRIBUTOR')
       },
       resultHeaders () {
-        if (this.providerId) {
-          return [
-            {
-              text: this.$i18n.t('component.general.name'),
-              align: 'start',
-              sortable: true,
-              value: 'link'
-            },
-            {
-              text: this.$i18n.tc('component.platform.label'),
-              align: 'start',
-              sortable: true,
-              width: '20%',
-              value: 'nominalPlatform'
-            },
-            {
-              text: this.$i18n.tc('component.package.contentType.label'),
-              align: 'start',
-              sortable: true,
-              width: '15%',
-              value: 'contentType'
-            },
-            {
-              text: this.$i18n.tc('component.general.lastUpdated'),
-              align: 'end',
-              sortable: true,
-              width: '18%',
-              value: 'lastUpdated'
-            }
-          ]
-        } else {
-          return [
-            {
-              text: this.$i18n.t('component.general.name'),
-              align: 'start',
-              sortable: true,
-              value: 'link'
-            },
-            {
-              text: this.$i18n.tc('component.provider.label'),
-              align: 'start',
-              sortable: true,
-              width: '20%',
-              value: 'linkTwo'
-            },
-            {
-              text: this.$i18n.tc('component.package.contentType.label'),
-              align: 'start',
-              sortable: true,
-              width: '15%',
-              value: 'contentType'
-            },
-            {
-              text: this.$i18n.tc('component.general.lastUpdated'),
-              align: 'end',
-              sortable: true,
-              width: '18%',
-              value: 'lastUpdated'
-            }
-          ]
-        }
+        return [
+          {
+            text: this.$i18n.t('component.general.name'),
+            align: 'start',
+            sortable: true,
+            value: 'link'
+          },
+          {
+            text: (this.providerId ? this.$i18n.tc('component.platform.label') : this.$i18n.tc('component.provider.label')),
+            align: 'start',
+            sortable: true,
+            width: '20%',
+            value: (this.providerId ? 'nominalPlatform' : 'linkTwo')
+          },
+          {
+            text: this.$i18n.tc('component.package.contentType.label'),
+            align: 'start',
+            sortable: true,
+            width: '15%',
+            value: 'contentType'
+          },
+          {
+            text: this.$i18n.tc('component.package.count'),
+            align: 'start',
+            sortable: false,
+            width: '150px',
+            value: 'count'
+          },
+          {
+            text: this.$i18n.tc('component.general.lastUpdated'),
+            align: 'end',
+            sortable: true,
+            width: '18%',
+            value: 'lastUpdated'
+          }
+        ]
       },
       isLoading () {
         return this.loading
@@ -293,7 +277,7 @@
         const searchParams = {}
 
         Object.keys(this.searchFilters).forEach(key => {
-          if (this.searchFilters[key] instanceof String || typeof this.searchFilters[key] === 'number') {
+          if (typeof this.searchFilters[key] === 'string' || typeof this.searchFilters[key] === 'number') {
             searchParams[key] = this.searchFilters[key]
           } else if (this.searchFilters[key] instanceof Object) {
             if (this.searchFilters[key].id) {

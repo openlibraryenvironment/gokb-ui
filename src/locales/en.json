@@ -360,6 +360,10 @@
         "processing": "KBART processing was cancelled due to errors!",
         "unknown": "KBART processing failed due to internal errors. Please report this to an administator!"
       },
+      "warn": {
+        "skipped": "The KBART import has finished, but at least one title has been skipped!",
+        "sourceNamespaceConflict": "The namespace for the column 'title_id' you selected differs from the one selected for the automated import. Please check both selections before submitting the kbart!"
+      },
       "skipped": {
         "noChange": "Automated KBART processing was skipped, since the same file was already processed last time."
       }
@@ -375,6 +379,11 @@
       "started": "Matching new package titles to global reference items..",
       "failure": "There have been errors matching the package titles!",
       "success": "Reference matching complete."
+    },
+    "validator": {
+      "label": "KBART Validator",
+      "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, values automatically interpolated by the GOKb are also accepted (according to the validation during package upload).",
+      "mode": "Strict mode"
     }
   },
   "profile": {
@@ -1228,7 +1237,7 @@
         },
         "Import Identifier Mismatch": {
           "label": "Import Identifier Mismatch",
-          "info": "A KBART record has been matched on an existing package title by some identifiers ({0}), but not by other important identifiers ({1}).",
+          "info": "A KBART record has been matched on an existing package title by some identifiers, but other important identifiers conflict.",
           "action": "New package title created",
           "toDo": "Check the package titles and merge them if necessary."
         },

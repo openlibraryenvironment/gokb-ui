@@ -82,7 +82,7 @@
           >
             {{ $tc('component.variantName.label', 2) }}
             <v-chip class="ma-2">
-              {{ allAlternateNames.length }}
+              {{ allNames.alts.length }}
             </v-chip>
             <v-icon
               v-if="pendingChanges.variants"
@@ -125,6 +125,7 @@
             </v-icon>
           </v-tab>
           <v-tab
+            v-if="!!id"
             key="packages"
             :active-class="tabClass"
           >
@@ -207,6 +208,7 @@
             />
           </v-tab-item>
           <v-tab-item
+            v-if="!!id"
             key="packages"
             class="mt-4"
           >
@@ -248,7 +250,7 @@
     <div v-else>
       <gokb-alternate-names-section
         v-model="allNames.alts"
-        :expanded="allAlternateNames.length > 0"
+        :expanded="allNames.alts.length > 0"
         :disabled="isReadonly"
       />
       <gokb-identifier-section
@@ -263,6 +265,7 @@
         :disabled="isReadonly"
       />
       <gokb-packages-section
+        v-if="!!id"
         :sub-title="$tc('component.package.label', 2)"
         :expanded="packageCount > 0"
         disabled

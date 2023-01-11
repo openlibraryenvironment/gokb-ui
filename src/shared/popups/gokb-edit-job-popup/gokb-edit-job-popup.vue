@@ -80,6 +80,23 @@
         </ul>
       </v-col>
     </v-row>
+    <v-row v-if="selectedItem.results?.badrows">
+      <v-col md="12">
+        <v-expansion-panels accordion>
+          <v-expansion-panel>
+            <v-expansion-panel-header>{{ $tc('kbart.processing.error.label', 2) }}</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-data-table
+                :items="rowErrors"
+                :headers="errorHeaders"
+                sort-by="row"
+                group-by="row"
+              />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-col>
+    </v-row>
     <v-row v-if="selectedItem.results">
       <v-col md="12">
         <v-expansion-panels accordion>
@@ -137,7 +154,8 @@
           dryRun: false,
           messages: []
         },
-        items: []
+        items: [],
+        rowErrors: []
       }
     },
     computed: {
@@ -151,6 +169,13 @@
       },
       localType () {
         return this.selectedItem.type ? this.$i18n.t('job.jobTypes.' + this.selectedItem.type.name) : null
+      },
+      errorHeaders () {
+        return [
+          { text: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
+          { text: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
+          { text: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
+        ]
       }
     },
     async created () {
@@ -198,6 +223,14 @@
           } else if (!!record.job_result.messages) {
             this.selectedItem.messages = record.job_result.messages
           }
+        }
+
+        if (!!record.job_result?.badrows) {
+          record.job_result.badrows.forEach(badrow => {
+            Object.entries(badrow.errors).forEach(([colname, v]) => {
+              this.rowErrors.push({ row: badrow.row, column: colname, reason: this.$i18n.t(v.messageCode, v.args) })
+            })
+          })
         }
       }
     },

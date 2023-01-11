@@ -360,6 +360,10 @@
         "processing": "Die KBART-Verarbeitung ist fehlgeschlagen!",
         "unknown": "Die KBART-Verarbeitung ist auf Grund von internen Fehlern fehlgeschlagen. Bitte melden Sie dies an einen Administrator!"
       },
+      "warn": {
+        "skipped": "Die KBART-Prozessierung ist abgeschlossen, aber mindestens ein Titel wurde übersprungen.",
+        "sourceNamespaceConflict": "Der für die Spalte 'title_id' gewählte Namensraum unterscheidet sich von dem für den automatischen Upload selektierten. Bitte überprüfen Sie beide Auswahlen vor dem Import!"
+      },
       "skipped": {
         "noChange": "Die KBART-Prozessierung wurde übersprungen, da sich die Datei im Vergleich zum letzten Import nicht verändert hat."
       }
@@ -375,6 +379,11 @@
       "started": "Die Referenztitel-Verknüpfung für neue Pakettitel wurde gestartet..",
       "failure": "Beim Abgleich neuer Pakettitel mit ihren Referenztiteln sind Fehler aufgetreten!",
       "success": "Die Referenztitel-Verknüpfung wurde abgeschlossen."
+    },
+    "validator": {
+      "label": "KBART-Validator",
+      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKb automatisch interpolierten Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
+      "mode": "Strikter Modus"
     }
   },
   "profile": {
@@ -1228,7 +1237,7 @@
         },
         "Import Identifier Mismatch": {
           "label": "Identifikatoren-Konflikt beim KBART-Import",
-          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren ({0}) einem bestehenden Pakettitel zugordnet werden, allerdings unterscheidet sich ein wichtiger anderer bzw. andere Identifikatoren ({1}).",
+          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren einem bestehenden Pakettitel zugordnet werden, allerdings unterscheidet sich mindestens ein anderer Identifikator.",
           "action": "Neuer Pakettitel angelegt",
           "toDo": "Überprüfen Sie die Pakettitel und führen sie beide gegebenenfalls zusammen."
         },

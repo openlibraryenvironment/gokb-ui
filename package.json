@@ -1,6 +1,6 @@
 {
   "name": "gokb-client",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --modern --mode local",
@@ -8,17 +8,7 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "build4Local": "vue-cli-service build --modern --mode localProd",
-    "build4Dev": "vue-cli-service build --modern --mode dev",
-    "build4Qa": "vue-cli-service build --modern --mode qa",
-    "build4Prod": "vue-cli-service build --modern --mode prod",
-    "build4LampetiaDev": "vue-cli-service build --modern --mode lampetiadev",
-    "build4LampetiaQa": "vue-cli-service build --modern --mode lampetiaqa",
-    "build4Lampetia": "vue-cli-service build --modern --mode lampetia",
-    "buildDeploy4Dev": "vue-cli-service build --modern --mode dev && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
-    "buildDeploy4Qa": "vue-cli-service build --modern --mode qa && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
-    "buildDeploy4PhaetonQa": "vue-cli-service build --modern --mode phaetonqa && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
-    "buildDeploy4Prod": "vue-cli-service build --modern --mode prod && del /s /q \\\\zb0001\\WWW1\\gokb_client_test\\ && xcopy /S /Q /Y dist \\\\zb0001\\WWW1\\gokb_client_test",
+    "build4Env": "vue-cli-service build --modern --mode ",
     "webpack-defaults": "webpack-defaults"
   },
   "dependencies": {

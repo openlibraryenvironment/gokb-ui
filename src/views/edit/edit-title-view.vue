@@ -7,22 +7,6 @@
   >
     <gokb-error-component :value="error" />
     <v-snackbars :objects.sync="eventMessages"></v-snackbars>
-    <span v-if="successMsg">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ localSuccessMessage }}
-      </v-alert>
-    </span>
-    <span v-if="errorMsg">
-      <v-alert
-        type="error"
-        dismissible
-      >
-        {{ localErrorMessage }}
-      </v-alert>
-    </span>
     <v-row>
       <v-col>
         <gokb-select-field
@@ -218,7 +202,7 @@
           >
             {{ $tc('component.variantName.label', 2) }}
             <v-chip class="ma-2">
-              {{ allAlternateNames.length }}
+              {{ allNames.alts.length }}
             </v-chip>
             <v-icon
               v-if="pendingChanges.variants"
