@@ -483,9 +483,9 @@
     <template #buttons>
       <gokb-button
         v-if="!isReadonly"
-        @click="reload"
+        @click="reset"
       >
-        {{ $t('btn.cancel') }}
+        {{ $t('btn.reset') }}
       </gokb-button>
       <v-spacer />
       <div v-if="id && !notFound">
@@ -776,6 +776,82 @@
             this.errors = response.data.error
           }
         }
+      },
+      reset () {
+        this.tab = null
+        this.pprops = undefined
+        this.pendingChanges = {}
+        this.platformSelection = []
+        this.reviewsCount = undefined
+        this.version = undefined
+        this.errors = {}
+        this.notFound = false
+        this.reviewRequests = []
+        this.coverageExpanded = true
+        this.selectedTitle = undefined
+        this.selectedItem = undefined
+        this.eventMessages = []
+        this.coverageObject = {
+          coverageDepth: undefined,
+          startDate: undefined,
+          endDate: undefined,
+          startVolume: undefined,
+          endVolume: undefined,
+          startIssue: undefined,
+          endIssue: undefined,
+          coverageNote: undefined,
+          embargo: undefined
+        },
+        this.updateUrl = undefined
+        this.deleteUrl = undefined
+        this.status = undefined
+        this.items = []
+        this.allNames = {}
+        this.titleType = undefined
+        this.importId = undefined
+        this.lastUpdated = undefined
+        this.dateCreated = undefined
+        this.uuid = undefined
+        this.packageTitleItem = {
+          id: undefined,
+          title: undefined,
+          pkg: undefined,
+          hostPlatform: undefined,
+          status: undefined,
+          paymentType: undefined,
+          prices: [],
+          url: undefined,
+          name: undefined,
+          accessStartDate: undefined,
+          accessEndDate: undefined,
+          ids: [],
+          coverageStatements: [
+            {
+              coverageDepth: undefined,
+              startDate: undefined,
+              endDate: undefined,
+              startVolume: undefined,
+              endVolume: undefined,
+              startIssue: undefined,
+              endIssue: undefined,
+              coverageNote: undefined,
+              embargo: undefined
+            }
+          ],
+          series: undefined,
+          subjectArea: undefined,
+          publisherName: undefined,
+          dateFirstInPrint: undefined,
+          dateFirstOnline: undefined,
+          firstAuthor: undefined,
+          firstEditor: undefined,
+          publicationType: undefined,
+          volumeNumber: undefined,
+          editionStatement: undefined,
+          medium: undefined,
+          lastChangedExternal: undefined
+        }
+        this.reload()
       },
       async reload () {
         loading.startLoading()
