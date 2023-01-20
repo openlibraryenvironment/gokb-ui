@@ -1235,7 +1235,16 @@
       "label": "Pflege | Pflege"
     },
     "curatoryGroup": {
-      "label": "Kuratorengruppe | Kuratorengruppen"
+      "label": "Kuratorengruppe | Kuratorengruppen",
+      "organisationType": {
+        "label": "Organisationstyp",
+        "Library": {
+          "label": "Bibliothek"
+        },
+        "Provider": {
+          "label": "Anbieter"
+        }
+      }
     },
     "variantName": {
       "label": "Namensvariante | Namensvarianten",
