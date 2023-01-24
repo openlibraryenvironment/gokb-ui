@@ -360,6 +360,8 @@
   import accountModel from '@/shared/models/account-model'
   import loading from '@/shared/models/loading'
   import VSnackbars from 'v-snackbars'
+  import { createCancelToken } from '@/shared/services/http'
+  import languageServices from '@/shared/services/language-services'
 
   export default {
     name: 'EditProviderView',
@@ -451,6 +453,7 @@
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
         }
+        languageServices.fetchLanguagesList(createCancelToken().token)
       },
       tabsView (value) {
         if (this.loggedIn) {

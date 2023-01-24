@@ -24,16 +24,17 @@ const api = (baseServices) => ({
     languagesModel.setLanguages(allLans.data)
   },
   getLanguages (locale) {
-    var result = {}
+    var result = []
+    const localeLang = localetoIso3(locale)
     for (let [key, value] of Object.entries(languagesModel.getLanguages())) {
-      if (!!value[locale]) {
-        result[key] = value.locale
+      if (!!value[localeLang]) {
+        result.push({ "iso3" : key, "name" : value[localeLang] })
       }
       else if (!!value.DEFAULT_LANG) {
-        result[key] = value.DEFAULT_LANG
+        result.push({ "iso3" : key, "name" : value.DEFAULT_LANG })
       }
     }
-    result
+    return result
   }
 })
 
