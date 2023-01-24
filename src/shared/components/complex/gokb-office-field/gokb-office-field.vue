@@ -12,11 +12,10 @@
         />
       </v-col>
       <v-col cols="4">
-        <gokb-state-field
+        <gokb-select-language-field
           v-model="language"
           width="100%"
           return-object
-          url="refdata/categories/KBComponent.Language"
           :label="$t('component.general.language.label')"
         />
       </v-col>

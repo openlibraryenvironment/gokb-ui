@@ -1,20 +1,23 @@
 const api = (vue) => {
-  const languages = vue.observable({})
+
+  var languages = vue.observable({})
+  var iso2iso3 = {
+    "de" : "ger",
+    "en" : "eng"
+  }
 
   return {
-    addLanguage (lan) {
-      if (this.isValid(lan)) {
-        languages[lan.value] = lan
-      }
-    },
-    isValid (lan) {
-      if (!lan || !lan.value) {
-        return false
-      }
-      return true
+    setLanguages (lans) {
+      languages = lans
     },
     getLanguage (lanValue) {
       return languages[lanValue]
+    },
+    getLanguages () {
+      return languages
+    },
+    iso2toIso3 (iso2) {
+      return iso2iso3[iso2]
     }
   }
 }
