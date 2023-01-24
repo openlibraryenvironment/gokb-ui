@@ -25,7 +25,7 @@ const api = (baseServices) => ({
   },
   getLanguages (locale) {
     var result = {}
-    for (let [key, value] of Object.entries(languagesModel.languages)) {
+    for (let [key, value] of Object.entries(languagesModel.getLanguages())) {
       if (!!value[locale]) {
         result[key] = value.locale
       }

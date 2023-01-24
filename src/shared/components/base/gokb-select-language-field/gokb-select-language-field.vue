@@ -1,3 +1,14 @@
+<template>
+  <v-select
+    v-model="localValue"
+    item-text="name"
+    item-value="id"
+    :items="localizedItems"
+    :label="label"
+    :no-data-text="$t('search.results.empty')"
+    :dense="dense"
+  />
+</template>
 <script>
   import GokbSelectField from '@/shared/components/base/gokb-select-field'
   import accountModel from '@/shared/models/account-model'
@@ -27,8 +38,7 @@
     data () {
       return {
         items: undefined,
-        cancelToken: undefined,
-        languageItems: undefined
+        cancelToken: undefined
       }
     },
     computed: {
@@ -44,11 +54,13 @@
         this.fetch()
       }
     },
-    created () {
-      const locale = this.$i18n.locale
+    async beforeCreate () {
       this.cancelToken = createCancelToken()
       languageServices.fetchLanguagesList(this.cancelToken.token)
-      this.languageItems = languageServices.getLanguages(locale)
+    },
+    async created () {
+      const locale = this.$i18n.locale
+      this.items = languageServices.getLanguages(locale)
     },
     methods: {
       transform (result) {
