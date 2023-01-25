@@ -15,9 +15,7 @@
         <gokb-select-language-field
           v-model="language"
           width="100%"
-          return-object
           :label="$t('component.general.language.label')"
-          :dense="true"
         />
       </v-col>
     </v-row>

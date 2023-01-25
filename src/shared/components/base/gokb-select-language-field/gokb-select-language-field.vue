@@ -38,15 +38,20 @@
       }
     },
     computed: {
-      localName () {
-        return (!!this.messagePath && !!this.localValue) ? this.$i18n.t(this.messagePath + '.' + (this.localValue?.value || this.localValue?.name) + '.label') : this.localValue?.name
-      },
       localizedItems () {
         if (!!this.items && this.items.length > 0) {
-          return this.items
+          return this.items.sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
         }
         else {
           return []
+        }
+      },
+      localValue: {
+        get () {
+          return this.value
+        },
+        set (localValue) {
+          this.$emit('input', localValue)
         }
       }
     },
