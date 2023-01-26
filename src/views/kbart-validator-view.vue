@@ -18,6 +18,14 @@
             :truncateLength="80"
           />
         </v-col>
+        <v-col xl="6">
+          <gokb-checkbox-field
+            v-model="useStrict"
+            class="pt-4"
+            :label="$t('kbart.validator.mode')"
+            :disabled="importRunning"
+          />
+        </v-col>
       </v-row>
       <v-row
         v-if="selectedFile"
@@ -194,6 +202,7 @@
           }
         },
         selectedFile: undefined,
+        useStrict: true,
         completion: undefined,
         options: {
           selectedFile: undefined,
@@ -244,7 +253,7 @@
         this.completion = 0
         var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
 
-        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, true, this.cancelToken.token)
+        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, this.useStrict, this.cancelToken.token)
 
         if (validationResult.status === 200 && validationResult?.data?.report) {
           if (validationResult.data.errors.missingColumns?.length > 0) {

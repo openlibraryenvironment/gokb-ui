@@ -318,6 +318,8 @@
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
       "shortRow": "Diese Zeile enthält weniger Spalten als im Datei-Header definiert wurden!",
       "noIds": "Diese Zeile enthält keine Idenitifikatoren und wird daher nicht prozessiert!",
+      "noImportIds": "Diese Zeile enthält keine Identifikatoren (print/online), und es wurde kein Anbieternamensraum ausgewählt!",
+      "noAuthIds": "Diese Zeile enthält weder einen 'print_identifier' noch einen 'online_identifier'!",
       "url": {
         "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
         "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
@@ -380,7 +382,8 @@
     },
     "validator": {
       "label": "KBART-Validator",
-      "info": "Dieser allgemeine KBART-Validator ist strikter als die GOKb-Importvalidierung, da er keine durch die GOKb automatisch interpolierten Werte akzeptiert."
+      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKb automatisch interpolierten Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
+      "mode": "Strikter Modus"
     }
   },
   "profile": {
@@ -1234,7 +1237,16 @@
       "label": "Pflege | Pflege"
     },
     "curatoryGroup": {
-      "label": "Kuratorengruppe | Kuratorengruppen"
+      "label": "Kuratorengruppe | Kuratorengruppen",
+      "organisationType": {
+        "label": "Organisationstyp",
+        "Library": {
+          "label": "Bibliothek"
+        },
+        "Provider": {
+          "label": "Anbieter"
+        }
+      }
     },
     "variantName": {
       "label": "Namensvariante | Namensvarianten",

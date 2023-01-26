@@ -177,7 +177,7 @@
           statusLabel: status ? this.$i18n.t('component.general.status.' + status.name + '.label') : undefined,
           nominalPlatform: nominalPlatform?.name || undefined,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
-          count: _tippCount || tippCount,
+          count: _tippCount || tippcount,
           deleteUrl: undefined,
           retireUrl: undefined
         }))
