@@ -1132,30 +1132,35 @@
         }
       },
       reset () {
-        this.packageItem.id = undefined
-        this.packageItem.name = undefined
-        this.packageItem.source = undefined
-        this.packageItem.status = undefined
-        this.packageItem.descriptionURL = undefined
-        this.packageItem.description = undefined
-        this.packageItem.scope = undefined
-        this.packageItem.global = undefined
-        this.packageItem.globalNote = undefined
-        this.packageItem.contentType = undefined
-        this.packageItem.consistent = undefined
-        this.packageItem.breakable = undefined
-        this.packageItem.fixed = undefined
-        this.packageItem.listStatus = undefined
-        this.packageItem.editStatus = undefined
-        this.packageItem.ids = []
-        this.packageItem.provider = undefined // organisation
-        this.packageItem.nominalPlatform = undefined
-        this.allNames = { name: undefined, alts: [] }
-        this.reload()
-      },
-      async reload () {
         if (this.isEdit) {
-          if(!loading.isLoading()) {
+          loading.startLoading()
+        }
+        else{
+          this.packageItem.id = undefined
+          this.packageItem.name = undefined
+          this.packageItem.source = undefined
+          this.packageItem.status = undefined
+          this.packageItem.descriptionURL = undefined
+          this.packageItem.description = undefined
+          this.packageItem.scope = undefined
+          this.packageItem.global = undefined
+          this.packageItem.globalNote = undefined
+          this.packageItem.contentType = undefined
+          this.packageItem.consistent = undefined
+          this.packageItem.breakable = undefined
+          this.packageItem.fixed = undefined
+          this.packageItem.listStatus = undefined
+          this.packageItem.editStatus = undefined
+          this.packageItem.ids = []
+          this.packageItem.provider = undefined // organisation
+          this.packageItem.nominalPlatform = undefined
+          this.allNames = { name: undefined, alts: [] }
+        }
+        this.reload(true)
+      },
+      async reload (alreadyLoaded = false) {
+        if (this.isEdit) {
+          if(!alreadyLoaded && !loading.isLoading()) {
             loading.startLoading()
           }
 
