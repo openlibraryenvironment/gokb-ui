@@ -16,6 +16,7 @@
       @input="event => onTitleNameInput(event)"
     >
       <h5 class="titlecard-headline">
+        <span> {{ $tc('component.types.' + originalRecord.type) }} </span>
         <router-link
           :style="{ color: 'primary' }"
           :to="{ name: route, params: { 'id': originalRecord.id } }"
@@ -26,17 +27,19 @@
     </v-card-title>
 
     <v-card-text>
-      <span>{{ $t('component.general.status.label') }}: </span>
-      <span v-if="!!status">
-        {{ $t('component.general.status.' + status + '.label') }}
-        <v-icon
-          :color="statusIcons[status].color"
-          class="mt-n1"
-          dense
-        >
-          {{ statusIcons[status].icon }}
-        </v-icon>
-      </span>
+      <div>
+        <span>{{ $t('component.general.status.label') }}: </span>
+        <span v-if="!!status">
+          {{ $t('component.general.status.' + status + '.label') }}
+          <v-icon
+            :color="statusIcons[status].color"
+            class="mt-n1"
+            dense
+          >
+            {{ statusIcons[status].icon }}
+          </v-icon>
+        </span>
+      </div>
     </v-card-text>
 
     <v-card-text v-if="!!ids?.length > 0">
@@ -460,7 +463,7 @@
         let val = [...this.originalRecord?._embedded?.ids]
           .map((item) => ({
             id: item.id,
-            namespace: item.namespace.value,
+            namespace: item.namespace.name || item.namespace.value,
             value: item.value,
             isDeletable: this.isItemDeletable,
             _pending: this.pendingStatuses[item.id]
@@ -468,7 +471,7 @@
         for (const [count, id] of this.mismatchIdentifiers.entries()) {
           val.push({
             id: id.id,
-            namespace: id.namespace.value,
+            namespace: id.namespace.name || id.namespace.value,
             value: id.value,
             isDeletable: this.isItemDeletable,
             _pending: this.pendingStatuses[id.id]
