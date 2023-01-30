@@ -171,6 +171,10 @@
     },
     "logout": {
       "label": "Ausloggen"
+    },
+    "register":  {
+      "label": "Registrieren",
+      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, registrieren Sie sich bitte und falls nicht anderweitig abgesprochen schicken Sie uns eine Nachricht mit Ihrem gewählten Benutzernamen sowie Informationen zu Ihrer Einrichtung an {0}. Wir melden uns dann so schnell wie möglich bei Ihnen zurück!"
     }
   },
   "validation": {
@@ -478,6 +482,17 @@
   },
   "component": {
     "label": "Komponente | Komponenten",
+    "types": {
+      "Title": "Referenztitel | Referenztitel",
+      "Journal": "Journal | Journals",
+      "Book": "Monographie | Monographien",
+      "Database": "Datenbank | Datenbanken",
+      "Package": "Paket | Pakete",
+      "TIPP": "Pakettitel | Pakettitel",
+      "Platform": "Plattform | Plattformen",
+      "Other": "Andere | Andere",
+      "Org": "Anbieter | Anbieter"
+    },
     "title": {
       "label": "Referenztitel | Referenztitel",
       "tabsView": "Kompakte Ansicht",
@@ -977,7 +992,8 @@
           "edited": "Prüfanfrage erfolgreich bearbeitet.",
           "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
-          "closed": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
+          "closed": "Request marked as closed",
+          "closedBulk": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
         }
       },
       "status": {
