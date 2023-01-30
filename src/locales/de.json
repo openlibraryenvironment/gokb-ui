@@ -174,7 +174,7 @@
     },
     "register":  {
       "label": "Registrieren",
-      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, registrieren Sie sich bitte und falls nicht anderweitig abgesprochen schicken Sie uns eine Nachricht mit Ihrem gewählten Benutzernamen sowie Informationen zu Ihrer Einrichtung an {0}. Wir melden uns dann so schnell wie möglich bei Ihnen zurück!"
+      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, registrieren Sie sich bitte und schicken uns falls nicht anderweitig abgesprochen eine Nachricht mit Ihrem gewählten Benutzernamen sowie Informationen zu Ihrer Einrichtung an {0}. Wir melden uns dann so schnell wie möglich bei Ihnen zurück!"
     }
   },
   "validation": {
