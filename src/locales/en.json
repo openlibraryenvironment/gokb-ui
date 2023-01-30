@@ -172,6 +172,10 @@
     },
     "logout": {
       "label": "Log out"
+    },
+    "register": {
+      "label": "Register",
+      "info": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and unless directed otherwise send an email with your chosen username and information about your institution to {0}. We will contact you as soon as possible!"
     }
   },
   "validation": {
@@ -256,7 +260,7 @@
       "ResetFreeTextIndexes": "Reset Free Text Indexes",
       "MasterListUpdate": "Master List Update",
       "EnrichmentService": "Enrichment Service",
-      "GeneratePackageTypes":  "Generate Missing Package Content Types",
+      "GeneratePackageTypes": "Generate Missing Package Content Types",
       "Housekeeping": "Housekeeping",
       "CleanupDeletedComponents": "Cleanup Deleted Components",
       "CleanupRejectedComponents": "Cleanup Rejected Components",
@@ -280,11 +284,11 @@
     "export": {
       "type": {
         "tipp": {
-          "label":"Raw",
+          "label": "Raw",
           "description": "Prefer original KBART info for all columns"
         },
         "title": {
-          "label":"Processed",
+          "label": "Processed",
           "description": "Fields like publication_name are preferably taken from global title records"
         }
       }
@@ -319,7 +323,9 @@
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
       "illegalPrintId": "Value for print identifier '{0}' is not valid.",
       "shortRow": "This line contains fewer columns than defined by the provided headings!",
-      "noIds": "This line contains no usable identifiers and will no be processed!",
+      "noIds": "This line contains no usable identifiers!",
+      "noImportIds": "This line contains no reference identifiers (print/online), and no default namespace was selected!",
+      "noAuthIds": "This line contains neither a 'print_identifier' nor an 'online_identifier'!",
       "url": {
         "mimeType": "KBART URL returned a wrong content type!",
         "unknown": "There were errors saving the KBART file!",
@@ -336,7 +342,7 @@
       "summary": "Summary",
       "rowStats": "Row Statistics",
       "total": {
-        "label":"Total"
+        "label": "Total"
       },
       "warning": {
         "label": "Warning | Warnings",
@@ -430,7 +436,7 @@
     "general": {
       "500": "The request failed, please report this to an admin or try again later.",
       "name": {
-        "malformedEnding" : "Please remove all trailing special characters from the name.",
+        "malformedEnding": "Please remove all trailing special characters from the name.",
         "notUnique": "This name is already in use!"
       }
     },
@@ -478,6 +484,17 @@
   },
   "component": {
     "label": "Component | Components",
+    "types": {
+      "Title": "Title | Titles",
+      "Journal": "Journal | Journals",
+      "Book": "Monograph | Monographs",
+      "Database": "Database | Databases",
+      "Package": "Package | Packages",
+      "TIPP": "Package Title | Package Titles",
+      "Platform": "Platform | Platforms",
+      "Other": "Other | Other",
+      "Org": "Provider | Providers"
+    },
     "title": {
       "label": "Title | Titles",
       "tabsView": "Tabbed View",
@@ -519,7 +536,7 @@
           "label": "Book"
         },
         "Database": {
-          "label":"Database"
+          "label": "Database"
         },
         "Dataset": {
           "label": "Dataset"
@@ -951,7 +968,7 @@
         "label": "Action taken"
       },
       "type": {
-        "label":"Type"
+        "label": "Type"
       },
       "todo": {
         "label": "ToDo"
@@ -1271,7 +1288,16 @@
       "label": "Maintenance | Maintenance"
     },
     "curatoryGroup": {
-      "label": "Curatory Group | Curatory Groups"
+      "label": "Curatory Group | Curatory Groups",
+      "organisationType": {
+        "label": "Organisation type",
+        "Library": {
+          "label": "Library"
+        },
+        "Provider": {
+          "label": "Provider"
+        }
+      }
     },
     "variantName": {
       "label": "Name Variant | Name Variants",
@@ -1337,7 +1363,7 @@
           "label": "Rejected"
         }
       },
-      "dateCreated":"Date Created",
+      "dateCreated": "Date Created",
       "lastUpdated": "Last Updated",
       "language": {
         "label": "Language"
