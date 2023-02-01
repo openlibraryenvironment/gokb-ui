@@ -171,6 +171,10 @@
     },
     "logout": {
       "label": "Ausloggen"
+    },
+    "register":  {
+      "label": "Registrieren",
+      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, registrieren Sie sich bitte und schicken uns falls nicht anderweitig abgesprochen eine Nachricht mit Ihrem gewählten Benutzernamen sowie Informationen zu Ihrer Einrichtung an {0}. Wir melden uns dann so schnell wie möglich bei Ihnen zurück!"
     }
   },
   "validation": {
@@ -318,6 +322,8 @@
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
       "shortRow": "Diese Zeile enthält weniger Spalten als im Datei-Header definiert wurden!",
       "noIds": "Diese Zeile enthält keine Idenitifikatoren und wird daher nicht prozessiert!",
+      "noImportIds": "Diese Zeile enthält keine Identifikatoren (print/online), und es wurde kein Anbieternamensraum ausgewählt!",
+      "noAuthIds": "Diese Zeile enthält weder einen 'print_identifier' noch einen 'online_identifier'!",
       "url": {
         "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
         "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
@@ -476,6 +482,17 @@
   },
   "component": {
     "label": "Komponente | Komponenten",
+    "types": {
+      "Title": "Referenztitel | Referenztitel",
+      "Journal": "Journal | Journals",
+      "Book": "Monographie | Monographien",
+      "Database": "Datenbank | Datenbanken",
+      "Package": "Paket | Pakete",
+      "TIPP": "Pakettitel | Pakettitel",
+      "Platform": "Plattform | Plattformen",
+      "Other": "Andere | Andere",
+      "Org": "Anbieter | Anbieter"
+    },
     "title": {
       "label": "Referenztitel | Referenztitel",
       "tabsView": "Kompakte Ansicht",
@@ -975,7 +992,8 @@
           "edited": "Prüfanfrage erfolgreich bearbeitet.",
           "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
-          "closed": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
+          "closed": "Request marked as closed",
+          "closedBulk": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
         }
       },
       "status": {
@@ -1235,7 +1253,16 @@
       "label": "Pflege | Pflege"
     },
     "curatoryGroup": {
-      "label": "Kuratorengruppe | Kuratorengruppen"
+      "label": "Kuratorengruppe | Kuratorengruppen",
+      "organisationType": {
+        "label": "Organisationstyp",
+        "Library": {
+          "label": "Bibliothek"
+        },
+        "Provider": {
+          "label": "Anbieter"
+        }
+      }
     },
     "variantName": {
       "label": "Namensvariante | Namensvarianten",

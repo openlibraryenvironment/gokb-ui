@@ -15,6 +15,15 @@
     </v-row>
     <v-row>
       <v-col>
+        <gokb-text-field
+          v-model="selectedItem.organisationType"
+          disabled
+          :label="$i18n.t('component.curatoryGroup.organisationType.label')"
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
         <gokb-email-field
           v-model="selectedItem.email"
           disabled
@@ -55,6 +64,7 @@
           name: undefined,
           email: undefined,
           users: undefined,
+          organisationType: undefined
         }
       }
     },
@@ -83,7 +93,7 @@
         this.id = this.selected.id
 
         const result = await this.catchError({
-          promise: curatoryGroupServices.getGroup(this.id, this.cancelToken.token),
+          promise: curatoryGroupServices.get(this.id, this.cancelToken.token),
           instance: this
         })
 
@@ -91,7 +101,9 @@
 
         this.selectedItem.name = record.name
         this.selectedItem.email = record.email
-
+        if (record.organizationType?.name) {
+          this.selectedItem.organisationType = this.$i18n.t('component.curatoryGroup.organisationType.' + record.organizationType?.name + '.label')
+        }
         if (record._embedded?.users) {
           this.selectedItem.users = record._embedded?.users
         }

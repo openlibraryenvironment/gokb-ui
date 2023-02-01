@@ -4,6 +4,13 @@
     width="500"
     :title="$t('component.user.register')"
   >
+    <v-alert type="info">
+      <i18n path="popups.register.info">
+        <template slot:0>
+          <a href="mailto:info@gokb.org">info@gokb.org</a>
+        </template>
+      </i18n>
+    </v-alert>
     <iframe
       id="register-embed"
       frameborder="0"
