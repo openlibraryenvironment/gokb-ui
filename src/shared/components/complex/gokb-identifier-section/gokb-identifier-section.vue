@@ -190,7 +190,7 @@
         this.addIdentifierPopupVisible = true
       },
       addNewIdentifier (id) {
-        this.localValue.push({ id: this.tempId(), value: id.value, namespace: id.namespace.value, nslabel: (id.namespace.name || id.namespace.value), isDeletable: true, _pending: 'added' })
+        this.localValue.push({ id: this.tempId(), value: id.value, namespace: id.namespace.value, nslabel: (id.namespace.name || id.namespace.value), isDeletable: undefined, _pending: 'added' })
         this.$emit('update', 'ids')
       },
       deleteIdentifier (value) {
