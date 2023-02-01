@@ -133,7 +133,7 @@
       },
       identifiers () {
         return [...this.value]
-          .map(item => ({ ...item, extlink: namespaceServices.getBaseurl(item.namespace) ? namespaceServices.getBaseurl(item.namespace)+item.value : undefined }))
+          .map(item => ({ ...item, extlink: namespaceServices.getBaseurl(item.namespace) ? namespaceServices.getBaseurl(item.namespace)+item.value : undefined, isDeletable : undefined }))
           .sort(({ value: first }, { value: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
