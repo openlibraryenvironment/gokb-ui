@@ -58,6 +58,7 @@
           <span class="mr-4">{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.report.invalid }}/{{ selectedItem.results.report.numRows }}</span>
           <span class="mr-4">{{ $i18n.t('job.report.previous.label') }}: {{ selectedItem.results.report.previous }}</span>
           <span class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</span>
+          <span class="mr-4">{{ $i18n.t('job.report.partial.label') }}: {{ selectedItem.results.report.partial }}</span>
           <span class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
           <span v-if="!selectedItem.dryRun">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
         </div>
