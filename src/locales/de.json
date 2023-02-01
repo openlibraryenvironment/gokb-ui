@@ -221,6 +221,9 @@
       "matched": {
         "label": "Treffer"
       },
+      "unmatched": {
+        "label": "Kein Treffer"
+      },
       "retired": {
         "label": "Archiviert"
       },
