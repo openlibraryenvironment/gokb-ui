@@ -453,7 +453,6 @@
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
         }
-        languageServices.fetchLanguagesList(createCancelToken().token)
       },
       tabsView (value) {
         if (this.loggedIn) {
