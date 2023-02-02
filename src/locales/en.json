@@ -221,6 +221,9 @@
       "matched": {
         "label": "Matched"
       },
+      "unmatched": {
+        "label": "Unmatched"
+      },
       "retired": {
         "label": "Retired"
       },
