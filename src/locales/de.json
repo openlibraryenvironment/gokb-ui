@@ -229,6 +229,9 @@
       },
       "previous": {
         "label": "Bisherige Anzahl"
+      },
+      "partial": {
+        "label": "Teilweise Treffer"
       }
     },
     "ok": "Erfolgreich",

@@ -229,6 +229,9 @@
       },
       "previous": {
         "label": "Previous count"
+      },
+      "partial": {
+        "label": "Partially matched"
       }
     },
     "ok": "Successful",
