@@ -1,41 +1,46 @@
 <template>
   <v-container fluid>
-    <v-row v-if="isTitleReview">
-      <v-col :md="colGridWidth" :cols="colGridWidth" xl="3" class="pa-1 mr-3">
-        <h3 class="mb-1"> {{ $t('component.review.componentToReview.label') }}</h3>
+    <v-row>
+      <v-col :md="colGridWidth" :cols="colGridWidth" xl="3">
+        <h3 class="mb-1"> {{ $t('component.review.componentToReview.label') }} ({{ reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label') }})</h3>
         <gokb-reviews-title-card
-          :id="reviewedComponent.id.toString()"
+          :id="reviewedComponent.id"
           role="reviewedComponent"
           :route="reviewedComponent.route"
           :selected-card="selectedCard"
           :selected-card-ids="selectedCardIds"
           :single-card-review="isSingleCardReview"
-          :merge-enabled="isMergeEnabled"
           :is-merged="isMerged"
           :editable="editable"
-          :fields-to-be-edited="fieldsPerType[reviewType]"
           :additional-vars="additionalVars"
           @feedback-response="feedbackResponse"
           @reviewed-card-selected-ids="setSelectedReviewItemIds"
         />
       </v-col>
-      <v-col :md="colGridWidth" :cols="colGridWidth" xl="3" class="pa-1" v-for="i in referenceComponents" :key="i.id">
-        <h3 class="mb-1">{{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label') : $t('component.review.edit.components.merge.unselected.label') }}</h3>
+      <v-col :md="colGridWidth" :cols="colGridWidth" xl="3" class="pa-1" v-for="i, idx in referenceComponents" :key="i.id">
+        <h3 class="mb-1">
+          {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label') : $t('component.review.edit.components.merge.unselected.label') }}
+          ({{ i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label') }})
+          <b>#{{ idx + 1 }}</b>
+        </h3>
         <gokb-reviews-title-card
-          :id="i.id.toString()"
+          :id="i.id"
           role="candidateComponent"
           :route="i.route"
+          :candidate-index="idx + 1"
+          :reviewed-component-name="reviewedComponent.name"
           :selected-card="selectedCard"
           :selected-card-ids="selectedCardIds"
           :single-card-review="isSingleCardReview"
           :merge-enabled="isMergeEnabled"
+          :link-enabled="isTippReview"
           :is-merged="isMerged"
           :editable="editable"
-          :fields-to-be-edited="fieldsPerType[reviewType]"
           :additional-vars="additionalVars"
           @set-active="setSelectedCard"
           @set-selected-ids="setSelectedCardIds"
           @merge="mergeCards"
+          @link="linkTitle"
           @feedback-response="feedbackResponse"
         />
       </v-col>
@@ -47,6 +52,7 @@
   import BaseComponent from '@/shared/components/base-component'
   import GokbReviewsTitleCard from '@/shared/components/complex/gokb-reviews-title-card'
   import titleServices from '@/shared/services/title-services'
+  import tippServices from '@/shared/services/tipp-services'
 
   export default {
     name: 'GokbReviewsComponentsSection',
@@ -69,6 +75,11 @@
         required: false,
         default: undefined
       },
+      reviewStatus: {
+        type: String,
+        required: false,
+        default: undefined
+      },
       additionalVars: {
         type: Array,
         required: false,
@@ -87,14 +98,7 @@
         selectedCardIds: undefined,
         selectedReviewItemIds: [],
         selectedIdItems: [],
-        isMerged: false,
-        fieldsPerType: {
-          "Invalid Name": ["name"],
-          "Minor Identifier Mismatch": ["ids"],
-          "Major Identifier Mismatch": ["ids"],
-          "Critical Identifier Conflict": ["ids"],
-          "Ambiguous Title Matches": ["ids"]
-        }
+        isMerged: false
       }
     },
     computed: {
@@ -105,10 +109,10 @@
         return this.referenceComponents.length === 0
       },
       isMergeEnabled () {
-        return (this.reviewedComponent.route === '/title')
+        return (this.reviewedComponent.route === '/title' || this.referenceComponents.length > 1) && !this.isMerged && this.reviewStatus === 'Open'
       },
-      isTitleReview () {
-        return (this.reviewedComponent.route === '/title' || this.reviewedComponent.route === '/package-title')
+      isTippReview () {
+        return (this.reviewedComponent.route === '/package-title')
       }
     },
     methods: {
@@ -122,7 +126,11 @@
         this.selectedReviewItemIds = ids
       },
       async mergeCards (targetId) {
-        let mergeData = { id: this.reviewedComponent.id, target: targetId, ids: this.selectedReviewItemIds }
+        let mergeData = {
+          id: selectedCard !== targetId ? this.reviewedComponent.id : targetId,
+          target: selectedCard !== targetId ? targetId : selectedCard,
+          ids: this.selectedReviewItemIds
+        }
         const mergeResponse = await this.catchError({
           promise: titleServices.merge(mergeData, this.cancelToken.token),
           instance: this
@@ -135,6 +143,26 @@
             this.isMerged = true
           }
           this.feedbackResponse(mergeResponse)
+        }
+      },
+      async linkTitle (targetId) {
+        let linkData = {
+          id: this.reviewedComponent.id,
+          version: this.reviewedComponent.version,
+          title: targetId
+        }
+        const updateResponse = await this.catchError({
+          promise: tippServices.createOrUpdate(linkData, this.cancelToken.token),
+          instance: this
+        })
+        if (typeof updateResponse == 'undefined') {
+          this.feedbackResponse('error.general.500')
+        }
+        else {
+          if (updateResponse.status < 400) {
+            this.isMerged = true
+          }
+          this.feedbackResponse(updateResponse)
         }
       },
       feedbackResponse (response) {

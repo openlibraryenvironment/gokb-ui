@@ -28,7 +28,7 @@
     "search": "Search",
     "select": "Select",
     "submit": "Submit",
-    "unselect": "Unselect",
+    "deselect": "Deselect",
     "update": "Update",
     "validate": "Validate",
     "bulkSelect": "Set Status of {0} entries to ...",
@@ -61,7 +61,10 @@
     "401": {
       "title": "No permission",
       "text": "You have insufficient permissions for viewing this page. If you think this is an error, please contact an admin."
-    }
+    },
+    "start": "Start",
+    "end": "End",
+    "date": "Date"
   },
   "direction": "ltr",
   "route": {
@@ -274,7 +277,8 @@
       "KBART Ingest": "KBART Package Ingest",
       "KBARTSourceIngest": "Automated KBART Ingest",
       "KBARTIngestDryRun": "KBART Package Ingest (Dry Run)",
-      "PackageTitleMatch": "Reference Title Matching"
+      "PackageTitleMatch": "Reference Title Matching",
+      "EZBCollectionIngest": "EZB Collection Ingest"
     }
   },
   "kbart": {
@@ -318,6 +322,8 @@
       "correctedVal": "Value '{0}' will be automatically replaced by '{1}'",
       "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
+      "unusualChars": "This line contains unusual characters, which may point to a corrupted file conversion.",
+      "unusualCharsVal": "Value '{0}' contains unusual characters. This may point to a corrupted file conversion.",
       "illegalVal": "Value '{0}' is not valid!",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
@@ -823,7 +829,9 @@
         "startVolume": "Start Volume",
         "endDate": "End Date",
         "endIssue": "End Issue",
-        "endVolume": "End Volume"
+        "endVolume": "End Volume",
+        "volume": "Volume",
+        "issue": "Issue"
       },
       "embargo": {
         "type": "Type",
@@ -999,8 +1007,8 @@
           "edited": "Request was successfully edited.",
           "escalated" : "The request has been successfully escalated.",
           "deescalated" : "The request has been successfully deescalated.",
-          "closed": "Request marked as closed",
-          "closedBulk": "Request marked as closed | {0} requests marked as closed"
+          "closed": "Request marked as finished",
+          "closedBulk": "Request marked as finished | {0} requests marked as finished"
         },
         "close": {
           "label": "Close review"
@@ -1012,11 +1020,11 @@
             },
             "confirm": {
               "label": "Confirm Merge",
-              "message": "Please confirm that you want to merge the reviewed title into the selected one. The review will be closed and the reviewed title will be deleted."
+              "message": "Please confirm that you want to merge the reviewed title ({0}) into the selected one ({1}). The review will be closed and the reviewed title will be deleted."
             },
             "selectIds": "Select IDs to add to the merged title.",
             "selected": {
-              "label": "Merge Candidate"
+              "label": "Selected Component"
             },
             "unselected": {
               "label": "Other Component"
@@ -1027,6 +1035,22 @@
             "confirm": {
               "label": "Confirm Changes",
               "message": "Please confirm the updates you have prepared for this title."
+            }
+          },
+          "link": {
+            "selectTarget": {
+              "label": "Select Linking Target"
+            },
+            "selectDeprecated": {
+              "label": "Merge Duplicate"
+            },
+            "confirmMerge": {
+              "label": "Confirm Merge",
+              "message": "Please confirm the title merge. The reference title {0} will be deleted and all of its linked package titles will be transferred to the selected title."
+            },
+            "confirmLink": {
+              "label": "Confirm Linking",
+              "message": "Please confirm the linking of the global title {0} with the package title."
             }
           }
         }
@@ -1214,7 +1238,7 @@
           "label": "Ambiguous Title Matches",
           "info": "The package title has been matched on multiple reference titles.",
           "action": "No reference title selected",
-          "toDo": "Check reference titles for duplicates. Merge titles if necessary and link this title manually. Check identifier duplicates and delete them if they are incorrect."
+          "toDo": "Please select a reference title to be linked to the package title. If the other candidates contain duplicate items to the selected, clean up by merging them into the selected item."
         },
         "Namespace Conflict": {
           "label": "Namespace Conflict",

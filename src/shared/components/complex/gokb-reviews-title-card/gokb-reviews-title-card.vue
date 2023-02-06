@@ -9,113 +9,231 @@
       :message="submitConfirmationMessage"
       @confirmed="triggerConfirmedAction"
     />
-    <v-card-title
-      primary-title
-      :id="titleName"
-      :contenteditable="singleCardReview && fieldsToBeEdited.includes('name')"
-      @input="event => onTitleNameInput(event)"
+    <v-card-subtitle
+      class="text--h4"
     >
-      <h5 class="titlecard-headline">
-        <span> {{ $tc('component.types.' + originalRecord.type) }} </span>
-        <router-link
-          :style="{ color: 'primary' }"
-          :to="{ name: route, params: { 'id': originalRecord.id } }"
-        >
-          {{ originalRecord.name }}
-        </router-link>
-      </h5>
-    </v-card-title>
-
-    <v-card-text>
-      <div>
-        <span>{{ $t('component.general.status.label') }}: </span>
-        <span v-if="!!status">
-          {{ $t('component.general.status.' + status + '.label') }}
-          <v-icon
-            :color="statusIcons[status].color"
-            class="mt-n1"
-            dense
+      <v-row dense>
+        <v-col>
+          <router-link
+            v-if="!nameEditActive"
+            :style="{ color: 'primary' }"
+            :to="{ name: route, params: { 'id': originalRecord.id } }"
           >
-            {{ statusIcons[status].icon }}
+            {{ originalRecord.name }}
+          </router-link>
+          <gokb-text-field
+            v-else
+            v-model="titleName"
+            append-icon="mdi-check-bold"
+            editable
+            dense
+            @click:append="saveNameChange"
+          />
+          <v-icon
+            v-if="isEditable && !nameEditActive"
+            class="ml-2"
+            style="cursor:pointer"
+            :title="$t('btn.edit')"
+            small
+            @click="nameEditActive = !nameEditActive"
+          >
+            mdi-pencil
           </v-icon>
-        </span>
-      </div>
-    </v-card-text>
-
-    <v-card-text v-if="!!ids?.length > 0">
-      <v-chip
-        v-if="reviewedCardDeleteEnabled"
-        class="mb-1"
-        pill
-      >
-          {{ $t('component.review.edit.components.single.selectIds') }}
-      </v-chip>
-      <v-chip
-        v-else-if="isOtherCardSelected && mergeEnabled && editable"
-        class="mb-1"
-        pill
-      >
-          {{ $t('component.review.edit.components.merge.selectIds') }}
-        </v-chip>
-      <gokb-table
-        :headers="idHeaders"
-        :items="idsVisible"
-        :selected-items="selectedIdItems"
-        :editable="idsEditable"
-        :options.sync="idOptions"
-        :total-number-of-items="totalNumberOfIds"
-        :hide-pagination="true"
-        :hide-select="hideTableSelects"
-        :actions="showActions"
-        _pending="empty"
-        @delete-item="deleteId"
-        @selected-items="selectedIdItems = $event"
-      />
-    </v-card-text>
-
-    <v-card-text v-if="!!originalRecord?.history">
-      <div class="titlecard-history">{{ $t('component.title.history.label') }}</div>
-    </v-card-text>
-
+        </v-col>
+      </v-row>
+    </v-card-subtitle>
     <v-card-text>
-      <gokb-table
-        :headers="historyHeaders"
-        :items="getHistory"
-        :editable="historyEditable"
-        :options.sync="historyOptions"
-        :total-number-of-items="getHistory.length"
-        :hide-select="true"
-        :hide-pagination="true"
-      />
+      <v-row dense>
+        <v-col>
+          <span>{{ $t('component.general.status.label') }}: </span>
+          <span v-if="!!status">
+            {{ $t('component.general.status.' + status + '.label') }}
+            <v-icon
+              :color="statusIcons[status].color"
+              class="mt-n1"
+              dense
+            >
+              {{ statusIcons[status].icon }}
+            </v-icon>
+          </span>
+        </v-col>
+      </v-row>
+
+      <v-row v-if="!!ids?.length > 0">
+        <v-col>
+          <v-chip
+            v-if="isReviewedCard && isOtherCardSelected && mergeEnabled && isEditable"
+            class="mb-1"
+            pill
+          >
+            {{ $t('component.review.edit.components.merge.selectIds') }}
+          </v-chip>
+          <v-chip
+            v-else-if="isEditable"
+            class="mb-1"
+            pill
+          >
+              {{ $t('component.review.edit.components.single.selectIds') }}
+          </v-chip>
+          <gokb-table
+            :headers="idHeaders"
+            :items="idsVisible"
+            :selected-items="selectedIdItems"
+            :editable="isEditable"
+            :options.sync="idOptions"
+            :total-number-of-items="totalNumberOfIds"
+            :hide-pagination="true"
+            :hide-select="!isEditable"
+            :actions="showActions"
+            _pending="empty"
+            @delete-item="deleteId"
+            @selected-items="selectedIdItems = $event"
+          />
+        </v-col>
+      </v-row>
+
+      <div v-if="originalRecord.type === 'Journal'">
+        <v-row>
+          <v-col>
+            {{ $t('component.title.history.label') }}
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col>
+            <gokb-table
+              :headers="historyHeaders"
+              :items="mappedHistory"
+              :editable="historyEditable"
+              :options.sync="historyOptions"
+              :total-number-of-items="mappedHistory.length"
+              :hide-select="true"
+              :hide-pagination="true"
+            />
+          </v-col>
+        </v-row>
+      </div>
+      <div v-else-if="originalRecord.type === 'TIPP' && originalRecord.publicationType?.name === 'Serial'">
+        <v-row>
+          <v-col>
+            {{ $t('component.tipp.coverage.label') }}
+          </v-col>
+        </v-row>
+
+        <v-card
+          v-for="ci in mappedCoverage"
+          :key="ci.id"
+          class="mt-3"
+        >
+          <v-card-text>
+            <v-row dense>
+              <v-col>
+                <span>{{ $t('component.tipp.coverage.depth.label') }}: </span>
+                <span> {{ $t('component.tipp.coverage.depth.' + ci.coverageDepth + '.label') }}</span>
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col cols="2" />
+              <v-col>
+                {{ $t('default.date') }}
+              </v-col>
+              <v-col>
+                {{ $t('component.tipp.coverage.volume') }}
+              </v-col>
+              <v-col>
+                {{ $t('component.tipp.coverage.issue') }}
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col cols="2">{{ $t('default.start') }}</v-col>
+              <v-col>
+                {{ ci.startDate }}
+              </v-col>
+              <v-col>
+                {{ ci.startVolume }}
+              </v-col>
+              <v-col>
+                {{ ci.startIssue }}
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col cols="2">{{ $t('default.end') }}</v-col>
+              <v-col>
+                {{ ci.endDate }}
+              </v-col>
+              <v-col>
+                {{ ci.endVolume }}
+              </v-col>
+              <v-col>
+                {{ ci.endIssue }}
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </div>
+      <v-row class="mt-3">
+        <v-col>
+          <v-row v-if="!isChanged && !isCardSelected && !isOtherCardSelected && isMergeCandidate">
+            <v-col>
+              <gokb-button
+                @click="selectCard"
+              >
+                {{ $i18n.t('component.review.edit.components.merge.selectTarget.label') }}
+              </gokb-button>
+            </v-col>
+          </v-row>
+          <v-row v-else-if="isCardSelected">
+            <v-col>
+              <gokb-button
+                @click="deselectCard"
+              >
+                {{ $i18n.t('btn.deselect') }}
+              </gokb-button>
+            </v-col>
+          </v-row>
+          <v-row v-if="!isChanged && isCardSelected && isLinkCandidate">
+            <v-col>
+              <gokb-button
+                primary
+                @click="showConfirmSelectedCard('link')"
+              >
+                {{ $i18n.t('component.review.edit.components.link.confirmLink.label') }}
+              </gokb-button>
+            </v-col>
+          </v-row>
+          <v-row v-else-if="!isChanged && isOtherCardSelected && isMergeCandidate">
+            <v-col>
+              <gokb-button
+                primary
+                @click="showConfirmSelectedCard('merge')"
+              >
+                {{ $i18n.t('component.review.edit.components.link.selectDeprecated.label')  }}
+              </gokb-button>
+            </v-col>
+          </v-row>
+          <v-row v-else-if="!isChanged && isCardSelected && isMergeCandidate">
+            <v-col>
+              <gokb-button
+                primary
+                @click="showConfirmSelectedCard('merge')"
+              >
+                {{ $i18n.t('component.review.edit.components.merge.confirm.label')  }}
+              </gokb-button>
+            </v-col>
+          </v-row>
+          <v-row v-if="!isChanged && isEditable">
+            <v-col>
+              <gokb-button
+                :disabled="selectedIdItems.length === 0 && !isNamePending"
+                @click="showConfirmSelectedCard('single')"
+              >
+                {{ $i18n.t('component.review.edit.components.single.confirm.label') }}
+              </gokb-button>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
     </v-card-text>
-    <v-card-actions v-if="editable">
-      <v-spacer />
-      <gokb-button v-if="!isChanged && !isCardSelected && !isOtherCardSelected && isMergeCandidate"
-        @click="selectCard"
-      >
-        {{ $i18n.t('component.review.edit.components.merge.selectTarget.label') }}
-      </gokb-button>
-      <gokb-button v-if="!isChanged && isCardSelected && isMergeCandidate"
-        @click="unselectCard"
-      >
-        {{ $i18n.t('btn.unselect') }}
-      </gokb-button>
-      <gokb-button
-        v-if="!isChanged && isCardSelected && isMergeCandidate"
-        primary
-        @click="showConfirmSelectedCard"
-      >
-        {{ $i18n.t('component.review.edit.components.merge.confirm.label') }}
-      </gokb-button>
-      <gokb-button
-        v-if="!isChanged && (singleCardReview || reviewedCardDeleteEnabled)"
-        :disabled="selectedIdItems.length === 0"
-        @click="showConfirmSelectedCard"
-      >
-        {{ $i18n.t('component.review.edit.components.single.confirm.label') }}
-      </gokb-button>
-      <v-spacer />
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -144,11 +262,16 @@
     extends: BaseComponent,
     props: {
       id: {
-        type: String,
+        type: Number,
         required: true
       },
+      candidateIndex: {
+        type: Number,
+        required: false,
+        default: undefined
+      },
       selectedCard: {
-        type: String,
+        type: Number,
         required: false,
         default: undefined
       },
@@ -175,6 +298,11 @@
         required: false,
         default: false
       },
+      linkEnabled: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
       route: {
         type: String,
         required: true
@@ -184,13 +312,13 @@
         required: false,
         default: false
       },
-      fieldsToBeEdited: {
-        type: Array,
-        required: false,
-        default: () => []
-      },
       additionalVars: {
         type: Array,
+        required: false,
+        default: undefined
+      },
+      reviewedComponentName: {
+        type: String,
         required: false,
         default: undefined
       }
@@ -199,10 +327,11 @@
       return {
         originalRecord: undefined,
         activeService: undefined,
+        nameEditActive: false,
+        isNamePending: false,
         ids: [],
         titleName: undefined,
         status: undefined,
-        wantedFields: ["name", "identifiers", "history"],
         idOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
@@ -213,10 +342,13 @@
         },
         selCard: undefined,
         selCardIds: [],
+        showCoverage: false,
         isCardSelected: false,
         isReviewedCard: undefined,
         selectedIdItems: [],
         pendingStatuses: {},
+        actionToConfirm: undefined,
+        parameterToConfirm: undefined,
         idsVisible: undefined,
         isChanged: false,
         mismatchIdentifiers: [],
@@ -231,12 +363,12 @@
           { text: this.$i18n.tc('component.identifier.label', 1), align: 'start', value: 'value', sortable: false }
         ]
       },
-      idsEditable () {
-        return this.isReviewedCard || (this.isCardSelected && this.fieldsToBeEdited.includes("ids"))
+      isEditable () {
+        return this.status !== 'Deleted' && this.editable && !!this.originalRecord?._links?.update?.href
       },
       roleColor () {
         if (this.role == "reviewedComponent") {
-          if (this.mergeEnabled) {
+          if (this.mergeEnabled && this.originalRecord.type !== 'TIPP') {
             return "#f2d2d2"
           }
           return null
@@ -269,13 +401,7 @@
       historyEditable () {
         return false
       },
-      reviewedCardDeleteEnabled () {
-        return this.editable && (this.singleCardReview || (this.isReviewedCard && !this.isOtherCardSelected))
-      },
-      hideTableSelects () {
-        return !this.editable || !this.isReviewedCard
-      },
-      getHistory () {
+      mappedHistory () {
         let result = []
         if (!!this.originalRecord?.history) {
           this.originalRecord.history.forEach(h => {
@@ -289,23 +415,43 @@
             })
           })
         }
-        // TODO: add Coverage
+        return result
+      },
+      mappedCoverage () {
+        let result = []
+        if (!!this.originalRecord?._embedded?.coverageStatements) {
+          this.originalRecord?._embedded?.coverageStatements.forEach(h => {
+            result.push({
+              id  : h.id,
+              coverageDepth: h.coverageDepth.name,
+              startDate: this.buildDateString(h.startDate),
+              startVolume: h.startVolume,
+              startIssue: h.startIssue,
+              endDate: this.buildDateString(h.endDate),
+              endVolume: h.endVolume,
+              endIssue: h.endIssue
+            })
+          })
+        }
         return result
       },
       isOtherCardSelected () {
         return this.singleCardReview || (!!this.id && !!this.selCard && this.id != this.selCard)
       },
       isItemDeletable () {
-        if (this.isReviewedCard || (!this.singleCardReview && !this.fieldsToBeEdited.includes("ids"))) {
+        if (this.isReviewedCard || !this.singleCardReview) {
           return undefined
         }
         else return true
       },
       isMergeCandidate () {
-        return this.role != 'reviewedComponent' && this.mergeEnabled
+        return this.role != 'reviewedComponent' && this.mergeEnabled && (!this.selectedCard || this.selectedCard != this.id)
+      },
+      isLinkCandidate () {
+        return this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
       },
       showActions () {
-        return this.isCardSelected && this.fieldsToBeEdited.includes('ids')
+        return this.isCardSelected
       }
     },
     watch: {
@@ -325,7 +471,9 @@
         this.selCardIds = this.selectedCardIds
       },
       selectedIdItems () {
-        this.$emit('reviewed-card-selected-ids', this.selectedIdItems)
+        if (this.isReviewedCard) {
+          this.$emit('reviewed-card-selected-ids', this.selectedIdItems)
+        }
       },
       isMerged (){
         this.fetchTitle()
@@ -367,9 +515,9 @@
         this.$emit('set-active', this.selCard)
         this.$emit('set-selected-ids', this.selCardIds)
       },
-      unselectCard () {
+      deselectCard () {
         this.selCard = undefined
-        this.selCardIds = []
+        this.selectedIdItems = []
 
         Object.entries(this.pendingStatuses).forEach(idkey => {
           this.pendingStatuses[idkey] = false
@@ -379,21 +527,39 @@
         this.$emit('set-active', undefined)
         this.$emit('set-selected-ids', [])
       },
-      showConfirmSelectedCard () {
-        if (this.isMergeCandidate) {
-          this.submitConfirmationMessage = { text: 'component.review.edit.components.merge.confirm.message', vars: [] }
-        } else {
-          this.submitConfirmationMessage = { text: 'component.review.edit.components.single.confirm.message', vars: [] }
+      showConfirmSelectedCard (type) {
+        let cardReference = this.titleName + ' (#' + this.candidateIndex + ')'
+
+        if (type === 'merge') {
+          if (this.selectedCard === this.id) {
+            this.submitConfirmationMessage = { text: 'component.review.edit.components.merge.confirm.message', vars: [this.reviewedComponentName , cardReference] }
+            this.parameterToConfirm = 'primaryMerge'
+          } else {
+            this.submitConfirmationMessage = { text: 'component.review.edit.components.link.confirmMerge.message', vars: [cardReference] }
+            this.parameterToConfirm = 'secondaryMerge'
+          }
+        } else if (type === 'link') {
+          this.submitConfirmationMessage = { text: 'component.review.edit.components.link.confirmLink.message', vars: [cardReference] }
+          this.parameterToConfirm === 'single'
         }
+
         this.showSubmitConfirm = true
       },
       triggerConfirmedAction () {
-        if (this.isMergeCandidate) {
+        if (this.parameterToConfirm === 'primaryMerge') {
           this.confirmSelectedCard()
+        } else if (this.parameterToConfirm === 'single') {
+          this.confirmItemChanges()
+        } else if (this.parameterToConfirm === 'secondaryMerge') {
+          this.confirmSecondaryMerge()
         }
-        else {
-          this.confirmReviewedItemCard()
-        }
+
+        this.parameterToConfirm = undefined
+      },
+      saveNameChange () {
+        this.originalRecord.name = this.titleName
+        this.isNamePending = true
+        this.nameEditActive = false
       },
       async confirmSelectedCard () {
         let putData = this.originalRecord
@@ -403,7 +569,8 @@
           promise: this.activeService.createOrUpdate(putData, this.cancelToken.token),
           instance: this
         })
-        this.unselectCard()
+        this.deselectCard()
+        this.isNamePending = false
         if (putResponse.status < 400) {
           this.$emit('merge', putData.id)
           this.isChanged = true
@@ -412,7 +579,11 @@
           this.$emit('feedback-response', putResponse)
         }
       },
-      async confirmReviewedItemCard () {
+      async confirmSecondaryMerge () {
+        this.$emit('merge', this.id)
+        this.isChanged = true
+      },
+      async confirmItemChanges () {
         let putData = this.originalRecord
         putData.ids = this.ids.filter(ido => !this.selectedIdItems.some(sel => sel.id == ido.id))
         if (!!this.titleName && this.titleName != this.originalRecord?.name) {

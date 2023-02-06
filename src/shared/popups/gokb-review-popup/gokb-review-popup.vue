@@ -14,15 +14,17 @@
       :component="reviewItem.component"
       :editable="!isReadonly"
       :review-component="reviewItem"
+      :has-component-cards="showComponentCards"
       :additional-vars="reviewItem.additionalVars"
     />
 
     <gokb-reviews-components-section
-      v-if="finishedLoading"
+      v-if="finishedLoading && showComponentCards"
       :value="error"
       :reviewed-component="reviewItem.component"
       :reference-components="reviewItem.otherComponents"
       :review-type="reviewItem.stdDesc?.name"
+      :review-status="reviewItem.status.value"
       :editable="!isReadonly"
       :additional-vars="reviewItem.additionalVars"
       @feedback-response="showResponse"
@@ -145,6 +147,9 @@
       isReadonly () {
         return !this.updateUrl
       },
+      showComponentCards () {
+        return this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title'
+      },
       isValid () {
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
       },
@@ -209,7 +214,7 @@
         this.reviewItem.additionalVars = record.additionalInfo?.vars
         this.reviewItem.otherComponents = record.additionalInfo?.otherComponents ? record.additionalInfo.otherComponents.map(oc => ({
           name: oc.name,
-          id: (oc.oid ? oc.oid.split(':')[1] : oc.id),
+          id: (oc.oid ? parseInt(oc.oid.split(':')[1]) : oc.id),
           type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
           route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
         })) : []

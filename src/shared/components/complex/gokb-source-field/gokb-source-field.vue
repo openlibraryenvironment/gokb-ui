@@ -171,7 +171,7 @@
       async fetch (sid) {
         if (sid) {
           const result = await this.catchError({
-            promise: sourceServices.get(sid, this.cancelToken.token),
+            promise: sourceServices.getSource(sid, this.cancelToken.token),
             instance: this
           })
 
