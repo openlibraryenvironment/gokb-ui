@@ -554,7 +554,7 @@
       />
       <gokb-button
         v-if="!isReadonly"
-        @click="reload"
+        @click="reset"
       >
         {{ $t('btn.reset') }}
       </gokb-button>
@@ -1130,6 +1130,31 @@
         if (loading.isLoading()) {
           loading.stopLoading()
         }
+      },
+      reset () {
+        if (!this.isEdit) {
+          this.packageItem.id = undefined
+          this.packageItem.name = undefined
+          this.packageItem.source = undefined
+          this.packageItem.status = undefined
+          this.packageItem.descriptionURL = undefined
+          this.packageItem.description = undefined
+          this.packageItem.scope = undefined
+          this.packageItem.global = undefined
+          this.packageItem.globalNote = undefined
+          this.packageItem.contentType = undefined
+          this.packageItem.consistent = undefined
+          this.packageItem.breakable = undefined
+          this.packageItem.fixed = undefined
+          this.packageItem.listStatus = undefined
+          this.packageItem.editStatus = undefined
+          this.packageItem.ids = []
+          this.packageItem.provider = undefined // organisation
+          this.packageItem.nominalPlatform = undefined
+          this.allNames = { name: undefined, alts: [] }
+        }
+        this.kbart = undefined
+        this.reload(true)
       },
       async reload () {
         if (this.isEdit) {
