@@ -1,7 +1,7 @@
 const ENDPOINT = '/rest/curatoryGroups'
 
 const api = (baseServices) => ({
-  getGroup (id, cancelToken) {
+  get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
       url: process.env.VUE_APP_API_BASE_URL + `${ENDPOINT}/${id}`,
