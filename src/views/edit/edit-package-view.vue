@@ -1132,10 +1132,7 @@
         }
       },
       reset () {
-        if (this.isEdit) {
-          loading.startLoading()
-        }
-        else{
+        if (!this.isEdit) {
           this.packageItem.id = undefined
           this.packageItem.name = undefined
           this.packageItem.source = undefined
@@ -1156,11 +1153,12 @@
           this.packageItem.nominalPlatform = undefined
           this.allNames = { name: undefined, alts: [] }
         }
+        this.kbart = undefined
         this.reload(true)
       },
-      async reload (alreadyLoaded = false) {
+      async reload () {
         if (this.isEdit) {
-          if(!alreadyLoaded && !loading.isLoading()) {
+          if(!loading.isLoading()) {
             loading.startLoading()
           }
 
