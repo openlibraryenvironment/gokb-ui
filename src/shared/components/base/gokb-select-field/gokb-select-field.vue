@@ -24,7 +24,17 @@
     :clearable="clearable && !required"
     :return-object="returnObject"
     :dense="dense"
-  />
+  >
+    <template #label>
+      {{ label }}
+      <span
+        v-if="required"
+        style="color:red"
+      >
+        *
+      </span>
+    </template>
+  </v-select>
 </template>
 
 <script>

@@ -172,6 +172,10 @@
     },
     "logout": {
       "label": "Log out"
+    },
+    "register": {
+      "label": "Register",
+      "info": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and unless directed otherwise send an email with your chosen username and information about your institution to {0}. We will contact you as soon as possible!"
     }
   },
   "validation": {
@@ -219,6 +223,9 @@
       "matched": {
         "label": "Matched"
       },
+      "unmatched": {
+        "label": "Unmatched"
+      },
       "retired": {
         "label": "Retired"
       },
@@ -227,6 +234,9 @@
       },
       "previous": {
         "label": "Previous count"
+      },
+      "partial": {
+        "label": "Partially matched"
       }
     },
     "ok": "Successful",
@@ -256,7 +266,7 @@
       "ResetFreeTextIndexes": "Reset Free Text Indexes",
       "MasterListUpdate": "Master List Update",
       "EnrichmentService": "Enrichment Service",
-      "GeneratePackageTypes":  "Generate Missing Package Content Types",
+      "GeneratePackageTypes": "Generate Missing Package Content Types",
       "Housekeeping": "Housekeeping",
       "CleanupDeletedComponents": "Cleanup Deleted Components",
       "CleanupRejectedComponents": "Cleanup Rejected Components",
@@ -280,11 +290,11 @@
     "export": {
       "type": {
         "tipp": {
-          "label":"Raw",
+          "label": "Raw",
           "description": "Prefer original KBART info for all columns"
         },
         "title": {
-          "label":"Processed",
+          "label": "Processed",
           "description": "Fields like publication_name are preferably taken from global title records"
         }
       }
@@ -314,6 +324,7 @@
       "correctedVal": "Value '{0}' will be automatically replaced by '{1}'",
       "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
+      "unusualCharsVal": "Value {0} contains unusual characters! This may point to a failed conversion to UTF-8.",
       "illegalVal": "Value '{0}' is not valid!",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
@@ -338,7 +349,7 @@
       "summary": "Summary",
       "rowStats": "Row Statistics",
       "total": {
-        "label":"Total"
+        "label": "Total"
       },
       "warning": {
         "label": "Warning | Warnings",
@@ -432,7 +443,7 @@
     "general": {
       "500": "The request failed, please report this to an admin or try again later.",
       "name": {
-        "malformedEnding" : "Please remove all trailing special characters from the name.",
+        "malformedEnding": "Please remove all trailing special characters from the name.",
         "notUnique": "This name is already in use!"
       }
     },
@@ -480,6 +491,17 @@
   },
   "component": {
     "label": "Component | Components",
+    "types": {
+      "Title": "Title | Titles",
+      "Journal": "Journal | Journals",
+      "Book": "Monograph | Monographs",
+      "Database": "Database | Databases",
+      "Package": "Package | Packages",
+      "TIPP": "Package Title | Package Titles",
+      "Platform": "Platform | Platforms",
+      "Other": "Other | Other",
+      "Org": "Provider | Providers"
+    },
     "title": {
       "label": "Title | Titles",
       "tabsView": "Tabbed View",
@@ -521,7 +543,7 @@
           "label": "Book"
         },
         "Database": {
-          "label":"Database"
+          "label": "Database"
         },
         "Dataset": {
           "label": "Dataset"
@@ -953,7 +975,7 @@
         "label": "Action taken"
       },
       "type": {
-        "label":"Type"
+        "label": "Type"
       },
       "todo": {
         "label": "ToDo"
@@ -1348,7 +1370,7 @@
           "label": "Rejected"
         }
       },
-      "dateCreated":"Date Created",
+      "dateCreated": "Date Created",
       "lastUpdated": "Last Updated",
       "language": {
         "label": "Language"

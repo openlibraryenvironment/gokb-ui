@@ -420,6 +420,7 @@
       <gokb-button
         v-if="!isReadonly"
         default
+        :disabled="!isValid"
       >
         {{ $i18n.t('btn.submit') }}
       </gokb-button>
@@ -555,7 +556,7 @@
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
       },
       isValid () {
-        return !!this.allNames.name
+        return !!this.allNames.name && !!this.currentType
       }
     },
     watch: {

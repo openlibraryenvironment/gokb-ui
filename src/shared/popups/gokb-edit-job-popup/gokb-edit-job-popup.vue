@@ -47,19 +47,26 @@
         />
       </v-col>
     </v-row>
-    <v-row v-if="selectedItem.results && selectedItem.results.report">
+    <v-row v-if="selectedItem.results">
       <v-col>
         <div
           class="primary--text"
         >
           {{ selectedItem.dryRun ? $i18n.t('job.report.dryRunLabel') : $i18n.t('job.report.label') }}
         </div>
-        <div>
+        <div v-if="selectedItem.results.report">
           <span class="mr-4">{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.report.invalid }}/{{ selectedItem.results.report.numRows }}</span>
           <span class="mr-4">{{ $i18n.t('job.report.previous.label') }}: {{ selectedItem.results.report.previous }}</span>
           <span class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</span>
+          <span class="mr-4">{{ $i18n.t('job.report.partial.label') }}: {{ selectedItem.results.report.partial }}</span>
           <span class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
           <span v-if="!selectedItem.dryRun">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
+        </div>
+        <div v-else>
+          <span class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
+          <span class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.created }}</span>
+          <span class="mr-4">{{ $i18n.t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
+          <span class="mr-4">{{ $i18n.tc('default.error.label', 2) }}: {{ selectedItem.results.error }}</span>
         </div>
       </v-col>
     </v-row>
