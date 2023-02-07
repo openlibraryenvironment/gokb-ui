@@ -258,7 +258,7 @@
           lastUpdated: lastUpdated ? new Date(lastUpdated).toLocaleString('sv').substr(0, 10) : undefined,
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
-          count: _tippCount || tippCount,
+          count: _tippCount || tippCount || 0,
           curatoryGroups: _embedded.curatoryGroups.map(cg => cg.name),
           status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
