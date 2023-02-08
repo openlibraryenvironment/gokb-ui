@@ -1,5 +1,6 @@
 <template>
   <v-textarea
+    :key="hasUpdated"
     v-model="localValue"
     v-bind="$props"
     :readonly="readonly"
@@ -86,7 +87,7 @@
     },
     data () {
       return {
-        defaultRows: 1
+        hasUpdated: false
       }
     },
     computed: {
@@ -99,18 +100,9 @@
         }
       },
     },
-    watch: {
-      value () {
-        this.setDefRows()
-      }
-    },
-    mounted() {
-      this.setDefRows()
-    },
     methods: {
-      setDefRows() {
-        let newRows = this.localValue?.match(/\n/g)?.length || 0
-        this.defaultRows = newRows > 0 ? newRows + 2 : 1
+      refreshRows () {
+        this.hasUpdated = !this.hasUpdated
       }
     }
   }

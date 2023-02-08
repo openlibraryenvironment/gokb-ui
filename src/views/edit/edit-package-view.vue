@@ -144,6 +144,7 @@
               :label="$t('component.package.descriptionUrl')"
             />
             <gokb-textarea-field
+              ref="descEdit"
               v-model="packageItem.description"
               :label="$t('component.package.description')"
               :disabled="isReadonly"
@@ -436,6 +437,7 @@
             <v-row v-if="packageItem.description">
               <v-col>
                 <gokb-textarea-field
+                  ref="descInfo"
                   v-model="packageItem.description"
                   :label="$t('component.package.description')"
                   dense
@@ -879,6 +881,10 @@
         if (prov) {
           this.fetchDefaultNamespace(prov.id)
         }
+      },
+      step () {
+        this.$refs.descInfo.refreshRows()
+        this.$refs.descEdit.refreshRows()
       }
     },
     async created () {
