@@ -63,6 +63,8 @@
     <gokb-section
       :sub-title="resultHeader"
       :items-total="totalNumberOfItems"
+      :export-option="exportOption && totalNumberOfItems > 0"
+      @export-search-results="exportSearchResults"
     >
       <template #buttons>
         <template v-for="button of resultActionButtons">
@@ -186,6 +188,9 @@
       this.searchServices = searchServices(this.searchServicesUrl)
     },
     methods: {
+      exportSearchResults () {
+        console.log("Export search results...")
+      },
       resetSearch () {
         Object.keys(this.searchFilters).forEach(filter => {
           if (Array.isArray(this.searchFilters[filter])) {

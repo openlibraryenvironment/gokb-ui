@@ -23,7 +23,8 @@
         sortMappings: {
           link: 'name',
           linkTwo: 'provider'
-        }
+        },
+        exportOption: true
       }
     },
     computed: {

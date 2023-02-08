@@ -17,7 +17,8 @@
         sortMappings: {
           link: 'name',
           linkTwo: 'publisher'
-        }
+        },
+        exportOption: true
       }
     },
     computed: {

@@ -14,7 +14,8 @@
           label: undefined,
           identifier: undefined,
           curatoryGroupIds: undefined
-        }
+        },
+        exportOption: true
       }
     },
     computed: {
