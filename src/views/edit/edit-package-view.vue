@@ -1088,6 +1088,8 @@
                 this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.processing', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
               } else if (sourceUpdateResult.status >= 500) {
                 this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.unknown', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+              } else if (sourceUpdateResult.data?.result === 'SKIPPED') {
+                this.eventMessages.push({ message: this.$i18n.t(sourceUpdateResult.data.messageCode), color: 'warn', timeout: -1 })
               }
 
               if (isUpdate) {

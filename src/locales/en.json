@@ -376,7 +376,8 @@
         "sourceNamespaceConflict": "The namespace for the column 'title_id' you selected differs from the one selected for the automated import. Please check both selections before submitting the kbart!"
       },
       "skipped": {
-        "noChange": "Automated KBART processing was skipped, since the same file was already processed last time."
+        "noChange": "Automated KBART processing was skipped, since the same file was already processed last time.",
+        "noFile": "Automated KBART processing was skipped, since no current file was found for this url."
       }
     },
     "dryRun": {
