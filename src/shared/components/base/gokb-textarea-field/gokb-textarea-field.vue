@@ -3,7 +3,7 @@
     v-model="localValue"
     v-bind="$props"
     :readonly="readonly"
-    rows="1"
+    :rows="defaultRows"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
     :required="required"
     validate-on-blur
@@ -84,6 +84,11 @@
         default: undefined,
       },
     },
+    data () {
+      return {
+        defaultRows: 1
+      }
+    },
     computed: {
       localValue: {
         get () {
@@ -94,6 +99,20 @@
         }
       },
     },
+    watch: {
+      value () {
+        this.setDefRows()
+      }
+    },
+    mounted() {
+      this.setDefRows()
+    },
+    methods: {
+      setDefRows() {
+        let newRows = this.localValue?.match(/\n/g)?.length || 0
+        this.defaultRows = newRows > 0 ? newRows + 2 : 1
+      }
+    }
   }
 </script>
 
