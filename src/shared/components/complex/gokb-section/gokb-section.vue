@@ -66,7 +66,6 @@
         </v-chip>
         <gokb-button
             v-if="exportOption"
-            class="ms-2"
             @click="$emit('export-search-results')"
           >
             {{ $i18n.t('btn.export') }}

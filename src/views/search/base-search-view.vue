@@ -121,6 +121,7 @@
   import selection from '@/shared/models/selection'
   import accountModel from '@/shared/models/account-model'
   import VSnackbars from 'v-snackbars'
+  import exportServices from '@/shared/services/export-services'
 
   const ROWS_PER_PAGE = 10
 
@@ -189,7 +190,10 @@
     },
     methods: {
       exportSearchResults () {
-        console.log("Export search results...")
+        console.log("Export search result:")
+        console.log(this.exportSearch())
+        console.log("Export:")
+        console.log(exportServices.toTsv(this.resultItems, 100, 1))
       },
       resetSearch () {
         Object.keys(this.searchFilters).forEach(filter => {
@@ -285,9 +289,8 @@
           instance: this
         })
       },
-      async search ({ page } = { page: undefined }) {
-        // console.log(this.searchInputFields)
-        const searchParameters = this.searchInputFields
+      _searchParameters (searchInputFields) {
+        return searchInputFields
           .flat()
           .map(field => ([field.name, field.value]))
           .filter(([name, value]) => name && this.searchFilters[value] !== undefined && this.searchFilters[value] !== null)
@@ -295,7 +298,9 @@
             result[name] = ((typeof this.searchFilters[value] === 'string' || typeof this.searchFilters[value] === 'number' || Array.isArray(this.searchFilters[value])) ? this.searchFilters[value] : this.searchFilters[value].id)
             return result
           }, {})
-        // console.log(this.searchInputFields, this.searchParameters)
+      },
+      async search ({ page } = { page: undefined }) {
+        const searchParameters = this._searchParameters(this.searchInputFields)
         const sort = this.requestOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.requestOptions.sortBy[0]] || this.requestOptions.sortBy[0]) : undefined
         const desc = typeof this.requestOptions.desc === 'Array' ? this.requestOptions.desc[0] : this.requestOptions.desc
 
@@ -330,7 +335,6 @@
 
         if (result?.status === 200) {
           const { data: { data, _pagination } } = result
-          // console.log(data, _pagination, _links)
           if (!page) {
             this.resultOptions.page = 1
             this.requestOptions.page = 1
@@ -347,6 +351,37 @@
         }
 
         this.loading = false
+      },
+      async exportSearch () {
+        const searchParameters = this._searchParameters(this.searchInputFields)
+        const sort = this.requestOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.requestOptions.sortBy[0]] || this.requestOptions.sortBy[0]) : undefined
+        const desc = typeof this.requestOptions.desc === 'Array' ? this.requestOptions.desc[0] : this.requestOptions.desc
+        const esTypedParams = {
+          es: true,
+          max: 10000,
+          ...((sort && { sort: sort }) || {}),
+          ...((sort && { order: (desc ? 'desc' : 'asc') }) || {})
+        }
+        const dbTypedParams = {
+          ...((sort && { _sort: sort }) || {}),
+          ...((sort && { _order: (desc ? 'desc' : 'asc') }) || {})
+        }
+        const result = await this.catchError({
+          promise: this.searchServices.search({
+            ...searchParameters,
+            ...(this.searchByEs ? esTypedParams : dbTypedParams),
+            ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
+            ...((this.searchServiceEmbeds && { _embed: this.searchServiceEmbeds }) || {})
+          }, this.cancelToken.token),
+          instance: this
+        })
+        if (result?.status === 200) {
+          const { data: { data, _pagination } } = result
+          return data
+        }
+        else {
+          return undefined
+        }
       },
       executeAction (actionMethodName, actionMethodParameter) {
         actionMethodName && this[actionMethodName](actionMethodParameter)
