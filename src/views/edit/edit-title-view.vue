@@ -377,7 +377,7 @@
     <template #buttons>
       <gokb-button
         v-if="!isReadonly"
-        @click="reload"
+        @click="reset"
       >
         {{ $i18n.t('btn.reset') }}
       </gokb-button>
@@ -420,6 +420,7 @@
       <gokb-button
         v-if="!isReadonly"
         default
+        :disabled="!isValid"
       >
         {{ $i18n.t('btn.submit') }}
       </gokb-button>
@@ -555,7 +556,7 @@
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
       },
       isValid () {
-        return !!this.allNames.name
+        return !!this.allNames.name && !!this.currentType
       }
     },
     watch: {
@@ -659,6 +660,52 @@
         }
 
         window.scrollTo(0, 0)
+      },
+      reset () {
+        this.tab = null
+        this.pendingChanges = {}
+        this.reviewsCount = undefined
+        this.tippCount = undefined
+        this.shortTitleMap = { name: undefined, id: undefined, uuid: undefined, type: undefined }
+        this.titleItem = {
+          id: undefined,
+          uuid: undefined,
+          name: undefined,
+          source: undefined,
+          publishedFrom: undefined,
+          publishedTo: undefined,
+          status: undefined,
+          firstPublishedOnline: undefined,
+          firstPublishedInPrint: undefined,
+          firstAuthor: undefined,
+          firstEditor: undefined,
+          editionNumber: undefined,
+          editionStatement: undefined,
+          volumeNumber: undefined,
+          OAStatus: undefined,
+          medium: undefined,
+          type: undefined
+        }
+        this.dateCreated = undefined
+        this.lastUpdated = undefined
+        this.notFound = false
+        this.tabsView = true
+        this.publishers = []
+        this.history = []
+        this.allNames = { name: undefined, alts: [] }
+        this.reviewRequests = []
+        this.version = undefined
+        this.reference = undefined
+        this.errors = {}
+        this.ids = []
+        this.tipps = []
+        this.allAlternateNames = []
+        this.allCuratoryGroups = []
+        this.currentType = undefined
+        this.updateUrl = undefined
+        this.deleteUrl = undefined
+        this.eventMessages = []
+        this.reload()
       },
       async reload () {
         if (this.isEdit) {

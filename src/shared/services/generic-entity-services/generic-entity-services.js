@@ -31,6 +31,17 @@ const api = (baseServices) =>
         url
       }, cancelToken)
       return result
+    },
+
+    checkUrl (value, cancelToken) {
+      const url = process.env.VUE_APP_API_BASE_URL + `/validation/url`
+      const data = { value: value }
+      const result = baseServices.request({
+        method: 'POST',
+        url,
+        data
+      }, cancelToken)
+      return result
     }
 })
 

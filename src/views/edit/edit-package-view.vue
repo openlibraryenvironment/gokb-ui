@@ -144,6 +144,7 @@
               :label="$t('component.package.descriptionUrl')"
             />
             <gokb-textarea-field
+              ref="descEdit"
               v-model="packageItem.description"
               :label="$t('component.package.description')"
               :disabled="isReadonly"
@@ -436,6 +437,7 @@
             <v-row v-if="packageItem.description">
               <v-col>
                 <gokb-textarea-field
+                  ref="descInfo"
                   v-model="packageItem.description"
                   :label="$t('component.package.description')"
                   dense
@@ -554,7 +556,7 @@
       />
       <gokb-button
         v-if="!isReadonly"
-        @click="reload"
+        @click="reset"
       >
         {{ $t('btn.reset') }}
       </gokb-button>
@@ -879,6 +881,10 @@
         if (prov) {
           this.fetchDefaultNamespace(prov.id)
         }
+      },
+      step () {
+        this.$refs.descInfo.refreshRows()
+        this.$refs.descEdit.refreshRows()
       }
     },
     async created () {
@@ -1088,6 +1094,8 @@
                 this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.processing', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
               } else if (sourceUpdateResult.status >= 500) {
                 this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.unknown', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+              } else if (sourceUpdateResult.data?.result === 'SKIPPED') {
+                this.eventMessages.push({ message: this.$i18n.t(sourceUpdateResult.data.messageCode), color: 'warn', timeout: -1 })
               }
 
               if (isUpdate) {
@@ -1130,6 +1138,31 @@
         if (loading.isLoading()) {
           loading.stopLoading()
         }
+      },
+      reset () {
+        if (!this.isEdit) {
+          this.packageItem.id = undefined
+          this.packageItem.name = undefined
+          this.packageItem.source = undefined
+          this.packageItem.status = undefined
+          this.packageItem.descriptionURL = undefined
+          this.packageItem.description = undefined
+          this.packageItem.scope = undefined
+          this.packageItem.global = undefined
+          this.packageItem.globalNote = undefined
+          this.packageItem.contentType = undefined
+          this.packageItem.consistent = undefined
+          this.packageItem.breakable = undefined
+          this.packageItem.fixed = undefined
+          this.packageItem.listStatus = undefined
+          this.packageItem.editStatus = undefined
+          this.packageItem.ids = []
+          this.packageItem.provider = undefined // organisation
+          this.packageItem.nominalPlatform = undefined
+          this.allNames = { name: undefined, alts: [] }
+        }
+        this.kbart = undefined
+        this.reload(true)
       },
       async reload () {
         if (this.isEdit) {
