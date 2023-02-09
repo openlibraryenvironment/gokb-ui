@@ -4,7 +4,7 @@
     v-model="localValue"
     v-bind="$props"
     :readonly="readonly"
-    :rows="defaultRows"
+    rows="1"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
     :required="required"
     validate-on-blur
