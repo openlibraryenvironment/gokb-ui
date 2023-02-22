@@ -1,6 +1,7 @@
 <template>
   <v-card
     v-if="!!originalRecord?.name"
+    :loading="loading"
     :color="roleColor"
     :class="elevationClass"
   >
@@ -30,7 +31,7 @@
             @click:append="saveNameChange"
           />
           <v-icon
-            v-if="isEditable && !nameEditActive"
+            v-if="isEditable && !nameEditActive && (!isReviewedCard || !mergeEnabled || !isOtherCardSelected)"
             class="ml-2"
             style="cursor:pointer"
             :title="$t('btn.edit')"
@@ -57,20 +58,38 @@
             </v-icon>
           </span>
         </v-col>
+        <v-col cols="1">
+          <v-btn
+            icon
+            :title="$t('btn.refresh')"
+            class="mt-n1"
+            @click="fetchTitle"
+          >
+            <v-icon>
+              mdi-refresh
+            </v-icon>
+          </v-btn>
+        </v-col>
       </v-row>
 
       <v-row v-if="!!ids?.length > 0">
         <v-col>
+          <div v-if="isReviewedCard && isOtherCardSelected && mergeEnabled && isEditable">
+            <v-chip
+              class="mb-1 info font-weight-bold"
+              pill
+            >
+              {{ $t('component.review.edit.components.merge.selectIds.label') }}
+            </v-chip>
+            <div>
+              <span class="mx-2"><v-icon class="pb-1" color="success" small> mdi-check-bold </v-icon>{{ $t('component.review.edit.components.merge.selectedIds.existing.label') }}</span>
+              <span class="mx-2"><v-icon class="pb-1" color="error" small> mdi-close-thick </v-icon>{{ $t('component.review.edit.components.merge.selectedIds.missing.label') }}</span>
+              <span class="mx-2"><v-icon class="pb-1" small> mdi-arrow-right-bold </v-icon>{{ $t('component.review.edit.components.merge.selectedIds.new.label') }}</span>
+            </div>
+          </div>
           <v-chip
-            v-if="isReviewedCard && isOtherCardSelected && mergeEnabled && isEditable"
-            class="mb-1"
-            pill
-          >
-            {{ $t('component.review.edit.components.merge.selectIds') }}
-          </v-chip>
-          <v-chip
-            v-else-if="isEditable"
-            class="mb-1"
+            v-else-if="isEditable && idsEditable"
+            class="mb-1 info font-weight-bold"
             pill
           >
               {{ $t('component.review.edit.components.single.selectIds') }}
@@ -79,13 +98,12 @@
             :headers="idHeaders"
             :items="idsVisible"
             :selected-items="selectedIdItems"
-            :editable="isEditable"
+            :editable="isEditable && idsEditable"
             :options.sync="idOptions"
             :total-number-of-items="totalNumberOfIds"
             :hide-pagination="true"
             :hide-select="!isEditable"
-            :actions="showActions"
-            _pending="empty"
+            actions
             @delete-item="deleteId"
             @selected-items="selectedIdItems = $event"
           />
@@ -95,23 +113,34 @@
       <div v-if="originalRecord.type === 'Journal'">
         <v-row>
           <v-col>
-            {{ $t('component.title.history.label') }}
+            <span>{{ $t('component.title.publishedPeriod') }}: </span>
+            <span>{{ publishingDates[0] }}</span>
+            <span> - </span>
+            <span>{{ publishingDates[1] }}</span>
           </v-col>
         </v-row>
 
         <v-row>
           <v-col>
-            <gokb-table
-              :headers="historyHeaders"
-              :items="mappedHistory"
-              :editable="historyEditable"
-              :options.sync="historyOptions"
-              :total-number-of-items="mappedHistory.length"
-              :hide-select="true"
-              :hide-pagination="true"
-            />
+            {{ $t('component.title.history.label') }}
           </v-col>
         </v-row>
+
+        <v-card>
+          <v-row>
+            <v-col>
+              <gokb-table
+                :headers="historyHeaders"
+                :items="mappedHistory"
+                :editable="historyEditable"
+                :options.sync="historyOptions"
+                :total-number-of-items="mappedHistory.length"
+                :hide-select="true"
+                :hide-pagination="true"
+              />
+            </v-col>
+          </v-row>
+        </v-card>
       </div>
       <div v-else-if="originalRecord.type === 'TIPP' && originalRecord.publicationType?.name === 'Serial'">
         <v-row>
@@ -173,12 +202,12 @@
       </div>
       <v-row class="mt-3">
         <v-col>
-          <v-row v-if="!isChanged && !isCardSelected && !isOtherCardSelected && isMergeCandidate">
+          <v-row v-if="!isCardSelected && !isOtherCardSelected && (isMergeCandidate || isLinkCandidate)">
             <v-col>
               <gokb-button
                 @click="selectCard"
               >
-                {{ $i18n.t('component.review.edit.components.merge.selectTarget.label') }}
+                {{ isMergeCandidate ? $i18n.t('component.review.edit.components.merge.selectTarget.label') : $i18n.t('component.review.edit.components.link.selectTarget.label') }}
               </gokb-button>
             </v-col>
           </v-row>
@@ -191,7 +220,7 @@
               </gokb-button>
             </v-col>
           </v-row>
-          <v-row v-if="!isChanged && isCardSelected && isLinkCandidate">
+          <v-row v-if="isCardSelected && isLinkCandidate">
             <v-col>
               <gokb-button
                 primary
@@ -201,7 +230,7 @@
               </gokb-button>
             </v-col>
           </v-row>
-          <v-row v-else-if="!isChanged && isOtherCardSelected && isMergeCandidate">
+          <v-row v-else-if="isOtherCardSelected && isMergeCandidate">
             <v-col>
               <gokb-button
                 primary
@@ -211,7 +240,7 @@
               </gokb-button>
             </v-col>
           </v-row>
-          <v-row v-else-if="!isChanged && isCardSelected && isMergeCandidate">
+          <v-row v-else-if="isCardSelected && isMergeCandidate">
             <v-col>
               <gokb-button
                 primary
@@ -221,7 +250,7 @@
               </gokb-button>
             </v-col>
           </v-row>
-          <v-row v-if="!isChanged && isEditable">
+          <v-row v-if="isEditable && (!isReviewedCard || !mergeEnabled || !isOtherCardSelected)">
             <v-col>
               <gokb-button
                 :disabled="selectedIdItems.length === 0 && !isNamePending"
@@ -242,6 +271,7 @@
   import titleServices from '@/shared/services/title-services'
   import tippServices from '@/shared/services/tipp-services'
   import identifierServices from '@/shared/services/identifier-services'
+  import namespaceServices from '@/shared/services/namespace-services'
   import genericEntityServices from '@/shared/services/generic-entity-services'
   import GokbTitleIdsField from '@/shared/components/simple/gokb-title-ids-field/gokb-title-ids-field.vue'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
@@ -342,10 +372,12 @@
         },
         selCard: undefined,
         selCardIds: [],
+        publishingDates: [],
         showCoverage: false,
         isCardSelected: false,
         isReviewedCard: undefined,
         selectedIdItems: [],
+        loading: false,
         pendingStatuses: {},
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -366,9 +398,12 @@
       isEditable () {
         return this.status !== 'Deleted' && this.editable && !!this.originalRecord?._links?.update?.href
       },
+      idsEditable () {
+        return this.editable || (this.isReviewedCard && this.isOtherCardSelected)
+      },
       roleColor () {
         if (this.role == "reviewedComponent") {
-          if (this.mergeEnabled && this.originalRecord.type !== 'TIPP') {
+          if (this.mergeEnabled && this.originalRecord.type !== 'TIPP' && this.isOtherCardSelected) {
             return "#f2d2d2"
           }
           return null
@@ -436,7 +471,7 @@
         return result
       },
       isOtherCardSelected () {
-        return this.singleCardReview || (!!this.id && !!this.selCard && this.id != this.selCard)
+        return this.singleCardReview || (!!this.id && !!this.selectedCard && this.id != this.selectedCard)
       },
       isItemDeletable () {
         if (this.isReviewedCard || !this.singleCardReview) {
@@ -445,7 +480,7 @@
         else return true
       },
       isMergeCandidate () {
-        return this.role != 'reviewedComponent' && this.mergeEnabled && (!this.selectedCard || this.selectedCard != this.id)
+        return this.role != 'reviewedComponent' && this.mergeEnabled
       },
       isLinkCandidate () {
         return this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
@@ -455,11 +490,8 @@
       }
     },
     watch: {
-      selCard () {
-        this.isCardSelected = (!!this.id && this.id == this.selCard)
-      },
-      selectedCard (val) {
-        this.selCard = this.selectedCard
+      selectedCard () {
+        this.isCardSelected = (!!this.id && this.id == this.selectedCard)
 
         Object.entries(this.pendingStatuses).forEach(([key, val]) => {
           this.pendingStatuses[key] = false
@@ -485,7 +517,7 @@
     },
     async mounted () {
       this.fetchTitle()
-      if (this.singleCardReview && this.fieldsToBeEdited.includes("ids")) {
+      if (this.editable && this.isReviewedCard && this.isOtherCardSelected) {
         this.fetchReviewMismatchIds()
       }
     },
@@ -494,7 +526,8 @@
     },
     methods: {
       async fetchTitle () {
-        this.finishedLoading = false
+        this.loading = true
+        this.$emit('loaded', true)
 
         let response = await this.catchError({
           promise: this.activeService.get(this.id, this.cancelToken.token),
@@ -505,18 +538,23 @@
           this.originalRecord = response.data
           this.titleName = response.data.name
           this.status = response.data.status.name
-          this.finishedLoading = true
           this.idsVisible = this.updateVisibleIdentifiers()
+
+          if (response.data.type  === 'Journal') {
+            this.publishingDates = [
+              response.data.publishedFrom ? response.data.publishedFrom?.substr(0,4) : undefined,
+              response.data.publishedTo ? response.data.publishedTo?.substr(0,4) : undefined
+            ]
+          }
         }
+        this.$emit('loaded', false)
+        this.loading = false
       },
       selectCard () {
-        this.selCard = this.id
-        this.selCardIds = this.ids
-        this.$emit('set-active', this.selCard)
-        this.$emit('set-selected-ids', this.selCardIds)
+        this.$emit('set-active', this.id)
+        this.$emit('set-selected-ids', this.ids)
       },
       deselectCard () {
-        this.selCard = undefined
         this.selectedIdItems = []
 
         Object.entries(this.pendingStatuses).forEach(idkey => {
@@ -528,7 +566,7 @@
         this.$emit('set-selected-ids', [])
       },
       showConfirmSelectedCard (type) {
-        let cardReference = this.titleName + ' (#' + this.candidateIndex + ')'
+        let cardReference = this.titleName + (this.candidateIndex ? (' (#' + this.candidateIndex + ')') : '')
 
         if (type === 'merge') {
           if (this.selectedCard === this.id) {
@@ -540,7 +578,10 @@
           }
         } else if (type === 'link') {
           this.submitConfirmationMessage = { text: 'component.review.edit.components.link.confirmLink.message', vars: [cardReference] }
-          this.parameterToConfirm === 'single'
+          this.parameterToConfirm = 'single'
+        } else if (type === 'single') {
+          this.submitConfirmationMessage = { text: 'component.review.edit.components.single.confirm.message', vars: [cardReference] }
+          this.parameterToConfirm = 'single'
         }
 
         this.showSubmitConfirm = true
@@ -586,25 +627,29 @@
       async confirmItemChanges () {
         let putData = this.originalRecord
         putData.ids = this.ids.filter(ido => !this.selectedIdItems.some(sel => sel.id == ido.id))
+
         if (!!this.titleName && this.titleName != this.originalRecord?.name) {
           putData.name = this.titleName
         }
+
         const putResponse = await this.catchError({
           promise: this.activeService.createOrUpdate(putData, this.cancelToken.token),
           instance: this
         })
+
         this.$emit('feedback-response', putResponse)
         this.isChanged = true
+        this.deselectCard()
+        this.fetchTitle()
       },
       deleteId (id) {
         this.pendingStatuses[id.id] = 'removed'
         this.idsVisible = this.updateVisibleIdentifiers()
       },
       getPendingStatus (id) {
-        if ( !this.isReviewedCard || (this.isReviewedCard && this.isOtherCardSelected) || (this.singleCardReview && this.fieldsToBeEdited.includes('ids'))){
+        if ( !this.isReviewedCard || (this.isReviewedCard && !this.isOtherCardSelected) || (this.singleCardReview && this.fieldsToBeEdited.includes('ids'))){
           return this.getDeletedStatus(id)
-        }
-        else {
+        } else {
           return this.getMergeStatus(id)
         }
       },
@@ -617,37 +662,45 @@
             return 'existing'
           }
         }
+
         for (const [i, idItem] of this.selectedIdItems.entries()) {
           if (idItem.id == id) {
             return 'selected'
           }
         }
+
         return 'unselected'
       },
       updateVisibleIdentifiers () {
         this.ids = this.originalRecord._embedded.ids
+
         if (this.isReviewedCard && !this.singleCardReview && this.isOtherCardSelected) {
-          for (const id of this.originalRecord?._embedded?.ids) {
+          for (const id of this.ids) {
             this.pendingStatuses[id.id] = this.getPendingStatus(id.id)
           }
         }
-        let val = [...this.originalRecord?._embedded?.ids]
+
+        let val = [...this.ids]
           .map((item) => ({
             id: item.id,
             namespace: item.namespace.name || item.namespace.value,
+            extlink: namespaceServices.getBaseurl(item.namespace.value) ? namespaceServices.getBaseurl(item.namespace.value) + item.value : undefined,
             value: item.value,
             isDeletable: this.isItemDeletable,
             _pending: this.pendingStatuses[item.id]
           }))
+
         for (const [count, id] of this.mismatchIdentifiers.entries()) {
           val.push({
             id: id.id,
             namespace: id.namespace.name || id.namespace.value,
+            extlink: namespaceServices.getBaseurl(id.namespace.value) ? (namespaceServices.getBaseurl(id.namespace.value) + id.value) : undefined,
             value: id.value,
             isDeletable: this.isItemDeletable,
             _pending: this.pendingStatuses[id.id]
           })
         }
+
         return val
       },
       fetchReviewMismatchIds () {
@@ -659,6 +712,7 @@
       },
       async addReviewMismatchId (namespace, id) {
         const namespaceItem = namespacesModel.getNamespace(namespace)
+
         if (!!namespaceItem) {
           const parameters = { value: id, namespace: namespaceItem.id }
           const response = await this.catchError({

@@ -3,6 +3,7 @@
     v-model="localValue"
     :title="localTitle"
     width="max-width"
+    fullscreen
   >
     <gokb-error-component :value="error" />
     <v-snackbar v-model="showSuccessMsg" color="success" :timeout="2000"> {{ localSuccessMessage }} </v-snackbar>
@@ -20,13 +21,22 @@
 
     <gokb-reviews-components-section
       v-if="finishedLoading && showComponentCards"
+      v-for="(wf, i) in workflow"
+      :key="i"
       :value="error"
       :reviewed-component="reviewItem.component"
+      :candidates="reviewItem.candidates"
       :reference-components="reviewItem.otherComponents"
       :review-type="reviewItem.stdDesc?.name"
       :review-status="reviewItem.status.value"
+      :more-steps="i+1 < workflow.length"
+      :workflow="wf"
       :editable="!isReadonly"
       :additional-vars="reviewItem.additionalVars"
+      :expanded="activeStep === i"
+      @expand="activateStep(i)"
+      @finished-step="changeActiveStep"
+      @close="closeReview"
       @feedback-response="showResponse"
     />
 
@@ -47,7 +57,7 @@
       <gokb-button
         @click="closePopup"
       >
-        {{ isReadonly ? $t('btn.close') : $t('btn.cancel') }}
+        {{ isReadonly || reviewItem.isClosed ? $t('btn.close') : $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         v-if="!isReadonly && !reviewItem.isClosed"
@@ -98,6 +108,8 @@
         updateUrl: undefined,
         deleteUrl: undefined,
         deescalatable: false,
+        workflow: [],
+        activeStep: 0,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,
@@ -193,8 +205,49 @@
 
         if (response.status === 200) {
           this.mapRecord(response.data)
-        } else {
 
+          let merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/title')).map(c => (c.id))
+
+          if (this.reviewItem.component.route === '/package-title') {
+            if (merge_ids.length > 1) {
+              this.workflow.push({
+                title: "Step 1: ID check & Cleanup",
+                showReviewed: false,
+                components: merge_ids,
+                actions: ['merge', 'ids']
+              })
+              this.workflow.push({
+                title: "Step 2: Select reference title to link",
+                showReviewed: true,
+                components: merge_ids,
+                actions: ['link', 'add']
+              })
+            } else if (merge_ids.length === 1) {
+              this.workflow.push({
+                title: "ID check & Cleanup",
+                showReviewed: true,
+                components: merge_ids,
+                actions: ['ids']
+              })
+            } else {
+              this.workflow.push({
+                title: "ID check & Cleanup",
+                showReviewed: true,
+                components: this.reviewItem.otherComponents.map(c => c.id),
+                actions: ['ids']
+              })
+            }
+          } else if (this.reviewItem.component.route === '/title') {
+            this.workflow.push({
+              title: "ID check & Cleanup",
+              showReviewed: true,
+              components: merge_ids,
+              actions: ['merge', 'ids']
+            })
+          }
+        } else {
+          this.errorMsg = 'error.general.500'
+          this.showErrorMsg = true
         }
         this.finishedLoading = true
       },
@@ -218,6 +271,7 @@
           type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
           route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
         })) : []
+        this.reviewItem.candidates = record.additionalInfo?.candidates
         this.updateUrl = record._links?.update?.href || undefined
         this.deleteUrl = record._links?.delete?.href || undefined
         this.version = record.version
@@ -234,6 +288,18 @@
       },
       closePopup () {
         this.localValue = false
+      },
+      activateStep (index) {
+        if (this.activeStep !== index) {
+          this.activeStep = index
+        } else {
+          this.activeStep = undefined
+        }
+      },
+      changeActiveStep (index) {
+        if (this.workflow.length > this.activeStep) {
+          this.activeStep++
+        }
       },
       showResponse (response) {
         if (typeof response === 'string' || response instanceof String) {

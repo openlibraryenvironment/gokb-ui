@@ -444,7 +444,10 @@
     },
     "create": {
       "400": "{0} contained errors!",
-      "403": "{0} could not be created due to missing user permissions."
+      "403": "{0} could not be created due to missing user permissions.",
+      "title": {
+        "identifierConflict": "Unable to create the title due to an identifier conflict! Please check the following titles for duplicates:"
+      }
     },
     "general": {
       "500": "The request failed, please report this to an admin or try again later.",
@@ -1029,7 +1032,18 @@
               "label": "Confirm Merge",
               "message": "Please confirm that you want to merge the reviewed title ({0}) into the selected one ({1}). The review will be closed and the reviewed title will be deleted."
             },
-            "selectIds": "Select IDs to add to the merged title.",
+            "selectIds": {
+              "label": "Select IDs to add to the merged title.",
+              "missing": {
+                "label": "Not linked"
+              },
+              "existing": {
+                "label": "Already linked"
+              },
+              "new": {
+                "label": "Will be added"
+              }
+            },
             "selected": {
               "label": "Selected Component"
             },
@@ -1040,8 +1054,8 @@
           "single": {
             "selectIds": "Select IDs to mark them for removal.",
             "confirm": {
-              "label": "Confirm Changes",
-              "message": "Please confirm the updates you have prepared for this title."
+              "label": "Confirm title changes",
+              "message": "Please confirm the updates you have prepared for {0}."
             }
           },
           "link": {
@@ -1059,6 +1073,10 @@
               "label": "Confirm Linking",
               "message": "Please confirm the linking of the global title {0} with the package title."
             }
+          },
+          "add": {
+            "label": "Generate new title",
+            "message": "Please confirm the creation of a new title with ALL remaining identifiers of the component to review."
           }
         }
       },
@@ -1364,6 +1382,7 @@
       }
     },
     "general": {
+      "label": "Component | Components",
       "name": "Name",
       "general": "General",
       "notFound": "{0} not found!",

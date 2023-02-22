@@ -444,7 +444,10 @@
     },
     "create": {
       "400": "Bei der Erstellung sind Fehler aufgetreten!",
-      "403": "{0} konnte nicht angelegt werden, da dieser Benutzer nicht dazu berechtigt ist."
+      "403": "{0} konnte nicht angelegt werden, da dieser Benutzer nicht dazu berechtigt ist.",
+      "title": {
+        "identifierConflict": "Der Titel konnte nicht angelegt werden, da ein Identifikatorkonflikt vorliegt. Bitte überprüfen Sie, ob eine Dublette zu folgenden Titeln vorliegt:"
+      }
     },
     "general": {
       "500": "Die Anfrage ist fehlgeschlagen, bitte melden Sie den Vorfall oder versuchen Sie es später noch einmal.",
@@ -1029,7 +1032,18 @@
               "label": "Zusammenführung Bestätigen",
               "message": "Bitte bestätigen Sie die Zusammenführung. Der zu prüfende Titel {0} wird gelöscht, und seine verknüpften Pakettitel werden an den selektierten Titel {1} übertragen."
             },
-            "selectIds": "Zu übertragende Identifikatoren auswählen.",
+            "selectIds": {
+              "label": "Zu übertragende Identifikatoren auswählen.",
+              "missing": {
+                "label": "Nicht verknüpft"
+              },
+              "existing": {
+                "label": "Bereits verknüpft"
+              },
+              "new": {
+                "label": "Wird hinzugefügt"
+              }
+            },
             "selected": {
               "label": "Zielkomponente"
             },
@@ -1040,8 +1054,8 @@
           "single": {
             "selectIds": "Zu löschende Identifikatoren auswählen.",
             "confirm": {
-              "label": "Änderungen abschicken",
-              "message": "Bitte bestätigen Sie die vorgemerkten Änderungen am Prüftitel."
+              "label": "Titeländerungen abschicken",
+              "message": "Bitte bestätigen Sie die vorgemerkten Änderungen."
             }
           },
           "link": {
@@ -1059,6 +1073,10 @@
               "label": "Verknüpfung bestätigen",
               "message": "Bitte bestätigen Sie die Auswahl des Referenztitels {0} zur Verknüpfung mit dem Pakettitel."
             }
+          },
+          "add": {
+            "label": "Neuen Referenztitel erzeugen",
+            "message": "Bitte bestätigen Sie die Erzeugung eines neuen Referenztitels mit ALLEN verbleibenden Identifikatoren des zu prüfenden Pakettitels."
           }
         }
       },
@@ -1364,6 +1382,7 @@
       }
     },
     "general": {
+      "label": "Komponente | Komponenten",
       "name": "Name",
       "general": "Allgemein",
       "notFound": "{0} nicht gefunden!",
