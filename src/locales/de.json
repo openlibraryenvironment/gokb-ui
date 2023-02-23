@@ -378,7 +378,8 @@
         "sourceNamespaceConflict": "Der für die Spalte 'title_id' gewählte Namensraum unterscheidet sich von dem für den automatischen Upload selektierten. Bitte überprüfen Sie beide Auswahlen vor dem Import!"
       },
       "skipped": {
-        "noChange": "Die KBART-Prozessierung wurde übersprungen, da sich die Datei im Vergleich zum letzten Import nicht verändert hat."
+        "noChange": "Die KBART-Prozessierung wurde übersprungen, da sich die Datei im Vergleich zum letzten Import nicht verändert hat.",
+        "noFile": "Die KBART-Prozessierung wurde übersprungen, da keine aktuelle Datei für die angegebene URL gefunden wurde."
       }
     },
     "dryRun": {
