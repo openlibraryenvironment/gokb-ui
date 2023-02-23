@@ -1,5 +1,6 @@
 <template>
   <v-textarea
+    :key="hasUpdated"
     v-model="localValue"
     v-bind="$props"
     :readonly="readonly"
@@ -84,6 +85,11 @@
         default: undefined,
       },
     },
+    data () {
+      return {
+        hasUpdated: false
+      }
+    },
     computed: {
       localValue: {
         get () {
@@ -94,6 +100,11 @@
         }
       },
     },
+    methods: {
+      refreshRows () {
+        this.hasUpdated = !this.hasUpdated
+      }
+    }
   }
 </script>
 
