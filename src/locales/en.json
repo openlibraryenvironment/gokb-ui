@@ -1024,13 +1024,29 @@
           "label": "Close review"
         },
         "components": {
+          "workflow": {
+            "tippLink": {
+              "step1": {
+                "label": "Step 1: ID check & component cleanup",
+                "toDo": "Please check the title information (name/identifiers) for errors. If you see duplicates, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'."
+              },
+              "step2": {
+                "label": "Step 2: Title linking",
+                "toDo": "Please select a reference title to link to the package title. If there are no valid options, you may also generate a new title to link from the package title information."
+              }
+            },
+            "titleMatch": {
+              "label": "ID check & duplicate cleanup",
+              "toDo": "Please check the title information (name/identifiers) for errors. If you see duplicates, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'."
+            }
+          },
           "merge": {
             "selectTarget": {
               "label": "Select Merge Target"
             },
             "confirm": {
               "label": "Confirm Merge",
-              "message": "Please confirm that you want to merge the reviewed title ({0}) into the selected one ({1}). The review will be closed and the reviewed title will be deleted."
+              "message": "Please confirm that you want to merge the reviewed title ({0}) into the selected one. The review will be closed and the reviewed title will be deleted."
             },
             "selectIds": {
               "label": "Select IDs to add to the merged title.",

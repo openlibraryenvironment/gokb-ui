@@ -82,9 +82,9 @@
               {{ $t('component.review.edit.components.merge.selectIds.label') }}
             </v-chip>
             <div>
-              <span class="mx-2"><v-icon class="pb-1" color="success" small> mdi-check-bold </v-icon>{{ $t('component.review.edit.components.merge.selectedIds.existing.label') }}</span>
-              <span class="mx-2"><v-icon class="pb-1" color="error" small> mdi-close-thick </v-icon>{{ $t('component.review.edit.components.merge.selectedIds.missing.label') }}</span>
-              <span class="mx-2"><v-icon class="pb-1" small> mdi-arrow-right-bold </v-icon>{{ $t('component.review.edit.components.merge.selectedIds.new.label') }}</span>
+              <span class="mx-1"><v-icon class="pb-1" color="success" small> mdi-check-bold </v-icon>{{ $t('component.review.edit.components.merge.selectIds.existing.label') }}</span>
+              <span class="mx-1"><v-icon class="pb-1" color="error" small> mdi-close-thick </v-icon>{{ $t('component.review.edit.components.merge.selectIds.missing.label') }}</span>
+              <span class="mx-1"><v-icon class="pb-1" small> mdi-arrow-right-bold </v-icon>{{ $t('component.review.edit.components.merge.selectIds.new.label') }}</span>
             </div>
           </div>
           <v-chip
@@ -202,7 +202,7 @@
       </div>
       <v-row class="mt-3">
         <v-col>
-          <v-row v-if="!isCardSelected && !isOtherCardSelected && (isMergeCandidate || isLinkCandidate)">
+          <v-row v-if="!isReviewedCard && !isCardSelected && !isOtherCardSelected && (isMergeCandidate || isLinkCandidate)">
             <v-col>
               <gokb-button
                 @click="selectCard"
@@ -237,16 +237,6 @@
                 @click="showConfirmSelectedCard('merge')"
               >
                 {{ $i18n.t('component.review.edit.components.link.selectDeprecated.label')  }}
-              </gokb-button>
-            </v-col>
-          </v-row>
-          <v-row v-else-if="isCardSelected && isMergeCandidate">
-            <v-col>
-              <gokb-button
-                primary
-                @click="showConfirmSelectedCard('merge')"
-              >
-                {{ $i18n.t('component.review.edit.components.merge.confirm.label')  }}
               </gokb-button>
             </v-col>
           </v-row>
@@ -315,6 +305,11 @@
         required: false
       },
       editable: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      active: {
         type: Boolean,
         required: false,
         default: false
@@ -480,10 +475,10 @@
         else return true
       },
       isMergeCandidate () {
-        return this.role != 'reviewedComponent' && this.mergeEnabled
+        return this.status != 'Deleted' && this.mergeEnabled
       },
       isLinkCandidate () {
-        return this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
+        return this.status != 'Deleted' && this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
       },
       showActions () {
         return this.isCardSelected
@@ -527,7 +522,7 @@
     methods: {
       async fetchTitle () {
         this.loading = true
-        this.$emit('loaded', true)
+        this.$emit('loaded', { id: this.id, status: undefined })
 
         let response = await this.catchError({
           promise: this.activeService.get(this.id, this.cancelToken.token),
@@ -547,11 +542,11 @@
             ]
           }
         }
-        this.$emit('loaded', false)
+        this.$emit('loaded', { id: this.id, status: this.status })
         this.loading = false
       },
       selectCard () {
-        this.$emit('set-active', this.id)
+        this.$emit('set-selected', this.id)
         this.$emit('set-selected-ids', this.ids)
       },
       deselectCard () {
@@ -562,23 +557,23 @@
         })
 
         this.idsVisible = this.updateVisibleIdentifiers()
-        this.$emit('set-active', undefined)
+        this.$emit('set-selected', undefined)
         this.$emit('set-selected-ids', [])
       },
       showConfirmSelectedCard (type) {
         let cardReference = this.titleName + (this.candidateIndex ? (' (#' + this.candidateIndex + ')') : '')
 
         if (type === 'merge') {
-          if (this.selectedCard === this.id) {
-            this.submitConfirmationMessage = { text: 'component.review.edit.components.merge.confirm.message', vars: [this.reviewedComponentName , cardReference] }
-            this.parameterToConfirm = 'primaryMerge'
+          if (this.isReviewedCard) {
+            this.submitConfirmationMessage = { text: 'component.review.edit.components.merge.confirm.message', vars: [cardReference] }
+            this.parameterToConfirm = 'merge'
           } else {
             this.submitConfirmationMessage = { text: 'component.review.edit.components.link.confirmMerge.message', vars: [cardReference] }
-            this.parameterToConfirm = 'secondaryMerge'
+            this.parameterToConfirm = 'merge'
           }
         } else if (type === 'link') {
           this.submitConfirmationMessage = { text: 'component.review.edit.components.link.confirmLink.message', vars: [cardReference] }
-          this.parameterToConfirm = 'single'
+          this.parameterToConfirm = 'link'
         } else if (type === 'single') {
           this.submitConfirmationMessage = { text: 'component.review.edit.components.single.confirm.message', vars: [cardReference] }
           this.parameterToConfirm = 'single'
@@ -587,12 +582,12 @@
         this.showSubmitConfirm = true
       },
       triggerConfirmedAction () {
-        if (this.parameterToConfirm === 'primaryMerge') {
-          this.confirmSelectedCard()
+        if (this.parameterToConfirm === 'merge') {
+          this.confirmMerge()
         } else if (this.parameterToConfirm === 'single') {
           this.confirmItemChanges()
-        } else if (this.parameterToConfirm === 'secondaryMerge') {
-          this.confirmSecondaryMerge()
+        } else if (this.parameterToConfirm === 'link') {
+          this.confirmItemLink()
         }
 
         this.parameterToConfirm = undefined
@@ -602,28 +597,16 @@
         this.isNamePending = true
         this.nameEditActive = false
       },
-      async confirmSelectedCard () {
-        let putData = this.originalRecord
-        putData.ids = this.ids.filter(id => this.pendingStatuses[id.id] != 'removed')
-
-        const putResponse = await this.catchError({
-          promise: this.activeService.createOrUpdate(putData, this.cancelToken.token),
-          instance: this
-        })
-        this.deselectCard()
-        this.isNamePending = false
-        if (putResponse.status < 400) {
-          this.$emit('merge', putData.id)
-          this.isChanged = true
-        }
-        else {
-          this.$emit('feedback-response', putResponse)
-        }
-      },
-      async confirmSecondaryMerge () {
+      confirmMerge () {
         this.$emit('merge', this.id)
         this.isChanged = true
       },
+
+      confirmItemLink () {
+        this.$emit('link', this.id)
+        this.isChanged = true
+      },
+
       async confirmItemChanges () {
         let putData = this.originalRecord
         putData.ids = this.ids.filter(ido => !this.selectedIdItems.some(sel => sel.id == ido.id))
@@ -674,7 +657,7 @@
       updateVisibleIdentifiers () {
         this.ids = this.originalRecord._embedded.ids
 
-        if (this.isReviewedCard && !this.singleCardReview && this.isOtherCardSelected) {
+        if (this.isOtherCardSelected) {
           for (const id of this.ids) {
             this.pendingStatuses[id.id] = this.getPendingStatus(id.id)
           }

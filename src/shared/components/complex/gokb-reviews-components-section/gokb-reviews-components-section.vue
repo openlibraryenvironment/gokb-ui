@@ -9,6 +9,7 @@
       :message="submitConfirmationMessage"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <v-alert v-if="editable && isStatusOpen" type="info"> {{ workflow.toDo }} </v-alert>
     <v-container fluid>
       <v-row>
         <v-col
@@ -27,7 +28,6 @@
             :selected-card-ids="selectedCardIds"
             :single-card-review="isSingleCardReview"
             :merge-enabled="isMergeEnabled"
-            :is-merged="isMerged"
             :editable="isIdsEnabled"
             :additional-vars="additionalVars"
             @feedback-response="feedbackResponse"
@@ -42,7 +42,7 @@
           v-for="i, idx in referenceComponents"
           :key="i.id"
         >
-          <div v-if="linkedComponents[i.id].active">
+          <div>
             <h3 class="mb-1">
               {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label') : $t('component.review.edit.components.merge.unselected.label') }}
               ({{ i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label') }})
@@ -62,11 +62,10 @@
               :single-card-review="isSingleCardReview"
               :merge-enabled="isMergeEnabled"
               :link-enabled="isLinkEnabled"
-              :is-merged="isMerged"
               :editable="isIdsEnabled"
               :additional-vars="additionalVars"
               @loaded="toggleLoaded"
-              @set-active="setSelectedCard"
+              @set-selected="setSelectedCard"
               @set-selected-ids="setSelectedCardIds"
               @merge="mergeCards"
               @link="linkTitle"
@@ -90,7 +89,7 @@
             </v-container>
           </v-card>
         </v-col>
-        <v-col v-if="!!newTitle">
+        <!-- <v-col v-if="!!newTitle">
           <gokb-reviews-title-card
             :id="newTitle.id"
             :ref="newTitle.id"
@@ -99,14 +98,10 @@
             is-merged
           />
         >
-        </v-col>
+        </v-col> -->
       </v-row>
-    </v-container>
-    <v-container v-if="moreSteps" fluid>
-      <v-row>
-        <v-row align="center" justify="space-around">
-          <gokb-button @click="nextStep"> {{ $t('btn.next') }}</gokb-button>
-        </v-row>
+      <v-row v-if="moreSteps" class="pt-3" align="center" justify="space-around">
+        <gokb-button @click="nextStep"> {{ $t('btn.next') }}</gokb-button>
       </v-row>
     </v-container>
   </gokb-section>
@@ -190,7 +185,7 @@
         parameterToConfirm: undefined,
         selectedIdItems: [],
         linkedComponents: {},
-        isMerged: false,
+        activeComponents: undefined,
         newTitle: undefined
       }
     },
@@ -209,48 +204,44 @@
       isSingleCardReview () {
         return this.referenceComponents.length === 0
       },
+      isStatusOpen () {
+        return this.reviewStatus === 'Open'
+      },
       isMergeEnabled () {
-        return !this.isMerged && this.reviewStatus === 'Open' && this.workflow?.actions?.includes('merge')
+        return this.isStatusOpen && this.workflow?.actions?.includes('merge') && this.activeComponents > 1
       },
       isTippReview () {
         return (this.reviewedComponent.route === '/package-title')
       },
       isLinkEnabled () {
-        return this.reviewStatus === 'Open' && this.workflow?.actions?.includes('link')
+        return this.isStatusOpen && this.workflow?.actions?.includes('link')
       },
       isIdsEnabled () {
-        return this.reviewStatus === 'Open' && this.workflow?.actions?.includes('ids')
+        return this.isStatusOpen && this.workflow?.actions?.includes('ids')
       },
       isAddEnabled () {
-        return this.reviewStatus === 'Open' && this.workflow?.actions?.includes('add') && !this.newTitle
+        return this.isStatusOpen && this.workflow?.actions?.includes('add') && !this.newTitle
       },
       workflowTitle () {
         return this.editable ? this.workflow.title : this.$i18n.tc('component.general.label', 3)
       }
     },
-    watch: {
-      'components': {
-        deep: true,
-        handler () {
-          let loaded = true
-
-          for (const [key, value] of Object.entries(this.activeComponents)) {
-            if (!v.loaded) {
-              loaded = false
-              break
-            }
-          }
-
-          if (loaded) {
-            this.finishedLoading = true
-          }
+    created() {
+      if (this.workflow.showReviewed) {
+        this.linkedComponents[this.reviewedComponent.id.toString()] = {
+          loaded: false,
+          active: true,
+          role: 'reviewedComponent',
+          route: this.reviewedComponent.route
         }
       }
-    },
-    created() {
-      this.linkedComponents[this.reviewedComponent.id.toString()] = { loaded: false, active: true }
       this.referenceComponents.forEach(rc => {
-        this.linkedComponents[rc.id.toString()] = { loaded: false, active: true }
+        this.linkedComponents[rc.id.toString()] = {
+          loaded: false,
+          active: true,
+          role: 'referenceComponent',
+          route: rc.route
+        }
       })
     },
     methods: {
@@ -267,13 +258,17 @@
         this.selectedReviewItemIds = ids
       },
       async mergeCards (val) {
-        let mergedId = this.selectedCard !== val ? this.reviewedComponent.id : val
-        let targetId = this.selectedCard !== val ? val : this.selectedCard
+        let mergedId = val
+        let targetId = this.selectedCard
         let mergeData = {
           id: mergedId,
-          target: targetId,
-          ids: this.selectedReviewItemIds
+          target: targetId
         }
+
+        if (val === this.reviewedComponent.id) {
+          mergeData.ids = this.selectedReviewItemIds
+        }
+
         const mergeResponse = await this.catchError({
           promise: titleServices.merge(mergeData, this.cancelToken.token),
           instance: this
@@ -283,12 +278,12 @@
         }
         else {
           if (mergeResponse.status < 400) {
-            this.isMerged = true
             this.linkedComponents[mergedId.toString()].active = false
-            this.toggleLoaded (targetId)
 
             if (mergedId === this.reviewedComponent.id) {
               this.$emit('close', true)
+            } else {
+              this.$emit('merge', true)
             }
           }
           this.feedbackResponse(mergeResponse)
@@ -327,14 +322,23 @@
               type: newTitleResponse.data.type,
               route: '/title'
             }
+
+            this.$emit('added', newTitleResponse.data)
           }
         }
       },
       async linkTitle (targetId) {
+        const currentTippData = await this.catchError({
+          promise: tippServices.get(this.reviewedComponent.id, this.cancelToken.token),
+          instance: this
+        })
+
         let linkData = {
-          id: this.reviewedComponent.id,
-          version: this.reviewedComponent.version,
-          title: targetId
+          id: currentTippData.data.id,
+          version: currentTippData.data.version,
+          title: targetId,
+          pkg: currentTippData.data.pkg.id,
+          hostPlatform: currentTippData.data.hostPlatform.id
         }
         const updateResponse = await this.catchError({
           promise: tippServices.createOrUpdate(linkData, this.cancelToken.token),
@@ -345,18 +349,32 @@
         }
         else {
           this.feedbackResponse(updateResponse)
+
+          if (updateResponse.status === 200) {
+            this.$emit('close', true)
+          }
         }
       },
       feedbackResponse (response) {
         this.$emit('feedback-response', response)
       },
-      toggleLoaded (cardId) {
-        if (this.linkedComponents[cardId.toString()]) {
-          this.linkedComponents[cardId.toString()].loaded = !this.linkedComponents[cardId.toString()].loaded
+      toggleLoaded (info) {
+        if (!info.status) {
+          this.linkedComponents[info.id.toString()].loaded = false
+        } else {
+          if (this.linkedComponents[info.id.toString()].loaded === false) {
+            this.linkedComponents[info.id.toString()].loaded = info.loaded
+          }
+
+          if (info.status === 'Deleted') {
+            this.linkedComponents[info.id.toString()].active = false
+          }
+
+          this.activeComponents = Object.values(this.linkedComponents).filter(lc => (lc.active === true)).length
         }
       },
       nextStep () {
-        this.$emit('finished', true)
+        this.$emit('finished-step', true)
       }
     }
   }

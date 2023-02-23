@@ -36,6 +36,8 @@
       :expanded="activeStep === i"
       @expand="activateStep(i)"
       @finished-step="changeActiveStep"
+      @merge="fetchReview"
+      @added="addNewComponent"
       @close="closeReview"
       @feedback-response="showResponse"
     />
@@ -205,46 +207,6 @@
 
         if (response.status === 200) {
           this.mapRecord(response.data)
-
-          let merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/title')).map(c => (c.id))
-
-          if (this.reviewItem.component.route === '/package-title') {
-            if (merge_ids.length > 1) {
-              this.workflow.push({
-                title: "Step 1: ID check & Cleanup",
-                showReviewed: false,
-                components: merge_ids,
-                actions: ['merge', 'ids']
-              })
-              this.workflow.push({
-                title: "Step 2: Select reference title to link",
-                showReviewed: true,
-                components: merge_ids,
-                actions: ['link', 'add']
-              })
-            } else if (merge_ids.length === 1) {
-              this.workflow.push({
-                title: "ID check & Cleanup",
-                showReviewed: true,
-                components: merge_ids,
-                actions: ['ids']
-              })
-            } else {
-              this.workflow.push({
-                title: "ID check & Cleanup",
-                showReviewed: true,
-                components: this.reviewItem.otherComponents.map(c => c.id),
-                actions: ['ids']
-              })
-            }
-          } else if (this.reviewItem.component.route === '/title') {
-            this.workflow.push({
-              title: "ID check & Cleanup",
-              showReviewed: true,
-              components: merge_ids,
-              actions: ['merge', 'ids']
-            })
-          }
         } else {
           this.errorMsg = 'error.general.500'
           this.showErrorMsg = true
@@ -275,6 +237,51 @@
         this.updateUrl = record._links?.update?.href || undefined
         this.deleteUrl = record._links?.delete?.href || undefined
         this.version = record.version
+
+        let merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/title')).map(c => (c.id))
+
+        if (this.reviewItem.component.route === '/package-title') {
+          if (merge_ids.length > 1) {
+            this.workflow.push({
+              title: this.$i18n.t('component.review.edit.components.workflow.tippLink.step1.label'),
+              toDo: this.$i18n.t('component.review.edit.components.workflow.tippLink.step1.toDo'),
+              showReviewed: false,
+              components: merge_ids,
+              actions: ['merge', 'ids']
+            })
+            this.workflow.push({
+              title: this.$i18n.t('component.review.edit.components.workflow.tippLink.step2.label'),
+              toDo: this.$i18n.t('component.review.edit.components.workflow.tippLink.step2.toDo'),
+              showReviewed: true,
+              components: merge_ids,
+              actions: ['link', 'add']
+            })
+          } else if (merge_ids.length === 1) {
+            this.workflow.push({
+              title: this.$i18n.t('component.review.edit.components.workflow.titleMatch.label'),
+              toDo: this.$i18n.t('component.review.edit.components.workflow.titleMatch.toDo'),
+              showReviewed: true,
+              components: merge_ids,
+              actions: ['ids']
+            })
+          } else {
+            this.workflow.push({
+              title: this.$i18n.t('component.review.edit.components.workflow.titleMatch.label'),
+              toDo: this.$i18n.t('component.review.edit.components.workflow.titleMatch.toDo'),
+              showReviewed: true,
+              components: this.reviewItem.otherComponents.map(c => c.id),
+              actions: ['ids']
+            })
+          }
+        } else if (this.reviewItem.component.route === '/title') {
+          this.workflow.push({
+            title: this.$i18n.t('component.review.edit.components.workflow.titleMatch.label'),
+            toDo: this.$i18n.t('component.review.edit.components.workflow.titleMatch.toDo'),
+            showReviewed: true,
+            components: merge_ids,
+            actions: ['merge', 'ids']
+          })
+        }
       },
       async closeReview () {
         const resp = await reviewServices.close(this.id, this.cancelToken.token)
@@ -285,6 +292,27 @@
         } else {
           this.errorMsg = 'error.update.400'
         }
+      },
+      async addNewComponent (info) {
+        if (!this.additionalInfo.otherComponents) {
+          this.additionalInfo.otherComponents = []
+        }
+
+        this.additionalInfo.otherComponents.push({
+          name: info.name,
+          id: info.id,
+          uuid: info.uuid
+        })
+
+        let body = {
+          id: this.id,
+          additionalInfo: this.additionalInfo
+        }
+
+        const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
+
+        this.showResponse(resp)
+        this.mapRecord(resp.data)
       },
       closePopup () {
         this.localValue = false

@@ -1024,6 +1024,22 @@
           "label": "Anfrage Abschließen"
         },
         "components": {
+          "workflow": {
+            "tippLink": {
+              "step1": {
+                "label": "Schritt 1: Identifikatoren- und Dublettenbereinigung",
+                "toDo": "Bitte überprüfen Sie die Titelidentifikatoren auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
+              },
+              "step2": {
+                "label": "Schritt 2: Referenztitelverknüpfung",
+                "toDo": "Bitte selektieren Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel. Falls keiner der angebotenen Titel dem korrekten Ziel entspricht, generiern Sie einen neuen Referenztitel basierend auf den Daten des Pakettitel, und wählen Sie diesen anschließend als Ziel aus."
+              }
+            },
+            "titleMatch": {
+              "label": "Identifikatoren- und Dublettenbereinigung",
+              "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren."
+            }
+          },
           "merge": {
             "selectTarget": {
               "label": "Ziel Auswählen"
