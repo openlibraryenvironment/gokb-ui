@@ -630,7 +630,7 @@
         this.idsVisible = this.updateVisibleIdentifiers()
       },
       getPendingStatus (id) {
-        if ( !this.isReviewedCard || (this.isReviewedCard && !this.isOtherCardSelected) || (this.singleCardReview && this.fieldsToBeEdited.includes('ids'))){
+        if ( !this.isReviewedCard || (this.isReviewedCard && !this.isOtherCardSelected) || this.singleCardReview){
           return this.getDeletedStatus(id)
         } else {
           return this.getMergeStatus(id)
