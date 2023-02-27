@@ -30,6 +30,7 @@
             :merge-enabled="isMergeEnabled"
             :editable="isIdsEnabled"
             :additional-vars="additionalVars"
+            @merge="mergeCards"
             @feedback-response="feedbackResponse"
             @reviewed-card-selected-ids="setSelectedReviewItemIds"
           />

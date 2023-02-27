@@ -206,9 +206,9 @@
               </div>
             </v-col>
           </v-row>
-          <v-row>
-            <v-col md="12">
-              <div v-if="reviewComponent.stdDesc">
+          <v-row v-if="reviewComponent.stdDesc && !hasComponentCards">
+            <v-col>
+              <div>
                 <label
                   class="v-label"
                   style="display:block;font-size:0.9em;"
