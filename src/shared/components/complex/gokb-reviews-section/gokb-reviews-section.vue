@@ -541,7 +541,6 @@
         }
       },
       async handlePopupChange (type) {
-        console.log("Changed popup:" + type)
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
         const newList = await this.retrieveReviews()
         this.$emit('update', this.totalNumberOfItems)
