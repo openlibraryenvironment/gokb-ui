@@ -1023,6 +1023,9 @@
         "close": {
           "label": "Close review"
         },
+        "open": {
+          "label": "Re-open review"
+        },
         "components": {
           "workflow": {
             "tippLink": {
@@ -1038,6 +1041,10 @@
             "titleMatch": {
               "label": "ID check & duplicate cleanup",
               "toDo": "Please check the title information (name/identifiers) for errors. If you see duplicates, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'."
+            },
+            "tippMisMatch": {
+              "label": "Identifier comparison",
+              "toDo": "Please check the title information (name/identifiers) for errors."
             }
           },
           "merge": {

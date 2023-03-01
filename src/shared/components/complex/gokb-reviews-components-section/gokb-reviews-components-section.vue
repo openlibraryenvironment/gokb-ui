@@ -260,6 +260,7 @@
       },
       async mergeCards (val) {
         let mergedId = val
+        let mergeParams = { mergeTipps: true }
         let targetId = this.selectedCard
         let mergeData = {
           id: mergedId,
@@ -268,10 +269,12 @@
 
         if (val === this.reviewedComponent.id) {
           mergeData.ids = this.selectedReviewItemIds
+        } else {
+          mergeParams.mergeIds = true
         }
 
         const mergeResponse = await this.catchError({
-          promise: titleServices.merge(mergeData, this.cancelToken.token),
+          promise: titleServices.merge(mergeData, mergeParams, this.cancelToken.token),
           instance: this
         })
         if (typeof mergeResponse == 'undefined') {

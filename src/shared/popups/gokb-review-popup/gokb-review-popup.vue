@@ -68,6 +68,12 @@
       >
         {{ $t('component.review.edit.close.label')}}
       </gokb-button>
+      <gokb-button
+        v-else-if="!isReadonly && reviewItem.isClosed"
+        @click="reopenReview"
+      >
+        {{ $t('component.review.edit.open.label')}}
+      </gokb-button>
     </template>
   </gokb-dialog>
 </template>
@@ -160,6 +166,9 @@
       },
       isReadonly () {
         return !this.updateUrl
+      },
+      isStatusOpen () {
+        return this.reviewItem?.status?.name === 'Open'
       },
       showComponentCards () {
         return this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title'
@@ -258,8 +267,8 @@
             })
           } else if (merge_ids.length === 1) {
             this.workflow.push({
-              title: this.$i18n.t('component.review.edit.components.workflow.titleMatch.label'),
-              toDo: this.$i18n.t('component.review.edit.components.workflow.titleMatch.toDo'),
+              title: this.$i18n.t('component.review.edit.components.workflow.tippMisMatch.label'),
+              toDo: this.$i18n.t('component.review.edit.components.workflow.tippMisMatch.toDo'),
               showReviewed: true,
               components: merge_ids,
               actions: ['ids']
@@ -289,6 +298,21 @@
         if (resp.status === 200) {
           this.$emit('edit', 'closed')
           this.closePopup()
+        } else {
+          this.errorMsg = 'error.update.400'
+        }
+      },
+      async reopenReview () {
+        let body = {
+          id: this.id,
+          status: 'Open'
+        }
+
+        const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
+
+        if (resp.status === 200) {
+          this.$emit('edit', 'reopened')
+          this.mapRecord(resp.data)
         } else {
           this.errorMsg = 'error.update.400'
         }
