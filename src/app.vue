@@ -289,6 +289,7 @@
   import { createCancelToken } from '@/shared/services/http'
   import searchServices from '@/shared/services/search-services'
   import baseServices from '@/shared/services/base-services'
+  import languageServices from '@/shared/services/language-services'
   import namespaceServices from '@/shared/services/namespace-services'
 
   // const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
@@ -470,6 +471,7 @@
       this.cancelToken = createCancelToken()
 
       namespaceServices.fetchNamespacesList(this.cancelToken.token)
+      languageServices.fetchLanguagesList(this.cancelToken.token)
     },
     created () {
       this.HOME_ROUTE = HOME_ROUTE

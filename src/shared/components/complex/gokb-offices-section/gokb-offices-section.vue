@@ -54,6 +54,7 @@
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
+  import languageServices from '@/shared/services/language-services'
 
   const ROWS_PER_PAGE = 10
 
@@ -122,6 +123,10 @@
       },
       offices () {
         return [...this.value]
+          .map(item => ({
+            ...item,
+            lang: languageServices.getLanguage(item.language.name ? item.language.name : item.language, this.$i18n.locale).name
+          }))
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
@@ -129,7 +134,7 @@
         return [
           { text: this.$i18n.tc('component.office.type.label'), align: 'start', value: 'function.name', sortable: false, width: '15%' },
           { text: this.$i18n.tc('component.office.name'), align: 'start', value: 'name', sortable: false, width: '15%' },
-          { text: this.$i18n.tc('component.general.language.label'), align: 'start', value: 'language.name', sortable: false, width: '15%' },
+          { text: this.$i18n.tc('component.general.language.label'), align: 'start', value: 'lang', sortable: false, width: '15%' },
           { text: this.$i18n.tc('component.office.email'), align: 'start', value: 'email', sortable: false }
         ]
       },
@@ -157,7 +162,6 @@
         this.confirmationPopUpVisible = true
       },
       _deleteSelected () {
-        // console.log('_deleteSelected')
         this.localValue = this.localValue.filter(({ id }) => !this.selectedItems
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedItems = []
