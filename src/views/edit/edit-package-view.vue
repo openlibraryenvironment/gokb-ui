@@ -1214,7 +1214,7 @@
 
           loading.stopLoading()
         } else {
-          if (this.loggedIn && this.activeGroup) {
+          if (this.loggedIn && !!this.activeGroup) {
             this.allCuratoryGroups = [this.activeGroup]
           }
         }
@@ -1333,7 +1333,7 @@
       },
       async getActiveJobs () {
         const jobResult = await this.catchError({
-          promise: jobServices.get({ linkedItem: this.id }, this.cancelToken.token),
+          promise: jobServices.get({ linkedItem: this.packageItem.id }, this.cancelToken.token),
           instance: this
         })
 
