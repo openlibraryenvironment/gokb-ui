@@ -212,7 +212,7 @@
       async checkForDupes (type) {
         this.cancelToken = createCancelToken()
         var response = await genericServices('rest/entities').checkNewName(
-          this.editedVal,
+          encodeURIComponent(this.editedVal),
           type,
           this.cancelToken.token
         )
