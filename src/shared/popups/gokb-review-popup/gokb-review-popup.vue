@@ -171,7 +171,7 @@
         return this.reviewItem?.status?.name === 'Open'
       },
       showComponentCards () {
-        return this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title'
+        return !!this.stdDesc && this.stdDesc.name != 'Manual Request' && (this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title')
       },
       isValid () {
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
@@ -336,7 +336,7 @@
         const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
 
         this.showResponse(resp)
-        this.mapRecord(resp.data)
+        this.fetchReview(this.id)
       },
       closePopup () {
         this.localValue = false

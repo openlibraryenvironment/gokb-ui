@@ -285,6 +285,13 @@
       "KBARTIngestDryRun": "KBART-Import (Testlauf)",
       "PackageTitleMatch": "Referenztitel-Abgleich",
       "EZBCollectionIngest": "EZB-Kollektionsimport"
+    },
+    "fetch": {
+      "error": {
+        "linkedItem": {
+          "notFound": "Die Job-Komponente konnte nicht referenziert werden!"
+        }
+      }
     }
   },
   "kbart": {
@@ -1353,6 +1360,12 @@
           "info": "",
           "action": "",
           "toDo": ""
+        },
+        "Invalid Identifiers": {
+          "label": "Ungültige Identifikatoren",
+          "info": "Unter den verknüpften Identifikatoren befinden sich ungültige Einträge!",
+          "action": "",
+          "toDo": "Bitte überprüfen und korrigieren Sie die verknüpften Identifikatoren."
         }
       }
     },
