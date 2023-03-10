@@ -3,7 +3,7 @@ const REFRESH_URL = '/oauth/access_token'
 
 const headers = {}
 
-const api = (http, tokenModel) => ({
+const api = (http, utils, tokenModel, accountModel) => ({
 
   deleteAuthorization () {
     delete headers[HEADER_AUTHORIZATION_KEY]
@@ -29,11 +29,15 @@ const api = (http, tokenModel) => ({
       // Try refreshing the token once
       if (tokenModel.isPersistent()) {
 
-        refresh_resp = this.refreshAuth()
+        const refresh_resp = this.refreshAuth()
 
         if (refresh_resp.status === 200) {
           response = http.request(parameters)
+        } else {
+          accountModel.logout(cancelToken)
         }
+      } else {
+        accountModel.logout(cancelToken)
       }
     } else if (tokenModel.needsRefresh()) {
       this.refreshAuth()
@@ -42,7 +46,7 @@ const api = (http, tokenModel) => ({
     return response
   },
 
-  refreshAuth () {
+  refreshAuth (cancelToken) {
     const form_data = {
       grant_type: 'refresh_token',
       refresh_token: tokenModel.getRefresh()
@@ -52,7 +56,8 @@ const api = (http, tokenModel) => ({
       method: 'POST',
       url: process.env.VUE_APP_API_BASE_URL + REFRESH_URL,
       headers,
-      data: refresh_data
+      data: refresh_data,
+      cancelToken
     }
 
     let response = http.request(refresh_pars)

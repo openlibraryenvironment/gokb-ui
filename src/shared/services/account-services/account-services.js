@@ -1,6 +1,4 @@
 const LOGIN_URL = '/rest/login'
-const LOGOUT_URL = '/rest/logout'
-
 const REGISTER_URL = '/rest/register'
 
 const api = (assert, log, tokenModel, baseServices, profileServices) => ({
@@ -39,15 +37,6 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
   },
 
   async logout (cancelToken) {
-    // JWT does not support logout
-    // try {
-    //   await baseServices.request({
-    //     initiator: this.logout.name,
-    //     method: 'POST',
-    //     url: process.env.VUE_APP_API_BASE_URL + LOGOUT_URL,
-    //     cancelToken
-    //   })
-    // } catch {}
     tokenModel.removeToken()
     baseServices.deleteAuthorization()
     log.debug('logged out')
