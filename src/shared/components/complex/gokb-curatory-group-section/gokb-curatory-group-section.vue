@@ -45,6 +45,7 @@
       :selected-items="selectedCuratoryGroups"
       :total-number-of-items="totalNumberOfItems"
       :options.sync="curatoryGroupsOptions"
+      :hide-select="!isEditable"
       @selected-items="selectedCuratoryGroups = $event"
       @delete-item="confirmDeleteItem"
     />

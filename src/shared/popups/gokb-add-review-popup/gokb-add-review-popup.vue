@@ -567,7 +567,7 @@
         }
 
         const response = await this.catchError({
-          promise: reviewServices.createOrUpdateReview(newReview, this.cancelToken.token),
+          promise: reviewServices.createOrUpdate(newReview, this.cancelToken.token),
           instance: this
         })
 
