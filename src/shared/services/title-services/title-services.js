@@ -44,9 +44,22 @@ const api = (baseServices) => ({
       url: baseServices.relativeUrl(url),
     }, cancelToken)
   },
-  merge (data, cancelToken) {
-    const { id, target, ids } = data
-    const parameterData = { target: target, ids: ids.map(id => id.id), mergeTipps: true }
+  merge (data, params, cancelToken) {
+    const { id, target, ids, tipps } = data
+    let parameterData = { target: target }
+
+    if (!!ids) {
+      parameterData.ids = ids.map(id => id.id)
+    } else if (params.mergeIds) {
+      parameterData.mergeIds = true
+    }
+
+    if (!!tipps) {
+      parameterData.tipps = tipps.map(id => id.id)
+    } else if (params.mergeTipps) {
+      parameterData.mergeTipps = true
+    }
+
     const queryParameters = baseServices.createQueryParameters(parameterData)
     const url = process.env.VUE_APP_API_BASE_URL + `${PROVIDER_URL}/${id}/merge?${queryParameters}`
     return baseServices.request({

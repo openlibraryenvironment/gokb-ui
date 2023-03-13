@@ -285,6 +285,13 @@
       "KBARTIngestDryRun": "KBART Package Ingest (Dry Run)",
       "PackageTitleMatch": "Reference Title Matching",
       "EZBCollectionIngest": "EZB Collection Ingest"
+    },
+    "fetch": {
+      "error": {
+        "linkedItem": {
+          "notFound": "Unable to reference the linked item!"
+        }
+      }
     }
   },
   "kbart": {
@@ -1023,6 +1030,9 @@
         "close": {
           "label": "Close review"
         },
+        "open": {
+          "label": "Re-open review"
+        },
         "components": {
           "workflow": {
             "tippLink": {
@@ -1038,6 +1048,10 @@
             "titleMatch": {
               "label": "ID check & duplicate cleanup",
               "toDo": "Please check the title information (name/identifiers) for errors. If you see duplicates, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'."
+            },
+            "tippMisMatch": {
+              "label": "Identifier comparison",
+              "toDo": "Please check the title information (name/identifiers) for errors."
             }
           },
           "merge": {
@@ -1346,6 +1360,12 @@
           "info": "",
           "action": "",
           "toDo": ""
+        },
+        "Invalid Identifiers": {
+          "label": "Invalid Identifiers",
+          "info": "There are invalid identifiers linked to this component!",
+          "action": "",
+          "toDo": "Please delete invalid identifiers and replace them with the correct ones."
         }
       }
     },

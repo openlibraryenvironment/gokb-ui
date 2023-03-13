@@ -1333,7 +1333,7 @@
       },
       async getActiveJobs () {
         const jobResult = await this.catchError({
-          promise: jobServices.get({ linkedItem: this.packageItem.id }, this.cancelToken.token),
+          promise: jobServices.search({ linkedItem: this.packageItem.id }, this.cancelToken.token),
           instance: this
         })
 

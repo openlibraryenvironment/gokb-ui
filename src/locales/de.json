@@ -285,6 +285,13 @@
       "KBARTIngestDryRun": "KBART-Import (Testlauf)",
       "PackageTitleMatch": "Referenztitel-Abgleich",
       "EZBCollectionIngest": "EZB-Kollektionsimport"
+    },
+    "fetch": {
+      "error": {
+        "linkedItem": {
+          "notFound": "Die Job-Komponente konnte nicht referenziert werden!"
+        }
+      }
     }
   },
   "kbart": {
@@ -1023,6 +1030,9 @@
         "close": {
           "label": "Anfrage Abschließen"
         },
+        "open": {
+          "label": "Abschließung Zurücknehmen"
+        },
         "components": {
           "workflow": {
             "tippLink": {
@@ -1038,6 +1048,10 @@
             "titleMatch": {
               "label": "Identifikatoren- und Dublettenbereinigung",
               "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren."
+            },
+            "tippMisMatch": {
+              "label": "Identifikatorabgleich",
+              "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler."
             }
           },
           "merge": {
@@ -1346,6 +1360,12 @@
           "info": "",
           "action": "",
           "toDo": ""
+        },
+        "Invalid Identifiers": {
+          "label": "Ungültige Identifikatoren",
+          "info": "Unter den verknüpften Identifikatoren befinden sich ungültige Einträge!",
+          "action": "",
+          "toDo": "Bitte überprüfen und korrigieren Sie die verknüpften Identifikatoren."
         }
       }
     },
