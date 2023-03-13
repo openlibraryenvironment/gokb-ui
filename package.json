@@ -9,6 +9,7 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "build4Env": "vue-cli-service build --modern --mode ",
+    "build4Lampetia": "vue-cli-service build --modern --mode lampetia",
     "build4LampetiaQa": "vue-cli-service build --modern --mode lampetiaqa",
     "webpack-defaults": "webpack-defaults"
   },
