@@ -1,6 +1,4 @@
 const LOGIN_URL = '/rest/login'
-const LOGOUT_URL = '/rest/logout'
-
 const REGISTER_URL = '/rest/register'
 
 const api = (assert, log, tokenModel, baseServices, profileServices) => ({
@@ -33,20 +31,12 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
       cancelToken
     })
     log.debug('logged in')
-    tokenModel.setToken(result, save)
+    tokenModel.setToken(result.access_token, result.refresh_token, result.expires_in, save)
     baseServices.setAuthorization(result.token_type, result.access_token)
     return { roles: result.roles }
   },
 
   async logout (cancelToken) {
-    try {
-      await baseServices.request({
-        initiator: this.logout.name,
-        method: 'POST',
-        url: process.env.VUE_APP_API_BASE_URL + LOGOUT_URL,
-        cancelToken
-      })
-    } catch {}
     tokenModel.removeToken()
     baseServices.deleteAuthorization()
     log.debug('logged out')

@@ -1,8 +1,9 @@
 const HEADER_AUTHORIZATION_KEY = 'Authorization'
+const REFRESH_URL = '/oauth/access_token'
 
 const headers = {}
 
-const api = (http, utils) => ({
+const api = (http, utils, tokenModel, accountModel) => ({
 
   deleteAuthorization () {
     delete headers[HEADER_AUTHORIZATION_KEY]
@@ -22,7 +23,51 @@ const api = (http, utils) => ({
       data,
       cancelToken
     }
-    return http.request(parameters)
+    let response = http.request(parameters)
+
+    if (response.status === 401 && !!headers[HEADER_AUTHORIZATION_KEY] && tokenModel.isExpired()) {
+      // Try refreshing the token once
+      if (tokenModel.isPersistent()) {
+
+        const refresh_resp = this.refreshAuth()
+
+        if (refresh_resp.status === 200) {
+          response = http.request(parameters)
+        } else {
+          accountModel.logout(cancelToken)
+        }
+      } else {
+        accountModel.logout(cancelToken)
+      }
+    } else if (tokenModel.needsRefresh()) {
+      this.refreshAuth()
+    }
+
+    return response
+  },
+
+  refreshAuth (cancelToken) {
+    const form_data = {
+      grant_type: 'refresh_token',
+      refresh_token: tokenModel.getRefresh()
+    }
+    const refresh_data = createFormData(form_data)
+    const refresh_pars = {
+      method: 'POST',
+      url: process.env.VUE_APP_API_BASE_URL + REFRESH_URL,
+      headers,
+      data: refresh_data,
+      cancelToken
+    }
+
+    let response = http.request(refresh_pars)
+
+    if (response.status === 200) {
+      tokenModel.setToken(response.access_token, response.refresh_token, response.expires_in, tokenModel.isPersistent())
+      this.setAuthorization(response.token_type, response.access_token)
+    }
+
+    return response
   },
 
   createQueryParameters (parameters) {
