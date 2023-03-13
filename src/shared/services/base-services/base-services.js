@@ -3,7 +3,7 @@ const REFRESH_URL = '/oauth/access_token'
 
 const headers = {}
 
-const api = (http, utils, tokenModel, accountModel) => ({
+const api = (http, tokenModel, accountModel) => ({
 
   deleteAuthorization () {
     delete headers[HEADER_AUTHORIZATION_KEY]
