@@ -1254,6 +1254,12 @@
           "info": "",
           "action": "",
           "toDo": ""
+        },
+        "Invalid Identifiers": {
+          "label": "Invalid Identifiers",
+          "info": "There are invalid identifiers linked to this component!",
+          "action": "",
+          "toDo": "Please delete invalid identifiers and replace them with the correct ones."
         }
       }
     },
