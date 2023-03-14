@@ -15,6 +15,8 @@ const api = (browserStorage) => {
       sessionStorage.remove(TOKEN_KEY)
       localStorage.remove(REFRESH_KEY)
       sessionStorage.remove(REFRESH_KEY)
+      localStorage.remove(EXPIRATION_KEY)
+      sessionStorage.remove(EXPIRATION_KEY)
     },
     needsRefresh () {
       return !!this.getToken() && (Date.now() > (sessionStorage.get(EXPIRATION_KEY) || localStorage.get(EXPIRATION_KEY) - 300000))
