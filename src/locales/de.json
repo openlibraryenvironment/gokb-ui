@@ -1255,11 +1255,11 @@
           "action": "",
           "toDo": ""
         },
-        "Invalid Identifiers": {
-          "label": "Invalid Identifiers",
-          "info": "There are invalid identifiers linked to this component!",
+        "Invalid Indentifiers": {
+          "label": "Ungültige Identifikatoren",
+          "info": "Unter den verknüpften Identifikatoren wurden ungültige Werte entdeckt!",
           "action": "",
-          "toDo": "Please delete invalid identifiers and replace them with the correct ones."
+          "toDo": "Bitte überprüfen Sie die Validität der Identifikatoren und korrigieren Sie eventuelle Fehler."
         }
       }
     },
