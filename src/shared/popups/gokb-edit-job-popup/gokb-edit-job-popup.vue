@@ -199,7 +199,7 @@
         this.id = this.selected.id
 
         const result = await this.catchError({
-          promise: jobServices.getJob(this.id, this.selected.archived, this.cancelToken.token),
+          promise: jobServices.get(this.id, this.selected.archived, this.cancelToken.token),
           instance: this
         })
 

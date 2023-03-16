@@ -1,7 +1,7 @@
 const PACKAGE_URL = '/rest/packages'
 
 const api = (baseServices) => ({
-  getPackage (id, cancelToken) {
+  get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
       url: process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}`,
@@ -24,7 +24,7 @@ const api = (baseServices) => ({
       url: url,
     }, cancelToken)
   },
-  createOrUpdatePackage (data, cancelToken) {
+  createOrUpdate (data, cancelToken) {
     const { id } = data
     const url = id ? process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}` : process.env.VUE_APP_API_BASE_URL + PACKAGE_URL
     return baseServices.request({
@@ -54,13 +54,13 @@ const api = (baseServices) => ({
       data,
     }, cancelToken)
   },
-  archivePackage (url, cancelToken) {
+  archive (url, cancelToken) {
     return baseServices.request({
       method: 'POST',
       url: baseServices.relativeUrl(url) + '/retire',
     }, cancelToken)
   },
-  deletePackage (url, cancelToken) {
+  delete (url, cancelToken) {
     return baseServices.request({
       method: 'GET',
       url: baseServices.relativeUrl(url),

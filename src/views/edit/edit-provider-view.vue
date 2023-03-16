@@ -498,7 +498,7 @@
           activeGroup: activeGroup
         }
         const response = await this.catchError({
-          promise: providerServices.createOrUpdateProvider(data, this.cancelToken.token),
+          promise: providerServices.createOrUpdate(data, this.cancelToken.token),
           instance: this
         })
         // todo: check error code
@@ -558,7 +558,7 @@
           this.pendingChanges = {}
 
           const result = await this.catchError({
-            promise: providerServices.getProvider(this.id, this.cancelToken.token),
+            promise: providerServices.get(this.id, this.cancelToken.token),
             instance: this
           })
 
@@ -567,7 +567,7 @@
           } else if (result.status === 401) {
             accountModel.logout()
             const retry = await this.catchError({
-              promise: providerServices.getProvider(this.id, this.cancelToken.token),
+              promise: providerServices.get(this.id, this.cancelToken.token),
               instance: this
             })
 
