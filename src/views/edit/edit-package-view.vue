@@ -883,8 +883,8 @@
         }
       },
       step () {
-        this.$refs.descInfo.refreshRows()
-        this.$refs.descEdit.refreshRows()
+        this.$refs?.descInfo?.refreshRows()
+        this.$refs?.descEdit?.refreshRows()
       }
     },
     async created () {
