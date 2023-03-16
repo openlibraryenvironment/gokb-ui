@@ -1361,11 +1361,12 @@
           "action": "",
           "toDo": ""
         },
-        "Invalid Identifiers": {
+
+        "Invalid Indentifiers": {
           "label": "Ungültige Identifikatoren",
-          "info": "Unter den verknüpften Identifikatoren befinden sich ungültige Einträge!",
+          "info": "Unter den verknüpften Identifikatoren wurden ungültige Werte entdeckt!",
           "action": "",
-          "toDo": "Bitte überprüfen und korrigieren Sie die verknüpften Identifikatoren."
+          "toDo": "Bitte überprüfen Sie die Validität der Identifikatoren und korrigieren Sie eventuelle Fehler."
         }
       }
     },
