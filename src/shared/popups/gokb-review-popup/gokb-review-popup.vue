@@ -59,7 +59,7 @@
       <gokb-button
         @click="closePopup"
       >
-        {{ isReadonly || reviewItem.isClosed ? $t('btn.close') : $t('btn.cancel') }}
+        {{ (isReadonly || reviewItem.isClosed) ? $t('btn.close') : $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
         v-if="!isReadonly && !reviewItem.isClosed"
@@ -167,11 +167,8 @@
       isReadonly () {
         return !this.updateUrl
       },
-      isStatusOpen () {
-        return this.reviewItem?.status?.name === 'Open'
-      },
       showComponentCards () {
-        return !!this.stdDesc && this.stdDesc.name != 'Manual Request' && (this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title')
+        return !!this.reviewItem.stdDesc && this.reviewItem.stdDesc.name != 'Manual Request' && (this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title')
       },
       isValid () {
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
