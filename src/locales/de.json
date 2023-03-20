@@ -27,7 +27,9 @@
     "reset": "Zurücksetzen",
     "retire": "Archivieren",
     "search": "Suchen",
+    "select": "Auswählen",
     "submit": "Abschicken",
+    "deselect": "Deselektieren",
     "update": "Aktualisieren",
     "validate": "Validieren",
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
@@ -61,7 +63,10 @@
       "title": "Fehlende Berechtigung",
       "text": "Ihnen fehlt die Berechtigung um diese Seite zu sehen. Falls dies ein Fehler ist, wenden Sie sich bitte an einen Administrator."
     },
-    "docsUrl": "https://service-wiki.hbz-nrw.de/display/GOKB/GOKb+-+Deutsche+Sektion"
+    "docsUrl": "https://service-wiki.hbz-nrw.de/display/GOKB/GOKb+-+Deutsche+Sektion",
+    "start": "Anfang",
+    "end": "Ende",
+    "date": "Datum"
   },
   "direction": "ltr",
   "route": {
@@ -279,7 +284,15 @@
       "KBART Ingest": "KBART-Import",
       "KBARTSourceIngest": "Automatisierter KBART-Import",
       "KBARTIngestDryRun": "KBART-Import (Testlauf)",
-      "PackageTitleMatch": "Referenztitel-Abgleich"
+      "PackageTitleMatch": "Referenztitel-Abgleich",
+      "EZBCollectionIngest": "EZB-Kollektionsimport"
+    },
+    "fetch": {
+      "error": {
+        "linkedItem": {
+          "notFound": "Die Job-Komponente konnte nicht referenziert werden!"
+        }
+      }
     }
   },
   "kbart": {
@@ -323,7 +336,8 @@
       "correctedVal": "Wert '{0}' wird automatisch durch '{1}' ersetzt werden.",
       "replacementChars": "Die Datei enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
       "replacementCharsRow": "Diese Zeile enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
-      "unusualCharsVal": "Wert {0} enthält unübliche Zeichen! Dies könnte auf eine fehlerhafte Konvertierung nach UTF-8 hinweisen.",
+      "unusualChars": "Diese Zeile enthält unübliche Zeichen, die auf eine fehlgeschlagene Dateikonvertierung hinweisen.",
+      "unusualCharsVal": "Wert '{0}' enthält unübliche Zeichen. Dies könnte auf ein fehlgeschlagene Dateikonvertierung hinweisen.",
       "illegalVal": "Wert '{0}' ist fehlerhaft!",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
@@ -438,7 +452,10 @@
     },
     "create": {
       "400": "Bei der Erstellung sind Fehler aufgetreten!",
-      "403": "{0} konnte nicht angelegt werden, da dieser Benutzer nicht dazu berechtigt ist."
+      "403": "{0} konnte nicht angelegt werden, da dieser Benutzer nicht dazu berechtigt ist.",
+      "title": {
+        "identifierConflict": "Der Titel konnte nicht angelegt werden, da ein Identifikatorkonflikt vorliegt. Bitte überprüfen Sie, ob eine Dublette zu folgenden Titeln vorliegt:"
+      }
     },
     "general": {
       "500": "Die Anfrage ist fehlgeschlagen, bitte melden Sie den Vorfall oder versuchen Sie es später noch einmal.",
@@ -628,7 +645,9 @@
           "changedTo": {
             "label": "wurde zu"
           }
-        }
+        },
+        "from": "von",
+        "to": "nach"
       }
     },
     "journal": {
@@ -828,7 +847,9 @@
         "startVolume": "Erster Band",
         "endDate": "Enddatum",
         "endIssue": "Letztes Heft",
-        "endVolume": "Letzter Band"
+        "endVolume": "Letzter Band",
+        "volume": "Band",
+        "issue": "Heft"
       },
       "embargo": {
         "type": "Typ",
@@ -975,11 +996,14 @@
       "type": {
         "label": "Typ"
       },
+      "todo": {
+        "label": "ToDo"
+      },
       "cause": {
         "label": "Ursache"
       },
       "componentToReview": {
-        "label": "Komponente"
+        "label": "Betroffene Komponente"
       },
       "additionalInfo": {
         "label": "Strukturierte Detailansicht"
@@ -1001,8 +1025,90 @@
           "edited": "Prüfanfrage erfolgreich bearbeitet.",
           "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
-          "closed": "Request marked as closed",
-          "closedBulk": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
+          "closed": "Prüfanfrage als erledigt markiert",
+          "closedBulk": "Prüfanfrage als erledigt markiert | {0} Prüfanfragen als erledigt markiert"
+        },
+        "close": {
+          "label": "Anfrage Abschließen"
+        },
+        "open": {
+          "label": "Abschließung Zurücknehmen"
+        },
+        "components": {
+          "workflow": {
+            "tippLink": {
+              "step1": {
+                "label": "Schritt 1: Identifikatoren- und Dublettenbereinigung",
+                "toDo": "Bitte überprüfen Sie die Titelidentifikatoren auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
+              },
+              "step2": {
+                "label": "Schritt 2: Referenztitelverknüpfung",
+                "toDo": "Bitte selektieren Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel. Falls keiner der angebotenen Titel dem korrekten Ziel entspricht, generiern Sie einen neuen Referenztitel basierend auf den Daten des Pakettitel, und wählen Sie diesen anschließend als Ziel aus."
+              }
+            },
+            "titleMatch": {
+              "label": "Identifikatoren- und Dublettenbereinigung",
+              "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren."
+            },
+            "tippMisMatch": {
+              "label": "Identifikatorabgleich",
+              "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler."
+            }
+          },
+          "merge": {
+            "selectTarget": {
+              "label": "Ziel Auswählen"
+            },
+            "confirm": {
+              "label": "Zusammenführung Bestätigen",
+              "message": "Bitte bestätigen Sie die Zusammenführung. Der zu prüfende Titel {0} wird gelöscht, und seine verknüpften Pakettitel werden an den selektierten Titel {1} übertragen."
+            },
+            "selectIds": {
+              "label": "Zu übertragende Identifikatoren auswählen.",
+              "missing": {
+                "label": "Nicht verknüpft"
+              },
+              "existing": {
+                "label": "Bereits verknüpft"
+              },
+              "new": {
+                "label": "Wird hinzugefügt"
+              }
+            },
+            "selected": {
+              "label": "Zielkomponente"
+            },
+            "unselected": {
+              "label": "Weitere Komponente"
+            }
+          },
+          "single": {
+            "selectIds": "Zu löschende Identifikatoren auswählen.",
+            "confirm": {
+              "label": "Titeländerungen abschicken",
+              "message": "Bitte bestätigen Sie die vorgemerkten Änderungen."
+            }
+          },
+          "link": {
+            "selectTarget": {
+              "label": "Ziel Auswählen"
+            },
+            "selectDeprecated": {
+              "label": "Dublette Zusammenführen"
+            },
+            "confirmMerge": {
+              "label": "Zusammenführung Bestätigen",
+              "message": "Bitte bestätigen Sie die Zusammenführung. Der Referenztitel {0} wird dabei gelöscht, und alle mit ihm verknüpften Pakettitel werden an die Zielkomponente übertragen."
+            },
+            "confirmLink": {
+              "label": "Verknüpfung bestätigen",
+              "message": "Bitte bestätigen Sie die Auswahl des Referenztitels {0} zur Verknüpfung mit dem Pakettitel."
+            }
+          },
+          "add": {
+            "label": "Neuen Referenztitel erzeugen",
+            "message": "Bitte bestätigen Sie die Erzeugung eines neuen Referenztitels mit ALLEN verbleibenden Identifikatoren des zu prüfenden Pakettitels."
+          }
         }
       },
       "status": {
@@ -1188,7 +1294,7 @@
           "label": "Uneindeutige Titelübereinstimmung",
           "info": "Der Pakettitel kann anhand der vorliegenden Identifikatoren nicht eindeutig einem Referenztitel zugeordnet werden.",
           "action": "Kein Referenztitel verknüpft",
-          "toDo": "Überprüfen Sie, ob bei den Referenztiteln eine Dublette vorliegt. Falls ja, führen Sie sie zusammen und verknüpfen diesen Titel manuell. Überprüfen Sie die Identifikatoren und löschen Sie gegebenenfalls welche, falls sie falsch sind."
+          "toDo": "Bitte wählen Sie den zu verknüpfenden Titel aus. Falls unter den weiteren Kandidaten eine Dublette zu dieser Auswahl vorliegt, bereinigen Sie diese zunächst, indem Sie sie mit der Auswahl zusammenführen."
         },
         "Namespace Conflict": {
           "label": "Unterschiedliche Namensräume",
@@ -1255,6 +1361,13 @@
           "info": "",
           "action": "",
           "toDo": ""
+        },
+
+        "Invalid Indentifiers": {
+          "label": "Ungültige Identifikatoren",
+          "info": "Unter den verknüpften Identifikatoren wurden ungültige Werte entdeckt!",
+          "action": "",
+          "toDo": "Bitte überprüfen Sie die Validität der Identifikatoren und korrigieren Sie eventuelle Fehler."
         }
       }
     },
@@ -1307,6 +1420,7 @@
       }
     },
     "general": {
+      "label": "Komponente | Komponenten",
       "name": "Name",
       "general": "Allgemein",
       "notFound": "{0} nicht gefunden!",

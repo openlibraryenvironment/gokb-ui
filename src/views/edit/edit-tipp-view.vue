@@ -755,7 +755,7 @@
         }
 
         const response = await this.catchError({
-          promise: tippServices.createOrUpdateTipp(newTipp, this.cancelToken.token),
+          promise: tippServices.createOrUpdate(newTipp, this.cancelToken.token),
           instance: this
         })
 
@@ -859,7 +859,7 @@
         this.pendingChanges = {}
 
         const result = await this.catchError({
-          promise: tippServices.getTipp(this.id, this.cancelToken.token),
+          promise: tippServices.get(this.id, this.cancelToken.token),
           instance: this
         })
 
@@ -868,7 +868,7 @@
         } else if (result.status === 401) {
           accountModel.logout()
           const retry = await this.catchError({
-            promise: tippServices.getTipp(this.id, this.cancelToken.token),
+            promise: tippServices.get(this.id, this.cancelToken.token),
             instance: this
           })
 
@@ -980,7 +980,7 @@
         }
       },
       refreshReviewsCount (count) {
-        this.reviewsCount = count
+        this.reload()
       }
     },
   }

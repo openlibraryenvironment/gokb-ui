@@ -22,61 +22,11 @@
         {{ localErrorMessage }}
       </v-alert>
     </span>
-    <v-row
-      v-if="isEdit"
-      align="center"
-    >
-      <v-col cols="3">
-        <gokb-text-field
-          v-model="reviewItem.dateCreated"
-          disabled
-          :label="$t('component.general.dateCreated')"
-        />
-      </v-col>
-      <v-col cols="3">
-        <gokb-state-field
-          v-model="reviewItem.status"
-          :init-item="reviewItem.status"
-          :clearable="false"
-          :readonly="isReadonly"
-          return-object
-          message-path="component.review.status"
-          url="refdata/categories/ReviewRequest.Status"
-          :label="$t('component.general.status.label')"
-        />
-      </v-col>
-      <v-col
-        v-if="reviewItem.allocatedGroups.length > 0"
-        cols="3"
-      >
-        <div
-          class="v-select__slot"
-          style="margin-top:-8px"
-        >
-          <label
-            class="v-label"
-            style="display:block;font-size:0.9em;"
-          > {{ $tc('component.curatoryGroup.label', 2) }}: </label>
-        </div>
-        <div style="margin-top:-6px">
-          <v-chip-group>
-            <v-chip
-              v-for="group in reviewItem.allocatedGroups"
-              :key="group.name"
-              class="font-weight-medium"
-              pill
-            >
-              {{ group.name }}
-            </v-chip>
-          </v-chip-group>
-        </div>
-      </v-col>
-    </v-row>
     <v-row dense>
       <v-col md="12">
         <gokb-entity-field
           v-model="reviewItem.component"
-          :readonly="isEdit || isReadonly || !!component"
+          readonly
           :init-item="component"
           :type-filter="cmpType"
           :show-link="true"
@@ -88,86 +38,7 @@
     <v-row>
       <v-col md="12">
         <template>
-          <div v-if="reviewItem.stdDesc">
-            <v-row dense>
-              <v-col cols="6">
-                <gokb-text-field
-                  v-model="localAction"
-                  :label="$t('component.review.action.label')"
-                  disabled
-                />
-              </v-col>
-            </v-row>
-            <label
-              class="v-label"
-              style="display:block;font-size:0.9em;"
-              for="stdDesc"
-            >
-              {{ $t('component.review.cause.label') }}
-            </label>
-            <i18n
-              id="stdDesc"
-              :style="{ fontSize: '1.2em' }"
-              :path="'component.review.stdDesc.' + (reviewItem.stdDesc.value || reviewItem.stdDesc.name) + '.info'"
-            >
-              <template v-slot:0>
-                <router-link
-                  v-if="numMessageVars > 0 && typeof additionalInfo.vars[0] === 'number'"
-                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': additionalInfo.vars[0] } }"
-                  :style="{ color: 'primary' }"
-                >
-                  {{ additionalInfo.vars[0] === reviewItem.component.id ? reviewItem.component.name : additionalInfo.vars[1] }}
-                </router-link>
-                <b v-else-if="numMessageVars > 0">{{ additionalInfo.vars[0] }}</b>
-                <router-link
-                  v-else-if="reviewItem.otherComponents && reviewItem.otherComponents.length > 0"
-                  :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
-                  :style="{ color: 'primary' }"
-                >
-                  {{ reviewItem.otherComponents[0].name }}
-                </router-link>
-                <router-link
-                  v-else-if="reviewItem.component"
-                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
-                  :style="{ color: 'primary' }"
-                >
-                  {{ reviewItem.component.name }}
-                </router-link>
-              </template>
-              <template v-slot:1>
-                <b v-if="numMessageVars > 1">
-                  <span v-if="typeof additionalInfo.vars[1] === 'string' || typeof additionalInfo.vars[1] === 'number'">
-                    {{ additionalInfo.vars[1] }}
-                  </span>
-                  <span v-else-if="Array.isArray(additionalInfo.vars[1])">
-                    (
-                    <span
-                      v-for="(entry, idx) in additionalInfo.vars[1]"
-                      :key="idx"
-                    >
-                      <span v-if="typeof entry === 'string'">
-                        {{ entry }}
-                      </span>
-                      <span v-else>
-                        <span
-                          v-for="(value, namespace) in entry"
-                          :key="namespace + '_' + value"
-                        >
-                          {{ namespace }}:{{ value }}
-                        </span>
-                      </span>
-                    </span>
-                    )
-                  </span>
-                </b>
-              </template>
-              <template v-slot:2>
-                <b v-if="numMessageVars > 2">{{ additionalInfo.vars[2] }}</b>
-              </template>
-            </i18n>
-          </div>
           <gokb-text-field
-            v-else
             v-model="reviewItem.description"
             required
             :disabled="isEdit"
@@ -254,40 +125,7 @@
     <v-row>
       <v-col md="12">
         <template>
-          <div v-if="reviewItem.stdDesc">
-            <label
-              class="v-label"
-              style="display:block;font-size:0.9em;"
-              for="todo"
-            >
-              To Do
-            </label>
-            <i18n
-              id="todo"
-              :style="{ fontSize: '1.2em'}"
-              :path="'component.review.stdDesc.' + (reviewItem.stdDesc.value || reviewItem.stdDesc.name) + '.toDo'"
-            >
-              <template v-slot:0>
-                <router-link
-                  v-if="reviewItem.otherComponents && reviewItem.otherComponents.size > 0"
-                  :style="{ color: 'primary' }"
-                  :to="{ name: reviewItem.otherComponents[0].route, params: { 'id': reviewItem.otherComponents[0].id } }"
-                  color="primary"
-                >
-                  {{ reviewItem.otherComponents[0].name }}
-                </router-link>
-                <router-link
-                  v-else-if="reviewItem.component"
-                  :to="{ name: componentRoutes[reviewItem.component.type.toLowerCase()], params: { 'id': reviewItem.component.id } }"
-                  :style="{ color: 'primary' }"
-                >
-                  {{ reviewItem.component.name }}
-                </router-link>
-              </template>
-            </i18n>
-          </div>
           <gokb-textarea-field
-            v-else
             v-model="reviewItem.request"
             required
             :disabled="isEdit"
@@ -296,32 +134,8 @@
         </template>
       </v-col>
     </v-row>
-    <v-row v-if="additionalInfo">
-      <v-col md="12">
-        <v-expansion-panels accordion>
-          <v-expansion-panel>
-            <v-expansion-panel-header>{{ $t('component.review.additionalInfo.label') }}</v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <vue-json-pretty :data="additionalInfo" />
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-col>
-    </v-row>
 
     <template #buttons>
-      <gokb-button
-        v-if="escalatable"
-        @click="escalate"
-      >
-        {{ $t('btn.escalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
-      </gokb-button>
-      <gokb-button
-        v-if="deescalatable"
-        @click="deescalate"
-      >
-        {{ $t('btn.deescalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
-      </gokb-button>
       <v-spacer />
       <gokb-button
         @click="close"
@@ -333,7 +147,7 @@
         :disabled="!isValid"
         default
       >
-        {{ isEdit ? $t('btn.update') : $t('btn.create') }}
+        {{ $t('btn.create') }}
       </gokb-button>
     </template>
   </gokb-dialog>
@@ -455,119 +269,29 @@
       }
     },
     created () {
-      this.selectedItem = this.selected
-
-      if (this.selected) {
-        this.id = this.selected.id
-        this.fetch(this.id)
-      }
-
       if (this.component) {
         this.reviewItem.component = this.component
-      }
-
-      if (this.selectedItem) {
-        this.isEscalatable()
-        this.isDeescalatable()
       }
     },
     methods: {
       close () {
         this.localValue = false
       },
-      async isEscalatable () {
-        await this.catchError({
-          promise: reviewServices.escalatable(this.id, accountModel.activeGroup().id),
-          instance: this
-        })
-          .then(response => {
-            this.escalatable = response.data.isEscalatable
-            this.escalationTarget = response.data.escalationTargetGroup
-          })
-      },
-      async isDeescalatable () {
-        await this.catchError({
-          promise: reviewServices.deescalatable(this.id, accountModel.activeGroup().id),
-          instance: this
-        })
-          .then(response => {
-            this.deescalatable = response.data.isDeescalatable
-            this.escalationTarget = response.data.escalationTargetGroup
-          })
-      },
-      async escalate () {
-        const response = await this.catchError({
-          promise: reviewServices.escalate(this.id, accountModel.activeGroup().id),
-          instance: this
-        })
-        if (response.status === 200) {
-          this.$emit('edit', 'escalated')
-          this.close()
-        }
-      },
-      async deescalate () {
-        const response = await this.catchError({
-          promise: reviewServices.deescalate(this.id, accountModel.activeGroup().id),
-          instance: this
-        })
-        if (response.status === 200) {
-          this.$emit('edit', 'deescalated')
-          this.close()
-        }
-      },
-      async fetch (rid) {
-        const {
-          data: {
-            status,
-            stdDesc,
-            reviewRequest,
-            descriptionOfCause,
-            dateCreated,
-            version,
-            componentToReview,
-            allocatedGroups,
-            additionalInfo,
-            _links
-          }
-        } = await this.catchError({
-          promise: reviewServices.getReview(rid, this.cancelToken.token),
-          instance: this
-        })
-        this.additionalInfo = additionalInfo
-        this.reviewItem.status = status
-        this.reviewItem.stdDesc = stdDesc
-        this.reviewItem.request = reviewRequest
-        this.reviewItem.description = descriptionOfCause
-        this.reviewItem.dateCreated = dateCreated ? new Date(dateCreated).toLocaleString('sv') : ''
-        this.reviewItem.component = componentToReview
-        this.reviewItem.allocatedGroups = allocatedGroups
-        this.reviewItem.otherComponents = additionalInfo?.otherComponents ? additionalInfo.otherComponents.map(oc => ({
-          name: oc.name,
-          id: (oc.oid ? oc.oid.split(':')[1] : oc.id),
-          type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
-          route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
-        })) : []
-        this.updateUrl = _links?.update?.href || undefined
-        this.deleteUrl = _links?.delete?.href || undefined
-        this.version = version
-      },
       async save () {
         const activeGroup = accountModel.activeGroup()
 
         const newReview = {
-          id: this.id,
           status: this.reviewItem.status?.id || null,
-          stdDesc: this.reviewItem.stdDesc?.id || null,
-          version: this.version,
-          reviewRequest: this.reviewItem.request || this.$i18n.t('component.review.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.action'),
-          descriptionOfCause: this.reviewItem.description || this.$i18n.t('component.review.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.info'),
+          stdDesc: "Manual Request",
+          reviewRequest: this.reviewItem.request,
+          descriptionOfCause: this.reviewItem.description,
           activeGroup,
           componentToReview: this.reviewItem.component.id,
           additionalInfo: { otherComponents: this.reviewItem.otherComponents }
         }
 
         const response = await this.catchError({
-          promise: reviewServices.createOrUpdateReview(newReview, this.cancelToken.token),
+          promise: reviewServices.createOrUpdate(newReview, this.cancelToken.token),
           instance: this
         })
 

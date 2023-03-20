@@ -883,14 +883,14 @@
         }
       },
       step () {
-        this.$refs.descInfo.refreshRows()
-        this.$refs.descEdit.refreshRows()
+        this.$refs?.descInfo?.refreshRows()
+        this.$refs?.descEdit?.refreshRows()
       }
     },
     async created () {
-      this.reload()
+      await this.reload()
 
-      if (this.initMessageCode) {
+      if (!!this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
           this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success' })
         } else if (this.initMessageCode.includes('failure')) {
@@ -900,7 +900,7 @@
         }
       }
 
-      if (this.kbartJob) {
+      if (!!this.kbartJob) {
         this.loadImportJobStatus(this.kbartJob)
       } else if (this.isEdit && this.accessible) {
         this.getActiveJobs()
@@ -1039,7 +1039,7 @@
           }
 
           const response = await this.catchError({
-            promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
+            promise: packageServices.createOrUpdate(newPackage, this.cancelToken.token),
             instance: this
           })
 
@@ -1174,7 +1174,7 @@
           this.newTipps = []
 
           const result = await this.catchError({
-            promise: packageServices.getPackage(this.id, this.cancelToken.token),
+            promise: packageServices.get(this.id, this.cancelToken.token),
             instance: this
           })
 
@@ -1183,7 +1183,7 @@
           } else if (result.status === 401) {
             accountModel.logout()
             const retry = await this.catchError({
-              promise: packageServices.getPackage(this.id, this.cancelToken.token),
+              promise: packageServices.get(this.id, this.cancelToken.token),
               instance: this
             })
 
@@ -1198,7 +1198,7 @@
 
           if (this.providerSelect) {
             const providerResult = await this.catchError({
-              promise: providerServices.getProvider(this.providerSelect.id, this.cancelToken.token),
+              promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
               instance: this
             })
 
@@ -1214,14 +1214,14 @@
 
           loading.stopLoading()
         } else {
-          if (this.loggedIn && this.activeGroup) {
+          if (this.loggedIn && !!this.activeGroup) {
             this.allCuratoryGroups = [this.activeGroup]
           }
         }
       },
       async fetchDefaultNamespace (providerId) {
         const providerResult = await this.catchError({
-          promise: providerServices.getProvider(providerId, this.cancelToken.token),
+          promise: providerServices.get(providerId, this.cancelToken.token),
           instance: this
         })
 
@@ -1245,7 +1245,7 @@
 
         while (!finished) {
           const jobResult = await this.catchError({
-            promise: jobServices.getJob(jobId, false, this.cancelToken.token),
+            promise: jobServices.get(jobId, false, this.cancelToken.token),
             instance: this
           })
 
@@ -1300,7 +1300,7 @@
 
         while (!finished) {
           const jobResult = await this.catchError({
-            promise: jobServices.getJob(jobId, false, this.cancelToken.token),
+            promise: jobServices.get(jobId, false, this.cancelToken.token),
             instance: this
           })
 
@@ -1333,7 +1333,7 @@
       },
       async getActiveJobs () {
         const jobResult = await this.catchError({
-          promise: jobServices.get({ linkedItem: this.id }, this.cancelToken.token),
+          promise: jobServices.search({ linkedItem: this.packageItem.id }, this.cancelToken.token),
           instance: this
         })
 
@@ -1342,7 +1342,6 @@
             this.activeJobs = true
 
             jobResult.data.data.forEach((job) => {
-              console.log(job)
               if (job.type?.value === 'PackageTitleMatch') {
                 this.loadMatchingJobStatus(job.uuid, job.type.value)
               }

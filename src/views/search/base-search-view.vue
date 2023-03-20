@@ -106,7 +106,7 @@
         @paginate="resultPaginate"
         @delete-item="confirmDeleteItem"
         @retire-item="confirmRetireItem"
-        @edit="search"
+        @edit="editItem"
       />
     </gokb-section>
   </gokb-page>
@@ -388,6 +388,9 @@
       },
       isButtonDisabled (attributeName) {
         return this[attributeName]
+      },
+      editItem (value) {
+        this.search()
       }
     }
   }

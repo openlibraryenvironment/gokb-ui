@@ -79,12 +79,12 @@
         </v-btn>
         <v-spacer />
         <slot
-          v-if="expanded"
+          v-if="localValue"
           name="buttons"
         />
       </v-toolbar>
       <v-toolbar
-        v-if="filters && expanded"
+        v-if="filters && localValue"
         height="63"
         class="pt-1"
         flat
@@ -112,11 +112,11 @@
       >
         <v-spacer />
         <slot
-          v-if="expanded"
+          v-if="localValue"
           name="buttons"
         />
       </v-toolbar>
-      <v-card-text v-show="expanded">
+      <v-card-text v-show="localValue">
         <div
           class="pa-2"
           :class="[!clearBackground ? (darkMode ? 'controls-dark' : 'controls') : '']"
@@ -132,6 +132,11 @@
   export default {
     name: 'GokbSection',
     props: {
+      value: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
       expandable: {
         type: Boolean,
         required: false,
@@ -141,11 +146,6 @@
         type: String,
         required: false,
         default: undefined,
-      },
-      hideDefault: {
-        type: Boolean,
-        required: false,
-        default: false
       },
       filters: {
         type: Boolean,
@@ -198,14 +198,17 @@
         default: false
       }
     },
-    data () {
-      return {
-        expanded: true
-      }
-    },
     computed: {
+      localValue: {
+        get () {
+          return this.value
+        },
+        set (localValue) {
+          this.$emit('input', localValue)
+        }
+      },
       expansionIcon () {
-        return this.expanded ? 'mdi-chevron-up' : 'mdi-chevron-down'
+        return this.localValue ? 'mdi-chevron-up' : 'mdi-chevron-down'
       },
       darkMode () {
         return this.$vuetify.theme.dark
@@ -224,12 +227,9 @@
         return [result]
       }
     },
-    created () {
-      this.expanded = !this.hideDefault
-    },
     methods: {
       doExpandCollapse () {
-        this.expanded = !this.expanded
+        this.localValue = !this.localValue
       }
     },
   }
