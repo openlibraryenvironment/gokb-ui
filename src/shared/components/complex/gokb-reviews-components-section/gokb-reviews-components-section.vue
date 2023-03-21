@@ -17,23 +17,35 @@
           :md="colGridWidth"
           :cols="colGridWidth"
           xl="3"
+          class="pa-1"
         >
-          <h3 class="mb-1"> {{ $t('component.review.componentToReview.label') }} ({{ reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label') }})</h3>
-          <gokb-reviews-title-card
-            :id="reviewedComponent.id"
-            :ref="reviewedComponent.id"
-            role="reviewedComponent"
-            :route="reviewedComponent.route"
-            :selected-card="selectedCard"
-            :selected-card-ids="selectedCardIds"
-            :single-card-review="isSingleCardReview"
-            :merge-enabled="isMergeEnabled"
-            :editable="isIdsEnabled"
-            :additional-vars="additionalVars"
-            @merge="mergeCards"
-            @feedback-response="feedbackResponse"
-            @reviewed-card-selected-ids="setSelectedReviewItemIds"
-          />
+          <v-row>
+            <v-col>
+              <h3 class="mb-1"> {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}</h3>
+              <gokb-reviews-title-card
+                :id="reviewedComponent.id"
+                :ref="reviewedComponent.id"
+                role="reviewedComponent"
+                :route="reviewedComponent.route"
+                :selected-card="selectedCard"
+                :selected-card-ids="selectedCardIds"
+                :single-card-review="isSingleCardReview"
+                :merge-enabled="isMergeEnabled"
+                :editable="isIdsEnabled"
+                :additional-vars="additionalVars"
+                @merge="mergeCards"
+                @feedback-response="feedbackResponse"
+                @reviewed-card-selected-ids="setSelectedReviewItemIds"
+              />
+            </v-col>
+            <v-col v-if="reviewType === 'Ambiguous Title Matches'" cols="1">
+              <v-container fill-height fluid>
+                <v-row align="center" justify="space-around">
+                  <v-icon> mdi-chevron-right </v-icon>
+                </v-row>
+              </v-container>
+            </v-col>
+          </v-row>
         </v-col>
         <v-col
           :md="colGridWidth"
@@ -43,36 +55,37 @@
           v-for="i, idx in referenceComponents"
           :key="i.id"
         >
-          <div>
-            <h3 class="mb-1">
-              {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label') : $t('component.review.edit.components.merge.unselected.label') }}
-              ({{ i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label') }})
-              <b>#{{ idx + 1 }}</b>
-            </h3>
-            <gokb-reviews-title-card
+          <v-row>
+            <v-col>
+              <h3 class="mb-1">
+                {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) : $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
+                <b>#{{ idx + 1 }}</b>
+              </h3>
+              <gokb-reviews-title-card
 
-              :id="i.id"
-              :ref="i.id"
-              role="candidateComponent"
-              height="100%"
-              :route="i.route"
-              :candidate-index="idx + 1"
-              :reviewed-component-name="reviewedComponent.name"
-              :selected-card="selectedCard"
-              :selected-card-ids="selectedCardIds"
-              :single-card-review="isSingleCardReview"
-              :merge-enabled="isMergeEnabled"
-              :link-enabled="isLinkEnabled"
-              :editable="isIdsEnabled"
-              :additional-vars="additionalVars"
-              @loaded="toggleLoaded"
-              @set-selected="setSelectedCard"
-              @set-selected-ids="setSelectedCardIds"
-              @merge="mergeCards"
-              @link="linkTitle"
-              @feedback-response="feedbackResponse"
-            />
-          </div>
+                :id="i.id"
+                :ref="i.id"
+                role="candidateComponent"
+                height="100%"
+                :route="i.route"
+                :candidate-index="idx + 1"
+                :reviewed-component-name="reviewedComponent.name"
+                :selected-card="selectedCard"
+                :selected-card-ids="selectedCardIds"
+                :single-card-review="isSingleCardReview"
+                :merge-enabled="isMergeEnabled"
+                :link-enabled="isLinkEnabled"
+                :editable="isIdsEnabled"
+                :additional-vars="additionalVars"
+                @loaded="toggleLoaded"
+                @set-selected="setSelectedCard"
+                @set-selected-ids="setSelectedCardIds"
+                @merge="mergeCards"
+                @link="linkTitle"
+                @feedback-response="feedbackResponse"
+              />
+            </v-col>
+          </v-row>
         </v-col>
         <v-col
           v-if="isAddEnabled"
@@ -209,22 +222,25 @@
         return this.reviewStatus === 'Open'
       },
       isMergeEnabled () {
-        return this.isStatusOpen && this.workflow?.actions?.includes('merge') && this.activeComponents > 1
+        return this.editable && this.isStatusOpen && this.workflow?.actions?.includes('merge') && this.workflow.components.length > 1
       },
       isTippReview () {
         return (this.reviewedComponent.route === '/package-title')
       },
+      isTitleReview () {
+        return (this.reviewedComponent.route === '/title')
+      },
       isLinkEnabled () {
-        return this.isStatusOpen && this.workflow?.actions?.includes('link')
+        return this.editable && this.isStatusOpen && this.workflow?.actions?.includes('link')
       },
       isIdsEnabled () {
-        return this.isStatusOpen && this.workflow?.actions?.includes('ids')
+        return this.editable && this.isStatusOpen && this.workflow?.actions?.includes('ids')
       },
       isAddEnabled () {
-        return this.isStatusOpen && this.workflow?.actions?.includes('add') && !this.newTitle
+        return this.editable && this.isStatusOpen && this.workflow?.actions?.includes('add') && !this.newTitle
       },
       workflowTitle () {
-        return this.editable ? this.workflow.title : this.$i18n.tc('component.general.label', 3)
+        return this.editable ? this.workflow.title : ""
       }
     },
     created() {

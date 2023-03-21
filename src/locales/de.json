@@ -28,7 +28,7 @@
     "search": "Suchen",
     "select": "Auswählen",
     "submit": "Abschicken",
-    "deselect": "Deselektieren",
+    "deselect": "Auswahl aufheben",
     "update": "Aktualisieren",
     "validate": "Validieren",
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
@@ -1027,6 +1027,13 @@
           "closed": "Prüfanfrage als erledigt markiert",
           "closedBulk": "Prüfanfrage als erledigt markiert | {0} Prüfanfragen als erledigt markiert"
         },
+        "confirm": {
+          "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage als erledigt markieren wollen.",
+          "reopen": "Bitte bestätigen Sie, dass Sie diese abgeschlossene Prüfanfrage erneut öffnen möchten."
+        },
+        "componentToReview": {
+          "label": "Zu prüfender {0}"
+        },
         "close": {
           "label": "Anfrage Abschließen"
         },
@@ -1035,17 +1042,7 @@
         },
         "components": {
           "workflow": {
-            "tippLink": {
-              "step1": {
-                "label": "Schritt 1: Identifikatoren- und Dublettenbereinigung",
-                "toDo": "Bitte überprüfen Sie die Titelidentifikatoren auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
-              },
-              "step2": {
-                "label": "Schritt 2: Referenztitelverknüpfung",
-                "toDo": "Bitte selektieren Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel. Falls keiner der angebotenen Titel dem korrekten Ziel entspricht, generiern Sie einen neuen Referenztitel basierend auf den Daten des Pakettitel, und wählen Sie diesen anschließend als Ziel aus."
-              }
-            },
-            "titleMatch": {
+            "titleMerge": {
               "label": "Identifikatoren- und Dublettenbereinigung",
               "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren."
             },
@@ -1075,10 +1072,10 @@
               }
             },
             "selected": {
-              "label": "Zielkomponente"
+              "label": "Selektierter {0}"
             },
             "unselected": {
-              "label": "Weitere Komponente"
+              "label": "{0}"
             }
           },
           "single": {
@@ -1227,7 +1224,17 @@
           "label": "Uneindeutige Titeltreffer",
           "info": "Mehrere Titel stimmen anhand der vorliegenden Identifikatoren überein.",
           "action": "Ältester Titel ausgewählt",
-          "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt. Falls ja, führen Sie die Titel zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diesen, falls sie falsch sind."
+          "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt. Falls ja, führen Sie die Titel zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diesen, falls sie falsch sind.",
+          "workflow": {
+            "step1": {
+              "label": "Schritt 1: Identifikatoren- und Dublettenbereinigung",
+              "toDo": "Bitte überprüfen Sie die Titelidentifikatoren auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
+            },
+            "step2": {
+              "label": "Schritt 2: Referenztitelverknüpfung",
+              "toDo": "Bitte selektieren Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel. Falls keiner der angebotenen Titel dem korrekten Ziel entspricht, generiern Sie einen neuen Referenztitel basierend auf den Daten des Pakettitel, und wählen Sie diesen anschließend als Ziel aus."
+            }
+          }
         },
         "Package Titles Retired": {
           "label": "Pakettitel archiviert",
@@ -1293,7 +1300,17 @@
           "label": "Uneindeutige Titelübereinstimmung",
           "info": "Der Pakettitel kann anhand der vorliegenden Identifikatoren nicht eindeutig einem Referenztitel zugeordnet werden.",
           "action": "Kein Referenztitel verknüpft",
-          "toDo": "Bitte wählen Sie den zu verknüpfenden Titel aus. Falls unter den weiteren Kandidaten eine Dublette zu dieser Auswahl vorliegt, bereinigen Sie diese zunächst, indem Sie sie mit der Auswahl zusammenführen."
+          "toDo": "Bitte wählen Sie den zu verknüpfenden Titel aus. Falls unter den weiteren Kandidaten eine Dublette zu dieser Auswahl vorliegt, bereinigen Sie diese zunächst, indem Sie sie mit der Auswahl zusammenführen.",
+          "workflow": {
+            "step1": {
+              "label": "Schritt 1: Identifikatoren- und Dublettenbereinigung",
+              "toDo": "Bitte überprüfen Sie die Titelidentifikatoren auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
+            },
+            "step2": {
+              "label": "Schritt 2: Referenztitelverknüpfung",
+              "toDo": "Bitte selektieren Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel. Falls keiner der angebotenen Titel dem korrekten Ziel entspricht, generiern Sie einen neuen Referenztitel basierend auf den Daten des Pakettitel, und wählen Sie diesen anschließend als Ziel aus."
+            }
+          }
         },
         "Namespace Conflict": {
           "label": "Unterschiedliche Namensräume",
@@ -1303,9 +1320,9 @@
         },
         "Critical Identifier Conflict": {
           "label": "Identifikator-Konflikt (Neuer Titel)",
-          "info": "Referenztitel {0} stimmt anhand eines Identifikators mit einem vorhandenen Referenztitel überein, aber andere Identifikatoren desselben Namensraumes stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname stark.",
+          "info": "Der neu angelegte Referenztitel {0} stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein, aber andere Identifikatoren desselben Namensraumes stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname signifikant.",
           "action": "Neuer Referenztitel erstellt",
-          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Referenztitel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diese, falls sie falsch sind."
+          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Referenztitel vorliegt. Liegt eine Dublette vor, selektieren Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen'. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' abschließen (dies schließt gleichzeitig die Prüfanfrage und diese Ansicht)."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifikatoren-Konflikt (ID ergänzt)",
