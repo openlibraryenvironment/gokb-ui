@@ -28,6 +28,7 @@
     <gokb-reviews-components-section
       v-if="finishedLoading && showComponentCards"
       v-for="(wf, i) in workflow"
+      :ref="'wf' + i"
       :key="i"
       :value="error"
       :reviewed-component="reviewItem.component"
@@ -42,7 +43,7 @@
       :expanded="activeStep === i"
       @expand="activateStep(i)"
       @finished-step="changeActiveStep"
-      @merge="fetchReview"
+      @merge="processMerge"
       @added="addNewComponent"
       @close="closeReview"
       @feedback-response="showResponse"
@@ -68,9 +69,15 @@
         {{ (isReadonly || reviewItem.isClosed) ? $t('btn.close') : $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
-        v-if="!isReadonly && !reviewItem.isClosed"
+        v-if="!isReadonly && !reviewItem.isClosed && showComponentCards && activeStep != workflow.length-1"
+        @click="activeStep++"
+      >
+        {{ $t('component.review.edit.next.label') }}
+      </gokb-button>
+      <gokb-button
+        v-else-if="!isReadonly && !reviewItem.isClosed"
+        class="ml-2"
         color="primary"
-        :disabled="showComponentCards && activeStep < workflow"
         @click="showConfirmCloseReview"
       >
         {{ $t('component.review.edit.close.label')}}
@@ -130,6 +137,7 @@
         updateUrl: undefined,
         deleteUrl: undefined,
         deescalatable: false,
+        deletedItems: [],
         workflow: [],
         activeStep: 0,
         reviewItem: {
@@ -182,7 +190,7 @@
         return !this.updateUrl
       },
       showComponentCards () {
-        return !!this.reviewItem.stdDesc && this.reviewItem.stdDesc.name != 'Manual Request' && (this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title')
+        return this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title'
       },
       isValid () {
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
@@ -195,6 +203,9 @@
       },
       localSuccessMessage () {
         return !!this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.review.label')]) : undefined
+      },
+      closeReviewButtonDisabledText () {
+        return this.showComponentCards && this.activeStep != this.workflow.length-1 ? this.$i18n.t('component.review.edit.close.error.moreSteps') : undefined
       }
     },
     created () {
@@ -266,7 +277,7 @@
           name: oc.name,
           id: (oc.oid ? parseInt(oc.oid.split(':')[1]) : oc.id),
           type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
-          route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
+          route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())],
         })) : []
         this.reviewItem.candidates = record.additionalInfo?.candidates
         this.updateUrl = record._links?.update?.href || undefined
@@ -278,6 +289,8 @@
         if (this.reviewItem.component.route === '/title') {
           merge_ids.push(this.reviewItem.component.id)
         }
+
+        this.workflow = []
 
         if (this.reviewItem.component.route === '/package-title' && merge_ids.length > 1) {
           this.workflow.push({
@@ -302,6 +315,11 @@
             components: merge_ids,
             actions: ['merge','ids']
           })
+        }
+      },
+      processMerge (id) {
+        if (this.workflow.length === 2) {
+          this.$refs.wf1.refreshItem(id)
         }
       },
       async closeReview () {
@@ -377,7 +395,8 @@
           }
           else {
             this.localSuccessMessage = undefined
-            this.errors = response.data.error
+            this.errors = response?.data?.error
+
             if (response.status === 403) {
               this.errorMsg = 'error.update.403'
               this.showErrorMsg = true

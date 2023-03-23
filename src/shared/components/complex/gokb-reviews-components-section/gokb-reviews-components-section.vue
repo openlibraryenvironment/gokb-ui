@@ -62,7 +62,6 @@
                 <b>#{{ idx + 1 }}</b>
               </h3>
               <gokb-reviews-title-card
-
                 :id="i.id"
                 :ref="i.id"
                 role="candidateComponent"
@@ -103,16 +102,6 @@
             </v-container>
           </v-card>
         </v-col>
-        <!-- <v-col v-if="!!newTitle">
-          <gokb-reviews-title-card
-            :id="newTitle.id"
-            :ref="newTitle.id"
-            route="/title"
-            :editable="isIdsEnabled"
-            is-merged
-          />
-        >
-        </v-col> -->
       </v-row>
       <v-row v-if="moreSteps" class="pt-3" align="center" justify="space-around">
         <gokb-button @click="nextStep"> {{ $t('btn.next') }}</gokb-button>
@@ -222,7 +211,7 @@
         return this.reviewStatus === 'Open'
       },
       isMergeEnabled () {
-        return this.editable && this.isStatusOpen && this.workflow?.actions?.includes('merge') && this.workflow.components.length > 1
+        return this.editable && this.isStatusOpen && this.workflow?.actions?.includes('merge') && this.activeComponents > 1
       },
       isTippReview () {
         return (this.reviewedComponent.route === '/package-title')
@@ -309,7 +298,11 @@
           this.feedbackResponse(mergeResponse)
         }
       },
+      refreshItem (id) {
+        this.$refs['' + id].fetchTitle()
+      },
       showConfirmGenerateTitle () {
+        this.showSubmitConfirm = true
         this.actionToConfirm = "generateTippTitle"
         this.parameterToConfirm = undefined
         this.submitConfirmationMessage = { text: 'component.review.edit.components.add.message', vars: [] }
@@ -324,7 +317,7 @@
           let titleData = {
             name: tippInfo.data.name,
             type: tippInfo.data.publicationType.name,
-            ids: tippInfo.data._embedded.ids,
+            ids: tippInfo.data._embedded.ids.map(ido => ({ value: ido.value, type: ido.namespace.value })),
             _checked: true
           }
 
@@ -345,6 +338,8 @@
 
             this.$emit('added', newTitleResponse.data)
           }
+        } else {
+          this.feedbackResponse(tippInfo)
         }
       },
       async linkTitle (targetId) {

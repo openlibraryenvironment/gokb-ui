@@ -1035,7 +1035,13 @@
           "label": "Zu prüfender {0}"
         },
         "close": {
-          "label": "Anfrage Abschließen"
+          "label": "Anfrage Abschließen",
+          "error": {
+            "moreSteps": "Bitte überprüfen Sie alle Arbeitsschritte, bevor Sie die Anfrage schließen."
+          }
+        },
+        "next": {
+          "label": "Nächster Schritt"
         },
         "open": {
           "label": "Abschließung Zurücknehmen"
@@ -1052,6 +1058,7 @@
             }
           },
           "merge": {
+            "label": "Dublettenbereinigung",
             "selectTarget": {
               "label": "Ziel Auswählen"
             },
@@ -1086,6 +1093,7 @@
             }
           },
           "link": {
+            "label": "Titelverknüpfung",
             "selectTarget": {
               "label": "Ziel Auswählen"
             },
@@ -1228,11 +1236,11 @@
           "workflow": {
             "step1": {
               "label": "Schritt 1: Identifikatoren- und Dublettenbereinigung",
-              "toDo": "Bitte überprüfen Sie die Titelidentifikatoren auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
+              "toDo": "Bitte überprüfen Sie die Titelidentifikatoren auf Fehler. Titeldubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren. Alle Pakettitel und die verbleibenden Identifikatoren des gelöschten Titels werden damit übertragen. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
             },
             "step2": {
               "label": "Schritt 2: Referenztitelverknüpfung",
-              "toDo": "Bitte selektieren Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel. Falls keiner der angebotenen Titel dem korrekten Ziel entspricht, generiern Sie einen neuen Referenztitel basierend auf den Daten des Pakettitel, und wählen Sie diesen anschließend als Ziel aus."
+              "toDo": "Bitte selektieren Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel, indem Sie das 'Ziel auswählen' und anschließend die 'Verknüpfung bestätigen'. Falls keiner der angebotenen Titel dem korrekten Ziel entspricht, erzeugen Sie einen neuen Referenztitel basierend auf den Daten des Pakettitels (schließt die Anfrage automatisch ab)."
             }
           }
         },
@@ -1322,7 +1330,7 @@
           "label": "Identifikator-Konflikt (Neuer Titel)",
           "info": "Der neu angelegte Referenztitel {0} stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein, aber andere Identifikatoren desselben Namensraumes stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname signifikant.",
           "action": "Neuer Referenztitel erstellt",
-          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Referenztitel vorliegt. Liegt eine Dublette vor, selektieren Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen'. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' abschließen (dies schließt gleichzeitig die Prüfanfrage und diese Ansicht)."
+          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Referenztitel vorliegt. Wurde eine Dublette erzeugt, selektieren Sie zunächst den vorherigen Titel per 'Ziel auswählen'. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' abschließen (dies schließt gleichzeitig die Prüfanfrage und diese Ansicht)."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifikatoren-Konflikt (ID ergänzt)",

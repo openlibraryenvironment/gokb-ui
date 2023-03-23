@@ -1035,7 +1035,13 @@
           "label": "{0} to review"
         },
         "close": {
-          "label": "Close review"
+          "label": "Close review",
+          "error": {
+            "moreSteps": "Please check all workflow steps before closing this review."
+          }
+        },
+        "next": {
+          "label": "Next Step"
         },
         "open": {
           "label": "Re-open review"
@@ -1052,6 +1058,7 @@
             }
           },
           "merge": {
+            "label": "Title merge",
             "selectTarget": {
               "label": "Select Merge Target"
             },
@@ -1086,6 +1093,7 @@
             }
           },
           "link": {
+            "label": "Title linking",
             "selectTarget": {
               "label": "Select Linking Target"
             },
@@ -1294,11 +1302,11 @@
           "workflow": {
             "step1": {
               "label": "Step 1: ID check & component cleanup",
-              "toDo": "Please check the title information (name/identifiers) for errors. If there are duplicate titles, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'."
+              "toDo": "Please check the title information (name/identifiers) for errors. If there are duplicate titles, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'. All package titles and remaining identifiers of the deleted item will be transferred. Otherwise, proceed to the next step."
             },
             "step2": {
               "label": "Step 2: Title linking",
-              "toDo": "Please select a reference title to link to the package title. If there are no valid options, you may also generate a new title to link from the package title information."
+              "toDo": "Please select a reference title to link to the package title via 'select linking target', which will close of this review. If there are no valid options, you may also generate a new title to link from the package title information."
             }
           }
         },
@@ -1312,7 +1320,7 @@
           "label": "Identifier Conflict (New Title)",
           "info": "The newly created reference title {0} matched an existing title on one or more identifiers, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs significantly.",
           "action": "New reference title created",
-          "toDo": "Check if the new reference title is correct or if it is a duplicate. To merge titles, first select the title to remain via 'select merge target'. You now have the option to select additional identifiers you want to keep from the duplicate, and to complete the de-duplication via 'merge duplicate' (which wil automatically finish the review and close this view)."
+          "toDo": "Check if the new reference title is correct or if it is a duplicate. If it is, first select the matched title via 'select merge target'. You now have the option to select additional identifiers you want to keep from the duplicate, and to complete the de-duplication via 'merge duplicate' (which wil automatically finish the review and close this view)."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifier Conflict (ID added)",

@@ -4,6 +4,7 @@
     :loading="loading"
     :color="roleColor"
     :class="elevationClass"
+    :disabled="isDeleted"
     :outlined="isReviewedCard"
   >
     <gokb-confirmation-popup
@@ -225,6 +226,8 @@
               </gokb-button>
             </v-col>
           </v-row>
+          <div v-if="isMergeCandidate || isLinkCandidate" class="mt-2"> {{ isMergeCandidate ? $t('component.review.edit.components.merge.label') : $t('component.review.edit.components.link.label') }} </div>
+          <v-divider class="mb-2" />
           <v-row v-if="!isReviewedCard && !isCardSelected && !isOtherCardSelected && (isMergeCandidate || isLinkCandidate)">
             <v-col>
               <gokb-button
@@ -482,13 +485,16 @@
         else return true
       },
       isMergeCandidate () {
-        return this.status != 'Deleted' && this.mergeEnabled && this.route === '/title'
+        return !this.isDeleted && this.mergeEnabled && this.route === '/title'
       },
       isLinkCandidate () {
-        return this.status != 'Deleted' && this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
+        return !this.isDeleted && this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
       },
       showActions () {
         return this.isCardSelected
+      },
+      isDeleted () {
+        return this.status === 'Deleted'
       }
     },
     watch: {
