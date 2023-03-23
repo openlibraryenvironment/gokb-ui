@@ -70,7 +70,7 @@
       dense
     >
       <v-col md="12">
-        <div v-if="reviewComponent.stdDesc">
+        <div v-if="reviewComponent.stdDesc && reviewComponent.stdDesc.name != 'Manual Request'">
           <v-row>
             <v-col md="12">
               <div>
@@ -206,7 +206,7 @@
               </div>
             </v-col>
           </v-row>
-          <v-row v-if="reviewComponent.stdDesc && !hasComponentCards">
+          <v-row v-if="editable && reviewComponent.stdDesc && !hasComponentCards">
             <v-col>
               <div>
                 <label
@@ -297,6 +297,11 @@
         default: undefined
       },
       hasComponentCards: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      editable: {
         type: Boolean,
         required: false,
         default: false
