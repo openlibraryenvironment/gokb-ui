@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="expanded"
     :expandable="expandable"
     :filters="showEditActions"
     :sub-title="title"
@@ -185,6 +186,7 @@
         enableBulkCheck: false,
         successMessage: undefined,
         errorMsg: undefined,
+        expanded: true,
         loading: false,
         selectedItems: [],
         actionToConfirm: undefined,

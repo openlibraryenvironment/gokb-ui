@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="expanded"
     expandable
     :sub-title="title"
     :items-total="totalNumberOfItems"
@@ -127,6 +128,7 @@
         selectedItems: [],
         jobPanel: 0,
         jobs: [],
+        expanded: false,
         showGroupJobs: false,
         totalNumberOfItems: 0,
         confirmationPopUpVisible: false,

@@ -9,6 +9,12 @@
     <v-snackbar v-model="showSuccessMsg" color="success" :timeout="2000"> {{ localSuccessMessage }} </v-snackbar>
     <v-snackbar v-model="showErrorMsg" color="error" :timeout="2000"> {{ localErrorMessage }} </v-snackbar>
 
+    <gokb-confirmation-popup
+      v-model="showSubmitConfirm"
+      :message="submitConfirmationMessage"
+      @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+    />
+
     <gokb-reviews-header
       v-if="reviewItem?.component"
       :value="error"
@@ -22,6 +28,7 @@
     <gokb-reviews-components-section
       v-if="finishedLoading && showComponentCards"
       v-for="(wf, i) in workflow"
+      :ref="'wf' + i"
       :key="i"
       :value="error"
       :reviewed-component="reviewItem.component"
@@ -36,7 +43,7 @@
       :expanded="activeStep === i"
       @expand="activateStep(i)"
       @finished-step="changeActiveStep"
-      @merge="fetchReview"
+      @merge="processMerge"
       @added="addNewComponent"
       @close="closeReview"
       @feedback-response="showResponse"
@@ -59,14 +66,27 @@
       <gokb-button
         @click="closePopup"
       >
-        {{ isReadonly || reviewItem.isClosed ? $t('btn.close') : $t('btn.cancel') }}
+        {{ (isReadonly || reviewItem.isClosed) ? $t('btn.close') : $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
-        v-if="!isReadonly && !reviewItem.isClosed"
+        v-if="!isReadonly && !reviewItem.isClosed && showComponentCards && activeStep != workflow.length-1"
+        @click="activeStep++"
+      >
+        {{ $t('component.review.edit.next.label') }}
+      </gokb-button>
+      <gokb-button
+        v-else-if="!isReadonly && !reviewItem.isClosed"
+        class="ml-2"
         color="primary"
-        @click="closeReview"
+        @click="showConfirmCloseReview"
       >
         {{ $t('component.review.edit.close.label')}}
+      </gokb-button>
+      <gokb-button
+        v-else-if="!isReadonly && reviewItem.isClosed"
+        @click="showConfirmReopenReview"
+      >
+        {{ $t('component.review.edit.open.label')}}
       </gokb-button>
     </template>
   </gokb-dialog>
@@ -76,12 +96,16 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import reviewServices from '@/shared/services/review-services'
+  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import 'vue-json-pretty/lib/styles.css'
   import GokbReviewsHeader from '@/shared/components/complex/gokb-reviews-header/gokb-reviews-header.vue'
 
   export default {
     name: 'GokbReviewPopup',
-    components: { GokbReviewsHeader },
+    components: {
+      GokbReviewsHeader,
+      GokbConfirmationPopup
+    },
     extends: BaseComponent,
     props: {
       selected: {
@@ -106,10 +130,14 @@
         showSuccessMsg: false,
         showErrorMsg: false,
         errorMsg: undefined,
+        submitConfirmationMessage: undefined,
+        parameterToConfirm: undefined,
+        showSubmitConfirm: false,
         escalatable: false,
         updateUrl: undefined,
         deleteUrl: undefined,
         deescalatable: false,
+        deletedItems: [],
         workflow: [],
         activeStep: 0,
         reviewItem: {
@@ -156,7 +184,7 @@
         return this.reviewItem?.component?.type || undefined
       },
       cmpLabel () {
-        return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+        return (this.isEdit && !!this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       isReadonly () {
         return !this.updateUrl
@@ -168,13 +196,16 @@
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
       },
       localTitle () {
-        return this.$i18n.tc('component.review.label') + (this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
+        return this.$i18n.tc('component.review.label') + (!!this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
       },
       localErrorMessage () {
-        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label')]) : undefined
+        return !!this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label')]) : undefined
       },
       localSuccessMessage () {
-        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.review.label')]) : undefined
+        return !!this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.review.label')]) : undefined
+      },
+      closeReviewButtonDisabledText () {
+        return this.showComponentCards && this.activeStep != this.workflow.length-1 ? this.$i18n.t('component.review.edit.close.error.moreSteps') : undefined
       }
     },
     created () {
@@ -199,6 +230,9 @@
       }
     },
     methods: {
+      executeAction (actionMethodName, actionMethodParameter) {
+        this[actionMethodName](actionMethodParameter)
+      },
       async fetchReview (rid) {
         const response = await this.catchError({
           promise: reviewServices.get(rid, this.cancelToken.token),
@@ -212,6 +246,18 @@
           this.showErrorMsg = true
         }
         this.finishedLoading = true
+      },
+      showConfirmCloseReview () {
+        this.showSubmitConfirm = true
+        this.actionToConfirm = "closeReview"
+        this.parameterToConfirm = undefined
+        this.submitConfirmationMessage = { text: 'component.review.edit.confirm.close', vars: [] }
+      },
+      showConfirmReopenReview () {
+        this.showSubmitConfirm = true
+        this.actionToConfirm = "reopenReview"
+        this.parameterToConfirm = undefined
+        this.submitConfirmationMessage = { text: 'component.review.edit.confirm.reopen', vars: [] }
       },
       mapRecord (record) {
         this.additionalInfo = record.additionalInfo
@@ -229,9 +275,9 @@
         this.reviewItem.additionalVars = record.additionalInfo?.vars
         this.reviewItem.otherComponents = record.additionalInfo?.otherComponents ? record.additionalInfo.otherComponents.map(oc => ({
           name: oc.name,
-          id: (oc.oid ? parseInt(oc.oid.split(':')[1]) : oc.id),
+          id: (!!oc.oid ? parseInt(oc.oid.split(':')[1]) : oc.id),
           type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
-          route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())]
+          route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())],
         })) : []
         this.reviewItem.candidates = record.additionalInfo?.candidates
         this.updateUrl = record._links?.update?.href || undefined
@@ -240,47 +286,48 @@
 
         let merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/title')).map(c => (c.id))
 
-        if (this.reviewItem.component.route === '/package-title') {
-          if (merge_ids.length > 1) {
-            this.workflow.push({
-              title: this.$i18n.t('component.review.edit.components.workflow.tippLink.step1.label'),
-              toDo: this.$i18n.t('component.review.edit.components.workflow.tippLink.step1.toDo'),
-              showReviewed: false,
-              components: merge_ids,
-              actions: ['merge', 'ids']
-            })
-            this.workflow.push({
-              title: this.$i18n.t('component.review.edit.components.workflow.tippLink.step2.label'),
-              toDo: this.$i18n.t('component.review.edit.components.workflow.tippLink.step2.toDo'),
-              showReviewed: true,
-              components: merge_ids,
-              actions: ['link', 'add']
-            })
-          } else if (merge_ids.length === 1) {
-            this.workflow.push({
-              title: this.$i18n.t('component.review.edit.components.workflow.titleMatch.label'),
-              toDo: this.$i18n.t('component.review.edit.components.workflow.titleMatch.toDo'),
-              showReviewed: true,
-              components: merge_ids,
-              actions: ['ids']
-            })
-          } else {
-            this.workflow.push({
-              title: this.$i18n.t('component.review.edit.components.workflow.titleMatch.label'),
-              toDo: this.$i18n.t('component.review.edit.components.workflow.titleMatch.toDo'),
-              showReviewed: true,
-              components: this.reviewItem.otherComponents.map(c => c.id),
-              actions: ['ids']
-            })
-          }
-        } else if (this.reviewItem.component.route === '/title') {
+        if (this.reviewItem.component.route === '/title') {
+          merge_ids.push(this.reviewItem.component.id)
+        }
+
+        this.workflow = []
+
+        if (this.isReadonly) {
           this.workflow.push({
-            title: this.$i18n.t('component.review.edit.components.workflow.titleMatch.label'),
-            toDo: this.$i18n.t('component.review.edit.components.workflow.titleMatch.toDo'),
+            title: "",
+            toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
+            components: merge_ids,
+            actions: []
+          })
+        } else if (this.reviewItem.component.route === '/package-title' && merge_ids.length > 1) {
+          this.workflow.push({
+            title: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step1.label'),
+            toDo: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step1.toDo'),
+            showReviewed: false,
             components: merge_ids,
             actions: ['merge', 'ids']
           })
+          this.workflow.push({
+            title: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step2.label'),
+            toDo: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step2.toDo'),
+            showReviewed: true,
+            components: merge_ids,
+            actions: ['link', 'add']
+          })
+        } else {
+          this.workflow.push({
+            title: this.$i18n.t('component.review.edit.components.workflow.titleReview.label'),
+            toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
+            showReviewed: true,
+            components: merge_ids,
+            actions: ['merge','ids']
+          })
+        }
+      },
+      processMerge (id) {
+        if (this.workflow.length === 2) {
+          this.$refs.wf1.refreshItem(id)
         }
       },
       async closeReview () {
@@ -293,6 +340,21 @@
           this.errorMsg = 'error.update.400'
         }
       },
+      async reopenReview () {
+        let body = {
+          id: this.id,
+          status: 'Open'
+        }
+
+        const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
+
+        if (resp.status === 200) {
+          this.$emit('edit', 'reopened')
+          this.mapRecord(resp.data)
+        } else {
+          this.errorMsg = 'error.update.400'
+        }
+      },
       async addNewComponent (info) {
         if (!this.additionalInfo.otherComponents) {
           this.additionalInfo.otherComponents = []
@@ -301,6 +363,8 @@
         this.additionalInfo.otherComponents.push({
           name: info.name,
           id: info.id,
+          oid: 'org.gokb.cred.' + info.componentType + ':' + info.id,
+          type: info.componentType,
           uuid: info.uuid
         })
 
@@ -312,7 +376,7 @@
         const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
 
         this.showResponse(resp)
-        this.mapRecord(resp.data)
+        this.fetchReview(this.id)
       },
       closePopup () {
         this.localValue = false
@@ -334,14 +398,15 @@
           this.errorMsg = response
         }
         else {
-          if (response.status < 400) {
+          if (response?.status < 400) {
             this.errorMsg = undefined
             this.showSuccessMsg = true
             this.successMsg = 'component.review.edit.success.edited'
           }
           else {
             this.localSuccessMessage = undefined
-            this.errors = response.data.error
+            this.errors = response?.data?.error
+
             if (response.status === 403) {
               this.errorMsg = 'error.update.403'
               this.showErrorMsg = true

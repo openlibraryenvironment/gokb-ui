@@ -159,7 +159,7 @@
         return this.selectedItems.length === 0
       },
       searchHeader () {
-        return this.$i18n.t('header.search')
+        return this.$i18n.t('header.search.label')
       },
       resultHeader () {
         return this.$i18n.t('header.results')

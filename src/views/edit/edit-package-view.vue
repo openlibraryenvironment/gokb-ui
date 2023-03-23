@@ -883,14 +883,14 @@
         }
       },
       step () {
-        this.$refs.descInfo.refreshRows()
-        this.$refs.descEdit.refreshRows()
+        this.$refs?.descInfo?.refreshRows()
+        this.$refs?.descEdit?.refreshRows()
       }
     },
     async created () {
-      this.reload()
+      await this.reload()
 
-      if (this.initMessageCode) {
+      if (!!this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
           this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success' })
         } else if (this.initMessageCode.includes('failure')) {
@@ -900,7 +900,7 @@
         }
       }
 
-      if (this.kbartJob) {
+      if (!!this.kbartJob) {
         this.loadImportJobStatus(this.kbartJob)
       } else if (this.isEdit && this.accessible) {
         this.getActiveJobs()
@@ -1214,7 +1214,7 @@
 
           loading.stopLoading()
         } else {
-          if (this.loggedIn && this.activeGroup) {
+          if (this.loggedIn && !!this.activeGroup) {
             this.allCuratoryGroups = [this.activeGroup]
           }
         }
@@ -1333,7 +1333,7 @@
       },
       async getActiveJobs () {
         const jobResult = await this.catchError({
-          promise: jobServices.search({ linkedItem: this.id }, this.cancelToken.token),
+          promise: jobServices.search({ linkedItem: this.packageItem.id }, this.cancelToken.token),
           instance: this
         })
 
@@ -1342,7 +1342,6 @@
             this.activeJobs = true
 
             jobResult.data.data.forEach((job) => {
-              console.log(job)
               if (job.type?.value === 'PackageTitleMatch') {
                 this.loadMatchingJobStatus(job.uuid, job.type.value)
               }

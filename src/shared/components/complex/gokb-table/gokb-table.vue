@@ -220,7 +220,13 @@
 
   export default {
     name: 'GokbTable',
-    components: { GokbEditJobPopup, GokbEditPlatformPopup, GokbAddTitlePopup, GokbReviewPopup, GokbCuratoryGroupPopup },
+    components: {
+      GokbEditJobPopup,
+      GokbEditPlatformPopup,
+      GokbAddTitlePopup,
+      GokbReviewPopup,
+      GokbCuratoryGroupPopup
+    },
     extends: BaseComponent,
     props: {
       disabled: {
