@@ -321,13 +321,17 @@
             toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
             components: merge_ids,
-            actions: ['merge','ids']
+            actions: (merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
           })
         }
       },
-      processMerge (id) {
+      processMerge (titles) {
+        this.$refs.wf0.refreshItem(titles.merged)
+        this.$refs.wf0.refreshItem(titles.target)
+
         if (this.workflow.length === 2) {
-          this.$refs.wf1.refreshItem(id)
+          this.$refs.wf1.refreshItem(titles.merged)
+          this.$refs.wf1.refreshItem(titles.target)
         }
       },
       async closeReview () {

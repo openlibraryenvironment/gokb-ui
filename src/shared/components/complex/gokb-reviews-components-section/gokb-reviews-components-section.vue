@@ -108,7 +108,7 @@
                     <v-col cols="6">
                       <gokb-title-field
                         v-model="newTitle"
-                        :label="$t('header.search.label' , [$tc('component.title.label')])"
+                        :label="$t('header.searchType.label' , [$tc('component.title.label')])"
                         width="50%"
                         return-object />
                     </v-col>
@@ -323,14 +323,14 @@
             if (mergedId === this.reviewedComponent.id) {
               this.$emit('close', true)
             } else {
-              this.$emit('merge', true)
+              this.$emit('merge', { merged: mergedId, target: targetId })
             }
           }
           this.feedbackResponse(mergeResponse)
         }
       },
       refreshItem (id) {
-        this.$refs['' + id].fetchTitle()
+        this.$refs[id.toString()].fetchTitle()
       },
       showConfirmGenerateTitle () {
         this.showSubmitConfirm = true

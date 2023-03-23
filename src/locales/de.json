@@ -478,7 +478,7 @@
     "create": {
       "label": "{0} anlegen"
     },
-    "search": {
+    "searchType": {
       "label": "{0} suchen"
     },
     "show": {
@@ -489,6 +489,7 @@
     },
     "welcome": "Willkommen zur Global Open Knowledgebase!",
     "dashboard": "Dashboard",
+    "search": "Suche",
     "results": "Ergebnisse"
   },
   "search": {
