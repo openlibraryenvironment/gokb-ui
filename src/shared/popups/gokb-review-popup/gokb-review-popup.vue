@@ -275,7 +275,7 @@
         this.reviewItem.additionalVars = record.additionalInfo?.vars
         this.reviewItem.otherComponents = record.additionalInfo?.otherComponents ? record.additionalInfo.otherComponents.map(oc => ({
           name: oc.name,
-          id: (oc.oid ? parseInt(oc.oid.split(':')[1]) : oc.id),
+          id: (!!oc.oid ? parseInt(oc.oid.split(':')[1]) : oc.id),
           type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
           route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())],
         })) : []
@@ -292,7 +292,15 @@
 
         this.workflow = []
 
-        if (this.reviewItem.component.route === '/package-title' && merge_ids.length > 1) {
+        if (this.isReadonly) {
+          this.workflow.push({
+            title: "",
+            toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
+            showReviewed: true,
+            components: merge_ids,
+            actions: []
+          })
+        } else if (this.reviewItem.component.route === '/package-title' && merge_ids.length > 1) {
           this.workflow.push({
             title: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step1.label'),
             toDo: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step1.toDo'),
@@ -355,6 +363,8 @@
         this.additionalInfo.otherComponents.push({
           name: info.name,
           id: info.id,
+          oid: 'org.gokb.cred.' + info.componentType + ':' + info.id,
+          type: info.componentType,
           uuid: info.uuid
         })
 

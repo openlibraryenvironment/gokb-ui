@@ -226,8 +226,6 @@
               </gokb-button>
             </v-col>
           </v-row>
-          <div v-if="isMergeCandidate || isLinkCandidate" class="mt-2"> {{ isMergeCandidate ? $t('component.review.edit.components.merge.label') : $t('component.review.edit.components.link.label') }} </div>
-          <v-divider class="mb-2" />
           <v-row v-if="!isReviewedCard && !isCardSelected && !isOtherCardSelected && (isMergeCandidate || isLinkCandidate)">
             <v-col>
               <gokb-button

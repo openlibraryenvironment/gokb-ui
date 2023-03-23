@@ -478,6 +478,9 @@
     "create": {
       "label": "Create {0}"
     },
+    "search": {
+      "label": "Search {0}"
+    },
     "show": {
       "label": "{0} details"
     },
@@ -486,7 +489,6 @@
     },
     "welcome": "Welcome to the Global Open Knowledgebase!",
     "dashboard": "Dashboard",
-    "search": "Search",
     "results": "Results"
   },
   "search": {
@@ -1107,6 +1109,12 @@
             "confirmLink": {
               "label": "Confirm Linking",
               "message": "Please confirm the linking of the global title {0} with the package title."
+            },
+            "lookup": {
+              "label": "Add another title to the selection"
+            },
+            "or": {
+              "label": "OR"
             }
           },
           "add": {
@@ -1306,7 +1314,7 @@
             },
             "step2": {
               "label": "Step 2: Title linking",
-              "toDo": "Please select a reference title to link to the package title via 'select linking target', which will close of this review. If there are no valid options, you may also generate a new title to link from the package title information."
+              "toDo": "Please select a reference title to link to the package title via 'select linking target', which will close off this review. If there are no valid options, you may also generate a new title to link from the package title information."
             }
           }
         },

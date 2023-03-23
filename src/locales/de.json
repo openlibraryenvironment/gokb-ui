@@ -478,6 +478,9 @@
     "create": {
       "label": "{0} anlegen"
     },
+    "search": {
+      "label": "{0} suchen"
+    },
     "show": {
       "label": "{0}-Details"
     },
@@ -486,7 +489,6 @@
     },
     "welcome": "Willkommen zur Global Open Knowledgebase!",
     "dashboard": "Dashboard",
-    "search": "Suche",
     "results": "Ergebnisse"
   },
   "search": {
@@ -1107,6 +1109,12 @@
             "confirmLink": {
               "label": "Verknüpfung bestätigen",
               "message": "Bitte bestätigen Sie die Auswahl des Referenztitels {0} zur Verknüpfung mit dem Pakettitel."
+            },
+            "lookup": {
+              "label": "Bestehenden Titel zur Auswahl hinzufügen"
+            },
+            "or": {
+              "label": "ODER"
             }
           },
           "add": {
