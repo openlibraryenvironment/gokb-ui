@@ -23,7 +23,7 @@
         </span>
         <v-spacer />
         <slot
-          v-if="expanded"
+          v-if="localValue"
           name="buttons"
         />
       </v-toolbar>

@@ -1028,34 +1028,38 @@
           "closed": "Request marked as finished",
           "closedBulk": "Request marked as finished | {0} requests marked as finished"
         },
+        "confirm": {
+          "close": "Please confirm marking this review as finished.",
+          "reopen": "Please confirm the reopening of this review."
+        },
+        "componentToReview": {
+          "label": "{0} to review"
+        },
         "close": {
-          "label": "Close review"
+          "label": "Close review",
+          "error": {
+            "moreSteps": "Please check all workflow steps before closing this review."
+          }
+        },
+        "next": {
+          "label": "Next Step"
         },
         "open": {
           "label": "Re-open review"
         },
         "components": {
           "workflow": {
-            "tippLink": {
-              "step1": {
-                "label": "Step 1: ID check & component cleanup",
-                "toDo": "Please check the title information (name/identifiers) for errors. If you see duplicates, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'."
-              },
-              "step2": {
-                "label": "Step 2: Title linking",
-                "toDo": "Please select a reference title to link to the package title. If there are no valid options, you may also generate a new title to link from the package title information."
-              }
+            "titleMerge": {
+              "label": "Identifier check & Duplicate cleanup",
+              "toDo": "Please check the title information (name/identifiers) for errors. If there are duplicate titles, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'."
             },
-            "titleMatch": {
-              "label": "ID check & duplicate cleanup",
-              "toDo": "Please check the title information (name/identifiers) for errors. If you see duplicates, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'."
-            },
-            "tippMisMatch": {
-              "label": "Identifier comparison",
+            "titleReview": {
+              "label": "Identifier check",
               "toDo": "Please check the title information (name/identifiers) for errors."
             }
           },
           "merge": {
+            "label": "Title merge",
             "selectTarget": {
               "label": "Select Merge Target"
             },
@@ -1076,10 +1080,10 @@
               }
             },
             "selected": {
-              "label": "Selected Component"
+              "label": "Selected {0}"
             },
             "unselected": {
-              "label": "Other Component"
+              "label": "{0}"
             }
           },
           "single": {
@@ -1090,6 +1094,7 @@
             }
           },
           "link": {
+            "label": "Title linking",
             "selectTarget": {
               "label": "Select Linking Target"
             },
@@ -1107,7 +1112,7 @@
           },
           "add": {
             "label": "Generate new title",
-            "message": "Please confirm the creation of a new title with ALL remaining identifiers of the component to review."
+            "message": "Please confirm the creation of a new reference title with ALL remaining identifiers of the reviewed package title."
           }
         }
       },
@@ -1294,7 +1299,17 @@
           "label": "Ambiguous Title Matches",
           "info": "The package title has been matched on multiple reference titles.",
           "action": "No reference title selected",
-          "toDo": "Please select a reference title to be linked to the package title. If the other candidates contain duplicate items to the selected, clean up by merging them into the selected item."
+          "toDo": "Please select a reference title to be linked to the package title. If the other candidates contain duplicate items to the selected, clean up by merging them into the selected item.",
+          "workflow": {
+            "step1": {
+              "label": "Step 1: ID check & component cleanup",
+              "toDo": "Please check the title information (name/identifiers) for errors. If there are duplicate titles, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'. All package titles and remaining identifiers of the deleted item will be transferred. Otherwise, proceed to the next step."
+            },
+            "step2": {
+              "label": "Step 2: Title linking",
+              "toDo": "Please select a reference title to link to the package title via 'select linking target', which will close of this review. If there are no valid options, you may also generate a new title to link from the package title information."
+            }
+          }
         },
         "Namespace Conflict": {
           "label": "Namespace Conflict",
@@ -1304,9 +1319,9 @@
         },
         "Critical Identifier Conflict": {
           "label": "Identifier Conflict (New Title)",
-          "info": "Reference title {0} matched an existing reference title on one identifier, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs significantly.",
+          "info": "The newly created reference title {0} matched an existing title on one or more identifiers, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs significantly.",
           "action": "New reference title created",
-          "toDo": "Check if the new reference title is correct or if it is a duplicate. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
+          "toDo": "Check if the new reference title is correct or if it is a duplicate. If it is, first select the matched title via 'select merge target'. You now have the option to select additional identifiers you want to keep from the duplicate, and to complete the de-duplication via 'merge duplicate' (which wil automatically finish the review and close this view)."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifier Conflict (ID added)",

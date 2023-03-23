@@ -4,6 +4,8 @@
     :loading="loading"
     :color="roleColor"
     :class="elevationClass"
+    :disabled="isDeleted"
+    :outlined="isReviewedCard"
   >
     <gokb-confirmation-popup
       v-model="showSubmitConfirm"
@@ -40,6 +42,18 @@
           >
             mdi-pencil
           </v-icon>
+        </v-col>
+      </v-row>
+      <v-row v-if="linkedPackage" dense>
+        <v-col>
+          <span> {{ $tc('component.package.label') }}: </span>
+          <router-link
+            :style="{ color: 'primary' }"
+            :to="{ name: '/package', params: { 'id': linkedPackage.id } }"
+            target="_blank"
+          >
+            {{ linkedPackage.name }}
+          </router-link>
         </v-col>
       </v-row>
     </v-card-subtitle>
@@ -202,6 +216,18 @@
       </div>
       <v-row class="mt-3">
         <v-col>
+          <v-row v-if="isEditable && (!isReviewedCard || !mergeEnabled || !isOtherCardSelected)">
+            <v-col>
+              <gokb-button
+                :disabled="selectedIdItems.length === 0 && !isNamePending"
+                @click="showConfirmSelectedCard('single')"
+              >
+                {{ $i18n.t('component.review.edit.components.single.confirm.label') }}
+              </gokb-button>
+            </v-col>
+          </v-row>
+          <div v-if="isMergeCandidate || isLinkCandidate" class="mt-2"> {{ isMergeCandidate ? $t('component.review.edit.components.merge.label') : $t('component.review.edit.components.link.label') }} </div>
+          <v-divider class="mb-2" />
           <v-row v-if="!isReviewedCard && !isCardSelected && !isOtherCardSelected && (isMergeCandidate || isLinkCandidate)">
             <v-col>
               <gokb-button
@@ -240,16 +266,6 @@
               </gokb-button>
             </v-col>
           </v-row>
-          <v-row v-if="isEditable && (!isReviewedCard || !mergeEnabled || !isOtherCardSelected)">
-            <v-col>
-              <gokb-button
-                :disabled="selectedIdItems.length === 0 && !isNamePending"
-                @click="showConfirmSelectedCard('single')"
-              >
-                {{ $i18n.t('component.review.edit.components.single.confirm.label') }}
-              </gokb-button>
-            </v-col>
-          </v-row>
         </v-col>
       </v-row>
     </v-card-text>
@@ -268,13 +284,6 @@
   import namespacesModel from '@/shared/models/namespaces-model'
 
   const ROWS_PER_PAGE = 10
-
-  const STATUS_ICONS = {
-    'Current': { icon: "mdi-check-circle", color: 'success'},
-    'Retired': { icon: "mdi-close-circle", color: 'amber'},
-    'Expected': { icon: "mdi-clock", color: 'info'},
-    'Deleted': { icon: "mdi-delete", color: 'red'}
-  }
 
   export default {
     name: 'GokbReviewsTitleCard',
@@ -357,6 +366,7 @@
         ids: [],
         titleName: undefined,
         status: undefined,
+        linkedPackage: undefined,
         idOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
@@ -423,7 +433,7 @@
         ]
       },
       elevationClass () {
-        return (this.isReviewedCard || this.isCardSelected) ? 'elevation-4' : 'elevation-1'
+        return (this.isReviewedCard || this.isCardSelected) ? 'elevation-6' : 'elevation-1'
       },
       totalNumberOfIds () {
         return !!(this.ids) ? this.ids.length : 0
@@ -475,13 +485,16 @@
         else return true
       },
       isMergeCandidate () {
-        return this.status != 'Deleted' && this.mergeEnabled
+        return !this.isDeleted && this.mergeEnabled && this.route === '/title'
       },
       isLinkCandidate () {
-        return this.status != 'Deleted' && this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
+        return !this.isDeleted && this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
       },
       showActions () {
         return this.isCardSelected
+      },
+      isDeleted () {
+        return this.status === 'Deleted'
       }
     },
     watch: {
@@ -498,7 +511,7 @@
         this.selCardIds = this.selectedCardIds
       },
       selectedIdItems () {
-        if (this.isReviewedCard) {
+        if (this.isReviewedCard && this.isMergeCandidate) {
           this.$emit('reviewed-card-selected-ids', this.selectedIdItems)
         }
       },
@@ -512,7 +525,7 @@
     },
     async mounted () {
       this.fetchTitle()
-      if (this.editable && this.isReviewedCard && this.isOtherCardSelected) {
+      if (this.editable && this.isReviewedCard) {
         this.fetchReviewMismatchIds()
       }
     },
@@ -534,6 +547,10 @@
           this.titleName = response.data.name
           this.status = response.data.status.name
           this.idsVisible = this.updateVisibleIdentifiers()
+
+          if (response.data.type === 'TIPP') {
+            this.linkedPackage = response.data.pkg
+          }
 
           if (response.data.type  === 'Journal') {
             this.publishingDates = [
@@ -611,10 +628,6 @@
         let putData = this.originalRecord
         putData.ids = this.ids.filter(ido => !this.selectedIdItems.some(sel => sel.id == ido.id))
 
-        if (!!this.titleName && this.titleName != this.originalRecord?.name) {
-          putData.name = this.titleName
-        }
-
         const putResponse = await this.catchError({
           promise: this.activeService.createOrUpdate(putData, this.cancelToken.token),
           instance: this
@@ -622,6 +635,7 @@
 
         this.$emit('feedback-response', putResponse)
         this.isChanged = true
+        this.isNamePending = false
         this.deselectCard()
         this.fetchTitle()
       },
@@ -706,17 +720,9 @@
           if (!!data && !!data[0]) {
             this.mismatchIdentifiers.push(data[0])
           }
-          else this.addNewReviewMismatchId(parameters)
-        }
-      },
-      async addNewReviewMismatchId(parameters) {
-        const response = await this.catchError({
-          promise: identifierServices.createOrUpdate(parameters, this.cancelToken.token),
-          instance: this
-        })
-        const { data } = response
-        if (!!data) {
-          this.mismatchIdentifiers.push(data)
+          else {
+            console.log('Unable to lookup identifier object for ' + namespace + ':' + id + '!')
+          }
         }
       }
     }

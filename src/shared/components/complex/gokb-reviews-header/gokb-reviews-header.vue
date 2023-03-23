@@ -70,7 +70,7 @@
       dense
     >
       <v-col md="12">
-        <div v-if="reviewComponent.stdDesc">
+        <div v-if="reviewComponent.stdDesc && reviewComponent.stdDesc.name != 'Manual Request'">
           <v-row>
             <v-col md="12">
               <div>
