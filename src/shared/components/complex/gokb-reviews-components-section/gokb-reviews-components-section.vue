@@ -21,7 +21,9 @@
         >
           <v-row>
             <v-col>
-              <h3 class="mb-1"> {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}</h3>
+              <h3 class="mb-1">
+                <v-icon class="mr-1 mt-n1"> {{ reviewedComponent.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }} </v-icon> {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
+              </h3>
               <gokb-reviews-title-card
                 :id="reviewedComponent.id"
                 :ref="reviewedComponent.id"
@@ -58,6 +60,9 @@
           <v-row>
             <v-col>
               <h3 class="mb-1">
+                <v-icon class="mr-1 mt-n1">
+                  {{ i.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
+                </v-icon>
                 {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) : $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
                 <b>#{{ idx + 1 }}</b>
               </h3>
@@ -95,9 +100,28 @@
           <v-card class="mt-4 mb-2" height="95%">
             <v-container fill-height fluid>
               <v-row align="center" justify="space-around">
-                <gokb-button @click="showConfirmGenerateTitle">
-                  {{ $t('component.review.edit.components.add.label') }}
-                </gokb-button>
+                <v-col>
+                  <v-row dense justify="space-around">
+                    {{ $t('component.review.edit.components.link.lookup.label') }}
+                  </v-row>
+                  <v-row dense justify="space-around">
+                    <v-col cols="6">
+                      <gokb-title-field
+                        v-model="newTitle"
+                        :label="$t('header.searchType.label' , [$tc('component.title.label')])"
+                        width="50%"
+                        return-object />
+                    </v-col>
+                  </v-row>
+                  <v-row dense justify="space-around">
+                    {{ $t('component.review.edit.components.link.or.label') }}
+                  </v-row>
+                  <v-row justify="space-around">
+                    <gokb-button @click="showConfirmGenerateTitle">
+                      {{ $t('component.review.edit.components.add.label') }}
+                    </gokb-button>
+                  </v-row>
+                </v-col>
               </v-row>
             </v-container>
           </v-card>
@@ -232,6 +256,13 @@
         return this.editable ? this.workflow.title : ""
       }
     },
+    watch: {
+      newTitle (val) {
+        if (!!val) {
+          this.$emit('added', val)
+        }
+      }
+    },
     created() {
       if (this.workflow.showReviewed) {
         this.linkedComponents[this.reviewedComponent.id.toString()] = {
@@ -292,14 +323,14 @@
             if (mergedId === this.reviewedComponent.id) {
               this.$emit('close', true)
             } else {
-              this.$emit('merge', true)
+              this.$emit('merge', { merged: mergedId, target: targetId })
             }
           }
           this.feedbackResponse(mergeResponse)
         }
       },
       refreshItem (id) {
-        this.$refs['' + id].fetchTitle()
+        this.$refs[id.toString()].fetchTitle()
       },
       showConfirmGenerateTitle () {
         this.showSubmitConfirm = true
@@ -374,6 +405,15 @@
         this.$emit('feedback-response', response)
       },
       toggleLoaded (info) {
+        if (!this.linkedComponents[info.id.toString()]) {
+          this.linkedComponents[info.id.toString()] = {
+            loaded: false,
+            active: true,
+            role: 'referenceComponent',
+            route: rc.route
+          }
+        }
+
         if (!info.status) {
           this.linkedComponents[info.id.toString()].loaded = false
         } else {

@@ -206,7 +206,7 @@
               </div>
             </v-col>
           </v-row>
-          <v-row v-if="reviewComponent.stdDesc && !hasComponentCards">
+          <v-row v-if="editable && reviewComponent.stdDesc && !hasComponentCards">
             <v-col>
               <div>
                 <label
@@ -297,6 +297,11 @@
         default: undefined
       },
       hasComponentCards: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      editable: {
         type: Boolean,
         required: false,
         default: false
