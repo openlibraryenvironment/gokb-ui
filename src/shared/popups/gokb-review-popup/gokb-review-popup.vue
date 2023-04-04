@@ -6,8 +6,8 @@
     fullscreen
   >
     <gokb-error-component :value="error" />
-    <v-snackbar v-model="showSuccessMsg" color="success" :timeout="2000"> {{ localSuccessMessage }} </v-snackbar>
-    <v-snackbar v-model="showErrorMsg" color="error" :timeout="2000"> {{ localErrorMessage }} </v-snackbar>
+    <v-snackbar v-model="showSuccessMsg" color="success" :timeout="5000"> {{ successMsg }} </v-snackbar>
+    <v-snackbar v-model="showErrorMsg" color="error" :timeout="5000"> {{ errorMsg }} </v-snackbar>
 
     <gokb-confirmation-popup
       v-model="showSubmitConfirm"
@@ -198,12 +198,6 @@
       localTitle () {
         return this.$i18n.tc('component.review.label') + (!!this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
       },
-      localErrorMessage () {
-        return !!this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label')]) : undefined
-      },
-      localSuccessMessage () {
-        return !!this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.review.label')]) : undefined
-      },
       closeReviewButtonDisabledText () {
         return this.showComponentCards && this.activeStep != this.workflow.length-1 ? this.$i18n.t('component.review.edit.close.error.moreSteps') : undefined
       }
@@ -242,7 +236,7 @@
         if (response.status === 200) {
           this.mapRecord(response.data)
         } else {
-          this.errorMsg = 'error.general.500'
+          this.errorMsg = this.$i18n.t('error.general.500')
           this.showErrorMsg = true
         }
         this.finishedLoading = true
@@ -321,13 +315,17 @@
             toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
             components: merge_ids,
-            actions: ['merge','ids']
+            actions: (merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
           })
         }
       },
-      processMerge (id) {
+      processMerge (titles) {
+        this.$refs.wf0.refreshItem(titles.merged)
+        this.$refs.wf0.refreshItem(titles.target)
+
         if (this.workflow.length === 2) {
-          this.$refs.wf1.refreshItem(id)
+          this.$refs.wf1.refreshItem(titles.merged)
+          this.$refs.wf1.refreshItem(titles.target)
         }
       },
       async closeReview () {
@@ -337,7 +335,7 @@
           this.$emit('edit', 'closed')
           this.closePopup()
         } else {
-          this.errorMsg = 'error.update.400'
+          this.errorMsg = this.$i18n.t('error.update.400')
         }
       },
       async reopenReview () {
@@ -352,7 +350,7 @@
           this.$emit('edit', 'reopened')
           this.mapRecord(resp.data)
         } else {
-          this.errorMsg = 'error.update.400'
+          this.errorMsg = this.$i18n.t('error.update.400')
         }
       },
       async addNewComponent (info) {
@@ -396,31 +394,36 @@
       showResponse (response) {
         if (typeof response === 'string' || response instanceof String) {
           this.errorMsg = response
+          this.showErrorMsg = true
         }
         else {
-          if (response?.status < 400) {
-            this.errorMsg = undefined
-            this.showSuccessMsg = true
-            this.successMsg = 'component.review.edit.success.edited'
+          if (response?.message) {
+            if (response.type == 'success') {
+              this.successMsg = response.message
+              this.showSuccessMsg = true
+            } else {
+              this.errorMsg = response.message
+              this.showErrorMsg = true
+            }
           }
           else {
-            this.localSuccessMessage = undefined
-            this.errors = response?.data?.error
+            this.successMsg = undefined
+            this.errors = response?.resp.data?.error
 
-            if (response.status === 403) {
-              this.errorMsg = 'error.update.403'
+            if (response.resp.status === 403) {
+              this.errorMsg = this.$i18n.t('error.update.403')
               this.showErrorMsg = true
             }
-            else if (response.status === 409) {
-              this.errorMsg = 'error.update.409'
+            else if (response.resp.status === 409) {
+              this.errorMsg = this.$i18n.t('error.update.409')
               this.showErrorMsg = true
             }
-            else if (response.status === 500) {
-              this.errorMsg = 'error.general.500'
+            else if (response.resp.status === 500) {
+              this.errorMsg = this.$i18n.t('error.general.500')
               this.showErrorMsg = true
             }
             else {
-              this.errorMsg = 'error.update.400'
+              this.errorMsg = this.$i18n.t('error.update.400')
               this.showErrorMsg = true
             }
           }

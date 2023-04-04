@@ -17,7 +17,7 @@
     :placeholder="placeholder"
     :append-icon="appendIcon"
     :validate-on-blur="validateOnBlur"
-    :clearable="!readonly && !disabled"
+    :clearable="allowClear"
     :dense="dense"
     @click:append="$emit('click:append', $event)"
     @click:prepend="iconAction"
@@ -121,6 +121,11 @@
         type: [Object, Array],
         required: false,
         default: undefined
+      },
+      allowClear: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     computed: {

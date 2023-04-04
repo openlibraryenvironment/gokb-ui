@@ -30,6 +30,7 @@
             append-icon="mdi-check-bold"
             editable
             dense
+            :allow-clear="false"
             @click:append="saveNameChange"
           />
           <v-icon
@@ -415,6 +416,9 @@
           return "#d2f2d2"
         }
       },
+      typeLabel () {
+        return (this.route === '/title' ? this.$i18n.tc('component.title.label') : this.$i18n.tc('component.tipp.label'))
+      },
       statusIcons () {
         return {
           'Current': { icon: "mdi-check-circle", color: 'success'},
@@ -631,11 +635,17 @@
           instance: this
         })
 
-        this.$emit('feedback-response', putResponse)
         this.isChanged = true
         this.isNamePending = false
         this.deselectCard()
         this.fetchTitle()
+
+        if (putResponse.status === 200) {
+          this.$emit('feedback-response', { type: 'success', message: this.$i18n.t('success.update', [this.typeLabel, this.titleName]) })
+        }
+        else {
+          this.$emit('feedback-response', { type: 'error', code: putResponse.status, resp: putResponse })
+        }
       },
       deleteId (id) {
         this.pendingStatuses[id.id] = 'removed'
@@ -643,7 +653,7 @@
       },
       getPendingStatus (id) {
         if ( !this.isReviewedCard || (this.isReviewedCard && !this.isOtherCardSelected) || this.singleCardReview){
-          return this.getDeletedStatus(id)
+          return null
         } else {
           return this.getMergeStatus(id)
         }
