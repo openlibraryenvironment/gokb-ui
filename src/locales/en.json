@@ -440,7 +440,8 @@
     "create": "Successfully created {0} {1}!",
     "update": "Successfully edited {0} {1}!",
     "retire": "Successfully archived {0} {1}!",
-    "delete": "Successfully deleted {0} {1}!"
+    "delete": "Successfully deleted {0} {1}!",
+    "merge": "{0} have been successfully merged!"
   },
   "error": {
     "label": "Error | Errors",
@@ -1276,7 +1277,7 @@
         "EZB Title Overlap": {
           "label": "EZB Label Mismatch",
           "info": "Matched EZB-ID is already linked to another title instance.",
-          "action": "",
+          "action": "-",
           "toDo": ""
         },
         "ZDB Title Overlap": {
@@ -1306,7 +1307,7 @@
         "Ambiguous Title Matches": {
           "label": "Ambiguous Title Matches",
           "info": "The package title has been matched on multiple reference titles.",
-          "action": "No reference title selected",
+          "action": "Unable to select a reference title.",
           "toDo": "Please select a reference title to be linked to the package title. If the other candidates contain duplicate items to the selected, clean up by merging them into the selected item.",
           "workflow": {
             "step1": {
@@ -1322,8 +1323,8 @@
         "Namespace Conflict": {
           "label": "Namespace Conflict",
           "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
-          "action": "",
-          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. Check the package title identifiers and the KBART record. Correct them if necessary."
+          "action": "-",
+          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. If the package title identifiers are wrong, please contact the provider of the KBART file and ask for the information to be fixed."
         },
         "Critical Identifier Conflict": {
           "label": "Identifier Conflict (New Title)",
@@ -1359,7 +1360,7 @@
           "label": "Import Identifier Mismatch",
           "info": "A KBART record has been matched on an existing package title by some identifiers, but other important identifiers conflict.",
           "action": "New package title created",
-          "toDo": "Check the package titles and merge them if necessary."
+          "toDo": "Check the identifiers of these package titles. If there are errors, the preferred solution is a new import of a corrected KBART file. In that case, you may delete the package titles to be corrected from their detail view before the import. Alternatively, you may manually delete erroneuos identifiers here."
         },
         "Import Report": {
           "label": "Report on KBART Import",
@@ -1370,25 +1371,25 @@
         "Invalid Name": {
           "label": "Invalid Name",
           "info": "The name of this title contains invalid characters.",
-          "action": "",
+          "action": "-",
           "toDo": "Correct the name of the title (check external sources if necessary). Please also check linked Package/Reference titles."
         },
         "Information": {
           "label": "Information",
           "info": "",
-          "action": "",
+          "action": "-",
           "toDo": ""
         },
         "Manual Request": {
           "label": "Manual Request",
           "info": "",
-          "action": "",
+          "action": "-",
           "toDo": ""
         },
         "Invalid Indentifiers": {
           "label": "Invalid Identifiers",
           "info": "There are invalid identifiers linked to this component!",
-          "action": "",
+          "action": "-",
           "toDo": "Please delete invalid identifiers and replace them with the correct ones."
         }
       }

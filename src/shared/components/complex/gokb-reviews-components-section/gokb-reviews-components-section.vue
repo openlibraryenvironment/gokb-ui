@@ -22,7 +22,10 @@
           <v-row>
             <v-col>
               <h3 class="mb-1">
-                <v-icon class="mr-1 mt-n1"> {{ reviewedComponent.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }} </v-icon> {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
+                <v-icon class="mr-1 mt-n1">
+                  {{ reviewedComponent.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
+                </v-icon>
+                {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
               </h3>
               <gokb-reviews-title-card
                 :id="reviewedComponent.id"
@@ -110,7 +113,8 @@
                         v-model="newTitle"
                         :label="$t('header.searchType.label' , [$tc('component.title.label')])"
                         width="50%"
-                        return-object />
+                        return-object
+                      />
                     </v-col>
                   </v-row>
                   <v-row dense justify="space-around">
@@ -314,7 +318,7 @@
           instance: this
         })
         if (typeof mergeResponse == 'undefined') {
-          this.feedbackResponse('error.general.500')
+          this.feedbackResponse({ type: 'error', message: 'error.general.500' })
         }
         else {
           if (mergeResponse.status < 400) {
@@ -324,9 +328,11 @@
               this.$emit('close', true)
             } else {
               this.$emit('merge', { merged: mergedId, target: targetId })
+              this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.title.label', 2)]) })
             }
+          } else {
+            this.feedbackResponse({ type: 'error', resp: mergeResponse })
           }
-          this.feedbackResponse(mergeResponse)
         }
       },
       refreshItem (id) {
@@ -384,20 +390,21 @@
           version: currentTippData.data.version,
           title: targetId,
           pkg: currentTippData.data.pkg.id,
-          hostPlatform: currentTippData.data.hostPlatform.id
+          hostPlatform: currentTippData.data.hostPlatform.id,
+          coverageStatements: currentTippData.data._embedded.coverageStatements
         }
         const updateResponse = await this.catchError({
           promise: tippServices.createOrUpdate(linkData, this.cancelToken.token),
           instance: this
         })
         if (typeof updateResponse == 'undefined') {
-          this.feedbackResponse('error.general.500')
+          this.feedbackResponse({ type: 'error', message: 'error.general.500' })
         }
         else {
-          this.feedbackResponse(updateResponse)
-
           if (updateResponse.status === 200) {
             this.$emit('close', true)
+          } else {
+            this.feedbackResponse({ type: 'error', code: updateResponse.status, resp: updateResponse })
           }
         }
       },
