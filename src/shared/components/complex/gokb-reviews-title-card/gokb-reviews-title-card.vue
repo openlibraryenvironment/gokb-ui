@@ -365,6 +365,7 @@
         ids: [],
         titleName: undefined,
         status: undefined,
+        version: undefined,
         linkedPackage: undefined,
         idOptions: {
           page: 1,
@@ -516,9 +517,6 @@
         if (this.isReviewedCard && this.isMergeCandidate) {
           this.$emit('reviewed-card-selected-ids', this.selectedIdItems)
         }
-      },
-      isMerged (){
-        this.fetchTitle()
       }
     },
     created () {

@@ -43,7 +43,6 @@
       :expanded="activeStep === i"
       @expand="activateStep(i)"
       @finished-step="changeActiveStep"
-      @merge="processMerge"
       @added="addNewComponent"
       @close="closeReview"
       @feedback-response="showResponse"
@@ -66,7 +65,7 @@
       <gokb-button
         @click="closePopup"
       >
-        {{ (isReadonly || reviewItem.isClosed) ? $t('btn.close') : $t('btn.cancel') }}
+        {{ (isReadonly || reviewItem.isClosed) ? $t('btn.close') : $t('component.review.edit.cancel.label') }}
       </gokb-button>
       <gokb-button
         v-if="!isReadonly && !reviewItem.isClosed && showComponentCards && activeStep != workflow.length-1"
@@ -269,7 +268,7 @@
         this.reviewItem.additionalVars = record.additionalInfo?.vars
         this.reviewItem.otherComponents = record.additionalInfo?.otherComponents ? record.additionalInfo.otherComponents.map(oc => ({
           name: oc.name,
-          id: (!!oc.oid ? parseInt(oc.oid.split(':')[1]) : oc.id),
+          id: (oc.id || parseInt(oc.oid.split(':')[1])),
           type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
           route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())],
         })) : []
@@ -311,21 +310,12 @@
           })
         } else {
           this.workflow.push({
-            title: this.$i18n.t('component.review.edit.components.workflow.titleReview.label'),
+            title: "",
             toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
             components: merge_ids,
             actions: (merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
           })
-        }
-      },
-      processMerge (titles) {
-        this.$refs.wf0.refreshItem(titles.merged)
-        this.$refs.wf0.refreshItem(titles.target)
-
-        if (this.workflow.length === 2) {
-          this.$refs.wf1.refreshItem(titles.merged)
-          this.$refs.wf1.refreshItem(titles.target)
         }
       },
       async closeReview () {
@@ -358,23 +348,32 @@
           this.additionalInfo.otherComponents = []
         }
 
-        this.additionalInfo.otherComponents.push({
-          name: info.name,
-          id: info.id,
-          oid: 'org.gokb.cred.' + info.componentType + ':' + info.id,
-          type: info.componentType,
-          uuid: info.uuid
-        })
+        if (info.id !== this.reviewItem.component.review && !this.additionalInfo.otherComponents.some(oc => (oc.id === info.id))) {
+          this.additionalInfo.otherComponents.push({
+            name: info.name,
+            id: info.id,
+            oid: 'org.gokb.cred.' + info.componentType + ':' + info.id,
+            type: info.componentType,
+            uuid: info.uuid
+          })
 
-        let body = {
-          id: this.id,
-          additionalInfo: this.additionalInfo
+          let body = {
+            id: this.id,
+            additionalInfo: this.additionalInfo
+          }
+
+          const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
+
+          if (resp.status < 400) {
+            this.showResponse({ type: 'success', message: this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), info.name]) })
+          } else {
+            this.showResponse({ type: 'error', resp: resp })
+          }
+          await this.fetchReview(this.id)
+          this.$refs["wf" + this.activeStep][0].refreshAll()
+        } else {
+          this.showResponse({ type: 'error', message: this.$i18n.t('component.review.otherComponents.error.duplicate') })
         }
-
-        const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
-
-        this.showResponse(resp)
-        this.fetchReview(this.id)
       },
       closePopup () {
         this.localValue = false
@@ -382,6 +381,11 @@
       activateStep (index) {
         if (this.activeStep !== index) {
           this.activeStep = index
+
+          let wfname = "wf" + this.activeStep
+          if (!!this.$refs[wfname]) {
+            this.$refs[wfname][0].refreshAll()
+          }
         } else {
           this.activeStep = undefined
         }
@@ -389,6 +393,11 @@
       changeActiveStep (index) {
         if (this.workflow.length > this.activeStep) {
           this.activeStep++
+          let wfname = "wf" + this.activeStep
+
+          if (!!this.$refs[wfname]) {
+            this.$refs[wfname][0].refreshAll()
+          }
         }
       },
       showResponse (response) {

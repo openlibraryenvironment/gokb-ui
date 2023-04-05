@@ -194,7 +194,11 @@
     "numberFormat": "Dieses Feld erwartet eine Zahl.",
     "dateFormat": "Ungültiges Datum",
     "dateRange": "Das Enddatum muss nach dem Anfangsdatum liegen.",
-    "passwordLength": "Das Passwort muss zwischen 6 und 64 Zeichen haben."
+    "passwordLength": "Das Passwort muss zwischen 6 und 64 Zeichen haben.",
+    "volumeRange": "Der erste Band muss vor dem letzten Band liegen.",
+    "issueRange": "Das erste Heft muss vor dem letzten Heft liegen.",
+    "missingStartIssue": "Die Angabe eines letzten Hefts erfordert ein Anfangsheft.",
+    "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband."
   },
   "job": {
     "label": "Import | Importe",
@@ -1060,7 +1064,7 @@
               "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren."
             },
             "titleReview": {
-              "label": "Identifikatorabgleich",
+              "label": "Titelüberprüfung",
               "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler."
             }
           },
