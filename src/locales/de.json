@@ -346,7 +346,8 @@
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
       "shortRow": "Diese Zeile enthält weniger Spalten als im Datei-Header definiert wurden!",
-      "noIds": "Diese Zeile enthält keine Idenitifikatoren und wird daher nicht prozessiert!",
+      "noIds": "Diese Zeile enthält keine Identifikatoren und wird daher nicht prozessiert!",
+      "noTitleId": "Diese Zeile enthält keinen Wert für den Anbieternamensraum!",
       "noImportIds": "Diese Zeile enthält keine Identifikatoren (print/online), und es wurde kein Anbieternamensraum ausgewählt!",
       "noAuthIds": "Diese Zeile enthält weder einen 'print_identifier' noch einen 'online_identifier'!",
       "url": {
