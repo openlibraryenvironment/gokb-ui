@@ -21,6 +21,7 @@
             v-if="!nameEditActive"
             :style="{ color: 'primary' }"
             :to="{ name: route, params: { 'id': originalRecord.id } }"
+            target="_blank"
           >
             {{ originalRecord.name }}
           </router-link>
@@ -45,7 +46,7 @@
           </v-icon>
         </v-col>
       </v-row>
-      <v-row v-if="linkedPackage" dense>
+      <v-row v-if="!!linkedPackage" dense>
         <v-col>
           <span> {{ $tc('component.package.label') }}: </span>
           <router-link
@@ -55,6 +56,20 @@
           >
             {{ linkedPackage.name }}
           </router-link>
+        </v-col>
+      </v-row>
+      <v-row v-if="route === '/package-title'" dense>
+        <v-col>
+          <span> {{ $tc('component.title.label') }}: </span>
+          <router-link
+            v-if="!!linkedTitle"
+            :style="{ color: 'primary' }"
+            :to="{ name: '/title', params: { 'id': linkedTitle.id } }"
+            target="_blank"
+          >
+            {{ linkedTitle?.name }}
+          </router-link>
+          <span v-else> - </span>
         </v-col>
       </v-row>
     </v-card-subtitle>
@@ -367,6 +382,7 @@
         status: undefined,
         version: undefined,
         linkedPackage: undefined,
+        linkedTitle: undefined,
         idOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
@@ -550,6 +566,7 @@
 
           if (response.data.type === 'TIPP') {
             this.linkedPackage = response.data.pkg
+            this.linkedTitle = response.data.title
           }
 
           if (response.data.type  === 'Journal') {
