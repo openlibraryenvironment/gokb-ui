@@ -62,11 +62,15 @@
           <span class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
           <span v-if="!selectedItem.dryRun">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
         </div>
-        <div v-else>
+        <div v-else-if="!!selectedItem.results.matched">
           <span class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
           <span class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.created }}</span>
           <span class="mr-4">{{ $i18n.t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
           <span class="mr-4">{{ $i18n.tc('default.error.label', 2) }}: {{ selectedItem.results.error }}</span>
+        </div>
+        <div v-else-if="results.validation">
+          <span class="mr-4">{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.validation.rows.error }}/{{ selectedItem.results.validation.rows.total }}</span>
+          <span class="mr-4">{{ $i18n.tc('kbart.processing.warning.label', 2) }}: {{ selectedItem.results.validation.rows.warning }}</span>
         </div>
       </v-col>
     </v-row>

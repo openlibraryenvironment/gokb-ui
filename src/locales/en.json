@@ -1193,10 +1193,10 @@
           "toDo": "Check if the new title is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
         },
         "Namespace Mismatch": {
-          "label": "Namespace Mismatch",
-          "info": "Ingest file issn matched an existing eissn or vice versa.",
-          "action": "Added identifier",
-          "toDo": "Check if an issn is erroneously marked as eissn or vice versa and correct those identifiers if necessary."
+          "label": "ISSN Conflict",
+          "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
+          "action": "The package title was created with a conflicting identifier.",
+          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. If the package title identifiers are wrong, please contact the provider of the KBART file and ask for the information to be fixed."
         },
         "New Org": {
           "label": "New Org",

@@ -1193,10 +1193,10 @@
           "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Titel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen."
         },
         "Namespace Mismatch": {
-          "label": "Unterschiedliche Namensräume",
-          "info": "Der neue Titel besitzt eine eISSN, die einer bestehenden Print-ISSN entspricht, oder umgekehrt.",
-          "action": "Identifikator hinzugefügt",
-          "toDo": "Überprüfen Sie, ob hier ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde."
+          "label": "ISSN-Konflikt",
+          "info": "Der Pakettitel besitzt eine e-ISSN, die einer bestehenden p-ISSN des Referenztitels entspricht, oder umgekehrt.",
+          "action": "Ein Pakettitel mit einer mit bestehenden Daten im Konflikt stehenden p-ISSN bzw. e-ISSN wurde angelegt.",
+          "toDo": "Überprüfen Sie im Pakettitel, ob eine p-ISSN als e-ISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diese. Überprüfen Sie ebenso den Referenztitel und korrigieren Sie dort die ISSNs. Sollte der Pakettitel über eine KBART-Datei eingespielt worden sein, kontaktieren Sie den Anbieter und weisen Sie ihn auf die falsche ISSN hin."
         },
         "New Org": {
           "label": "Neue Organisation",
@@ -1340,19 +1340,19 @@
         },
         "Namespace Conflict": {
           "label": "Namensraumkonflikt",
-          "info": "Der Pakettitel besitzt eine eISSN, die einer bestehenden Print-ISSN des Referenztitels entspricht, oder umgekehrt.",
+          "info": "Der Pakettitel besitzt eine e-ISSN, die einer bestehenden p-ISSN des Referenztitels entspricht, oder umgekehrt.",
           "action": "Ein Pakettitel mit einer mit bestehenden Daten im Konflikt stehenden p-ISSN bzw. e-ISSN wurde angelegt.",
           "toDo": "Überprüfen Sie im Pakettitel, ob eine p-ISSN als e-ISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diese. Überprüfen Sie ebenso den Referenztitel und korrigieren Sie dort die ISSNs. Sollte der Pakettitel über eine KBART-Datei eingespielt worden sein, kontaktieren Sie den Anbieter und weisen Sie ihn auf die falsche ISSN hin."
         },
         "Critical Identifier Conflict": {
-          "label": "Identifikator-Konflikt (Neuer Titel)",
-          "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Dieser stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein.",
+          "label": "Referenztitelkonflikt",
+          "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Der neue Referenztitel stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein; andere Identifikatoren stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname stark.",
           "action": "Es wurde ein neuer Referenztitel erstellt.",
           "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Referenztitel vorliegt. Wurde eine Dublette erzeugt, selektieren Sie zunächst den vorherigen Titel per 'Ziel auswählen'. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren, um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' abschließen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht)."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifikatoren-Konflikt (ID ergänzt)",
-          "info": "Beim Abgleich mit einem Referenztitel wurde mindestens ein Identifikator gefunden, der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
+          "info": "Beim Abgleich mit einem Referenztitel wurde ein Identifikator gefunden, der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
           "action": "Die GOKb hat im Referenztitel den Identifikator ergänzt.",
           "toDo": "Überprüfen Sie die Identifikatoren der Referenztitel und löschen Sie diese, falls sie falsch sind."
         },
@@ -1376,7 +1376,7 @@
         },
         "Import Identifier Mismatch": {
           "label": "Identifikatoren-Konflikt beim KBART-Import",
-          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren einem bestehenden Pakettitel zugordnet werden, allerdings unterscheidet sich mindestens ein anderer Identifikator.",
+          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren einem bestehenden Pakettitel zugordnet werden, allerdings unterscheiden sich ein oder mehrere andere Identifikatoren.",
           "action": "Ein neuer Pakettitel wurde erstellt.",
           "toDo": "Überprüfen Sie die Identifikatoren der Pakettitel. Falls Sie Fehler feststellen, sollten diese optimalerweise durch die Einspielung einer korrigierten KBART-Datei behoben werden. In diesem Fall können Sie den/die fehlerhafte(n) Pakettitel zunächst über ihre Detailansicht als gelöscht markieren. Alternativ können Sie fehlerhafte Identifikatoren hier auch manuell löschen."
         },
