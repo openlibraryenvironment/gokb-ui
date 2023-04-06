@@ -1125,6 +1125,9 @@
             },
             "or": {
               "label": "OR"
+            },
+            "success": {
+              "label": "The reference title has been successfully linked to the package title."
             }
           },
           "add": {

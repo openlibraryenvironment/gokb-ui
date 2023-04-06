@@ -1125,6 +1125,9 @@
             },
             "or": {
               "label": "ODER"
+            },
+            "success": {
+              "label": "Der Referenztitel wurde erfolgreich mit dem Pakettitel verknüpft."
             }
           },
           "add": {

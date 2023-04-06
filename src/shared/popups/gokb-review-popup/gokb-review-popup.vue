@@ -393,11 +393,14 @@
       changeActiveStep (index) {
         if (this.workflow.length > this.activeStep) {
           this.activeStep++
-          let wfname = "wf" + this.activeStep
+          refreshCurrentComponents()
+        }
+      },
+      refreshCurrentComponents () {
+        let wfname = "wf" + this.activeStep
 
-          if (!!this.$refs[wfname]) {
-            this.$refs[wfname][0].refreshAll()
-          }
+        if (!!this.$refs[wfname]) {
+          this.$refs[wfname][0].refreshAll()
         }
       },
       showResponse (response) {

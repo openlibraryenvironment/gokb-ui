@@ -432,7 +432,8 @@
         }
         else {
           if (updateResponse.status === 200) {
-            this.$emit('close', true)
+            this.refreshAll()
+            this.feedbackResponse({ type: 'success', message: this.$i18n.t('component.review.edit.components.link.success.label') })
           } else {
             this.feedbackResponse({ type: 'error', code: updateResponse.status, resp: updateResponse })
           }
