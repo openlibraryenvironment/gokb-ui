@@ -190,10 +190,8 @@
     },
     methods: {
       exportSearchResults () {
-        console.log("Export search result:")
-        console.log(this.exportSearch())
-        console.log("Export:")
-        console.log(exportServices.toTsv(this.resultItems, 100, 1))
+        this.exportSearch()
+        exportServices.toTsv(this.resultItems, 100, 1)
       },
       resetSearch () {
         Object.keys(this.searchFilters).forEach(filter => {
@@ -354,12 +352,12 @@
       },
       async exportSearch () {
         const searchParameters = this._searchParameters(this.searchInputFields)
-        searchParameters.export = true
+        searchParameters.format = 'tsv'
         const sort = this.requestOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.requestOptions.sortBy[0]] || this.requestOptions.sortBy[0]) : undefined
         const desc = typeof this.requestOptions.desc === 'Array' ? this.requestOptions.desc[0] : this.requestOptions.desc
         const esTypedParams = {
           es: true,
-          max: Number.MAX_SAFE_INTEGER,
+          max: 10000, // == OpenSearch maximum
           ...((sort && { sort: sort }) || {}),
           ...((sort && { order: (desc ? 'desc' : 'asc') }) || {})
         }
