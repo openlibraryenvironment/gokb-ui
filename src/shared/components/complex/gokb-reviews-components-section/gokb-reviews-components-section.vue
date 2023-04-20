@@ -22,11 +22,14 @@
           <v-row>
             <v-col>
               <h3 class="mb-1">
-                <v-icon class="mr-1 mt-n1"> {{ reviewedComponent.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }} </v-icon> {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
+                <v-icon class="mr-1 mt-n1">
+                  {{ reviewedComponent.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
+                </v-icon>
+                {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
               </h3>
               <gokb-reviews-title-card
                 :id="reviewedComponent.id"
-                :ref="reviewedComponent.id"
+                :ref="reviewedComponent.id.toString()"
                 role="reviewedComponent"
                 :route="reviewedComponent.route"
                 :selected-card="selectedCard"
@@ -68,7 +71,7 @@
               </h3>
               <gokb-reviews-title-card
                 :id="i.id"
-                :ref="i.id"
+                :ref="i.id.toString()"
                 role="candidateComponent"
                 height="100%"
                 :route="i.route"
@@ -105,12 +108,28 @@
                     {{ $t('component.review.edit.components.link.lookup.label') }}
                   </v-row>
                   <v-row dense justify="space-around">
+
                     <v-col cols="6">
-                      <gokb-title-field
-                        v-model="newTitle"
-                        :label="$t('header.searchType.label' , [$tc('component.title.label')])"
-                        width="50%"
-                        return-object />
+                      <v-row>
+                        <v-col>
+                          <gokb-title-field
+                            v-model="newTitle"
+                            :label="$t('header.searchType.label' , [$tc('component.title.label')])"
+                            width="50%"
+                            return-object
+                          />
+                        </v-col>
+                        <v-col cols="1" v-if="!!newTitle">
+                          <v-icon
+                            class="mt-4"
+                            style="cursor:pointer"
+                            :title="$t('btn.add')"
+                            @click="confirmAddComponent"
+                          >
+                            mdi-check-bold
+                          </v-icon>
+                        </v-col>
+                      </v-row>
                     </v-col>
                   </v-row>
                   <v-row dense justify="space-around">
@@ -213,7 +232,8 @@
         selectedIdItems: [],
         linkedComponents: {},
         activeComponents: undefined,
-        newTitle: undefined
+        newTitle: undefined,
+        generatedTitle: undefined
       }
     },
     computed: {
@@ -250,17 +270,10 @@
         return this.editable && this.isStatusOpen && this.workflow?.actions?.includes('ids')
       },
       isAddEnabled () {
-        return this.editable && this.isStatusOpen && this.workflow?.actions?.includes('add') && !this.newTitle
+        return this.editable && this.isStatusOpen && this.workflow?.actions?.includes('add') && !this.generatedTitle
       },
       workflowTitle () {
         return this.editable ? this.workflow.title : ""
-      }
-    },
-    watch: {
-      newTitle (val) {
-        if (!!val) {
-          this.$emit('added', val)
-        }
       }
     },
     created() {
@@ -314,7 +327,7 @@
           instance: this
         })
         if (typeof mergeResponse == 'undefined') {
-          this.feedbackResponse('error.general.500')
+          this.feedbackResponse({ type: 'error', message: 'error.general.500' })
         }
         else {
           if (mergeResponse.status < 400) {
@@ -323,14 +336,37 @@
             if (mergedId === this.reviewedComponent.id) {
               this.$emit('close', true)
             } else {
-              this.$emit('merge', { merged: mergedId, target: targetId })
+              this.refreshAll()
+              this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.title.label', 2)]) })
             }
+          } else {
+            this.feedbackResponse({ type: 'error', resp: mergeResponse })
           }
-          this.feedbackResponse(mergeResponse)
         }
+
       },
       refreshItem (id) {
         this.$refs[id.toString()].fetchTitle()
+      },
+      confirmAddComponent () {
+        this.$emit('added', this.newTitle)
+      },
+      refreshAll () {
+        if (this.workflow.showReviewed) {
+          let refid = this.reviewedComponent.id.toString()
+
+          if (!!this.$refs[refid]) {
+            this.$refs[refid].fetchTitle()
+          }
+        }
+
+        this.referenceComponents.forEach(rc => {
+          let refid = rc.id.toString()
+
+          if (!!this.$refs[refid]) {
+            this.$refs[refid][0].fetchTitle()
+          }
+        })
       },
       showConfirmGenerateTitle () {
         this.showSubmitConfirm = true
@@ -360,7 +396,7 @@
           this.feedbackResponse(newTitleResponse)
 
           if (newTitleResponse.status === 200) {
-            this.newTitle = {
+            this.generatedTitle = {
               name: newTitleResponse.data.name,
               id: newTitleResponse.data.id,
               type: newTitleResponse.data.type,
@@ -384,20 +420,22 @@
           version: currentTippData.data.version,
           title: targetId,
           pkg: currentTippData.data.pkg.id,
-          hostPlatform: currentTippData.data.hostPlatform.id
+          hostPlatform: currentTippData.data.hostPlatform.id,
+          coverageStatements: currentTippData.data._embedded.coverageStatements
         }
         const updateResponse = await this.catchError({
           promise: tippServices.createOrUpdate(linkData, this.cancelToken.token),
           instance: this
         })
         if (typeof updateResponse == 'undefined') {
-          this.feedbackResponse('error.general.500')
+          this.feedbackResponse({ type: 'error', message: 'error.general.500' })
         }
         else {
-          this.feedbackResponse(updateResponse)
-
           if (updateResponse.status === 200) {
-            this.$emit('close', true)
+            this.refreshAll()
+            this.feedbackResponse({ type: 'success', message: this.$i18n.t('component.review.edit.components.link.success.label') })
+          } else {
+            this.feedbackResponse({ type: 'error', code: updateResponse.status, resp: updateResponse })
           }
         }
       },
