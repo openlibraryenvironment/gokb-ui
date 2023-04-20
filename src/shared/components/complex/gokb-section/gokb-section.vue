@@ -64,12 +64,18 @@
         >
           {{ itemsTotal }}
         </v-chip>
-        <gokb-button
-            v-if="exportOption"
+        <a
+          v-if="exportOption"
+          href=""
+          target="_blank"
+          :style="{ textDecoration: 'none' }"
+        >
+          <gokb-button
             @click="$emit('export-search-results')"
           >
             {{ $i18n.t('btn.export') }}
           </gokb-button>
+        </a>
         <v-btn
           v-if="expandable"
           icon
