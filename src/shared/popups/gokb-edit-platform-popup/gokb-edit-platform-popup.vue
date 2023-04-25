@@ -298,7 +298,7 @@
         }
 
         const response = await this.catchError({
-          promise: platformServices.checkPlatform(newPlatform, this.cancelToken.token),
+          promise: platformServices.check(newPlatform, this.cancelToken.token),
           instance: this
         })
         if (response?.status < 300 && response.data) {
