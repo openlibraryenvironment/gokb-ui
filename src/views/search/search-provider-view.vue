@@ -14,8 +14,7 @@
           label: undefined,
           identifier: undefined,
           curatoryGroupIds: undefined
-        },
-        exportOption: true
+        }
       }
     },
     computed: {
@@ -30,6 +29,12 @@
       },
       resultActionButtons () {
         return [
+          {
+            label: this.$i18n.t('btn.export'),
+            disabled: 'isSearchExportDisabled',
+            action: 'exportSearchResults',
+            loading: this.exportLoading
+          },
           {
             icon: 'mdi-close',
             label: this.$i18n.t('btn.retire'),

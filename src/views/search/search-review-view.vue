@@ -18,8 +18,7 @@
         allStates: [
           { name: this.$i18n.t(), id: 'Open' },
           { name: this.$i18n.t(), id: 'Closed' }
-        ],
-        exportOption: true
+        ]
       }
     },
     computed: {
