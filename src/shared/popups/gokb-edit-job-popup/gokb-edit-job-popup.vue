@@ -14,16 +14,16 @@
         />
       </v-col>
     </v-row>
-    <v-row v-if="selectedItem.componentId">
+    <v-row v-if="!!selectedItem.componentId">
       <v-col>
         <div
-          v-if="selectedItem.link"
+          v-if="!!selectedItem.link"
           class="primary--text"
         >
           {{ $i18n.tc('component.package.label') }}
         </div>
         <router-link
-          v-if="selectedItem.link"
+          v-if="!!selectedItem.link"
           :style="{ color: 'primary' }"
           :to="{ name: '/package', params: { 'id': selectedItem.componentId } }"
         >
@@ -47,20 +47,21 @@
         />
       </v-col>
     </v-row>
-    <v-row v-if="selectedItem.results">
+    <v-row v-if="!!selectedItem.results">
       <v-col>
         <div
           class="primary--text"
         >
           {{ selectedItem.dryRun ? $i18n.t('job.report.dryRunLabel') : $i18n.t('job.report.label') }}
         </div>
-        <div v-if="selectedItem.results.report">
+        <div v-if="!!selectedItem.results.report">
           <span class="mr-4">{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.report.invalid }}/{{ selectedItem.results.report.numRows }}</span>
-          <span class="mr-4">{{ $i18n.t('job.report.previous.label') }}: {{ selectedItem.results.report.previous }}</span>
-          <span class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</span>
-          <span class="mr-4">{{ $i18n.t('job.report.partial.label') }}: {{ selectedItem.results.report.partial }}</span>
-          <span class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
-          <span v-if="!selectedItem.dryRun">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
+          <span v-if="!!selectedItem.results.report.previous" class="mr-4">{{ $i18n.t('job.report.previous.label') }}: {{ selectedItem.results.report.previous }}</span>
+          <span v-if="!!selectedItem.results.report.matched" class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</span>
+          <span v-if="!!selectedItem.results.report.partial" class="mr-4">{{ $i18n.t('job.report.partial.label') }}: {{ selectedItem.results.report.partial }}</span>
+          <span v-if="!!selectedItem.results.report.created" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
+          <span v-if="!!selectedItem.results.report.reviews" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.reviews }}</span>
+          <span v-if="!selectedItem.dryRun && !!selectedItem.results.report.retired">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.matched">
           <span class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
@@ -68,7 +69,7 @@
           <span class="mr-4">{{ $i18n.t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
           <span class="mr-4">{{ $i18n.tc('default.error.label', 2) }}: {{ selectedItem.results.error }}</span>
         </div>
-        <div v-else-if="results.validation">
+        <div v-else-if="!!selectedItem.results.validation">
           <span class="mr-4">{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.validation.rows.error }}/{{ selectedItem.results.validation.rows.total }}</span>
           <span class="mr-4">{{ $i18n.tc('kbart.processing.warning.label', 2) }}: {{ selectedItem.results.validation.rows.warning }}</span>
         </div>
@@ -91,7 +92,7 @@
         </ul>
       </v-col>
     </v-row>
-    <v-row v-if="selectedItem.results?.badrows">
+    <v-row v-if="rowErrors.length > 0">
       <v-col md="12">
         <v-expansion-panels accordion>
           <v-expansion-panel>
@@ -99,6 +100,23 @@
             <v-expansion-panel-content>
               <v-data-table
                 :items="rowErrors"
+                :headers="errorHeaders"
+                sort-by="row"
+                group-by="row"
+              />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-col>
+    </v-row>
+    <v-row v-if="rowWarnings.length > 0">
+      <v-col md="12">
+        <v-expansion-panels accordion>
+          <v-expansion-panel>
+            <v-expansion-panel-header>{{ $tc('kbart.processing.warning.label', 2) }}</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-data-table
+                :items="rowWarnings"
                 :headers="errorHeaders"
                 sort-by="row"
                 group-by="row"
@@ -166,7 +184,8 @@
           messages: []
         },
         items: [],
-        rowErrors: []
+        rowErrors: [],
+        rowWarnings: []
       }
     },
     computed: {
@@ -242,6 +261,18 @@
               this.rowErrors.push({ row: badrow.row, column: colname, reason: this.$i18n.t(v.messageCode, v.args) })
             })
           })
+        } else if (!!record.job_result?.validation) {
+          Object.entries(record.job_result.validation.errors.rows).forEach(([rownum, colobj]) =>
+            Object.entries(colobj).forEach(([colname, eo]) =>
+              this.rowErrors.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+            )
+          )
+
+          Object.entries(record.job_result.validation.warnings.rows).forEach(([rownum, colobj]) =>
+            Object.entries(colobj).forEach(([colname, wo]) =>
+              this.rowWarnings.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
+            )
+          )
         }
       }
     },

@@ -286,6 +286,7 @@
       "KBARTIngest": "KBART Package Ingest",
       "KBART Ingest": "KBART Package Ingest",
       "KBARTSourceIngest": "Automated KBART Ingest",
+      "KBARTSourceIngestDryRun": "Automated KBART Ingest (Dry Run)",
       "KBARTIngestDryRun": "KBART Package Ingest (Dry Run)",
       "PackageTitleMatch": "Reference Title Matching",
       "EZBCollectionIngest": "EZB Collection Ingest"
