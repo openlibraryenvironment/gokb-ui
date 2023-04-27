@@ -286,6 +286,7 @@
       "KBARTIngest": "KBART-Import",
       "KBART Ingest": "KBART-Import",
       "KBARTSourceIngest": "Automatisierter KBART-Import",
+      "KBARTSourceIngestDryRun": "Automatisierter KBART-Import (Testlauf)",
       "KBARTIngestDryRun": "KBART-Import (Testlauf)",
       "PackageTitleMatch": "Referenztitel-Abgleich",
       "EZBCollectionIngest": "EZB-Kollektionsimport"
