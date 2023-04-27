@@ -61,7 +61,7 @@
     :item-text="itemText"
     :item-value="itemValue"
     :return-object="returnObject"
-    clearable
+    :clearable="allowClear"
     hide-details
     hide-no-data
     no-filter
@@ -235,6 +235,11 @@
         default() {
           return []
         }
+      },
+      allowClear: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     data () {

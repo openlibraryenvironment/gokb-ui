@@ -21,6 +21,7 @@
             v-if="!nameEditActive"
             :style="{ color: 'primary' }"
             :to="{ name: route, params: { 'id': originalRecord.id } }"
+            target="_blank"
           >
             {{ originalRecord.name }}
           </router-link>
@@ -30,6 +31,7 @@
             append-icon="mdi-check-bold"
             editable
             dense
+            :allow-clear="false"
             @click:append="saveNameChange"
           />
           <v-icon
@@ -44,7 +46,7 @@
           </v-icon>
         </v-col>
       </v-row>
-      <v-row v-if="linkedPackage" dense>
+      <v-row v-if="!!linkedPackage" dense>
         <v-col>
           <span> {{ $tc('component.package.label') }}: </span>
           <router-link
@@ -54,6 +56,20 @@
           >
             {{ linkedPackage.name }}
           </router-link>
+        </v-col>
+      </v-row>
+      <v-row v-if="route === '/package-title'" dense>
+        <v-col>
+          <span> {{ $tc('component.title.label') }}: </span>
+          <router-link
+            v-if="!!linkedTitle"
+            :style="{ color: 'primary' }"
+            :to="{ name: '/title', params: { 'id': linkedTitle.id } }"
+            target="_blank"
+          >
+            {{ linkedTitle?.name }}
+          </router-link>
+          <span v-else> - </span>
         </v-col>
       </v-row>
     </v-card-subtitle>
@@ -364,7 +380,9 @@
         ids: [],
         titleName: undefined,
         status: undefined,
+        version: undefined,
         linkedPackage: undefined,
+        linkedTitle: undefined,
         idOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
@@ -414,6 +432,9 @@
         if (this.role == "candidateComponent" && this.isCardSelected) {
           return "#d2f2d2"
         }
+      },
+      typeLabel () {
+        return (this.route === '/title' ? this.$i18n.tc('component.title.label') : this.$i18n.tc('component.tipp.label'))
       },
       statusIcons () {
         return {
@@ -512,9 +533,6 @@
         if (this.isReviewedCard && this.isMergeCandidate) {
           this.$emit('reviewed-card-selected-ids', this.selectedIdItems)
         }
-      },
-      isMerged (){
-        this.fetchTitle()
       }
     },
     created () {
@@ -548,6 +566,7 @@
 
           if (response.data.type === 'TIPP') {
             this.linkedPackage = response.data.pkg
+            this.linkedTitle = response.data.title
           }
 
           if (response.data.type  === 'Journal') {
@@ -631,11 +650,17 @@
           instance: this
         })
 
-        this.$emit('feedback-response', putResponse)
         this.isChanged = true
         this.isNamePending = false
         this.deselectCard()
         this.fetchTitle()
+
+        if (putResponse.status === 200) {
+          this.$emit('feedback-response', { type: 'success', message: this.$i18n.t('success.update', [this.typeLabel, this.titleName]) })
+        }
+        else {
+          this.$emit('feedback-response', { type: 'error', code: putResponse.status, resp: putResponse })
+        }
       },
       deleteId (id) {
         this.pendingStatuses[id.id] = 'removed'
@@ -643,7 +668,7 @@
       },
       getPendingStatus (id) {
         if ( !this.isReviewedCard || (this.isReviewedCard && !this.isOtherCardSelected) || this.singleCardReview){
-          return this.getDeletedStatus(id)
+          return null
         } else {
           return this.getMergeStatus(id)
         }

@@ -23,7 +23,6 @@
         />
       </v-col>
       <v-col
-        v-if="reviewComponent.allocatedGroups.length > 0"
         cols="3"
       >
         <div

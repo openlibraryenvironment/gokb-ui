@@ -194,7 +194,11 @@
     "numberFormat": "Please enter a number.",
     "dateFormat": "Invalid Date",
     "dateRange": "The end date must be after the start date.",
-    "passwordLength": "The password must be between 6 and 64 characters of length."
+    "passwordLength": "The password must be between 6 and 64 characters of length.",
+    "volumeRange": "The start volume must be before the end volume",
+    "issueRange": "The start issue must be before the end issue",
+    "missingStartIssue": "An end issue requires a set start issue!",
+    "missingStartVolume": "An end volume requires a set start volume!"
   },
   "job": {
     "label": "Import | Imports",
@@ -282,6 +286,7 @@
       "KBARTIngest": "KBART Package Ingest",
       "KBART Ingest": "KBART Package Ingest",
       "KBARTSourceIngest": "Automated KBART Ingest",
+      "KBARTSourceIngestDryRun": "Automated KBART Ingest (Dry Run)",
       "KBARTIngestDryRun": "KBART Package Ingest (Dry Run)",
       "PackageTitleMatch": "Reference Title Matching",
       "EZBCollectionIngest": "EZB Collection Ingest"
@@ -343,6 +348,7 @@
       "illegalPrintId": "Value for print identifier '{0}' is not valid.",
       "shortRow": "This line contains fewer columns than defined by the provided headings!",
       "noIds": "This line contains no usable identifiers!",
+      "noTitleId": "This line does not contain a value for the common title id!",
       "noImportIds": "This line contains no reference identifiers (print/online), and no default namespace was selected!",
       "noAuthIds": "This line contains neither a 'print_identifier' nor an 'online_identifier'!",
       "url": {
@@ -440,7 +446,8 @@
     "create": "Successfully created {0} {1}!",
     "update": "Successfully edited {0} {1}!",
     "retire": "Successfully archived {0} {1}!",
-    "delete": "Successfully deleted {0} {1}!"
+    "delete": "Successfully deleted {0} {1}!",
+    "merge": "{0} have been successfully merged!"
   },
   "error": {
     "label": "Error | Errors",
@@ -478,7 +485,7 @@
     "create": {
       "label": "Create {0}"
     },
-    "search": {
+    "searchType": {
       "label": "Search {0}"
     },
     "show": {
@@ -489,6 +496,7 @@
     },
     "welcome": "Welcome to the Global Open Knowledgebase!",
     "dashboard": "Dashboard",
+    "search": "Search",
     "results": "Results"
   },
   "search": {
@@ -1037,10 +1045,13 @@
           "label": "{0} to review"
         },
         "close": {
-          "label": "Close review",
+          "label": "Mark finished",
           "error": {
             "moreSteps": "Please check all workflow steps before closing this review."
           }
+        },
+        "cancel": {
+          "label": "Cancel review"
         },
         "next": {
           "label": "Next Step"
@@ -1115,6 +1126,9 @@
             },
             "or": {
               "label": "OR"
+            },
+            "success": {
+              "label": "The reference title has been successfully linked to the package title."
             }
           },
           "add": {
@@ -1183,10 +1197,10 @@
           "toDo": "Check if the new title is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
         },
         "Namespace Mismatch": {
-          "label": "Namespace Mismatch",
-          "info": "Ingest file issn matched an existing eissn or vice versa.",
-          "action": "Added identifier",
-          "toDo": "Check if an issn is erroneously marked as eissn or vice versa and correct those identifiers if necessary."
+          "label": "ISSN Conflict",
+          "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
+          "action": "The package title was created with a conflicting identifier.",
+          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. If the package title identifiers are wrong, please contact the provider of the KBART file and ask for the information to be fixed."
         },
         "New Org": {
           "label": "New Org",
@@ -1275,7 +1289,7 @@
         "EZB Title Overlap": {
           "label": "EZB Label Mismatch",
           "info": "Matched EZB-ID is already linked to another title instance.",
-          "action": "",
+          "action": "-",
           "toDo": ""
         },
         "ZDB Title Overlap": {
@@ -1305,7 +1319,7 @@
         "Ambiguous Title Matches": {
           "label": "Ambiguous Title Matches",
           "info": "The package title has been matched on multiple reference titles.",
-          "action": "No reference title selected",
+          "action": "Unable to select a reference title.",
           "toDo": "Please select a reference title to be linked to the package title. If the other candidates contain duplicate items to the selected, clean up by merging them into the selected item.",
           "workflow": {
             "step1": {
@@ -1321,8 +1335,8 @@
         "Namespace Conflict": {
           "label": "Namespace Conflict",
           "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
-          "action": "",
-          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. Check the package title identifiers and the KBART record. Correct them if necessary."
+          "action": "-",
+          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. If the package title identifiers are wrong, please contact the provider of the KBART file and ask for the information to be fixed."
         },
         "Critical Identifier Conflict": {
           "label": "Identifier Conflict (New Title)",
@@ -1358,7 +1372,7 @@
           "label": "Import Identifier Mismatch",
           "info": "A KBART record has been matched on an existing package title by some identifiers, but other important identifiers conflict.",
           "action": "New package title created",
-          "toDo": "Check the package titles and merge them if necessary."
+          "toDo": "Check the identifiers of these package titles. If there are errors, the preferred solution is a new import of a corrected KBART file. In that case, you may delete the package titles to be corrected from their detail view before the import. Alternatively, you may manually delete erroneuos identifiers here."
         },
         "Import Report": {
           "label": "Report on KBART Import",
@@ -1369,25 +1383,25 @@
         "Invalid Name": {
           "label": "Invalid Name",
           "info": "The name of this title contains invalid characters.",
-          "action": "",
+          "action": "-",
           "toDo": "Correct the name of the title (check external sources if necessary). Please also check linked Package/Reference titles."
         },
         "Information": {
           "label": "Information",
           "info": "",
-          "action": "",
+          "action": "-",
           "toDo": ""
         },
         "Manual Request": {
           "label": "Manual Request",
           "info": "",
-          "action": "",
+          "action": "-",
           "toDo": ""
         },
         "Invalid Indentifiers": {
           "label": "Invalid Identifiers",
           "info": "There are invalid identifiers linked to this component!",
-          "action": "",
+          "action": "-",
           "toDo": "Please delete invalid identifiers and replace them with the correct ones."
         }
       }
