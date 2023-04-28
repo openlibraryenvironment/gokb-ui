@@ -19,6 +19,7 @@
     >
       <v-col>
         <gokb-search-platform-field
+          v-if="!selected"
           v-model="platformName"
           :items="items"
           :readonly="isReadonly"
@@ -28,6 +29,13 @@
           return-object
           allow-new-values
           disable-if-linked
+        />
+        <gokb-text-field
+          v-else
+          v-model="platform.name"
+          :readonly="isReadonly"
+          :label="$tc('component.general.name')"
+          required
         />
       </v-col>
     </v-row>
@@ -83,7 +91,7 @@
         {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
-        v-if="editable"
+        v-if="!isReadonly"
         default
         :disabled="!isValid"
       >
@@ -158,7 +166,7 @@
         }
       },
       isReadonly () {
-        return !this.editable
+        return !this.pprops.editable
       },
       isEdit () {
         return !!this.selected
