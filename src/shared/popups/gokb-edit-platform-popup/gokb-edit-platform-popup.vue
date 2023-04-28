@@ -253,7 +253,7 @@
         }
 
         const response = await this.catchError({
-          promise: platformServices.createOrUpdatePlatform(newPlatform, this.cancelToken.token),
+          promise: platformServices.createOrUpdate(newPlatform, this.cancelToken.token),
           instance: this
         })
 
