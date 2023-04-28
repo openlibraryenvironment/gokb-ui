@@ -21,7 +21,7 @@
         <gokb-search-platform-field
           v-model="platformName"
           :items="items"
-          :readonly="isReadonly || !!selected"
+          :readonly="isReadonly"
           :label="$tc('component.general.name')"
           :query-fields="[]"
           required
@@ -50,7 +50,8 @@
         <gokb-url-field
           v-else
           v-model="platformUrl"
-          required
+          :readonly="isReadonly"
+          :required="!isReadonly"
         />
       </v-col>
     </v-row>
@@ -82,6 +83,7 @@
         {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
+        v-if="editable"
         default
         :disabled="!isValid"
       >
@@ -119,6 +121,11 @@
         type: Number,
         required: false,
         default: undefined
+      },
+      editable: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -151,7 +158,7 @@
         }
       },
       isReadonly () {
-        return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !!this.platform?._links && !this.platform?._links?.update?.href)
+        return !this.editable
       },
       isEdit () {
         return !!this.selected

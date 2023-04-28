@@ -9,6 +9,7 @@
     <gokb-edit-platform-popup
       v-if="editPlatformPopupVisible"
       v-model="editPlatformPopupVisible"
+      :editable="isEditable"
       :provider-id="providerId"
       @edit="addPlatform"
     />
