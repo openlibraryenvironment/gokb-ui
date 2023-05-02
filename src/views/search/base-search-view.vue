@@ -161,6 +161,9 @@
       isNothingSelected () {
         return this.selectedItems.length === 0
       },
+      isSearchExportDisabled () {
+        return this.isNothingSelected || this.totalNumberOfItems > 1000
+      },
       searchHeader () {
         return this.$i18n.t('header.search')
       },

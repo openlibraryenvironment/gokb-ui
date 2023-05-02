@@ -33,9 +33,6 @@
       isRetiredSelectedDisabled () {
         return this.isReadonly || !this.selectedItems.length || this.selectedItems.some(item => (!item.updateUrl))
       },
-      isExportSelectedDisabled () {
-        return this.selectedItems.length < 1
-      },
       showSelect () {
         return true
       },
@@ -313,7 +310,6 @@
       },
       _transformForExport (data) {
         return data.map(({
-          id,
           name,
           providerName,
           lastUpdatedDisplay,
