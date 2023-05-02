@@ -1333,9 +1333,9 @@
           }
         },
         "Namespace Conflict": {
-          "label": "Namespace Conflict",
+          "label": "ISSN Conflict",
           "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
-          "action": "-",
+          "action": "A package title with a conflicting ISSN was created",
           "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. If the package title identifiers are wrong, please contact the provider of the KBART file and ask for the information to be fixed."
         },
         "Critical Identifier Conflict": {
@@ -1384,7 +1384,7 @@
           "label": "Invalid Name",
           "info": "The name of this title contains invalid characters.",
           "action": "-",
-          "toDo": "Correct the name of the title (check external sources if necessary). Please also check linked Package/Reference titles."
+          "toDo": "Correct the name of the title by selecting the pen icon next to its name. Please also check linked Package/Reference titles."
         },
         "Information": {
           "label": "Information",
