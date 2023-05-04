@@ -162,7 +162,7 @@
         return this.selectedItems.length === 0
       },
       isSearchExportDisabled () {
-        return this.isNothingSelected || this.totalNumberOfItems > 1000
+        return this.totalNumberOfItems < 1 || this.totalNumberOfItems > 10000
       },
       searchHeader () {
         return this.$i18n.t('header.search')
