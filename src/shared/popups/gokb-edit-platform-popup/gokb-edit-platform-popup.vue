@@ -166,7 +166,7 @@
         }
       },
       isReadonly () {
-        return !this.pprops.editable
+        return !this.editable
       },
       isEdit () {
         return !!this.selected
