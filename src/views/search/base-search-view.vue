@@ -63,8 +63,6 @@
     <gokb-section
       :sub-title="resultHeader"
       :items-total="totalNumberOfItems"
-      :export-option="exportOption && totalNumberOfItems > 0"
-      @export-search-results="exportSearchResults"
     >
       <template #buttons>
         <template v-for="button of resultActionButtons">
@@ -79,6 +77,7 @@
             :key="button.label"
             class="ms-4"
             :icon-id="button.icon"
+            :loading="button.loading"
             :to="button.route"
             color="primary"
             :disabled="isButtonDisabled(button.disabled)"
@@ -117,11 +116,11 @@
   import BaseComponent from '@/shared/components/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import searchServices from '@/shared/services/search-services'
+  import exportServices from '@/shared/services/export-services'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import selection from '@/shared/models/selection'
   import accountModel from '@/shared/models/account-model'
   import VSnackbars from 'v-snackbars'
-  import exportServices from '@/shared/services/export-services'
 
   const ROWS_PER_PAGE = 10
 
@@ -154,12 +153,16 @@
         messageToConfirm: undefined,
         accessible: true,
         loading: false,
+        exportLoading: false,
         eventMessages: []
       }
     },
     computed: {
       isNothingSelected () {
         return this.selectedItems.length === 0
+      },
+      isSearchExportDisabled () {
+        return this.totalNumberOfItems < 1 || this.totalNumberOfItems > 10000
       },
       searchHeader () {
         return this.$i18n.t('header.search')
@@ -175,6 +178,26 @@
       },
       isLoading () {
         return this.loading
+      },
+      exportHeaders () {
+        return [
+          {
+            text: 'ID',
+            value: 'id'
+          },
+          {
+            text: this.$i18n.t('component.general.name'),
+            value: 'name'
+          },
+          {
+            text: this.$i18n.t('component.general.status.label'),
+            value: 'status'
+          },
+          {
+            text: this.$i18n.t('component.general.lastUpdated'),
+            value: 'lastUpdated'
+          }
+        ]
       }
     },
     watch: {
@@ -189,10 +212,6 @@
       this.searchServices = searchServices(this.searchServicesUrl)
     },
     methods: {
-      exportSearchResults () {
-        this.exportSearch()
-        exportServices.toTsv(this.resultItems, 100, 1)
-      },
       resetSearch () {
         Object.keys(this.searchFilters).forEach(filter => {
           if (Array.isArray(this.searchFilters[filter])) {
@@ -297,6 +316,20 @@
             return result
           }, {})
       },
+      _transformForExport (data) {
+        return data.map(({
+          id,
+          name,
+          lastUpdatedDisplay,
+          uuid,
+          status
+        }) => ({
+          id: uuid,
+          name,
+          lastUpdated: lastUpdatedDisplay ? new Date(lastUpdatedDisplay).toLocaleString('sv').substr(0, 10) : undefined,
+          status
+        }))
+      },
       async search ({ page } = { page: undefined }) {
         const searchParameters = this._searchParameters(this.searchInputFields)
         const sort = this.requestOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.requestOptions.sortBy[0]] || this.requestOptions.sortBy[0]) : undefined
@@ -350,14 +383,15 @@
 
         this.loading = false
       },
-      async exportSearch () {
+      async exportSearchResults () {
+        this.exportLoading = true
         const searchParameters = this._searchParameters(this.searchInputFields)
-        searchParameters.format = 'tsv'
+        searchParameters.skipDomainMapping = 'true'
         const sort = this.requestOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.requestOptions.sortBy[0]] || this.requestOptions.sortBy[0]) : undefined
         const desc = typeof this.requestOptions.desc === 'Array' ? this.requestOptions.desc[0] : this.requestOptions.desc
         const esTypedParams = {
           es: true,
-          max: 10000, // == OpenSearch maximum
+          max: 10000,
           ...((sort && { sort: sort }) || {}),
           ...((sort && { order: (desc ? 'desc' : 'asc') }) || {})
         }
@@ -374,13 +408,15 @@
           }, this.cancelToken.token),
           instance: this
         })
+
         if (result?.status === 200) {
-          const { data: { data, _pagination } } = result
-          return data
+          const records = result.data.records
+          exportServices.toTsv(this.exportHeaders, this._transformForExport(records))
         }
         else {
           return undefined
         }
+        this.exportLoading = false
       },
       executeAction (actionMethodName, actionMethodParameter) {
         actionMethodName && this[actionMethodName](actionMethodParameter)

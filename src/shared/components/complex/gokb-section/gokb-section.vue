@@ -64,12 +64,6 @@
         >
           {{ itemsTotal }}
         </v-chip>
-        <gokb-export-button
-          v-if="exportOption"
-          @export-search-results="$emit('export-search-results')"
-        >
-          {{ $i18n.t('btn.export') }}
-        </gokb-export-button>
         <v-btn
           v-if="expandable"
           icon
@@ -188,11 +182,6 @@
         default: false
       },
       clearBackground: {
-        type: Boolean,
-        required: false,
-        default: false
-      },
-      exportOption: {
         type: Boolean,
         required: false,
         default: false

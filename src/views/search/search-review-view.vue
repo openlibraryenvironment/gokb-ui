@@ -18,8 +18,7 @@
         allStates: [
           { name: this.$i18n.t(), id: 'Open' },
           { name: this.$i18n.t(), id: 'Closed' }
-        ],
-        exportOption: true
+        ]
       }
     },
     computed: {
@@ -35,6 +34,9 @@
             action: '_confirmCloseSelectedItems',
           }
         ]
+      },
+      showSelect () {
+        return true
       },
       title () {
         return this.$i18n.tc('component.review.label', 2)
@@ -172,7 +174,7 @@
           component: componentToReview,
           componentId: componentToReview.id,
           type: this.$i18n.tc('component.' + componentToReview.type.toLowerCase() + '.label'),
-          dateCreated: new Date(dateCreated).toISOString().substr(0, 10),
+          dateCreated: new Date(dateCreated).toISOString().substring(0, 10),
           allocatedGroups,
           request: reviewRequest,
           description: descriptionOfCause,
@@ -194,7 +196,7 @@
       async _closeSelectedItems () {
         await Promise.all(this.selectedItems.map(({ id }) =>
           this.catchError({
-            promise: reviewServices.closeReview(id, this.cancelToken.token),
+            promise: reviewServices.close(id, this.cancelToken.token),
             instance: this
           })
         ))

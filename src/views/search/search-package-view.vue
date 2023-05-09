@@ -23,8 +23,7 @@
         sortMappings: {
           link: 'name',
           linkTwo: 'provider'
-        },
-        exportOption: true
+        }
       }
     },
     computed: {
@@ -33,9 +32,6 @@
       },
       isRetiredSelectedDisabled () {
         return this.isReadonly || !this.selectedItems.length || this.selectedItems.some(item => (!item.updateUrl))
-      },
-      isExportSelectedDisabled () {
-        return this.selectedItems.length !== 1
       },
       showSelect () {
         return true
@@ -51,6 +47,12 @@
               disabled: this.isExportSelectedDisabled,
               items: this.selectedItems
             }
+          },
+          {
+            label: this.$i18n.t('btn.export'),
+            disabled: 'isSearchExportDisabled',
+            action: 'exportSearchResults',
+            loading: this.exportLoading
           },
           {
             icon: 'mdi-close',
@@ -221,6 +223,46 @@
             value: 'lastUpdated'
           }
         ]
+      },
+      exportHeaders () {
+        return [
+          {
+            text: 'ID',
+            value: 'id'
+          },
+          {
+            text: this.$i18n.t('component.general.name'),
+            value: 'name'
+          },
+          {
+            text: this.$i18n.tc('component.provider.label'),
+            value: 'providerName'
+          },
+          {
+            text: this.$i18n.tc('component.platform.label'),
+            value: 'nominalPlatformName'
+          },
+          {
+            text: this.$i18n.tc('component.package.contentType.label'),
+            value: 'contentType'
+          },
+          {
+            text: this.$i18n.tc('component.package.count'),
+            value: 'tippCount'
+          },
+          {
+            text: this.$i18n.tc('component.curatoryGroup.label'),
+            value: 'curatoryGroups'
+          },
+          {
+            text: this.$i18n.t('component.general.status.label'),
+            value: 'status'
+          },
+          {
+            text: this.$i18n.t('component.general.lastUpdated'),
+            value: 'lastUpdated'
+          }
+        ]
       }
     },
     async created () {
@@ -264,6 +306,29 @@
           status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined
+        }))
+      },
+      _transformForExport (data) {
+        return data.map(({
+          name,
+          providerName,
+          lastUpdatedDisplay,
+          uuid,
+          status,
+          contentType,
+          nominalPlatformName,
+          curatoryGroups,
+          titleCount,
+        }) => ({
+          id: uuid,
+          name,
+          providerName,
+          lastUpdated: lastUpdatedDisplay ? new Date(lastUpdatedDisplay).toLocaleString('sv').substr(0, 10) : undefined,
+          nominalPlatformName,
+          contentType,
+          tippCount: titleCount.toString(),
+          curatoryGroups: curatoryGroups.join(','),
+          status
         }))
       },
       _confirmDeleteSelectedItems () {
