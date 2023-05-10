@@ -56,12 +56,12 @@
         </div>
         <div v-if="!!selectedItem.results.report">
           <span class="mr-4">{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.report.invalid }}/{{ selectedItem.results.report.numRows }}</span>
-          <span v-if="!!selectedItem.results.report.previous" class="mr-4">{{ $i18n.t('job.report.previous.label') }}: {{ selectedItem.results.report.previous }}</span>
-          <span v-if="!!selectedItem.results.report.matched" class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</span>
-          <span v-if="!!selectedItem.results.report.partial" class="mr-4">{{ $i18n.t('job.report.partial.label') }}: {{ selectedItem.results.report.partial }}</span>
-          <span v-if="!!selectedItem.results.report.created" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
-          <span v-if="!!selectedItem.results.report.reviews" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.reviews }}</span>
-          <span v-if="!selectedItem.dryRun && !!selectedItem.results.report.retired">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('previous')" class="mr-4">{{ $i18n.t('job.report.previous.label') }}: {{ selectedItem.results.report.previous }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('matched')" class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('partial')" class="mr-4">{{ $i18n.t('job.report.partial.label') }}: {{ selectedItem.results.report.partial }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('created')" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('reviews')" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.reviews }}</span>
+          <span v-if="!selectedItem.dryRun && !!selectedItem.results.report.hasOwnProperty('retired')">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.matched">
           <span class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>

@@ -242,7 +242,7 @@
       },
       async fetchDefaultNamespace () {
         const providerResult = await this.catchError({
-          promise: providerServices.getProvider(this.provider.id, this.cancelToken.token),
+          promise: providerServices.get(this.provider.id, this.cancelToken.token),
           instance: this
         })
 

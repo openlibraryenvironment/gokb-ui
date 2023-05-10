@@ -215,6 +215,7 @@
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
+        eventMessages: []
       }
     },
     computed: {

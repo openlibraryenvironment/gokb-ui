@@ -1080,7 +1080,7 @@
               "message": "Bitte bestätigen Sie die Zusammenführung. Der zu prüfende Titel {0} wird gelöscht, und seine verknüpften Pakettitel werden an den selektierten Titel {1} übertragen."
             },
             "selectIds": {
-              "label": "Zu übertragende Identifikatoren auswählen.",
+              "label": "Zu übertragende Identifikatoren auswählen",
               "missing": {
                 "label": "Nicht verknüpft"
               },
@@ -1099,7 +1099,7 @@
             }
           },
           "single": {
-            "selectIds": "Zu löschende Identifikatoren auswählen.",
+            "selectIds": "Zu löschende Identifikatoren auswählen",
             "confirm": {
               "label": "Titeländerungen abschicken",
               "message": "Bitte bestätigen Sie die vorgemerkten Änderungen."
@@ -1200,7 +1200,7 @@
           "label": "ISSN-Konflikt",
           "info": "Der Pakettitel besitzt eine e-ISSN, die einer bestehenden p-ISSN des Referenztitels entspricht, oder umgekehrt.",
           "action": "Ein Pakettitel mit einer mit bestehenden Daten im Konflikt stehenden p-ISSN bzw. e-ISSN wurde angelegt.",
-          "toDo": "Überprüfen Sie im Pakettitel, ob eine p-ISSN als e-ISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diese. Überprüfen Sie ebenso den Referenztitel und korrigieren Sie dort die ISSNs. Sollte der Pakettitel über eine KBART-Datei eingespielt worden sein, kontaktieren Sie den Anbieter und weisen Sie ihn auf die falsche ISSN hin."
+          "toDo": "Überprüfen Sie im Pakettitel, ob eine p-ISSN als e-ISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diese, indem Sie die fehlerhaften ISSNs löschen. Neue Identifikatoren können Sie hinzufügen, wenn Sie die Detailsicht des Titels mit einem Klick auf den Titel in einem neuen Reiter öffnen. Überprüfen Sie ebenso den Referenztitel und korrigieren Sie dort die ISSNs. Sollte der Pakettitel über eine KBART-Datei eingespielt worden sein, kontaktieren Sie den Anbieter und weisen Sie ihn auf die falsche ISSN hin."
         },
         "New Org": {
           "label": "Neue Organisation",
@@ -1253,16 +1253,16 @@
         "Ambiguous Matches": {
           "label": "Uneindeutige Titeltreffer",
           "info": "Mehrere Titel stimmen anhand der vorliegenden Identifikatoren überein.",
-          "action": "Ältester Titel ausgewählt",
+          "action": "Die GOKb konnte keinen Referenztitel verknüpfen.",
           "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt. Falls ja, führen Sie die Titel zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diesen, falls sie falsch sind.",
           "workflow": {
             "step1": {
               "label": "Schritt 1: Identifikatoren- und Dublettenbereinigung",
-              "toDo": "Bitte überprüfen Sie die Titelidentifikatoren auf Fehler. Titeldubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren. Alle Pakettitel und die verbleibenden Identifikatoren des gelöschten Titels werden damit übertragen. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
+              "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, führen Sie diese zusammen, indem Sie zunächst einen Referenztitel per 'Ziel auswählen' markieren und dann auf 'Dublette zusammenführen' klicken. Dabei werden alle noch verbleibenden Identifikatoren des zu löschenden Titels übernommen. Liegt keine Dublette vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
             },
             "step2": {
               "label": "Schritt 2: Referenztitelverknüpfung",
-              "toDo": "Bitte selektieren Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel, indem Sie das 'Ziel auswählen' und anschließend die 'Verknüpfung bestätigen'. Falls keiner der angebotenen Titel dem korrekten Ziel entspricht, erzeugen Sie einen neuen Referenztitel basierend auf den Daten des Pakettitels (schließt die Anfrage automatisch ab)."
+              "toDo": "Über 'Ziel auswählen' wählen Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel aus. Falls keiner der angebotenen Referenztitel dem Pakettitel entspricht, können Sie entweder über die Suchmaske der letzten Kachel den passenden Referenztitel suchen oder über den entsprechenden Button einen neuen Referenztitel basierend auf den Daten des Pakettitels erzeugen. Wählen Sie diesen anschließend als Ziel aus. Bestätigen Sie die Verknüpfung über den entsprechenden Button."
             }
           }
         },
@@ -1334,11 +1334,11 @@
           "workflow": {
             "step1": {
               "label": "Schritt 1: Identifikatoren- und Dublettenbereinigung",
-              "toDo": "Überprüfen Sie, ob unter den Referenztiteln Dubletten vorliegen. Ist dies der Fall, können Sie zunächst einen zu verbleibenden Titel per 'Ziel auswählen' markieren, und anschließend die Dublette(n) mit diesem zusammenführen (dabei werden alle noch verbleibenden Identifikatoren des zu löschenden Titels übernommen). Überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln. "
+              "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, führen Sie diese zusammen, indem Sie zunächst einen Referenztitel per 'Ziel auswählen' markieren und dann auf 'Dublette zusammenführen' klicken. Dabei werden alle noch verbleibenden Identifikatoren des zu löschenden Titels übernommen. Liegt keine Dublette vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
             },
             "step2": {
               "label": "Schritt 2: Referenztitelverknüpfung",
-              "toDo": "Bitte selektieren Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel. Falls keiner der angebotenen Titel dem korrekten Ziel entspricht, können Sie in der Datenbank nach weiteren Kandidaten suchen und anschließend als Ziel auswählen, oder einen neuen Referenztitel basierend auf den Daten des Pakettitels generieren."
+              "toDo": "Über 'Ziel auswählen' wählen Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel aus. Falls keiner der angebotenen Referenztitel dem Pakettitel entspricht, können Sie entweder über die Suchmaske der letzten Kachel den passenden Referenztitel suchen oder über den entsprechenden Button einen neuen Referenztitel basierend auf den Daten des Pakettitels erzeugen. Wählen Sie diesen anschließend als Ziel aus. Bestätigen Sie die Verknüpfung über den entsprechenden Button."
             }
           }
         },
@@ -1350,15 +1350,15 @@
         },
         "Critical Identifier Conflict": {
           "label": "Referenztitelkonflikt",
-          "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Der neue Referenztitel stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein; andere Identifikatoren stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname stark.",
-          "action": "Es wurde ein neuer Referenztitel erstellt.",
-          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Referenztitel vorliegt. Wurde eine Dublette erzeugt, selektieren Sie zunächst den vorherigen Titel per 'Ziel auswählen'. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren, um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' abschließen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht)."
+          "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Der neue Referenztitel stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein; andere Identifikatoren stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname.",
+          "action": "Die GOKb erstellte einen neuen Referenztitel mit den Identifikatoren des Pakettitels. Der Pakettitel wurde mit dem neuen Referenztitel verknüpft.",
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Liegen Dubletten vor, wählen Sie den zu verbleibenden Titel über den Button 'Ziel auswählen' aus. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren, um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht). Liegen keine Dubletten vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Fehlende Identifikatoren können Sie nachtragen, indem Sie über den Namen in die Bearbeitungssicht eines Titels springen. Sie können die Anfrage nun als abgeschlossen markieren."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifikatoren-Konflikt (ID ergänzt)",
           "info": "Beim Abgleich mit einem Referenztitel wurde ein Identifikator gefunden, der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
           "action": "Die GOKb hat im Referenztitel den Identifikator ergänzt.",
-          "toDo": "Überprüfen Sie die Identifikatoren der Referenztitel und löschen Sie diese, falls sie falsch sind."
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, führen Sie diese zusammen, indem Sie zunächst einen Referenztitel per 'Ziel auswählen' markieren und dann auf 'Dublette zusammenführen' klicken. Dabei werden alle noch verbleibenden Identifikatoren des zu löschenden Titels übernommen. Liegt keine Dublette vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. "
         },
         "Generic Matching Conflict": {
           "label": "Generischer Matchingkonflikt",
@@ -1392,9 +1392,9 @@
         },
         "Invalid Name": {
           "label": "Fehlerhafter Name",
-          "info": "Der Name dieses Titels enhält fehlerhafte Zeichen.",
-          "action": "-",
-          "toDo": "Korrigieren Sie den Namen des Titels (evtl. basierend auf der Verzeichung in externen Quellen). Bitte überprüfen Sie auch die verknüpften Referenztitel/Pakettitel."
+          "info": "Der Name dieses Titels enthält fehlerhafte Zeichen (dargestellt durch Platzhalter �).",
+          "action": "Die GOKb legte den Namen mit Platzhaltern (�) für fehlerhafte Zeichen an.",
+          "toDo": "Korrigieren Sie den Namen des Titels, indem sie das Stift-Icon neben dem Titelnamen anklicken. Schließen Sie die Bearbeitung ab, indem Sie den Haken anwählen. Bestätigen Sie Ihre Änderung mit 'Titeländerungen abschicken'. Bitte überprüfen Sie auch die Namen der gegebenenfalls verknüpften Referenztitel/Pakettitel. "
         },
         "Information": {
           "label": "Information",

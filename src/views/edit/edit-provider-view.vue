@@ -547,7 +547,8 @@
           source: undefined,
           titleNamespace: undefined,
           packageNamespac: undefined,
-          homepage: undefined
+          homepage: undefined,
+          preferredShortname: undefined
         }
         this.reload()
       },
@@ -607,6 +608,7 @@
         this.dateCreated = data.dateCreated
         this.lastUpdated = data.lastUpdated
         this.providerObject.status = data.status
+        this.providerObject.preferredShortname = data.preferredShortname
         this.uuid = data.uuid
 
         document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
