@@ -8,8 +8,13 @@
     :to="to"
     @click="$emit('click', $event)"
   >
+    <v-progress-circular
+      v-if="loading"
+      size="24"
+      indeterminate
+    />
     <v-icon
-      v-if="iconId"
+      v-else-if="iconId"
       left
     >
       {{ iconId }}
@@ -56,6 +61,11 @@
         type: String,
         required: false,
         default: undefined
+      },
+      loading: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     computed: {
