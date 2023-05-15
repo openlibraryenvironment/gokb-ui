@@ -77,6 +77,7 @@
             :key="button.label"
             class="ms-4"
             :icon-id="button.icon"
+            :loading="button.loading"
             :to="button.route"
             color="primary"
             :disabled="isButtonDisabled(button.disabled)"
@@ -115,6 +116,7 @@
   import BaseComponent from '@/shared/components/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import searchServices from '@/shared/services/search-services'
+  import exportServices from '@/shared/services/export-services'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import selection from '@/shared/models/selection'
   import accountModel from '@/shared/models/account-model'
@@ -151,12 +153,16 @@
         messageToConfirm: undefined,
         accessible: true,
         loading: false,
+        exportLoading: false,
         eventMessages: []
       }
     },
     computed: {
       isNothingSelected () {
         return this.selectedItems.length === 0
+      },
+      isSearchExportDisabled () {
+        return this.totalNumberOfItems < 1 || this.totalNumberOfItems > 10000
       },
       searchHeader () {
         return this.$i18n.t('header.search')
@@ -172,6 +178,26 @@
       },
       isLoading () {
         return this.loading
+      },
+      exportHeaders () {
+        return [
+          {
+            text: 'ID',
+            value: 'id'
+          },
+          {
+            text: this.$i18n.t('component.general.name'),
+            value: 'name'
+          },
+          {
+            text: this.$i18n.t('component.general.status.label'),
+            value: 'status'
+          },
+          {
+            text: this.$i18n.t('component.general.lastUpdated'),
+            value: 'lastUpdated'
+          }
+        ]
       }
     },
     watch: {
@@ -280,9 +306,8 @@
           instance: this
         })
       },
-      async search ({ page } = { page: undefined }) {
-        // console.log(this.searchInputFields)
-        const searchParameters = this.searchInputFields
+      _searchParameters (searchInputFields) {
+        return searchInputFields
           .flat()
           .map(field => ([field.name, field.value]))
           .filter(([name, value]) => name && this.searchFilters[value] !== undefined && this.searchFilters[value] !== null)
@@ -290,7 +315,23 @@
             result[name] = ((typeof this.searchFilters[value] === 'string' || typeof this.searchFilters[value] === 'number' || Array.isArray(this.searchFilters[value])) ? this.searchFilters[value] : this.searchFilters[value].id)
             return result
           }, {})
-        // console.log(this.searchInputFields, this.searchParameters)
+      },
+      _transformForExport (data) {
+        return data.map(({
+          id,
+          name,
+          lastUpdatedDisplay,
+          uuid,
+          status
+        }) => ({
+          id: uuid,
+          name,
+          lastUpdated: lastUpdatedDisplay ? new Date(lastUpdatedDisplay).toLocaleString('sv').substr(0, 10) : undefined,
+          status
+        }))
+      },
+      async search ({ page } = { page: undefined }) {
+        const searchParameters = this._searchParameters(this.searchInputFields)
         const sort = this.requestOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.requestOptions.sortBy[0]] || this.requestOptions.sortBy[0]) : undefined
         const desc = typeof this.requestOptions.desc === 'Array' ? this.requestOptions.desc[0] : this.requestOptions.desc
 
@@ -325,7 +366,6 @@
 
         if (result?.status === 200) {
           const { data: { data, _pagination } } = result
-          // console.log(data, _pagination, _links)
           if (!page) {
             this.resultOptions.page = 1
             this.requestOptions.page = 1
@@ -342,6 +382,41 @@
         }
 
         this.loading = false
+      },
+      async exportSearchResults () {
+        this.exportLoading = true
+        const searchParameters = this._searchParameters(this.searchInputFields)
+        searchParameters.skipDomainMapping = 'true'
+        const sort = this.requestOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.requestOptions.sortBy[0]] || this.requestOptions.sortBy[0]) : undefined
+        const desc = typeof this.requestOptions.desc === 'Array' ? this.requestOptions.desc[0] : this.requestOptions.desc
+        const esTypedParams = {
+          es: true,
+          max: 10000,
+          ...((sort && { sort: sort }) || {}),
+          ...((sort && { order: (desc ? 'desc' : 'asc') }) || {})
+        }
+        const dbTypedParams = {
+          ...((sort && { _sort: sort }) || {}),
+          ...((sort && { _order: (desc ? 'desc' : 'asc') }) || {})
+        }
+        const result = await this.catchError({
+          promise: this.searchServices.search({
+            ...searchParameters,
+            ...(this.searchByEs ? esTypedParams : dbTypedParams),
+            ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
+            ...((this.searchServiceEmbeds && { _embed: this.searchServiceEmbeds }) || {})
+          }, this.cancelToken.token),
+          instance: this
+        })
+
+        if (result?.status === 200) {
+          const records = result.data.records
+          exportServices.toTsv(this.exportHeaders, this._transformForExport(records))
+        }
+        else {
+          return undefined
+        }
+        this.exportLoading = false
       },
       executeAction (actionMethodName, actionMethodParameter) {
         actionMethodName && this[actionMethodName](actionMethodParameter)
