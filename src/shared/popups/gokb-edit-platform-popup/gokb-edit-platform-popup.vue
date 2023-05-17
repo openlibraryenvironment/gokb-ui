@@ -19,15 +19,23 @@
     >
       <v-col>
         <gokb-search-platform-field
+          v-if="!selected"
           v-model="platformName"
           :items="items"
-          :readonly="isReadonly || !!selected"
+          :readonly="isReadonly"
           :label="$tc('component.general.name')"
           :query-fields="[]"
           required
           return-object
           allow-new-values
           disable-if-linked
+        />
+        <gokb-text-field
+          v-else
+          v-model="platform.name"
+          :readonly="isReadonly"
+          :label="$tc('component.general.name')"
+          required
         />
       </v-col>
     </v-row>
@@ -50,7 +58,8 @@
         <gokb-url-field
           v-else
           v-model="platformUrl"
-          required
+          :readonly="isReadonly"
+          :required="!isReadonly"
         />
       </v-col>
     </v-row>
@@ -82,6 +91,7 @@
         {{ $t('btn.cancel') }}
       </gokb-button>
       <gokb-button
+        v-if="!isReadonly"
         default
         :disabled="!isValid"
       >
@@ -119,6 +129,11 @@
         type: Number,
         required: false,
         default: undefined
+      },
+      editable: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -151,7 +166,7 @@
         }
       },
       isReadonly () {
-        return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !!this.platform?._links && !this.platform?._links?.update?.href)
+        return !this.editable
       },
       isEdit () {
         return !!this.selected
@@ -253,7 +268,7 @@
         }
 
         const response = await this.catchError({
-          promise: platformServices.createOrUpdatePlatform(newPlatform, this.cancelToken.token),
+          promise: platformServices.createOrUpdate(newPlatform, this.cancelToken.token),
           instance: this
         })
 
@@ -298,7 +313,7 @@
         }
 
         const response = await this.catchError({
-          promise: platformServices.checkPlatform(newPlatform, this.cancelToken.token),
+          promise: platformServices.check(newPlatform, this.cancelToken.token),
           instance: this
         })
         if (response?.status < 300 && response.data) {

@@ -96,6 +96,29 @@
         >
           mdi-minus
         </v-icon>
+        <v-icon
+          v-else-if="item._pending === 'existing'"
+          class="mr-2"
+          color="green"
+          small
+        >
+          mdi-check-bold
+        </v-icon>
+        <v-icon
+          v-else-if="item._pending === 'selected'"
+          class="mr-2"
+          small
+        >
+          mdi-arrow-right-bold
+        </v-icon>
+        <v-icon
+          v-else-if="item._pending === 'unselected'"
+          class="mr-2"
+          color="red"
+          small
+        >
+          mdi-close-thick
+        </v-icon>
       </template>
       <template
         v-if="actions"
@@ -175,7 +198,7 @@
         </div>
       </template>
     </v-data-table>
-    <div class="text-center pt-2">
+    <div v-if="!hidePagination" class="text-center pt-2">
       <v-pagination
         v-model="options.page"
         color="secondary"
@@ -192,12 +215,18 @@
   import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
   import GokbEditPlatformPopup from '@/shared/popups/gokb-edit-platform-popup'
   import GokbAddTitlePopup from '@/shared/popups/gokb-add-title-popup'
-  import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
+  import GokbReviewPopup from '@/shared/popups/gokb-review-popup'
   import GokbCuratoryGroupPopup from '@/shared/popups/gokb-curatory-group-popup'
 
   export default {
     name: 'GokbTable',
-    components: { GokbEditJobPopup, GokbEditPlatformPopup, GokbAddTitlePopup, GokbAddReviewPopup, GokbCuratoryGroupPopup },
+    components: {
+      GokbEditJobPopup,
+      GokbEditPlatformPopup,
+      GokbAddTitlePopup,
+      GokbReviewPopup,
+      GokbCuratoryGroupPopup
+    },
     extends: BaseComponent,
     props: {
       disabled: {
@@ -237,6 +266,11 @@
         required: false,
         default: true,
       },
+      hidePagination: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
       totalNumberOfItems: {
         type: Number,
         required: true,
@@ -272,13 +306,20 @@
         set (value) { this.$emit('selected-items', value) }
       },
       localHeaders () {
-        return [...this.headers, { value: '_pending', sortable: false }, { value: 'action', sortable: false }].filter(header => ((!this.editable ? header.value !== '_pending' : true) && (!this.actions ? header.value !== 'action' : true))) // with delete icon
+        return [
+          ...this.headers,
+          { value: '_pending', sortable: false },
+          { value: 'action', sortable: false }
+        ].filter(header => (
+          (!this.editable ? header.value !== '_pending' : true) &&
+          (!this.actions ? header.value !== 'action' : true)
+        )) // with delete icon
       },
       pages () {
         return Math.min(Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage), this.options.page + 10, 1000)
       },
       showSelect () {
-        return this.editable || !this.hideSelect
+        return this.editable && !this.hideSelect
       }
     },
     watch: {

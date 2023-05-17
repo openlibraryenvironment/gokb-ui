@@ -26,7 +26,9 @@
     "reset": "Zurücksetzen",
     "retire": "Archivieren",
     "search": "Suchen",
+    "select": "Auswählen",
     "submit": "Abschicken",
+    "deselect": "Auswahl aufheben",
     "update": "Aktualisieren",
     "validate": "Validieren",
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
@@ -60,7 +62,10 @@
       "title": "Fehlende Berechtigung",
       "text": "Ihnen fehlt die Berechtigung um diese Seite zu sehen. Falls dies ein Fehler ist, wenden Sie sich bitte an einen Administrator."
     },
-    "docsUrl": "https://service-wiki.hbz-nrw.de/display/GOKB/GOKb+-+Deutsche+Sektion"
+    "docsUrl": "https://service-wiki.hbz-nrw.de/display/GOKB/GOKb+-+Deutsche+Sektion",
+    "start": "Anfang",
+    "end": "Ende",
+    "date": "Datum"
   },
   "direction": "ltr",
   "route": {
@@ -189,7 +194,11 @@
     "numberFormat": "Dieses Feld erwartet eine Zahl.",
     "dateFormat": "Ungültiges Datum",
     "dateRange": "Das Enddatum muss nach dem Anfangsdatum liegen.",
-    "passwordLength": "Das Passwort muss zwischen 6 und 64 Zeichen haben."
+    "passwordLength": "Das Passwort muss zwischen 6 und 64 Zeichen haben.",
+    "volumeRange": "Der erste Band muss vor dem letzten Band liegen.",
+    "issueRange": "Das erste Heft muss vor dem letzten Heft liegen.",
+    "missingStartIssue": "Die Angabe eines letzten Hefts erfordert ein Anfangsheft.",
+    "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband."
   },
   "job": {
     "label": "Import | Importe",
@@ -277,8 +286,17 @@
       "KBARTIngest": "KBART-Import",
       "KBART Ingest": "KBART-Import",
       "KBARTSourceIngest": "Automatisierter KBART-Import",
+      "KBARTSourceIngestDryRun": "Automatisierter KBART-Import (Testlauf)",
       "KBARTIngestDryRun": "KBART-Import (Testlauf)",
-      "PackageTitleMatch": "Referenztitel-Abgleich"
+      "PackageTitleMatch": "Referenztitel-Abgleich",
+      "EZBCollectionIngest": "EZB-Kollektionsimport"
+    },
+    "fetch": {
+      "error": {
+        "linkedItem": {
+          "notFound": "Die Job-Komponente konnte nicht referenziert werden!"
+        }
+      }
     }
   },
   "kbart": {
@@ -322,13 +340,15 @@
       "correctedVal": "Wert '{0}' wird automatisch durch '{1}' ersetzt werden.",
       "replacementChars": "Die Datei enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
       "replacementCharsRow": "Diese Zeile enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
-      "unusualCharsVal": "Wert {0} enthält unübliche Zeichen! Dies könnte auf eine fehlerhafte Konvertierung nach UTF-8 hinweisen.",
+      "unusualChars": "Diese Zeile enthält unübliche Zeichen, die auf eine fehlgeschlagene Dateikonvertierung hinweisen.",
+      "unusualCharsVal": "Wert '{0}' enthält unübliche Zeichen. Dies könnte auf ein fehlgeschlagene Dateikonvertierung hinweisen.",
       "illegalVal": "Wert '{0}' ist fehlerhaft!",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
       "shortRow": "Diese Zeile enthält weniger Spalten als im Datei-Header definiert wurden!",
-      "noIds": "Diese Zeile enthält keine Idenitifikatoren und wird daher nicht prozessiert!",
+      "noIds": "Diese Zeile enthält keine Identifikatoren und wird daher nicht prozessiert!",
+      "noTitleId": "Diese Zeile enthält keinen Wert für den Anbieternamensraum!",
       "noImportIds": "Diese Zeile enthält keine Identifikatoren (print/online), und es wurde kein Anbieternamensraum ausgewählt!",
       "noAuthIds": "Diese Zeile enthält weder einen 'print_identifier' noch einen 'online_identifier'!",
       "url": {
@@ -426,7 +446,8 @@
     "create": "{0} {1} erfolgreich erstellt!",
     "update": "{0} {1} erfolgreich bearbeitet!",
     "retire": "{0} {1} wurde archiviert!",
-    "delete": "{0} {1} wurde gelöscht!"
+    "delete": "{0} {1} wurde gelöscht!",
+    "merge": "{0} wurden erfolgreich zusammengeführt!"
   },
   "error": {
     "label": "Fehler | Fehler",
@@ -437,7 +458,10 @@
     },
     "create": {
       "400": "Bei der Erstellung sind Fehler aufgetreten!",
-      "403": "{0} konnte nicht angelegt werden, da dieser Benutzer nicht dazu berechtigt ist."
+      "403": "{0} konnte nicht angelegt werden, da dieser Benutzer nicht dazu berechtigt ist.",
+      "title": {
+        "identifierConflict": "Der Titel konnte nicht angelegt werden, da ein Identifikatorkonflikt vorliegt. Bitte überprüfen Sie, ob eine Dublette zu folgenden Titeln vorliegt:"
+      }
     },
     "general": {
       "500": "Die Anfrage ist fehlgeschlagen, bitte melden Sie den Vorfall oder versuchen Sie es später noch einmal.",
@@ -460,6 +484,9 @@
     },
     "create": {
       "label": "{0} anlegen"
+    },
+    "searchType": {
+      "label": "{0} suchen"
     },
     "show": {
       "label": "{0}-Details"
@@ -627,7 +654,9 @@
           "changedTo": {
             "label": "wurde zu"
           }
-        }
+        },
+        "from": "von",
+        "to": "nach"
       }
     },
     "journal": {
@@ -827,7 +856,9 @@
         "startVolume": "Erster Band",
         "endDate": "Enddatum",
         "endIssue": "Letztes Heft",
-        "endVolume": "Letzter Band"
+        "endVolume": "Letzter Band",
+        "volume": "Band",
+        "issue": "Heft"
       },
       "embargo": {
         "type": "Typ",
@@ -974,11 +1005,14 @@
       "type": {
         "label": "Typ"
       },
+      "todo": {
+        "label": "ToDo"
+      },
       "cause": {
         "label": "Ursache"
       },
       "componentToReview": {
-        "label": "Komponente"
+        "label": "Betroffene Komponente"
       },
       "additionalInfo": {
         "label": "Strukturierte Detailansicht"
@@ -1000,8 +1034,107 @@
           "edited": "Prüfanfrage erfolgreich bearbeitet.",
           "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
-          "closed": "Request marked as closed",
-          "closedBulk": "Prüfanfrage als geschlossen markiert | {0} Prüfanfragen als geschlossen markiert"
+          "closed": "Prüfanfrage als erledigt markiert",
+          "closedBulk": "Prüfanfrage als erledigt markiert | {0} Prüfanfragen als erledigt markiert"
+        },
+        "confirm": {
+          "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage als erledigt markieren wollen.",
+          "reopen": "Bitte bestätigen Sie, dass Sie diese abgeschlossene Prüfanfrage erneut öffnen möchten."
+        },
+        "componentToReview": {
+          "label": "Zu prüfender {0}"
+        },
+        "close": {
+          "label": "Prüfanfrage Abschließen",
+          "error": {
+            "moreSteps": "Bitte überprüfen Sie alle Arbeitsschritte, bevor Sie die Anfrage schließen."
+          }
+        },
+        "cancel": {
+          "label": "Prüfanfrage abbrechen"
+        },
+        "next": {
+          "label": "Nächster Schritt"
+        },
+        "open": {
+          "label": "Abschließung Zurücknehmen"
+        },
+        "components": {
+          "workflow": {
+            "titleMerge": {
+              "label": "Identifikatoren- und Dublettenbereinigung",
+              "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler. Mögliche Dubletten können Sie zusammenführen, indem Sie zunächst den zu verbleibenden Titel per 'Ziel auswählen' bestimmen, und anschließend den zu löschenden Titel über 'Dublette zusammenführen' designieren."
+            },
+            "titleReview": {
+              "label": "Titelüberprüfung",
+              "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler."
+            }
+          },
+          "merge": {
+            "label": "Dublettenbereinigung",
+            "selectTarget": {
+              "label": "Ziel Auswählen"
+            },
+            "confirm": {
+              "label": "Zusammenführung Bestätigen",
+              "message": "Bitte bestätigen Sie die Zusammenführung. Der zu prüfende Titel {0} wird gelöscht, und seine verknüpften Pakettitel werden an den selektierten Titel {1} übertragen."
+            },
+            "selectIds": {
+              "label": "Zu übertragende Identifikatoren auswählen",
+              "missing": {
+                "label": "Nicht verknüpft"
+              },
+              "existing": {
+                "label": "Bereits verknüpft"
+              },
+              "new": {
+                "label": "Wird hinzugefügt"
+              }
+            },
+            "selected": {
+              "label": "Selektierter {0}"
+            },
+            "unselected": {
+              "label": "{0}"
+            }
+          },
+          "single": {
+            "selectIds": "Zu löschende Identifikatoren auswählen",
+            "confirm": {
+              "label": "Titeländerungen abschicken",
+              "message": "Bitte bestätigen Sie die vorgemerkten Änderungen."
+            }
+          },
+          "link": {
+            "label": "Titelverknüpfung",
+            "selectTarget": {
+              "label": "Ziel Auswählen"
+            },
+            "selectDeprecated": {
+              "label": "Dublette Zusammenführen"
+            },
+            "confirmMerge": {
+              "label": "Zusammenführung Bestätigen",
+              "message": "Bitte bestätigen Sie die Zusammenführung. Der Referenztitel {0} wird dabei gelöscht, und alle mit ihm verknüpften Pakettitel werden an die Zielkomponente übertragen."
+            },
+            "confirmLink": {
+              "label": "Verknüpfung bestätigen",
+              "message": "Bitte bestätigen Sie die Auswahl des Referenztitels {0} zur Verknüpfung mit dem Pakettitel."
+            },
+            "lookup": {
+              "label": "Bestehenden Titel zur Auswahl hinzufügen"
+            },
+            "or": {
+              "label": "ODER"
+            },
+            "success": {
+              "label": "Der Referenztitel wurde erfolgreich mit dem Pakettitel verknüpft."
+            }
+          },
+          "add": {
+            "label": "Neuen Referenztitel erzeugen",
+            "message": "Bitte bestätigen Sie die Erzeugung eines neuen Referenztitels mit ALLEN verbleibenden Identifikatoren des zu prüfenden Pakettitels."
+          }
         }
       },
       "status": {
@@ -1064,10 +1197,10 @@
           "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Titel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen."
         },
         "Namespace Mismatch": {
-          "label": "Unterschiedliche Namensräume",
-          "info": "Der neue Titel besitzt eine eISSN, die einer bestehenden Print-ISSN entspricht, oder umgekehrt.",
-          "action": "Identifikator hinzugefügt",
-          "toDo": "Überprüfen Sie, ob hier ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde."
+          "label": "ISSN-Konflikt",
+          "info": "Der Pakettitel besitzt eine e-ISSN, die einer bestehenden p-ISSN des Referenztitels entspricht, oder umgekehrt.",
+          "action": "Ein Pakettitel mit einer mit bestehenden Daten im Konflikt stehenden p-ISSN bzw. e-ISSN wurde angelegt.",
+          "toDo": "Überprüfen Sie im Pakettitel, ob eine p-ISSN als e-ISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diese, indem Sie die fehlerhaften ISSNs löschen. Neue Identifikatoren können Sie hinzufügen, wenn Sie die Detailsicht des Titels mit einem Klick auf den Titel in einem neuen Reiter öffnen. Überprüfen Sie ebenso den Referenztitel und korrigieren Sie dort die ISSNs. Sollte der Pakettitel über eine KBART-Datei eingespielt worden sein, kontaktieren Sie den Anbieter und weisen Sie ihn auf die falsche ISSN hin."
         },
         "New Org": {
           "label": "Neue Organisation",
@@ -1120,8 +1253,18 @@
         "Ambiguous Matches": {
           "label": "Uneindeutige Titeltreffer",
           "info": "Mehrere Titel stimmen anhand der vorliegenden Identifikatoren überein.",
-          "action": "Ältester Titel ausgewählt",
-          "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt. Falls ja, führen Sie die Titel zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diesen, falls sie falsch sind."
+          "action": "Die GOKb konnte keinen Referenztitel verknüpfen.",
+          "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt. Falls ja, führen Sie die Titel zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diesen, falls sie falsch sind.",
+          "workflow": {
+            "step1": {
+              "label": "Schritt 1: Identifikatoren- und Dublettenbereinigung",
+              "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, führen Sie diese zusammen, indem Sie zunächst einen Referenztitel per 'Ziel auswählen' markieren und dann auf 'Dublette zusammenführen' klicken. Dabei werden alle noch verbleibenden Identifikatoren des zu löschenden Titels übernommen. Liegt keine Dublette vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
+            },
+            "step2": {
+              "label": "Schritt 2: Referenztitelverknüpfung",
+              "toDo": "Über 'Ziel auswählen' wählen Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel aus. Falls keiner der angebotenen Referenztitel dem Pakettitel entspricht, können Sie entweder über die Suchmaske der letzten Kachel den passenden Referenztitel suchen oder über den entsprechenden Button einen neuen Referenztitel basierend auf den Daten des Pakettitels erzeugen. Wählen Sie diesen anschließend als Ziel aus. Bestätigen Sie die Verknüpfung über den entsprechenden Button."
+            }
+          }
         },
         "Package Titles Retired": {
           "label": "Pakettitel archiviert",
@@ -1156,7 +1299,7 @@
         "EZB Title Overlap": {
           "label": "EZB-ID bereits verwendet",
           "info": "Die gefundene EZB-ID ist bereits mit einem anderen Referenztitel verknüpft.",
-          "action": "",
+          "action": "-",
           "toDo": ""
         },
         "ZDB Title Overlap": {
@@ -1186,74 +1329,90 @@
         "Ambiguous Title Matches": {
           "label": "Uneindeutige Titelübereinstimmung",
           "info": "Der Pakettitel kann anhand der vorliegenden Identifikatoren nicht eindeutig einem Referenztitel zugeordnet werden.",
-          "action": "Kein Referenztitel verknüpft",
-          "toDo": "Überprüfen Sie, ob bei den Referenztiteln eine Dublette vorliegt. Falls ja, führen Sie sie zusammen und verknüpfen diesen Titel manuell. Überprüfen Sie die Identifikatoren und löschen Sie gegebenenfalls welche, falls sie falsch sind."
+          "action": "Der Pakettitel wurde ohne Referenztitelverknüpfung angelegt.",
+          "toDo": "Bitte wählen Sie den zu verknüpfenden Titel aus. Falls unter den weiteren Kandidaten eine Dublette zu dieser Auswahl vorliegt, bereinigen Sie diese zunächst, indem Sie sie mit der Auswahl zusammenführen.",
+          "workflow": {
+            "step1": {
+              "label": "Schritt 1: Identifikatoren- und Dublettenbereinigung",
+              "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, führen Sie diese zusammen, indem Sie zunächst einen Referenztitel per 'Ziel auswählen' markieren und dann auf 'Dublette zusammenführen' klicken. Dabei werden alle noch verbleibenden Identifikatoren des zu löschenden Titels übernommen. Liegt keine Dublette vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Ist die Bereinigung abgeschlossen, können Sie zum nächsten Schritt wechseln."
+            },
+            "step2": {
+              "label": "Schritt 2: Referenztitelverknüpfung",
+              "toDo": "Über 'Ziel auswählen' wählen Sie einen Referenztitel zur Verknüpfung mit dem zu prüfenden Pakettitel aus. Falls keiner der angebotenen Referenztitel dem Pakettitel entspricht, können Sie entweder über die Suchmaske der letzten Kachel den passenden Referenztitel suchen oder über den entsprechenden Button einen neuen Referenztitel basierend auf den Daten des Pakettitels erzeugen. Wählen Sie diesen anschließend als Ziel aus. Bestätigen Sie die Verknüpfung über den entsprechenden Button."
+            }
+          }
         },
         "Namespace Conflict": {
-          "label": "Unterschiedliche Namensräume",
-          "info": "Der Pakettitel besitzt eine eISSN, die einer bestehenden Print-ISSN des Referenztitels entspricht, oder umgekehrt.",
-          "action": "",
-          "toDo": "Überprüfen Sie, ob beim Referenztitel ein Fehler vorliegt und fälschlicherweise eine Print-ISSN als eISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diesen Fall. Ansonsten überprüfen Sie den Pakettitel und die KBART-Datei dahingehend und korrigieren Sie diese."
+          "label": "Namensraumkonflikt",
+          "info": "Der Pakettitel besitzt eine e-ISSN, die einer bestehenden p-ISSN des Referenztitels entspricht, oder umgekehrt.",
+          "action": "Ein Pakettitel mit einer mit bestehenden Daten im Konflikt stehenden p-ISSN bzw. e-ISSN wurde angelegt.",
+          "toDo": "Überprüfen Sie im Pakettitel, ob eine p-ISSN als e-ISSN oder umgekehrt ausgezeichnet wurde, und korrigieren Sie diese. Überprüfen Sie ebenso den Referenztitel und korrigieren Sie dort die ISSNs. Sollte der Pakettitel über eine KBART-Datei eingespielt worden sein, kontaktieren Sie den Anbieter und weisen Sie ihn auf die falsche ISSN hin."
         },
         "Critical Identifier Conflict": {
-          "label": "Identifikator-Konflikt (Neuer Titel)",
-          "info": "Referenztitel {0} stimmt anhand eines Identifikators mit einem vorhandenen Referenztitel überein, aber andere Identifikatoren desselben Namensraumes stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname stark.",
-          "action": "Neuer Referenztitel erstellt",
-          "toDo": "Überprüfen Sie, ob hier tatsächlich ein neuer Referenztitel vorliegt. Ist er identisch mit dem vorhandenen, führen Sie beide zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diese, falls sie falsch sind."
+          "label": "Referenztitelkonflikt",
+          "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Der neue Referenztitel stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein; andere Identifikatoren stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname.",
+          "action": "Die GOKb erstellte einen neuen Referenztitel mit den Identifikatoren des Pakettitels. Der Pakettitel wurde mit dem neuen Referenztitel verknüpft.",
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Liegen Dubletten vor, wählen Sie den zu verbleibenden Titel über den Button 'Ziel auswählen' aus. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren, um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht). Liegen keine Dubletten vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Fehlende Identifikatoren können Sie nachtragen, indem Sie über den Namen in die Bearbeitungssicht eines Titels springen. Sie können die Anfrage nun als abgeschlossen markieren."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifikatoren-Konflikt (ID ergänzt)",
-          "info": "Referenztitel {0} stimmt mit dem vorhandenen Referenztitel überein, aber manche Identifikatoren {1} desselben Namensraums stimmen nicht überein.",
-          "action": "Identifikator ergänzt",
-          "toDo": "Überprüfen Sie die Identifikatoren des Referenztitels und löschen Sie diese, falls sie falsch sind."
+          "info": "Beim Abgleich mit einem Referenztitel wurde ein Identifikator gefunden, der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
+          "action": "Die GOKb hat im Referenztitel den Identifikator ergänzt.",
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, führen Sie diese zusammen, indem Sie zunächst einen Referenztitel per 'Ziel auswählen' markieren und dann auf 'Dublette zusammenführen' klicken. Dabei werden alle noch verbleibenden Identifikatoren des zu löschenden Titels übernommen. Liegt keine Dublette vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. "
         },
         "Generic Matching Conflict": {
           "label": "Generischer Matchingkonflikt",
-          "info": "Es trat ein Konflikt beim Matching des Pakettitels mit bestehenden Referenztiteln auf.",
-          "action": "",
+          "info": "Es trat ein Konflikt beim Abgleich des eigehenden Pakettitels mit bestehenden Referenztiteln auf.",
+          "action": "-",
           "toDo": "Überprüfen Sie die betroffenen Titel und informieren Sie gegebenenfalls die GOKb-Redaktion."
         },
         "Invalid Record": {
           "label": "Ungültiger KBART-Datensatz",
           "info": "Ein Datensatz der KBART-Datei enthält ungültige Werte. Es wurde kein Pakettitel angelegt.",
-          "action": "Kein Pakettitel angelegt",
+          "action": "Es wurde kein Pakettitel angelegt",
           "toDo": "Überprüfen Sie den entsprechenden Datensatz in der KBART-Datei auf Fehler und korrigieren Sie ihn."
         },
         "Ambiguous Record Matches": {
           "label": "Uneindeutiger KBART-Datensatz",
           "info": "Ein Datensatz der KBART-Datei kann nicht eindeutig einem Pakettitel zugeordnet werden.",
-          "action": "Pakettitel ausgewählt",
+          "action": "Einer der übereinstimmenden Pakettitel wurde ausgewählt",
           "toDo": "Überprüfen Sie den entsprechenden Datensatz sowie den Pakettitel, ob der korrekte Pakettitel ausgewählt wurde."
         },
         "Import Identifier Mismatch": {
           "label": "Identifikatoren-Konflikt beim KBART-Import",
-          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren einem bestehenden Pakettitel zugordnet werden, allerdings unterscheidet sich mindestens ein anderer Identifikator.",
-          "action": "Neuer Pakettitel angelegt",
-          "toDo": "Überprüfen Sie die Pakettitel und führen sie beide gegebenenfalls zusammen."
+          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren einem bestehenden Pakettitel zugordnet werden, allerdings unterscheiden sich ein oder mehrere andere Identifikatoren.",
+          "action": "Ein neuer Pakettitel wurde erstellt.",
+          "toDo": "Überprüfen Sie die Identifikatoren der Pakettitel. Falls Sie Fehler feststellen, sollten diese optimalerweise durch die Einspielung einer korrigierten KBART-Datei behoben werden. In diesem Fall können Sie den/die fehlerhafte(n) Pakettitel zunächst über ihre Detailansicht als gelöscht markieren. Alternativ können Sie fehlerhafte Identifikatoren hier auch manuell löschen."
         },
         "Import Report": {
           "label": "Ergebnisbericht einer KBART-Einspielung",
           "info": "Eine KBART-Einspielung hat stattgefunden. Entnehmen Sie genauere Informationen bitte den Details.",
-          "action": "Paket eingespielt",
+          "action": "Das Paket wurde fertig eingespielt",
           "toDo": ""
         },
         "Invalid Name": {
           "label": "Fehlerhafter Name",
-          "info": "Der Name dieses Titels enhält fehlerhafte Zeichen.",
-          "action": "",
-          "toDo": "Korrigieren Sie den Namen des Titels (evtl. basierend auf der Verzeichung in externen Quellen). Bitte überprüfen Sie auch die verknüpften Referenztitel/Pakettitel."
+          "info": "Der Name dieses Titels enthält fehlerhafte Zeichen (dargestellt durch Platzhalter �).",
+          "action": "Die GOKb legte den Namen mit Platzhaltern (�) für fehlerhafte Zeichen an.",
+          "toDo": "Korrigieren Sie den Namen des Titels, indem sie das Stift-Icon neben dem Titelnamen anklicken. Schließen Sie die Bearbeitung ab, indem Sie den Haken anwählen. Bestätigen Sie Ihre Änderung mit 'Titeländerungen abschicken'. Bitte überprüfen Sie auch die Namen der gegebenenfalls verknüpften Referenztitel/Pakettitel. "
         },
         "Information": {
           "label": "Information",
           "info": "",
-          "action": "",
+          "action": "-",
           "toDo": ""
         },
         "Manual Request": {
           "label": "Manuelle Anfrage",
           "info": "",
-          "action": "",
+          "action": "-",
           "toDo": ""
+        },
+        "Invalid Indentifiers": {
+          "label": "Ungültige Identifikatoren",
+          "info": "Unter den verknüpften Identifikatoren wurden ungültige Werte entdeckt!",
+          "action": "-",
+          "toDo": "Bitte überprüfen Sie die Validität der Identifikatoren und korrigieren Sie eventuelle Fehler."
         }
       }
     },
@@ -1306,6 +1465,7 @@
       }
     },
     "general": {
+      "label": "Komponente | Komponenten",
       "name": "Name",
       "general": "Allgemein",
       "notFound": "{0} nicht gefunden!",

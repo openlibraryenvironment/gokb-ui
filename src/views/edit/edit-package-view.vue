@@ -4,7 +4,7 @@
     :key="version"
     :title="title"
     :sub-title="subTitle"
-    @submit="showCreatePackageConfirm"
+    @submit="showSubmitPackageConfirm"
   >
     <gokb-error-component :value="error" />
     <v-snackbars ref="snackbars" :objects.sync="eventMessages"></v-snackbars>
@@ -326,7 +326,7 @@
                 v-model="packageItem.ids"
                 target-type="Package"
                 :disabled="isReadonly"
-                :api-errors="errors.ids"
+                :api-errors="errors?.ids"
               />
             </v-col>
             <v-col
@@ -336,7 +336,7 @@
               <gokb-alternate-names-section
                 v-model="allNames.alts"
                 :disabled="isReadonly"
-                :api-errors="errors.variantNames"
+                :api-errors="errors?.variantNames"
               />
             </v-col>
           </v-row>
@@ -369,7 +369,7 @@
             :platform="packageItem.nominalPlatform"
             :provider="packageItem.provider"
             :disabled="isReadonly"
-            :api-errors="errors.tipps"
+            :api-errors="errors?.tipps"
             @kbart="setKbart"
             @update="updateNewTipps"
           />
@@ -379,7 +379,7 @@
             v-model="sourceItem"
             :default-title-namespace="providerTitleNamespace"
             :expanded="false"
-            :api-errors="errors.source"
+            :api-errors="errors?.source"
             :readonly="isReadonly"
             @enable="triggerUpdate"
           />
@@ -472,7 +472,7 @@
                   message-path="component.package.listStatus"
                   url="refdata/categories/Package.ListStatus"
                   :label="$t('component.package.listStatus.label')"
-                  :api-errors="errors.listStatus"
+                  :api-errors="errors?.listStatus"
                   dense
                   readonly
                 />
@@ -530,7 +530,7 @@
                 v-if="id && isContrib"
                 :expandable="false"
                 :review-component="packageItem"
-                :api-errors="errors.listStatus"
+                :api-errors="errors?.listStatus"
                 @update=reload
               />
             </v-col>
@@ -552,7 +552,7 @@
       <gokb-confirmation-popup
         v-model="showSubmitConfirm"
         :message="submitConfirmationMessage"
-        @confirmed="createPackage"
+        @confirmed="submitPackage"
       />
       <gokb-button
         v-if="!isReadonly"
@@ -714,7 +714,6 @@
       return {
         valid: false,
         step: 1,
-        step2Error: false,
         waiting: false,
         notFound: false,
         version: undefined,
@@ -848,8 +847,11 @@
       activeGroup () {
         return this.loggedIn && accountModel.activeGroup()
       },
+      step2Error () {
+        return (this.isEdit && !this.isReadonly && !this.isValid) || (!this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids))
+      },
       step3Error () {
-        return (this.isEdit && this.errors?.variantNames && this.errors?.ids) || (!this.isEdit && this.errors?.tipps)
+        return (this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids)) || (!this.isEdit && !!this.errors?.tipps)
       },
       kbartLabel () {
         return 'KBART' + (this.kbart?.dryRun ? ' (' + this.$i18n.t('kbart.dryRun.label') + ')' : '')
@@ -870,27 +872,20 @@
 
         this.eventMessages = []
       },
-      isValid (valid) {
-        if (this.isEdit && !this.isReadonly && !valid) {
-          this.step2Error = true
-        } else {
-          this.step2Error = false
-        }
-      },
       'packageItem.provider' (prov) {
         if (prov) {
           this.fetchDefaultNamespace(prov.id)
         }
       },
       step () {
-        this.$refs.descInfo.refreshRows()
-        this.$refs.descEdit.refreshRows()
+        this.$refs?.descInfo?.refreshRows()
+        this.$refs?.descEdit?.refreshRows()
       }
     },
     async created () {
-      this.reload()
+      await this.reload()
 
-      if (this.initMessageCode) {
+      if (!!this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
           this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success' })
         } else if (this.initMessageCode.includes('failure')) {
@@ -900,7 +895,7 @@
         }
       }
 
-      if (this.kbartJob) {
+      if (!!this.kbartJob) {
         this.loadImportJobStatus(this.kbartJob)
       } else if (this.isEdit && this.accessible) {
         this.getActiveJobs()
@@ -963,7 +958,7 @@
           this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict'), color: 'warn', timeout: -1 })
         }
       },
-      showCreatePackageConfirm (form) {
+      showSubmitPackageConfirm (form) {
         if (this.isValid) {
           if (this.kbart?.selectedFile) {
             let code = this.kbart.dryRun ? 'component.package.navigation.confirm.kbartDryRun.label' : 'component.package.navigation.confirm.kbartLocal.label'
@@ -980,7 +975,7 @@
         this.selectedJob = { id: uuid, archived: false }
         this.editJobPopupVisible = true
       },
-      async createPackage () {
+      async submitPackage () {
         loading.startLoading()
         var isUpdate = !!this.id
         this.eventMessages = []
@@ -1039,7 +1034,7 @@
           }
 
           const response = await this.catchError({
-            promise: packageServices.createOrUpdatePackage(newPackage, this.cancelToken.token),
+            promise: packageServices.createOrUpdate(newPackage, this.cancelToken.token),
             instance: this
           })
 
@@ -1126,7 +1121,7 @@
               this.eventMessages.push({ message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
             } else {
               this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
-              this.errors = response.data.error
+              this.errors = response.data.errors || {}
               this.step = 1
             }
           }
@@ -1174,7 +1169,7 @@
           this.newTipps = []
 
           const result = await this.catchError({
-            promise: packageServices.getPackage(this.id, this.cancelToken.token),
+            promise: packageServices.get(this.id, this.cancelToken.token),
             instance: this
           })
 
@@ -1183,7 +1178,7 @@
           } else if (result.status === 401) {
             accountModel.logout()
             const retry = await this.catchError({
-              promise: packageServices.getPackage(this.id, this.cancelToken.token),
+              promise: packageServices.get(this.id, this.cancelToken.token),
               instance: this
             })
 
@@ -1198,7 +1193,7 @@
 
           if (this.providerSelect) {
             const providerResult = await this.catchError({
-              promise: providerServices.getProvider(this.providerSelect.id, this.cancelToken.token),
+              promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
               instance: this
             })
 
@@ -1221,7 +1216,7 @@
       },
       async fetchDefaultNamespace (providerId) {
         const providerResult = await this.catchError({
-          promise: providerServices.getProvider(providerId, this.cancelToken.token),
+          promise: providerServices.get(providerId, this.cancelToken.token),
           instance: this
         })
 
@@ -1245,7 +1240,7 @@
 
         while (!finished) {
           const jobResult = await this.catchError({
-            promise: jobServices.getJob(jobId, false, this.cancelToken.token),
+            promise: jobServices.get(jobId, false, this.cancelToken.token),
             instance: this
           })
 
@@ -1300,7 +1295,7 @@
 
         while (!finished) {
           const jobResult = await this.catchError({
-            promise: jobServices.getJob(jobId, false, this.cancelToken.token),
+            promise: jobServices.get(jobId, false, this.cancelToken.token),
             instance: this
           })
 
@@ -1333,7 +1328,7 @@
       },
       async getActiveJobs () {
         const jobResult = await this.catchError({
-          promise: jobServices.get({ linkedItem: this.packageItem.id }, this.cancelToken.token),
+          promise: jobServices.search({ linkedItem: this.packageItem.id }, this.cancelToken.token),
           instance: this
         })
 
@@ -1342,7 +1337,6 @@
             this.activeJobs = true
 
             jobResult.data.data.forEach((job) => {
-              console.log(job)
               if (job.type?.value === 'PackageTitleMatch') {
                 this.loadMatchingJobStatus(job.uuid, job.type.value)
               }

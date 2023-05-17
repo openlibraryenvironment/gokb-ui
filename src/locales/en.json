@@ -26,7 +26,9 @@
     "reset": "Reset",
     "retire": "Retire",
     "search": "Search",
+    "select": "Select",
     "submit": "Submit",
+    "deselect": "Deselect",
     "update": "Update",
     "validate": "Validate",
     "bulkSelect": "Set Status of {0} entries to ...",
@@ -59,7 +61,10 @@
     "401": {
       "title": "No permission",
       "text": "You have insufficient permissions for viewing this page. If you think this is an error, please contact an admin."
-    }
+    },
+    "start": "Start",
+    "end": "End",
+    "date": "Date"
   },
   "direction": "ltr",
   "route": {
@@ -189,7 +194,11 @@
     "numberFormat": "Please enter a number.",
     "dateFormat": "Invalid Date",
     "dateRange": "The end date must be after the start date.",
-    "passwordLength": "The password must be between 6 and 64 characters of length."
+    "passwordLength": "The password must be between 6 and 64 characters of length.",
+    "volumeRange": "The start volume must be before the end volume",
+    "issueRange": "The start issue must be before the end issue",
+    "missingStartIssue": "An end issue requires a set start issue!",
+    "missingStartVolume": "An end volume requires a set start volume!"
   },
   "job": {
     "label": "Import | Imports",
@@ -277,8 +286,17 @@
       "KBARTIngest": "KBART Package Ingest",
       "KBART Ingest": "KBART Package Ingest",
       "KBARTSourceIngest": "Automated KBART Ingest",
+      "KBARTSourceIngestDryRun": "Automated KBART Ingest (Dry Run)",
       "KBARTIngestDryRun": "KBART Package Ingest (Dry Run)",
-      "PackageTitleMatch": "Reference Title Matching"
+      "PackageTitleMatch": "Reference Title Matching",
+      "EZBCollectionIngest": "EZB Collection Ingest"
+    },
+    "fetch": {
+      "error": {
+        "linkedItem": {
+          "notFound": "Unable to reference the linked item!"
+        }
+      }
     }
   },
   "kbart": {
@@ -322,13 +340,15 @@
       "correctedVal": "Value '{0}' will be automatically replaced by '{1}'",
       "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
-      "unusualCharsVal": "Value {0} contains unusual characters! This may point to a failed conversion to UTF-8.",
+      "unusualChars": "This line contains unusual characters, which may point to a corrupted file conversion.",
+      "unusualCharsVal": "Value '{0}' contains unusual characters. This may point to a corrupted file conversion.",
       "illegalVal": "Value '{0}' is not valid!",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
       "illegalPrintId": "Value for print identifier '{0}' is not valid.",
       "shortRow": "This line contains fewer columns than defined by the provided headings!",
       "noIds": "This line contains no usable identifiers!",
+      "noTitleId": "This line does not contain a value for the common title id!",
       "noImportIds": "This line contains no reference identifiers (print/online), and no default namespace was selected!",
       "noAuthIds": "This line contains neither a 'print_identifier' nor an 'online_identifier'!",
       "url": {
@@ -426,7 +446,8 @@
     "create": "Successfully created {0} {1}!",
     "update": "Successfully edited {0} {1}!",
     "retire": "Successfully archived {0} {1}!",
-    "delete": "Successfully deleted {0} {1}!"
+    "delete": "Successfully deleted {0} {1}!",
+    "merge": "{0} have been successfully merged!"
   },
   "error": {
     "label": "Error | Errors",
@@ -437,7 +458,10 @@
     },
     "create": {
       "400": "{0} contained errors!",
-      "403": "{0} could not be created due to missing user permissions."
+      "403": "{0} could not be created due to missing user permissions.",
+      "title": {
+        "identifierConflict": "Unable to create the title due to an identifier conflict! Please check the following titles for duplicates:"
+      }
     },
     "general": {
       "500": "The request failed, please report this to an admin or try again later.",
@@ -460,6 +484,9 @@
     },
     "create": {
       "label": "Create {0}"
+    },
+    "searchType": {
+      "label": "Search {0}"
     },
     "show": {
       "label": "{0} details"
@@ -502,7 +529,7 @@
       "Org": "Provider | Providers"
     },
     "title": {
-      "label": "Title | Titles",
+      "label": "Reference Title | Reference Titles",
       "tabsView": "Tabbed View",
       "type": {
         "label": "Type",
@@ -627,7 +654,9 @@
           "changedTo": {
             "label": "changed to"
           }
-        }
+        },
+        "from": "from",
+        "to": "to"
       }
     },
     "journal": {
@@ -827,7 +856,9 @@
         "startVolume": "Start Volume",
         "endDate": "End Date",
         "endIssue": "End Issue",
-        "endVolume": "End Volume"
+        "endVolume": "End Volume",
+        "volume": "Volume",
+        "issue": "Issue"
       },
       "embargo": {
         "type": "Type",
@@ -974,11 +1005,14 @@
       "type": {
         "label": "Type"
       },
+      "todo": {
+        "label": "ToDo"
+      },
       "cause": {
         "label": "Cause"
       },
       "componentToReview": {
-        "label": "Component"
+        "label": "Component to review"
       },
       "additionalInfo": {
         "label": "Structured info"
@@ -998,10 +1032,109 @@
         "success": {
           "created": "A new request was successfully created.",
           "edited": "Request was successfully edited.",
-          "escalated": "The request has been successfully escalated.",
-          "deescalated": "The request has been successfully deescalated.",
-          "closed": "Request marked as closed",
-          "closedBulk": "Request marked as closed | {0} requests marked as closed"
+          "escalated" : "The request has been successfully escalated.",
+          "deescalated" : "The request has been successfully deescalated.",
+          "closed": "Request marked as finished",
+          "closedBulk": "Request marked as finished | {0} requests marked as finished"
+        },
+        "confirm": {
+          "close": "Please confirm marking this review as finished.",
+          "reopen": "Please confirm the reopening of this review."
+        },
+        "componentToReview": {
+          "label": "{0} to review"
+        },
+        "close": {
+          "label": "Mark finished",
+          "error": {
+            "moreSteps": "Please check all workflow steps before closing this review."
+          }
+        },
+        "cancel": {
+          "label": "Cancel review"
+        },
+        "next": {
+          "label": "Next Step"
+        },
+        "open": {
+          "label": "Re-open review"
+        },
+        "components": {
+          "workflow": {
+            "titleMerge": {
+              "label": "Identifier check & Duplicate cleanup",
+              "toDo": "Please check the title information (name/identifiers) for errors. If there are duplicate titles, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'."
+            },
+            "titleReview": {
+              "label": "Identifier check",
+              "toDo": "Please check the title information (name/identifiers) for errors."
+            }
+          },
+          "merge": {
+            "label": "Title merge",
+            "selectTarget": {
+              "label": "Select Merge Target"
+            },
+            "confirm": {
+              "label": "Confirm Merge",
+              "message": "Please confirm that you want to merge the reviewed title ({0}) into the selected one. The review will be closed and the reviewed title will be deleted."
+            },
+            "selectIds": {
+              "label": "Select IDs to add to the merged title.",
+              "missing": {
+                "label": "Not linked"
+              },
+              "existing": {
+                "label": "Already linked"
+              },
+              "new": {
+                "label": "Will be added"
+              }
+            },
+            "selected": {
+              "label": "Selected {0}"
+            },
+            "unselected": {
+              "label": "{0}"
+            }
+          },
+          "single": {
+            "selectIds": "Select IDs to mark them for removal.",
+            "confirm": {
+              "label": "Confirm title changes",
+              "message": "Please confirm the updates you have prepared for {0}."
+            }
+          },
+          "link": {
+            "label": "Title linking",
+            "selectTarget": {
+              "label": "Select Linking Target"
+            },
+            "selectDeprecated": {
+              "label": "Merge Duplicate"
+            },
+            "confirmMerge": {
+              "label": "Confirm Merge",
+              "message": "Please confirm the title merge. The reference title {0} will be deleted and all of its linked package titles will be transferred to the selected title."
+            },
+            "confirmLink": {
+              "label": "Confirm Linking",
+              "message": "Please confirm the linking of the global title {0} with the package title."
+            },
+            "lookup": {
+              "label": "Add another title to the selection"
+            },
+            "or": {
+              "label": "OR"
+            },
+            "success": {
+              "label": "The reference title has been successfully linked to the package title."
+            }
+          },
+          "add": {
+            "label": "Generate new title",
+            "message": "Please confirm the creation of a new reference title with ALL remaining identifiers of the reviewed package title."
+          }
         }
       },
       "status": {
@@ -1064,10 +1197,10 @@
           "toDo": "Check if the new title is correct. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
         },
         "Namespace Mismatch": {
-          "label": "Namespace Mismatch",
-          "info": "Ingest file issn matched an existing eissn or vice versa.",
-          "action": "Added identifier",
-          "toDo": "Check if an issn is erroneously marked as eissn or vice versa and correct those identifiers if necessary."
+          "label": "ISSN Conflict",
+          "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
+          "action": "The package title was created with a conflicting identifier.",
+          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. If the package title identifiers are wrong, please contact the provider of the KBART file and ask for the information to be fixed."
         },
         "New Org": {
           "label": "New Org",
@@ -1156,7 +1289,7 @@
         "EZB Title Overlap": {
           "label": "EZB Label Mismatch",
           "info": "Matched EZB-ID is already linked to another title instance.",
-          "action": "",
+          "action": "-",
           "toDo": ""
         },
         "ZDB Title Overlap": {
@@ -1186,20 +1319,30 @@
         "Ambiguous Title Matches": {
           "label": "Ambiguous Title Matches",
           "info": "The package title has been matched on multiple reference titles.",
-          "action": "No reference title selected",
-          "toDo": "Check reference titles for duplicates. Merge titles if necessary and link this title manually. Check identifier duplicates and delete them if they are incorrect."
+          "action": "Unable to select a reference title.",
+          "toDo": "Please select a reference title to be linked to the package title. If the other candidates contain duplicate items to the selected, clean up by merging them into the selected item.",
+          "workflow": {
+            "step1": {
+              "label": "Step 1: ID check & component cleanup",
+              "toDo": "Please check the title information (name/identifiers) for errors. If there are duplicate titles, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'. All package titles and remaining identifiers of the deleted item will be transferred. Otherwise, proceed to the next step."
+            },
+            "step2": {
+              "label": "Step 2: Title linking",
+              "toDo": "Please select a reference title to link to the package title via 'select linking target', which will close off this review. If there are no valid options, you may also generate a new title to link from the package title information."
+            }
+          }
         },
         "Namespace Conflict": {
-          "label": "Namespace Conflict",
+          "label": "ISSN Conflict",
           "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
-          "action": "",
-          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. Check the package title identifiers and the KBART record. Correct them if necessary."
+          "action": "A package title with a conflicting ISSN was created",
+          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. If the package title identifiers are wrong, please contact the provider of the KBART file and ask for the information to be fixed."
         },
         "Critical Identifier Conflict": {
           "label": "Identifier Conflict (New Title)",
-          "info": "Reference title {0} matched an existing reference title on one identifier, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs badly.",
+          "info": "The newly created reference title {0} matched an existing title on one or more identifiers, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs significantly.",
           "action": "New reference title created",
-          "toDo": "Check if the new reference title is correct or if it is a duplicate. Merge titles if necessary. Check identifiers and delete them if they are incorrect."
+          "toDo": "Check if the new reference title is correct or if it is a duplicate. If it is, first select the matched title via 'select merge target'. You now have the option to select additional identifiers you want to keep from the duplicate, and to complete the de-duplication via 'merge duplicate' (which wil automatically finish the review and close this view)."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifier Conflict (ID added)",
@@ -1229,7 +1372,7 @@
           "label": "Import Identifier Mismatch",
           "info": "A KBART record has been matched on an existing package title by some identifiers, but other important identifiers conflict.",
           "action": "New package title created",
-          "toDo": "Check the package titles and merge them if necessary."
+          "toDo": "Check the identifiers of these package titles. If there are errors, the preferred solution is a new import of a corrected KBART file. In that case, you may delete the package titles to be corrected from their detail view before the import. Alternatively, you may manually delete erroneuos identifiers here."
         },
         "Import Report": {
           "label": "Report on KBART Import",
@@ -1240,20 +1383,26 @@
         "Invalid Name": {
           "label": "Invalid Name",
           "info": "The name of this title contains invalid characters.",
-          "action": "",
-          "toDo": "Correct the name of the title (check external sources if necessary). Please also check linked Package/Reference titles."
+          "action": "-",
+          "toDo": "Correct the name of the title by selecting the pen icon next to its name. Please also check linked Package/Reference titles."
         },
         "Information": {
           "label": "Information",
           "info": "",
-          "action": "",
+          "action": "-",
           "toDo": ""
         },
         "Manual Request": {
           "label": "Manual Request",
           "info": "",
-          "action": "",
+          "action": "-",
           "toDo": ""
+        },
+        "Invalid Indentifiers": {
+          "label": "Invalid Identifiers",
+          "info": "There are invalid identifiers linked to this component!",
+          "action": "-",
+          "toDo": "Please delete invalid identifiers and replace them with the correct ones."
         }
       }
     },
@@ -1306,6 +1455,7 @@
       }
     },
     "general": {
+      "label": "Component | Components",
       "name": "Name",
       "general": "General",
       "notFound": "{0} not found!",

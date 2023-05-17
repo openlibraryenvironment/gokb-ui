@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="expanded"
     :expandable="expandable"
     :filters="showEditActions"
     :sub-title="title"
@@ -112,6 +113,7 @@
       :options.sync="reviewsOptions"
       :actions="showEditActions"
       :show-loading="loading"
+      :hide-select="!showEditActions"
       @selected-items="selectedItems = $event"
       @paginate="retrieveReviews"
       @edit="handlePopupChange"
@@ -122,6 +124,7 @@
 
 <script>
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbReviewPopup from '@/shared/popups/gokb-review-popup'
   import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
   import reviewServices from '@/shared/services/review-services'
   import BaseComponent from '@/shared/components/base-component'
@@ -133,7 +136,8 @@
     name: 'GokbReviewsSection',
     components: {
       GokbConfirmationPopup,
-      GokbAddReviewPopup
+      GokbAddReviewPopup,
+      GokbReviewPopup
     },
     extends: BaseComponent,
     props: {
@@ -182,6 +186,7 @@
         enableBulkCheck: false,
         successMessage: undefined,
         errorMsg: undefined,
+        expanded: true,
         loading: false,
         selectedItems: [],
         actionToConfirm: undefined,
@@ -238,7 +243,7 @@
           const stdDescLabel = entry?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + entry?.stdDesc.name + '.label') : this.$i18n.t('component.review.stdDesc.none.label')
           const updateUrl = entry?._links.update.href
           const deleteUrl = entry?._links.delete.href
-          const popup = { value: this.reviewComponent ? stdDescLabel : (component.name || type + ' ' + component.id), label: 'review', type: 'GokbAddReviewPopup' }
+          const popup = { value: this.reviewComponent ? stdDescLabel : (component.name || type + ' ' + component.id), label: 'review', type: 'GokbReviewPopup' }
           const link = { value: component.name, route: componentRoutes[entry?.componentToReview?.type?.toLowerCase()], id: 'componentId' }
           const groupsList = entry.allocatedGroups.map(ag => ag.name)
           const isClosable = !!(status?.name === 'Open' && updateUrl)
@@ -421,7 +426,7 @@
           limit: this.reviewsOptions.itemsPerPage
         }
         this.rawReviews = await this.catchError({
-          promise: reviewServices.get({ parameters }, this.cancelToken.token),
+          promise: reviewServices.search({ parameters }, this.cancelToken.token),
           instance: this
         })
 
@@ -436,7 +441,7 @@
         this.selectedItems = []
 
         const response = await this.catchError({
-          promise: reviewServices.closeReview(item.id, this.cancelToken.token),
+          promise: reviewServices.close(item.id, this.cancelToken.token),
           instance: this
         })
 
@@ -504,7 +509,7 @@
           })
 
           if (response.status < 400) {
-            this.successMessage = this.$i18n.tc('component.review.edit.success.closed', response.data.report.total, { count: response.data.report.total })
+            this.successMessage = this.$i18n.tc('component.review.edit.success.closedBulk', response.data.report.total, { count: response.data.report.total })
           } else if (response.status === 403) {
             this.errorMsg = 'error.bulkUpdate.403'
           }
@@ -525,12 +530,12 @@
           this.loading = true
           await Promise.all(this.selectedItems.map(({ id }) =>
             this.catchError({
-              promise: reviewServices.closeReview(id, this.cancelToken.token),
+              promise: reviewServices.close(id, this.cancelToken.token),
               instance: this
             })
           ))
 
-          this.successMessage = this.$i18n.tc('component.review.edit.success.closed', this.selectedItems.length, { count: this.selectedItems.length })
+          this.successMessage = this.$i18n.tc('component.review.edit.success.closedBulk', this.selectedItems.length, { count: this.selectedItems.length })
           this.reviewsOptions.page = 1
           this.loading = false
           const newList = await this.retrieveReviews()

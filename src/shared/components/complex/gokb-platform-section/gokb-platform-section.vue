@@ -9,6 +9,7 @@
     <gokb-edit-platform-popup
       v-if="editPlatformPopupVisible"
       v-model="editPlatformPopupVisible"
+      :editable="isEditable"
       :provider-id="providerId"
       @edit="addPlatform"
     />
@@ -45,6 +46,7 @@
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
       :options.sync="options"
+      :hide-select="!isEditable"
       @selected-items="selectedItems = $event"
       @delete-item="confirmDeleteItem"
       @edit="editPlatform"
@@ -131,7 +133,7 @@
         return [...this.localValue]
           .map(item => ({
             ...item,
-            popup: { value: item.name, label: 'platform', type: 'GokbEditPlatformPopup', otherProps: { providerId: this.providerId } }
+            popup: { value: item.name, label: 'platform', type: 'GokbEditPlatformPopup', otherProps: { providerId: this.providerId, editable: this.isEditable } }
           }))
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)

@@ -52,6 +52,11 @@
         required: false,
         default: false,
       },
+      title: {
+        type: String,
+        required: false,
+        default: undefined
+      }
     },
     computed: {
       colorValue () {

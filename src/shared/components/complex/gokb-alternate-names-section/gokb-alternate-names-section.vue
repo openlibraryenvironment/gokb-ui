@@ -54,6 +54,7 @@
       :selected-items="selectedVariantNames"
       :total-number-of-items="totalNumberOfItems"
       :options.sync="variantNameOptions"
+      :hide-select="!isEditable"
       @selected-items="selectedVariantNames = $event"
       @delete-item="confirmDeleteItem"
     />
@@ -125,8 +126,8 @@
           .map(item => ({
             ...item,
             locale: (item.locale?.name || item.locale),
-            markError: this.apiErrors?.find(e => (e.baddata.variantName === item.variantName))
-              ? this.$i18n.t('component.variantName.error.' + this.apiErrors.find(e => (e.baddata.variantName === item.variantName)).code)
+            markError: this.apiErrors?.find(e => (e.baddata === item.variantName || e.baddata?.variantName === item.variantName))
+              ? this.$i18n.t('component.variantName.error.' + this.apiErrors.find(e => (e.baddata === item.variantName || e.baddata?.variantName === item.variantName)).code)
               : null
           }))
           .sort(({ variantName: first }, { variantName: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)

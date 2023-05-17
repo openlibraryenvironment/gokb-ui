@@ -3,6 +3,7 @@
     v-if="!loggedIn"
     title=""
   >
+    <v-alert type="info" v-if="!!systemInfo"> {{ systemInfo }}</v-alert>
     <v-card>
       <v-card-text>
         <div class="text-h4 primary--text text-center">
@@ -29,6 +30,7 @@
     v-else
     title="Dashboard"
   >
+    <v-alert type="info" v-if="!!systemInfo"> {{ systemInfo }}</v-alert>
     <div v-if="isContrib && activeGroup">
       <gokb-reviews-section
         :group="activeGroup"
@@ -63,7 +65,8 @@
     data () {
       return {
         groups: [],
-        groupId: -1
+        groupId: -1,
+        systemInfo: undefined
       }
     },
     computed: {
@@ -84,9 +87,14 @@
         } else {
           this.groups = []
         }
+      },
+      '$i18n.locale' (l) {
+        this.checkForSystemUpdate()
       }
     },
     async created () {
+      this.checkForSystemUpdate()
+
       if (this.loggedIn) {
         this.loadGroups()
       }
@@ -100,10 +108,15 @@
             }
           }
         } = await this.catchError({
-          promise: profileServices.getProfile(this.cancelToken.token),
+          promise: profileServices.get(this.cancelToken.token),
           instance: this
         })
         this.groups = curatoryGroups
+      },
+      checkForSystemUpdate() {
+        let local_var = 'VUE_APP_SYSTEM_INFO_' + this.$i18n.locale.toUpperCase()
+
+        this.systemInfo = process.env[local_var]
       }
     }
   }

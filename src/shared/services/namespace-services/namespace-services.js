@@ -18,7 +18,7 @@ const api = (baseServices) => ({
   },
   getBaseurl(nsVal) {
     var ns = namespacesModel.getNamespace(nsVal)
-    if (ns?.baseUrl){
+    if (ns?.baseUrl) {
       return ns.baseUrl
     }
     return null
