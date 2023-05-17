@@ -13,25 +13,23 @@
         {{ localErrorMessage }}
       </v-alert>
     </span>
-    <v-toolbar tabs>
-      <v-tabs
-        v-model="tab"
+    <v-tabs
+      v-model="tab"
+    >
+      <v-tab
+        key="edit"
       >
-        <v-tab
-          :key="edit"
-        >
-          {{ $tc('btn.select') }}
-        </v-tab>
-        <v-tab
-          :key="add"
-        >
-          {{ $tc('btn.new') }}
-        </v-tab>
-      </v-tabs>
-    </v-toolbar>
+        {{ $tc('btn.select') }}
+      </v-tab>
+      <v-tab
+        key="add"
+      >
+        {{ $tc('btn.new') }}
+      </v-tab>
+    </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item
-        :key="edit"
+        key="edit"
       >
         <v-row
           dense
@@ -104,7 +102,7 @@
         </v-row>
       </v-tab-item>
       <v-tab-item
-        :key="add"
+        key="add"
       >
         <!-- TODO: add "add" fields here -->
       </v-tab-item>
@@ -164,6 +162,7 @@
     },
     data () {
       return {
+        tab: null,
         errorMsg: undefined,
         errors: {},
         conflictLinks: [],
