@@ -88,7 +88,9 @@
     "platform": {
       "add": "Plattform hinzufügen",
       "edit": "Plattform bearbeiten",
-      "create": "Plattform anlegen"
+      "create": "Plattform anlegen",
+      "createNew": "Neue Plattform anlegen",
+      "searchExisting": "Existierende Plattform suchen"
     },
     "provider": {
       "edit": "Anbieter bearbeiten",

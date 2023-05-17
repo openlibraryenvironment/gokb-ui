@@ -17,20 +17,102 @@
       v-model="tab"
     >
       <v-tab
-        key="edit"
+        key="search"
       >
         {{ $tc('btn.select') }}
       </v-tab>
       <v-tab
-        key="add"
+        key="new"
       >
         {{ $tc('btn.new') }}
       </v-tab>
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item
-        key="edit"
+        key="search"
       >
+        <v-row
+          class="text-h6 mt-4 ml-0"
+        >
+          {{ $tc('route.platform.searchExisting') }}
+        </v-row>
+        <v-row
+          dense
+          class="mt-4"
+        >
+          <v-col>
+            <gokb-search-platform-field
+              v-if="!selected"
+              v-model="platformName"
+              :items="items"
+              :readonly="isReadonly"
+              :label="$tc('component.general.name')"
+              :query-fields="[]"
+              required
+              return-object
+              disable-if-linked
+            />
+            <gokb-text-field
+              v-else
+              v-model="platform.name"
+              :readonly="isReadonly"
+              :label="$tc('component.general.name')"
+              required
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <gokb-search-platform-field
+              v-if="!selected"
+              v-model="platformUrl"
+              :items="items"
+              :readonly="isReadonly"
+              :label="$tc('component.platform.url')"
+              :rules="urlRules"
+              :query-fields="['primaryUrl']"
+              item-text="primaryUrl"
+              required
+              return-object
+              allow-new-values
+              disable-if-linked
+            />
+            <gokb-url-field
+              v-else
+              v-model="platformUrl"
+              :readonly="isReadonly"
+              :required="!isReadonly"
+            />
+          </v-col>
+        </v-row>
+        <v-row
+          v-for="c in conflictLinks"
+          :key="c.id"
+          dense
+        >
+          <v-col v-if="!c.id">
+            {{ $t('component.platform.conflict.noProvider', [c.platformId]) }}
+          </v-col>
+          <v-col v-else>
+            {{ $t('component.platform.conflict.' + c.type, [c.platformName]) }}
+            {{ $t('component.platform.conflict.providerLink') }}
+            <router-link
+              :style="{ color: 'primary' }"
+              :to="{ name: '/provider', params: { 'id': c.id } }"
+            >
+              {{ c.name }}
+            </router-link>
+          </v-col>
+        </v-row>
+      </v-tab-item>
+      <v-tab-item
+        key="new"
+      >
+        <v-row
+          class="text-h6 mt-4 ml-0"
+        >
+          {{ $tc('route.platform.createNew') }}
+        </v-row>
         <v-row
           dense
           class="mt-4"
@@ -100,11 +182,6 @@
             </router-link>
           </v-col>
         </v-row>
-      </v-tab-item>
-      <v-tab-item
-        key="add"
-      >
-        <!-- TODO: add "add" fields here -->
       </v-tab-item>
     </v-tabs-items>
     <template #buttons>

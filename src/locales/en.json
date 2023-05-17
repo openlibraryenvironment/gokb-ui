@@ -87,7 +87,9 @@
     "platform": {
       "add": "Add Platform",
       "edit": "Edit Platform",
-      "create": "Create Platform"
+      "create": "Create Platform",
+      "createNew": "Create New Platform",
+      "searchExisting": "Search Existing Platform"
     },
     "provider": {
       "edit": "Edit Provider",
