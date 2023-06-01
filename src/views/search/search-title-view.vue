@@ -17,7 +17,8 @@
         sortMappings: {
           link: 'name',
           linkTwo: 'publisher'
-        }
+        },
+        exportOption: true
       }
     },
     computed: {
@@ -32,6 +33,12 @@
       },
       resultActionButtons () {
         return [
+          {
+            label: this.$i18n.t('btn.export'),
+            disabled: 'isSearchExportDisabled',
+            action: 'exportSearchResults',
+            loading: this.exportLoading
+          },
           {
             icon: 'mdi-close',
             label: this.$i18n.t('btn.retire'),
@@ -129,6 +136,30 @@
             value: 'startDate'
           }
         ]
+      },
+      exportHeaders () {
+        return [
+          {
+            text: 'ID',
+            value: 'id'
+          },
+          {
+            text: this.$i18n.t('component.general.name'),
+            value: 'name'
+          },
+          {
+            text: this.$i18n.tc('component.title.publisher.label'),
+            value: 'publisherName'
+          },
+          {
+            text: this.$i18n.t('component.title.type.label'),
+            value: 'type'
+          },
+          {
+            text: this.$i18n.t('component.title.publishStart'),
+            value: 'startDate'
+          }
+        ]
       }
     },
     async created () {
@@ -164,6 +195,27 @@
           status: status?.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined
+        }))
+      },
+      _transformForExport (data) {
+        return data.map(({
+          uuid,
+          name,
+          componentType,
+          status,
+          publishedFrom,
+          publisherName,
+          dateFirstInPrint,
+          dateFirstOnline,
+          lastUpdatedDisplay
+        }) => ({
+          id: uuid,
+          name,
+          type: this.$i18n.tc('component.title.type.' + componentType.replace('Instance', '')),
+          startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
+          publisherName,
+          lastUpdatedDisplay,
+          status
         }))
       },
       _confirmDeleteSelectedItems () {

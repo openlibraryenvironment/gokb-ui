@@ -2,7 +2,6 @@
   import BaseSearch from './base-search-view'
   import GokbIdentifierField from '@/shared/components/simple/gokb-search-identifier-field'
   import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
-  import providerServices from '@/shared/services/provider-services'
 
   export default {
     name: 'SearchProvider',
@@ -29,6 +28,12 @@
       },
       resultActionButtons () {
         return [
+          {
+            label: this.$i18n.t('btn.export'),
+            disabled: 'isSearchExportDisabled',
+            action: 'exportSearchResults',
+            loading: this.exportLoading
+          },
           {
             icon: 'mdi-close',
             label: this.$i18n.t('btn.retire'),
