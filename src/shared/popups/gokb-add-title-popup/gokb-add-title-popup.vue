@@ -159,6 +159,7 @@
         <gokb-identifier-section
           v-model="packageTitleItem.ids"
           :target-type="titleTypeString"
+          :api-errors="errors.ids"
           :mark-required="!isEdit"
           :disabled="isReadonly"
           :expanded="false"
@@ -526,6 +527,7 @@
     data () {
       return {
         pprops: undefined,
+        errors: {},
         urlValid: false,
         platformSelection: [],
         coverageExpanded: false,
@@ -657,6 +659,8 @@
     },
     methods: {
       async submitTipp () {
+        this.errors = {}
+
         if (this.selected && typeof this.selected.id === 'number') {
           const activeGroup = accountModel.activeGroup()
 
