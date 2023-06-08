@@ -51,7 +51,7 @@ const api = (http, tokenModel, accountModel) => ({
       grant_type: 'refresh_token',
       refresh_token: tokenModel.getRefresh()
     }
-    const refresh_data = createFormData(form_data)
+    const refresh_data = this.createFormData(form_data)
     const refresh_pars = {
       method: 'POST',
       url: process.env.VUE_APP_API_BASE_URL + REFRESH_URL,
