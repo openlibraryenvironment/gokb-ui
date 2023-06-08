@@ -93,7 +93,7 @@
         return accountModel.loggedIn()
       },
       firstLetter () {
-        return (this.loggedIn && this.username.substr(0, 1).toUpperCase())
+        return (this.loggedIn && this.username?.substring(0, 1)?.toUpperCase())
       },
       userMenuItems () {
         if (this.loggedIn) {

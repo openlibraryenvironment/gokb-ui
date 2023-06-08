@@ -5,17 +5,18 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
 
   async initialize (cancelToken) {
     const token = tokenModel.getToken()
+
     if (token) { // we have a token, try to use it
-      baseServices.setAuthorization(token.token_type, token.access_token)
+      baseServices.setAuthorization('Bearer', token)
       try {
-        await profileServices.get(cancelToken)
+        const profile = await profileServices.get(cancelToken)
+        return profile.data.data
       } catch (exception) {
         baseServices.deleteAuthorization()
-        log.info('saved token invalid', token, exception)
+        log.info('saved token invalid', exception)
         tokenModel.removeToken()
         return
       }
-      return token
     }
   },
 
