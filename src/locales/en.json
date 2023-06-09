@@ -1320,31 +1320,31 @@
         },
         "Ambiguous Title Matches": {
           "label": "Ambiguous Title Matches",
-          "info": "The package title has been matched on multiple reference titles.",
-          "action": "Unable to select a reference title.",
-          "toDo": "Please select a reference title to be linked to the package title. If the other candidates contain duplicate items to the selected, clean up by merging them into the selected item.",
+          "info": "Based on the available identifiers the package title cannot be uniquely assigned to a reference title.",
+          "action": "The GOKb could not link a reference title.",
+          "toDo": "Check if there are duplicates in the reference titles. Select the correct title.",
           "workflow": {
             "step1": {
               "label": "Step 1: ID check & component cleanup",
-              "toDo": "Please check the title information (name/identifiers) for errors. If there are duplicate titles, you may merge them by first selecting a surviving 'merge target' and then the duplicate to be deleted via 'merge duplicate'. All package titles and remaining identifiers of the deleted item will be transferred. Otherwise, proceed to the next step."
+              "toDo": "Check whether there are duplicates for the reference titles. If this is the case, merge them by first selecting a reference title via 'Select merge target' and then clicking on 'Merge duplicate'. All remaining identifiers of the title to be deleted will be taken over. If there is no duplicate, check the identifiers and delete any that are incorrect. Once the cleanup is complete, you can move to the next step."
             },
             "step2": {
               "label": "Step 2: Title linking",
-              "toDo": "Please select a reference title to link to the package title via 'select linking target', which will close off this review. If there are no valid options, you may also generate a new title to link from the package title information."
+              "toDo": "Via 'Select linking target' you can select a reference title to link to the package title to be checked. If none of the offered reference titles matches the package title, you can either use the search mask of the last tile to find the matching reference title or create a new reference title based on the data of the package title by using the corresponding button. Then select this as the target. Confirm the link via the corresponding button."
             }
           }
         },
         "Namespace Conflict": {
           "label": "ISSN Conflict",
-          "info": "A package title eISSN matched an existing reference title print-ISSN or vice versa.",
-          "action": "A package title with a conflicting ISSN was created",
-          "toDo": "Check if the reference title has a print-ISSN erroneously marked as eISSN or vice versa and correct those identifiers if necessary. If the package title identifiers are wrong, please contact the provider of the KBART file and ask for the information to be fixed."
+          "info": "The package title has an e-ISSN that corresponds to an existing p-ISSN of the reference title, or vice versa.",
+          "action": "The GOKb created p-ISSN and e-ISSN with the same value.",
+          "toDo": "In the package title, check if a p-ISSN has been marked as an e-ISSN or vice versa and correct it by deleting the incorrect ISSNs. You can add new identifiers by opening the detailed view of the title in a new tab by clicking on the title. Likewise, check the reference title and correct the ISSNs there. If the package title was imported via a KBART file, contact the provider and point out the incorrect ISSN."
         },
         "Critical Identifier Conflict": {
-          "label": "Identifier Conflict (New Title)",
-          "info": "The newly created reference title {0} matched an existing title on one or more identifiers, but at least one other identifier differs from existing ones in the same namespace. Furthermore, the reference title name differs significantly.",
-          "action": "New reference title created",
-          "toDo": "Check if the new reference title is correct or if it is a duplicate. If it is, first select the matched title via 'select merge target'. You now have the option to select additional identifiers you want to keep from the duplicate, and to complete the de-duplication via 'merge duplicate' (which wil automatically finish the review and close this view)."
+          "label": "Reference Title Conflict",
+          "info": "A new reference title was created due to an identifier conflict. The new reference title matches an existing reference title based on at least one identifier while other identifiers do not match. In addition, the reference title name differs significantly.",
+          "action": "The GOKb created a new reference title using the identifiers of the package title. The package title was linked to the new reference title.",
+          "toDo": "Check for duplicates in the reference titles. If this is the case, merge them by first selecting a reference title via 'Select Merge Target' and then clicking on 'Merge Duplicate'. All remaining identifiers of the title to be deleted will be taken over. If there is no duplicate, check the identifiers and delete any that are incorrect."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifier Conflict (ID added)",
@@ -1372,9 +1372,9 @@
         },
         "Import Identifier Mismatch": {
           "label": "Import Identifier Mismatch",
-          "info": "A KBART record has been matched on an existing package title by some identifiers, but other important identifiers conflict.",
-          "action": "New package title created",
-          "toDo": "Check the identifiers of these package titles. If there are errors, the preferred solution is a new import of a corrected KBART file. In that case, you may delete the package titles to be corrected from their detail view before the import. Alternatively, you may manually delete erroneuos identifiers here."
+          "info": "A KBART record could be matched to an existing package title based on one or more identifiers, but one or more other identifiers differ.",
+          "action": "The GOKb created a new package title.",
+          "toDo": "Review the identifiers of the package titles. If you find any errors, they should ideally be corrected by importing a corrected KBART file. In this case, you can first delete the erroneous package title(s) via their detail view. Alternatively, you can also delete incorrect identifiers manually here."
         },
         "Import Report": {
           "label": "Report on KBART Import",
@@ -1384,9 +1384,9 @@
         },
         "Invalid Name": {
           "label": "Invalid Name",
-          "info": "The name of this title contains invalid characters.",
-          "action": "-",
-          "toDo": "Correct the name of the title by selecting the pen icon next to its name. Please also check linked Package/Reference titles."
+          "info": "The name of this title contains incorrect characters (represented by placeholder �).",
+          "action": "The GOKb created the name with placeholders (�) for incorrect characters.",
+          "toDo": "Correct the name of the title by clicking on the pencil icon next to the title name. Complete the editing by selecting the check mark. Confirm your changes by clicking on 'Confirm title changes'. Please also check the names of any linked reference titles/package titles."
         },
         "Information": {
           "label": "Information",
