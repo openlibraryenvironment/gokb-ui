@@ -238,7 +238,7 @@
       },
       async fetch (pid) {
         const response = await this.catchError({
-          promise: platformServices.getPlatform(pid, this.cancelToken.token),
+          promise: platformServices.get(pid, this.cancelToken.token),
           instance: this
         })
 
