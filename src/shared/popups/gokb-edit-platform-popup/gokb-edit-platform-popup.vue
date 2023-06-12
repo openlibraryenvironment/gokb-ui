@@ -18,12 +18,14 @@
     >
       <v-tab
         key="search"
+        @click="resetFields()"
       >
         {{ $tc('btn.select') }}
       </v-tab>
       <v-tab
         key="new"
         :disabled="!searched"
+        @click="resetFields()"
       >
         {{ $tc('btn.new') }}
       </v-tab>
@@ -488,6 +490,19 @@
       },
       hasSearched (bool) {
         this.searched = bool
+      },
+      resetFields () {
+        if (this.searched) {
+          this.platformUrl = undefined
+          this.platformName = undefined
+          this.items = []
+          this.updateUrl = undefined
+          this.platform = {
+            id: undefined,
+            name: undefined,
+            primaryUrl: undefined
+          }
+        }
       }
     }
   }
