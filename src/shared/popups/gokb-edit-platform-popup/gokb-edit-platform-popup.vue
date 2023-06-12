@@ -23,6 +23,7 @@
         {{ $tc('btn.select') }}
       </v-tab>
       <v-tab
+        v-if="!selected"
         key="new"
         :disabled="!searched"
         @click="resetFields()"
