@@ -36,6 +36,13 @@
         key="search"
       >
         <v-row
+          v-if="selected"
+          class="text-h6 mt-4 ml-0"
+        >
+          {{ $tc('route.platform.edit') }}
+        </v-row>
+        <v-row
+          v-else
           class="text-h6 mt-4 ml-0"
         >
           {{ $tc('route.platform.searchExisting') }}
@@ -125,20 +132,7 @@
           class="mt-4"
         >
           <v-col>
-            <gokb-search-platform-field
-              v-if="!selected"
-              v-model="platformName"
-              :items="items"
-              :readonly="isReadonly"
-              :label="$tc('component.general.name')"
-              :query-fields="[]"
-              required
-              return-object
-              allow-new-values
-              disable-if-linked
-            />
             <gokb-text-field
-              v-else
               v-model="platform.name"
               :readonly="isReadonly"
               :label="$tc('component.general.name')"
@@ -148,22 +142,7 @@
         </v-row>
         <v-row>
           <v-col>
-            <gokb-search-platform-field
-              v-if="!selected"
-              v-model="platformUrl"
-              :items="items"
-              :readonly="isReadonly"
-              :label="$tc('component.platform.url')"
-              :rules="urlRules"
-              :query-fields="['primaryUrl']"
-              item-text="primaryUrl"
-              required
-              return-object
-              allow-new-values
-              disable-if-linked
-            />
             <gokb-url-field
-              v-else
               v-model="platformUrl"
               :readonly="isReadonly"
               :required="!isReadonly"
