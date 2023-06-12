@@ -317,6 +317,7 @@
         })
         this.loading = false
         this.items = this.transform(result)
+        this.$emit('searched', true)
       },
       transform (result) {
         const { data: { data } } = result

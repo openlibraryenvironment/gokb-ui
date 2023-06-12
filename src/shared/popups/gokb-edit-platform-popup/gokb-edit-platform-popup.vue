@@ -23,6 +23,7 @@
       </v-tab>
       <v-tab
         key="new"
+        :disabled="!searched"
       >
         {{ $tc('btn.new') }}
       </v-tab>
@@ -50,7 +51,9 @@
               :query-fields="[]"
               required
               return-object
+              allow-new-values
               disable-if-linked
+              @searched="hasSearched(true)"
             />
             <gokb-text-field
               v-else
@@ -58,6 +61,7 @@
               :readonly="isReadonly"
               :label="$tc('component.general.name')"
               required
+              @change="hasSearched(true)"
             />
           </v-col>
         </v-row>
@@ -255,7 +259,8 @@
         urlRules:
           [v => (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || this.$i18n.t('component.tipp.url.error')],
         queryFields: ['primaryUrl'],
-        disableIfLinked: true
+        disableIfLinked: true,
+        searched: false
       }
     },
     computed: {
@@ -480,6 +485,9 @@
           this.conflictLinks.push(conflictProviders[cp])
         }
         this.errors = errors
+      },
+      hasSearched (bool) {
+        this.searched = bool
       }
     }
   }
