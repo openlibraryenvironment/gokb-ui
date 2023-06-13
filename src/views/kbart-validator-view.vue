@@ -262,6 +262,8 @@
 
           this.loadedFile = validationResult.data.report
 
+          let typedReport = !!this.loadedFile.errors.type
+
           this.loadedFile.errors.single = []
           Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) => {
             Object.entries(colobj).forEach(([colname, eo]) => {
@@ -269,11 +271,13 @@
 
               if (!this.loadedFile.errors.type[colname]) {
                 this.loadedFile.errors.type[colname] = 1
-              } else {
+              } else if (!typedReport) {
                 this.loadedFile.errors.type[colname]++
               }
             })
           })
+
+          typedReport = !!this.loadedFile.warnings.type
 
           this.loadedFile.warnings.single = []
           Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) => {
@@ -282,7 +286,7 @@
 
               if (!this.loadedFile.warnings.type[colname]) {
                 this.loadedFile.warnings.type[colname] = 1
-              } else {
+              } else if (!typedReport) {
                 this.loadedFile.warnings.type[colname]++
               }
             })
