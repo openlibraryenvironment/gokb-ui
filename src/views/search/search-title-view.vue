@@ -9,7 +9,7 @@
       return {
         searchFilters: {
           name: undefined,
-          identifierIds: undefined,
+          identifierValue: undefined,
           publisherId: undefined,
           type: undefined,
           status: undefined,
@@ -64,11 +64,12 @@
               }
             },
             {
-              type: 'GokbTextField',
+              type: 'GokbIdentifierFilterField',
               name: 'ids',
-              value: 'identifierIds',
+              value: 'identifierValue',
               properties: {
-                label: this.$i18n.tc('component.identifier.label')
+                label: this.$i18n.tc('component.identifier.label'),
+                targetType: 'Title'
               }
             },
             {
