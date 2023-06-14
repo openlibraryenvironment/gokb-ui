@@ -1,8 +1,8 @@
 <template>
   <gokb-dialog
-    value=""
+    v-model="localValue"
     :title="localTitle"
-    v-on="isEdit ? { submit: save } : { submit: check }"
+    @submit="save"
   >
     <gokb-error-component :value="error" />
     <span v-if="errorMsg">
@@ -14,6 +14,7 @@
       </v-alert>
     </span>
     <v-tabs
+      v-if="!isEdit"
       v-model="tab"
     >
       <v-tab
@@ -23,7 +24,7 @@
         {{ $tc('btn.select') }}
       </v-tab>
       <v-tab
-        v-if="!selected"
+        v-if="!isEdit"
         key="new"
         :disabled="!searched"
         @click="resetFields()"
@@ -36,7 +37,7 @@
         key="search"
       >
         <v-row
-          v-if="selected"
+          v-if="isEdit"
           class="text-h6 mt-4 ml-0"
         >
           {{ $tc('route.platform.edit') }}
@@ -53,49 +54,22 @@
         >
           <v-col>
             <gokb-search-platform-field
-              v-if="!selected"
               v-model="platformName"
               :items="items"
-              :readonly="isReadonly"
               :label="$tc('component.general.name')"
-              :query-fields="[]"
-              required
+              :query-fields="['name', 'primaryUrl']"
               return-object
-              allow-new-values
               disable-if-linked
-              @searched="hasSearched(true)"
-            />
-            <gokb-text-field
-              v-else
-              v-model="platform.name"
-              :readonly="isReadonly"
-              :label="$tc('component.general.name')"
-              required
-              @change="hasSearched(true)"
+              @searched="hasSearched()"
             />
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <gokb-search-platform-field
-              v-if="!selected"
-              v-model="platformUrl"
-              :items="items"
-              :readonly="isReadonly"
-              :label="$tc('component.platform.url')"
-              :rules="urlRules"
-              :query-fields="['primaryUrl']"
-              item-text="primaryUrl"
-              required
-              return-object
-              allow-new-values
-              disable-if-linked
-            />
             <gokb-url-field
-              v-else
+              v-if="!!platformUrl"
               v-model="platformUrl"
-              :readonly="isReadonly"
-              :required="!isReadonly"
+              readonly
             />
           </v-col>
         </v-row>
@@ -143,7 +117,7 @@
         <v-row>
           <v-col>
             <gokb-url-field
-              v-model="platformUrl"
+              v-model="platform.primaryUrl"
               :readonly="isReadonly"
               :required="!isReadonly"
             />
@@ -170,6 +144,30 @@
         </v-row>
       </v-tab-item>
     </v-tabs-items>
+    <div v-if="isEdit">
+      <v-row
+        dense
+        class="mt-4"
+      >
+        <v-col>
+          <gokb-text-field
+            v-model="platform.name"
+            :readonly="isReadonly"
+            :label="$tc('component.general.name')"
+            required
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <gokb-url-field
+            v-model="platformUrl"
+            :readonly="isReadonly"
+            required
+          />
+        </v-col>
+      </v-row>
+    </div>
     <template #buttons>
       <v-spacer />
       <gokb-button
@@ -255,7 +253,7 @@
         }
       },
       isReadonly () {
-        return !this.editable
+        return !!this.pprops ? !this.pprops.editable : false
       },
       isEdit () {
         return !!this.selected
@@ -274,7 +272,7 @@
       },
       localTitle () {
         if (this.isEdit) {
-          return this.$i18n.tc('component.platform.label') + (this.platform?.stdDesc ? (' – ' + this.$i18n.t('component.platform.stdDesc.' + (this.platform.stdDesc.value || this.platform.stdDesc.name) + '.label')) : '')
+          return this.isReadonly ? this.$i18n.tc('component.platform.label') : this.$i18n.t('header.edit.label', [this.$i18n.tc('component.platform.label')])
         } else {
           return this.$i18n.tc('route.platform.add')
         }
@@ -327,7 +325,7 @@
       },
       async fetch (pid) {
         const response = await this.catchError({
-          promise: platformServices.getPlatform(pid, this.cancelToken.token),
+          promise: platformServices.get(pid, this.cancelToken.token),
           instance: this
         })
 
@@ -352,10 +350,6 @@
           activeGroup
         }
 
-        if (!this.isEdit) {
-          newPlatform.provider = this.providerId
-        }
-
         const response = await this.catchError({
           promise: platformServices.createOrUpdate(newPlatform, this.cancelToken.token),
           instance: this
@@ -376,42 +370,6 @@
             }
 
             this.$emit('edit', updatedObj)
-            this.close()
-          }
-        } else {
-          if (response?.status === 409) {
-            this.errorMsg = 'error.update.409'
-            this.errors = response?.data?.error
-          } else if (response?.status === 500) {
-            this.errorMsg = 'error.general.500'
-          } else if (response.data?.error) {
-            this.handleApiErrors(response.data.error)
-          }
-        }
-      },
-      async check () {
-        this.errors = {}
-        this.conflictLinks = []
-        const activeGroup = accountModel.activeGroup()
-        const newPlatform = {
-          id: this.platform.id,
-          name: this.platform.name,
-          primaryUrl: this.platform.primaryUrl,
-          version: this.version,
-          activeGroup
-        }
-
-        const response = await this.catchError({
-          promise: platformServices.check(newPlatform, this.cancelToken.token),
-          instance: this
-        })
-        if (response?.status < 300 && response.data) {
-          if (response.data.error) {
-            this.handleApiErrors(response.data.error)
-          } else if (!response.data.to_create) {
-            this.handleApiErrors(response.data.conflicts)
-          } else {
-            this.$emit('edit', newPlatform)
             this.close()
           }
         } else {
@@ -468,8 +426,8 @@
         }
         this.errors = errors
       },
-      hasSearched (bool) {
-        this.searched = bool
+      hasSearched () {
+        this.searched = true
       },
       resetFields () {
         if (this.searched) {
