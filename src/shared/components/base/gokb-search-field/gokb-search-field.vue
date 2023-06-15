@@ -157,6 +157,12 @@
           {{ statusIcon(item.status) }}
         </v-icon>
       </span>
+      <v-chip
+        v-if="item.disabled && !!item.disabledMessage"
+        color="error"
+      >
+        <span> {{ $t(item.disabledMessage) }} </span>
+      </v-chip>
     </template>
   </v-autocomplete>
 </template>
@@ -317,6 +323,7 @@
         })
         this.loading = false
         this.items = this.transform(result)
+        this.$emit('searched', true)
       },
       transform (result) {
         const { data: { data } } = result

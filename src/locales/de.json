@@ -88,7 +88,9 @@
     "platform": {
       "add": "Plattform hinzufügen",
       "edit": "Plattform bearbeiten",
-      "create": "Plattform anlegen"
+      "create": "Plattform anlegen",
+      "createNew": "Neue Plattform anlegen",
+      "searchExisting": "Existierende Plattform suchen"
     },
     "provider": {
       "edit": "Anbieter bearbeiten",
@@ -947,6 +949,7 @@
       "value": "Wert",
       "namespace": "Namensraum | Namensräume",
       "validation": {
+        "value": "Wert {0} ist ungültig!",
         "generic": "Dieser Wert ist ungültig!",
         "pattern": "Der eingegebene Wert hat ein ungültiges Format."
       }

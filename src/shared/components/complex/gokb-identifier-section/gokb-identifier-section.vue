@@ -134,7 +134,14 @@
       },
       identifiers () {
         return [...this.value]
-          .map(item => ({ ...item, extlink: namespaceServices.getBaseurl(item.namespace) ? namespaceServices.getBaseurl(item.namespace)+item.value : undefined, isDeletable : undefined }))
+          .map(item => ({
+            ...item,
+            extlink: namespaceServices.getBaseurl(item.namespace) ? namespaceServices.getBaseurl(item.namespace)+item.value : undefined,
+            markError: this.apiErrors?.find(e => (e.baddata.value === item.value && e.baddata.namespace === item.namespace))
+              ? (e.messageCode ? this.$i18n.t(e.messageCode, [e.baddata.value]) : this.$i18n.t('component.identifier.validation.value', [e.baddata.value]))
+              : null,
+            isDeletable : undefined
+          }))
           .sort(({ value: first }, { value: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },

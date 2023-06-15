@@ -11,7 +11,7 @@
       return {
         searchFilters: {
           label: undefined,
-          identifier: undefined,
+          identifierValue: undefined,
           curatoryGroupIds: undefined
         }
       }
@@ -59,12 +59,12 @@
               }
             },
             {
-              type: 'GokbTextField',
+              type: 'GokbIdentifierFilterField',
               name: 'ids',
-              value: 'identifier',
+              value: 'identifierValue',
               properties: {
-                entity: 'Org', // means Provider ;-)
-                label: this.$i18n.tc('component.identifier.label')
+                label: this.$i18n.tc('component.identifier.label'),
+                targetType: 'Org'
               }
             },
             {

@@ -1,8 +1,8 @@
 <template>
   <gokb-dialog
-    value=""
+    v-model="localValue"
     :title="localTitle"
-    v-on="isEdit ? { submit: save } : { submit: check }"
+    @submit="save"
   >
     <gokb-error-component :value="error" />
     <span v-if="errorMsg">
@@ -13,76 +13,161 @@
         {{ localErrorMessage }}
       </v-alert>
     </span>
-    <v-row
-      dense
-      class="mt-4"
+    <v-tabs
+      v-if="!isEdit"
+      v-model="tab"
     >
-      <v-col>
-        <gokb-search-platform-field
-          v-if="!selected"
-          v-model="platformName"
-          :items="items"
-          :readonly="isReadonly"
-          :label="$tc('component.general.name')"
-          :query-fields="[]"
-          required
-          return-object
-          allow-new-values
-          disable-if-linked
-        />
-        <gokb-text-field
-          v-else
-          v-model="platform.name"
-          :readonly="isReadonly"
-          :label="$tc('component.general.name')"
-          required
-        />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <gokb-search-platform-field
-          v-if="!selected"
-          v-model="platformUrl"
-          :items="items"
-          :readonly="isReadonly"
-          :label="$tc('component.platform.url')"
-          :rules="urlRules"
-          :query-fields="['primaryUrl']"
-          item-text="primaryUrl"
-          required
-          return-object
-          allow-new-values
-          disable-if-linked
-        />
-        <gokb-url-field
-          v-else
-          v-model="platformUrl"
-          :readonly="isReadonly"
-          :required="!isReadonly"
-        />
-      </v-col>
-    </v-row>
-    <v-row
-      v-for="c in conflictLinks"
-      :key="c.id"
-      dense
-    >
-      <v-col v-if="!c.id">
-        {{ $t('component.platform.conflict.noProvider', [c.platformId]) }}
-      </v-col>
-      <v-col v-else>
-        {{ $t('component.platform.conflict.' + c.type, [c.platformName]) }}
-        {{ $t('component.platform.conflict.providerLink') }}
-        <router-link
-          :style="{ color: 'primary' }"
-          :to="{ name: '/provider', params: { 'id': c.id } }"
+      <v-tab
+        key="search"
+        @click="resetFields()"
+      >
+        {{ $tc('btn.select') }}
+      </v-tab>
+      <v-tab
+        v-if="!isEdit"
+        key="new"
+        :disabled="!searched"
+        @click="resetFields()"
+      >
+        {{ $tc('btn.new') }}
+      </v-tab>
+    </v-tabs>
+    <v-tabs-items v-model="tab">
+      <v-tab-item
+        key="search"
+      >
+        <v-row
+          v-if="isEdit"
+          class="text-h6 mt-4 ml-0"
         >
-          {{ c.name }}
-        </router-link>
-      </v-col>
-    </v-row>
-
+          {{ $tc('route.platform.edit') }}
+        </v-row>
+        <v-row
+          v-else
+          class="text-h6 mt-4 ml-0"
+        >
+          {{ $tc('route.platform.searchExisting') }}
+        </v-row>
+        <v-row
+          dense
+          class="mt-4"
+        >
+          <v-col>
+            <gokb-search-platform-field
+              v-model="platformName"
+              :items="items"
+              :label="$tc('component.general.name')"
+              :query-fields="['name', 'primaryUrl']"
+              return-object
+              disable-if-linked
+              @searched="hasSearched()"
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <gokb-url-field
+              v-if="!!platformUrl"
+              v-model="platformUrl"
+              readonly
+            />
+          </v-col>
+        </v-row>
+        <v-row
+          v-for="c in conflictLinks"
+          :key="c.id"
+          dense
+        >
+          <v-col v-if="!c.id">
+            {{ $t('component.platform.conflict.noProvider', [c.platformId]) }}
+          </v-col>
+          <v-col v-else>
+            {{ $t('component.platform.conflict.' + c.type, [c.platformName]) }}
+            {{ $t('component.platform.conflict.providerLink') }}
+            <router-link
+              :style="{ color: 'primary' }"
+              :to="{ name: '/provider', params: { 'id': c.id } }"
+            >
+              {{ c.name }}
+            </router-link>
+          </v-col>
+        </v-row>
+      </v-tab-item>
+      <v-tab-item
+        key="new"
+      >
+        <v-row
+          class="text-h6 mt-4 ml-0"
+        >
+          {{ $tc('route.platform.createNew') }}
+        </v-row>
+        <v-row
+          dense
+          class="mt-4"
+        >
+          <v-col>
+            <gokb-text-field
+              v-model="platform.name"
+              :readonly="isReadonly"
+              :label="$tc('component.general.name')"
+              required
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <gokb-url-field
+              v-model="platform.primaryUrl"
+              :readonly="isReadonly"
+              :required="!isReadonly"
+            />
+          </v-col>
+        </v-row>
+        <v-row
+          v-for="c in conflictLinks"
+          :key="c.id"
+          dense
+        >
+          <v-col v-if="!c.id">
+            {{ $t('component.platform.conflict.noProvider', [c.platformId]) }}
+          </v-col>
+          <v-col v-else>
+            {{ $t('component.platform.conflict.' + c.type, [c.platformName]) }}
+            {{ $t('component.platform.conflict.providerLink') }}
+            <router-link
+              :style="{ color: 'primary' }"
+              :to="{ name: '/provider', params: { 'id': c.id } }"
+            >
+              {{ c.name }}
+            </router-link>
+          </v-col>
+        </v-row>
+      </v-tab-item>
+    </v-tabs-items>
+    <div v-if="isEdit">
+      <v-row
+        dense
+        class="mt-4"
+      >
+        <v-col>
+          <gokb-text-field
+            v-model="platform.name"
+            :readonly="isReadonly"
+            :label="$tc('component.general.name')"
+            required
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <gokb-url-field
+            v-model="platformUrl"
+            :readonly="isReadonly"
+            required
+          />
+        </v-col>
+      </v-row>
+    </div>
     <template #buttons>
       <v-spacer />
       <gokb-button
@@ -138,6 +223,7 @@
     },
     data () {
       return {
+        tab: null,
         errorMsg: undefined,
         errors: {},
         conflictLinks: [],
@@ -153,7 +239,8 @@
         urlRules:
           [v => (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || this.$i18n.t('component.tipp.url.error')],
         queryFields: ['primaryUrl'],
-        disableIfLinked: true
+        disableIfLinked: true,
+        searched: false
       }
     },
     computed: {
@@ -166,7 +253,7 @@
         }
       },
       isReadonly () {
-        return !this.editable
+        return !!this.pprops ? !this.pprops.editable : false
       },
       isEdit () {
         return !!this.selected
@@ -185,7 +272,7 @@
       },
       localTitle () {
         if (this.isEdit) {
-          return this.$i18n.tc('component.platform.label') + (this.platform?.stdDesc ? (' – ' + this.$i18n.t('component.platform.stdDesc.' + (this.platform.stdDesc.value || this.platform.stdDesc.name) + '.label')) : '')
+          return this.isReadonly ? this.$i18n.tc('component.platform.label') : this.$i18n.t('header.edit.label', [this.$i18n.tc('component.platform.label')])
         } else {
           return this.$i18n.tc('route.platform.add')
         }
@@ -238,7 +325,7 @@
       },
       async fetch (pid) {
         const response = await this.catchError({
-          promise: platformServices.getPlatform(pid, this.cancelToken.token),
+          promise: platformServices.get(pid, this.cancelToken.token),
           instance: this
         })
 
@@ -263,10 +350,6 @@
           activeGroup
         }
 
-        if (!this.isEdit) {
-          newPlatform.provider = this.providerId
-        }
-
         const response = await this.catchError({
           promise: platformServices.createOrUpdate(newPlatform, this.cancelToken.token),
           instance: this
@@ -287,42 +370,6 @@
             }
 
             this.$emit('edit', updatedObj)
-            this.close()
-          }
-        } else {
-          if (response?.status === 409) {
-            this.errorMsg = 'error.update.409'
-            this.errors = response?.data?.error
-          } else if (response?.status === 500) {
-            this.errorMsg = 'error.general.500'
-          } else if (response.data?.error) {
-            this.handleApiErrors(response.data.error)
-          }
-        }
-      },
-      async check () {
-        this.errors = {}
-        this.conflictLinks = []
-        const activeGroup = accountModel.activeGroup()
-        const newPlatform = {
-          id: this.platform.id,
-          name: this.platform.name,
-          primaryUrl: this.platform.primaryUrl,
-          version: this.version,
-          activeGroup
-        }
-
-        const response = await this.catchError({
-          promise: platformServices.check(newPlatform, this.cancelToken.token),
-          instance: this
-        })
-        if (response?.status < 300 && response.data) {
-          if (response.data.error) {
-            this.handleApiErrors(response.data.error)
-          } else if (!response.data.to_create) {
-            this.handleApiErrors(response.data.conflicts)
-          } else {
-            this.$emit('edit', newPlatform)
             this.close()
           }
         } else {
@@ -378,6 +425,22 @@
           this.conflictLinks.push(conflictProviders[cp])
         }
         this.errors = errors
+      },
+      hasSearched () {
+        this.searched = true
+      },
+      resetFields () {
+        if (this.searched) {
+          this.platformUrl = undefined
+          this.platformName = undefined
+          this.items = []
+          this.updateUrl = undefined
+          this.platform = {
+            id: undefined,
+            name: undefined,
+            primaryUrl: undefined
+          }
+        }
       }
     }
   }
