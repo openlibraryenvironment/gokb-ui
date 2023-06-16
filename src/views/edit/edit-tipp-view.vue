@@ -319,6 +319,7 @@
             <gokb-identifier-section
               v-model="packageTitleItem.ids"
               :target-type="titleTypeString"
+              :api-errors="errors.ids"
               :disabled="isReadonly"
               no-tool-bar
               @update="addPendingChange"

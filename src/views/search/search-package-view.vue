@@ -79,11 +79,12 @@
               }
             },
             {
-              type: 'GokbTextField',
+              type: 'GokbIdentifierFilterField',
               name: 'ids',
               value: 'identifierValue',
               properties: {
                 label: this.$i18n.tc('component.identifier.label'),
+                targetType: 'Package'
               }
             },
             {
