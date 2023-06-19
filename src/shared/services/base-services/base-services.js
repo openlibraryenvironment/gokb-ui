@@ -31,7 +31,7 @@ const api = (http, tokenModel, accountModel) => ({
 
         const refresh_resp = this.refreshAuth()
 
-        if (refresh_resp.status === 200) {
+        if (refresh_resp?.status === 200) {
           response = http.request(parameters)
         } else {
           accountModel.logout(cancelToken)
@@ -47,6 +47,8 @@ const api = (http, tokenModel, accountModel) => ({
   },
 
   refreshAuth (cancelToken) {
+    let response
+
     const form_data = {
       grant_type: 'refresh_token',
       refresh_token: tokenModel.getRefresh()
@@ -60,11 +62,15 @@ const api = (http, tokenModel, accountModel) => ({
       cancelToken
     }
 
-    let response = http.request(refresh_pars)
+    try {
+      response = http.request(refresh_pars)
 
-    if (response.status === 200) {
-      tokenModel.setToken(response.access_token, response.refresh_token, response.expires_in, tokenModel.isPersistent())
-      this.setAuthorization(response.token_type, response.access_token)
+      if (response.status === 200) {
+        tokenModel.setToken(response.access_token, response.refresh_token, response.expires_in, tokenModel.isPersistent())
+        this.setAuthorization(response.token_type, response.access_token)
+      }
+    }
+    catch (e) {
     }
 
     return response
