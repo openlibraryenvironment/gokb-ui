@@ -47,6 +47,7 @@ const api = (vue, accountServices) => {
     async initialize (cancelToken) {
       const result = await accountServices.initialize(cancelToken)
       state.initialized = true
+
       if (result) {
         state.loggedIn = true
         state.roles = result.roles

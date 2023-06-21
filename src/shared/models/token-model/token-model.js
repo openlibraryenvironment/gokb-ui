@@ -35,7 +35,7 @@ const api = (browserStorage) => {
         ? { saveEnvironment: localStorage, deleteEnvironment: sessionStorage } : { saveEnvironment: sessionStorage, deleteEnvironment: localStorage }
       saveEnvironment.set(TOKEN_KEY, token)
       saveEnvironment.set(REFRESH_KEY, refresh)
-      saveEnvironment.set(EXPIRATION_KEY, Date.now() + (lifetime * 1000))
+      saveEnvironment.set(EXPIRATION_KEY, Date.now() + lifetime*1000)
       deleteEnvironment.remove(TOKEN_KEY)
       deleteEnvironment.remove(REFRESH_KEY)
       deleteEnvironment.remove(EXPIRATION_KEY)
