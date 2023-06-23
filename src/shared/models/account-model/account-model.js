@@ -17,7 +17,7 @@ const api = (vue, accountServices) => {
     },
 
     hasRole (role) {
-      return state.roles?.includes(role)
+      return state.roles.includes(role)
     },
 
     username () {
@@ -82,8 +82,7 @@ const api = (vue, accountServices) => {
       state.username = username
     },
 
-    logout (cancelToken) {
-      accountServices.logout(cancelToken)
+    clear () {
       state.loggedIn = false
       state.username = ''
       state.roles = []
@@ -92,6 +91,11 @@ const api = (vue, accountServices) => {
       state.id = undefined
       state.tabbedView = true
       state.userLocale = undefined
+    },
+
+    logout () {
+      accountServices.logout()
+      this.clear()
     },
 
     async register ({ username, email, password, password2 }) {
