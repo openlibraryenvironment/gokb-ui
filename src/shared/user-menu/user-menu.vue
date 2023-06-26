@@ -143,7 +143,10 @@
         if (method) {
           this[method]()
         }
-        path && this.navigateTo(path)
+
+        if (!!path && path !== this.$route.name) {
+          this.navigateTo(path)
+        }
       },
       login () {
         showLoginModel.set(true)

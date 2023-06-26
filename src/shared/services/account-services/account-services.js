@@ -8,15 +8,15 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
 
     if (token) { // we have a token, try to use it
       baseServices.setAuthorization('Bearer', token)
+      let profile
+
       try {
-        const profile = await profileServices.get(cancelToken)
-        return profile.data.data
-      } catch (exception) {
-        baseServices.deleteAuthorization()
-        log.info('saved token invalid', exception)
-        tokenModel.removeToken()
-        return
-      }
+        const resp = await profileServices.get(cancelToken)
+        profile = resp?.data?.data
+        profile.roles = profile.roles?.map(obj => obj.authority)
+      } catch (exception) {}
+
+      return profile
     }
   },
 
@@ -37,8 +37,10 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
     return { roles: result.roles }
   },
 
-  async logout (cancelToken) {
-    tokenModel.removeToken()
+  logout () {
+    if (!!tokenModel.getToken()) {
+      tokenModel.removeToken()
+    }
     baseServices.deleteAuthorization()
     log.debug('logged out')
   },

@@ -3,7 +3,7 @@ const REFRESH_URL = '/oauth/access_token'
 
 const headers = {}
 
-const api = (http, tokenModel, accountModel) => ({
+const api = (http, log, tokenModel, accountModel) => ({
 
   deleteAuthorization () {
     delete headers[HEADER_AUTHORIZATION_KEY]
@@ -23,6 +23,11 @@ const api = (http, tokenModel, accountModel) => ({
       data,
       cancelToken
     }
+
+    if (!!headers[HEADER_AUTHORIZATION_KEY] && !tokenModel.getToken()) {
+      accountModel.default.logout()
+    }
+
     let response = http.request(parameters)
 
     if (response.status === 401 && !!headers[HEADER_AUTHORIZATION_KEY] && tokenModel.isExpired()) {
@@ -34,10 +39,10 @@ const api = (http, tokenModel, accountModel) => ({
         if (refresh_resp?.status === 200) {
           response = http.request(parameters)
         } else {
-          accountModel.logout(cancelToken)
+          accountModel.default.logout()
         }
       } else {
-        accountModel.logout(cancelToken)
+        accountModel.default.logout()
       }
     } else if (tokenModel.needsRefresh()) {
       this.refreshAuth()
@@ -62,15 +67,11 @@ const api = (http, tokenModel, accountModel) => ({
       cancelToken
     }
 
-    try {
-      response = http.request(refresh_pars)
+    response = http.request(refresh_pars)
 
-      if (response.status === 200) {
-        tokenModel.setToken(response.access_token, response.refresh_token, response.expires_in, tokenModel.isPersistent())
-        this.setAuthorization(response.token_type, response.access_token)
-      }
-    }
-    catch (e) {
+    if (response.status === 200) {
+      tokenModel.setToken(response.access_token, response.refresh_token, response.expires_in, tokenModel.isPersistent())
+      this.setAuthorization(response.token_type, response.access_token)
     }
 
     return response

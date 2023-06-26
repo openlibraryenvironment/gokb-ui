@@ -19,10 +19,10 @@ const api = (browserStorage) => {
       sessionStorage.remove(EXPIRATION_KEY)
     },
     needsRefresh () {
-      return !!this.getToken() && (Date.now() > (sessionStorage.get(EXPIRATION_KEY) || localStorage.get(EXPIRATION_KEY) - 300000))
+      return !!this.getToken() && (Date.now() > (parseInt(sessionStorage.get(EXPIRATION_KEY)) || parseInt(localStorage.get(EXPIRATION_KEY) - 300000)))
     },
     isExpired () {
-      return !!this.getToken() && Date.now() > (sessionStorage.get(EXPIRATION_KEY) || localStorage.get(EXPIRATION_KEY))
+      return !!this.getToken() && Date.now() > (parseInt(sessionStorage.get(EXPIRATION_KEY)) || parseInt(localStorage.get(EXPIRATION_KEY)))
     },
     getToken () {
       return sessionStorage.get(TOKEN_KEY) || localStorage.get(TOKEN_KEY)
