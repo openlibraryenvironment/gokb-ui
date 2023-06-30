@@ -219,7 +219,8 @@
       "profile": "Nur eigene Jobs anzeigen"
     },
     "dryRun": {
-      "label": "Trockenlauf"
+      "label": "Trockenlauf",
+      "tooltip": "Der Inhalt der KBART-Datei wird mit dem bestehenden Datenbestand abgeglichen, aber es werden keine Titel importiert."
     },
     "report": {
       "label": "Ergebnis",
@@ -319,10 +320,16 @@
       }
     },
     "propId": {
-      "label": "Namensraum für title_id (optional)"
+      "label": "Namensraum für title_id (optional)",
+      "tooltip": "Falls die Spalte 'title_id' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden."
     },
     "addOnly": {
-      "label": "Teil-Update"
+      "label": "Teil-Update",
+      "tooltip": "Bestehende Pakettitel, die in dieser Datei nicht enthalten sind, werden nicht als 'Archiviert' markiert."
+    },
+    "deleteMissing": {
+      "label": "Fehlende Titel als gelöscht markieren",
+      "tooltip": "Bestehende Pakettitel, die nicht dieser Datei enthalten sind, werden als 'Gelöscht' statt 'Archiviert' markiert."
     },
     "column": {
       "label": "Spalte | Spalten",
@@ -463,7 +470,7 @@
       "400": "Bei der Erstellung sind Fehler aufgetreten!",
       "403": "{0} konnte nicht angelegt werden, da dieser Benutzer nicht dazu berechtigt ist.",
       "title": {
-        "identifierConflict": "Der Titel konnte nicht angelegt werden, da ein Identifikatorkonflikt vorliegt. Bitte überprüfen Sie, ob eine Dublette zu folgenden Titeln vorliegt:"
+        "identifierConflict": "Dieser Identifikator ist bereits mit einem anderen Titel verknüpft!"
       }
     },
     "general": {
@@ -922,7 +929,10 @@
       "homepage": "Webseite",
       "titleNamespace": "Titel-Namensraum",
       "packageNamespace": "Paket-Namensraum",
-      "technicalSupport": "Technischer Support"
+      "technicalSupport": "Technischer Support",
+      "preferredShortname": {
+        "label": "Empfohlene Kurzform"
+      }
     },
     "organization": {
       "label": "Anbieter | Anbieter"

@@ -7,7 +7,11 @@
     @submit="update"
   >
     <gokb-error-component :value="error" />
-    <v-snackbars :objects.sync="eventMessages"></v-snackbars>
+    <v-snackbars :objects.sync="eventMessages">
+      <template #action="{ close }">
+        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
+      </template>
+    </v-snackbars>
     <gokb-section :no-tool-bar="true">
       <v-row>
         <v-col md="12">
@@ -39,7 +43,14 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="6">
+        <v-col cols="2">
+          <gokb-text-field
+            v-model="providerObject.preferredShortname"
+            :label="$t('component.provider.preferredShortname.label')"
+            :disabled="isReadonly"
+          />
+        </v-col>
+        <v-col cols="4">
           <gokb-text-field
             v-model="providerObject.homepage"
             :label="$t('component.provider.homepage')"

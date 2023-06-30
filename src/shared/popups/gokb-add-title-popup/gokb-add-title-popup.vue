@@ -5,23 +5,11 @@
     :width="1000"
     @submit="submitTipp"
   >
-    <gokb-error-component :value="error" />
-    <span v-if="successMsg">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ localSuccessMessage }}
-      </v-alert>
-    </span>
-    <span v-if="errorMsg">
-      <v-alert
-        type="error"
-        dismissible
-      >
-        {{ localErrorMessage }}
-      </v-alert>
-    </span>
+    <v-snackbars :objects.sync="eventMessages">
+      <template #action="{ close }">
+        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
+      </template>
+    </v-snackbars>
     <v-row dense>
       <v-col>
         <gokb-section
@@ -547,6 +535,7 @@
         deleteUrl: undefined,
         successMsg: undefined,
         errorMsg: undefined,
+        eventMessages: [],
         status: undefined,
         version: undefined,
         items: [],
@@ -660,6 +649,7 @@
     methods: {
       async submitTipp () {
         this.errors = {}
+        this.eventMessages = []
 
         if (this.selected && typeof this.selected.id === 'number') {
           const activeGroup = accountModel.activeGroup()
@@ -692,11 +682,11 @@
             this.close()
           } else {
             if (response.status === 409) {
-              this.errorMsg = 'error.update.409'
+              this.eventMessages.push({ message: this.$i18n.t('error.update.409'), color: 'error', timeout: -1 })
             } else if (response.status === 500) {
-              this.errorMsg = 'error.general.500'
+              this.eventMessages.push({ message: this.$i18n.t('error.general.500'), color: 'error', timeout: -1 })
             } else {
-              this.errorMsg = this.isEdit ? 'error.update.400' : 'error.create.400'
+              this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400'), color: 'error', timeout: -1 })
               this.errors = response.data.error
             }
           }
@@ -734,7 +724,7 @@
         }
       },
       tempId () {
-        return 'tempTippId' + Math.random().toString(36).substr(2, 5)
+        return 'tempTippId' + Math.random().toString(36).substring(2, 5)
       },
       close () {
         this.localValue = false

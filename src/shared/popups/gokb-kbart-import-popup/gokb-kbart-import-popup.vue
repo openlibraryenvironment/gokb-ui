@@ -21,6 +21,10 @@
         :label="$t('kbart.addOnly.label')"
       />
       <gokb-checkbox-field
+        v-model="options.deleteMissing"
+        :label="$t('kbart.deleteMissing.label')"
+      />
+      <gokb-checkbox-field
         v-model="options.dryRun"
         :label="$t('kbart.dryRun.label')"
       />
@@ -228,6 +232,7 @@
         this.loadedFile.warnings.single = []
         this.loadedFile.warnings.type = {}
         this.options.addOnly = false
+        this.options.deleteMissing = false
         this.options.selectedFile = file
       }
     },
