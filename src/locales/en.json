@@ -1362,7 +1362,7 @@
           "label": "Identifier Conflict (ID added)",
           "info": "Reference title {0} matched an existing reference title on one identifier, but other identifiers {1} differ from existing ones in the same namespaces.",
           "action": "Identifier added",
-          "toDo": "Check identifiers of the reference title and delete the incorrect identifiers if necessary."
+          "toDo": "Check identifiers of the reference title and remove the incorrect identifiers if necessary."
         },
         "Generic Matching Conflict": {
           "label": "Generic Matching Conflict",
