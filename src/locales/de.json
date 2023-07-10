@@ -1361,8 +1361,8 @@
         "Secondary Identifier Conflict": {
           "label": "Identifikatoren-Konflikt (ID ergänzt)",
           "info": "Beim Abgleich mit einem Referenztitel wurde ein Identifikator gefunden, der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
-          "action": "Die GOKb hat im Referenztitel den Identifikator ergänzt.",
-          "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, führen Sie diese zusammen, indem Sie zunächst einen Referenztitel per 'Ziel auswählen' markieren und dann auf 'Dublette zusammenführen' klicken. Dabei werden alle noch verbleibenden Identifikatoren des zu löschenden Titels übernommen. Liegt keine Dublette vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. "
+          "action": "Die GOKb hat im Referenztitel Identifikatoren hinzugefügt.",
+          "toDo": "Überprüfen Sie die Identifikatoren des Referenztitels, und entfernen sie fehlerhafte Einträge."
         },
         "Generic Matching Conflict": {
           "label": "Generischer Matchingkonflikt",

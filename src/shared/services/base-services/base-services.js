@@ -51,7 +51,8 @@ const api = (http, log, tokenModel, accountModel) => ({
     return response
   },
 
-  refreshAuth (cancelToken) {
+  async refreshAuth (cancelToken) {
+    this.deleteAuthorization()
     let response
 
     const form_data = {
@@ -67,11 +68,20 @@ const api = (http, log, tokenModel, accountModel) => ({
       cancelToken
     }
 
-    response = http.request(refresh_pars)
+    try {
+      response = await http.request(refresh_pars)
+    }
+    catch (e) {
+      log.debug("Unable to refresh login!")
+    }
 
-    if (response.status === 200) {
-      tokenModel.setToken(response.access_token, response.refresh_token, response.expires_in, tokenModel.isPersistent())
-      this.setAuthorization(response.token_type, response.access_token)
+    if (response?.status === 200) {
+      tokenModel.setToken(response.data.access_token, response.data.refresh_token, response.data.expires_in, tokenModel.isPersistent())
+      this.setAuthorization(response.data.token_type, response.data.access_token)
+      accountModel.default.refresh(response.data)
+    }
+    else {
+      log.debug("No refresh possible!")
     }
 
     return response

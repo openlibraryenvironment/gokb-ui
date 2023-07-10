@@ -82,6 +82,12 @@ const api = (vue, accountServices) => {
       state.username = username
     },
 
+    refresh (response) {
+      state.loggedIn = true
+      state.roles = response.roles
+      state.username = response.username
+    },
+
     clear () {
       state.loggedIn = false
       state.username = ''
