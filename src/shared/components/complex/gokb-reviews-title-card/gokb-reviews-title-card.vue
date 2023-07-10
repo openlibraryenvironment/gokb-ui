@@ -721,7 +721,7 @@
           })
         }
 
-        return val
+        return val.sort(({ namespace: first }, { namespace: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
       },
       fetchReviewMismatchIds () {
         for (const [count, idItem] of this.additionalVars[1].entries()) {

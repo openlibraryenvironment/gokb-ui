@@ -116,7 +116,7 @@
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedItems: [],
-
+        identifiers: [],
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -131,19 +131,6 @@
         set (localValue) {
           this.$emit('input', localValue)
         }
-      },
-      identifiers () {
-        return [...this.value]
-          .map(item => ({
-            ...item,
-            extlink: namespaceServices.getBaseurl(item.namespace) ? namespaceServices.getBaseurl(item.namespace)+item.value : undefined,
-            markError: this.apiErrors?.find(e => (e.baddata.value === item.value && e.baddata.namespace === item.namespace))
-              ? (e.messageCode ? this.$i18n.t(e.messageCode, [e.baddata.value]) : this.$i18n.t('component.identifier.validation.value', [e.baddata.value]))
-              : null,
-            isDeletable : undefined
-          }))
-          .sort(({ value: first }, { value: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-          .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
@@ -163,6 +150,23 @@
       title () {
         return this.showTitle ? this.$i18n.tc('component.identifier.label', 2) : undefined
       }
+    },
+    watch: {
+      value: {
+        deep: true,
+        handler () {
+          this.updateItems()
+        }
+      },
+      apiErrors () {
+        this.updateItems()
+      },
+      '$i18n.locale' () {
+        this.updateItems()
+      }
+    },
+    mounted () {
+      this.updateItems()
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -203,6 +207,27 @@
       },
       deleteIdentifier (value) {
         this.localValue = this.localValue.filter(v => v !== value)
+      },
+      updateItems () {
+        this.identifiers = this.localValue.map(item => ({
+          ...item,
+          extlink: namespaceServices.getBaseurl(item.namespace) ? namespaceServices.getBaseurl(item.namespace)+item.value : undefined,
+          markError: this.mapErrorForItem(item),
+          isDeletable : undefined
+        }))
+        .sort(({ nslabel: first }, { nslabel: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+        .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
+      },
+      mapErrorForItem (item) {
+        let result = null
+
+        this.apiErrors?.forEach(e => {
+          if (e.baddata[0].value === item.value && e.baddata[0].type === item.namespace) {
+            result = (e.messageCode ? this.$i18n.t(e.messageCode, [e.baddata[0].value]) : this.$i18n.t('component.identifier.validation.value', [e.baddata[0].value]))
+          }
+        })
+
+        return result
       }
     }
   }

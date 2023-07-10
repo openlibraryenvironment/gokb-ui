@@ -7,7 +7,11 @@
     @submit="showSubmitPackageConfirm"
   >
     <gokb-error-component :value="error" />
-    <v-snackbars ref="snackbars" :objects.sync="eventMessages"></v-snackbars>
+    <v-snackbars :objects.sync="eventMessages">
+      <template #action="{ close }">
+        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
+      </template>
+    </v-snackbars>
     <span v-if="importJob?.result === 'success'">
       <v-alert
         type="success"
@@ -1046,7 +1050,8 @@
                 activeGroup: this.activeGroup?.id,
                 titleIdNamespace: this.kbart.selectedNamespace?.id || this.sourceItem?.targetNamespace?.id,
                 dryRun: this.kbart.dryRun,
-                addOnly: this.kbart.addOnly
+                addOnly: this.kbart.addOnly,
+                deleteMissing: this.kbart.deleteMissing
               }
               const kbartResult = await this.catchError({
                 promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, kbartPars, this.cancelToken.token),

@@ -219,7 +219,8 @@
       "profile": "Only show your own jobs"
     },
     "dryRun": {
-      "label": "Dry run"
+      "label": "Dry run",
+      "tooltip": "The contents of the KBART file will be matched against the current database to create a report, but they will not be imported."
     },
     "report": {
       "label": "Result",
@@ -319,10 +320,16 @@
       }
     },
     "propId": {
-      "label": "Namespace for title_id values (optional)"
+      "label": "Namespace for title_id values (optional)",
+      "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
     },
     "addOnly": {
-      "label": "Partial Update"
+      "label": "Partial Update",
+      "tooltip": "Don't retire existing titles not matched in this update."
+    },
+    "deleteMissing": {
+      "label": "Delete removed titles",
+      "tooltip": "Marks all existing titles not matched via this update as 'Deleted'."
     },
     "column": {
       "label": "Column | Columns",
@@ -463,7 +470,7 @@
       "400": "{0} contained errors!",
       "403": "{0} could not be created due to missing user permissions.",
       "title": {
-        "identifierConflict": "Unable to create the title due to an identifier conflict! Please check the following titles for duplicates:"
+        "identifierConflict": "This identifier is already connected to another title!"
       }
     },
     "general": {
@@ -922,7 +929,10 @@
       "homepage": "Website",
       "titleNamespace": "Title Namespace",
       "packageNamespace": "Package Namespace",
-      "technicalSupport": "Technical Support"
+      "technicalSupport": "Technical Support",
+      "preferredShortname": {
+        "label": "Preferred Short Name"
+      }
     },
     "organization": {
       "label": "Provider | Providers"

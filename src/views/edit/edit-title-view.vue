@@ -6,7 +6,11 @@
     @submit="update"
   >
     <gokb-error-component :value="error" />
-    <v-snackbars :objects.sync="eventMessages"></v-snackbars>
+    <v-snackbars :objects.sync="eventMessages">
+      <template #action="{ close }">
+        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
+      </template>
+    </v-snackbars>
     <v-row>
       <v-col>
         <gokb-select-field
