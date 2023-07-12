@@ -13,6 +13,7 @@ const api = (http, log, tokenModel, accountModel) => ({
   },
   setLanguage (lang) {
     headers['Accept-Language'] = lang
+    window.localStorage.setItem('locale', lang)
   },
 
   request ({ method, url, data }, cancelToken) {

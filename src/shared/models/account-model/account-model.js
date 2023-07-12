@@ -6,7 +6,7 @@ const api = (vue, accountServices) => {
     userLocale: undefined,
     activeGroup: undefined,
     tabbedView: true,
-    darkMode: false,
+    darkMode: undefined,
     id: undefined,
     roles: undefined,
   })

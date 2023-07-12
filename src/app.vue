@@ -460,12 +460,16 @@
 
       if (accountModel.loggedIn() && accountModel.userLocale()) {
         this.currentLocale = accountModel.userLocale()
+      } else if (window.localStorage.getItem('locale') != undefined) {
+        this.currentLocale = window.localStorage.getItem('locale')
       } else {
         baseServices.setLanguage(this.$i18n.locale)
       }
 
-      if (accountModel.loggedIn()) {
-        this.$vuetify.theme.dark = accountModel.darkMode()
+      if (window.localStorage.getItem('darkMode') != undefined) {
+        this.$vuetify.theme.dark = window.localStorage.getItem('darkMode') === 'true'
+      } else {
+        this.$vuetify.theme.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
       }
 
       this.cancelToken = createCancelToken()
@@ -480,6 +484,7 @@
       toggleDarkMode () {
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark
         accountModel.toggleDarkMode(this.$vuetify.theme.dark)
+        window.localStorage.setItem('darkMode', this.$vuetify.theme.dark)
       },
       async loadGroups () {
         this.cancelToken = createCancelToken()
