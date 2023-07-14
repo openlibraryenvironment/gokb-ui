@@ -107,7 +107,7 @@
         })
 
         if (response?.status === 200) {
-          this.groups = curatoryGroups
+          this.groups = response.data.data.curatoryGroups
         }
       },
       checkForSystemUpdate() {
