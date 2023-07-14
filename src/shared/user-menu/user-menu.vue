@@ -93,7 +93,7 @@
         return accountModel.loggedIn()
       },
       firstLetter () {
-        return (this.loggedIn && this.username.substr(0, 1).toUpperCase())
+        return (this.loggedIn && this.username?.substring(0, 1)?.toUpperCase())
       },
       userMenuItems () {
         if (this.loggedIn) {
@@ -143,7 +143,10 @@
         if (method) {
           this[method]()
         }
-        path && this.navigateTo(path)
+
+        if (!!path && path !== this.$route.name) {
+          this.navigateTo(path)
+        }
       },
       login () {
         showLoginModel.set(true)

@@ -6,7 +6,7 @@ const api = (vue, accountServices) => {
     userLocale: undefined,
     activeGroup: undefined,
     tabbedView: true,
-    darkMode: false,
+    darkMode: undefined,
     id: undefined,
     roles: undefined,
   })
@@ -17,7 +17,7 @@ const api = (vue, accountServices) => {
     },
 
     hasRole (role) {
-      return state.roles?.includes(role)
+      return state.roles.includes(role)
     },
 
     username () {
@@ -47,6 +47,7 @@ const api = (vue, accountServices) => {
     async initialize (cancelToken) {
       const result = await accountServices.initialize(cancelToken)
       state.initialized = true
+
       if (result) {
         state.loggedIn = true
         state.roles = result.roles
@@ -81,8 +82,13 @@ const api = (vue, accountServices) => {
       state.username = username
     },
 
-    logout (cancelToken) {
-      accountServices.logout(cancelToken)
+    refresh (response) {
+      state.loggedIn = true
+      state.roles = response.roles
+      state.username = response.username
+    },
+
+    clear () {
       state.loggedIn = false
       state.username = ''
       state.roles = []
@@ -91,6 +97,11 @@ const api = (vue, accountServices) => {
       state.id = undefined
       state.tabbedView = true
       state.userLocale = undefined
+    },
+
+    logout () {
+      accountServices.logout()
+      this.clear()
     },
 
     async register ({ username, email, password, password2 }) {
