@@ -468,8 +468,6 @@
 
       if (window.localStorage.getItem('darkMode') != undefined) {
         this.$vuetify.theme.dark = window.localStorage.getItem('darkMode') === 'true'
-      } else {
-        this.$vuetify.theme.dark = window.matchMedia('(prefers-color-scheme: dark)').matches
       }
 
       this.cancelToken = createCancelToken()

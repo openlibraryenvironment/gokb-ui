@@ -1210,7 +1210,7 @@
               }
             }
           }
-          this.$refs.tipps.fetchTipps()
+          await this.$refs.tipps.fetchTipps()
 
           loading.stopLoading()
         } else {

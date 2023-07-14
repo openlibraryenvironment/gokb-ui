@@ -101,17 +101,14 @@
     },
     methods: {
       async loadGroups () {
-        const {
-          data: {
-            data: {
-              curatoryGroups
-            }
-          }
-        } = await this.catchError({
+        const response = await this.catchError({
           promise: profileServices.get(this.cancelToken.token),
           instance: this
         })
-        this.groups = curatoryGroups
+
+        if (response?.status === 200) {
+          this.groups = curatoryGroups
+        }
       },
       checkForSystemUpdate() {
         let local_var = 'VUE_APP_SYSTEM_INFO_' + this.$i18n.locale.toUpperCase()

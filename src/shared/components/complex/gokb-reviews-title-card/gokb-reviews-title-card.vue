@@ -5,7 +5,7 @@
     :color="roleColor"
     :class="elevationClass"
     :disabled="isDeleted"
-    :outlined="isReviewedCard"
+    outlined
   >
     <gokb-confirmation-popup
       v-model="showSubmitConfirm"
