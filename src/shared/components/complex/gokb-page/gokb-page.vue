@@ -8,11 +8,13 @@
       <v-card flat>
         <v-toolbar
           flat
+          :color="toolbarBackground"
+          height="70px"
         >
           <div class="ml-3">
             <v-toolbar-title>
-              <p class="text-h4">{{ title }}</p>
-              <p v-if="subTitle">{{ subTitle }}</p>
+              <div class="text-h4">{{ title }}</div>
+              <div v-if="subTitle">{{ subTitle }}</div>
             </v-toolbar-title>
           </div>
         </v-toolbar>
@@ -45,6 +47,11 @@
         type: String,
         required: false,
         default: '1400px'
+      }
+    },
+    computed: {
+      toolbarBackground () {
+        return this.$vuetify.theme.dark ? '#121212' : '#ffffff'
       }
     },
     methods: {

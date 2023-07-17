@@ -24,7 +24,7 @@
     },
     created () {
       this.entityName = 'identifier-namespaces'
-      if (this.targetType) {
+      if (!!this.targetType) {
         this.searchParams = { targetType: this.targetType }
       }
     },

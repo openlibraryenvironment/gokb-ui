@@ -61,7 +61,7 @@
           v-if="!disabled"
           @click="showEditName"
         >
-          {{ $i18n.t('btn.edit') }}
+          {{ $i18n.t('header.edit.label', [$i18n.t('component.general.name')]) }}
         </v-btn>
       </template>
     </v-banner>

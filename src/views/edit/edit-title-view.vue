@@ -272,7 +272,7 @@
               v-model="ids"
               :show-title="false"
               :target-type="currentType"
-              :disabled="isReadonly"
+              :disabled="isReadonly || !currentType"
               :api-errors="errors.ids"
               @update="addPendingChange"
             />
@@ -466,6 +466,11 @@
         required: false,
         default: undefined
       },
+      initLocale: {
+        type: String,
+        required: false,
+        default: undefined
+      },
       initMessageCode: {
         type: String,
         required: false,
@@ -530,7 +535,7 @@
         return !!this.id
       },
       title () {
-        return this.currentType ? this.$i18n.t(this.titleCode, [this.typeDisplay]) : this.$i18n.t(this.titleCode, [this.$i18n.tc('component.title.label')])
+        return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.title.label')])
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'

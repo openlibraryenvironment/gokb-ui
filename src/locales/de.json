@@ -24,7 +24,7 @@
     "reactivate": "Reaktivieren",
     "refresh": "Aktualisieren",
     "reload": "Neu laden",
-    "reset": "Zurücksetzen",
+    "reset": "Änderungen verwerfen",
     "retire": "Archivieren",
     "search": "Suchen",
     "select": "Auswählen",
@@ -828,7 +828,7 @@
           "label": "Gültigkeitsende"
         }
       },
-      "name": "Paketspezifischer Titel",
+      "name": "Paketspezifischer Titelname",
       "accessPeriod": "Zugriffszeitraum",
       "identifier": {
         "label": "Paketspezifischer Identifikator | Paketspezifische Identifikatoren"

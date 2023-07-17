@@ -13,6 +13,7 @@ const api = (http, log, tokenModel, accountModel) => ({
   },
   setLanguage (lang) {
     headers['Accept-Language'] = lang
+    window.localStorage.setItem('locale', lang)
   },
 
   request ({ method, url, data }, cancelToken) {
@@ -30,18 +31,22 @@ const api = (http, log, tokenModel, accountModel) => ({
 
     let response = http.request(parameters)
 
-    if (response.status === 401 && !!headers[HEADER_AUTHORIZATION_KEY] && tokenModel.isExpired()) {
-      // Try refreshing the token once
-      if (tokenModel.isPersistent()) {
+    if (response.status === 401) {
+      if (!!headers[HEADER_AUTHORIZATION_KEY] && tokenModel.isExpired()) {
+        // Try refreshing the token once
+        if (tokenModel.isPersistent()) {
 
-        const refresh_resp = this.refreshAuth()
+          const refresh_resp = this.refreshAuth()
 
-        if (refresh_resp?.status === 200) {
-          response = http.request(parameters)
+          if (refresh_resp?.status === 200) {
+            response = http.request(parameters)
+          } else {
+            accountModel.default.logout()
+          }
         } else {
           accountModel.default.logout()
         }
-      } else {
+      } else if (!response.data) {
         accountModel.default.logout()
       }
     } else if (tokenModel.needsRefresh()) {

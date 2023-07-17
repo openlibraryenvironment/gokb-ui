@@ -468,6 +468,7 @@
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
   import tippServices from '@/shared/services/tipp-services'
+  import VSnackbars from 'v-snackbars'
   import { EDIT_TITLE_ROUTE, EDIT_TIPP_ROUTE } from '@/router/route-paths'
 
   const URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/
@@ -484,6 +485,7 @@
 
   export default {
     name: 'GokbAddTitlePopup',
+    components: { VSnackbars },
     extends: BaseComponent,
     props: {
       value: {
@@ -637,12 +639,35 @@
         }
       }
     },
+    watch: {
+      'packageTitleItem.title'(title) {
+        if (!!title && !this.isEdit) {
+          if (this.packageTitleItem.ids?.length == 0) {
+            this.packageTitleItem.ids = title._embedded.ids.map(({ value, namespace }) => ({
+              id: this.tempId(),
+              value,
+              namespace: namespace.value,
+              nslabel: (namespace.name || namespace.value),
+              isDeletable: true
+            }))
+          }
+          if (!this.allNames.name) {
+            this.allNames.name = title.name
+          }
+
+          if (!this.packageTitleItem.publisherName && !!title.publisher) {
+            this.packageTitleItem.publisherName = title.publisher.name
+          }
+        }
+      }
+    },
     async created () {
       if (this.selected) {
         this.mapRecord(this.selected)
       } else {
         this.titleTypeString = TARGET_TYPES[this.titleType.id]
         this.packageTitleItem.hostPlatform = this.parentPlatform
+        this.packageTitleItem.publicationType = this.titleType.id
       }
       this.coverageExpanded = !this.isEdit && this.titleTypeString === 'Serial'
     },

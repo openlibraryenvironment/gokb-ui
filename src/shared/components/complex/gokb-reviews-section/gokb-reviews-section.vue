@@ -489,7 +489,7 @@
         })
 
         if (this.reviewComponent) {
-          searchParams.componentToReview = this.reviewComponent
+          searchParams.componentToReview = this.reviewComponent.id
 
           if (this.fetchTitleReviews) {
             searchParams.titlereviews = true
