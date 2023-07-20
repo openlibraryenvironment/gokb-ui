@@ -52,7 +52,7 @@
         <div
           class="primary--text"
         >
-          {{ selectedItem.dryRun ? $i18n.t('job.report.dryRunLabel') : $i18n.t('job.report.label') }}
+          {{ selectedItem.dryRun ? $t('job.report.dryRunLabel') : $t('job.report.label') }}
         </div>
         <div v-if="!!selectedItem.results.report">
           <span class="mr-4">{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.report.invalid }}/{{ selectedItem.results.report.numRows }}</span>
@@ -72,6 +72,9 @@
         <div v-else-if="!!selectedItem.results.validation">
           <span class="mr-4">{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.validation.rows.error }}/{{ selectedItem.results.validation.rows.total }}</span>
           <span class="mr-4">{{ $i18n.tc('kbart.processing.warning.label', 2) }}: {{ selectedItem.results.validation.rows.warning }}</span>
+        </div>
+        <div v-else-if="!!selectedItem.results.messageCode">
+          <span class="pt-4">{{ $tc('default.error.label') }} - {{ $t(selectedItem.results.messageCode) }}</span>
         </div>
       </v-col>
     </v-row>

@@ -42,30 +42,6 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         component: () => import('@/views/register-view.vue')
       },
       {
-        path: `${TITLE_ROUTE}/:id`,
-        name: TITLE_ROUTE,
-        meta: {
-          code: 'route.title.edit'
-        },
-        component: () => import('@/views/title-view.vue')
-      },
-      {
-        path: `${PACKAGE_ROUTE}/:id`,
-        name: PACKAGE_ROUTE,
-        meta: {
-          code: 'route.package.edit'
-        },
-        component: () => import('@/views/package-view.vue')
-      },
-      {
-        path: `${PROVIDER_ROUTE}/:id`,
-        name: PROVIDER_ROUTE,
-        meta: {
-          code: 'route.provider.edit'
-        },
-        component: () => import('@/views/provider-view.vue')
-      },
-      {
         path: CREATE_PACKAGE_ROUTE,
         name: CREATE_PACKAGE_ROUTE,
         meta: {

@@ -83,6 +83,7 @@ const api = (vue, accountServices) => {
     },
 
     refresh (response) {
+      state.initialized = true
       state.loggedIn = true
       state.roles = response.roles
       state.username = response.username

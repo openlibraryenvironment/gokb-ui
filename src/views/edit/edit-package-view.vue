@@ -779,6 +779,8 @@
         allNames: { name: undefined, alts: [] },
         titleCount: 0,
         maintenanceCycle: undefined,
+        step3Error: false,
+        step2Error: false,
         updateUrl: undefined,
         deleteUrl: undefined,
         kbart: undefined
@@ -850,12 +852,6 @@
       },
       activeGroup () {
         return this.loggedIn && accountModel.activeGroup()
-      },
-      step2Error () {
-        return (this.isEdit && !this.isReadonly && !this.isValid) || (!this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids))
-      },
-      step3Error () {
-        return (this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids)) || (!this.isEdit && !!this.errors?.tipps)
       },
       kbartLabel () {
         return 'KBART' + (this.kbart?.dryRun ? ' (' + this.$i18n.t('kbart.dryRun.label') + ')' : '')
@@ -936,7 +932,7 @@
           this.go2NextStep()
         } else if (['1', '2', '3', '4'].includes(e.key) && (e.ctrlKey || e.metaKey)) {
           e.preventDefault()
-          this.step = e.key
+          this.step = parseInt(e.key)
         }
       },
       setKbart (options) {
@@ -983,6 +979,8 @@
         loading.startLoading()
         var isUpdate = !!this.id
         this.eventMessages = []
+        this.errors = {}
+        this.updateStepErrors()
 
         if (this.importJob?.status !== 'info') {
           this.importJob = {}
@@ -1126,7 +1124,8 @@
               this.eventMessages.push({ message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
             } else {
               this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
-              this.errors = response.data.errors || {}
+              this.errors = response.data.error || {}
+              this.updateStepErrors()
               this.step = 1
             }
           }
@@ -1135,8 +1134,19 @@
           this.eventMessages.push({message: this.$i18n.t('validation.hasErrors'), color: 'error', timeout: -1})
         }
 
-        if (loading.isLoading()) {
-          loading.stopLoading()
+        loading.stopLoading()
+      },
+      updateStepErrors () {
+        if ((this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids)) || (!this.isEdit && !!this.errors?.tipps)) {
+          this.step3Error = true
+        } else {
+          this.step3Error = false
+        }
+
+        if ((this.isEdit && !this.isReadonly && !this.isValid) || (!this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids))) {
+          this.step2Error = true
+        } else {
+          this.step2Error = false
         }
       },
       reset () {
@@ -1170,30 +1180,22 @@
             loading.startLoading()
           }
 
+          this.eventMessages = []
           this.errors = {}
           this.newTipps = []
+          this.updateStepErrors()
 
           const result = await this.catchError({
             promise: packageServices.get(this.id, this.cancelToken.token),
             instance: this
           })
 
-          if (result.status === 200) {
+          if (result?.status === 200) {
             this.mapRecord(result.data)
-          } else if (result.status === 401) {
-            accountModel.logout()
-            const retry = await this.catchError({
-              promise: packageServices.get(this.id, this.cancelToken.token),
-              instance: this
-            })
-
-            if (retry.status > 200) {
-              this.accessible = false
-            } else {
-              this.mapRecord(retry.data)
-            }
           } else if (result.status === 404) {
             this.notFound = true
+          } else {
+            this.$router.push({ name: '/error' })
           }
 
           if (this.providerSelect) {
@@ -1249,7 +1251,7 @@
             instance: this
           })
 
-          if (jobResult.status < 400) {
+          if (jobResult?.status < 400) {
             jobInfo.progress = jobResult.data.progress
 
             if (jobResult.data.finished) {
@@ -1258,8 +1260,8 @@
 
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
-                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.processing'), color: 'error', importResult: true })
-              } else if (jobResult.data.job_result?.badrows) {
+                this.eventMessages.push({ message: this.$i18n.t(jobResult.data.messageCode || 'kbart.transmission.error.processing'), color: 'error', importResult: true })
+              } else if (!!jobResult.data.job_result?.badrows) {
                 jobInfo.result = 'warn'
                 this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.warn.skipped'), color: 'warn', importResult: true })
 

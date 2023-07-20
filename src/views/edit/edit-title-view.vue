@@ -608,6 +608,7 @@
       },
       async update () {
         this.errors = {}
+        this.eventMessages = []
         var isUpdate = !!this.id
 
         const activeGroup = accountModel.activeGroup()
@@ -721,9 +722,6 @@
           loading.startLoading()
           this.errors = {}
           this.pendingChanges = {}
-          this.successMsg = undefined
-          this.warningMsg = undefined
-          this.errorMsg = undefined
 
           const result = await this.catchError({
             promise: titleServices.get(this.id, this.cancelToken.token),
@@ -732,18 +730,6 @@
 
           if (result.status === 200) {
             this.mapRecord(result.data)
-          } else if (result.status === 401) {
-            accountModel.logout()
-            const retry = await this.catchError({
-              promise: titleServices.get(this.id, this.cancelToken.token),
-              instance: this
-            })
-
-            if (retry.status > 200) {
-              this.accessible = false
-            } else {
-              this.mapRecord(retry.data)
-            }
           } else if (result.status === 404) {
             this.notFound = true
           }
