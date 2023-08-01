@@ -17,7 +17,7 @@ const api = (vue, accountServices) => {
     },
 
     hasRole (role) {
-      return state.roles.includes(role)
+      return !!state.roles && state.roles.includes(role)
     },
 
     username () {
