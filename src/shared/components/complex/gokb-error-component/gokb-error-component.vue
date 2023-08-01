@@ -1,5 +1,5 @@
 <template>
-  <span v-if="value">
+  <span v-if="value && showDetails">
     <v-btn
       absolute
       color="error"

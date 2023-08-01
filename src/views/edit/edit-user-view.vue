@@ -304,55 +304,44 @@
           instance: this
         })
         // todo: check error code
-        if (response.status < 400) {
+        if (response?.status < 400) {
           if (this.isEdit) {
             this.eventMessages.push(this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username]))
             this.fetch()
           } else {
             this.$router.put({ path: '/user/', props: { id: response.data.id, isCreated: true } })
           }
-        } else {
+        } else if (response.status === 409) {
+            this.eventMessages.push({ message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.user.label')]), color: 'error' })
+        } else if (response?.status === 404) {
           this.notFound = true
+        } else {
+          this.eventMessages.push({ message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')]), color: 'error' })
         }
       },
       pageBack () {
         this.$router.go(-1)
       },
       async fetch () {
-        const {
-          data: {
-            data: {
-              username,
-              email,
-              accountLocked,
-              enabled,
-              passwordExpired,
-              roles,
-              version,
-              curatoryGroups,
-              _links: {
-                update: { href: updateUserUrl },
-              },
-              // organisation
-            }
-          }
-        } = await this.catchError({
+        const response = await this.catchError({
           promise: userServices.get(this.id, this.cancelToken.token),
           instance: this
         })
 
-        this.addedRoles = []
-        this.username = username
-        this.password = undefined
-        this.email = email
-        this.version = version
-        this.accountLocked = accountLocked
-        this.enabled = enabled
-        this.passwordExpired = passwordExpired
-        this.allRoles = roles.map(({ authority, ...rest }) => ({ ...rest, name: authority }))
-        this.updateUserUrl = updateUserUrl
-        this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
-        // this.organisation = organisation
+        if (response?.status === 200) {
+          this.addedRoles = []
+          this.username = username
+          this.password = undefined
+          this.email = email
+          this.version = version
+          this.accountLocked = accountLocked
+          this.enabled = enabled
+          this.passwordExpired = passwordExpired
+          this.allRoles = roles.map(({ authority, ...rest }) => ({ ...rest, name: authority }))
+          this.updateUserUrl = updateUserUrl
+          this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
+          // this.organisation = organisation
+        }
       },
       confirmDeleteRole ({ id, value }) {
         this.actionToConfirm = '_deleteRole'

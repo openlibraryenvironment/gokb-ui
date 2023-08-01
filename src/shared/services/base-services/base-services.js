@@ -27,31 +27,22 @@ const api = (http, log, tokenModel, accountModel) => ({
 
     if (!!headers[HEADER_AUTHORIZATION_KEY] && !tokenModel.getToken()) {
       accountModel.default.logout()
-    }
+    } else if (!!headers[HEADER_AUTHORIZATION_KEY] && tokenModel.isExpired()) {
+      if (tokenModel.isPersistent()) {
+        const refresh_resp = this.refreshAuth()
 
-    let response = http.request(parameters)
-
-    if (response.status === 401) {
-      if (!!headers[HEADER_AUTHORIZATION_KEY] && tokenModel.isExpired()) {
-        // Try refreshing the token once
-        if (tokenModel.isPersistent()) {
-
-          const refresh_resp = this.refreshAuth()
-
-          if (refresh_resp?.status === 200) {
-            response = http.request(parameters)
-          } else {
-            accountModel.default.logout()
-          }
+        if (refresh_resp?.status === 200) {
         } else {
           accountModel.default.logout()
         }
-      } else if (!response.data) {
+      } else {
         accountModel.default.logout()
       }
     } else if (tokenModel.needsRefresh()) {
       this.refreshAuth()
     }
+
+    let response = http.request(parameters)
 
     return response
   },

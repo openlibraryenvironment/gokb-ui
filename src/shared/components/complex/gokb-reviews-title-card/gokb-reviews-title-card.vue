@@ -425,12 +425,12 @@
       roleColor () {
         if (this.role == "reviewedComponent") {
           if (this.mergeEnabled && this.originalRecord.type !== 'TIPP' && this.isOtherCardSelected) {
-            return "#f2d2d2"
+            return (this.$vuetify.theme.dark ? "#670000" : "#f2d2d2")
           }
           return null
         }
         if (this.role == "candidateComponent" && this.isCardSelected) {
-          return "#d2f2d2"
+          return (this.$vuetify.theme.dark ? "#1D5D0D" : "#d2f2d2")
         }
       },
       typeLabel () {
@@ -514,6 +514,9 @@
       },
       isDeleted () {
         return this.status === 'Deleted'
+      },
+      darkMode () {
+        return this.$vuetify.theme.dark
       }
     },
     watch: {
