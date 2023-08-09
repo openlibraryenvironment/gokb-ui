@@ -68,12 +68,12 @@
         <template v-for="button of resultActionButtons">
           <component
             :is="button.component"
-            v-if="button.component"
+            v-if="!!button.component"
             :key="button.component.name"
             v-bind="button.properties"
           />
           <gokb-button
-            v-else-if="!isReadonly"
+            v-else-if="!isReadonly || button.public"
             :key="button.label"
             class="ms-4"
             :icon-id="button.icon"
