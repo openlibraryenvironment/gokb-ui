@@ -51,6 +51,7 @@
           {
             label: this.$i18n.t('btn.export'),
             disabled: 'isSearchExportDisabled',
+            public: true,
             action: 'exportSearchResults',
             loading: this.exportLoading
           },
