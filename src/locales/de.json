@@ -407,6 +407,7 @@
       },
       "skipped": {
         "noChange": "Die KBART-Prozessierung wurde übersprungen, da sich die Datei im Vergleich zum letzten Import nicht verändert hat.",
+        "sameFile": "Die KBART-Prozessierung wurde übersprungen, da sich die Datei im Vergleich zum letzten Import nicht verändert hat.",
         "noFile": "Die KBART-Prozessierung wurde übersprungen, da keine aktuelle Datei für die angegebene URL gefunden wurde."
       }
     },

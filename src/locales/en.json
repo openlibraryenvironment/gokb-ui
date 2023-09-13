@@ -407,6 +407,7 @@
       },
       "skipped": {
         "noChange": "Automated KBART processing was skipped, since the same file was already processed last time.",
+        "sameFile": "Automated KBART processing was skipped, since the same file was already processed last time.",
         "noFile": "Automated KBART processing was skipped, since no current file was found for this url."
       }
     },

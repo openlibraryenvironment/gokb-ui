@@ -25,24 +25,47 @@ const api = (http, log, tokenModel, accountModel) => ({
       cancelToken
     }
 
-    if (!!headers[HEADER_AUTHORIZATION_KEY] && !tokenModel.getToken()) {
-      accountModel.default.logout()
-    } else if (!!headers[HEADER_AUTHORIZATION_KEY] && tokenModel.isExpired()) {
-      if (tokenModel.isPersistent()) {
-        const refresh_resp = this.refreshAuth()
+    let response
+    let failedInit = false
 
-        if (refresh_resp?.status === 200) {
-        } else {
-          accountModel.default.logout()
-        }
-      } else {
-        accountModel.default.logout()
+    if (!!tokenModel.getToken() && !headers[HEADER_AUTHORIZATION_KEY]) {
+      log.debug("Token exists, but header is missing .. possibly getting refreshed right now.")
+      // refresh in progress?
+      try {
+        response = http.request(parameters)
       }
-    } else if (tokenModel.needsRefresh()) {
-      this.refreshAuth()
+      catch (e) {
+        failedInit = true
+      }
     }
 
-    let response = http.request(parameters)
+    if (!response || failedInit) {
+      if (!!headers[HEADER_AUTHORIZATION_KEY] && !tokenModel.getToken()) {
+        log.debug("Existing header but no token.. logging out")
+        accountModel.default.logout()
+      } else if (!!tokenModel.getToken()) {
+        if (!!headers[HEADER_AUTHORIZATION_KEY] && tokenModel.isExpired()) {
+          if (tokenModel.isPersistent()) {
+            log.debug("Persistent token expired, refreshing ..")
+            const refresh_resp = this.refreshAuth()
+
+            if (refresh_resp?.status === 200) {
+            } else {
+              log.debug("Unable to refresh token .. logging out")
+              accountModel.default.logout()
+            }
+          } else {
+            log.debug("Non-persistent token expired .. logging out")
+            accountModel.default.logout()
+          }
+        } else if (tokenModel.needsRefresh()) {
+          log.debug("Refreshing token ")
+          this.refreshAuth()
+        }
+      }
+
+      response = http.request(parameters)
+    }
 
     return response
   },

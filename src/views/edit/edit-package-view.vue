@@ -1092,7 +1092,7 @@
                 this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.processing', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
               } else if (sourceUpdateResult.status >= 500) {
                 this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.unknown', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
-              } else if (sourceUpdateResult.data?.result === 'SKIPPED') {
+              } else if (sourceUpdateResult.data?.status === 'SKIPPED' || sourceUpdateResult.data?.result === 'SKIPPED') {
                 this.eventMessages.push({ message: this.$i18n.t(sourceUpdateResult.data.messageCode), color: 'warn', timeout: -1 })
               }
 
@@ -1261,9 +1261,9 @@
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
                 this.eventMessages.push({ message: this.$i18n.t(jobResult.data.messageCode || 'kbart.transmission.error.processing'), color: 'error', importResult: true })
-              } else if (!!jobResult.data.job_result?.badrows) {
+              } else if (!!jobResult.data.job_result?.badrows || jobResult.data.job_result.result === 'SKIPPED') {
                 jobInfo.result = 'warn'
-                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.warn.skipped'), color: 'warn', importResult: true })
+                this.eventMessages.push({ message: this.$i18n.t(jobResult.data.job_result?.messageCode || 'kbart.transmission.warn.skipped'), color: 'warn', importResult: true })
 
                 if (jobResult.data.job_result.matchingJob) {
                   this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
@@ -1302,7 +1302,7 @@
 
         while (!finished) {
           const jobResult = await this.catchError({
-            promise: jobServices.get(jobId, false, this.cancelToken.token),
+            promise: jobServices.get(jobId, false, this.cancelToken?.token),
             instance: this
           })
 
