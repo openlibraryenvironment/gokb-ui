@@ -1443,6 +1443,9 @@
         },
         "Provider": {
           "label": "Anbieter"
+        },
+        "Konsortium": {
+          "label": "Konsortium"
         }
       }
     },
