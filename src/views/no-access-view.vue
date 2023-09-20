@@ -18,7 +18,7 @@
           align="center"
           justify="center"
         >
-          <h1>{{ $t('default.401.title') }}</h1>
+          <h1 id="title-no-access">{{ $t('default.401.title') }}</h1>
         </v-row>
         <v-row
           align="center"

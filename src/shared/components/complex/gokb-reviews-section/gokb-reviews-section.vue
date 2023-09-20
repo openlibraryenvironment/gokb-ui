@@ -189,6 +189,7 @@
         expanded: true,
         loading: false,
         selectedItems: [],
+        selectedItemsTotal: undefined,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         fetchTitleReviews: false,
@@ -217,7 +218,7 @@
         ]
       },
       bulkCloseLabel () {
-        return this.$i18n.t('btn.bulkCloseReview', [(this.allPagesSelected ? this.totalNumberOfItems : this.selectedItems.length)])
+        return this.$i18n.t('btn.bulkCloseReview', [(this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal)])
       },
       reviews () {
         const componentRoutes = {
@@ -381,6 +382,7 @@
           this.enableBulkCheck = false
         }
         this.allPagesSelected = false
+        this.selectedItemsTotal = length
       },
       fetchTitleReviews () {
         this.retrieveReviews()

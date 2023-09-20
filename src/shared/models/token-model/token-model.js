@@ -8,7 +8,7 @@ const api = (browserStorage) => {
 
   return {
     isPersistent () {
-      return localStorage.get(PERSISTENCE_KEY) === "true"
+      return localStorage.get(PERSISTENCE_KEY, true) === "true"
     },
     removeToken () {
       localStorage.remove(TOKEN_KEY)
@@ -32,7 +32,7 @@ const api = (browserStorage) => {
       localStorage.set(TOKEN_KEY, token)
       localStorage.set(REFRESH_KEY, refresh)
       localStorage.set(EXPIRATION_KEY, Date.now() + lifetime*1000)
-      localStorage.set(PERSISTENCE_KEY, persistent)
+      localStorage.set(PERSISTENCE_KEY, persistent, true)
     },
   }
 }

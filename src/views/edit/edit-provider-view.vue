@@ -53,7 +53,7 @@
         <v-col cols="4">
           <gokb-text-field
             v-model="providerObject.homepage"
-            :label="$t('component.provider.homepage')"
+            :label="$t('component.provider.homepage.label')"
             :disabled="isReadonly"
           />
         </v-col>
@@ -62,7 +62,7 @@
             v-model="providerObject.titleNamespace"
             target-type="Title"
             :readonly="isReadonly"
-            :label="$t('component.provider.titleNamespace')"
+            :label="$t('component.provider.titleNamespace.label')"
           />
         </v-col>
         <v-col cols="3" xl="2">
@@ -70,7 +70,7 @@
             v-model="providerObject.packageNamespace"
             target-type="Package"
             :readonly="isReadonly"
-            :label="$t('component.provider.packageNamespace')"
+            :label="$t('component.provider.packageNamespace.label')"
           />
         </v-col>
         <v-col lg="2" />

@@ -927,10 +927,18 @@
     },
     "provider": {
       "label": "Provider | Providers",
-      "homepage": "Website",
-      "titleNamespace": "Title Namespace",
-      "packageNamespace": "Package Namespace",
-      "technicalSupport": "Technical Support",
+      "homepage": {
+        "label": "Website"
+      },
+      "titleNamespace": {
+        "label": "Title Namespace"
+      },
+      "packageNamespace": {
+        "label": "Package Namespace"
+      },
+      "technicalSupport": {
+        "label": "Technical Support"
+      },
       "preferredShortname": {
         "label": "Preferred Short Name"
       }

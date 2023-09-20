@@ -7,11 +7,13 @@
   >
     <gokb-username-field
       v-model="username"
+      name="username"
       :label="$t('component.user.username')"
       :rules="rules"
     />
     <gokb-password-field
       v-model="password"
+      name="password"
       :label="$t('component.user.password')"
       :rules="rules"
     />

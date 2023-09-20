@@ -11,6 +11,7 @@
         >
           <template #activator="{ on: menuOn }">
             <v-btn
+              id="user-btn"
               icon
               v-on="menuOn"
             >
@@ -39,6 +40,7 @@
               <v-list-item
                 v-for="item in menu.items"
                 :key="item.title"
+                :id="item.id"
                 @click="execute(item)"
               >
                 <v-list-item-avatar>
@@ -105,12 +107,14 @@
                   title: this.$i18n.t('profile.label'),
                   icon: 'mdi-face-man-profile',
                   path: PROFILE_ROUTE,
+                  id: 'user-menu-profile'
                 },
                 {
                   title: this.$i18n.t('popups.logout.label'),
                   icon: 'mdi-logout-variant',
                   method: 'logout',
                   path: HOME_ROUTE,
+                  id: 'user-menu-logout'
                 },
               ],
               last: true
@@ -125,12 +129,14 @@
               {
                 title: this.$i18n.t('popups.login.label'),
                 icon: 'mdi-login-variant',
-                method: 'login'
+                method: 'login',
+                id: 'user-menu-login'
               },
               {
                 title: this.$i18n.t('register.register'),
                 icon: 'mdi-account-plus',
-                method: 'register'
+                method: 'register',
+                id: 'user-menu-register'
               },
             ],
             last: true,

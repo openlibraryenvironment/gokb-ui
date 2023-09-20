@@ -449,7 +449,7 @@
     }
   },
   "register": {
-    "register": "Registrierung",
+    "register": "Registrieren",
     "confirmPass": "Passwort (Bestätigung)"
   },
   "success": {
@@ -927,10 +927,18 @@
     },
     "provider": {
       "label": "Anbieter | Anbieter",
-      "homepage": "Webseite",
-      "titleNamespace": "Titel-Namensraum",
-      "packageNamespace": "Paket-Namensraum",
-      "technicalSupport": "Technischer Support",
+      "homepage": {
+        "label": "Webseite"
+      },
+      "titleNamespace": {
+        "label": "Titel-Namensraum"
+      },
+      "packageNamespace": {
+        "label": "Paket-Namensraum"
+      },
+      "technicalSupport": {
+        "label": "Technischer Support"
+      },
       "preferredShortname": {
         "label": "Empfohlene Kurzform"
       }

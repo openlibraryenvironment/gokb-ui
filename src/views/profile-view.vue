@@ -13,6 +13,7 @@
     </span>
     <gokb-section :title="$t('component.general.general')">
       <gokb-email-field
+        id="email"
         v-model="email"
         :label="$t('component.user.email')"
         :disabled="!updateProfileAvailable"
@@ -21,6 +22,7 @@
     </gokb-section>
     <gokb-section :title="$t('component.user.password')">
       <gokb-password-field
+        id="current-password"
         ref="passwordField"
         v-model="origpass"
         :disabled="!updateProfileAvailable"
@@ -28,6 +30,7 @@
         :rules="[isOldPasswordEmpty, isPasswordWrong]"
       />
       <gokb-password-field
+        id="new-password"
         ref="newpass"
         v-model="newpass"
         :disabled="!updateProfileAvailable"
@@ -36,6 +39,7 @@
         :rules="[checkNewPassword, isPasswordEmpty, isPasswordConfirmed]"
       />
       <gokb-password-field
+        id="repeat-password"
         ref="repeatpass"
         v-model="repeatpass"
         :disabled="!updateProfileAvailable"
@@ -148,12 +152,17 @@
       loggedIn (acc) {
         if (acc) {
           this.fetchProfile()
+
+          document.title = this.$i18n.t('route.profile')
         }
       }
     },
     async activated () {
       if (account.loggedIn()) {
         this.fetchProfile()
+      }
+      else {
+        document.title = this.$i18n.t('route.profile') + ' - ' + this.$i18n.t('default.401.title')
       }
     },
     methods: {
@@ -200,6 +209,7 @@
           promise: profileServices.get(this.cancelToken.token),
           instance: this
         })
+
         this.updateProfileUrl = updateProfileUrl
         this.deleteProfileUrl = deleteProfileUrl
         this.email = email
@@ -221,6 +231,9 @@
         const message = result?.data?.errors ? Object.values(result.data.errors)
           .reduce((result, { message }) => `${result} ${message}`, '') : undefined
         this.passwordWrongMessage = message
+        this.origpass = undefined
+        this.newpass = undefined
+        this.repeatpass = undefined
 
         if (result.status === 200) {
           this.successMsgShown = true

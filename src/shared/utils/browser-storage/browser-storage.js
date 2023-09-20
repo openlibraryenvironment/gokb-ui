@@ -3,21 +3,22 @@ const api = (log, crypt) => {
     remove (key) {
       environment.removeItem(key)
     },
-    get (key) {
+    get (key, isClear) {
       const value = environment.getItem(key)
       if (value === undefined) {
         return undefined
       }
       try {
-        return JSON.parse(crypt.decode(value))
+        return JSON.parse(isClear ? value : crypt.decode(value))
       } catch (exception) {
         log.info(exception)
         // old format of data or somebody has changed it manually, so not available
         // fail silently not giving a hint
       }
     },
-    set (key, value) {
-      environment.setItem(key, crypt.encode(JSON.stringify(value)))
+
+    set (key, value, clear) {
+      environment.setItem(key, clear ? JSON.stringify(value) : crypt.encode(JSON.stringify(value)))
     },
   })
 }

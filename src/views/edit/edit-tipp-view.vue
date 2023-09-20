@@ -384,7 +384,7 @@
                 </v-col>
               </v-row>
               <v-row dense>
-                <v-col>
+                <v-col cols="6">
                   <gokb-text-field
                     v-model="importId"
                     disabled

@@ -276,6 +276,9 @@
         await Promise.all(this.selectedItems.map(({ deleteUrl }) =>
           this._executeDeleteItemService(deleteUrl)
         ))
+
+        await this.timeout(1000)
+
         this.resultPaginate(this.resultOptions.page)
       },
       confirmRetireItem ({ updateUrl }) {
@@ -286,13 +289,18 @@
       },
       async retireItem (updateUrl) {
         await this._executeRetireItemService(updateUrl)
-        this.resultPaginate(this.resultOptions.page)
+        this.resultPaginate(this.resultOptions)
       },
       async _retireSelectedItems () {
         await Promise.all(this.selectedItems.map(({ updateUrl }) =>
           this._executeRetireItemService(updateUrl)
         ))
-        this.resultPaginate(this.resultOptions.page)
+
+        this.loading = true
+        await this.timeout(1000)
+        this.loading = false
+
+        this.resultPaginate(this.resultOptions)
       },
       _executeDeleteItemService (deleteUrl) {
         return this.catchError({
@@ -326,7 +334,7 @@
         }) => ({
           id: uuid,
           name,
-          lastUpdated: lastUpdatedDisplay ? new Date(lastUpdatedDisplay).toLocaleString('sv').substr(0, 10) : undefined,
+          lastUpdated: lastUpdatedDisplay ? new Date(lastUpdatedDisplay).toLocaleString('sv').substring(0, 10) : undefined,
           status
         }))
       },
@@ -426,6 +434,9 @@
       },
       editItem (value) {
         this.search()
+      },
+      timeout(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
       }
     }
   }

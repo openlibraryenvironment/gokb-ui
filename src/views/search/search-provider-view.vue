@@ -12,6 +12,7 @@
         searchFilters: {
           label: undefined,
           identifierValue: undefined,
+          titleNamespace: undefined,
           curatoryGroupIds: undefined
         }
       }
@@ -89,7 +90,16 @@
                 width: '100%',
                 messagePath: 'component.general.status'
               }
-            }
+            },
+            {
+              type: 'GokbNamespaceField',
+              name: 'titleNamespace',
+              value: 'titleNamespaceId',
+              properties: {
+                label: this.$i18n.t('component.provider.titleNamespace.label'),
+                returnObject: false
+              }
+            },
           ],
         ]
       },
