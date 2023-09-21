@@ -93,6 +93,7 @@
         @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
       />
       <gokb-table
+        ref="rtable"
         :headers="resultHeaders"
         :items="resultItems"
         :editable="!isReadonly"
@@ -379,15 +380,16 @@
             this.requestOptions.page = 1
           }
 
-          this.selectedItems = []
           this.totalNumberOfItems = _pagination.total
           this.resultItems = this._transformForTable(data)
         }
         else {
-          this.selectedItems = []
           this.totalNumberOfItems = 0
           this.eventMessages.push({ message: this.$i18n.t(result?.data?.messageCode || 'error.search.unknown'), color: 'error' })
         }
+
+        this.selectedItems = []
+        this.$refs.rtable.clearSelection()
 
         this.loading = false
       },

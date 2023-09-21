@@ -1058,7 +1058,8 @@
           "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
           "closed": "Prüfanfrage als erledigt markiert",
-          "closedBulk": "Prüfanfrage als erledigt markiert | {0} Prüfanfragen als erledigt markiert"
+          "closedBulk": "Prüfanfrage als erledigt markiert | {0} Prüfanfragen als erledigt markiert",
+          "reopened": "Die Prüfanfrage wurde erneut geöffnet."
         },
         "confirm": {
           "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage als erledigt markieren wollen.",

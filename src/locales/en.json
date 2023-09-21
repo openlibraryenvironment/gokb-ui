@@ -1058,7 +1058,8 @@
           "escalated" : "The request has been successfully escalated.",
           "deescalated" : "The request has been successfully deescalated.",
           "closed": "Request marked as finished",
-          "closedBulk": "Request marked as finished | {0} requests marked as finished"
+          "closedBulk": "Request marked as finished | {0} requests marked as finished",
+          "reopened": "Request has been reopened."
         },
         "confirm": {
           "close": "Please confirm marking this review as finished.",

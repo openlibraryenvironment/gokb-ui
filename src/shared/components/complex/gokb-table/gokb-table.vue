@@ -7,6 +7,7 @@
       {{ label }}
     </div>
     <v-data-table
+      ref="dtable"
       v-model="localSelectedItems"
       :headers="localHeaders"
       :items="items"
@@ -360,6 +361,9 @@
       },
       checkEditItemPopupVisible (oid) {
         return this.editItemPopupVisible === oid
+      },
+      clearSelection () {
+        this.$refs.dtable.selection = {}
       }
     }
   }

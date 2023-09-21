@@ -106,6 +106,7 @@
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
     <gokb-table
+      ref="rtable"
       :items="reviews"
       :headers="localizedReviewHeaders"
       :editable="showEditActions"
@@ -189,7 +190,7 @@
         expanded: true,
         loading: false,
         selectedItems: [],
-        selectedItemsTotal: undefined,
+        selectedItemsTotal: 0,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         fetchTitleReviews: false,
@@ -208,7 +209,7 @@
     },
     computed: {
       isDeleteSelectedDisabled () {
-        return !this.selectedItems.length
+        return this.selectedItemsTotal === 0
       },
       reviewStates () {
         return [
@@ -375,14 +376,18 @@
         },
         deep: true
       },
-      'selectedItems.length' (length) {
-        if (length >= 10) {
-          this.enableBulkCheck = true
-        } else {
-          this.enableBulkCheck = false
-        }
-        this.allPagesSelected = false
-        this.selectedItemsTotal = length
+      selectedItems: {
+        handler (items) {
+          if (items.length >= 10) {
+            this.enableBulkCheck = true
+          } else {
+            this.enableBulkCheck = false
+          }
+          this.allPagesSelected = false
+          console.log("new length: " + items.length)
+          this.selectedItemsTotal = items.length
+        },
+        deep: true
       },
       fetchTitleReviews () {
         this.retrieveReviews()
@@ -393,7 +398,9 @@
         this[actionMethodName](actionMethodParameter)
       },
       async retrieveReviews () {
-        this.selectedItems = []
+        this.selectedItems.length = 0
+        this.selectedItemsTotal = 0
+        this.$refs.rtable.clearSelection()
         this.loading = true
 
         const searchParams = {}
