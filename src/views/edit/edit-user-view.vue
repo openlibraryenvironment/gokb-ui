@@ -330,16 +330,16 @@
 
         if (response?.status === 200) {
           this.addedRoles = []
-          this.username = username
+          this.username = response.data.data.username
           this.password = undefined
-          this.email = email
-          this.version = version
-          this.accountLocked = accountLocked
-          this.enabled = enabled
-          this.passwordExpired = passwordExpired
-          this.allRoles = roles.map(({ authority, ...rest }) => ({ ...rest, name: authority }))
-          this.updateUserUrl = updateUserUrl
-          this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
+          this.email = response.data.data.email
+          this.version = response.data.data.version
+          this.accountLocked = response.data.data.accountLocked
+          this.enabled = response.data.data.enabled
+          this.passwordExpired = response.data.data.passwordExpired
+          this.allRoles = response.data.data.roles.map(({ authority, ...rest }) => ({ ...rest, name: authority }))
+          this.updateUserUrl = response.data.data.updateUserUrl
+          this.allCuratoryGroups = response.data.data.curatoryGroups.map(group => ({ ...group, isDeletable: true }))
           // this.organisation = organisation
         }
       },
