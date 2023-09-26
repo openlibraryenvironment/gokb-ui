@@ -440,6 +440,7 @@
         v-if="isEdit"
         class="ml-6 btn-default"
         :to="{ name: '/package-title', params: { id: id} }"
+        target="_blank"
       >
         {{ $t('component.tipp.toFullView') }}
       </v-btn>

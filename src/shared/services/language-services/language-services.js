@@ -29,8 +29,11 @@ const getLang = (key, value, localeLang) => {
 
 const api = (baseServices) => ({
   async fetchLanguagesList (cancelToken) {
-    var allLans = await requestLanguages(baseServices, cancelToken)
-    languagesModel.setLanguages(allLans.data)
+    let response = await requestLanguages(baseServices, cancelToken)
+
+    if (response?.status === 200) {
+      languagesModel.setLanguages(response?.data)
+    }
   },
   getLanguages (locale) {
     var result = []

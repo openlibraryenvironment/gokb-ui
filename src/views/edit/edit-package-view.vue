@@ -1192,7 +1192,7 @@
 
           if (result?.status === 200) {
             this.mapRecord(result.data)
-          } else if (result.status === 404) {
+          } else if (result?.status === 404) {
             this.notFound = true
           } else {
             this.$router.push({ name: '/error' })

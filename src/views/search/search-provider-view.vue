@@ -91,15 +91,15 @@
                 messagePath: 'component.general.status'
               }
             },
-            {
-              type: 'GokbNamespaceField',
-              name: 'titleNamespace',
-              value: 'titleNamespaceId',
-              properties: {
-                label: this.$i18n.t('component.provider.titleNamespace.label'),
-                returnObject: false
-              }
-            },
+            // {
+            //   type: 'GokbNamespaceField',
+            //   name: 'titleNamespace',
+            //   value: 'titleNamespaceId',
+            //   properties: {
+            //     label: this.$i18n.t('component.provider.titleNamespace.label'),
+            //     returnObject: false
+            //   }
+            // },
           ],
         ]
       },

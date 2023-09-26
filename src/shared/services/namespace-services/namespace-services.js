@@ -11,9 +11,12 @@ const requestNamespaces = (baseServices, cancelToken) => {
 
 const api = (baseServices) => ({
   async fetchNamespacesList (cancelToken) {
-    var allNss = await requestNamespaces(baseServices, cancelToken)
-    for (const ns of allNss.data?.data) {
-      namespacesModel.addNamespace(ns)
+    let response = await requestNamespaces(baseServices, cancelToken)
+
+    if (response?.status === 200) {
+      for (const ns of response?.data?.data) {
+        namespacesModel.addNamespace(ns)
+      }
     }
   },
   getBaseurl(nsVal) {

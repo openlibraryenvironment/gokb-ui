@@ -17,10 +17,10 @@ const api = (browserStorage) => {
       localStorage.remove(PERSISTENCE_KEY)
     },
     needsRefresh () {
-      return !!localStorage.get(EXPIRATION_KEY) && !!this.getToken() && (Date.now() > (parseInt(localStorage.get(EXPIRATION_KEY) - 300000)))
+      return !!localStorage.get(EXPIRATION_KEY, true) && !!this.getToken() && !/^\d+$/.test(localStorage.get(EXPIRATION_KEY, true)) && (Date.now() > (parseInt(localStorage.get(EXPIRATION_KEY, true) - 300000)))
     },
     isExpired () {
-      return !localStorage.get(EXPIRATION_KEY) || (!!this.getToken() && Date.now() > parseInt(localStorage.get(EXPIRATION_KEY)))
+      return !localStorage.get(EXPIRATION_KEY, true) || !/^\d+$/.test(localStorage.get(EXPIRATION_KEY, true)) || (!!this.getToken() && Date.now() > parseInt(localStorage.get(EXPIRATION_KEY, true)))
     },
     getToken () {
       return localStorage.get(TOKEN_KEY)
@@ -31,7 +31,7 @@ const api = (browserStorage) => {
     setToken (token, refresh, lifetime, persistent) {
       localStorage.set(TOKEN_KEY, token)
       localStorage.set(REFRESH_KEY, refresh)
-      localStorage.set(EXPIRATION_KEY, Date.now() + lifetime*1000)
+      localStorage.set(EXPIRATION_KEY, Date.now() + lifetime*1000, true)
       localStorage.set(PERSISTENCE_KEY, persistent, true)
     },
   }

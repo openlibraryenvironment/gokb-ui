@@ -384,7 +384,6 @@
             this.enableBulkCheck = false
           }
           this.allPagesSelected = false
-          console.log("new length: " + items.length)
           this.selectedItemsTotal = items.length
         },
         deep: true

@@ -16,8 +16,8 @@ const api = (http, log, tokenModel, accountModel) => ({
     window.localStorage.setItem('locale', lang)
   },
 
-  request ({ method, url, data }, cancelToken) {
-    const parameters = {
+  async request ({ method, url, data }, cancelToken) {
+    let parameters = {
       method,
       url,
       headers,
@@ -26,42 +26,40 @@ const api = (http, log, tokenModel, accountModel) => ({
     }
 
     let response
-    let failedInit = false
 
-    if (!!tokenModel.getToken() && !headers[HEADER_AUTHORIZATION_KEY]) {
-      log.debug("Token exists, but header is missing .. possibly getting refreshed right now.")
-      // refresh in progress?
-      try {
-        response = http.request(parameters)
+    if (!!tokenModel.getToken()) {
+      if (!headers[HEADER_AUTHORIZATION_KEY]) {
+        log.error("Token exists but no header is defined!")
+        this.setAuthorization('Bearer', tokenModel.getToken())
       }
-      catch (e) {
-        failedInit = true
-      }
-    }
 
-    if (!response || failedInit) {
-      if (!!headers[HEADER_AUTHORIZATION_KEY] && !tokenModel.getToken()) {
-        log.debug("Existing header but no token.. logging out")
-        accountModel.default.logout()
-      } else if (!!tokenModel.getToken()) {
-        if (!!headers[HEADER_AUTHORIZATION_KEY] && tokenModel.isExpired()) {
-          if (tokenModel.isPersistent()) {
-            log.debug("Persistent token expired, refreshing ..")
-            const refresh_resp = this.refreshAuth()
+      if (tokenModel.isExpired()) {
+        if (tokenModel.isPersistent()) {
+          log.debug("Persistent token expired, refreshing ..")
+          const refresh_resp = await this.refreshAuth()
 
-            if (refresh_resp?.status === 200) {
-            } else {
-              log.debug("Unable to refresh token .. logging out")
-              accountModel.default.logout()
-            }
+          if (refresh_resp?.status === 200) {
           } else {
-            log.debug("Non-persistent token expired .. logging out")
+            log.debug("Unable to refresh token .. logging out")
             accountModel.default.logout()
           }
-        } else if (tokenModel.needsRefresh()) {
-          log.debug("Refreshing token ")
-          this.refreshAuth()
+        } else {
+          log.debug("Non-persistent token expired .. logging out")
+          accountModel.default.logout()
         }
+      } else if (tokenModel.needsRefresh()) {
+        log.debug("Refreshing token ..")
+        await this.refreshAuth()
+      }
+
+      response = await http.request(parameters).catch(e => {
+        log.debug(e.response)
+      })
+    }
+    else {
+      if (!!headers[HEADER_AUTHORIZATION_KEY]) {
+        log.debug("No token but remaining header to delete")
+        accountModel.default.logout()
       }
 
       response = http.request(parameters)
@@ -72,7 +70,6 @@ const api = (http, log, tokenModel, accountModel) => ({
 
   async refreshAuth (cancelToken) {
     this.deleteAuthorization()
-    let response
 
     const form_data = {
       grant_type: 'refresh_token',
@@ -87,14 +84,12 @@ const api = (http, log, tokenModel, accountModel) => ({
       cancelToken
     }
 
-    try {
-      response = await http.request(refresh_pars)
-    }
-    catch (e) {
+    let response = await http.request(refresh_pars).catch(e => {
       log.debug("Unable to refresh login!")
-    }
+    })
 
     if (response?.status === 200) {
+      log.debug("Refreshed token!")
       tokenModel.setToken(response.data.access_token, response.data.refresh_token, response.data.expires_in, tokenModel.isPersistent())
       this.setAuthorization(response.data.token_type, response.data.access_token)
       accountModel.default.refresh(response.data)

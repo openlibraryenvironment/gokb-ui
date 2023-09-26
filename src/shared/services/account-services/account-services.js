@@ -4,6 +4,7 @@ const REGISTER_URL = '/rest/register'
 const api = (assert, log, tokenModel, baseServices, profileServices) => ({
 
   async initialize (cancelToken) {
+    log.debug("initializing ..")
     const token = tokenModel.getToken()
 
     if (token) { // we have a token, try to use it
@@ -23,7 +24,8 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
   async login ({ username, password, save }, cancelToken) {
     assert.isDefined(username && password)
     // remove old authorization for requests
-    baseServices.deleteAuthorization()
+    this.logout()
+
     const { data: result } = await baseServices.request({
       initiator: this.login.name,
       method: 'POST',
@@ -32,7 +34,7 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
       cancelToken
     })
     log.debug('logged in')
-    tokenModel.setToken(result.access_token, result.refresh_token, result.expires_in, save)
+    tokenModel.setToken(result.access_token, result.refresh_token, result.expires_in, !!save)
     baseServices.setAuthorization(result.token_type, result.access_token)
     return { roles: result.roles }
   },
@@ -40,9 +42,9 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
   logout () {
     if (!!tokenModel.getToken()) {
       tokenModel.removeToken()
+      log.debug('logged out')
     }
     baseServices.deleteAuthorization()
-    log.debug('logged out')
   },
 
   register ({ username, email, password, password2 }) {

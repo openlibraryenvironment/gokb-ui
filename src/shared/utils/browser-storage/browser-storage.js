@@ -9,7 +9,7 @@ const api = (log, crypt) => {
         return undefined
       }
       try {
-        return JSON.parse(isClear ? value : crypt.decode(value))
+        return (isClear ? value : JSON.parse(crypt.decode(value)))
       } catch (exception) {
         log.info(exception)
         // old format of data or somebody has changed it manually, so not available
