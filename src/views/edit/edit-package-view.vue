@@ -1298,6 +1298,7 @@
           this.allNames = { name: undefined, alts: [] }
         }
         this.kbart = undefined
+        this.eventMessages = []
         this.reload(true)
       },
       async reload () {
@@ -1306,7 +1307,6 @@
             loading.startLoading()
           }
 
-          this.eventMessages = []
           this.errors = {}
           this.newTipps = []
           this.updateStepErrors()
