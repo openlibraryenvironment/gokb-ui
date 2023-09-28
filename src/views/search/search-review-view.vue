@@ -16,8 +16,14 @@
           name: undefined,
         },
         allStates: [
-          { name: this.$i18n.t(), id: 'Open' },
-          { name: this.$i18n.t(), id: 'Closed' }
+          {
+            name: this.$i18n.t(),
+            id: 'Open'
+          },
+          {
+            name: this.$i18n.t(),
+            id: 'Closed'
+          }
         ]
       }
     },
@@ -189,7 +195,10 @@
       },
       _confirmCloseSelectedItems () {
         this.actionToConfirm = '_closeSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.selectedItems.length, this.$i18n.tc('component.review.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.close.list',
+          vars: [this.selectedItems.length, this.$i18n.tc('component.review.label', this.selectedItems.length)]
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

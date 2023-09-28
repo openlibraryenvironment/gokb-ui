@@ -371,8 +371,6 @@
   import accountModel from '@/shared/models/account-model'
   import loading from '@/shared/models/loading'
   import VSnackbars from 'v-snackbars'
-  import { createCancelToken } from '@/shared/services/http'
-  import languageServices from '@/shared/services/language-services'
 
   export default {
     name: 'EditProviderView',
@@ -404,7 +402,10 @@
         allAlternateNames: [],
         allCuratoryGroups: [],
         packageCount: 0,
-        allNames: { name: undefined, alts: [] },
+        allNames: {
+          name: undefined,
+          alts: []
+        },
         allPlatforms: [],
         offices: [],
         errors: {},
@@ -476,11 +477,23 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name]), color: 'success' })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name]),
+            color: 'success',
+            timeout: 2000
+          })
         } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label')]), color: 'error', timeout: -1 })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label')]),
+            color: 'error',
+            timeout: -1
+          })
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name]), color: 'warning', timeout: -1 })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name]),
+            color: 'warning',
+            timeout: -1
+          })
         }
       }
 
@@ -501,11 +514,26 @@
           ...this.providerObject,
           name: this.allNames.name,
           version: this.version,
-          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
-          offices: this.offices.map(office => ({ ...office, id: (typeof office.id === 'number' ? office.id : null) })),
-          ids: this.providerObject.ids.map(id => ({ value: id.value, type: id.namespace })),
+          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
+            variantName,
+            locale,
+            variantType,
+            id: typeof id === 'number' ? id : null
+          })),
+          offices: this.offices.map(office => ({
+            ...office,
+            id: (typeof office.id === 'number' ? office.id : null)
+          })),
+          ids: this.providerObject.ids.map(id => ({
+            value: id.value,
+            type: id.namespace
+          })),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
-          providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({ name, primaryUrl, id: typeof id === 'number' ? id : null })),
+          providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({
+            name,
+            primaryUrl,
+            id: typeof id === 'number' ? id : null
+          })),
           activeGroup: activeGroup
         }
         const response = await this.catchError({
@@ -515,18 +543,40 @@
         // todo: check error code
         if (response?.status < 400) {
           if (isUpdate) {
+            this.eventMessages.push({
+              message: this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.allNames.name]),
+              color: 'success',
+              timeout: 2000
+            })
             this.reload()
-            this.eventMessages.push({ message: this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.allNames.name]), color: 'success' })
           } else {
-            this.$router.push({ name: '/provider', params: { id: response.data?.id, initMessageCode: 'success.create' } })
+            this.$router.push({
+              name: '/provider',
+              params: {
+                id: response.data?.id,
+                initMessageCode: 'success.create'
+              }
+            })
           }
         } else {
           if (response.status === 409) {
-            this.eventMessages.push({ message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.provider.label')]), color: 'error' })
+            this.eventMessages.push({
+              message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.provider.label')]),
+              color: 'error',
+              timeout: -1
+            })
           } else if (response.status === 500) {
-            this.eventMessages.push({ message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.provider.label')]), color: 'error' })
+            this.eventMessages.push({
+              message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.provider.label')]),
+              color: 'error',
+              timeout: -1
+            })
           } else {
-            this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.provider.label')]), color: 'error' })
+            this.eventMessages.push({
+              message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.provider.label')]),
+              color: 'error',
+              timeout: -1
+            })
             this.errors = response.data.error
           }
         }
@@ -544,7 +594,10 @@
         this.allAlternateNames = []
         this.allCuratoryGroups = []
         this.packageCount = 0
-        this.allNames = { name: undefined, alts: [] }
+        this.allNames = {
+          name: undefined,
+          alts: []
+        }
         this.allPlatforms = []
         this.offices = []
         this.errors = {}
@@ -596,14 +649,38 @@
         this.updateUrl = data._links?.update?.href || null
         this.deleteUrl = data._links?.delete?.href || null
         this.providerObject.id = data.id
-        this.providerObject.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
-        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
-        this.allCuratoryGroups = data._embedded.curatoryGroups.map(group => ({ ...group, isDeletable: !!this.updateUrl }))
-        this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({ ...platform, updateUrl: platform._links.update.href, isDeletable: !!this.updateUrl }))
+        this.providerObject.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
+          id,
+          value,
+          namespace: namespace.value,
+          nslabel: namespace.name || namespace.value,
+          isDeletable: !!this.updateUrl
+        }))
+        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({
+          ...variantName,
+          isDeletable: !!this.updateUrl
+        }))
+        this.allCuratoryGroups = data._embedded.curatoryGroups.map(group => ({
+          ...group,
+          isDeletable: !!this.updateUrl
+        }))
+        this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({
+          ...platform,
+          updateUrl: platform._links.update.href,
+          isDeletable: !!this.updateUrl
+        }))
         this.providerObject.titleNamespace = data.titleNamespace
         this.providerObject.packageNamespace = data.packageNamespace
-        this.allNames = { name: data.name, alts: this.allAlternateNames }
-        this.offices = data._embedded.offices?.map(office => ({ ...office, typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined), localLanguage: (office.language?.value && office.language.value), isDeletable: !!this.updateUrl })) || []
+        this.allNames = {
+          name: data.name,
+          alts: this.allAlternateNames
+        }
+        this.offices = data._embedded.offices?.map(office => ({
+          ...office,
+          typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined),
+          localLanguage: (office.language?.value && office.language.value),
+          isDeletable: !!this.updateUrl
+        })) || []
         this.dateCreated = data.dateCreated
         this.lastUpdated = data.lastUpdated
         this.providerObject.status = data.status
@@ -613,7 +690,11 @@
         document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
 
         const pkgResult = await this.catchError({
-          promise: searchServices('rest/packages').search({ status: 'Current', provider: data.id, es: true }, this.cancelToken.token),
+          promise: searchServices('rest/packages').search({
+            status: 'Current',
+            provider: data.id,
+            es: true
+          }, this.cancelToken.token),
           instance: this
         })
 

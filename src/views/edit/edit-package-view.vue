@@ -18,7 +18,9 @@
         dismissible
       >
         {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
+          {{ $t('kbart.transmission.showResults') }}
+        </gokb-button>
       </v-alert>
     </span>
     <span v-if="importJob?.result === 'error'">
@@ -27,7 +29,9 @@
         dismissible
       >
         {{ $t('kbart.transmission.error.processing') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
+          {{ $t('kbart.transmission.showResults') }}
+        </gokb-button>
       </v-alert>
     </span>
     <span v-if="importJob?.result === 'warn'">
@@ -36,7 +40,9 @@
         dismissible
       >
         {{ $t('kbart.transmission.warn.skipped') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
+          {{ $t('kbart.transmission.showResults') }}
+        </gokb-button>
       </v-alert>
     </span>
     <span v-else-if="importJob?.result === 'info'">
@@ -62,7 +68,9 @@
         dismissible
       >
         {{ $t('kbart.titleMatch.success') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">
+          {{ $t('kbart.transmission.showResults') }}
+        </gokb-button>
       </v-alert>
     </span>
     <span v-if="matchingJob?.result === 'error'">
@@ -71,7 +79,9 @@
         dismissible
       >
         {{ $t(matchingJob.messageCode) }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">{{ $t('kbart.transmission.showResults') }}</gokb-button>
+        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">
+          {{ $t('kbart.transmission.showResults') }}
+        </gokb-button>
       </v-alert>
     </span>
     <span v-else-if="matchingJob?.result === 'info'">
@@ -776,7 +786,10 @@
         platformSelect: [],
         selectedTitles: [],
         allAlternateNames: [],
-        allNames: { name: undefined, alts: [] },
+        allNames: {
+          name: undefined,
+          alts: []
+        },
         titleCount: 0,
         maintenanceCycle: undefined,
         step3Error: false,
@@ -887,11 +900,23 @@
 
       if (!!this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success' })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]),
+            color: 'success',
+            timeout: 2000
+          })
         } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]),
+            color: 'error',
+            timeout: -1
+          })
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]), color: 'warning', timeout: -1 })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]),
+            color: 'warning',
+            timeout: -1
+          })
         }
       }
 
@@ -955,18 +980,31 @@
                     !!options.selectedNamespace &&
                     options.selectedNamespace.id != this.sourceItem.targetNamespace.id
         ) {
-          this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict'), color: 'warn', timeout: -1 })
+          this.eventMessages.push({
+            message: this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict'),
+            color: 'warn',
+            timeout: -1
+          })
         }
       },
       showSubmitPackageConfirm (form) {
         if (this.isValid) {
           if (this.kbart?.selectedFile) {
             let code = this.kbart.dryRun ? 'component.package.navigation.confirm.kbartDryRun.label' : 'component.package.navigation.confirm.kbartLocal.label'
-            this.submitConfirmationMessage = { text: code, vars: [this.allNames.name, this.kbart.selectedFile.name] }
+            this.submitConfirmationMessage = {
+              text: code,
+              vars: [this.allNames.name, this.kbart.selectedFile.name]
+            }
           } else if (this.urlUpdate) {
-            this.submitConfirmationMessage = { text: 'component.package.navigation.confirm.sourceUpdate.label', vars: [this.allNames.name, this.sourceItem.url] }
+            this.submitConfirmationMessage = {
+              text: 'component.package.navigation.confirm.sourceUpdate.label',
+              vars: [this.allNames.name, this.sourceItem.url]
+              }
           } else {
-            this.submitConfirmationMessage = { text: 'component.package.navigation.confirm.noTipps.label', vars: [this.allNames.name] }
+            this.submitConfirmationMessage = {
+              text: 'component.package.navigation.confirm.noTipps.label',
+              vars: [this.allNames.name]
+            }
           }
           this.showSubmitConfirm = true
         }
@@ -1017,12 +1055,25 @@
 
           const newPackage = {
             ...this.packageItem,
-            ...(this.newTipps.length > 0 ? { tipps: this.newTipps.map(tipp => ({ ...tipp, id: typeof id === 'number' ? id : null })) } : {}),
+            ...(this.newTipps.length > 0 ? {
+              tipps: this.newTipps.map(tipp => ({
+                ...tipp,
+                id: typeof id === 'number' ? id : null
+              }))
+            } : {}),
             name: this.allNames.name,
             version: this.version,
-            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
+            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
+              variantName,
+              locale,
+              variantType,
+              id: typeof id === 'number' ? id : null
+            })),
             curatoryGroups: this.allCuratoryGroups,
-            ids: this.packageItem.ids.map(id => ({ value: id.value, type: id.namespace })),
+            ids: this.packageItem.ids.map(id => ({
+              value: id.value,
+              type: id.namespace
+            })),
             breakable: utils.asYesNo(this.packageItem.breakable),
             consistent: utils.asYesNo(this.packageItem.consistent),
             fixed: utils.asYesNo(this.packageItem.fixed),
@@ -1059,23 +1110,46 @@
               this.kbart = undefined
 
               if (kbartResult.status === 403) {
-                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.denied'), color: 'error', timeout: -1 })
+                this.eventMessages.push({
+                  message: this.$i18n.t('kbart.transmission.error.denied'),
+                  color: 'error',
+                  timeout: -1
+                })
               } else if (kbartResult.status >= 400 && kbartResult.status < 500) {
-                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.processing'), color: 'error', timeout: -1 })
+                this.eventMessages.push({
+                  message: this.$i18n.t('kbart.transmission.error.processing'),
+                  color: 'error',
+                  timeout: -1
+                })
               } else if (kbartResult.status >= 500) {
-                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.unknown'), color: 'error', timeout: -1 })
+                this.eventMessages.push({
+                  message: this.$i18n.t('kbart.transmission.error.unknown'),
+                  color: 'error',
+                  timeout: -1
+                })
               }
 
               if (isUpdate) {
                 this.step = 1
-                this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success' })
+                this.eventMessages.push({
+                  message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
+                  color: 'success',
+                  timeout: 2000
+                })
                 this.reload()
 
                 if (kbartResult?.data?.jobId) {
                   this.loadImportJobStatus(kbartResult?.data?.jobId)
                 }
               } else {
-                this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartJob: kbartResult?.data?.jobId, initMessageCode: 'success.create' } })
+                this.$router.push({
+                  name: '/package',
+                  params: {
+                    id: this.packageItem.id,
+                    kbartJob: kbartResult?.data?.jobId,
+                    initMessageCode: 'success.create'
+                  }
+                })
               }
             } else if (this.urlUpdate) {
               const updateParams = {
@@ -1087,43 +1161,91 @@
               })
 
               if (sourceUpdateResult.status === 403) {
-                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.denied', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+                this.eventMessages.push({
+                  message: this.$i18n.t('kbart.transmission.error.denied', [this.$i18n.tc('component.package.label')]),
+                  color: 'error',
+                  timeout: -1
+                })
               } else if (sourceUpdateResult.status >= 400 && sourceUpdateResult.status < 500) {
-                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.processing', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+                this.eventMessages.push({
+                  message: this.$i18n.t('kbart.transmission.error.processing', [this.$i18n.tc('component.package.label')]),
+                  color: 'error',
+                  timeout: -1
+                })
               } else if (sourceUpdateResult.status >= 500) {
-                this.eventMessages.push({ message: this.$i18n.t('kbart.transmission.error.unknown', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+                this.eventMessages.push({
+                  message: this.$i18n.t('kbart.transmission.error.unknown', [this.$i18n.tc('component.package.label')]),
+                  color: 'error',
+                  timeout: -1
+                })
               } else if (sourceUpdateResult.data?.status === 'SKIPPED' || sourceUpdateResult.data?.result === 'SKIPPED') {
-                this.eventMessages.push({ message: this.$i18n.t(sourceUpdateResult.data.messageCode), color: 'warn', timeout: -1 })
+                this.eventMessages.push({
+                  message: this.$i18n.t(sourceUpdateResult.data.messageCode),
+                  color: 'warn',
+                  timeout: -1
+                })
               }
 
               if (isUpdate) {
                 this.step = 1
-                this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success' })
+                this.eventMessages.push({
+                  message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
+                  color: 'success',
+                  timeout: 2000
+                })
                 this.reload()
 
                 if (sourceUpdateResult?.data?.jobId) {
                   this.loadImportJobStatus(sourceUpdateResult?.data?.jobId)
                 }
               } else {
-                this.$router.push({ name: '/package', params: { id: this.packageItem.id, kbartJob: sourceUpdateResult?.data?.jobId, initMessageCode: 'success.create' } })
+                this.$router.push({
+                  name: '/package',
+                  params: {
+                    id: this.packageItem.id,
+                    kbartJob: sourceUpdateResult?.data?.jobId,
+                    initMessageCode: 'success.create'
+                  }
+                })
               }
             } else {
-
               if (isUpdate) {
                 this.step = 1
                 this.reload()
-                this.eventMessages.push({ message: this.$i18n.t((this.isEdit ? 'success.update' : 'success.create'), [this.$i18n.tc('component.package.label'), this.allNames.name]), color: 'success', timeout: -1 })
+                this.eventMessages.push({
+                  message: this.$i18n.t((this.isEdit ? 'success.update' : 'success.create'), [this.$i18n.tc('component.package.label'), this.allNames.name]),
+                  color: 'success',
+                  timeout: 2000
+                })
               } else {
-                this.$router.push({ name: '/package', params: { id: this.packageItem.id, initMessageCode: 'success.create' } })
+                this.$router.push({
+                  name: '/package',
+                  params: {
+                    id: this.packageItem.id,
+                    initMessageCode: 'success.create'
+                  }
+                })
               }
             }
           } else {
             if (response.status === 409) {
-              this.eventMessages.push({ message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+              this.eventMessages.push({
+                message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')]),
+                color: 'error',
+                timeout: -1
+              })
             } else if (response.status === 500) {
-              this.eventMessages.push({ message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+              this.eventMessages.push({
+                message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.package.label')]),
+                color: 'error',
+                timeout: -1
+              })
             } else {
-              this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]), color: 'error', timeout: -1 })
+              this.eventMessages.push({
+                message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
+                color: 'error',
+                timeout: -1
+              })
               this.errors = response.data.error || {}
               this.updateStepErrors()
               this.step = 1
@@ -1131,7 +1253,11 @@
           }
         }
         else {
-          this.eventMessages.push({message: this.$i18n.t('validation.hasErrors'), color: 'error', timeout: -1})
+          this.eventMessages.push({
+            message: this.$i18n.t('validation.hasErrors'),
+            color: 'error',
+            timeout: -1
+          })
         }
 
         loading.stopLoading()
@@ -1260,17 +1386,32 @@
 
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
-                this.eventMessages.push({ message: this.$i18n.t(jobResult.data.messageCode || 'kbart.transmission.error.processing'), color: 'error', importResult: true })
+                this.eventMessages.push({
+                  message: this.$i18n.t(jobResult.data.messageCode || 'kbart.transmission.error.processing'),
+                  color: 'error',
+                  importResult: true,
+                  timeout: -1
+                })
               } else if (!!jobResult.data.job_result?.badrows || jobResult.data.job_result.result === 'SKIPPED') {
                 jobInfo.result = 'warn'
-                this.eventMessages.push({ message: this.$i18n.t(jobResult.data.job_result?.messageCode || 'kbart.transmission.warn.skipped'), color: 'warn', importResult: true })
+                this.eventMessages.push({
+                  message: this.$i18n.t(jobResult.data.job_result?.messageCode || 'kbart.transmission.warn.skipped'),
+                  color: 'warn',
+                  importResult: true,
+                  timeout: -1
+                })
 
                 if (jobResult.data.job_result.matchingJob) {
                   this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
                 }
               } else {
                 jobInfo.result = 'success'
-                this.eventMessages.push({ message: this.$i18n.t(jobInfo.dryRun ? 'kbart.dryRun.success' : 'kbart.transmission.success'), color: 'success', importResult: true })
+                this.eventMessages.push({
+                  message: this.$i18n.t(jobInfo.dryRun ? 'kbart.dryRun.success' : 'kbart.transmission.success'),
+                  color: 'success',
+                  importResult: true,
+                  timeout: -1
+                })
 
                 if (jobResult.data.job_result.matchingJob) {
                   this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
@@ -1315,10 +1456,20 @@
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
                 jobInfo.messageCode = jobResult.data.job_result?.messageCode || 'kbart.titleMatch.failure'
-                this.eventMessages.push({ message: this.$i18n.t(jobResult.data.job_result?.messageCode), color: 'error', timeout: -1, matchingResult: true })
+                this.eventMessages.push({
+                  message: this.$i18n.t(jobResult.data.job_result?.messageCode),
+                  color: 'error',
+                  timeout: -1,
+                  matchingResult: true
+                })
               } else {
                 jobInfo.result = 'success'
-                this.eventMessages.push({ message: this.$i18n.t('kbart.titleMatch.success'), color: 'success', timeout: -1, importResult: true })
+                this.eventMessages.push({
+                  message: this.$i18n.t('kbart.titleMatch.success'),
+                  color: 'success',
+                  timeout: -1,
+                  importResult: true
+                })
               }
 
               finished = true
@@ -1377,20 +1528,37 @@
         this.packageItem.listStatus = data.listStatus
         this.packageItem.editStatus = data.editStatus
         this.version = data.version
-        this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => (
-          { id, value, namespace: namespace.value, nslabel: namespace.name || namespace.value, isDeletable: !!this.updateUrl }))
-        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
-        this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({ id, name, isDeletable: !!this.updateUrl }))
+        this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
+          id,
+          value,
+          namespace: namespace.value,
+          nslabel: namespace.name || namespace.value,
+          isDeletable: !!this.updateUrl
+        }))
+        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({
+          ...variantName,
+          isDeletable: !!this.updateUrl
+        }))
+        this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({
+          id,
+          name,
+          isDeletable: !!this.updateUrl
+        }))
         this.reviewRequests = data._embedded.reviewRequests
         this.providerSelect = data.provider
         this.platformSelect = data.nominalPlatform
         this.titleCount = data._tippCount
-        this.allNames = { name: data.name, alts: this.allAlternateNames }
+        this.allNames = {
+          name: data.name,
+          alts: this.allAlternateNames
+        }
         this.listVerifiedDate = data.listVerifiedDate
+
         if (data.source && this.$refs.source) {
           this.sourceItem = data.source
           this.$refs.source.fetch(data.source.id)
         }
+
         this.lastUpdated = data.lastUpdated
         this.dateCreated = data.dateCreated
 

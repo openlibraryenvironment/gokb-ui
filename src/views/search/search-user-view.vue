@@ -142,7 +142,7 @@
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({ id, username, roles, status, enabled, _links: { update: { href: updateUrl } } }) => ({
+        return data.map(({ id, username, roles, status, _links: { update: { href: updateUrl } } }) => ({
           id,
           link: { value: username, route: EDIT_USER_ROUTE, id: 'id' },
           enabled: this.$i18n.t('component.user.enabled.' + (status ? 'active' : 'inactive') + '.label'),
@@ -155,7 +155,10 @@
       },
       _confirmDeactivateSelectedItems () {
         this.actionToConfirm = '_deactivateSelectedItems'
-        this.messageToConfirm = { text: this.$i18n.t('popups.confirm.deactivate.generic'), vars: [] }
+        this.messageToConfirm = {
+          text: this.$i18n.t('popups.confirm.deactivate.generic'),
+          vars: []
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

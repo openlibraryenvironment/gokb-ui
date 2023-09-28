@@ -483,7 +483,12 @@
         pendingChanges: {},
         reviewsCount: undefined,
         tippCount: undefined,
-        shortTitleMap: { name: undefined, id: undefined, uuid: undefined, type: undefined },
+        shortTitleMap: {
+          name: undefined,
+          id: undefined,
+          uuid: undefined,
+          type: undefined
+        },
         titleItem: {
           id: undefined,
           uuid: undefined,
@@ -509,7 +514,10 @@
         tabsView: true,
         publishers: [],
         history: [],
-        allNames: { name: undefined, alts: [] },
+        allNames: {
+          name: undefined,
+          alts: []
+        },
         reviewRequests: [],
         version: undefined,
         reference: undefined,
@@ -594,11 +602,23 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]), color: 'success' })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]),
+            color: 'success',
+            timeout: -1
+          })
         } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]), color: 'error', timeout: -1 })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]),
+            color: 'error',
+            timeout: -1
+          })
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]), color: 'warning', timeout: -1 })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]),
+            color: 'warning',
+            timeout: -1
+          })
         }
       }
     },
@@ -616,8 +636,16 @@
         const data = {
           id: this.titleItem.id,
           name: this.allNames.name,
-          ids: this.ids.map(id => ({ value: id.value, type: id.namespace })),
-          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
+          ids: this.ids.map(id => ({
+            value: id.value,
+            type: id.namespace
+          })),
+          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
+            variantName,
+            locale,
+            variantType,
+            id: typeof id === 'number' ? id : null
+          })),
           publishedFrom: this.titleItem.publishedFrom,
           publishedTo: this.titleItem.publishedTo,
           dateFirstInPrint: this.titleItem.firstPublishedInPrint,
@@ -641,7 +669,12 @@
         })
         // todo: check error code
         if (response.status < 400) {
-          const mappedHistory = this.history.map(({ date, from, to, id }) => ({ date, from, to, id: (typeof id === 'number' ? id : null) }))
+          const mappedHistory = this.history.map(({ date, from, to, id }) => ({
+            date,
+            from,
+            to,
+            id: (typeof id === 'number' ? id : null)
+          }))
 
           const hresp = await this.catchError({
             promise: titleServices.updateHistory(response.data.id, mappedHistory, this.cancelToken.token),
@@ -653,18 +686,40 @@
           } else {
             if (isUpdate) {
               this.reload()
-              this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]), color: 'success' })
+              this.eventMessages.push({
+                message: this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), this.allNames.name]),
+                color: 'success',
+                timeout: 2000
+              })
             } else {
-              this.$router.push({ name: '/title', params: { id: response.data?.id, initMessageCode: 'success.create' } })
+              this.$router.push({
+                name: '/title',
+                params: {
+                  id: response.data?.id,
+                  initMessageCode: 'success.create'
+                }
+              })
             }
           }
         } else {
           if (response.status === 409) {
-            this.eventMessages.push({ message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.title.label')]), color: 'error', timeout: -1 })
+            this.eventMessages.push({
+              message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.title.label')]),
+              color: 'error',
+              timeout: -1
+            })
           } else if (response.status === 500) {
-            this.eventMessages.push({ message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.title.label')]), color: 'error', timeout: -1 })
+            this.eventMessages.push({
+              message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.title.label')]),
+              color: 'error',
+              timeout: -1
+            })
           } else {
-            this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.title.label')]), color: 'error', timeout: -1 })
+            this.eventMessages.push({
+              message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.title.label')]),
+              color: 'error',
+              timeout: -1
+            })
             this.errors = response.data.error
           }
         }
@@ -676,7 +731,12 @@
         this.pendingChanges = {}
         this.reviewsCount = undefined
         this.tippCount = undefined
-        this.shortTitleMap = { name: undefined, id: undefined, uuid: undefined, type: undefined }
+        this.shortTitleMap = {
+          name: undefined,
+          id: undefined,
+          uuid: undefined,
+          type: undefined
+        }
         this.titleItem = {
           id: undefined,
           uuid: undefined,
@@ -702,7 +762,10 @@
         this.tabsView = true
         this.publishers = []
         this.history = []
-        this.allNames = { name: undefined, alts: [] }
+        this.allNames = {
+          name: undefined,
+          alts: []
+        }
         this.reviewRequests = []
         this.version = undefined
         this.reference = undefined
@@ -746,10 +809,28 @@
         this.titleItem.type = data.type
         this.titleItem.publishedFrom = this.buildDateString(data.publishedFrom)
         this.titleItem.publishedTo = this.buildDateString(data.publishedTo)
-        this.publishers = data._embedded.publisher.map(pub => ({ id: pub.id, name: pub.name, link: { value: pub.name, route: EDIT_PROVIDER_ROUTE, id: 'id' }, isDeletable: !!this.updateUrl }))
-        this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
+        this.publishers = data._embedded.publisher.map(pub => ({
+          id: pub.id,
+          name: pub.name,
+          link: {
+            value: pub.name,
+            route: EDIT_PROVIDER_ROUTE,
+            id: 'id'
+          },
+          isDeletable: !!this.updateUrl
+        }))
+        this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
+          id,
+          value,
+          namespace: namespace.value,
+          nslabel: (namespace.name || namespace.value),
+          isDeletable: !!this.updateUrl
+        }))
         this.tipps = data._embedded.tipps || []
-        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl }))
+        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({
+          ...variantName,
+          isDeletable: !!this.updateUrl
+        }))
         this.allNames = { name: data.name, alts: this.allAlternateNames }
         this.reviewRequests = data._embedded.reviewRequests
         this.titleItem.editionStatement = data.editionStatement
@@ -768,7 +849,12 @@
         this.titleItem.status = data.status
         this.history = data.history
 
-        this.shortTitleMap = { name: data.name, id: data.id, uuid: data.uuid, type: data.type }
+        this.shortTitleMap = {
+          name: data.name,
+          id: data.id,
+          uuid: data.uuid,
+          type: data.type
+        }
         this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
 
         document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name

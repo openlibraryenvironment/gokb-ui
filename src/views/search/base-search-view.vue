@@ -265,7 +265,10 @@
       },
       confirmDeleteItem ({ deleteUrl }) {
         this.actionToConfirm = 'deleteItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)]
+        }
         this.parameterToConfirm = deleteUrl
         this.confirmationPopUpVisible = true
       },
@@ -284,7 +287,10 @@
       },
       confirmRetireItem ({ updateUrl }) {
         this.actionToConfirm = 'retireItem'
-        this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.retire.list',
+          vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)]
+        }
         this.parameterToConfirm = updateUrl
         this.confirmationPopUpVisible = true
       },
@@ -321,7 +327,13 @@
           .map(field => ([field.name, field.value]))
           .filter(([name, value]) => name && this.searchFilters[value] !== undefined && this.searchFilters[value] !== null)
           .reduce((result, [name, value]) => {
-            result[name] = ((typeof this.searchFilters[value] === 'string' || typeof this.searchFilters[value] === 'number' || Array.isArray(this.searchFilters[value])) ? this.searchFilters[value] : this.searchFilters[value].id)
+            result[name] = (
+              (typeof this.searchFilters[value] === 'string' ||
+              typeof this.searchFilters[value] === 'number' ||
+              Array.isArray(this.searchFilters[value])
+              ) ?
+              this.searchFilters[value] : this.searchFilters[value].id
+            )
             return result
           }, {})
       },
@@ -385,7 +397,10 @@
         }
         else {
           this.totalNumberOfItems = 0
-          this.eventMessages.push({ message: this.$i18n.t(result?.data?.messageCode || 'error.search.unknown'), color: 'error' })
+          this.eventMessages.push({
+            message: this.$i18n.t(result?.data?.messageCode || 'error.search.unknown'),
+            color: 'error'
+          })
         }
 
         this.selectedItems = []

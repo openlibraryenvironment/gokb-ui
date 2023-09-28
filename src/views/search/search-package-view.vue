@@ -300,7 +300,7 @@
           link: { value: name, route: EDIT_PACKAGE_ROUTE, id: 'id' },
           linkTwo: provider ? { value: provider.name, route: EDIT_PROVIDER_ROUTE, id: 'providerId' } : undefined,
           providerId: provider?.id || undefined,
-          lastUpdated: lastUpdated ? new Date(lastUpdated).toLocaleString('sv').substr(0, 10) : undefined,
+          lastUpdated: lastUpdated ? new Date(lastUpdated).toLocaleString('sv').substring(0, 10) : undefined,
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
           count: _tippCount || tippCount || 0,
@@ -325,7 +325,7 @@
           id: uuid,
           name,
           providerName,
-          lastUpdated: lastUpdatedDisplay ? new Date(lastUpdatedDisplay).toLocaleString('sv').substr(0, 10) : undefined,
+          lastUpdated: lastUpdatedDisplay ? new Date(lastUpdatedDisplay).toLocaleString('sv').substring(0, 10) : undefined,
           nominalPlatformName,
           contentType,
           tippCount: titleCount.toString(),
@@ -335,13 +335,19 @@
       },
       _confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.package.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [this.selectedItems.length, this.$i18n.tc('component.package.label', this.selectedItems.length)]
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       _confirmRetireSelectedItems () {
         this.actionToConfirm = '_retireSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.package.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.retire.list',
+          vars: [this.selectedItems.length, this.$i18n.tc('component.package.label', this.selectedItems.length)]
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       }

@@ -213,7 +213,10 @@
         this.updateProfileUrl = updateProfileUrl
         this.deleteProfileUrl = deleteProfileUrl
         this.email = email
-        this.allCuratoryGroups = curatoryGroups.map(group => ({ ...group, isDeletable: true }))
+        this.allCuratoryGroups = curatoryGroups.map(group => ({
+          ...group,
+          isDeletable: true
+        }))
       },
       async updateProfile (form) {
         this.successMsgShown = false

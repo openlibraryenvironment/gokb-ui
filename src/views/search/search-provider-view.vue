@@ -134,7 +134,11 @@
           _links
         }) => ({
           id,
-          link: { value: name, route: EDIT_PROVIDER_ROUTE, id: 'id' },
+          link: {
+            value: name,
+            route: EDIT_PROVIDER_ROUTE,
+            id: 'id'
+          },
           status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined
@@ -142,13 +146,19 @@
       },
       _confirmArchiveSelectedItems () {
         this.actionToConfirm = '_archiveSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.provider.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.retire.list',
+          vars: [this.selectedItems.length, this.$i18n.tc('component.provider.label', this.selectedItems.length)]
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       _confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.provider.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [this.selectedItems.length, this.$i18n.tc('component.provider.label', this.selectedItems.length)]
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       }

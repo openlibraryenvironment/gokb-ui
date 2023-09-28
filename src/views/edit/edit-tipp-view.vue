@@ -730,11 +730,23 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')]), color: 'success' })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')]),
+            color: 'success',
+            timeout: 2000
+          })
         } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]), color: 'error', timeout: -1 })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]),
+            color: 'error',
+            timeout: -1
+          })
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({ message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]), color: 'warning', timeout: -1 })
+          this.eventMessages.push({
+            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]),
+            color: 'warning',
+            timeout: -1
+          })
         }
       }
     },
@@ -748,9 +760,21 @@
 
         const newTipp = {
           ...this.packageTitleItem,
-          ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
-          prices: this.packageTitleItem.prices.map(price => ({ ...price, type: (price.type || price.priceType), id: (typeof price.id === 'number' ? price.id : null) })),
-          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
+          ids: this.packageTitleItem.ids.map(id => ({
+            value: id.value,
+            type: id.namespace
+          })),
+          prices: this.packageTitleItem.prices.map(price => ({
+            ...price,
+            type: (price.type || price.priceType),
+            id: (typeof price.id === 'number' ? price.id : null)
+          })),
+          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
+            variantName,
+            locale,
+            variantType,
+            id: typeof id === 'number' ? id : null
+          })),
           status: typeof this.packageTitleItem.status === 'string' ? { name: this.packageTitleItem.status } : this.packageTitleItem.status,
           name: this.allNames.name,
           version: this.version,
@@ -766,18 +790,40 @@
 
         if (response.status < 400) {
           if (this.isEdit) {
-            this.eventMessages.push({ message: this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label'), this.allNames.name]), color: 'success' })
+            this.eventMessages.push({
+              message: this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label'), this.allNames.name]),
+              color: 'success',
+              timeout: 2000
+            })
             this.reload()
           } else {
-            this.$router.push({ name: '/package-title', params: { id: response.data?.id, initMessageCode: 'success.create' } })
+            this.$router.push({
+              name: '/package-title',
+              params: {
+                id: response.data?.id,
+                initMessageCode: 'success.create'
+              }
+            })
           }
         } else {
           if (response.status === 409) {
-            this.eventMessages.push({ message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.tipp.label')]), color: 'error', timeout: -1 })
+            this.eventMessages.push({
+              message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.tipp.label')]),
+              color: 'error',
+              timeout: -1
+            })
           } else if (response.status === 500) {
-            this.eventMessages.push({ message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.tipp.label')]), color: 'error', timeout: -1 })
+            this.eventMessages.push({
+              message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.tipp.label')]),
+              color: 'error',
+              timeout: -1
+            })
           } else {
-            this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.tipp.label')]), color: 'error', timeout: -1 })
+            this.eventMessages.push({
+              message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.tipp.label')]),
+              color: 'error',
+              timeout: -1
+            })
             this.errors = response.data.error
           }
         }
@@ -898,7 +944,13 @@
         this.version = data.version
         this.status = data.status
         this.packageTitleItem.publisherName = data.publisherName
-        this.packageTitleItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!this.updateUrl }))
+        this.packageTitleItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
+          id,
+          value,
+          namespace: namespace.value,
+          nslabel: (namespace.name || namespace.value),
+          isDeletable: !!this.updateUrl
+        }))
         this.reviewRequests = data._embedded.reviewRequests
         this.editionStatement = data.editionStatement
         this.importId = data.importId
@@ -923,32 +975,30 @@
         this.packageTitleItem.lastChangedExternal = data.lastChangedExternal
         this.packageTitleItem.status = data.status
         this.history = data.history
-        this.allNames = { name: data.name, alts: data._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })) }
+        this.allNames = {
+          name: data.name,
+          alts: data._embedded.variantNames.map(variantName => ({
+            ...variantName,
+            isDeletable: !!this.updateUrl
+          }))
+        }
 
         this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
 
         if (data._embedded.coverageStatements?.length) {
-          this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
-            startDate: this.buildDateString(startDate),
-            endDate: this.buildDateString(endDate),
-            coverageDepth,
-            coverageNote,
-            startIssue,
-            startVolume,
-            endIssue,
-            endVolume,
-            embargo
+          this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(statement => ({
+            ...statement,
+            startDate: this.buildDateString(statement.startDate),
+            endDate: this.buildDateString(statement.endDate),
           }))
         }
 
         if (data._embedded.prices?.length) {
-          this.packageTitleItem.prices = data._embedded.prices.map(({ id, priceType, price, currency, startDate, endDate }) => ({
-            id,
-            type: priceType,
-            startDate: this.buildDateString(startDate),
-            endDate: this.buildDateString(endDate),
-            price,
-            currency
+          this.packageTitleItem.prices = data._embedded.prices.map(pobj => ({
+            ...pobj,
+            type: pobj.priceType,
+            startDate: this.buildDateString(pobj.startDate),
+            endDate: this.buildDateString(pobj.endDate)
           }))
         }
 

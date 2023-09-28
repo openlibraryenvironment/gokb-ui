@@ -178,7 +178,13 @@
 
   export default {
     name: 'EditUserView',
-    components: { GokbAddItemPopup, GokbConfirmationPopup, GokbErrorComponent, GokbCuratoryGroupSection, VSnackbars },
+    components: {
+      GokbAddItemPopup,
+      GokbConfirmationPopup,
+      GokbErrorComponent,
+      GokbCuratoryGroupSection,
+      VSnackbars
+    },
     extends: BaseComponent,
     props: {
       id: {
@@ -228,7 +234,13 @@
       },
       rolesTableHeaders () {
         return [
-          { text: this.$i18n.tc('component.user.role.label'), align: 'left', value: 'localName', sortable: false, width: '100%' },
+          {
+            text: this.$i18n.tc('component.user.role.label'),
+            align: 'left',
+            value: 'localName',
+            sortable: false,
+            width: '100%'
+          }
         ]
       },
       isDeleteSelectedRolesDisabled () {
@@ -270,7 +282,11 @@
         }
 
         if (this.isCreated) {
-          this.eventMessages.push(this.$i18n.t('success.create', [this.$i18n.tc('component.user.label'), this.username]))
+          this.eventMessages.push({
+            message: this.$i18n.t('success.create', [this.$i18n.tc('component.user.label'), this.username]),
+            color: 'success',
+            timeout: 5
+          })
         }
       }
     },
@@ -279,7 +295,13 @@
         this[actionMethodName](actionMethodParameter)
       },
       addNewRole (role) {
-        !this.allRoles.find(({ id: idInAll }) => role.id === idInAll) && !this.addedRoles.find(({ id: idInAll }) => role.id === idInAll) && this.addedRoles.push({ id: role.id, name: role.value, isDeletable: true })
+        !this.allRoles.find(
+          ({ id: idInAll }) => role.id === idInAll
+        ) && !this.addedRoles.find(
+          ({ id: idInAll }) => role.id === idInAll
+        ) && this.addedRoles.push(
+          { id: role.id, name: role.value, isDeletable: true }
+        )
       },
       showAddNewRole () {
         this.addRolePopupVisible = true
@@ -306,17 +328,29 @@
         // todo: check error code
         if (response?.status < 400) {
           if (this.isEdit) {
-            this.eventMessages.push(this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username]))
+            this.eventMessages.push({
+              message: this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username]),
+              color: 'success',
+              timeout: -1
+            })
             this.fetch()
           } else {
             this.$router.put({ path: '/user/', props: { id: response.data.id, isCreated: true } })
           }
         } else if (response.status === 409) {
-            this.eventMessages.push({ message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.user.label')]), color: 'error' })
+          this.eventMessages.push({
+            message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.user.label')]),
+            color: 'error',
+            timeout: -1
+          })
         } else if (response?.status === 404) {
           this.notFound = true
         } else {
-          this.eventMessages.push({ message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')]), color: 'error' })
+          this.eventMessages.push({
+            message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')]),
+            color: 'error',
+            timeout: -1
+          })
         }
       },
       pageBack () {
@@ -337,15 +371,24 @@
           this.accountLocked = response.data.data.accountLocked
           this.enabled = response.data.data.enabled
           this.passwordExpired = response.data.data.passwordExpired
-          this.allRoles = response.data.data.roles.map(({ authority, ...rest }) => ({ ...rest, name: authority }))
+          this.allRoles = response.data.data.roles.map(({ authority, ...rest }) => ({
+            ...rest,
+            name: authority
+          }))
           this.updateUserUrl = response.data.data.updateUserUrl
-          this.allCuratoryGroups = response.data.data.curatoryGroups.map(group => ({ ...group, isDeletable: true }))
+          this.allCuratoryGroups = response.data.data.curatoryGroups.map(group => ({
+            ...group,
+            isDeletable: true
+          }))
           // this.organisation = organisation
         }
       },
       confirmDeleteRole ({ id, value }) {
         this.actionToConfirm = '_deleteRole'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.user.role.label'), value] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [this.$i18n.tc('component.user.role.label'), value]
+        }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -356,7 +399,10 @@
       },
       confirmDeleteSelectedRoles () {
         this.actionToConfirm = '_deleteSelectedRoles'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.user.role.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [this.selectedItems.length, this.$i18n.tc('component.user.role.label', this.selectedItems.length)]
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

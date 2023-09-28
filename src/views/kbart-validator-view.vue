@@ -282,7 +282,11 @@
           this.loadedFile.warnings.single = []
           Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) => {
             Object.entries(colobj).forEach(([colname, wo]) => {
-              this.loadedFile.warnings.single.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
+              this.loadedFile.warnings.single.push({
+                row: rownum,
+                column: colname,
+                reason: this.$i18n.t(wo.messageCode, wo.args)
+              })
 
               if (!this.loadedFile.warnings.type[colname]) {
                 this.loadedFile.warnings.type[colname] = 1
