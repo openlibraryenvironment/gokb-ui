@@ -26,8 +26,9 @@
           <gokb-state-select-field
             v-if="status"
             v-model="packageTitleItem.status"
-            :deletable="!!deleteUrl"
-            :editable="!!updateUrl"
+            :deletable="!isReadonly"
+            :editable="!isReadonly"
+            @delete="markDeleted"
           />
         </v-col>
         <v-col cols="6" xl="3">
@@ -666,13 +667,16 @@
         return accountModel.loggedIn()
       },
       isReadonly () {
-        return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
+        return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl) || (this.isDeleted && !accountModel.hasRole('ROLE_ADMIN'))
       },
       isJournal () {
         return this.packageTitleItem.title?.type === 'Journal' || this.packageTitleItem.title?.type?.id === 'journal' || this.packageTitleItem.publicationType?.name === 'Serial'
       },
       isBook () {
         return this.packageTitleItem.title?.type === 'Book' || this.packageTitleItem.title?.type?.id === 'book' || this.packageTitleItem.title?.type === 'Monograph' || this.packageTitleItem.title?.type?.id === 'monograph' || this.packageTitleItem.publicationType?.name === 'Monograph'
+      },
+      isDeleted () {
+        return this.packageTitleItem.status === 'Deleted' || this.packageTitleItem.status?.name === 'Deleted'
       },
       titleTypeString () {
         return (typeof this.packageTitleItem.title?.type === 'object' ? this.packageTitleItem.title?.type?.id : this.packageTitleItem.title?.type)
@@ -908,6 +912,7 @@
         loading.startLoading()
         this.errors = {}
         this.pendingChanges = {}
+        this.toDelete = false
 
         const result = await this.catchError({
           promise: tippServices.get(this.id, this.cancelToken.token),
@@ -988,8 +993,8 @@
         if (data._embedded.coverageStatements?.length) {
           this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(statement => ({
             ...statement,
-            startDate: this.buildDateString(statement.startDate),
-            endDate: this.buildDateString(statement.endDate),
+            startDate: statement.startDate && this.buildDateString(statement.startDate),
+            endDate: statement.endDate && this.buildDateString(statement.endDate),
           }))
         }
 
@@ -1007,7 +1012,7 @@
         document.title = this.$i18n.tc('component.tipp.label') + ' – ' + (data.name || data.title?.name)
       },
       tempId () {
-        return 'tempTippId' + Math.random().toString(36).substr(2, 5)
+        return 'tempTippId' + Math.random().toString(36).substring(2, 5)
       },
       decodeEmbargo () {
         const matches = this.packageTitleItem.coverageStatement.embargo?.match(/^([P,R]?)([0-9]*)([D,M,Y]?)$/)
@@ -1036,6 +1041,9 @@
       },
       refreshReviewsCount (count) {
         this.reload()
+      },
+      markDeleted (val) {
+        this.toDelete = val
       }
     },
   }

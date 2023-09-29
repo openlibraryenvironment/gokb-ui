@@ -1509,6 +1509,11 @@
         },
         "Deleted": {
           "label": "Gelöscht"
+        },
+        "edit": {
+          "delete": {
+            "confirm": "Bitte beachten Sie, dass dieser Status nur für fehlerhafte Einträge verwendet werden sollte und nicht rückgängig gemacht werden kann."
+          }
         }
       },
       "editStatus": {

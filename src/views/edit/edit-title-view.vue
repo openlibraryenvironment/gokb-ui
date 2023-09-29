@@ -40,9 +40,10 @@
         <v-col cols="6">
           <gokb-state-select-field
             v-model="titleItem.status"
-            :deletable="!!deleteUrl"
-            :editable="!!updateUrl"
+            :deletable="!isReadonly"
+            :editable="!isReadonly"
             :api-errors="errors.status"
+            @delete="markDeleted"
           />
         </v-col>
         <v-col cols="6" xl="3">
@@ -512,6 +513,7 @@
         lastUpdated: undefined,
         notFound: false,
         tabsView: true,
+        toDelete: false,
         publishers: [],
         history: [],
         allNames: {
@@ -546,13 +548,16 @@
         return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.title.label')])
       },
       titleCode () {
-        return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
+        return this.isEdit ? (this.isReadonly ? 'header.show.label' : 'header.edit.label') : 'header.create.label'
       },
       typeDisplay () {
         return this.currentType ? this.$i18n.tc('component.title.type.' + this.currentType) : this.$i18n.tc('component.title.label')
       },
       isReadonly () {
-        return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
+        return !accountModel.loggedIn() || (this.isEdit && !this.updateUrl) || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && this.isDeleted && !accountModel.hasRole('ROLE_ADMIN'))
+      },
+      isDeleted () {
+        return !this.toDelete && (this.titleItem.status === 'Deleted' || this.titleItem.status?.name === 'Deleted')
       },
       isContrib () {
         return this.loggedIn && accountModel.hasRole('ROLE_CONTRIBUTOR')
@@ -570,7 +575,7 @@
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
       },
       accessible () {
-        return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
+        return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_EDITOR'))
       },
       isValid () {
         return !!this.allNames.name && !!this.currentType
@@ -784,6 +789,7 @@
         if (this.isEdit) {
           loading.startLoading()
           this.errors = {}
+          this.toDelete = false
           this.pendingChanges = {}
 
           const result = await this.catchError({
@@ -878,6 +884,9 @@
       },
       updateTippCount (count) {
         this.tippCount = count
+      },
+      markDeleted (val) {
+        this.toDelete = val
       }
     },
   }

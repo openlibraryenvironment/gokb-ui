@@ -416,8 +416,9 @@
                   v-if="packageItem.status"
                   v-model="packageItem.status"
                   dense
-                  :deletable="!!deleteUrl"
-                  :editable="!!updateUrl"
+                  :deletable="!isReadonly"
+                  :editable="!isReadonly"
+                  @delete="markDeleted"
                 />
               </v-col>
               <v-col cols="6" xl="3">
@@ -732,6 +733,7 @@
         notFound: false,
         version: undefined,
         errors: {},
+        toDelete: false,
         eventMessages: [],
         uuid: undefined,
         isCurator: false,
@@ -922,7 +924,7 @@
 
       if (!!this.kbartJob) {
         this.loadImportJobStatus(this.kbartJob)
-      } else if (this.isEdit && this.accessible) {
+      } else if (this.isEdit && !this.isReadonly) {
         this.getActiveJobs()
       }
     },
@@ -1308,6 +1310,7 @@
           }
 
           this.errors = {}
+          this.toDelete = false
           this.newTipps = []
           this.updateStepErrors()
 
@@ -1572,6 +1575,9 @@
       },
       wait (ms) {
         return new Promise((resolve) => { setTimeout(resolve, ms) })
+      },
+      markDeleted (val) {
+        this.toDelete = val
       }
     }
   }

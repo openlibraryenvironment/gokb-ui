@@ -1499,6 +1499,11 @@
         },
         "Deleted": {
           "label": "Deleted"
+        },
+        "edit": {
+          "delete": {
+            "confirm": "Please note that this status is reserved for erroneous entries and will trigger changes that cannot be simply reversed."
+          }
         }
       },
       "editStatus": {

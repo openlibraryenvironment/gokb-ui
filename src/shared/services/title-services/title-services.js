@@ -41,7 +41,7 @@ const api = (baseServices) => ({
   delete (url, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: baseServices.relativeUrl(url),
+      url: baseServices.relativeUrl(url) + '/delete',
     }, cancelToken)
   },
   merge (data, params, cancelToken) {

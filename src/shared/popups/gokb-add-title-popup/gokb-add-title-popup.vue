@@ -519,6 +519,7 @@
       return {
         pprops: undefined,
         errors: {},
+        toDelete: false,
         urlValid: false,
         platformSelection: [],
         coverageExpanded: false,
@@ -544,7 +545,10 @@
         items: [],
         id: undefined,
         uuid: undefined,
-        allNames: { name: undefined, alts: [] },
+        allNames: {
+          name: undefined,
+          alts: []
+        },
         lastUpdated: undefined,
         dateCreated: undefined,
         packageTitleItem: {
@@ -683,10 +687,21 @@
           const newTipp = {
             ...this.packageTitleItem,
             name: this.allNames.name,
-            ids: this.packageTitleItem.ids.map(id => ({ value: id.value, type: id.namespace })),
-            prices: this.packageTitleItem.prices.map(price => ({ ...price, id: (typeof price.id === 'number' ? price.id : null) })),
+            ids: this.packageTitleItem.ids.map(id => ({
+              value: id.value,
+              type: id.namespace
+            })),
+            prices: this.packageTitleItem.prices.map(price => ({
+              ...price,
+              id: (typeof price.id === 'number' ? price.id : null)
+            })),
             publicationType: this.packageTitleItem.publicationType ? (this.packageTitleItem.publicationType.name || this.packageTitleItem.publicationType.value) : null,
-            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
+            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
+              variantName,
+              locale,
+              variantType,
+              id: typeof id === 'number' ? id : null
+            })),
             status: typeof this.packageTitleItem.status === 'string' ? { name: this.packageTitleItem.status } : this.packageTitleItem.status,
             id: this.id,
             activeGroup: activeGroup
@@ -700,7 +715,11 @@
           if (response.status < 400) {
             const edited = {
               ...this.packageTitleItem,
-              popup: { value: (this.pkg ? (this.packageTitleItem.title ? this.packageTitleItem.title.name : this.packageTitleItem.name) : this.packageTitleItem.pkg.name), label: 'tipp', type: 'GokbAddTitlePopup' },
+              popup: {
+                value: (this.pkg ? (this.packageTitleItem.title ? this.packageTitleItem.title.name : this.packageTitleItem.name) : this.packageTitleItem.pkg.name),
+                label: 'tipp',
+                type: 'GokbAddTitlePopup'
+              },
               hostPlatformName: this.packageTitleItem.hostPlatform?.name,
               titleType: this.titleTypeString,
             }
@@ -708,11 +727,23 @@
             this.close()
           } else {
             if (response.status === 409) {
-              this.eventMessages.push({ message: this.$i18n.t('error.update.409'), color: 'error', timeout: -1 })
+              this.eventMessages.push({
+                message: this.$i18n.t('error.update.409'),
+                color: 'error',
+                timeout: -1
+              })
             } else if (response.status === 500) {
-              this.eventMessages.push({ message: this.$i18n.t('error.general.500'), color: 'error', timeout: -1 })
+              this.eventMessages.push({
+                message: this.$i18n.t('error.general.500'),
+                color: 'error',
+                timeout: -1
+              })
             } else {
-              this.eventMessages.push({ message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400'), color: 'error', timeout: -1 })
+              this.eventMessages.push({
+                message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400'),
+                color: 'error',
+                timeout: -1
+              })
               this.errors = response.data.error
             }
           }
@@ -726,9 +757,21 @@
             ...this.packageTitleItem,
             id: this.tempId(),
             connectedTitleId: this.packageTitleItem.title?.id || null,
-            ids: this.packageTitleItem.ids.map(ido => ({ value: ido.value, type: ido.namespace })),
-            prices: this.packageTitleItem.prices.map(price => ({ ...price, type: price.priceType, id: (typeof price.id === 'number' ? price.id : null) })),
-            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({ variantName, locale, variantType, id: typeof id === 'number' ? id : null })),
+            ids: this.packageTitleItem.ids.map(ido => ({
+              value: ido.value,
+              type: ido.namespace
+            })),
+            prices: this.packageTitleItem.prices.map(price => ({
+              ...price,
+              type: price.priceType,
+              id: (typeof price.id === 'number' ? price.id : null)
+            })),
+            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
+              variantName,
+              locale,
+              variantType,
+              id: typeof id === 'number' ? id : null
+            })),
             status: typeof this.packageTitleItem.status === 'string' ? { name: this.packageTitleItem.status } : this.packageTitleItem.status,
             publicationType: this.packageTitleItem.publicationType ? (this.packageTitleItem.publicationType.name || this.packageTitleItem.publicationType.value) : null,
             popup: { value: this.packageTitleItem.name, label: 'tipp', type: 'GokbAddTitlePopup' },
@@ -813,16 +856,10 @@
         this.allNames.alts = data.variantNames
 
         if (data?.coverageStatements?.length) {
-          this.packageTitleItem.coverageStatements = data.coverageStatements.map(({ startDate, endDate, coverageDepth, coverageNote, startIssue, startVolume, endIssue, endVolume, embargo }) => ({
-            startDate: startDate && this.buildDateString(startDate),
-            endDate: endDate && this.buildDateString(endDate),
-            coverageDepth,
-            coverageNote,
-            startIssue,
-            startVolume,
-            endIssue,
-            endVolume,
-            embargo
+          this.packageTitleItem.coverageStatements = data.coverageStatements.map(statement => ({
+            ...statement,
+            startDate: statement.startDate && this.buildDateString(statement.startDate),
+            endDate: statement.endDate && this.buildDateString(statement.endDate)
           }))
         }
         this.id = data.id
@@ -835,6 +872,9 @@
         else {
           this.titleTypeString = this.packageTitleItem.publicationType ? TARGET_TYPES[this.packageTitleItem.publicationType.name || this.packageTitleItem.publicationType.value] : undefined
         }
+      },
+      markDeleted (val) {
+        this.toDelete = val
       }
     }
   }

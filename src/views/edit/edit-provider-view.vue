@@ -28,8 +28,9 @@
         <v-col cols="6">
           <gokb-state-select-field
             v-model="providerObject.status"
-            :deletable="!!deleteUrl"
-            :editable="!!updateUrl"
+            :deletable="!isReadonly"
+            :editable="!isReadonly"
+            @delete="markDeleted"
           />
         </v-col>
         <v-col cols="6" xl="3">
@@ -393,6 +394,7 @@
         tab: null,
         uuid: undefined,
         pendingChanges: {},
+        toDelete: false,
         valid: true,
         notFound: false,
         tabsView: true,
@@ -620,6 +622,7 @@
         if (this.isEdit) {
           loading.startLoading()
           this.errors = {}
+          this.toDelete = false
           this.pendingChanges = {}
 
           const result = await this.catchError({
@@ -704,6 +707,9 @@
       },
       updatePackageCount (count) {
         this.packageCount = count
+      },
+      markDeleted (val) {
+        this.toDelete = val
       }
     }
   }
