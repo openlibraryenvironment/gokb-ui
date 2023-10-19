@@ -285,7 +285,7 @@
           this.eventMessages.push({
             message: this.$i18n.t('success.create', [this.$i18n.tc('component.user.label'), this.username]),
             color: 'success',
-            timeout: 5
+            timeout: 2000
           })
         }
       }
@@ -331,7 +331,7 @@
             this.eventMessages.push({
               message: this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username]),
               color: 'success',
-              timeout: -1
+              timeout: 2000
             })
             this.fetch()
           } else {

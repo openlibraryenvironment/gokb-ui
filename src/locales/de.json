@@ -465,7 +465,10 @@
     "update": {
       "400": "Bei der Aktualisierung sind Fehler aufgetreten!",
       "403": "{0} konnte nicht aktualisiert werden, da dieser Benutzer nicht dazu berechtigt ist.",
-      "409": "{0} konnte nicht gespeichert werden, da Ihre Ansicht auf Grund einer anderen Aktualisierung nicht mehr aktuell ist. Bitte akutalisieren Sie diese Seite und versuchen es noch einmal."
+      "409": "{0} konnte nicht gespeichert werden, da Ihre Ansicht auf Grund einer anderen Aktualisierung nicht mehr aktuell ist. Bitte akutalisieren Sie diese Seite und versuchen es noch einmal.",
+      "tipp": {
+        "runningImport": "Bitte warten Sie mit manuellen Updates, bis alle laufenden Importe für das Paket abgeschlossen sind."
+      }
     },
     "create": {
       "400": "Bei der Erstellung sind Fehler aufgetreten!",

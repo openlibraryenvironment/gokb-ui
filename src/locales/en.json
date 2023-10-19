@@ -465,7 +465,10 @@
     "update": {
       "400": "{0} update contained errors!",
       "403": "{0} could not be updated due to missing user permissions.",
-      "409": "{0} could not be saved because it has had another update in the meantime. Please look through your changes and enter them again after refreshing this site."
+      "409": "{0} could not be saved because it has had another update in the meantime. Please look through your changes and enter them again after refreshing this site.",
+      "tipp": {
+        "runningImport": "Please wait for all import jobs for the package to finish before making manual changes."
+      }
     },
     "create": {
       "400": "{0} contained errors!",
@@ -1370,8 +1373,8 @@
         },
         "Secondary Identifier Conflict": {
           "label": "Identifier Conflict (ID added)",
-          "info": "Reference title {0} matched an existing reference title on one identifier, but other identifiers {1} differ from existing ones in the same namespaces.",
-          "action": "Identifier added",
+          "info": "When matching with a reference title, an identifier was found that does not match the existing identifiers of the reference title. Nevertheless, it seems to be the same title because, for example, the name matches.",
+          "action": "The GOKb has added the identifier in the reference title.",
           "toDo": "Check identifiers of the reference title and remove the incorrect identifiers if necessary."
         },
         "Generic Matching Conflict": {
