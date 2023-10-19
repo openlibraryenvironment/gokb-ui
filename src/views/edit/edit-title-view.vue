@@ -596,6 +596,9 @@
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
         }
+      },
+      tab (val) {
+        history.pushState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
       }
     },
     async created () {
@@ -626,6 +629,9 @@
           })
         }
       }
+    },
+    mounted () {
+      this.tab = parseInt(this.$route.query.tab) || null
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

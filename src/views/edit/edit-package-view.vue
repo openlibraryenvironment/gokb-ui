@@ -892,9 +892,11 @@
           this.fetchDefaultNamespace(prov.id)
         }
       },
-      step () {
+      step (val) {
         this.$refs?.descInfo?.refreshRows()
         this.$refs?.descEdit?.refreshRows()
+
+        history.pushState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
       }
     },
     async created () {
@@ -930,6 +932,8 @@
     },
     mounted () {
       document.addEventListener('keydown', this.handleKeyboardNav.bind(this))
+
+      this.step = parseInt(this.$route.query.step) || 1
     },
     beforeDestroy() {
       document.removeEventListener("keydown", this.handleKeyboardNav)
