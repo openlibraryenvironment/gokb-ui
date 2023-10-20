@@ -43,7 +43,7 @@
         :label="$t('component.general.status.Deleted.label')"
         readonly
         off-icon="mdi-delete-outline"
-        style="padding-right:4px;border: 1px solid red;border-radius:2px"
+        :style="{'paddingRight': '4px', 'border': ((editable || value === 'Deleted') ? '1px solid red' : 'none'), 'borderRadius':'2px'}"
         @click="showConfirm(localValue)"
       />
     </v-radio-group>

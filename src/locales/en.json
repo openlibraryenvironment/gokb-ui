@@ -356,6 +356,7 @@
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
       "illegalPrintId": "Value for print identifier '{0}' is not valid.",
+      "longVal": "Value {0} is unusually long for this column.",
       "shortRow": "This line contains fewer columns than defined by the provided headings!",
       "noIds": "This line contains no usable identifiers!",
       "noTitleId": "This line does not contain a value for the common title id!",

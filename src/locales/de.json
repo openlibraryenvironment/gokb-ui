@@ -215,7 +215,7 @@
       "label": "Archivierte Ergebnisse"
     },
     "context": {
-      "group": "Alle Jobs für die ausgewählte Gruppe anzeigen",
+      "group": "Alle Jobs für die ausgewählte Kuratorengruppe anzeigen",
       "profile": "Nur eigene Jobs anzeigen"
     },
     "dryRun": {
@@ -356,6 +356,7 @@
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
+      "longVal": "Wert '{0}' ist ungewöhnlich lang für diese Spalte.",
       "shortRow": "Diese Zeile enthält weniger Spalten als im Datei-Header definiert wurden!",
       "noIds": "Diese Zeile enthält keine Identifikatoren und wird daher nicht prozessiert!",
       "noTitleId": "Diese Zeile enthält keinen Wert für den Anbieternamensraum!",
