@@ -36,8 +36,9 @@
             :label="$t('component.user.password')"
             hide-icon
             required
+            validate-on-blur
             autocomplete="off"
-            :rules="[]"
+            :rules="[passwordValidMessage]"
             dense
           />
         </v-col>
@@ -264,8 +265,14 @@
       updateButtonText () {
         return this.id ? this.$i18n.t('btn.update') : this.$i18n.t('btn.add')
       },
+      isPasswordValid () {
+        return (this.password?.length > 5 && this.password?.length < 64)
+      },
+      passwordValidMessage () {
+        return this.isPasswordValid || this.$i18n.t('validation.passwordLength')
+      },
       valid () {
-        return this.username && (this.isEdit || (this.password?.length > 5 && this.password?.length < 64))
+        return this.username && (this.isEdit || this.isPasswordValid)
       }
     },
     watch: {
@@ -335,7 +342,14 @@
             })
             this.fetch()
           } else {
-            this.$router.put({ path: '/user/', props: { id: response.data.id, isCreated: true } })
+            console.log("No ID")
+            this.$router.push({
+              name: '/user',
+              params: {
+                id: response.data.data.id,
+                isCreated: true
+              }
+            })
           }
         } else if (response.status === 409) {
           this.eventMessages.push({
