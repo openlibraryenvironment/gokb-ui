@@ -737,7 +737,7 @@
           this.eventMessages.push({
             message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')]),
             color: 'success',
-            timeout: 2000
+            timeout: 3000
           })
         } else if (this.initMessageCode.includes('failure')) {
           this.eventMessages.push({
@@ -797,7 +797,7 @@
             this.eventMessages.push({
               message: this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label'), this.allNames.name]),
               color: 'success',
-              timeout: 2000
+              timeout: 3000
             })
             this.reload()
           } else {

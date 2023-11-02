@@ -205,10 +205,22 @@
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
-      resultPaginate (page) {
-        this.fetchJobs({ page })
+      resultPaginate (options) {
+        this.successMessage = false
+        if (options.sortBy) {
+          this.options.sortBy = [options.sortBy]
+        }
+        if (typeof options.desc === 'boolean') {
+          this.options.desc = options.desc
+        }
+
+        if (options.itemsPerPage) {
+          this.options.itemsPerPage = options.itemsPerPage
+        }
+
+        this.fetchJobs()
       },
-      async fetchJobs ({ page } = { page: undefined }) {
+      async fetchJobs () {
         let lookupService = profileServices
 
         if (this.linkedComponent) {
