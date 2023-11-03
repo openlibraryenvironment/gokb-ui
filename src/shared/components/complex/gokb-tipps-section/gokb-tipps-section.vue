@@ -520,14 +520,18 @@
           this.searchOptions.desc = options.desc
         }
 
+        if (options.itemsPerPage) {
+          this.searchOptions.itemsPerPage = options.itemsPerPage
+        }
+
         if (this.ttl || this.pkg) {
           this.fetchTipps(options)
         }
       },
-      resultNewPaginate (page) {
+      resultNewPaginate () {
         this.successMessage = false
       },
-      async fetchTipps (options) {
+      async fetchTipps () {
         if (this.pkg || this.ttl) {
           this.selectedItems = []
           const reqId = this.pkg || this.ttl
