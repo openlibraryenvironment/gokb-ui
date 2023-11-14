@@ -310,12 +310,12 @@
     "export": {
       "type": {
         "tipp": {
-          "label": "Raw",
-          "description": "Prefer original KBART info for all columns"
+          "label": "Package related",
+          "description": "Fields are preferably taken from imported KBART data"
         },
         "title": {
           "label": "Processed",
-          "description": "Fields like publication_name are preferably taken from global title records"
+          "description": "Fields are preferably taken from enriched reference title data"
         }
       }
     },
