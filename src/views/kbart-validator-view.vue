@@ -243,6 +243,12 @@
         if (this.selectedFile) {
           this.doImport()
         }
+      },
+      useStrict () {
+          this.completion = 0
+      },
+      'options.selectedNamespace': function () {
+          this.completion = 0
       }
     },
     methods: {
