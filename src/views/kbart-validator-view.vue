@@ -52,7 +52,7 @@
     </v-row>
     <gokb-section
       :sub-title="$t('header.results')"
-      v-if="completion === 100"
+      v-if="showResults"
     >
       <v-row
         v-if="errors.length > 0"
@@ -70,7 +70,7 @@
         </v-col>
       </v-row>
       <v-row
-        v-else-if="completion === 100"
+        v-else-if="showResults"
         class="pa-4"
       >
         <v-col>
@@ -124,7 +124,9 @@
       >
         <v-col>
           <v-expansion-panels>
-            <v-expansion-panel>
+            <v-expansion-panel
+              v-if="loadedFile.errors.single.length > 0"
+            >
               <v-expansion-panel-header>
                 {{ $tc('kbart.processing.error.label', 2) }}
               </v-expansion-panel-header>
@@ -138,7 +140,9 @@
                 />
               </v-expansion-panel-content>
             </v-expansion-panel>
-            <v-expansion-panel>
+            <v-expansion-panel
+              v-if="loadedFile.warnings.single.length > 0"
+            >
               <v-expansion-panel-header>
                 {{ $tc('kbart.processing.warning.label', 2) }}
               </v-expansion-panel-header>
@@ -185,6 +189,7 @@
         errors: [],
         selectedNamespace: undefined,
         importRunning: undefined,
+        executedOnce: false,
         loadedFile: {
           errors: {
             missingColumns: [],
@@ -224,6 +229,9 @@
       },
       expandWidth () {
         return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 400
+      },
+      showResults () {
+        return (this.completion === 100 || (this.completion === 0 && this.executedOnce))
       }
     },
     watch: {
@@ -306,9 +314,11 @@
 
           this.options.lineCount = validationResult.data.report.rows.total
           this.completion = 100
+          this.executedOnce = true
         } else {
           this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))
           this.completion = 100
+          this.executedOnce = true
         }
 
         this.importRunning = false
