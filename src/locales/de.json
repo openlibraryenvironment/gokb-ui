@@ -310,12 +310,12 @@
     "export": {
       "type": {
         "tipp": {
-          "label":"Original",
+          "label":"Paketbezogen",
           "description": "Informationen werden bevorzugt aus dem ursprünglichen KBART entnommen"
         },
         "title": {
           "label":"Angereichert",
-          "description": "Spalten werden bevorzugt aus Informationen zum angereicherten Referenztitel erzeugt"
+          "description": "Informationen werden bevorzugt aus den angereicherten Referenztiteln entnommen"
         }
       }
     },
