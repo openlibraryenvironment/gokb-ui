@@ -1489,7 +1489,7 @@
       "label": "Subject | Subjects",
       "scheme": {
         "label": "Type | Type",
-        "ddc": {
+        "DDC": {
           "label" : "DDC",
           "error": {
             "notationFormat": "Value {0} is not a valid DDC notation.",

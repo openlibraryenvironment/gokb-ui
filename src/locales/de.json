@@ -1499,7 +1499,7 @@
       "label": "Fachgebiet | Fachgebiete",
       "scheme": {
         "label": "System | Systeme",
-        "ddc": {
+        "DDC": {
           "label" : "DDC",
           "error": {
             "notationFormat": "Der Wert {0} ist keine valide DDC-Notation.",
