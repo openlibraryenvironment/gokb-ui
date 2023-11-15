@@ -1485,6 +1485,22 @@
         }
       }
     },
+    "subject": {
+      "label": "Subject | Subjects",
+      "scheme": {
+        "label": "Type | Type",
+        "ddc": {
+          "label" : "DDC",
+          "error": {
+            "notationFormat": "Value {0} is not a valid DDC notation.",
+            "longNotation": "Deep DCC notations are not supported!"
+          }
+        }
+      },
+      "heading": {
+        "label": "Value | Values"
+      }
+    },
     "general": {
       "label": "Component | Components",
       "name": "Name",

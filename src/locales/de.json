@@ -1495,6 +1495,22 @@
         }
       }
     },
+    "subject": {
+      "label": "Fachgebiet | Fachgebiete",
+      "scheme": {
+        "label": "System | Systeme",
+        "ddc": {
+          "label" : "DDC",
+          "error": {
+            "notationFormat": "Der Wert {0} ist keine valide DDC-Notation.",
+            "longNotation": "Tiefe DDC-Notationen werden nicht unterstützt!"
+          }
+        }
+      },
+      "heading": {
+        "label": "Wert | Werte"
+      }
+    },
     "general": {
       "label": "Komponente | Komponenten",
       "name": "Name",
