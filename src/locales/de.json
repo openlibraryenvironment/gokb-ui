@@ -945,6 +945,9 @@
       },
       "preferredShortname": {
         "label": "Empfohlene Kurzform"
+      },
+      "currentPackages": {
+        "label": "Aktuelle Paketanzahl"
       }
     },
     "organization": {

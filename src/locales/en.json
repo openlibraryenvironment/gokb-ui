@@ -945,6 +945,9 @@
       },
       "preferredShortname": {
         "label": "Preferred Short Name"
+      },
+      "currentPackages": {
+        "label": "Current Packages"
       }
     },
     "organization": {

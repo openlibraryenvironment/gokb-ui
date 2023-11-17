@@ -112,6 +112,11 @@
             sortable: true,
             value: 'link'
           },
+          { text: this.$i18n.tc('component.provider.currentPackages.label', 2),
+            align: 'center',
+            sortable: false,
+            value: 'packages'
+          }
         ]
       }
     },
@@ -131,6 +136,7 @@
           id,
           name,
           status,
+          _providedPackages,
           _links
         }) => ({
           id,
@@ -139,6 +145,7 @@
             route: EDIT_PROVIDER_ROUTE,
             id: 'id'
           },
+          packages: _providedPackages,
           status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined
