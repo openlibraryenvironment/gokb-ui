@@ -34,6 +34,15 @@
       />
       <v-spacer class="ms-4" />
       <gokb-state-field
+        v-model="searchFilters.contentType"
+        width="150px"
+        message-path="component.package.contentType"
+        url="refdata/categories/Package.ContentType"
+        :label="$t('component.package.contentType.label')"
+        return-object
+      />
+      <v-spacer class="ms-4" />
+      <gokb-state-field
         v-model="searchFilters.status"
         width="150px"
         init-item="Current"
@@ -119,6 +128,11 @@
         type: Number,
         required: false,
         default: undefined
+      },
+      hideLocal: {
+        type: Boolean,
+        required: false,
+        default: true
       }
     },
     data () {
@@ -140,6 +154,7 @@
         searchFilters: {
           status: undefined,
           provider: undefined,
+          contentType: undefined,
           nominalPlatform: undefined,
           q: undefined
         }
@@ -294,6 +309,7 @@
           promise: searchServices('rest/packages').search({
             ...(searchParams || {}),
             ...((sort && { _sort: sort }) || {}),
+            ...(this.hideLocal ? { global: ['Global', 'Consortium', 'Regional', 'Unknown'] } : {}),
             _order: (this.resultOptions.desc ? 'desc' : 'asc'),
             _include: searchServiceIncludes,
             offset: this.resultOptions.page ? (this.resultOptions.page - 1) * this.resultOptions.itemsPerPage : 0,
