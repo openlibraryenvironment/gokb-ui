@@ -23,6 +23,7 @@
     :style="{ maxWidth: width }"
     :clearable="clearable && !required"
     :return-object="returnObject"
+    :persistent-placeholder="!!placeholder"
     :dense="dense"
   >
     <template #label>

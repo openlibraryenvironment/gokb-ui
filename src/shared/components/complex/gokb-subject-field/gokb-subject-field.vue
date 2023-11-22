@@ -6,6 +6,7 @@
         width="150px"
         class="ms-4"
         message-path="component.subject.scheme"
+        :init-item="scheme"
         :label="$tc('component.subject.scheme.label')"
         return-object
         required
@@ -25,12 +26,9 @@
   </div>
 </template>
 <script>
-  import GokbTextField from '@/shared/components/base/gokb-text-field'
-  import GokbSelectField from '../../base/gokb-select-field/gokb-select-field.vue'
 
   export default {
     name: 'GokbSubjectField',
-    components: { GokbTextField, GokbSelectField },
     props: {
       disabled: {
         type: Boolean,
@@ -40,6 +38,11 @@
       deleteable: {
         type: Boolean,
         required: false
+      },
+      scheme: {
+        type: String,
+        required: false,
+        default: undefined
       },
       value: {
         type: Object,

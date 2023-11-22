@@ -19,6 +19,7 @@
     :validate-on-blur="validateOnBlur"
     :clearable="allowClear"
     :dense="dense"
+    :persistent-placeholder="!!placeholder"
     @click:append="$emit('click:append', $event)"
     @click:prepend="iconAction"
     :class="[ (disabled ? 'v-input--is-disabled' : '') ]"

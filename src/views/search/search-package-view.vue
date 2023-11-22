@@ -15,6 +15,7 @@
           platformId: undefined,
           lastUpdated: undefined,
           identifierValue: undefined,
+          subjectValue: undefined,
           contentType: undefined,
           status: 'Current',
           global: ['Global', 'Consortium', 'Regional', 'Other'],
@@ -89,14 +90,11 @@
               }
             },
             {
-              type: 'GokbStateField',
-              name: 'contentType',
-              value: 'contentType',
+              type: 'GokbSubjectFilterField',
+              name: 'subject',
+              value: 'subjectValue',
               properties: {
-                label: this.$i18n.t('component.package.contentType.label'),
-                width: '100%',
-                url: 'refdata/categories/Package.ContentType',
-                messagePath: 'component.package.contentType'
+                label: this.$i18n.tc('component.subjects.label')
               }
             },
           ],
@@ -133,6 +131,7 @@
             {
               type: 'GokbStateField',
               name: 'status',
+              md: 2,
               value: 'status',
               properties: {
                 initItem: 'Current',
@@ -142,7 +141,20 @@
             },
             {
               type: 'GokbStateField',
+              name: 'contentType',
+              md: 2,
+              value: 'contentType',
+              properties: {
+                label: this.$i18n.t('component.package.contentType.label'),
+                width: '100%',
+                url: 'refdata/categories/Package.ContentType',
+                messagePath: 'component.package.contentType'
+              }
+            },
+            {
+              type: 'GokbStateField',
               name: 'listStatus',
+              md: 2,
               value: 'listStatus',
               properties: {
                 label: this.$i18n.t('component.package.listStatus.label'),
@@ -154,6 +166,7 @@
             {
               type: 'GokbStateField',
               name: 'editStatus',
+              md: 2,
               value: 'editStatus',
               properties: {
                 label: this.$i18n.t('component.general.editStatus.label'),

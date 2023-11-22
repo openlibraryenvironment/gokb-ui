@@ -1,0 +1,7000 @@
+[{
+   "label" : {
+      "en" : "0 -- Computer science, information & general works",
+      "de" : "0 -- Informatik, Informationswissenschaft & allgemeine Werke"
+   },
+   "notation" : "0"
+},
+{
+   "notation" : "1",
+   "label" : {
+      "en" : "1 -- Knowledge",
+      "de" : "1 -- Wissen"
+   }
+},
+{
+   "notation" : "2",
+   "label" : {
+      "en" : "2 -- The book",
+      "de" : "2 -- Das Buch"
+   }
+},
+{
+   "label" : {
+      "de" : "3 -- Systeme",
+      "en" : "3 -- Systems"
+   },
+   "notation" : "3"
+},
+{
+   "notation" : "4",
+   "label" : {
+      "en" : "4 -- Data processing & computer science",
+      "de" : "4 -- Informatik"
+   }
+},
+{
+   "notation" : "5",
+   "label" : {
+      "de" : "5 -- Computerprogrammierung, Computerprogramme & Daten",
+      "en" : "5 -- Computer programming, programs & data"
+   }
+},
+{
+   "notation" : "6",
+   "label" : {
+      "en" : "6 -- Special computer methods",
+      "de" : "6 -- Spezielle Computerverfahren"
+   }
+},
+{
+   "label" : {
+      "de" : "7 -- Unbesetzt",
+      "en" : "7 -- Unassigned"
+   },
+   "notation" : "7"
+},
+{
+   "label" : {
+      "en" : "8 -- Unassigned",
+      "de" : "8 -- Unbesetzt"
+   },
+   "notation" : "8"
+},
+{
+   "label" : {
+      "de" : "9 -- Unbesetzt",
+      "en" : "9 -- Unassigned"
+   },
+   "notation" : "9"
+},
+{
+   "notation" : "10",
+   "label" : {
+      "de" : "10 -- Bibliografie",
+      "en" : "10 -- Bibliography"
+   }
+},
+{
+   "notation" : "11",
+   "label" : {
+      "de" : "11 -- Bibliografien & Kataloge",
+      "en" : "11 -- Bibliographies"
+   }
+},
+{
+   "label" : {
+      "de" : "12 -- Bibliografien & Kataloge von Einzelpersonen",
+      "en" : "12 -- Bibliographies of individuals"
+   },
+   "notation" : "12"
+},
+{
+   "notation" : "13",
+   "label" : {
+      "en" : "13 -- Unassigned",
+      "de" : "13 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "de" : "14 -- Anonymer & pseudonymer Werke",
+      "en" : "14 -- Of anonymous & pseudonymous works"
+   },
+   "notation" : "14"
+},
+{
+   "notation" : "15",
+   "label" : {
+      "de" : "15 -- Von Werken aus einzelnen Orten",
+      "en" : "15 -- Bibliographies of works from specific places"
+   }
+},
+{
+   "label" : {
+      "de" : "16 -- Von Werken über einzelne Themen",
+      "en" : "16 -- Bibliographies of works on specific subjects"
+   },
+   "notation" : "16"
+},
+{
+   "notation" : "17",
+   "label" : {
+      "de" : "17 -- Allgemeinbibliografien",
+      "en" : "17 -- General subject catalogs"
+   }
+},
+{
+   "label" : {
+      "de" : "18 -- Unbesetzt",
+      "en" : "18 -- Catalogs arranged by author, date, etc."
+   },
+   "notation" : "18"
+},
+{
+   "label" : {
+      "en" : "19 -- Dictionary catalogs",
+      "de" : "19 -- Unbesetzt"
+   },
+   "notation" : "19"
+},
+{
+   "label" : {
+      "en" : "20 -- Library & information sciences",
+      "de" : "20 -- Bibliotheks- & Informationswissenschaften"
+   },
+   "notation" : "20"
+},
+{
+   "notation" : "21",
+   "label" : {
+      "en" : "21 -- Library relationships",
+      "de" : "21 -- Beziehungen von Bibliotheken"
+   }
+},
+{
+   "label" : {
+      "en" : "22 -- Administration of physical plant",
+      "de" : "22 -- Verwaltung von Bibliotheksgebäuden und Bibliotheksstandorten"
+   },
+   "notation" : "22"
+},
+{
+   "notation" : "23",
+   "label" : {
+      "de" : "23 -- Personalmanagement",
+      "en" : "23 -- Personnel management"
+   }
+},
+{
+   "label" : {
+      "de" : "24 -- Unbesetzt",
+      "en" : "24 -- Unassigned"
+   },
+   "notation" : "24"
+},
+{
+   "notation" : "25",
+   "label" : {
+      "de" : "25 -- Tätigkeiten in Bibliotheken",
+      "en" : "25 -- Library operations"
+   }
+},
+{
+   "label" : {
+      "en" : "26 -- Libraries for specific subjects",
+      "de" : "26 -- Fachgebiets- & themenspezifische Bibliotheken"
+   },
+   "notation" : "26"
+},
+{
+   "label" : {
+      "de" : "27 -- Allgemeinbibliotheken",
+      "en" : "27 -- General libraries"
+   },
+   "notation" : "27"
+},
+{
+   "label" : {
+      "de" : "28 -- Lesen & Nutzung anderer Informationsmedien",
+      "en" : "28 -- Reading & use of other information media"
+   },
+   "notation" : "28"
+},
+{
+   "notation" : "29",
+   "label" : {
+      "en" : "29 -- Unassigned",
+      "de" : "29 -- Unbesetzt"
+   }
+},
+{
+   "notation" : "30",
+   "label" : {
+      "en" : "30 -- General encyclopedic works",
+      "de" : "30 -- Allgemeinenzyklopädien"
+   }
+},
+{
+   "notation" : "31",
+   "label" : {
+      "en" : "31 -- Encyclopedias in American English",
+      "de" : "31 -- Enzyklopädien in amerikanischem Englisch"
+   }
+},
+{
+   "notation" : "32",
+   "label" : {
+      "de" : "32 -- Enzyklopädien in Englisch",
+      "en" : "32 -- Encyclopedias in English"
+   }
+},
+{
+   "label" : {
+      "en" : "33 -- In other Germanic languages",
+      "de" : "33 -- In anderen germanischen Sprachen"
+   },
+   "notation" : "33"
+},
+{
+   "notation" : "34",
+   "label" : {
+      "de" : "34 -- Enzyklopädien in Französisch, Okzitanisch & Katalanisch",
+      "en" : "34 -- Encyclopedias in French, Occitan & Catalan"
+   }
+},
+{
+   "notation" : "35",
+   "label" : {
+      "de" : "35 -- In Italienisch, Rumänisch & verwandten Sprachen",
+      "en" : "35 -- In Italian, Romanian & related languages"
+   }
+},
+{
+   "notation" : "36",
+   "label" : {
+      "en" : "36 -- Encyclopedias in Spanish & Portuguese",
+      "de" : "36 -- Enzyklopädien in Spanisch, Portugiesisch & Galicisch"
+   }
+},
+{
+   "label" : {
+      "en" : "37 -- Encyclopedias in Slavic languages",
+      "de" : "37 -- Enzyklopädien in slawischen Sprachen"
+   },
+   "notation" : "37"
+},
+{
+   "label" : {
+      "de" : "38 -- Enzyklopädien in skandinavischen Sprachen",
+      "en" : "38 -- Encyclopedias in Scandinavian languages"
+   },
+   "notation" : "38"
+},
+{
+   "label" : {
+      "de" : "39 -- Enzyklopädien in anderen Sprachen",
+      "en" : "39 -- Encyclopedias in other languages"
+   },
+   "notation" : "39"
+},
+{
+   "notation" : "40",
+   "label" : {
+      "en" : "40 -- Unassigned",
+      "de" : "40 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "de" : "41 -- Unbesetzt",
+      "en" : "41 -- Unassigned"
+   },
+   "notation" : "41"
+},
+{
+   "notation" : "42",
+   "label" : {
+      "de" : "42 -- Unbesetzt",
+      "en" : "42 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "en" : "43 -- Unassigned",
+      "de" : "43 -- Unbesetzt"
+   },
+   "notation" : "43"
+},
+{
+   "label" : {
+      "de" : "44 -- Unbesetzt",
+      "en" : "44 -- Unassigned"
+   },
+   "notation" : "44"
+},
+{
+   "label" : {
+      "de" : "45 -- Unbesetzt",
+      "en" : "45 -- Unassigned"
+   },
+   "notation" : "45"
+},
+{
+   "label" : {
+      "de" : "46 -- Unbesetzt",
+      "en" : "46 -- Unassigned"
+   },
+   "notation" : "46"
+},
+{
+   "label" : {
+      "en" : "47 -- Unassigned",
+      "de" : "47 -- Unbesetzt"
+   },
+   "notation" : "47"
+},
+{
+   "label" : {
+      "de" : "48 -- Unbesetzt",
+      "en" : "48 -- Unassigned"
+   },
+   "notation" : "48"
+},
+{
+   "label" : {
+      "en" : "49 -- Unassigned",
+      "de" : "49 -- Unbesetzt"
+   },
+   "notation" : "49"
+},
+{
+   "label" : {
+      "en" : "50 -- General serial publications",
+      "de" : "50 -- Magazine, Zeitschriften & fortlaufende Sammelwerke"
+   },
+   "notation" : "50"
+},
+{
+   "label" : {
+      "de" : "51 -- Fortlaufende Sammelwerke in amerikanischem Englisch",
+      "en" : "51 -- Serials in American English"
+   },
+   "notation" : "51"
+},
+{
+   "notation" : "52",
+   "label" : {
+      "en" : "52 -- Serials in English",
+      "de" : "52 -- Fortlaufende Sammelwerke in Englisch"
+   }
+},
+{
+   "notation" : "53",
+   "label" : {
+      "de" : "53 -- Fortlaufende Sammelwerke in anderen germanischen Sprachen",
+      "en" : "53 -- Serials in other Germanic languages"
+   }
+},
+{
+   "notation" : "54",
+   "label" : {
+      "de" : "54 -- Sammelwerke in Französisch, Okzitanisch & Katalanisch",
+      "en" : "54 -- Serials in French, Occitan & Catalan"
+   }
+},
+{
+   "label" : {
+      "en" : "55 -- In Italian, Romanian & related languages",
+      "de" : "55 -- In Italienisch, Rumänisch & verwandten Sprachen"
+   },
+   "notation" : "55"
+},
+{
+   "label" : {
+      "de" : "56 -- Fortlaufende Sammelwerke in Spanisch, Portugiesisch & Galicisch",
+      "en" : "56 -- Serials in Spanish & Portuguese"
+   },
+   "notation" : "56"
+},
+{
+   "label" : {
+      "en" : "57 -- Serials in Slavic languages",
+      "de" : "57 -- Fortlaufende Sammelwerke in slawischen Sprachen"
+   },
+   "notation" : "57"
+},
+{
+   "label" : {
+      "en" : "58 -- Serials in Scandinavian languages",
+      "de" : "58 -- Fortlaufende Sammelwerke in skandinavischen Sprachen"
+   },
+   "notation" : "58"
+},
+{
+   "label" : {
+      "en" : "59 -- Serials in other languages",
+      "de" : "59 -- Fortlaufende Sammelwerke in anderen Sprachen"
+   },
+   "notation" : "59"
+},
+{
+   "label" : {
+      "de" : "60 -- Allgemeine Organisationen & Museumswissenschaft",
+      "en" : "60 -- General organizations & museum science"
+   },
+   "notation" : "60"
+},
+{
+   "label" : {
+      "de" : "61 -- Organisationen in Nordamerika",
+      "en" : "61 -- Organizations in North America"
+   },
+   "notation" : "61"
+},
+{
+   "label" : {
+      "de" : "62 -- Organisationen auf den Britischen Inseln",
+      "en" : "62 -- Organizations in British Isles, in England"
+   },
+   "notation" : "62"
+},
+{
+   "notation" : "63",
+   "label" : {
+      "en" : "63 -- Organizations in central Europe, in Germany",
+      "de" : "63 -- Organisationen in Deutschland, in Mitteleuropa"
+   }
+},
+{
+   "label" : {
+      "en" : "64 -- Organizations in France & Monaco",
+      "de" : "64 -- Organisationen in Frankreich & Monaco"
+   },
+   "notation" : "64"
+},
+{
+   "notation" : "65",
+   "label" : {
+      "de" : "65 -- In Italien, San Marino, Vatikanstadt, Malta",
+      "en" : "65 -- Organizations in Italy & adjacent islands"
+   }
+},
+{
+   "notation" : "66",
+   "label" : {
+      "en" : "66 -- In Iberian Peninsula & adjacent islands",
+      "de" : "66 -- In Spanien, Andorra, Gibraltar, Portugal"
+   }
+},
+{
+   "notation" : "67",
+   "label" : {
+      "en" : "67 -- Organizations in eastern Europe, in Russia",
+      "de" : "67 -- Organisationen in Russland, in Osteuropa"
+   }
+},
+{
+   "label" : {
+      "en" : "68 -- Organizations in other geographic areas",
+      "de" : "68 -- Organisationen in anderen geografischen Gebieten"
+   },
+   "notation" : "68"
+},
+{
+   "label" : {
+      "en" : "69 -- Museum science",
+      "de" : "69 -- Museumswissenschaft"
+   },
+   "notation" : "69"
+},
+{
+   "label" : {
+      "en" : "70 -- News media, journalism & publishing",
+      "de" : "70 -- Publizistische Medien, Journalismus & Verlagswesen"
+   },
+   "notation" : "70"
+},
+{
+   "notation" : "71",
+   "label" : {
+      "de" : "71 -- Zeitungen in Nordamerika",
+      "en" : "71 -- Newspapers in North America"
+   }
+},
+{
+   "notation" : "72",
+   "label" : {
+      "en" : "72 -- Newspapers in British Isles, in England",
+      "de" : "72 -- Zeitungen auf den Britischen Inseln"
+   }
+},
+{
+   "notation" : "73",
+   "label" : {
+      "de" : "73 -- Zeitungen in Deutschland, in Mitteleuropa",
+      "en" : "73 -- Newspapers in central Europe, in Germany"
+   }
+},
+{
+   "label" : {
+      "de" : "74 -- Zeitungen in Frankreich & Monaco",
+      "en" : "74 -- Newspapers in France & Monaco"
+   },
+   "notation" : "74"
+},
+{
+   "label" : {
+      "en" : "75 -- Newspapers in Italy & adjacent islands",
+      "de" : "75 -- In Italien, San Marino, Vatikanstadt, Malta"
+   },
+   "notation" : "75"
+},
+{
+   "label" : {
+      "en" : "76 -- In Iberian Peninsula & adjacent islands",
+      "de" : "76 -- In Spanien, Andorra, Gibraltar, Portugal"
+   },
+   "notation" : "76"
+},
+{
+   "notation" : "77",
+   "label" : {
+      "en" : "77 -- Newspapers in eastern Europe, in Russia",
+      "de" : "77 -- Zeitungen in Russland, in Osteuropa"
+   }
+},
+{
+   "label" : {
+      "de" : "78 -- Zeitungen in Skandinavien",
+      "en" : "78 -- Newspapers in Scandinavia"
+   },
+   "notation" : "78"
+},
+{
+   "label" : {
+      "de" : "79 -- Zeitungen in anderen geografischen Gebieten",
+      "en" : "79 -- Newspapers in other geographic areas"
+   },
+   "notation" : "79"
+},
+{
+   "label" : {
+      "de" : "80 -- Allgemeine Sammelwerke",
+      "en" : "80 -- General collections"
+   },
+   "notation" : "80"
+},
+{
+   "notation" : "81",
+   "label" : {
+      "de" : "81 -- Sammelwerke in amerikanischem Englisch",
+      "en" : "81 -- Collections in American English"
+   }
+},
+{
+   "label" : {
+      "en" : "82 -- Collections in English",
+      "de" : "82 -- Sammelwerke in Englisch"
+   },
+   "notation" : "82"
+},
+{
+   "label" : {
+      "de" : "83 -- Sammelwerke in anderen germanischen Sprachen",
+      "en" : "83 -- Collections in other Germanic languages"
+   },
+   "notation" : "83"
+},
+{
+   "label" : {
+      "de" : "84 -- Sammelwerke in Französisch, Okzitanisch & Katalanisch",
+      "en" : "84 -- Collections in French, Occitan & Catalan"
+   },
+   "notation" : "84"
+},
+{
+   "label" : {
+      "en" : "85 -- In Italian, Romanian & related languages",
+      "de" : "85 -- In Italienisch, Rumänisch & verwandten Sprachen"
+   },
+   "notation" : "85"
+},
+{
+   "notation" : "86",
+   "label" : {
+      "en" : "86 -- Collections in Spanish & Portuguese",
+      "de" : "86 -- Sammelwerke in Spanisch, Portugiesisch & Galicisch"
+   }
+},
+{
+   "label" : {
+      "de" : "87 -- Sammelwerke in slawischen Sprachen",
+      "en" : "87 -- Collections in Slavic languages"
+   },
+   "notation" : "87"
+},
+{
+   "label" : {
+      "en" : "88 -- Collections in Scandinavian languages",
+      "de" : "88 -- Sammelwerke in skandinavischen Sprachen"
+   },
+   "notation" : "88"
+},
+{
+   "label" : {
+      "en" : "89 -- Collections in other languages",
+      "de" : "89 -- Sammelwerke in anderen Sprachen"
+   },
+   "notation" : "89"
+},
+{
+   "notation" : "90",
+   "label" : {
+      "de" : "90 -- Handschriften & seltene Bücher",
+      "en" : "90 -- Manuscripts & rare books"
+   }
+},
+{
+   "label" : {
+      "de" : "91 -- Handschriften",
+      "en" : "91 -- Manuscripts"
+   },
+   "notation" : "91"
+},
+{
+   "notation" : "92",
+   "label" : {
+      "en" : "92 -- Block books",
+      "de" : "92 -- Blockbücher"
+   }
+},
+{
+   "notation" : "93",
+   "label" : {
+      "en" : "93 -- Incunabula",
+      "de" : "93 -- Inkunabeln"
+   }
+},
+{
+   "label" : {
+      "en" : "94 -- Printed books",
+      "de" : "94 -- Gedruckte Bücher"
+   },
+   "notation" : "94"
+},
+{
+   "notation" : "95",
+   "label" : {
+      "de" : "95 -- Bücher mit besonderem Einband",
+      "en" : "95 -- Books notable for bindings"
+   }
+},
+{
+   "notation" : "96",
+   "label" : {
+      "en" : "96 -- Books notable for illustrations",
+      "de" : "96 -- Bücher mit besonderen Illustrationen"
+   }
+},
+{
+   "label" : {
+      "en" : "97 -- Books notable for ownership or origin",
+      "de" : "97 -- Bücher aus besonderem Besitz oder besonderer Herkunft"
+   },
+   "notation" : "97"
+},
+{
+   "label" : {
+      "de" : "98 -- Verbotene Werke, Fälschungen & Scherzdrucke",
+      "en" : "98 -- Prohibited works, forgeries & hoaxes"
+   },
+   "notation" : "98"
+},
+{
+   "label" : {
+      "de" : "99 -- Bücher mit besonderem Format",
+      "en" : "99 -- Books notable for format"
+   },
+   "notation" : "99"
+},
+{
+   "notation" : "100",
+   "label" : {
+      "en" : "100 -- Philosophy & psychology",
+      "de" : "100 -- Philosophie und Psychologie"
+   }
+},
+{
+   "label" : {
+      "en" : "101 -- Theory of philosophy",
+      "de" : "101 -- Theorie der Philosophie"
+   },
+   "notation" : "101"
+},
+{
+   "label" : {
+      "de" : "102 -- Verschiedenes",
+      "en" : "102 -- Miscellany"
+   },
+   "notation" : "102"
+},
+{
+   "label" : {
+      "en" : "103 -- Dictionaries & encyclopedias",
+      "de" : "103 -- Wörterbücher, Enzyklopädien"
+   },
+   "notation" : "103"
+},
+{
+   "label" : {
+      "en" : "104 -- Unassigned",
+      "de" : "104 -- Unbesetzt"
+   },
+   "notation" : "104"
+},
+{
+   "notation" : "105",
+   "label" : {
+      "en" : "105 -- Serial publications",
+      "de" : "105 -- Fortlaufende Sammelwerke"
+   }
+},
+{
+   "notation" : "106",
+   "label" : {
+      "de" : "106 -- Organisationen, Management",
+      "en" : "106 -- Organizations & management"
+   }
+},
+{
+   "label" : {
+      "en" : "107 -- Education, research & related topics",
+      "de" : "107 -- Ausbildung, Forschung, verwandte Themen"
+   },
+   "notation" : "107"
+},
+{
+   "label" : {
+      "de" : "108 -- Behandlung nach Personengruppen",
+      "en" : "108 -- Kinds of persons treatment"
+   },
+   "notation" : "108"
+},
+{
+   "label" : {
+      "de" : "109 -- Historische Behandlung, Behandlung mehrerer Einzelpersonen",
+      "en" : "109 -- Historical & collected persons treatment"
+   },
+   "notation" : "109"
+},
+{
+   "label" : {
+      "de" : "110 -- Metaphysik",
+      "en" : "110 -- Metaphysics"
+   },
+   "notation" : "110"
+},
+{
+   "notation" : "111",
+   "label" : {
+      "en" : "111 -- Ontology",
+      "de" : "111 -- Ontologie"
+   }
+},
+{
+   "notation" : "112",
+   "label" : {
+      "de" : "112 -- Unbesetzt",
+      "en" : "112 -- Unassigned"
+   }
+},
+{
+   "notation" : "113",
+   "label" : {
+      "en" : "113 -- Cosmology",
+      "de" : "113 -- Kosmologie"
+   }
+},
+{
+   "notation" : "114",
+   "label" : {
+      "de" : "114 -- Raum",
+      "en" : "114 -- Space"
+   }
+},
+{
+   "notation" : "115",
+   "label" : {
+      "en" : "115 -- Time",
+      "de" : "115 -- Zeit"
+   }
+},
+{
+   "notation" : "116",
+   "label" : {
+      "en" : "116 -- Change",
+      "de" : "116 -- Veränderung"
+   }
+},
+{
+   "notation" : "117",
+   "label" : {
+      "en" : "117 -- Structure",
+      "de" : "117 -- Struktur"
+   }
+},
+{
+   "label" : {
+      "de" : "118 -- Kraft und Energie",
+      "en" : "118 -- Force & energy"
+   },
+   "notation" : "118"
+},
+{
+   "label" : {
+      "de" : "119 -- Zahl und Quantität",
+      "en" : "119 -- Number & quantity"
+   },
+   "notation" : "119"
+},
+{
+   "notation" : "120",
+   "label" : {
+      "en" : "120 -- Epistemology, causation & humankind",
+      "de" : "120 -- Epistemologie, Kausalität, Menschheit"
+   }
+},
+{
+   "label" : {
+      "en" : "121 -- Epistemology",
+      "de" : "121 -- Epistemologie"
+   },
+   "notation" : "121"
+},
+{
+   "label" : {
+      "de" : "122 -- Kausalität",
+      "en" : "122 -- Causation"
+   },
+   "notation" : "122"
+},
+{
+   "label" : {
+      "en" : "123 -- Determinism & indeterminism",
+      "de" : "123 -- Determinismus, Indeterminismus"
+   },
+   "notation" : "123"
+},
+{
+   "label" : {
+      "en" : "124 -- Teleology",
+      "de" : "124 -- Teleologie"
+   },
+   "notation" : "124"
+},
+{
+   "label" : {
+      "de" : "125 -- Unbesetzt",
+      "en" : "125 -- Unassigned"
+   },
+   "notation" : "125"
+},
+{
+   "notation" : "126",
+   "label" : {
+      "en" : "126 -- The self",
+      "de" : "126 -- Das Selbst"
+   }
+},
+{
+   "notation" : "127",
+   "label" : {
+      "de" : "127 -- Das Unbewusste, das Unterbewusste",
+      "en" : "127 -- The unconscious & the subconscious"
+   }
+},
+{
+   "label" : {
+      "de" : "128 -- Menschheit",
+      "en" : "128 -- Humankind"
+   },
+   "notation" : "128"
+},
+{
+   "label" : {
+      "de" : "129 -- Ursprung und Schicksal individueller Seelen",
+      "en" : "129 -- Origin & destiny of individual souls"
+   },
+   "notation" : "129"
+},
+{
+   "notation" : "130",
+   "label" : {
+      "en" : "130 -- Parapsychology & occultism",
+      "de" : "130 -- Parapsychologie und Okkultismus"
+   }
+},
+{
+   "label" : {
+      "en" : "131 -- Parapsychological & occult methods",
+      "de" : "131 -- Parapsychologische und okkulte Techniken"
+   },
+   "notation" : "131"
+},
+{
+   "label" : {
+      "en" : "132 -- Unassigned",
+      "de" : "132 -- Unbesetzt"
+   },
+   "notation" : "132"
+},
+{
+   "label" : {
+      "en" : "133 -- Specific topics in parapsychology & occultism",
+      "de" : "133 -- Einzelne Themen der Parapsychologie und des Okkultismus"
+   },
+   "notation" : "133"
+},
+{
+   "label" : {
+      "en" : "134 -- Unassigned",
+      "de" : "134 -- Unbesetzt"
+   },
+   "notation" : "134"
+},
+{
+   "label" : {
+      "de" : "135 -- Träume, Mysterien",
+      "en" : "135 -- Dreams & mysteries"
+   },
+   "notation" : "135"
+},
+{
+   "label" : {
+      "en" : "136 -- Unassigned",
+      "de" : "136 -- Unbesetzt"
+   },
+   "notation" : "136"
+},
+{
+   "notation" : "137",
+   "label" : {
+      "de" : "137 -- Divinatorische Graphologie",
+      "en" : "137 -- Divinatory graphology"
+   }
+},
+{
+   "label" : {
+      "de" : "138 -- Physiognomie",
+      "en" : "138 -- Physiognomy"
+   },
+   "notation" : "138"
+},
+{
+   "notation" : "139",
+   "label" : {
+      "en" : "139 -- Phrenology",
+      "de" : "139 -- Phrenologie"
+   }
+},
+{
+   "notation" : "140",
+   "label" : {
+      "de" : "140 -- Einzelne philosophische Schulen",
+      "en" : "140 -- Specific philosophical schools"
+   }
+},
+{
+   "notation" : "141",
+   "label" : {
+      "de" : "141 -- Idealismus und verwandte Systeme",
+      "en" : "141 -- Idealism & related systems"
+   }
+},
+{
+   "label" : {
+      "en" : "142 -- Critical philosophy",
+      "de" : "142 -- Kritizismus"
+   },
+   "notation" : "142"
+},
+{
+   "notation" : "143",
+   "label" : {
+      "de" : "143 -- Bergsonismus, Intuitionismus",
+      "en" : "143 -- Bergsonism & intuitionism"
+   }
+},
+{
+   "label" : {
+      "en" : "144 -- Humanism & related systems",
+      "de" : "144 -- Humanismus und verwandte Systeme"
+   },
+   "notation" : "144"
+},
+{
+   "notation" : "145",
+   "label" : {
+      "de" : "145 -- Sensualismus",
+      "en" : "145 -- Sensationalism"
+   }
+},
+{
+   "notation" : "146",
+   "label" : {
+      "en" : "146 -- Naturalism & related systems",
+      "de" : "146 -- Naturalismus und verwandte Systeme"
+   }
+},
+{
+   "notation" : "147",
+   "label" : {
+      "en" : "147 -- Pantheism & related systems",
+      "de" : "147 -- Pantheismus und verwandte Systeme"
+   }
+},
+{
+   "notation" : "148",
+   "label" : {
+      "de" : "148 -- Eklektizismus, Liberalismus, Traditionalismus",
+      "en" : "148 -- Eclecticism, liberalism & traditionalism"
+   }
+},
+{
+   "label" : {
+      "de" : "149 -- Andere philosophische Systeme",
+      "en" : "149 -- Other philosophical systems"
+   },
+   "notation" : "149"
+},
+{
+   "notation" : "150",
+   "label" : {
+      "de" : "150 -- Psychologie",
+      "en" : "150 -- Psychology"
+   }
+},
+{
+   "notation" : "151",
+   "label" : {
+      "en" : "151 -- Unassigned",
+      "de" : "151 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "de" : "152 -- Sinneswahrnehmung, Bewegung, Emotionen, Triebe",
+      "en" : "152 -- Perception, movement, emotions & drives"
+   },
+   "notation" : "152"
+},
+{
+   "label" : {
+      "en" : "153 -- Mental processes & intelligence",
+      "de" : "153 -- Kognitive Prozesse, Intelligenz"
+   },
+   "notation" : "153"
+},
+{
+   "notation" : "154",
+   "label" : {
+      "en" : "154 -- Subconscious & altered states",
+      "de" : "154 -- Unterbewusste und bewusstseinsveränderte Zustände"
+   }
+},
+{
+   "notation" : "155",
+   "label" : {
+      "en" : "155 -- Differential & developmental psychology",
+      "de" : "155 -- Differentielle Psychologie, Entwicklungspsychologie"
+   }
+},
+{
+   "label" : {
+      "en" : "156 -- Comparative psychology",
+      "de" : "156 -- Vergleichende Psychologie"
+   },
+   "notation" : "156"
+},
+{
+   "label" : {
+      "en" : "157 -- Unassigned",
+      "de" : "157 -- Unbesetzt"
+   },
+   "notation" : "157"
+},
+{
+   "label" : {
+      "de" : "158 -- Angewandte Psychologie",
+      "en" : "158 -- Applied psychology"
+   },
+   "notation" : "158"
+},
+{
+   "notation" : "159",
+   "label" : {
+      "en" : "159 -- Unassigned",
+      "de" : "159 -- Unbesetzt"
+   }
+},
+{
+   "notation" : "160",
+   "label" : {
+      "en" : "160 -- Logic",
+      "de" : "160 -- Logik"
+   }
+},
+{
+   "notation" : "161",
+   "label" : {
+      "en" : "161 -- Induction",
+      "de" : "161 -- Induktion"
+   }
+},
+{
+   "label" : {
+      "en" : "162 -- Deduction",
+      "de" : "162 -- Deduktion"
+   },
+   "notation" : "162"
+},
+{
+   "notation" : "163",
+   "label" : {
+      "en" : "163 -- Unassigned",
+      "de" : "163 -- Unbesetzt"
+   }
+},
+{
+   "notation" : "164",
+   "label" : {
+      "de" : "164 -- Unbesetzt",
+      "en" : "164 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "en" : "165 -- Fallacies & sources of error",
+      "de" : "165 -- Fehlschlüsse, Fehlerquellen"
+   },
+   "notation" : "165"
+},
+{
+   "notation" : "166",
+   "label" : {
+      "en" : "166 -- Syllogisms",
+      "de" : "166 -- Syllogismen"
+   }
+},
+{
+   "notation" : "167",
+   "label" : {
+      "en" : "167 -- Hypotheses",
+      "de" : "167 -- Hypothesen"
+   }
+},
+{
+   "notation" : "168",
+   "label" : {
+      "en" : "168 -- Argument & persuasion",
+      "de" : "168 -- Argument, Überzeugungung"
+   }
+},
+{
+   "notation" : "169",
+   "label" : {
+      "de" : "169 -- Analogie",
+      "en" : "169 -- Analogy"
+   }
+},
+{
+   "label" : {
+      "de" : "170 -- Ethik",
+      "en" : "170 -- Ethics"
+   },
+   "notation" : "170"
+},
+{
+   "notation" : "171",
+   "label" : {
+      "en" : "171 -- Ethical systems",
+      "de" : "171 -- Ethische Systeme"
+   }
+},
+{
+   "label" : {
+      "de" : "172 -- Politische Ethik",
+      "en" : "172 -- Political ethics"
+   },
+   "notation" : "172"
+},
+{
+   "label" : {
+      "de" : "173 -- Familienethik",
+      "en" : "173 -- Ethics of family relationships"
+   },
+   "notation" : "173"
+},
+{
+   "notation" : "174",
+   "label" : {
+      "de" : "174 -- Berufsethik",
+      "en" : "174 -- Occupational ethics"
+   }
+},
+{
+   "notation" : "175",
+   "label" : {
+      "de" : "175 -- Ethik von Freizeit und Erholung",
+      "en" : "175 -- Ethics of recreation & leisure"
+   }
+},
+{
+   "notation" : "176",
+   "label" : {
+      "de" : "176 -- Sexual- und Reproduktionsethik",
+      "en" : "176 -- Ethics of sex & reproduction"
+   }
+},
+{
+   "notation" : "177",
+   "label" : {
+      "en" : "177 -- Ethics of social relations",
+      "de" : "177 -- Ethik sozialer Beziehungen"
+   }
+},
+{
+   "label" : {
+      "de" : "178 -- Konsumethik",
+      "en" : "178 -- Ethics of consumption"
+   },
+   "notation" : "178"
+},
+{
+   "notation" : "179",
+   "label" : {
+      "en" : "179 -- Other ethical norms",
+      "de" : "179 -- Andere ethische Normen"
+   }
+},
+{
+   "notation" : "180",
+   "label" : {
+      "de" : "180 -- Antike, mittelalterliche und östliche Philosophie",
+      "en" : "180 -- Ancient, medieval & eastern philosophy"
+   }
+},
+{
+   "notation" : "181",
+   "label" : {
+      "de" : "181 -- Östliche Philosophie",
+      "en" : "181 -- Eastern philosophy"
+   }
+},
+{
+   "notation" : "182",
+   "label" : {
+      "de" : "182 -- Vorsokratische griechische Philosophien",
+      "en" : "182 -- Pre-Socratic Greek philosophies"
+   }
+},
+{
+   "label" : {
+      "de" : "183 -- Sokratische und verwandte Philosophien",
+      "en" : "183 -- Socratic & related philosophies"
+   },
+   "notation" : "183"
+},
+{
+   "label" : {
+      "de" : "184 -- Platonische Philosophie",
+      "en" : "184 -- Platonic philosophy"
+   },
+   "notation" : "184"
+},
+{
+   "label" : {
+      "de" : "185 -- Aristotelische Philosophie",
+      "en" : "185 -- Aristotelian philosophy"
+   },
+   "notation" : "185"
+},
+{
+   "label" : {
+      "en" : "186 -- Skeptic & Neoplatonic philosophies",
+      "de" : "186 -- Skeptische und neuplatonische Philosophien"
+   },
+   "notation" : "186"
+},
+{
+   "notation" : "187",
+   "label" : {
+      "de" : "187 -- Epikureische Philosophie",
+      "en" : "187 -- Epicurean philosophy"
+   }
+},
+{
+   "notation" : "188",
+   "label" : {
+      "en" : "188 -- Stoic philosophy",
+      "de" : "188 -- Stoische Philosophie"
+   }
+},
+{
+   "label" : {
+      "en" : "189 -- Medieval western philosophy",
+      "de" : "189 -- Mittelalterliche westliche Philosophie"
+   },
+   "notation" : "189"
+},
+{
+   "label" : {
+      "de" : "190 -- Neuzeitliche westliche Philosophie",
+      "en" : "190 -- Modern western philosophy"
+   },
+   "notation" : "190"
+},
+{
+   "notation" : "191",
+   "label" : {
+      "de" : "191 -- Philosophie in den USA und Kanada",
+      "en" : "191 -- Philosophy of United States & Canada"
+   }
+},
+{
+   "notation" : "192",
+   "label" : {
+      "en" : "192 -- Philosophy of British Isles",
+      "de" : "192 -- Philosophie auf den Britischen Inseln"
+   }
+},
+{
+   "notation" : "193",
+   "label" : {
+      "en" : "193 -- Philosophy of Germany & Austria",
+      "de" : "193 -- Philosophie in Deutschland und Österreich"
+   }
+},
+{
+   "notation" : "194",
+   "label" : {
+      "en" : "194 -- Philosophy of France",
+      "de" : "194 -- Philosophie in Frankreich"
+   }
+},
+{
+   "label" : {
+      "en" : "195 -- Philosophy of Italy",
+      "de" : "195 -- Philosophie in Italien"
+   },
+   "notation" : "195"
+},
+{
+   "label" : {
+      "de" : "196 -- Philosophie in Spanien und Portugal",
+      "en" : "196 -- Philosophy of Spain & Portugal"
+   },
+   "notation" : "196"
+},
+{
+   "notation" : "197",
+   "label" : {
+      "de" : "197 -- Philosophie in Russland und der früheren Sowjetunion",
+      "en" : "197 -- Philosophy of former Soviet Union"
+   }
+},
+{
+   "label" : {
+      "en" : "198 -- Philosophy of Scandinavia",
+      "de" : "198 -- Philosophie in Skandinavien"
+   },
+   "notation" : "198"
+},
+{
+   "label" : {
+      "de" : "199 -- Philosophie in anderen geografischen Gebieten",
+      "en" : "199 -- Philosophy in other geographic areas"
+   },
+   "notation" : "199"
+},
+{
+   "notation" : "200",
+   "label" : {
+      "de" : "200 -- Religion",
+      "en" : "200 -- Religion"
+   }
+},
+{
+   "label" : {
+      "de" : "201 -- Religiöse Mythologie, Soziallehre",
+      "en" : "201 -- Religious mythology & social theology"
+   },
+   "notation" : "201"
+},
+{
+   "label" : {
+      "en" : "202 -- Doctrines",
+      "de" : "202 -- Lehren"
+   },
+   "notation" : "202"
+},
+{
+   "label" : {
+      "de" : "203 -- Gottesdienst und andere Formen der öffentlichen Religionsausübung",
+      "en" : "203 -- Public worship & other practices"
+   },
+   "notation" : "203"
+},
+{
+   "notation" : "204",
+   "label" : {
+      "de" : "204 -- Religiöse Erfahrung, religiöses Leben, religiöse Praxis",
+      "en" : "204 -- Religious experience, life & practice"
+   }
+},
+{
+   "notation" : "205",
+   "label" : {
+      "en" : "205 -- Religious ethics",
+      "de" : "205 -- Religiöse Ethik"
+   }
+},
+{
+   "notation" : "206",
+   "label" : {
+      "de" : "206 -- Religiöse Führer und Organisation",
+      "en" : "206 -- Leaders & organization"
+   }
+},
+{
+   "notation" : "207",
+   "label" : {
+      "en" : "207 -- Missions & religious education",
+      "de" : "207 -- Mission, religiöse Erziehung"
+   }
+},
+{
+   "label" : {
+      "de" : "208 -- Quellen",
+      "en" : "208 -- Sources"
+   },
+   "notation" : "208"
+},
+{
+   "label" : {
+      "en" : "209 -- Sects & reform movements",
+      "de" : "209 -- Sekten, Reformbewegungen"
+   },
+   "notation" : "209"
+},
+{
+   "notation" : "210",
+   "label" : {
+      "en" : "210 -- Philosophy & theory of religion",
+      "de" : "210 -- Religionsphilosophie, Religionstheorie"
+   }
+},
+{
+   "label" : {
+      "de" : "211 -- Gottesvorstellungen",
+      "en" : "211 -- Concepts of God"
+   },
+   "notation" : "211"
+},
+{
+   "notation" : "212",
+   "label" : {
+      "en" : "212 -- Existence, knowability & attributes of God",
+      "de" : "212 -- Gottesfrage, Gotteserkenntnis, Eigenschaften Gottes"
+   }
+},
+{
+   "label" : {
+      "de" : "213 -- Schöpfung",
+      "en" : "213 -- Creation"
+   },
+   "notation" : "213"
+},
+{
+   "notation" : "214",
+   "label" : {
+      "en" : "214 -- Theodicy",
+      "de" : "214 -- Theodizee"
+   }
+},
+{
+   "notation" : "215",
+   "label" : {
+      "en" : "215 -- Science & religion",
+      "de" : "215 -- Naturwissenschaft und Religion"
+   }
+},
+{
+   "notation" : "216",
+   "label" : {
+      "en" : "216 -- Unassigned",
+      "de" : "216 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "en" : "217 -- Unassigned",
+      "de" : "217 -- Unbesetzt"
+   },
+   "notation" : "217"
+},
+{
+   "notation" : "218",
+   "label" : {
+      "en" : "218 -- Humankind",
+      "de" : "218 -- Der Mensch"
+   }
+},
+{
+   "label" : {
+      "de" : "219 -- Unbesetzt",
+      "en" : "219 -- Unassigned"
+   },
+   "notation" : "219"
+},
+{
+   "label" : {
+      "en" : "220 -- Bible",
+      "de" : "220 -- Bibel"
+   },
+   "notation" : "220"
+},
+{
+   "notation" : "221",
+   "label" : {
+      "en" : "221 -- Old Testament (Tanakh)",
+      "de" : "221 -- Altes Testament (Tenach)"
+   }
+},
+{
+   "notation" : "222",
+   "label" : {
+      "de" : "222 -- Geschichtsbücher des Alten Testaments",
+      "en" : "222 -- Historical books of Old Testament"
+   }
+},
+{
+   "notation" : "223",
+   "label" : {
+      "en" : "223 -- Poetic books of Old Testament",
+      "de" : "223 -- Poetische Bücher des Alten Testaments"
+   }
+},
+{
+   "label" : {
+      "en" : "224 -- Prophetic books of Old Testament",
+      "de" : "224 -- Prophetische Bücher des Alten Testaments"
+   },
+   "notation" : "224"
+},
+{
+   "notation" : "225",
+   "label" : {
+      "en" : "225 -- New Testament",
+      "de" : "225 -- Neues Testament"
+   }
+},
+{
+   "label" : {
+      "de" : "226 -- Evangelien, Apostelgeschichte",
+      "en" : "226 -- Gospels & Acts"
+   },
+   "notation" : "226"
+},
+{
+   "label" : {
+      "en" : "227 -- Epistles",
+      "de" : "227 -- Briefe"
+   },
+   "notation" : "227"
+},
+{
+   "notation" : "228",
+   "label" : {
+      "en" : "228 -- Revelation (Apocalypse)",
+      "de" : "228 -- Johannes-Apokalypse (Offenbarung des Johannes)"
+   }
+},
+{
+   "notation" : "229",
+   "label" : {
+      "de" : "229 -- Apokryphen, Pseudepigraphen",
+      "en" : "229 -- Apocrypha & pseudepigrapha"
+   }
+},
+{
+   "label" : {
+      "de" : "230 -- Christentum, Christliche Theologie",
+      "en" : "230 -- Christianity & Christian theology"
+   },
+   "notation" : "230"
+},
+{
+   "label" : {
+      "en" : "231 -- God",
+      "de" : "231 -- Gott"
+   },
+   "notation" : "231"
+},
+{
+   "notation" : "232",
+   "label" : {
+      "de" : "232 -- Jesus Christus und seine Familie",
+      "en" : "232 -- Jesus Christ & his family"
+   }
+},
+{
+   "notation" : "233",
+   "label" : {
+      "de" : "233 -- Der Mensch",
+      "en" : "233 -- Humankind"
+   }
+},
+{
+   "label" : {
+      "en" : "234 -- Salvation & grace",
+      "de" : "234 -- Erlösung, Gnade"
+   },
+   "notation" : "234"
+},
+{
+   "notation" : "235",
+   "label" : {
+      "en" : "235 -- Spiritual beings",
+      "de" : "235 -- Geistliche Wesen"
+   }
+},
+{
+   "label" : {
+      "en" : "236 -- Eschatology",
+      "de" : "236 -- Eschatologie"
+   },
+   "notation" : "236"
+},
+{
+   "label" : {
+      "de" : "237 -- Unbesetzt",
+      "en" : "237 -- Unassigned"
+   },
+   "notation" : "237"
+},
+{
+   "notation" : "238",
+   "label" : {
+      "en" : "238 -- Creeds & catechisms",
+      "de" : "238 -- Glaubensbekenntnisse, Katechismen"
+   }
+},
+{
+   "label" : {
+      "de" : "239 -- Apologetik, Polemik",
+      "en" : "239 -- Apologetics & polemics"
+   },
+   "notation" : "239"
+},
+{
+   "notation" : "240",
+   "label" : {
+      "de" : "240 -- Christliche Ethik, spirituelle Theologie",
+      "en" : "240 -- Christian moral & devotional theology"
+   }
+},
+{
+   "notation" : "241",
+   "label" : {
+      "en" : "241 -- Christian ethics",
+      "de" : "241 -- Christliche Ethik"
+   }
+},
+{
+   "notation" : "242",
+   "label" : {
+      "de" : "242 -- Erbauungsliteratur",
+      "en" : "242 -- Devotional literature"
+   }
+},
+{
+   "notation" : "243",
+   "label" : {
+      "en" : "243 -- Evangelistic writings for individuals",
+      "de" : "243 -- Evangelistisches Schrifttum für Einzelpersonen"
+   }
+},
+{
+   "notation" : "244",
+   "label" : {
+      "en" : "244 -- Unassigned",
+      "de" : "244 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "en" : "245 -- Unassigned",
+      "de" : "245 -- Unbesetzt"
+   },
+   "notation" : "245"
+},
+{
+   "notation" : "246",
+   "label" : {
+      "en" : "246 -- Use of art in Christianity",
+      "de" : "246 -- Kunst im Christentum"
+   }
+},
+{
+   "notation" : "247",
+   "label" : {
+      "de" : "247 -- Kirchenausstattung, liturgisches Gerät",
+      "en" : "247 -- Church furnishings & articles"
+   }
+},
+{
+   "notation" : "248",
+   "label" : {
+      "en" : "248 -- Christian experience, practice & life",
+      "de" : "248 -- Christliche Erfahrung, christliche Praxis, christliches Leben"
+   }
+},
+{
+   "notation" : "249",
+   "label" : {
+      "en" : "249 -- Christian observances in family life",
+      "de" : "249 -- Christliches Leben in der Familie"
+   }
+},
+{
+   "notation" : "250",
+   "label" : {
+      "en" : "250 -- Christian orders & local church",
+      "de" : "250 -- Christliche Orden und Ortskirchen"
+   }
+},
+{
+   "notation" : "251",
+   "label" : {
+      "en" : "251 -- Preaching",
+      "de" : "251 -- Homiletik"
+   }
+},
+{
+   "label" : {
+      "de" : "252 -- Predigttexte",
+      "en" : "252 -- Texts of sermons"
+   },
+   "notation" : "252"
+},
+{
+   "label" : {
+      "de" : "253 -- Pastoraltheologie",
+      "en" : "253 -- Pastoral office & work"
+   },
+   "notation" : "253"
+},
+{
+   "label" : {
+      "en" : "254 -- Parish administration",
+      "de" : "254 -- Gemeindeverwaltung"
+   },
+   "notation" : "254"
+},
+{
+   "notation" : "255",
+   "label" : {
+      "de" : "255 -- Religiöse Kongregationen und Orden",
+      "en" : "255 -- Religious congregations & orders"
+   }
+},
+{
+   "label" : {
+      "de" : "256 -- Unbesetzt",
+      "en" : "256 -- Unassigned"
+   },
+   "notation" : "256"
+},
+{
+   "notation" : "257",
+   "label" : {
+      "en" : "257 -- Unassigned",
+      "de" : "257 -- Unbesetzt"
+   }
+},
+{
+   "notation" : "258",
+   "label" : {
+      "de" : "258 -- Unbesetzt",
+      "en" : "258 -- Unassigned"
+   }
+},
+{
+   "notation" : "259",
+   "label" : {
+      "de" : "259 -- Familienseelsorge, Kategorialseelsorge",
+      "en" : "259 -- Pastoral care of families & kinds of persons"
+   }
+},
+{
+   "label" : {
+      "en" : "260 -- Social & ecclesiastical theology",
+      "de" : "260 -- Soziallehre, Ekklesiologie"
+   },
+   "notation" : "260"
+},
+{
+   "notation" : "261",
+   "label" : {
+      "en" : "261 -- Social theology",
+      "de" : "261 -- Soziallehre"
+   }
+},
+{
+   "notation" : "262",
+   "label" : {
+      "de" : "262 -- Ekklesiologie",
+      "en" : "262 -- Ecclesiology"
+   }
+},
+{
+   "notation" : "263",
+   "label" : {
+      "en" : "263 -- Days, times & places of observance",
+      "de" : "263 -- Heilige Tage, Zeiten und Orte"
+   }
+},
+{
+   "label" : {
+      "de" : "264 -- Öffentliche Religionsausübung",
+      "en" : "264 -- Public worship"
+   },
+   "notation" : "264"
+},
+{
+   "label" : {
+      "de" : "265 -- Sakramente, andere Riten und Handlungen",
+      "en" : "265 -- Sacraments, other rites & acts"
+   },
+   "notation" : "265"
+},
+{
+   "label" : {
+      "de" : "266 -- Mission",
+      "en" : "266 -- Missions"
+   },
+   "notation" : "266"
+},
+{
+   "label" : {
+      "de" : "267 -- Religiöse Verbände",
+      "en" : "267 -- Associations for religious work"
+   },
+   "notation" : "267"
+},
+{
+   "notation" : "268",
+   "label" : {
+      "en" : "268 -- Religious education",
+      "de" : "268 -- Religiöse Erziehung"
+   }
+},
+{
+   "label" : {
+      "en" : "269 -- Spiritual renewal",
+      "de" : "269 -- Geistliche Erneuerung"
+   },
+   "notation" : "269"
+},
+{
+   "notation" : "270",
+   "label" : {
+      "de" : "270 -- Geschichte des Christentums, Kirchengeschichte",
+      "en" : "270 -- History of Christianity & Christian church"
+   }
+},
+{
+   "notation" : "271",
+   "label" : {
+      "en" : "271 -- Religious orders in church history",
+      "de" : "271 -- Religiöse Orden in der Kirchengeschichte"
+   }
+},
+{
+   "notation" : "272",
+   "label" : {
+      "en" : "272 -- Persecutions in church history",
+      "de" : "272 -- Verfolgung in der Kirchengeschichte"
+   }
+},
+{
+   "label" : {
+      "de" : "273 -- Dogmatische Kontroversen, Häresie",
+      "en" : "273 -- Doctrinal controversies & heresies"
+   },
+   "notation" : "273"
+},
+{
+   "notation" : "274",
+   "label" : {
+      "de" : "274 -- Geschichte des Christentums in Europa",
+      "en" : "274 -- History of Christianity in Europe"
+   }
+},
+{
+   "label" : {
+      "de" : "275 -- Geschichte des Christentums in Asien",
+      "en" : "275 -- History of Christianity in Asia"
+   },
+   "notation" : "275"
+},
+{
+   "label" : {
+      "en" : "276 -- History of Christianity in Africa",
+      "de" : "276 -- Geschichte des Christentums in Afrika"
+   },
+   "notation" : "276"
+},
+{
+   "notation" : "277",
+   "label" : {
+      "de" : "277 -- Geschichte des Christentums in Nordamerika",
+      "en" : "277 -- History of Christianity in North America"
+   }
+},
+{
+   "label" : {
+      "de" : "278 -- Geschichte des Christentums in Südamerika",
+      "en" : "278 -- History of Christianity in South America"
+   },
+   "notation" : "278"
+},
+{
+   "notation" : "279",
+   "label" : {
+      "de" : "279 -- Geschichte des Christentums in anderen Gebieten",
+      "en" : "279 -- History of Christianity in other areas"
+   }
+},
+{
+   "notation" : "280",
+   "label" : {
+      "de" : "280 -- Christliche Konfessionen und Sekten",
+      "en" : "280 -- Christian denominations & sects"
+   }
+},
+{
+   "label" : {
+      "de" : "281 -- Alte Kirche, Ostkirchen",
+      "en" : "281 -- Early church & Eastern churches"
+   },
+   "notation" : "281"
+},
+{
+   "label" : {
+      "de" : "282 -- Römisch-Katholische Kirche",
+      "en" : "282 -- Roman Catholic Church"
+   },
+   "notation" : "282"
+},
+{
+   "notation" : "283",
+   "label" : {
+      "en" : "283 -- Anglican churches",
+      "de" : "283 -- Anglikanische Kirchen"
+   }
+},
+{
+   "label" : {
+      "en" : "284 -- Protestants of Continental origin",
+      "de" : "284 -- Protestanten kontinentaleuropäischen Ursprungs"
+   },
+   "notation" : "284"
+},
+{
+   "notation" : "285",
+   "label" : {
+      "en" : "285 -- Presbyterian, Reformed & Congregational",
+      "de" : "285 -- Presbyterianer, Reformierte, Kongregationalisten"
+   }
+},
+{
+   "notation" : "286",
+   "label" : {
+      "en" : "286 -- Baptist, Disciples of Christ & Adventist",
+      "de" : "286 -- Baptisten, Disciples of Christ, Adventisten"
+   }
+},
+{
+   "notation" : "287",
+   "label" : {
+      "en" : "287 -- Methodist & related churches",
+      "de" : "287 -- Methodisten und verwandte Kirchen"
+   }
+},
+{
+   "notation" : "288",
+   "label" : {
+      "en" : "288 -- Unassigned",
+      "de" : "288 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "en" : "289 -- Other denominations & sects",
+      "de" : "289 -- Andere Konfessionen und Sekten"
+   },
+   "notation" : "289"
+},
+{
+   "notation" : "290",
+   "label" : {
+      "en" : "290 -- Other religions",
+      "de" : "290 -- Andere Religionen"
+   }
+},
+{
+   "notation" : "291",
+   "label" : {
+      "en" : "291 -- Unassigned",
+      "de" : "291 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "de" : "292 -- Griechische und römische Religion",
+      "en" : "292 -- Greek & Roman religion"
+   },
+   "notation" : "292"
+},
+{
+   "notation" : "293",
+   "label" : {
+      "de" : "293 -- Germanische Religion",
+      "en" : "293 -- Germanic religion"
+   }
+},
+{
+   "notation" : "294",
+   "label" : {
+      "de" : "294 -- Religionen indischen Ursprungs",
+      "en" : "294 -- Religions of Indic origin"
+   }
+},
+{
+   "notation" : "295",
+   "label" : {
+      "en" : "295 -- Zoroastrianism",
+      "de" : "295 -- Parsismus"
+   }
+},
+{
+   "label" : {
+      "de" : "296 -- Judentum",
+      "en" : "296 -- Judaism"
+   },
+   "notation" : "296"
+},
+{
+   "notation" : "297",
+   "label" : {
+      "en" : "297 -- Islam, Babism & Bahai Faith",
+      "de" : "297 -- Islam, Babismus, Bahaismus"
+   }
+},
+{
+   "notation" : "298",
+   "label" : {
+      "en" : "298 -- (Optional number)",
+      "de" : "298 -- (Optionale Notation)"
+   }
+},
+{
+   "notation" : "299",
+   "label" : {
+      "en" : "299 -- Religions not provided for elsewhere",
+      "de" : "299 -- An anderer Stelle nicht vorgesehene Religionen"
+   }
+},
+{
+   "label" : {
+      "en" : "300 -- Social sciences",
+      "de" : "300 -- Sozialwissenschaften"
+   },
+   "notation" : "300"
+},
+{
+   "label" : {
+      "de" : "301 -- Soziologie, Anthropologie",
+      "en" : "301 -- Sociology & anthropology"
+   },
+   "notation" : "301"
+},
+{
+   "label" : {
+      "en" : "302 -- Social interaction",
+      "de" : "302 -- Soziale Interaktion"
+   },
+   "notation" : "302"
+},
+{
+   "label" : {
+      "en" : "303 -- Social processes",
+      "de" : "303 -- Gesellschaftliche Prozesse"
+   },
+   "notation" : "303"
+},
+{
+   "label" : {
+      "en" : "304 -- Factors affecting social behavior",
+      "de" : "304 -- Das Sozialverhalten beeinflussende Faktoren"
+   },
+   "notation" : "304"
+},
+{
+   "label" : {
+      "de" : "305 -- Soziale Gruppen",
+      "en" : "305 -- Social groups"
+   },
+   "notation" : "305"
+},
+{
+   "label" : {
+      "en" : "306 -- Culture & institutions",
+      "de" : "306 -- Kultur und Institutionen"
+   },
+   "notation" : "306"
+},
+{
+   "label" : {
+      "de" : "307 -- Gemeinschaften",
+      "en" : "307 -- Communities"
+   },
+   "notation" : "307"
+},
+{
+   "label" : {
+      "en" : "308 -- Unassigned",
+      "de" : "308 -- Unbesetzt"
+   },
+   "notation" : "308"
+},
+{
+   "label" : {
+      "de" : "309 -- Unbesetzt",
+      "en" : "309 -- Unassigned"
+   },
+   "notation" : "309"
+},
+{
+   "label" : {
+      "en" : "310 -- Collections of general statistics",
+      "de" : "310 -- Sammlungen allgemeiner Statistiken"
+   },
+   "notation" : "310"
+},
+{
+   "notation" : "311",
+   "label" : {
+      "en" : "311 -- Unassigned",
+      "de" : "311 -- Unbesetzt"
+   }
+},
+{
+   "notation" : "312",
+   "label" : {
+      "de" : "312 -- Unbesetzt",
+      "en" : "312 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "de" : "313 -- Unbesetzt",
+      "en" : "313 -- Unassigned"
+   },
+   "notation" : "313"
+},
+{
+   "notation" : "314",
+   "label" : {
+      "de" : "314 -- Allgemeine Statistiken zu Europa",
+      "en" : "314 -- General statistics of Europe"
+   }
+},
+{
+   "notation" : "315",
+   "label" : {
+      "de" : "315 -- Allgemeine Statistiken zu Asien",
+      "en" : "315 -- General statistics of Asia"
+   }
+},
+{
+   "notation" : "316",
+   "label" : {
+      "de" : "316 -- Allgemeine Statistiken zu Afrika",
+      "en" : "316 -- General statistics of Africa"
+   }
+},
+{
+   "notation" : "317",
+   "label" : {
+      "en" : "317 -- General statistics of North America",
+      "de" : "317 -- Allgemeine Statistiken zu Nordamerika"
+   }
+},
+{
+   "notation" : "318",
+   "label" : {
+      "en" : "318 -- General statistics of South America",
+      "de" : "318 -- Allgemeine Statistiken zu Südamerika"
+   }
+},
+{
+   "label" : {
+      "en" : "319 -- General statistics of other areas",
+      "de" : "319 -- Allgemeine Statistiken zu anderen Gebieten"
+   },
+   "notation" : "319"
+},
+{
+   "notation" : "320",
+   "label" : {
+      "de" : "320 -- Politikwissenschaft",
+      "en" : "320 -- Political science"
+   }
+},
+{
+   "notation" : "321",
+   "label" : {
+      "en" : "321 -- Systems of governments & states",
+      "de" : "321 -- Staatsformen und Regierungssysteme"
+   }
+},
+{
+   "notation" : "322",
+   "label" : {
+      "de" : "322 -- Beziehungen des Staats zu organisierten Gruppen",
+      "en" : "322 -- Relation of state to organized groups"
+   }
+},
+{
+   "notation" : "323",
+   "label" : {
+      "en" : "323 -- Civil & political rights",
+      "de" : "323 -- Grundrechte und politische Rechte"
+   }
+},
+{
+   "notation" : "324",
+   "label" : {
+      "en" : "324 -- The political process",
+      "de" : "324 -- Der politische Prozess"
+   }
+},
+{
+   "label" : {
+      "en" : "325 -- International migration & colonization",
+      "de" : "325 -- Internationale Migration, Kolonisation"
+   },
+   "notation" : "325"
+},
+{
+   "label" : {
+      "de" : "326 -- Sklaverei und Sklavenbefreiung",
+      "en" : "326 -- Slavery & emancipation"
+   },
+   "notation" : "326"
+},
+{
+   "notation" : "327",
+   "label" : {
+      "de" : "327 -- Internationale Beziehungen",
+      "en" : "327 -- International relations"
+   }
+},
+{
+   "label" : {
+      "en" : "328 -- The legislative process",
+      "de" : "328 -- Der Gesetzgebungsprozess"
+   },
+   "notation" : "328"
+},
+{
+   "notation" : "329",
+   "label" : {
+      "en" : "329 -- Unassigned",
+      "de" : "329 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "en" : "330 -- Economics",
+      "de" : "330 -- Wirtschaft"
+   },
+   "notation" : "330"
+},
+{
+   "label" : {
+      "de" : "331 -- Arbeitsökonomie",
+      "en" : "331 -- Labor economics"
+   },
+   "notation" : "331"
+},
+{
+   "notation" : "332",
+   "label" : {
+      "en" : "332 -- Financial economics",
+      "de" : "332 -- Finanzwirtschaft"
+   }
+},
+{
+   "label" : {
+      "de" : "333 -- Boden- und Energiewirtschaft",
+      "en" : "333 -- Economics of land & energy"
+   },
+   "notation" : "333"
+},
+{
+   "notation" : "334",
+   "label" : {
+      "en" : "334 -- Cooperatives",
+      "de" : "334 -- Genossenschaften"
+   }
+},
+{
+   "label" : {
+      "en" : "335 -- Socialism & related systems",
+      "de" : "335 -- Sozialismus und verwandte Systeme"
+   },
+   "notation" : "335"
+},
+{
+   "label" : {
+      "de" : "336 -- Öffentliche Finanzen",
+      "en" : "336 -- Public finance"
+   },
+   "notation" : "336"
+},
+{
+   "notation" : "337",
+   "label" : {
+      "en" : "337 -- International economics",
+      "de" : "337 -- Weltwirtschaft"
+   }
+},
+{
+   "notation" : "338",
+   "label" : {
+      "en" : "338 -- Production",
+      "de" : "338 -- Produktion"
+   }
+},
+{
+   "label" : {
+      "en" : "339 -- Macroeconomics & related topics",
+      "de" : "339 -- Makroökonomie und verwandte Themen"
+   },
+   "notation" : "339"
+},
+{
+   "notation" : "340",
+   "label" : {
+      "de" : "340 -- Recht",
+      "en" : "340 -- Law"
+   }
+},
+{
+   "label" : {
+      "de" : "341 -- Völkerrecht",
+      "en" : "341 -- Law of nations"
+   },
+   "notation" : "341"
+},
+{
+   "notation" : "342",
+   "label" : {
+      "en" : "342 -- Constitutional & administrative law",
+      "de" : "342 -- Verfassungs- und Verwaltungsrecht"
+   }
+},
+{
+   "notation" : "343",
+   "label" : {
+      "de" : "343 -- Wehrrecht, Steuerrecht, Wirtschaftsrecht",
+      "en" : "343 -- Military, tax, trade & industrial law"
+   }
+},
+{
+   "notation" : "344",
+   "label" : {
+      "en" : "344 -- Labor, social, education & cultural law",
+      "de" : "344 -- Arbeitsrecht, Sozialrecht, Bildungsrecht, Kulturrecht"
+   }
+},
+{
+   "label" : {
+      "en" : "345 -- Criminal law",
+      "de" : "345 -- Strafrecht"
+   },
+   "notation" : "345"
+},
+{
+   "notation" : "346",
+   "label" : {
+      "de" : "346 -- Privatrecht",
+      "en" : "346 -- Private law"
+   }
+},
+{
+   "notation" : "347",
+   "label" : {
+      "de" : "347 -- Zivilprozessrecht, Zivilgerichte",
+      "en" : "347 -- Civil procedure & courts"
+   }
+},
+{
+   "label" : {
+      "en" : "348 -- Laws, regulations & cases",
+      "de" : "348 -- Gesetze, Verordnungen, Rechtsfälle"
+   },
+   "notation" : "348"
+},
+{
+   "notation" : "349",
+   "label" : {
+      "en" : "349 -- Law of specific jurisdictions & areas",
+      "de" : "349 -- Recht einzelner Gebietskörperschaften und Gebiete"
+   }
+},
+{
+   "notation" : "350",
+   "label" : {
+      "en" : "350 -- Public administration & military science",
+      "de" : "350 -- Öffentliche Verwaltung, Militärwissenschaft"
+   }
+},
+{
+   "label" : {
+      "de" : "351 -- Öffentliche Verwaltung",
+      "en" : "351 -- Public administration"
+   },
+   "notation" : "351"
+},
+{
+   "notation" : "352",
+   "label" : {
+      "de" : "352 -- Allgemeines zur öffentlichen Verwaltung",
+      "en" : "352 -- General considerations of public administration"
+   }
+},
+{
+   "label" : {
+      "en" : "353 -- Specific fields of public administration",
+      "de" : "353 -- Einzelne Bereiche der öffentlichen Verwaltung"
+   },
+   "notation" : "353"
+},
+{
+   "notation" : "354",
+   "label" : {
+      "en" : "354 -- Administration of economy & environment",
+      "de" : "354 -- Verwaltung von Wirtschaft und Umwelt"
+   }
+},
+{
+   "label" : {
+      "en" : "355 -- Military science",
+      "de" : "355 -- Militärwissenschaft"
+   },
+   "notation" : "355"
+},
+{
+   "notation" : "356",
+   "label" : {
+      "en" : "356 -- Infantry forces & warfare",
+      "de" : "356 -- Infanterie und Kampfführung"
+   }
+},
+{
+   "label" : {
+      "de" : "357 -- Kavalleriestreitkräfte und Kampfführung",
+      "en" : "357 -- Mounted forces & warfare"
+   },
+   "notation" : "357"
+},
+{
+   "label" : {
+      "de" : "358 -- Luftstreitkräfte und andere spezialisierte Streitkräfte",
+      "en" : "358 -- Air & other specialized forces"
+   },
+   "notation" : "358"
+},
+{
+   "label" : {
+      "de" : "359 -- Seestreitkräfte und Kampfführung",
+      "en" : "359 -- Sea forces & warfare"
+   },
+   "notation" : "359"
+},
+{
+   "notation" : "360",
+   "label" : {
+      "en" : "360 -- Social problems & services, associations",
+      "de" : "360 -- Soziale Probleme und Sozialdienste, Verbände"
+   }
+},
+{
+   "notation" : "361",
+   "label" : {
+      "de" : "361 -- Soziale Probleme und Sozialhilfe im Allgemeinen",
+      "en" : "361 -- Social problems & social welfare in general"
+   }
+},
+{
+   "notation" : "362",
+   "label" : {
+      "de" : "362 -- Probleme und Dienste der Sozialhilfe",
+      "en" : "362 -- Social welfare problems & services"
+   }
+},
+{
+   "notation" : "363",
+   "label" : {
+      "en" : "363 -- Other social problems & services",
+      "de" : "363 -- Andere soziale Probleme und Sozialdienste"
+   }
+},
+{
+   "notation" : "364",
+   "label" : {
+      "en" : "364 -- Criminology",
+      "de" : "364 -- Kriminologie"
+   }
+},
+{
+   "notation" : "365",
+   "label" : {
+      "en" : "365 -- Penal & related institutions",
+      "de" : "365 -- Justizvollzugsanstalten und verwandte Einrichtungen"
+   }
+},
+{
+   "label" : {
+      "en" : "366 -- Associations",
+      "de" : "366 -- Verbände"
+   },
+   "notation" : "366"
+},
+{
+   "label" : {
+      "de" : "367 -- Allgemeine Klubs",
+      "en" : "367 -- General clubs"
+   },
+   "notation" : "367"
+},
+{
+   "label" : {
+      "de" : "368 -- Versicherungen",
+      "en" : "368 -- Insurance"
+   },
+   "notation" : "368"
+},
+{
+   "label" : {
+      "en" : "369 -- Miscellaneous kinds of associations",
+      "de" : "369 -- Verschiedene Arten von Verbänden"
+   },
+   "notation" : "369"
+},
+{
+   "notation" : "370",
+   "label" : {
+      "en" : "370 -- Education",
+      "de" : "370 -- Bildung und Erziehung"
+   }
+},
+{
+   "notation" : "371",
+   "label" : {
+      "en" : "371 -- Schools & their activities, special education",
+      "de" : "371 -- Schulen, schulische Tätigkeiten, Sonderpädagogik"
+   }
+},
+{
+   "label" : {
+      "en" : "372 -- Elementary education",
+      "de" : "372 -- Primar- und Elementarbildung"
+   },
+   "notation" : "372"
+},
+{
+   "label" : {
+      "en" : "373 -- Secondary education",
+      "de" : "373 -- Sekundarbildung"
+   },
+   "notation" : "373"
+},
+{
+   "label" : {
+      "de" : "374 -- Erwachsenenbildung",
+      "en" : "374 -- Adult education"
+   },
+   "notation" : "374"
+},
+{
+   "label" : {
+      "de" : "375 -- Curricula",
+      "en" : "375 -- Curricula"
+   },
+   "notation" : "375"
+},
+{
+   "notation" : "376",
+   "label" : {
+      "en" : "376 -- Unassigned",
+      "de" : "376 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "de" : "377 -- Unbesetzt",
+      "en" : "377 -- Unassigned"
+   },
+   "notation" : "377"
+},
+{
+   "label" : {
+      "en" : "378 -- Higher education",
+      "de" : "378 -- Hochschulbildung"
+   },
+   "notation" : "378"
+},
+{
+   "notation" : "379",
+   "label" : {
+      "en" : "379 -- Public policy issues in education",
+      "de" : "379 -- Bildungspolitik"
+   }
+},
+{
+   "notation" : "380",
+   "label" : {
+      "en" : "380 -- Commerce, communications & transportation",
+      "de" : "380 -- Handel, Kommunikation, Verkehr"
+   }
+},
+{
+   "label" : {
+      "de" : "381 -- Handel",
+      "en" : "381 -- Commerce"
+   },
+   "notation" : "381"
+},
+{
+   "notation" : "382",
+   "label" : {
+      "en" : "382 -- International commerce",
+      "de" : "382 -- Internationaler Handel"
+   }
+},
+{
+   "notation" : "383",
+   "label" : {
+      "de" : "383 -- Postverkehr",
+      "en" : "383 -- Postal communication"
+   }
+},
+{
+   "notation" : "384",
+   "label" : {
+      "en" : "384 -- Communications, telecommunication",
+      "de" : "384 -- Kommunikation, Telekommunikation"
+   }
+},
+{
+   "label" : {
+      "en" : "385 -- Railroad transportation",
+      "de" : "385 -- Schienenverkehr"
+   },
+   "notation" : "385"
+},
+{
+   "label" : {
+      "de" : "386 -- Binnenschifffahrt, Fährverkehr",
+      "en" : "386 -- Inland waterway & ferry transportation"
+   },
+   "notation" : "386"
+},
+{
+   "notation" : "387",
+   "label" : {
+      "de" : "387 -- Schifffahrt, Luft-, Weltraumverkehr",
+      "en" : "387 -- Water, air & space transportation"
+   }
+},
+{
+   "label" : {
+      "en" : "388 -- Transportation, ground transportation",
+      "de" : "388 -- Verkehr, Landverkehr"
+   },
+   "notation" : "388"
+},
+{
+   "label" : {
+      "de" : "389 -- Metrologie, Normung",
+      "en" : "389 -- Metrology & standardization"
+   },
+   "notation" : "389"
+},
+{
+   "label" : {
+      "en" : "390 -- Customs, etiquette & folklore",
+      "de" : "390 -- Bräuche, Etikette, Folklore"
+   },
+   "notation" : "390"
+},
+{
+   "label" : {
+      "en" : "391 -- Costume & personal appearance",
+      "de" : "391 -- Kleidung, äußeres Erscheinungsbild"
+   },
+   "notation" : "391"
+},
+{
+   "notation" : "392",
+   "label" : {
+      "de" : "392 -- Bräuche im Lebenslauf und im häuslichen Leben",
+      "en" : "392 -- Customs of life cycle & domestic life"
+   }
+},
+{
+   "label" : {
+      "en" : "393 -- Death customs",
+      "de" : "393 -- Sterbe- und Bestattungsriten"
+   },
+   "notation" : "393"
+},
+{
+   "notation" : "394",
+   "label" : {
+      "en" : "394 -- General customs",
+      "de" : "394 -- Allgemeine Bräuche"
+   }
+},
+{
+   "label" : {
+      "en" : "395 -- Etiquette (Manners)",
+      "de" : "395 -- Etikette (Manieren)"
+   },
+   "notation" : "395"
+},
+{
+   "notation" : "396",
+   "label" : {
+      "en" : "396 -- Unassigned",
+      "de" : "396 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "en" : "397 -- Unassigned",
+      "de" : "397 -- Unbesetzt"
+   },
+   "notation" : "397"
+},
+{
+   "label" : {
+      "de" : "398 -- Folklore",
+      "en" : "398 -- Folklore"
+   },
+   "notation" : "398"
+},
+{
+   "notation" : "399",
+   "label" : {
+      "de" : "399 -- Bräuche des Krieges und der Diplomatie",
+      "en" : "399 -- Customs of war & diplomacy"
+   }
+},
+{
+   "label" : {
+      "en" : "400 -- Language",
+      "de" : "400 -- Sprache"
+   },
+   "notation" : "400"
+},
+{
+   "label" : {
+      "en" : "401 -- Philosophy & theory",
+      "de" : "401 -- Sprachphilosophie, Sprachtheorie"
+   },
+   "notation" : "401"
+},
+{
+   "notation" : "402",
+   "label" : {
+      "de" : "402 -- Verschiedenes",
+      "en" : "402 -- Miscellany"
+   }
+},
+{
+   "notation" : "403",
+   "label" : {
+      "en" : "403 -- Dictionaries & encyclopedias",
+      "de" : "403 -- Wörterbücher, Enzyklopädien"
+   }
+},
+{
+   "label" : {
+      "de" : "404 -- Spezielle Themen",
+      "en" : "404 -- Special topics"
+   },
+   "notation" : "404"
+},
+{
+   "label" : {
+      "de" : "405 -- Fortlaufende Sammelwerke",
+      "en" : "405 -- Serial publications"
+   },
+   "notation" : "405"
+},
+{
+   "notation" : "406",
+   "label" : {
+      "en" : "406 -- Organizations & management",
+      "de" : "406 -- Organisationen, Management"
+   }
+},
+{
+   "label" : {
+      "en" : "407 -- Education, research & related topics",
+      "de" : "407 -- Ausbildung, Forschung, verwandte Themen"
+   },
+   "notation" : "407"
+},
+{
+   "notation" : "408",
+   "label" : {
+      "en" : "408 -- Kinds of persons treatment",
+      "de" : "408 -- Behandlung nach Personengruppen"
+   }
+},
+{
+   "notation" : "409",
+   "label" : {
+      "de" : "409 -- Geografische, personenbezogene Behandlung",
+      "en" : "409 -- Geographic & persons treatment"
+   }
+},
+{
+   "notation" : "410",
+   "label" : {
+      "de" : "410 -- Linguistik",
+      "en" : "410 -- Linguistics"
+   }
+},
+{
+   "notation" : "411",
+   "label" : {
+      "en" : "411 -- Writing systems",
+      "de" : "411 -- Schriftsysteme"
+   }
+},
+{
+   "label" : {
+      "de" : "412 -- Etymologie",
+      "en" : "412 -- Etymology"
+   },
+   "notation" : "412"
+},
+{
+   "notation" : "413",
+   "label" : {
+      "de" : "413 -- Wörterbücher",
+      "en" : "413 -- Dictionaries"
+   }
+},
+{
+   "notation" : "414",
+   "label" : {
+      "de" : "414 -- Phonologie, Phonetik",
+      "en" : "414 -- Phonology & phonetics"
+   }
+},
+{
+   "notation" : "415",
+   "label" : {
+      "en" : "415 -- Grammar",
+      "de" : "415 -- Grammatik"
+   }
+},
+{
+   "label" : {
+      "en" : "416 -- Unassigned",
+      "de" : "416 -- Unbesetzt"
+   },
+   "notation" : "416"
+},
+{
+   "notation" : "417",
+   "label" : {
+      "en" : "417 -- Dialectology & historical linguistics",
+      "de" : "417 -- Dialektologie, historische Linguistik"
+   }
+},
+{
+   "notation" : "418",
+   "label" : {
+      "en" : "418 -- Standard usage & applied linguistics",
+      "de" : "418 -- Standardsprache, Angewandte Linguistik"
+   }
+},
+{
+   "label" : {
+      "de" : "419 -- Gebärdensprachen",
+      "en" : "419 -- Sign languages"
+   },
+   "notation" : "419"
+},
+{
+   "notation" : "420",
+   "label" : {
+      "en" : "420 -- English & Old English",
+      "de" : "420 -- Englisch, Altenglisch"
+   }
+},
+{
+   "notation" : "421",
+   "label" : {
+      "de" : "421 -- Schriftsystem und Phonologie des Englischen",
+      "en" : "421 -- English writing system & phonology"
+   }
+},
+{
+   "label" : {
+      "en" : "422 -- English etymology",
+      "de" : "422 -- Etymologie des Englischen"
+   },
+   "notation" : "422"
+},
+{
+   "notation" : "423",
+   "label" : {
+      "de" : "423 -- Englische Wörterbücher",
+      "en" : "423 -- English dictionaries"
+   }
+},
+{
+   "label" : {
+      "en" : "424 -- Unassigned",
+      "de" : "424 -- Unbesetzt"
+   },
+   "notation" : "424"
+},
+{
+   "notation" : "425",
+   "label" : {
+      "de" : "425 -- Englische Grammatik",
+      "en" : "425 -- English grammar"
+   }
+},
+{
+   "label" : {
+      "en" : "426 -- Unassigned",
+      "de" : "426 -- Unbesetzt"
+   },
+   "notation" : "426"
+},
+{
+   "notation" : "427",
+   "label" : {
+      "en" : "427 -- English language variations",
+      "de" : "427 -- Varianten des Englischen, Mittelenglisch"
+   }
+},
+{
+   "notation" : "428",
+   "label" : {
+      "en" : "428 -- Standard English usage",
+      "de" : "428 -- Gebrauch des Standard-Englisch"
+   }
+},
+{
+   "notation" : "429",
+   "label" : {
+      "de" : "429 -- Altenglisch (Angelsächsisch)",
+      "en" : "429 -- Old English (Anglo-Saxon)"
+   }
+},
+{
+   "label" : {
+      "de" : "430 -- Germanische Sprachen, Deutsch",
+      "en" : "430 -- Germanic languages, German"
+   },
+   "notation" : "430"
+},
+{
+   "label" : {
+      "en" : "431 -- German writing systems & phonology",
+      "de" : "431 -- Schriftsysteme und Phonologie des Deutschen"
+   },
+   "notation" : "431"
+},
+{
+   "label" : {
+      "de" : "432 -- Etymologie des Deutschen",
+      "en" : "432 -- German etymology"
+   },
+   "notation" : "432"
+},
+{
+   "label" : {
+      "en" : "433 -- German dictionaries",
+      "de" : "433 -- Deutsche Wörterbücher"
+   },
+   "notation" : "433"
+},
+{
+   "label" : {
+      "de" : "434 -- Unbesetzt",
+      "en" : "434 -- Unassigned"
+   },
+   "notation" : "434"
+},
+{
+   "notation" : "435",
+   "label" : {
+      "en" : "435 -- German grammar",
+      "de" : "435 -- Deutsche Grammatik"
+   }
+},
+{
+   "notation" : "436",
+   "label" : {
+      "en" : "436 -- Unassigned",
+      "de" : "436 -- Unbesetzt"
+   }
+},
+{
+   "notation" : "437",
+   "label" : {
+      "en" : "437 -- German language variations",
+      "de" : "437 -- Varianten des Deutschen"
+   }
+},
+{
+   "label" : {
+      "en" : "438 -- Standard German usage",
+      "de" : "438 -- Gebrauch des Standard-Deutsch"
+   },
+   "notation" : "438"
+},
+{
+   "label" : {
+      "en" : "439 -- Other Germanic languages",
+      "de" : "439 -- Andere germanische Sprachen"
+   },
+   "notation" : "439"
+},
+{
+   "label" : {
+      "en" : "440 -- Romance languages, French",
+      "de" : "440 -- Romanische Sprachen, Französisch"
+   },
+   "notation" : "440"
+},
+{
+   "label" : {
+      "en" : "441 -- French writing systems & phonology",
+      "de" : "441 -- Schriftsysteme und Phonologie des Französischen"
+   },
+   "notation" : "441"
+},
+{
+   "label" : {
+      "en" : "442 -- French etymology",
+      "de" : "442 -- Etymologie des Französischen"
+   },
+   "notation" : "442"
+},
+{
+   "label" : {
+      "de" : "443 -- Französische Wörterbücher",
+      "en" : "443 -- French dictionaries"
+   },
+   "notation" : "443"
+},
+{
+   "notation" : "444",
+   "label" : {
+      "de" : "444 -- Unbesetzt",
+      "en" : "444 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "en" : "445 -- French grammar",
+      "de" : "445 -- Französische Grammatik"
+   },
+   "notation" : "445"
+},
+{
+   "label" : {
+      "en" : "446 -- Unassigned",
+      "de" : "446 -- Unbesetzt"
+   },
+   "notation" : "446"
+},
+{
+   "label" : {
+      "de" : "447 -- Varianten des Französischen",
+      "en" : "447 -- French language variations"
+   },
+   "notation" : "447"
+},
+{
+   "notation" : "448",
+   "label" : {
+      "de" : "448 -- Gebrauch des Standard-Französisch",
+      "en" : "448 -- Standard French usage"
+   }
+},
+{
+   "notation" : "449",
+   "label" : {
+      "de" : "449 -- Okzitanisch, Katalanisch",
+      "en" : "449 -- Occitan & Catalan"
+   }
+},
+{
+   "notation" : "450",
+   "label" : {
+      "de" : "450 -- Italienisch, Rumänisch, Rätoromanisch",
+      "en" : "450 -- Italian, Romanian & related languages"
+   }
+},
+{
+   "notation" : "451",
+   "label" : {
+      "de" : "451 -- Schriftsysteme und Phonologie des Italienischen",
+      "en" : "451 -- Italian writing systems & phonology"
+   }
+},
+{
+   "notation" : "452",
+   "label" : {
+      "de" : "452 -- Etymologie des Italienischen",
+      "en" : "452 -- Italian etymology"
+   }
+},
+{
+   "label" : {
+      "en" : "453 -- Italian dictionaries",
+      "de" : "453 -- Italienische Wörterbücher"
+   },
+   "notation" : "453"
+},
+{
+   "label" : {
+      "en" : "454 -- Unassigned",
+      "de" : "454 -- Unbesetzt"
+   },
+   "notation" : "454"
+},
+{
+   "notation" : "455",
+   "label" : {
+      "en" : "455 -- Italian grammar",
+      "de" : "455 -- Italienische Grammatik"
+   }
+},
+{
+   "notation" : "456",
+   "label" : {
+      "de" : "456 -- Unbesetzt",
+      "en" : "456 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "en" : "457 -- Italian language variations",
+      "de" : "457 -- Varianten des Italienischen"
+   },
+   "notation" : "457"
+},
+{
+   "notation" : "458",
+   "label" : {
+      "en" : "458 -- Standard Italian usage",
+      "de" : "458 -- Gebrauch des Standard-Italienisch"
+   }
+},
+{
+   "label" : {
+      "de" : "459 -- Rumänisch, Rätoromanisch",
+      "en" : "459 -- Romanian & related languages"
+   },
+   "notation" : "459"
+},
+{
+   "label" : {
+      "de" : "460 -- Spanisch, Portugiesisch",
+      "en" : "460 -- Spanish & Portuguese languages"
+   },
+   "notation" : "460"
+},
+{
+   "notation" : "461",
+   "label" : {
+      "de" : "461 -- Schriftsysteme und Phonologie des Spanischen",
+      "en" : "461 -- Spanish writing systems & phonology"
+   }
+},
+{
+   "notation" : "462",
+   "label" : {
+      "en" : "462 -- Spanish etymology",
+      "de" : "462 -- Etymologie des Spanischen"
+   }
+},
+{
+   "label" : {
+      "en" : "463 -- Spanish dictionaries",
+      "de" : "463 -- Spanische Wörterbücher"
+   },
+   "notation" : "463"
+},
+{
+   "label" : {
+      "de" : "464 -- Unbesetzt",
+      "en" : "464 -- Unassigned"
+   },
+   "notation" : "464"
+},
+{
+   "label" : {
+      "en" : "465 -- Spanish grammar",
+      "de" : "465 -- Spanische Grammatik"
+   },
+   "notation" : "465"
+},
+{
+   "label" : {
+      "en" : "466 -- Unassigned",
+      "de" : "466 -- Unbesetzt"
+   },
+   "notation" : "466"
+},
+{
+   "label" : {
+      "en" : "467 -- Spanish language variations",
+      "de" : "467 -- Varianten des Spanischen"
+   },
+   "notation" : "467"
+},
+{
+   "notation" : "468",
+   "label" : {
+      "de" : "468 -- Gebrauch des Standard-Spanisch",
+      "en" : "468 -- Standard Spanish usage"
+   }
+},
+{
+   "notation" : "469",
+   "label" : {
+      "en" : "469 -- Portuguese",
+      "de" : "469 -- Portugiesisch"
+   }
+},
+{
+   "notation" : "470",
+   "label" : {
+      "de" : "470 -- Italische Sprachen, Latein",
+      "en" : "470 -- Italic languages, Latin"
+   }
+},
+{
+   "notation" : "471",
+   "label" : {
+      "de" : "471 -- Schriftsysteme und Phonologie des klassischen Latein",
+      "en" : "471 -- Classical Latin writing & phonology"
+   }
+},
+{
+   "notation" : "472",
+   "label" : {
+      "en" : "472 -- Classical Latin etymology",
+      "de" : "472 -- Etymologie des klassischen Latein"
+   }
+},
+{
+   "notation" : "473",
+   "label" : {
+      "de" : "473 -- Wörterbücher des klassischen Latein",
+      "en" : "473 -- Classical Latin dictionaries"
+   }
+},
+{
+   "label" : {
+      "de" : "474 -- Unbesetzt",
+      "en" : "474 -- Unassigned"
+   },
+   "notation" : "474"
+},
+{
+   "label" : {
+      "de" : "475 -- Grammatik des klassischen Latein",
+      "en" : "475 -- Classical Latin grammar"
+   },
+   "notation" : "475"
+},
+{
+   "notation" : "476",
+   "label" : {
+      "de" : "476 -- Unbesetzt",
+      "en" : "476 -- Unassigned"
+   }
+},
+{
+   "notation" : "477",
+   "label" : {
+      "en" : "477 -- Old, postclassical & Vulgar Latin",
+      "de" : "477 -- Altlatein, Mittellatein, Neulatein, Kirchenlatein, Vulgärlatein"
+   }
+},
+{
+   "label" : {
+      "en" : "478 -- Classical Latin usage",
+      "de" : "478 -- Gebrauch des klassischen Latein"
+   },
+   "notation" : "478"
+},
+{
+   "label" : {
+      "en" : "479 -- Other Italic languages",
+      "de" : "479 -- Andere italische Sprachen"
+   },
+   "notation" : "479"
+},
+{
+   "notation" : "480",
+   "label" : {
+      "en" : "480 -- Hellenic languages, classical Greek",
+      "de" : "480 -- Hellenische Sprachen, klassisches Griechisch"
+   }
+},
+{
+   "label" : {
+      "de" : "481 -- Schriftsysteme und Phonologie des klassischen Griechisch",
+      "en" : "481 -- Classical Greek writing & phonology"
+   },
+   "notation" : "481"
+},
+{
+   "label" : {
+      "en" : "482 -- Classical Greek etymology",
+      "de" : "482 -- Etymologie des klassischen Griechisch"
+   },
+   "notation" : "482"
+},
+{
+   "notation" : "483",
+   "label" : {
+      "de" : "483 -- Wörterbücher des klassischen Griechisch",
+      "en" : "483 -- Classical Greek dictionaries"
+   }
+},
+{
+   "notation" : "484",
+   "label" : {
+      "de" : "484 -- Unbesetzt",
+      "en" : "484 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "en" : "485 -- Classical Greek grammar",
+      "de" : "485 -- Grammatik des klassischen Griechisch"
+   },
+   "notation" : "485"
+},
+{
+   "label" : {
+      "en" : "486 -- Unassigned",
+      "de" : "486 -- Unbesetzt"
+   },
+   "notation" : "486"
+},
+{
+   "notation" : "487",
+   "label" : {
+      "en" : "487 -- Preclassical & postclassical Greek",
+      "de" : "487 -- Vorklassisches Griechisch, Mittelgriechisch"
+   }
+},
+{
+   "notation" : "488",
+   "label" : {
+      "en" : "488 -- Classical Greek usage",
+      "de" : "488 -- Gebrauch des klassischen Griechisch"
+   }
+},
+{
+   "notation" : "489",
+   "label" : {
+      "en" : "489 -- Other Hellenic languages",
+      "de" : "489 -- Andere hellenische Sprachen, Neugriechisch"
+   }
+},
+{
+   "label" : {
+      "de" : "490 -- Andere Sprachen",
+      "en" : "490 -- Other languages"
+   },
+   "notation" : "490"
+},
+{
+   "notation" : "491",
+   "label" : {
+      "en" : "491 -- East Indo-European & Celtic languages",
+      "de" : "491 -- Ostindoeuropäische und keltische Sprachen"
+   }
+},
+{
+   "label" : {
+      "de" : "492 -- Afroasiatische Sprachen, semitische Sprachen",
+      "en" : "492 -- Afro-Asiatic languages, Semitic languages"
+   },
+   "notation" : "492"
+},
+{
+   "notation" : "493",
+   "label" : {
+      "de" : "493 -- Nichtsemitische afroasiatische Sprachen",
+      "en" : "493 -- Non-Semitic Afro-Asiatic languages"
+   }
+},
+{
+   "notation" : "494",
+   "label" : {
+      "en" : "494 -- Altaic, Uralic, Hyperborean & Dravidian",
+      "de" : "494 -- Altaische, uralische, paläosibirische, drawidische Sprachen"
+   }
+},
+{
+   "notation" : "495",
+   "label" : {
+      "en" : "495 -- Languages of East & Southeast Asia",
+      "de" : "495 -- Ost- und südostasiatische Sprachen"
+   }
+},
+{
+   "notation" : "496",
+   "label" : {
+      "en" : "496 -- African languages",
+      "de" : "496 -- Afrikanische Sprachen"
+   }
+},
+{
+   "label" : {
+      "en" : "497 -- North American native languages",
+      "de" : "497 -- Nordamerikanische Indianersprachen"
+   },
+   "notation" : "497"
+},
+{
+   "label" : {
+      "de" : "498 -- Südamerikanische Indianersprachen",
+      "en" : "498 -- South American native languages"
+   },
+   "notation" : "498"
+},
+{
+   "label" : {
+      "de" : "499 -- Austronesische und andere Sprachen",
+      "en" : "499 -- Austronesian & other languages"
+   },
+   "notation" : "499"
+},
+{
+   "notation" : "500",
+   "label" : {
+      "en" : "500 -- Natural sciences & mathematics",
+      "de" : "500 -- Naturwissenschaften und Mathematik"
+   }
+},
+{
+   "label" : {
+      "de" : "501 -- Philosophie, Theorie",
+      "en" : "501 -- Philosophy & theory"
+   },
+   "notation" : "501"
+},
+{
+   "notation" : "502",
+   "label" : {
+      "en" : "502 -- Miscellany",
+      "de" : "502 -- Verschiedenes"
+   }
+},
+{
+   "label" : {
+      "en" : "503 -- Dictionaries & encyclopedias",
+      "de" : "503 -- Wörterbücher, Enzyklopädien"
+   },
+   "notation" : "503"
+},
+{
+   "notation" : "504",
+   "label" : {
+      "de" : "504 -- Unbesetzt",
+      "en" : "504 -- Unassigned"
+   }
+},
+{
+   "notation" : "505",
+   "label" : {
+      "en" : "505 -- Serial publications",
+      "de" : "505 -- Fortlaufende Sammelwerke"
+   }
+},
+{
+   "label" : {
+      "en" : "506 -- Organizations & management",
+      "de" : "506 -- Organisationen, Management"
+   },
+   "notation" : "506"
+},
+{
+   "notation" : "507",
+   "label" : {
+      "en" : "507 -- Education, research & related topics",
+      "de" : "507 -- Ausbildung, Forschung, verwandte Themen"
+   }
+},
+{
+   "notation" : "508",
+   "label" : {
+      "de" : "508 -- Naturgeschichte",
+      "en" : "508 -- Natural history"
+   }
+},
+{
+   "label" : {
+      "en" : "509 -- Historical, geographic & persons treatment",
+      "de" : "509 -- Historische, geografische, personenbezogene Behandlung"
+   },
+   "notation" : "509"
+},
+{
+   "notation" : "510",
+   "label" : {
+      "de" : "510 -- Mathematik",
+      "en" : "510 -- Mathematics"
+   }
+},
+{
+   "label" : {
+      "de" : "511 -- Allgemeine mathematische Prinzipien",
+      "en" : "511 -- General principles of mathematics"
+   },
+   "notation" : "511"
+},
+{
+   "notation" : "512",
+   "label" : {
+      "de" : "512 -- Algebra",
+      "en" : "512 -- Algebra"
+   }
+},
+{
+   "notation" : "513",
+   "label" : {
+      "en" : "513 -- Arithmetic",
+      "de" : "513 -- Arithmetik"
+   }
+},
+{
+   "notation" : "514",
+   "label" : {
+      "de" : "514 -- Topologie",
+      "en" : "514 -- Topology"
+   }
+},
+{
+   "label" : {
+      "en" : "515 -- Analysis",
+      "de" : "515 -- Analysis"
+   },
+   "notation" : "515"
+},
+{
+   "notation" : "516",
+   "label" : {
+      "en" : "516 -- Geometry",
+      "de" : "516 -- Geometrie"
+   }
+},
+{
+   "label" : {
+      "de" : "517 -- Unbesetzt",
+      "en" : "517 -- Unassigned"
+   },
+   "notation" : "517"
+},
+{
+   "label" : {
+      "en" : "518 -- Numerical analysis",
+      "de" : "518 -- Numerische Analysis"
+   },
+   "notation" : "518"
+},
+{
+   "notation" : "519",
+   "label" : {
+      "de" : "519 -- Wahrscheinlichkeiten, angewandte Mathematik",
+      "en" : "519 -- Probabilities & applied mathematics"
+   }
+},
+{
+   "label" : {
+      "en" : "520 -- Astronomy & allied sciences",
+      "de" : "520 -- Astronomie und zugeordnete Wissenschaften"
+   },
+   "notation" : "520"
+},
+{
+   "notation" : "521",
+   "label" : {
+      "de" : "521 -- Himmelsmechanik",
+      "en" : "521 -- Celestial mechanics"
+   }
+},
+{
+   "notation" : "522",
+   "label" : {
+      "en" : "522 -- Techniques, equipment & materials",
+      "de" : "522 -- Techniken, Ausstattung, Materialien"
+   }
+},
+{
+   "notation" : "523",
+   "label" : {
+      "de" : "523 -- Einzelne Himmelskörper und Himmelsphänomene",
+      "en" : "523 -- Specific celestial bodies & phenomena"
+   }
+},
+{
+   "label" : {
+      "de" : "524 -- Unbesetzt",
+      "en" : "524 -- Unassigned"
+   },
+   "notation" : "524"
+},
+{
+   "label" : {
+      "de" : "525 -- Erde (Astronomische Geografie)",
+      "en" : "525 -- Earth (Astronomical geography)"
+   },
+   "notation" : "525"
+},
+{
+   "notation" : "526",
+   "label" : {
+      "de" : "526 -- Mathematische Geografie",
+      "en" : "526 -- Mathematical geography"
+   }
+},
+{
+   "label" : {
+      "de" : "527 -- Astronavigation",
+      "en" : "527 -- Celestial navigation"
+   },
+   "notation" : "527"
+},
+{
+   "notation" : "528",
+   "label" : {
+      "en" : "528 -- Ephemerides",
+      "de" : "528 -- Ephemeriden"
+   }
+},
+{
+   "label" : {
+      "de" : "529 -- Chronologie",
+      "en" : "529 -- Chronology"
+   },
+   "notation" : "529"
+},
+{
+   "notation" : "530",
+   "label" : {
+      "en" : "530 -- Physics",
+      "de" : "530 -- Physik"
+   }
+},
+{
+   "notation" : "531",
+   "label" : {
+      "en" : "531 -- Classical mechanics, solid mechanics",
+      "de" : "531 -- Klassische Mechanik, Festkörpermechanik"
+   }
+},
+{
+   "notation" : "532",
+   "label" : {
+      "de" : "532 -- Mechanik der Fluide, Mechanik der Flüssigkeiten",
+      "en" : "532 -- Fluid mechanics, liquid mechanics"
+   }
+},
+{
+   "notation" : "533",
+   "label" : {
+      "de" : "533 -- Gasmechanik",
+      "en" : "533 -- Gas mechanics"
+   }
+},
+{
+   "notation" : "534",
+   "label" : {
+      "de" : "534 -- Schall und verwandte Schwingungen",
+      "en" : "534 -- Sound & related vibrations"
+   }
+},
+{
+   "notation" : "535",
+   "label" : {
+      "de" : "535 -- Licht, Infrarot- und Ultraviolettphänomene",
+      "en" : "535 -- Light & infrared & ultraviolet phenomena"
+   }
+},
+{
+   "label" : {
+      "en" : "536 -- Heat",
+      "de" : "536 -- Wärme"
+   },
+   "notation" : "536"
+},
+{
+   "label" : {
+      "en" : "537 -- Electricity & electronics",
+      "de" : "537 -- Elektrizität, Elektronik"
+   },
+   "notation" : "537"
+},
+{
+   "label" : {
+      "de" : "538 -- Magnetismus",
+      "en" : "538 -- Magnetism"
+   },
+   "notation" : "538"
+},
+{
+   "notation" : "539",
+   "label" : {
+      "de" : "539 -- Moderne Physik",
+      "en" : "539 -- Modern physics"
+   }
+},
+{
+   "notation" : "540",
+   "label" : {
+      "en" : "540 -- Chemistry & allied sciences",
+      "de" : "540 -- Chemie und zugeordnete Wissenschaften"
+   }
+},
+{
+   "label" : {
+      "de" : "541 -- Physikalische Chemie",
+      "en" : "541 -- Physical chemistry"
+   },
+   "notation" : "541"
+},
+{
+   "notation" : "542",
+   "label" : {
+      "en" : "542 -- Techniques, equipment & materials",
+      "de" : "542 -- Techniken, Ausstattung, Materialien"
+   }
+},
+{
+   "notation" : "543",
+   "label" : {
+      "de" : "543 -- Analytische Chemie",
+      "en" : "543 -- Analytical chemistry"
+   }
+},
+{
+   "notation" : "544",
+   "label" : {
+      "en" : "544 -- Unassigned",
+      "de" : "544 -- Unbesetzt"
+   }
+},
+{
+   "notation" : "545",
+   "label" : {
+      "en" : "545 -- Unassigned",
+      "de" : "545 -- Unbesetzt"
+   }
+},
+{
+   "notation" : "546",
+   "label" : {
+      "de" : "546 -- Anorganische Chemie",
+      "en" : "546 -- Inorganic chemistry"
+   }
+},
+{
+   "notation" : "547",
+   "label" : {
+      "de" : "547 -- Organische Chemie",
+      "en" : "547 -- Organic chemistry"
+   }
+},
+{
+   "notation" : "548",
+   "label" : {
+      "en" : "548 -- Crystallography",
+      "de" : "548 -- Kristallografie"
+   }
+},
+{
+   "notation" : "549",
+   "label" : {
+      "en" : "549 -- Mineralogy",
+      "de" : "549 -- Mineralogie"
+   }
+},
+{
+   "notation" : "550",
+   "label" : {
+      "de" : "550 -- Geowissenschaften",
+      "en" : "550 -- Earth sciences"
+   }
+},
+{
+   "notation" : "551",
+   "label" : {
+      "en" : "551 -- Geology, hydrology & meteorology",
+      "de" : "551 -- Geologie, Hydrologie, Meteorologie"
+   }
+},
+{
+   "label" : {
+      "en" : "552 -- Petrology",
+      "de" : "552 -- Petrologie"
+   },
+   "notation" : "552"
+},
+{
+   "label" : {
+      "de" : "553 -- Lagerstättenkunde",
+      "en" : "553 -- Economic geology"
+   },
+   "notation" : "553"
+},
+{
+   "label" : {
+      "de" : "554 -- Geowissenschaften Europas",
+      "en" : "554 -- Earth sciences of Europe"
+   },
+   "notation" : "554"
+},
+{
+   "notation" : "555",
+   "label" : {
+      "de" : "555 -- Geowissenschaften Asiens",
+      "en" : "555 -- Earth sciences of Asia"
+   }
+},
+{
+   "notation" : "556",
+   "label" : {
+      "de" : "556 -- Geowissenschaften Afrikas",
+      "en" : "556 -- Earth sciences of Africa"
+   }
+},
+{
+   "label" : {
+      "en" : "557 -- Earth sciences of North America",
+      "de" : "557 -- Geowissenschaften Nordamerikas"
+   },
+   "notation" : "557"
+},
+{
+   "label" : {
+      "de" : "558 -- Geowissenschaften Südamerikas",
+      "en" : "558 -- Earth sciences of South America"
+   },
+   "notation" : "558"
+},
+{
+   "label" : {
+      "en" : "559 -- Earth sciences of other areas",
+      "de" : "559 -- Geowissenschaften anderer Gebiete"
+   },
+   "notation" : "559"
+},
+{
+   "label" : {
+      "de" : "560 -- Paläontologie, Paläozoologie",
+      "en" : "560 -- Paleontology, paleozoology"
+   },
+   "notation" : "560"
+},
+{
+   "notation" : "561",
+   "label" : {
+      "de" : "561 -- Paläobotanik, fossile Mikroorganismen",
+      "en" : "561 -- Paleobotany, fossil microorganisms"
+   }
+},
+{
+   "notation" : "562",
+   "label" : {
+      "en" : "562 -- Fossil invertebrates",
+      "de" : "562 -- Fossile Evertebrata (Wirbellose)"
+   }
+},
+{
+   "notation" : "563",
+   "label" : {
+      "en" : "563 -- Fossil marine & seashore invertebrates",
+      "de" : "563 -- Fossile Wirbellose des Meeres und der Meeresküste"
+   }
+},
+{
+   "notation" : "564",
+   "label" : {
+      "en" : "564 -- Fossil mollusks & molluscoids",
+      "de" : "564 -- Fossile Mollusca (Weichtiere), Tentaculata (Kranzfühler)"
+   }
+},
+{
+   "notation" : "565",
+   "label" : {
+      "de" : "565 -- Fossile Arthropoden (Gliederfüßer)",
+      "en" : "565 -- Fossil arthropods"
+   }
+},
+{
+   "notation" : "566",
+   "label" : {
+      "de" : "566 -- Fossile Chordata (Chordatiere)",
+      "en" : "566 -- Fossil chordates"
+   }
+},
+{
+   "notation" : "567",
+   "label" : {
+      "en" : "567 -- Fossil cold-blooded vertebrates, fossil fishes",
+      "de" : "567 -- Fossile wechselwarme Wirbeltiere, fossile Pisces (Fische)"
+   }
+},
+{
+   "notation" : "568",
+   "label" : {
+      "en" : "568 -- Fossil birds",
+      "de" : "568 -- Fossile Aves (Vögel)"
+   }
+},
+{
+   "label" : {
+      "de" : "569 -- Fossile Mammalia (Säugetiere)",
+      "en" : "569 -- Fossil mammals"
+   },
+   "notation" : "569"
+},
+{
+   "label" : {
+      "en" : "570 -- Life sciences, biology",
+      "de" : "570 -- Biowissenschaften, Biologie"
+   },
+   "notation" : "570"
+},
+{
+   "notation" : "571",
+   "label" : {
+      "en" : "571 -- Physiology & related subjects",
+      "de" : "571 -- Physiologie und verwandte Themen"
+   }
+},
+{
+   "notation" : "572",
+   "label" : {
+      "de" : "572 -- Biochemie",
+      "en" : "572 -- Biochemistry"
+   }
+},
+{
+   "notation" : "573",
+   "label" : {
+      "de" : "573 -- Einzelne physiologische Systeme bei Tieren",
+      "en" : "573 -- Specific physiological systems in animals"
+   }
+},
+{
+   "notation" : "574",
+   "label" : {
+      "de" : "574 -- Unbesetzt",
+      "en" : "574 -- Unassigned"
+   }
+},
+{
+   "notation" : "575",
+   "label" : {
+      "de" : "575 -- Einzelne Teile von und physiologische Systeme bei Pflanzen",
+      "en" : "575 -- Specific parts of & systems in plants"
+   }
+},
+{
+   "label" : {
+      "de" : "576 -- Genetik und Evolution",
+      "en" : "576 -- Genetics & evolution"
+   },
+   "notation" : "576"
+},
+{
+   "notation" : "577",
+   "label" : {
+      "en" : "577 -- Ecology",
+      "de" : "577 -- Ökologie"
+   }
+},
+{
+   "label" : {
+      "de" : "578 -- Naturgeschichte von Organismen",
+      "en" : "578 -- Natural history of organisms"
+   },
+   "notation" : "578"
+},
+{
+   "notation" : "579",
+   "label" : {
+      "en" : "579 -- Microorganisms, fungi & algae",
+      "de" : "579 -- Mikroorganismen, Pilze, Algen"
+   }
+},
+{
+   "label" : {
+      "en" : "580 -- Plants (Botany)",
+      "de" : "580 -- Pflanzen (Botanik)"
+   },
+   "notation" : "580"
+},
+{
+   "notation" : "581",
+   "label" : {
+      "de" : "581 -- Einzelne Themen in der Naturgeschichte",
+      "en" : "581 -- Specific topics in natural history"
+   }
+},
+{
+   "notation" : "582",
+   "label" : {
+      "en" : "582 -- Plants noted for characteristics & flowers",
+      "de" : "582 -- Pflanzen mit spezifischen Merkmalen und Blüten"
+   }
+},
+{
+   "label" : {
+      "en" : "583 -- Dicotyledons",
+      "de" : "583 -- Magnoliopsida (Zweikeimblättrige)"
+   },
+   "notation" : "583"
+},
+{
+   "label" : {
+      "en" : "584 -- Monocotyledons",
+      "de" : "584 -- Liliopsida (Einkeimblättrige)"
+   },
+   "notation" : "584"
+},
+{
+   "notation" : "585",
+   "label" : {
+      "de" : "585 -- Gymnospermae (Nacktsamer), Coniferae (Nadelgehölze)",
+      "en" : "585 -- Gymnosperms, conifers"
+   }
+},
+{
+   "label" : {
+      "de" : "586 -- Cryptogamia (Blütenlose Pflanzen)",
+      "en" : "586 -- Seedless plants"
+   },
+   "notation" : "586"
+},
+{
+   "notation" : "587",
+   "label" : {
+      "de" : "587 -- Pteridophyta (Farnpflanzen)",
+      "en" : "587 -- Vascular seedless plants"
+   }
+},
+{
+   "label" : {
+      "de" : "588 -- Bryophyta (Moose)",
+      "en" : "588 -- Bryophytes"
+   },
+   "notation" : "588"
+},
+{
+   "notation" : "589",
+   "label" : {
+      "de" : "589 -- Unbesetzt",
+      "en" : "589 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "de" : "590 -- Tiere (Zoologie)",
+      "en" : "590 -- Animals (Zoology)"
+   },
+   "notation" : "590"
+},
+{
+   "notation" : "591",
+   "label" : {
+      "de" : "591 -- Einzelne Themen in der Naturgeschichte",
+      "en" : "591 -- Specific topics in natural history"
+   }
+},
+{
+   "notation" : "592",
+   "label" : {
+      "en" : "592 -- Invertebrates",
+      "de" : "592 -- Evertebrata (Wirbellose)"
+   }
+},
+{
+   "label" : {
+      "de" : "593 -- Wirbellose des Meeres und der Meeresküste",
+      "en" : "593 -- Marine & seashore invertebrates"
+   },
+   "notation" : "593"
+},
+{
+   "notation" : "594",
+   "label" : {
+      "de" : "594 -- Mollusca (Weichtiere), Tentaculata (Kranzfühler)",
+      "en" : "594 -- Mollusks & molluscoids"
+   }
+},
+{
+   "label" : {
+      "de" : "595 -- Arthropoden (Gliederfüßer)",
+      "en" : "595 -- Arthropods"
+   },
+   "notation" : "595"
+},
+{
+   "label" : {
+      "de" : "596 -- Chordata (Chordatiere)",
+      "en" : "596 -- Chordates"
+   },
+   "notation" : "596"
+},
+{
+   "notation" : "597",
+   "label" : {
+      "en" : "597 -- Cold-blooded vertebrates, fishes",
+      "de" : "597 -- Wechselwarme Wirbeltiere, Pisces (Fische)"
+   }
+},
+{
+   "notation" : "598",
+   "label" : {
+      "en" : "598 -- Birds",
+      "de" : "598 -- Aves (Vögel)"
+   }
+},
+{
+   "notation" : "599",
+   "label" : {
+      "de" : "599 -- Mammalia (Säugetiere)",
+      "en" : "599 -- Mammals"
+   }
+},
+{
+   "label" : {
+      "en" : "600 -- Technology",
+      "de" : "600 -- Technik, Technologie"
+   },
+   "notation" : "600"
+},
+{
+   "notation" : "601",
+   "label" : {
+      "de" : "601 -- Philosophie, Theorie",
+      "en" : "601 -- Philosophy & theory"
+   }
+},
+{
+   "label" : {
+      "de" : "602 -- Verschiedenes",
+      "en" : "602 -- Miscellany"
+   },
+   "notation" : "602"
+},
+{
+   "notation" : "603",
+   "label" : {
+      "en" : "603 -- Dictionaries & encyclopedias",
+      "de" : "603 -- Wörterbücher, Enzyklopädien"
+   }
+},
+{
+   "label" : {
+      "en" : "604 -- Special topics",
+      "de" : "604 -- Spezielle Themen"
+   },
+   "notation" : "604"
+},
+{
+   "notation" : "605",
+   "label" : {
+      "en" : "605 -- Serial publications",
+      "de" : "605 -- Fortlaufende Sammelwerke"
+   }
+},
+{
+   "notation" : "606",
+   "label" : {
+      "en" : "606 -- Organizations",
+      "de" : "606 -- Organisationen"
+   }
+},
+{
+   "notation" : "607",
+   "label" : {
+      "de" : "607 -- Ausbildung, Forschung, verwandte Themen",
+      "en" : "607 -- Education, research & related topics"
+   }
+},
+{
+   "label" : {
+      "en" : "608 -- Inventions & patents",
+      "de" : "608 -- Erfindungen, Patente"
+   },
+   "notation" : "608"
+},
+{
+   "notation" : "609",
+   "label" : {
+      "en" : "609 -- Historical, geographic & persons treatment",
+      "de" : "609 -- Historische, geografische, personenbezogene Behandlung"
+   }
+},
+{
+   "label" : {
+      "de" : "610 -- Medizin und Gesundheit",
+      "en" : "610 -- Medicine & health"
+   },
+   "notation" : "610"
+},
+{
+   "notation" : "611",
+   "label" : {
+      "de" : "611 -- Menschliche Anatomie, Zytologie, Histologie",
+      "en" : "611 -- Human anatomy, cytology & histology"
+   }
+},
+{
+   "notation" : "612",
+   "label" : {
+      "en" : "612 -- Human physiology",
+      "de" : "612 -- Humanphysiologie"
+   }
+},
+{
+   "label" : {
+      "en" : "613 -- Personal health & safety",
+      "de" : "613 -- Persönliche Gesundheit und Sicherheit"
+   },
+   "notation" : "613"
+},
+{
+   "notation" : "614",
+   "label" : {
+      "de" : "614 -- Inzidenz und Prävention von Krankheiten",
+      "en" : "614 -- Incidence & prevention of disease"
+   }
+},
+{
+   "notation" : "615",
+   "label" : {
+      "en" : "615 -- Pharmacology & therapeutics",
+      "de" : "615 -- Pharmakologie, Therapeutik"
+   }
+},
+{
+   "notation" : "616",
+   "label" : {
+      "de" : "616 -- Krankheiten",
+      "en" : "616 -- Diseases"
+   }
+},
+{
+   "notation" : "617",
+   "label" : {
+      "en" : "617 -- Surgery & related medical specialties",
+      "de" : "617 -- Chirurgie und verwandte medizinische Fachrichtungen"
+   }
+},
+{
+   "notation" : "618",
+   "label" : {
+      "de" : "618 -- Gynäkologie, Geburtsmedizin, Pädiatrie, Geriatrie",
+      "en" : "618 -- Gynecology, obstetrics, pediatrics & geriatrics"
+   }
+},
+{
+   "label" : {
+      "en" : "619 -- Unassigned",
+      "de" : "619 -- Unbesetzt"
+   },
+   "notation" : "619"
+},
+{
+   "label" : {
+      "de" : "620 -- Ingenieurwissenschaften und zugeordnete Tätigkeitenn",
+      "en" : "620 -- Engineering & allied operations"
+   },
+   "notation" : "620"
+},
+{
+   "notation" : "621",
+   "label" : {
+      "de" : "621 -- Angewandte Physik",
+      "en" : "621 -- Applied physics"
+   }
+},
+{
+   "notation" : "622",
+   "label" : {
+      "de" : "622 -- Bergbau und verwandte Tätigkeiten",
+      "en" : "622 -- Mining & related operations"
+   }
+},
+{
+   "notation" : "623",
+   "label" : {
+      "en" : "623 -- Military & nautical engineering",
+      "de" : "623 -- Militär- und Schiffstechnik"
+   }
+},
+{
+   "notation" : "624",
+   "label" : {
+      "de" : "624 -- Ingenieurbau",
+      "en" : "624 -- Civil engineering"
+   }
+},
+{
+   "notation" : "625",
+   "label" : {
+      "en" : "625 -- Engineering of railroads & roads",
+      "de" : "625 -- Eisenbahn- und Straßenbau"
+   }
+},
+{
+   "label" : {
+      "en" : "626 -- Unassigned",
+      "de" : "626 -- Unbesetzt"
+   },
+   "notation" : "626"
+},
+{
+   "notation" : "627",
+   "label" : {
+      "de" : "627 -- Wasserbau",
+      "en" : "627 -- Hydraulic engineering"
+   }
+},
+{
+   "notation" : "628",
+   "label" : {
+      "en" : "628 -- Sanitary & municipal engineering",
+      "de" : "628 -- Sanitär- und Kommunaltechnik, Umwelttechnik"
+   }
+},
+{
+   "label" : {
+      "en" : "629 -- Other branches of engineering",
+      "de" : "629 -- Andere Fachrichtungen der Ingenieurwissenschaften"
+   },
+   "notation" : "629"
+},
+{
+   "label" : {
+      "de" : "630 -- Landwirtschaft und verwandte Bereiche",
+      "en" : "630 -- Agriculture & related technologies"
+   },
+   "notation" : "630"
+},
+{
+   "label" : {
+      "de" : "631 -- Techniken, Ausstattung, Materialien",
+      "en" : "631 -- Techniques, equipment & materials"
+   },
+   "notation" : "631"
+},
+{
+   "label" : {
+      "en" : "632 -- Plant injuries, diseases & pests",
+      "de" : "632 -- Schäden, Krankheiten, Schädlinge an Pflanzen"
+   },
+   "notation" : "632"
+},
+{
+   "notation" : "633",
+   "label" : {
+      "en" : "633 -- Field & plantation crops",
+      "de" : "633 -- Feld- und Plantagenfrüchte"
+   }
+},
+{
+   "notation" : "634",
+   "label" : {
+      "de" : "634 -- Obstanlagen, Früchte, Forstwirtschaft",
+      "en" : "634 -- Orchards, fruits & forestry"
+   }
+},
+{
+   "notation" : "635",
+   "label" : {
+      "en" : "635 -- Garden crops (Horticulture)",
+      "de" : "635 -- Gartenpflanzen (Gartenbau)"
+   }
+},
+{
+   "label" : {
+      "en" : "636 -- Animal husbandry",
+      "de" : "636 -- Viehwirtschaft"
+   },
+   "notation" : "636"
+},
+{
+   "label" : {
+      "de" : "637 -- Milchverarbeitung und verwandte Produkte",
+      "en" : "637 -- Processing dairy & related products"
+   },
+   "notation" : "637"
+},
+{
+   "notation" : "638",
+   "label" : {
+      "de" : "638 -- Insektenzucht",
+      "en" : "638 -- Insect culture"
+   }
+},
+{
+   "notation" : "639",
+   "label" : {
+      "de" : "639 -- Jagd, Fischfang, Naturschutz",
+      "en" : "639 -- Hunting, fishing & conservation"
+   }
+},
+{
+   "notation" : "640",
+   "label" : {
+      "en" : "640 -- Home & family management",
+      "de" : "640 -- Hauswirtschaft und Familie"
+   }
+},
+{
+   "notation" : "641",
+   "label" : {
+      "de" : "641 -- Essen und Trinken",
+      "en" : "641 -- Food & drink"
+   }
+},
+{
+   "notation" : "642",
+   "label" : {
+      "de" : "642 -- Mahlzeiten, Tischkultur",
+      "en" : "642 -- Meals & table service"
+   }
+},
+{
+   "label" : {
+      "de" : "643 -- Wohnen, Haushaltsausstattung",
+      "en" : "643 -- Housing & household equipment"
+   },
+   "notation" : "643"
+},
+{
+   "notation" : "644",
+   "label" : {
+      "en" : "644 -- Household utilities",
+      "de" : "644 -- Gebäudeversorgung für Haushalte"
+   }
+},
+{
+   "label" : {
+      "de" : "645 -- Einrichtungsgegenstände",
+      "en" : "645 -- Household furnishings"
+   },
+   "notation" : "645"
+},
+{
+   "label" : {
+      "de" : "646 -- Nähen, Kleidung, persönliches Leben, Familienleben",
+      "en" : "646 -- Sewing, clothing & personal living"
+   },
+   "notation" : "646"
+},
+{
+   "label" : {
+      "de" : "647 -- Großhaushaltsführung",
+      "en" : "647 -- Management of public households"
+   },
+   "notation" : "647"
+},
+{
+   "notation" : "648",
+   "label" : {
+      "de" : "648 -- Haushaltsführung",
+      "en" : "648 -- Housekeeping"
+   }
+},
+{
+   "label" : {
+      "en" : "649 -- Child rearing & home care of persons",
+      "de" : "649 -- Kindererziehung, häusliche Betreuung"
+   },
+   "notation" : "649"
+},
+{
+   "label" : {
+      "de" : "650 -- Management und unterstützende Tätigkeiten",
+      "en" : "650 -- Management & auxiliary services"
+   },
+   "notation" : "650"
+},
+{
+   "label" : {
+      "de" : "651 -- Büroarbeit",
+      "en" : "651 -- Office services"
+   },
+   "notation" : "651"
+},
+{
+   "label" : {
+      "en" : "652 -- Processes of written communication",
+      "de" : "652 -- Techniken der schriftlichen Kommunikation"
+   },
+   "notation" : "652"
+},
+{
+   "notation" : "653",
+   "label" : {
+      "de" : "653 -- Stenografie",
+      "en" : "653 -- Shorthand"
+   }
+},
+{
+   "notation" : "654",
+   "label" : {
+      "de" : "654 -- Unbesetzt",
+      "en" : "654 -- Unassigned"
+   }
+},
+{
+   "notation" : "655",
+   "label" : {
+      "de" : "655 -- Unbesetzt",
+      "en" : "655 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "en" : "656 -- Unassigned",
+      "de" : "656 -- Unbesetzt"
+   },
+   "notation" : "656"
+},
+{
+   "notation" : "657",
+   "label" : {
+      "en" : "657 -- Accounting",
+      "de" : "657 -- Rechnungslegung"
+   }
+},
+{
+   "notation" : "658",
+   "label" : {
+      "de" : "658 -- Allgemeines Management",
+      "en" : "658 -- General management"
+   }
+},
+{
+   "label" : {
+      "en" : "659 -- Advertising & public relations",
+      "de" : "659 -- Werbung, Öffentlichkeitsarbeit"
+   },
+   "notation" : "659"
+},
+{
+   "label" : {
+      "de" : "660 -- Chemische Verfahrenstechnik",
+      "en" : "660 -- Chemical engineering"
+   },
+   "notation" : "660"
+},
+{
+   "label" : {
+      "de" : "661 -- Industriechemikalien",
+      "en" : "661 -- Industrial chemicals"
+   },
+   "notation" : "661"
+},
+{
+   "label" : {
+      "de" : "662 -- Explosivstoffe, Brennstoffe und verwandte Produkte",
+      "en" : "662 -- Explosives, fuels & related products"
+   },
+   "notation" : "662"
+},
+{
+   "label" : {
+      "en" : "663 -- Beverage technology",
+      "de" : "663 -- Getränketechnologie"
+   },
+   "notation" : "663"
+},
+{
+   "notation" : "664",
+   "label" : {
+      "de" : "664 -- Lebensmitteltechnologie",
+      "en" : "664 -- Food technology"
+   }
+},
+{
+   "notation" : "665",
+   "label" : {
+      "de" : "665 -- Industrielle Öle, Fette, Wachse, technische Gase",
+      "en" : "665 -- Industrial oils, fats, waxes & gases"
+   }
+},
+{
+   "label" : {
+      "de" : "666 -- Keramiktechnologie und zugeordnete Technologien",
+      "en" : "666 -- Ceramic & allied technologies"
+   },
+   "notation" : "666"
+},
+{
+   "label" : {
+      "en" : "667 -- Cleaning, color & coating technologies",
+      "de" : "667 -- Reinigungs-, Färbe-, Beschichtungstechniken"
+   },
+   "notation" : "667"
+},
+{
+   "notation" : "668",
+   "label" : {
+      "de" : "668 -- Technik anderer organischer Produkte",
+      "en" : "668 -- Technology of other organic products"
+   }
+},
+{
+   "notation" : "669",
+   "label" : {
+      "en" : "669 -- Metallurgy",
+      "de" : "669 -- Metallurgie"
+   }
+},
+{
+   "label" : {
+      "de" : "670 -- Industrielle Fertigung",
+      "en" : "670 -- Manufacturing"
+   },
+   "notation" : "670"
+},
+{
+   "label" : {
+      "en" : "671 -- Metalworking & primary metal products",
+      "de" : "671 -- Metallverarbeitung und Rohprodukte aus Metall"
+   },
+   "notation" : "671"
+},
+{
+   "label" : {
+      "de" : "672 -- Eisen, Stahl, andere Eisenlegierungen",
+      "en" : "672 -- Iron, steel & other iron alloys"
+   },
+   "notation" : "672"
+},
+{
+   "label" : {
+      "en" : "673 -- Nonferrous metals",
+      "de" : "673 -- Nichteisenmetalle"
+   },
+   "notation" : "673"
+},
+{
+   "notation" : "674",
+   "label" : {
+      "de" : "674 -- Holzverarbeitung, Holzprodukte, Kork",
+      "en" : "674 -- Lumber processing, wood products & cork"
+   }
+},
+{
+   "notation" : "675",
+   "label" : {
+      "en" : "675 -- Leather & fur processing",
+      "de" : "675 -- Leder- und Pelzverarbeitung"
+   }
+},
+{
+   "label" : {
+      "de" : "676 -- Zellstoff und Papierherstellung",
+      "en" : "676 -- Pulp & paper technology"
+   },
+   "notation" : "676"
+},
+{
+   "label" : {
+      "de" : "677 -- Textilien",
+      "en" : "677 -- Textiles"
+   },
+   "notation" : "677"
+},
+{
+   "notation" : "678",
+   "label" : {
+      "en" : "678 -- Elastomers & elastomer products",
+      "de" : "678 -- Elastomere, Elastomerprodukte"
+   }
+},
+{
+   "notation" : "679",
+   "label" : {
+      "de" : "679 -- Andere Produkte aus einzelnen Werkstoffen",
+      "en" : "679 -- Other products of specific materials"
+   }
+},
+{
+   "notation" : "680",
+   "label" : {
+      "en" : "680 -- Manufacture for specific uses",
+      "de" : "680 -- Industrielle Fertigung für einzelne Verwendungszwecke"
+   }
+},
+{
+   "label" : {
+      "en" : "681 -- Precision instruments & other devices",
+      "de" : "681 -- Präzisionsinstrumente und andere Geräte"
+   },
+   "notation" : "681"
+},
+{
+   "label" : {
+      "en" : "682 -- Small forge work (Blacksmithing)",
+      "de" : "682 -- Schmiedehandwerk"
+   },
+   "notation" : "682"
+},
+{
+   "label" : {
+      "de" : "683 -- Eisenwaren, Haushaltsgeräte",
+      "en" : "683 -- Hardware & household appliances"
+   },
+   "notation" : "683"
+},
+{
+   "notation" : "684",
+   "label" : {
+      "de" : "684 -- Wohnungseinrichtung, Heimwerkstätten",
+      "en" : "684 -- Furnishings & home workshops"
+   }
+},
+{
+   "label" : {
+      "de" : "685 -- Leder- und Pelzwaren und verwandte Produkte",
+      "en" : "685 -- Leather, fur goods & related products"
+   },
+   "notation" : "685"
+},
+{
+   "notation" : "686",
+   "label" : {
+      "de" : "686 -- Drucken und verwandte Tätigkeiten",
+      "en" : "686 -- Printing & related activities"
+   }
+},
+{
+   "label" : {
+      "en" : "687 -- Clothing & accessories",
+      "de" : "687 -- Kleidung, Accessoires"
+   },
+   "notation" : "687"
+},
+{
+   "notation" : "688",
+   "label" : {
+      "en" : "688 -- Other final products & packaging",
+      "de" : "688 -- Andere Endprodukte, Verpackungstechnik"
+   }
+},
+{
+   "notation" : "689",
+   "label" : {
+      "en" : "689 -- Unassigned",
+      "de" : "689 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "de" : "690 -- Hausbau, Bauhandwerk",
+      "en" : "690 -- Buildings"
+   },
+   "notation" : "690"
+},
+{
+   "label" : {
+      "en" : "691 -- Building materials",
+      "de" : "691 -- Baustoffe"
+   },
+   "notation" : "691"
+},
+{
+   "label" : {
+      "de" : "692 -- Bauhilfstechniken",
+      "en" : "692 -- Auxiliary construction practices"
+   },
+   "notation" : "692"
+},
+{
+   "notation" : "693",
+   "label" : {
+      "en" : "693 -- Specific materials & purposes",
+      "de" : "693 -- Einzelne Baustoffarten und Zwecke"
+   }
+},
+{
+   "notation" : "694",
+   "label" : {
+      "en" : "694 -- Wood construction & carpentry",
+      "de" : "694 -- Holzbau, Zimmerhandwerk"
+   }
+},
+{
+   "label" : {
+      "de" : "695 -- Dachdeckung",
+      "en" : "695 -- Roof covering"
+   },
+   "notation" : "695"
+},
+{
+   "notation" : "696",
+   "label" : {
+      "en" : "696 -- Utilities",
+      "de" : "696 -- Versorgungseinrichtungen"
+   }
+},
+{
+   "label" : {
+      "de" : "697 -- Heizungs-, Lüftungs-, Klimatechnik",
+      "en" : "697 -- Heating, ventilating & air-conditioning"
+   },
+   "notation" : "697"
+},
+{
+   "label" : {
+      "de" : "698 -- Ausbau",
+      "en" : "698 -- Detail finishing"
+   },
+   "notation" : "698"
+},
+{
+   "label" : {
+      "en" : "699 -- Unassigned",
+      "de" : "699 -- Unbesetzt"
+   },
+   "notation" : "699"
+},
+{
+   "notation" : "700",
+   "label" : {
+      "de" : "700 -- Künste, Bildende und angewandte Kunst",
+      "en" : "700 -- The arts, fine & decorative arts"
+   }
+},
+{
+   "label" : {
+      "en" : "701 -- Philosophy of fine & decorative arts",
+      "de" : "701 -- Kunstphilosophie, Kunsttheorie der bildenden und angewandten Kunst"
+   },
+   "notation" : "701"
+},
+{
+   "notation" : "702",
+   "label" : {
+      "en" : "702 -- Miscellany of fine & decorative arts",
+      "de" : "702 -- Verschiedenes zur bildenden und angewandten Kunst"
+   }
+},
+{
+   "label" : {
+      "en" : "703 -- Dictionaries of fine & decorative arts",
+      "de" : "703 -- Wörterbücher, Enzyklopädien zur bildenden und angewandten Kunst"
+   },
+   "notation" : "703"
+},
+{
+   "notation" : "704",
+   "label" : {
+      "de" : "704 -- Spezielle Themen zur bildenden und angewandten Kunst",
+      "en" : "704 -- Special topics in fine & decorative arts"
+   }
+},
+{
+   "notation" : "705",
+   "label" : {
+      "en" : "705 -- Serial publications of fine & decorative arts",
+      "de" : "705 -- Fortlaufende Sammelwerke zur bildenden und angewandten Kunst"
+   }
+},
+{
+   "notation" : "706",
+   "label" : {
+      "en" : "706 -- Organizations & management",
+      "de" : "706 -- Organisationen, Management der bildenden und angewandten Kunst"
+   }
+},
+{
+   "notation" : "707",
+   "label" : {
+      "de" : "707 -- Ausbildung, Forschung, verwandte Themen zur bildenden und angewandten Kunst",
+      "en" : "707 -- Education, research & related topics"
+   }
+},
+{
+   "notation" : "708",
+   "label" : {
+      "en" : "708 -- Galleries, museums & private collections",
+      "de" : "708 -- Galerien, Museen, Privatsammlungen zur bildenden und angewandten Kunst"
+   }
+},
+{
+   "notation" : "709",
+   "label" : {
+      "de" : "709 -- Historische, geografische, personenbezogene Behandlung der bildenden und angewandten Kunst",
+      "en" : "709 -- Historical, geographic & persons treatment"
+   }
+},
+{
+   "label" : {
+      "en" : "710 -- Civic & landscape art",
+      "de" : "710 -- Städtebau, Raumplanung, Landschaftsgestaltung"
+   },
+   "notation" : "710"
+},
+{
+   "notation" : "711",
+   "label" : {
+      "de" : "711 -- Raumplanung",
+      "en" : "711 -- Area planning"
+   }
+},
+{
+   "notation" : "712",
+   "label" : {
+      "en" : "712 -- Landscape architecture",
+      "de" : "712 -- Landschaftsgestaltung"
+   }
+},
+{
+   "notation" : "713",
+   "label" : {
+      "en" : "713 -- Landscape architecture of trafficways",
+      "de" : "713 -- Landschaftsgestaltung von Verkehrswegen"
+   }
+},
+{
+   "notation" : "714",
+   "label" : {
+      "de" : "714 -- Wasser als Gestaltungselement",
+      "en" : "714 -- Water features"
+   }
+},
+{
+   "notation" : "715",
+   "label" : {
+      "en" : "715 -- Woody plants",
+      "de" : "715 -- Gehölze als Gestaltungselemente"
+   }
+},
+{
+   "label" : {
+      "de" : "716 -- Krautige Pflanzen als Gestaltungselemente",
+      "en" : "716 -- Herbaceous plants"
+   },
+   "notation" : "716"
+},
+{
+   "notation" : "717",
+   "label" : {
+      "en" : "717 -- Structures in landscape architecture",
+      "de" : "717 -- Andere Gestaltungselemente"
+   }
+},
+{
+   "label" : {
+      "de" : "718 -- Landschaftsgestaltung von Friedhöfen",
+      "en" : "718 -- Landscape design of cemeteries"
+   },
+   "notation" : "718"
+},
+{
+   "label" : {
+      "en" : "719 -- Natural landscapes",
+      "de" : "719 -- Naturlandschaften"
+   },
+   "notation" : "719"
+},
+{
+   "notation" : "720",
+   "label" : {
+      "en" : "720 -- Architecture",
+      "de" : "720 -- Architektur"
+   }
+},
+{
+   "notation" : "721",
+   "label" : {
+      "de" : "721 -- Architektonische Struktur",
+      "en" : "721 -- Architectural structure"
+   }
+},
+{
+   "notation" : "722",
+   "label" : {
+      "de" : "722 -- Architektur bis ca. 300",
+      "en" : "722 -- Architecture to ca. 300"
+   }
+},
+{
+   "label" : {
+      "en" : "723 -- Architecture from ca. 300 to 1399",
+      "de" : "723 -- Architektur von ca. 300"
+   },
+   "notation" : "723"
+},
+{
+   "notation" : "724",
+   "label" : {
+      "en" : "724 -- Architecture from 1400",
+      "de" : "724 -- Architektur ab 1400"
+   }
+},
+{
+   "notation" : "725",
+   "label" : {
+      "en" : "725 -- Public structures",
+      "de" : "725 -- Öffentliche Bauwerke"
+   }
+},
+{
+   "label" : {
+      "en" : "726 -- Buildings for religious purposes",
+      "de" : "726 -- Gebäude für religiöse und verwandte Zwecke"
+   },
+   "notation" : "726"
+},
+{
+   "label" : {
+      "en" : "727 -- Buildings for education & research",
+      "de" : "727 -- Gebäude für Lehr- und Forschungszwecke"
+   },
+   "notation" : "727"
+},
+{
+   "label" : {
+      "en" : "728 -- Residential & related buildings",
+      "de" : "728 -- Wohnbauten und verwandte Gebäude"
+   },
+   "notation" : "728"
+},
+{
+   "label" : {
+      "de" : "729 -- Entwurf und Gestaltung, Innenarchitektur",
+      "en" : "729 -- Design & decoration"
+   },
+   "notation" : "729"
+},
+{
+   "notation" : "730",
+   "label" : {
+      "en" : "730 -- Plastic arts, sculpture",
+      "de" : "730 -- Plastische Künste, Bildhauerkunst"
+   }
+},
+{
+   "label" : {
+      "en" : "731 -- Processes, forms & subjects of sculpture",
+      "de" : "731 -- Verfahren, Formen und Motive in der Bildhauerkunst"
+   },
+   "notation" : "731"
+},
+{
+   "label" : {
+      "en" : "732 -- Sculpture to ca. 500",
+      "de" : "732 -- Bildhauerei bis ca. 500"
+   },
+   "notation" : "732"
+},
+{
+   "label" : {
+      "de" : "733 -- Griechische, etruskische, römische Bildhauerkunst",
+      "en" : "733 -- Greek, Etruscan & Roman sculpture"
+   },
+   "notation" : "733"
+},
+{
+   "label" : {
+      "de" : "734 -- Bildhauerkunst von ca. 500",
+      "en" : "734 -- Sculpture from ca. 500 to 1399"
+   },
+   "notation" : "734"
+},
+{
+   "notation" : "735",
+   "label" : {
+      "de" : "735 -- Bildhauerkunst ab 1400",
+      "en" : "735 -- Sculpture from 1400"
+   }
+},
+{
+   "notation" : "736",
+   "label" : {
+      "de" : "736 -- Schnitzen, Schnitzereien",
+      "en" : "736 -- Carving & carvings"
+   }
+},
+{
+   "notation" : "737",
+   "label" : {
+      "de" : "737 -- Numismatik, Siegelkunde",
+      "en" : "737 -- Numismatics & sigillography"
+   }
+},
+{
+   "notation" : "738",
+   "label" : {
+      "de" : "738 -- Keramikkunst",
+      "en" : "738 -- Ceramic arts"
+   }
+},
+{
+   "notation" : "739",
+   "label" : {
+      "en" : "739 -- Art metalwork",
+      "de" : "739 -- Metallkunst"
+   }
+},
+{
+   "notation" : "740",
+   "label" : {
+      "en" : "740 -- Drawing & decorative arts",
+      "de" : "740 -- Zeichnung, angewandte Kunst"
+   }
+},
+{
+   "label" : {
+      "en" : "741 -- Drawing & drawings",
+      "de" : "741 -- Zeichnung, Zeichnungen"
+   },
+   "notation" : "741"
+},
+{
+   "label" : {
+      "de" : "742 -- Perspektive",
+      "en" : "742 -- Perspective"
+   },
+   "notation" : "742"
+},
+{
+   "notation" : "743",
+   "label" : {
+      "de" : "743 -- Zeichnung und Zeichnungen nach Motiv",
+      "en" : "743 -- Drawing & drawings by subject"
+   }
+},
+{
+   "notation" : "744",
+   "label" : {
+      "de" : "744 -- Unbesetzt",
+      "en" : "744 -- Unassigned"
+   }
+},
+{
+   "notation" : "745",
+   "label" : {
+      "en" : "745 -- Decorative arts",
+      "de" : "745 -- Angewandte Kunst"
+   }
+},
+{
+   "notation" : "746",
+   "label" : {
+      "en" : "746 -- Textile arts",
+      "de" : "746 -- Textilkunst"
+   }
+},
+{
+   "notation" : "747",
+   "label" : {
+      "de" : "747 -- Innendekoration",
+      "en" : "747 -- Interior decoration"
+   }
+},
+{
+   "label" : {
+      "en" : "748 -- Glass",
+      "de" : "748 -- Glas"
+   },
+   "notation" : "748"
+},
+{
+   "notation" : "749",
+   "label" : {
+      "de" : "749 -- Möbel, Möbelzubehör",
+      "en" : "749 -- Furniture & accessories"
+   }
+},
+{
+   "notation" : "750",
+   "label" : {
+      "en" : "750 -- Painting & paintings",
+      "de" : "750 -- Malerei, Gemälde"
+   }
+},
+{
+   "notation" : "751",
+   "label" : {
+      "en" : "751 -- Techniques, equipment, materials & forms",
+      "de" : "751 -- Techniken, Ausstattung, Materialien, Formen"
+   }
+},
+{
+   "notation" : "752",
+   "label" : {
+      "en" : "752 -- Color",
+      "de" : "752 -- Farbe"
+   }
+},
+{
+   "label" : {
+      "en" : "753 -- Symbolism, allegory, mythology & legend",
+      "de" : "753 -- Symbolik, Allegorie, Mythologie, Legende"
+   },
+   "notation" : "753"
+},
+{
+   "notation" : "754",
+   "label" : {
+      "en" : "754 -- Genre paintings",
+      "de" : "754 -- Genremalerei"
+   }
+},
+{
+   "notation" : "755",
+   "label" : {
+      "en" : "755 -- Religion",
+      "de" : "755 -- Religion"
+   }
+},
+{
+   "notation" : "756",
+   "label" : {
+      "de" : "756 -- Unbesetzt",
+      "en" : "756 -- Unassigned"
+   }
+},
+{
+   "notation" : "757",
+   "label" : {
+      "en" : "757 -- Human figures",
+      "de" : "757 -- Menschliche Figuren"
+   }
+},
+{
+   "notation" : "758",
+   "label" : {
+      "en" : "758 -- Other subjects",
+      "de" : "758 -- Andere Motive"
+   }
+},
+{
+   "label" : {
+      "en" : "759 -- Historical, geographic & persons treatment",
+      "de" : "759 -- Histor., geogr., personenbezogene Behandlung"
+   },
+   "notation" : "759"
+},
+{
+   "notation" : "760",
+   "label" : {
+      "de" : "760 -- Grafik, Druckgrafik, Drucke",
+      "en" : "760 -- Graphic arts, printmaking & prints"
+   }
+},
+{
+   "label" : {
+      "de" : "761 -- Hochdruckverfahren (Blockdruck)",
+      "en" : "761 -- Relief processes (Block printing)"
+   },
+   "notation" : "761"
+},
+{
+   "notation" : "762",
+   "label" : {
+      "de" : "762 -- Unbesetzt",
+      "en" : "762 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "de" : "763 -- Lithografische Druckverfahren",
+      "en" : "763 -- Lithographic processes"
+   },
+   "notation" : "763"
+},
+{
+   "notation" : "764",
+   "label" : {
+      "de" : "764 -- Farblithografie, Serigrafie",
+      "en" : "764 -- Chromolithography & serigraphy"
+   }
+},
+{
+   "label" : {
+      "en" : "765 -- Metal engraving",
+      "de" : "765 -- Metallgravur"
+   },
+   "notation" : "765"
+},
+{
+   "notation" : "766",
+   "label" : {
+      "de" : "766 -- Mezzotinto, Aquatinta und verwandte Techniken",
+      "en" : "766 -- Mezzotinting, aquatinting & related processes"
+   }
+},
+{
+   "label" : {
+      "de" : "767 -- Radierung, Kaltnadelarbeit",
+      "en" : "767 -- Etching & drypoint"
+   },
+   "notation" : "767"
+},
+{
+   "notation" : "768",
+   "label" : {
+      "de" : "768 -- Unbesetzt]",
+      "en" : "768 -- Unassigned"
+   }
+},
+{
+   "notation" : "769",
+   "label" : {
+      "en" : "769 -- Prints",
+      "de" : "769 -- Drucke"
+   }
+},
+{
+   "notation" : "770",
+   "label" : {
+      "en" : "770 -- Photography, photographs & computer art",
+      "de" : "770 -- Fotografie, Fotografien, Computerkunst"
+   }
+},
+{
+   "notation" : "771",
+   "label" : {
+      "de" : "771 -- Techniken, Ausstattung, Materialien",
+      "en" : "771 -- Techniques, equipment & materials"
+   }
+},
+{
+   "notation" : "772",
+   "label" : {
+      "de" : "772 -- Entwicklungsverfahren mit Metallsalzen",
+      "en" : "772 -- Metallic salt processes"
+   }
+},
+{
+   "label" : {
+      "en" : "773 -- Pigment processes of printing",
+      "de" : "773 -- Pigmentdruckverfahren"
+   },
+   "notation" : "773"
+},
+{
+   "label" : {
+      "en" : "774 -- Holography",
+      "de" : "774 -- Holografie"
+   },
+   "notation" : "774"
+},
+{
+   "label" : {
+      "de" : "775 -- Digitale Fotografie",
+      "en" : "775 -- Digital photography"
+   },
+   "notation" : "775"
+},
+{
+   "label" : {
+      "de" : "776 -- Computerkunst (Digitale Kunst)",
+      "en" : "776 -- Computer art (Digital art)"
+   },
+   "notation" : "776"
+},
+{
+   "notation" : "777",
+   "label" : {
+      "de" : "777 -- Unbesetzt",
+      "en" : "777 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "de" : "778 -- Bereiche und Arten der Fotografie",
+      "en" : "778 -- Fields & kinds of photography"
+   },
+   "notation" : "778"
+},
+{
+   "label" : {
+      "de" : "779 -- Fotografien",
+      "en" : "779 -- Photographs"
+   },
+   "notation" : "779"
+},
+{
+   "label" : {
+      "de" : "780 -- Musik",
+      "en" : "780 -- Music"
+   },
+   "notation" : "780"
+},
+{
+   "notation" : "781",
+   "label" : {
+      "de" : "781 -- Allgemeine Prinzipien, musikalische Formen",
+      "en" : "781 -- General principles & musical forms"
+   }
+},
+{
+   "notation" : "782",
+   "label" : {
+      "en" : "782 -- Vocal music",
+      "de" : "782 -- Vokalmusik"
+   }
+},
+{
+   "label" : {
+      "en" : "783 -- Music for single voices, the voice",
+      "de" : "783 -- Musik für Einzelstimmen, die Stimme"
+   },
+   "notation" : "783"
+},
+{
+   "label" : {
+      "en" : "784 -- Instruments & instrumental ensembles",
+      "de" : "784 -- Instrumente, Instrumentalensembles"
+   },
+   "notation" : "784"
+},
+{
+   "label" : {
+      "de" : "785 -- Ensembles mit einem Instrument pro Stimme",
+      "en" : "785 -- Ensembles with one instrument per part"
+   },
+   "notation" : "785"
+},
+{
+   "label" : {
+      "en" : "786 -- Keyboard & other instruments",
+      "de" : "786 -- Tasteninstrumente, andere Instrumente"
+   },
+   "notation" : "786"
+},
+{
+   "label" : {
+      "de" : "787 -- Saiteninstrumente",
+      "en" : "787 -- Stringed instruments"
+   },
+   "notation" : "787"
+},
+{
+   "label" : {
+      "en" : "788 -- Wind instruments",
+      "de" : "788 -- Blasinstrumente"
+   },
+   "notation" : "788"
+},
+{
+   "label" : {
+      "de" : "789 -- (Optionale Notation)",
+      "en" : "789 -- (Optional number)"
+   },
+   "notation" : "789"
+},
+{
+   "label" : {
+      "en" : "790 -- Recreational & performing arts",
+      "de" : "790 -- Freizeitgestaltung, darstellende Künste, Sport"
+   },
+   "notation" : "790"
+},
+{
+   "label" : {
+      "de" : "791 -- Öffentliche Darbietungen, Film, Rundfunk",
+      "en" : "791 -- Public performances"
+   },
+   "notation" : "791"
+},
+{
+   "notation" : "792",
+   "label" : {
+      "de" : "792 -- Bühnenkunst",
+      "en" : "792 -- Stage presentations"
+   }
+},
+{
+   "label" : {
+      "de" : "793 -- Spiele und Freizeitaktivitäten für drinnen",
+      "en" : "793 -- Indoor games & amusements"
+   },
+   "notation" : "793"
+},
+{
+   "notation" : "794",
+   "label" : {
+      "de" : "794 -- Unterhaltungsspiele für drinnen",
+      "en" : "794 -- Indoor games of skill"
+   }
+},
+{
+   "notation" : "795",
+   "label" : {
+      "de" : "795 -- Glücksspiele",
+      "en" : "795 -- Games of chance"
+   }
+},
+{
+   "label" : {
+      "en" : "796 -- Athletic & outdoor sports & games",
+      "de" : "796 -- Sportarten, Sportspiele"
+   },
+   "notation" : "796"
+},
+{
+   "label" : {
+      "de" : "797 -- Wasser- und Luftsport",
+      "en" : "797 -- Aquatic & air sports"
+   },
+   "notation" : "797"
+},
+{
+   "notation" : "798",
+   "label" : {
+      "en" : "798 -- Equestrian sports & animal racing",
+      "de" : "798 -- Pferdesport, Tierrennen"
+   }
+},
+{
+   "notation" : "799",
+   "label" : {
+      "de" : "799 -- Fischfang, Jagd, Schießen",
+      "en" : "799 -- Fishing, hunting & shooting"
+   }
+},
+{
+   "notation" : "800",
+   "label" : {
+      "en" : "800 -- Literature & rhetoric",
+      "de" : "800 -- Literatur und Rhetorik"
+   }
+},
+{
+   "label" : {
+      "en" : "801 -- Philosophy & theory",
+      "de" : "801 -- Literaturtheorie"
+   },
+   "notation" : "801"
+},
+{
+   "notation" : "802",
+   "label" : {
+      "de" : "802 -- Verschiedenes",
+      "en" : "802 -- Miscellany"
+   }
+},
+{
+   "label" : {
+      "en" : "803 -- Dictionaries & encyclopedias",
+      "de" : "803 -- Wörterbücher, Enzyklopädien"
+   },
+   "notation" : "803"
+},
+{
+   "notation" : "804",
+   "label" : {
+      "en" : "804 -- Unassigned",
+      "de" : "804 -- Unbesetzt"
+   }
+},
+{
+   "label" : {
+      "de" : "805 -- Fortlaufende Sammelwerke",
+      "en" : "805 -- Serial publications"
+   },
+   "notation" : "805"
+},
+{
+   "notation" : "806",
+   "label" : {
+      "en" : "806 -- Organizations & management",
+      "de" : "806 -- Organisationen, Management"
+   }
+},
+{
+   "label" : {
+      "en" : "807 -- Education, research & related topics",
+      "de" : "807 -- Ausbildung, Forschung, verwandte Themen"
+   },
+   "notation" : "807"
+},
+{
+   "notation" : "808",
+   "label" : {
+      "de" : "808 -- Rhetorik, Sammlungen von Literatur",
+      "en" : "808 -- Rhetoric & collections of literature"
+   }
+},
+{
+   "label" : {
+      "en" : "809 -- History, description & criticism",
+      "de" : "809 -- Geschichte, Darstellung, Literaturwissenschaft und kritik"
+   },
+   "notation" : "809"
+},
+{
+   "notation" : "810",
+   "label" : {
+      "en" : "810 -- American literature in English",
+      "de" : "810 -- Amerikanische Literatur in in Englisch"
+   }
+},
+{
+   "label" : {
+      "en" : "811 -- American poetry in English",
+      "de" : "811 -- Amerikanische Versdichtung"
+   },
+   "notation" : "811"
+},
+{
+   "notation" : "812",
+   "label" : {
+      "de" : "812 -- Amerikanische Dramen",
+      "en" : "812 -- American drama in English"
+   }
+},
+{
+   "notation" : "813",
+   "label" : {
+      "de" : "813 -- Amerikanische Erzählprosa",
+      "en" : "813 -- American fiction in English"
+   }
+},
+{
+   "notation" : "814",
+   "label" : {
+      "en" : "814 -- American essays in English",
+      "de" : "814 -- Amerikanische Essays"
+   }
+},
+{
+   "notation" : "815",
+   "label" : {
+      "de" : "815 -- Amerikanische Reden",
+      "en" : "815 -- American speeches in English"
+   }
+},
+{
+   "notation" : "816",
+   "label" : {
+      "en" : "816 -- American letters in English",
+      "de" : "816 -- Amerikanische Briefe"
+   }
+},
+{
+   "notation" : "817",
+   "label" : {
+      "de" : "817 -- Amerikanischer Humor, amerikanische Satire",
+      "en" : "817 -- American humor & satire in English"
+   }
+},
+{
+   "label" : {
+      "en" : "818 -- American miscellaneous writings",
+      "de" : "818 -- Amerikanische vermischte Schriften"
+   },
+   "notation" : "818"
+},
+{
+   "notation" : "819",
+   "label" : {
+      "de" : "819 -- (Optionale Notation)",
+      "en" : "819 -- (Optional number)"
+   }
+},
+{
+   "label" : {
+      "en" : "820 -- English & Old English literatures",
+      "de" : "820 -- Englische, altenglische Literaturen"
+   },
+   "notation" : "820"
+},
+{
+   "notation" : "821",
+   "label" : {
+      "de" : "821 -- Englische Versdichtung",
+      "en" : "821 -- English poetry"
+   }
+},
+{
+   "notation" : "822",
+   "label" : {
+      "de" : "822 -- Englische Dramen",
+      "en" : "822 -- English drama"
+   }
+},
+{
+   "label" : {
+      "de" : "823 -- Englische Erzählprosa",
+      "en" : "823 -- English fiction"
+   },
+   "notation" : "823"
+},
+{
+   "label" : {
+      "de" : "824 -- Englische Essays",
+      "en" : "824 -- English essays"
+   },
+   "notation" : "824"
+},
+{
+   "label" : {
+      "de" : "825 -- Englische Reden",
+      "en" : "825 -- English speeches"
+   },
+   "notation" : "825"
+},
+{
+   "notation" : "826",
+   "label" : {
+      "de" : "826 -- Englische Briefe",
+      "en" : "826 -- English letters"
+   }
+},
+{
+   "label" : {
+      "en" : "827 -- English humor & satire",
+      "de" : "827 -- Englischer Humor, englische Satire"
+   },
+   "notation" : "827"
+},
+{
+   "notation" : "828",
+   "label" : {
+      "en" : "828 -- English miscellaneous writings",
+      "de" : "828 -- Englische vermischte Schriften"
+   }
+},
+{
+   "notation" : "829",
+   "label" : {
+      "de" : "829 -- Altenglische (Angelsächsische) Literatur",
+      "en" : "829 -- Old English (Anglo-Saxon)"
+   }
+},
+{
+   "notation" : "830",
+   "label" : {
+      "en" : "830 -- Literatures of Germanic languages",
+      "de" : "830 -- Literaturen germanischer Sprachen, Deutsche Literatur"
+   }
+},
+{
+   "label" : {
+      "en" : "831 -- German poetry",
+      "de" : "831 -- Deutsche Versdichtung"
+   },
+   "notation" : "831"
+},
+{
+   "label" : {
+      "en" : "832 -- German drama",
+      "de" : "832 -- Deutsche Dramen"
+   },
+   "notation" : "832"
+},
+{
+   "label" : {
+      "en" : "833 -- German fiction",
+      "de" : "833 -- Deutsche Erzählprosa"
+   },
+   "notation" : "833"
+},
+{
+   "notation" : "834",
+   "label" : {
+      "de" : "834 -- Deutsche Essays",
+      "en" : "834 -- German essays"
+   }
+},
+{
+   "notation" : "835",
+   "label" : {
+      "en" : "835 -- German speeches",
+      "de" : "835 -- Deutsche Reden"
+   }
+},
+{
+   "label" : {
+      "de" : "836 -- Deutsche Briefe",
+      "en" : "836 -- German letters"
+   },
+   "notation" : "836"
+},
+{
+   "label" : {
+      "de" : "837 -- Deutscher Humor, deutsche Satire",
+      "en" : "837 -- German humor & satire"
+   },
+   "notation" : "837"
+},
+{
+   "notation" : "838",
+   "label" : {
+      "de" : "838 -- Deutsche vermischte Schriften",
+      "en" : "838 -- German miscellaneous writings"
+   }
+},
+{
+   "label" : {
+      "de" : "839 -- Andere germanische Literaturen",
+      "en" : "839 -- Other Germanic literatures"
+   },
+   "notation" : "839"
+},
+{
+   "notation" : "840",
+   "label" : {
+      "en" : "840 -- Literatures of Romance languages",
+      "de" : "840 -- Literaturen romanischer Sprachen, Französische Literatur"
+   }
+},
+{
+   "notation" : "841",
+   "label" : {
+      "de" : "841 -- Französische Versdichtung",
+      "en" : "841 -- French poetry"
+   }
+},
+{
+   "notation" : "842",
+   "label" : {
+      "de" : "842 -- Französische Dramen",
+      "en" : "842 -- French drama"
+   }
+},
+{
+   "label" : {
+      "en" : "843 -- French fiction",
+      "de" : "843 -- Französische Erzählprosa"
+   },
+   "notation" : "843"
+},
+{
+   "label" : {
+      "en" : "844 -- French essays",
+      "de" : "844 -- Französische Essays"
+   },
+   "notation" : "844"
+},
+{
+   "label" : {
+      "en" : "845 -- French speeches",
+      "de" : "845 -- Französische Reden"
+   },
+   "notation" : "845"
+},
+{
+   "notation" : "846",
+   "label" : {
+      "de" : "846 -- Französische Briefe",
+      "en" : "846 -- French letters"
+   }
+},
+{
+   "label" : {
+      "en" : "847 -- French humor & satire",
+      "de" : "847 -- Französischer Humor, französische Satire"
+   },
+   "notation" : "847"
+},
+{
+   "label" : {
+      "de" : "848 -- Französische vermischte Schriften",
+      "en" : "848 -- French miscellaneous writings"
+   },
+   "notation" : "848"
+},
+{
+   "label" : {
+      "en" : "849 -- Occitan & Catalan literatures",
+      "de" : "849 -- Okzitanische, katalanische Literaturen"
+   },
+   "notation" : "849"
+},
+{
+   "notation" : "850",
+   "label" : {
+      "de" : "850 -- Italienische, rumänische, rätoromanische Literaturen",
+      "en" : "850 -- Italian, Romanian & related literatures"
+   }
+},
+{
+   "notation" : "851",
+   "label" : {
+      "de" : "851 -- Italienische Versdichtung",
+      "en" : "851 -- Italian poetry"
+   }
+},
+{
+   "notation" : "852",
+   "label" : {
+      "en" : "852 -- Italian drama",
+      "de" : "852 -- Italienische Dramen"
+   }
+},
+{
+   "label" : {
+      "de" : "853 -- Italienische Erzählprosa",
+      "en" : "853 -- Italian fiction"
+   },
+   "notation" : "853"
+},
+{
+   "label" : {
+      "en" : "854 -- Italian essays",
+      "de" : "854 -- Italienische Essays"
+   },
+   "notation" : "854"
+},
+{
+   "label" : {
+      "en" : "855 -- Italian speeches",
+      "de" : "855 -- Italienische Reden"
+   },
+   "notation" : "855"
+},
+{
+   "label" : {
+      "de" : "856 -- Italienische Briefe",
+      "en" : "856 -- Italian letters"
+   },
+   "notation" : "856"
+},
+{
+   "notation" : "857",
+   "label" : {
+      "de" : "857 -- Italienischer Humor, italienische Satire",
+      "en" : "857 -- Italian humor & satire"
+   }
+},
+{
+   "notation" : "858",
+   "label" : {
+      "de" : "858 -- Italienische vermischte Schriften",
+      "en" : "858 -- Italian miscellaneous writings"
+   }
+},
+{
+   "notation" : "859",
+   "label" : {
+      "en" : "859 -- Romanian & related literatures",
+      "de" : "859 -- Rumänische, rätoromanische Literaturen"
+   }
+},
+{
+   "label" : {
+      "en" : "860 -- Spanish & Portuguese literatures",
+      "de" : "860 -- Spanische, portugiesische Literaturen"
+   },
+   "notation" : "860"
+},
+{
+   "label" : {
+      "en" : "861 -- Spanish poetry",
+      "de" : "861 -- Spanische Versdichtung"
+   },
+   "notation" : "861"
+},
+{
+   "notation" : "862",
+   "label" : {
+      "de" : "862 -- Spanische Dramen",
+      "en" : "862 -- Spanish drama"
+   }
+},
+{
+   "notation" : "863",
+   "label" : {
+      "en" : "863 -- Spanish fiction",
+      "de" : "863 -- Spanische Erzählprosa"
+   }
+},
+{
+   "notation" : "864",
+   "label" : {
+      "de" : "864 -- Spanische Essays",
+      "en" : "864 -- Spanish essays"
+   }
+},
+{
+   "notation" : "865",
+   "label" : {
+      "de" : "865 -- Spanische Reden",
+      "en" : "865 -- Spanish speeches"
+   }
+},
+{
+   "label" : {
+      "de" : "866 -- Spanische Briefe",
+      "en" : "866 -- Spanish letters"
+   },
+   "notation" : "866"
+},
+{
+   "label" : {
+      "en" : "867 -- Spanish humor & satire",
+      "de" : "867 -- Spanischer Humor, spanische Satire"
+   },
+   "notation" : "867"
+},
+{
+   "label" : {
+      "de" : "868 -- Spanische vermischte Schriften",
+      "en" : "868 -- Spanish miscellaneous writings"
+   },
+   "notation" : "868"
+},
+{
+   "label" : {
+      "de" : "869 -- Portugiesische Literatur",
+      "en" : "869 -- Portuguese literature"
+   },
+   "notation" : "869"
+},
+{
+   "notation" : "870",
+   "label" : {
+      "de" : "870 -- Italische Literaturen, Lateinische Literatur",
+      "en" : "870 -- Italic literatures, Latin literature"
+   }
+},
+{
+   "label" : {
+      "en" : "871 -- Latin poetry",
+      "de" : "871 -- Lateinische Versdichtung"
+   },
+   "notation" : "871"
+},
+{
+   "notation" : "872",
+   "label" : {
+      "de" : "872 -- Lateinische dramatische Versdichtung, Dramen",
+      "en" : "872 -- Latin dramatic poetry & drama"
+   }
+},
+{
+   "notation" : "873",
+   "label" : {
+      "en" : "873 -- Latin epic poetry & fiction",
+      "de" : "873 -- Lateinische erzählende Versdichtung, Erzählprosa"
+   }
+},
+{
+   "notation" : "874",
+   "label" : {
+      "en" : "874 -- Latin lyric poetry",
+      "de" : "874 -- Lateinische lyrische Versdichtung"
+   }
+},
+{
+   "label" : {
+      "en" : "875 -- Latin speeches",
+      "de" : "875 -- Lateinische Reden"
+   },
+   "notation" : "875"
+},
+{
+   "notation" : "876",
+   "label" : {
+      "de" : "876 -- Lateinische Briefe",
+      "en" : "876 -- Latin letters"
+   }
+},
+{
+   "notation" : "877",
+   "label" : {
+      "de" : "877 -- Lateinischer Humor, lateinische Satire",
+      "en" : "877 -- Latin humor & satire"
+   }
+},
+{
+   "notation" : "878",
+   "label" : {
+      "en" : "878 -- Latin miscellaneous writings",
+      "de" : "878 -- Lateinische vermischte Schriften"
+   }
+},
+{
+   "label" : {
+      "en" : "879 -- Literatures of other Italic languages",
+      "de" : "879 -- Literaturen anderer italischer Sprachen"
+   },
+   "notation" : "879"
+},
+{
+   "label" : {
+      "en" : "880 -- Hellenic literatures, classical Greek",
+      "de" : "880 -- Hellenische Literaturen, Klassische griechische Literatur"
+   },
+   "notation" : "880"
+},
+{
+   "label" : {
+      "de" : "881 -- Klassische griechische Versdichtung",
+      "en" : "881 -- Classical Greek poetry"
+   },
+   "notation" : "881"
+},
+{
+   "notation" : "882",
+   "label" : {
+      "en" : "882 -- Classical Greek dramatic poetry & drama",
+      "de" : "882 -- Klassische griechische dramatische Versdichtung, Dramen"
+   }
+},
+{
+   "notation" : "883",
+   "label" : {
+      "de" : "883 -- Klassische griechische erzählende Versdichtung, Erzählprosa",
+      "en" : "883 -- Classical Greek epic poetry & fiction"
+   }
+},
+{
+   "notation" : "884",
+   "label" : {
+      "de" : "884 -- Klassische griechische lyrische Versdichtung",
+      "en" : "884 -- Classical Greek lyric poetry"
+   }
+},
+{
+   "label" : {
+      "en" : "885 -- Classical Greek speeches",
+      "de" : "885 -- Klassische griechische Reden"
+   },
+   "notation" : "885"
+},
+{
+   "label" : {
+      "en" : "886 -- Classical Greek letters",
+      "de" : "886 -- Klassische griechische Briefe"
+   },
+   "notation" : "886"
+},
+{
+   "label" : {
+      "de" : "887 -- Humor und Satire in klassischem Griechisch",
+      "en" : "887 -- Classical Greek humor & satire"
+   },
+   "notation" : "887"
+},
+{
+   "label" : {
+      "en" : "888 -- Classical Greek miscellaneous writings",
+      "de" : "888 -- Klassische griechische vermischte Schriften"
+   },
+   "notation" : "888"
+},
+{
+   "label" : {
+      "en" : "889 -- Modern Greek literature",
+      "de" : "889 -- Neugriechische Literatur"
+   },
+   "notation" : "889"
+},
+{
+   "label" : {
+      "en" : "890 -- Literatures of other languages",
+      "de" : "890 -- Literaturen anderer Sprachen"
+   },
+   "notation" : "890"
+},
+{
+   "label" : {
+      "de" : "891 -- Ostindoeuropäische, keltische Literaturen",
+      "en" : "891 -- East Indo-European & Celtic literatures"
+   },
+   "notation" : "891"
+},
+{
+   "label" : {
+      "de" : "892 -- Afroasiatische Literaturen, Semitische Literaturen",
+      "en" : "892 -- Afro-Asiatic literatures, Semitic literatures"
+   },
+   "notation" : "892"
+},
+{
+   "notation" : "893",
+   "label" : {
+      "de" : "893 -- Nichtsemitische afroasiatische Literaturen",
+      "en" : "893 -- Non-Semitic Afro-Asiatic literatures"
+   }
+},
+{
+   "label" : {
+      "de" : "894 -- Altaische, uralische, paläosibirische, drawidische Literaturen",
+      "en" : "894 -- Altaic, Uralic, Hyperborean & Dravidian"
+   },
+   "notation" : "894"
+},
+{
+   "notation" : "895",
+   "label" : {
+      "en" : "895 -- Literatures of East & Southeast Asia",
+      "de" : "895 -- Ost- und südostasiatische Literaturen"
+   }
+},
+{
+   "notation" : "896",
+   "label" : {
+      "en" : "896 -- African literatures",
+      "de" : "896 -- Afrikanische Literaturen"
+   }
+},
+{
+   "label" : {
+      "en" : "897 -- North American native literatures",
+      "de" : "897 -- Literaturen nordamerikanischer Indianersprachen"
+   },
+   "notation" : "897"
+},
+{
+   "notation" : "898",
+   "label" : {
+      "de" : "898 -- Literaturen südamerikanischer Indianersprachen",
+      "en" : "898 -- South American native literatures"
+   }
+},
+{
+   "notation" : "899",
+   "label" : {
+      "de" : "899 -- Austronesische und andere Literaturen",
+      "en" : "899 -- Austronesian & other literatures"
+   }
+},
+{
+   "label" : {
+      "en" : "900 -- History & geography",
+      "de" : "900 -- Geschichte und Geografie"
+   },
+   "notation" : "900"
+},
+{
+   "notation" : "901",
+   "label" : {
+      "de" : "901 -- Geschichtsphilosophie, Geschichtstheorie",
+      "en" : "901 -- Philosophy & theory"
+   }
+},
+{
+   "label" : {
+      "en" : "902 -- Miscellany",
+      "de" : "902 -- Verschiedenes"
+   },
+   "notation" : "902"
+},
+{
+   "notation" : "903",
+   "label" : {
+      "en" : "903 -- Dictionaries & encyclopedias",
+      "de" : "903 -- Wörterbücher, Enzyklopädien"
+   }
+},
+{
+   "label" : {
+      "de" : "904 -- Allgemeine Darstellungen von Ereignissen",
+      "en" : "904 -- Collected accounts of events"
+   },
+   "notation" : "904"
+},
+{
+   "notation" : "905",
+   "label" : {
+      "en" : "905 -- Serial publications",
+      "de" : "905 -- Fortlaufende Sammelwerke"
+   }
+},
+{
+   "label" : {
+      "de" : "906 -- Organisationen, Management",
+      "en" : "906 -- Organizations & management"
+   },
+   "notation" : "906"
+},
+{
+   "notation" : "907",
+   "label" : {
+      "en" : "907 -- Education, research & related topics",
+      "de" : "907 -- Ausbildung, Forschung, verwandte Themen"
+   }
+},
+{
+   "notation" : "908",
+   "label" : {
+      "en" : "908 -- Kinds of persons treatment",
+      "de" : "908 -- Behandlung nach Personengruppen"
+   }
+},
+{
+   "notation" : "909",
+   "label" : {
+      "en" : "909 -- World history",
+      "de" : "909 -- Weltgeschichte"
+   }
+},
+{
+   "notation" : "910",
+   "label" : {
+      "de" : "910 -- Geografie, Reisen",
+      "en" : "910 -- Geography & travel"
+   }
+},
+{
+   "notation" : "911",
+   "label" : {
+      "en" : "911 -- Historical geography",
+      "de" : "911 -- Historische Geografie"
+   }
+},
+{
+   "label" : {
+      "de" : "912 -- Atlanten, Karten, Grafiken, Pläne",
+      "en" : "912 -- Atlases, maps, charts & plans"
+   },
+   "notation" : "912"
+},
+{
+   "label" : {
+      "de" : "913 -- Geografie der und Reisen in der Alten Welt",
+      "en" : "913 -- Geography of & travel in ancient world"
+   },
+   "notation" : "913"
+},
+{
+   "label" : {
+      "en" : "914 -- Geography of & travel in Europe",
+      "de" : "914 -- Geografie Europas und Reisen in Europa"
+   },
+   "notation" : "914"
+},
+{
+   "label" : {
+      "en" : "915 -- Geography of & travel in Asia",
+      "de" : "915 -- Geografie Asiens und Reisen in Asien"
+   },
+   "notation" : "915"
+},
+{
+   "label" : {
+      "de" : "916 -- Geografie Afrikas und Reisen in Afrika",
+      "en" : "916 -- Geography of & travel in Africa"
+   },
+   "notation" : "916"
+},
+{
+   "notation" : "917",
+   "label" : {
+      "de" : "917 -- Geografie Nordamerikas und Reisen in Nordamerika",
+      "en" : "917 -- Geography of & travel in North America"
+   }
+},
+{
+   "label" : {
+      "en" : "918 -- Geography of & travel in South America",
+      "de" : "918 -- Geografie Südamerikas und Reisen in Südamerika"
+   },
+   "notation" : "918"
+},
+{
+   "label" : {
+      "de" : "919 -- Geografie anderer Gebiete und Reisen in anderen Gebieten",
+      "en" : "919 -- Geography of & travel in other areas"
+   },
+   "notation" : "919"
+},
+{
+   "label" : {
+      "en" : "920 -- Biography, genealogy & insignia",
+      "de" : "920 -- Biografien, Genealogie, Insignien"
+   },
+   "notation" : "920"
+},
+{
+   "notation" : "921",
+   "label" : {
+      "en" : "921 -- (Optional number)",
+      "de" : "921 -- (Optionale Notation)"
+   }
+},
+{
+   "notation" : "922",
+   "label" : {
+      "en" : "922 -- (Optional number)",
+      "de" : "922 -- (Optionale Notation)"
+   }
+},
+{
+   "notation" : "923",
+   "label" : {
+      "de" : "923 -- (Optionale Notation)",
+      "en" : "923 -- (Optional number)"
+   }
+},
+{
+   "notation" : "924",
+   "label" : {
+      "de" : "924 -- (Optionale Notation)",
+      "en" : "924 -- (Optional number)"
+   }
+},
+{
+   "label" : {
+      "de" : "925 -- (Optionale Notation)",
+      "en" : "925 -- (Optional number)"
+   },
+   "notation" : "925"
+},
+{
+   "notation" : "926",
+   "label" : {
+      "de" : "926 -- (Optionale Notation)",
+      "en" : "926 -- (Optional number)"
+   }
+},
+{
+   "notation" : "927",
+   "label" : {
+      "en" : "927 -- (Optional number)",
+      "de" : "927 -- (Optionale Notation)"
+   }
+},
+{
+   "notation" : "928",
+   "label" : {
+      "en" : "928 -- (Optional number)",
+      "de" : "928 -- (Optionale Notation)"
+   }
+},
+{
+   "label" : {
+      "en" : "929 -- Genealogy, names & insignia",
+      "de" : "929 -- Genealogie, Namenkunde, Insignien"
+   },
+   "notation" : "929"
+},
+{
+   "label" : {
+      "de" : "930 -- Geschichte des Altertums bis ca. 499, Archäologie",
+      "en" : "930 -- History of ancient world to ca. 499"
+   },
+   "notation" : "930"
+},
+{
+   "label" : {
+      "en" : "931 -- China to 420",
+      "de" : "931 -- Geschichte Chinas bis 420"
+   },
+   "notation" : "931"
+},
+{
+   "label" : {
+      "de" : "932 -- Geschichte Ägyptens bis 640",
+      "en" : "932 -- Egypt to 640"
+   },
+   "notation" : "932"
+},
+{
+   "label" : {
+      "de" : "933 -- Geschichte Palästinas bis 70",
+      "en" : "933 -- Palestine to 70"
+   },
+   "notation" : "933"
+},
+{
+   "notation" : "934",
+   "label" : {
+      "de" : "934 -- Geschichte Indiens bis 647",
+      "en" : "934 -- India to 647"
+   }
+},
+{
+   "label" : {
+      "en" : "935 -- Mesopotamia & Iranian Plateau to 637",
+      "de" : "935 -- Geschichte Mesopotamiens und der iranischen Hochebene bis 637"
+   },
+   "notation" : "935"
+},
+{
+   "notation" : "936",
+   "label" : {
+      "en" : "936 -- Europe north & west of Italy to ca. 499",
+      "de" : "936 -- Geschichte Europas nördlich und westlich von Italien bis ca. 499"
+   }
+},
+{
+   "notation" : "937",
+   "label" : {
+      "en" : "937 -- Italy & adjacent territories to 476",
+      "de" : "937 -- Geschichte Italiens und benachbarter Gebiete bis 476"
+   }
+},
+{
+   "notation" : "938",
+   "label" : {
+      "de" : "938 -- Geschichte Griechenlands bis 323",
+      "en" : "938 -- Greece to 323"
+   }
+},
+{
+   "notation" : "939",
+   "label" : {
+      "de" : "939 -- Geschichte anderer Teile der Welt bis ca. 640",
+      "en" : "939 -- Other parts of ancient world to ca. 640"
+   }
+},
+{
+   "notation" : "940",
+   "label" : {
+      "en" : "940 -- History of Europe",
+      "de" : "940 -- Geschichte Europas"
+   }
+},
+{
+   "label" : {
+      "de" : "941 -- Geschichte der Britischen Inseln",
+      "en" : "941 -- British Isles"
+   },
+   "notation" : "941"
+},
+{
+   "notation" : "942",
+   "label" : {
+      "de" : "942 -- Geschichte Englands und Wales",
+      "en" : "942 -- England & Wales"
+   }
+},
+{
+   "label" : {
+      "en" : "943 -- Central Europe, Germany",
+      "de" : "943 -- Geschichte Mitteleuropas, Deutschlands"
+   },
+   "notation" : "943"
+},
+{
+   "notation" : "944",
+   "label" : {
+      "en" : "944 -- France & Monaco",
+      "de" : "944 -- Geschichte Frankreichs und Monacos"
+   }
+},
+{
+   "notation" : "945",
+   "label" : {
+      "de" : "945 -- Geschichte der italienische Halbinsel und benachbarter Inseln",
+      "en" : "945 -- Italian Peninsula & adjacent islands"
+   }
+},
+{
+   "notation" : "946",
+   "label" : {
+      "en" : "946 -- Iberian Peninsula & adjacent islands",
+      "de" : "946 -- Geschichte der iberischen Halbinsel und benachbarter Inseln"
+   }
+},
+{
+   "notation" : "947",
+   "label" : {
+      "de" : "947 -- Geschichte Osteuropas, Russlands",
+      "en" : "947 -- Eastern Europe, Russia"
+   }
+},
+{
+   "notation" : "948",
+   "label" : {
+      "en" : "948 -- Scandinavia",
+      "de" : "948 -- Geschichte Skandinaviens"
+   }
+},
+{
+   "label" : {
+      "en" : "949 -- Other parts of Europe",
+      "de" : "949 -- Geschichte anderer Teile Europas"
+   },
+   "notation" : "949"
+},
+{
+   "notation" : "950",
+   "label" : {
+      "de" : "950 -- Geschichte Asiens, des Fernen Ostens",
+      "en" : "950 -- History of Asia, Far East"
+   }
+},
+{
+   "notation" : "951",
+   "label" : {
+      "en" : "951 -- China & adjacent areas",
+      "de" : "951 -- Geschichte Chinas und benachbarter Gebiete"
+   }
+},
+{
+   "notation" : "952",
+   "label" : {
+      "en" : "952 -- Japan",
+      "de" : "952 -- Geschichte Japans"
+   }
+},
+{
+   "label" : {
+      "de" : "953 -- Geschichte der arabischen Halbinsel und benachbarter Gebiete",
+      "en" : "953 -- Arabian Peninsula & adjacent areas"
+   },
+   "notation" : "953"
+},
+{
+   "label" : {
+      "en" : "954 -- South Asia, India",
+      "de" : "954 -- Geschichte Südasiens, Indiens"
+   },
+   "notation" : "954"
+},
+{
+   "notation" : "955",
+   "label" : {
+      "en" : "955 -- Iran",
+      "de" : "955 -- Geschichte Irans"
+   }
+},
+{
+   "notation" : "956",
+   "label" : {
+      "en" : "956 -- Middle East (Near East)",
+      "de" : "956 -- Geschichte des Nahen Ostens (Mittleren Ostens)"
+   }
+},
+{
+   "label" : {
+      "de" : "957 -- Geschichte Sibiriens (der Asiatischen Russlands)",
+      "en" : "957 -- Siberia (Asiatic Russia)"
+   },
+   "notation" : "957"
+},
+{
+   "label" : {
+      "de" : "958 -- Geschichte Zentralasiens",
+      "en" : "958 -- Central Asia"
+   },
+   "notation" : "958"
+},
+{
+   "notation" : "959",
+   "label" : {
+      "de" : "959 -- Geschichte Südostasiens",
+      "en" : "959 -- Southeast Asia"
+   }
+},
+{
+   "label" : {
+      "en" : "960 -- History of Africa",
+      "de" : "960 -- Geschichte Afrikas"
+   },
+   "notation" : "960"
+},
+{
+   "label" : {
+      "de" : "961 -- Geschichte Tunesiens und Libyens",
+      "en" : "961 -- Tunisia & Libya"
+   },
+   "notation" : "961"
+},
+{
+   "notation" : "962",
+   "label" : {
+      "de" : "962 -- Geschichte Ägyptens und Sudans",
+      "en" : "962 -- Egypt & Sudan"
+   }
+},
+{
+   "notation" : "963",
+   "label" : {
+      "en" : "963 -- Ethiopia & Eritrea",
+      "de" : "963 -- Geschichte Äthiopiens und Eritreas"
+   }
+},
+{
+   "label" : {
+      "de" : "964 -- Geschichte der nordwestafrikanischen Küste und vorgelagerter Inseln",
+      "en" : "964 -- Northwest African coast & offshore islands"
+   },
+   "notation" : "964"
+},
+{
+   "notation" : "965",
+   "label" : {
+      "en" : "965 -- Algeria",
+      "de" : "965 -- Geschichte Algeriens"
+   }
+},
+{
+   "notation" : "966",
+   "label" : {
+      "de" : "966 -- Geschichte Westafrikas und vorgelagerter Inseln",
+      "en" : "966 -- West Africa & offshore islands"
+   }
+},
+{
+   "label" : {
+      "en" : "967 -- Central Africa & offshore islands",
+      "de" : "967 -- Geschichte Zentralafrikas und vorgelagerter Inseln"
+   },
+   "notation" : "967"
+},
+{
+   "notation" : "968",
+   "label" : {
+      "de" : "968 -- Geschichte Südafrikas, der Republik Südafrika",
+      "en" : "968 -- Southern Africa, Republic of South Africa"
+   }
+},
+{
+   "label" : {
+      "en" : "969 -- South Indian Ocean islands",
+      "de" : "969 -- Geschichte der Inseln im südlichen Indischen Ozean"
+   },
+   "notation" : "969"
+},
+{
+   "label" : {
+      "en" : "970 -- History of North America",
+      "de" : "970 -- Geschichte Nordamerikas"
+   },
+   "notation" : "970"
+},
+{
+   "label" : {
+      "de" : "971 -- Geschichte Kanadas",
+      "en" : "971 -- Canada"
+   },
+   "notation" : "971"
+},
+{
+   "notation" : "972",
+   "label" : {
+      "de" : "972 -- Geschichte Mittelamerikas, Mexikos",
+      "en" : "972 -- Middle America, Mexico"
+   }
+},
+{
+   "notation" : "973",
+   "label" : {
+      "en" : "973 -- United States",
+      "de" : "973 -- Geschichte der USA"
+   }
+},
+{
+   "label" : {
+      "de" : "974 -- Geschichte der nordöstlichen Staaten der USA",
+      "en" : "974 -- Northeastern United States"
+   },
+   "notation" : "974"
+},
+{
+   "label" : {
+      "de" : "975 -- Geschichte der südöstlichen Staaten der USA",
+      "en" : "975 -- Southeastern United States"
+   },
+   "notation" : "975"
+},
+{
+   "notation" : "976",
+   "label" : {
+      "en" : "976 -- South central United States",
+      "de" : "976 -- Geschichte der südlichen zentralen Staaten der USA"
+   }
+},
+{
+   "label" : {
+      "de" : "977 -- Geschichte der nördlichen zentralen Staaten der USA",
+      "en" : "977 -- North central United States"
+   },
+   "notation" : "977"
+},
+{
+   "label" : {
+      "en" : "978 -- Western United States",
+      "de" : "978 -- Geschichte der westlichen Staaten der USA"
+   },
+   "notation" : "978"
+},
+{
+   "notation" : "979",
+   "label" : {
+      "en" : "979 -- Great Basin & Pacific Slope region",
+      "de" : "979 -- Geschichte der Staaten des Großen Beckens und der pazifischen Gebirgsketten"
+   }
+},
+{
+   "notation" : "980",
+   "label" : {
+      "de" : "980 -- Geschichte Südamerikas",
+      "en" : "980 -- History of South America"
+   }
+},
+{
+   "notation" : "981",
+   "label" : {
+      "de" : "981 -- Geschichte Brasiliens",
+      "en" : "981 -- Brazil"
+   }
+},
+{
+   "notation" : "982",
+   "label" : {
+      "en" : "982 -- Argentina",
+      "de" : "982 -- Geschichte Argentiniens"
+   }
+},
+{
+   "label" : {
+      "de" : "983 -- Geschichte Chiles",
+      "en" : "983 -- Chile"
+   },
+   "notation" : "983"
+},
+{
+   "notation" : "984",
+   "label" : {
+      "de" : "984 -- Geschichte Boliviens",
+      "en" : "984 -- Bolivia"
+   }
+},
+{
+   "notation" : "985",
+   "label" : {
+      "de" : "985 -- Geschichte Perus",
+      "en" : "985 -- Peru"
+   }
+},
+{
+   "label" : {
+      "de" : "986 -- Geschichte Kolumbiens und Ecuadors",
+      "en" : "986 -- Colombia & Ecuador"
+   },
+   "notation" : "986"
+},
+{
+   "notation" : "987",
+   "label" : {
+      "de" : "987 -- Geschichte Venezuelas",
+      "en" : "987 -- Venezuela"
+   }
+},
+{
+   "label" : {
+      "de" : "988 -- Geschichte Guayanas",
+      "en" : "988 -- Guiana"
+   },
+   "notation" : "988"
+},
+{
+   "notation" : "989",
+   "label" : {
+      "de" : "989 -- Geschichte Paraguays und Uruguays",
+      "en" : "989 -- Paraguay & Uruguay"
+   }
+},
+{
+   "notation" : "990",
+   "label" : {
+      "en" : "990 -- History of other areas",
+      "de" : "990 -- Geschichte anderer Gebiete"
+   }
+},
+{
+   "notation" : "991",
+   "label" : {
+      "de" : "991 -- Unbesetzt",
+      "en" : "991 -- Unassigned"
+   }
+},
+{
+   "label" : {
+      "de" : "992 -- Unbesetzt",
+      "en" : "992 -- Unassigned"
+   },
+   "notation" : "992"
+},
+{
+   "notation" : "993",
+   "label" : {
+      "en" : "993 -- New Zealand",
+      "de" : "993 -- Geschichte Neuseelands"
+   }
+},
+{
+   "notation" : "994",
+   "label" : {
+      "en" : "994 -- Australia",
+      "de" : "994 -- Geschichte Australiens"
+   }
+},
+{
+   "label" : {
+      "de" : "995 -- Geschichte Melanesiens, Neuguineas",
+      "en" : "995 -- Melanesia, New Guinea"
+   },
+   "notation" : "995"
+},
+{
+   "label" : {
+      "en" : "996 -- Other parts of Pacific, Polynesia",
+      "de" : "996 -- Geschichte anderer Teile des Pazifischen Ozeans, Polynesiens"
+   },
+   "notation" : "996"
+},
+{
+   "notation" : "997",
+   "label" : {
+      "de" : "997 -- Geschichte der atlantischen Inseln",
+      "en" : "997 -- Atlantic Ocean islands"
+   }
+},
+{
+   "notation" : "998",
+   "label" : {
+      "en" : "998 -- Arctic islands & Antarctica",
+      "de" : "998 -- Geschichte der arktischen Inseln und der Antarktis"
+   }
+},
+{
+   "label" : {
+      "de" : "999 -- Geschichte der außerirdischen Welten",
+      "en" : "999 -- Extraterrestrial worlds"
+   },
+   "notation" : "999"
+}]

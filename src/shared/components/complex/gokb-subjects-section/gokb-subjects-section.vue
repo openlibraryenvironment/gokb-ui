@@ -6,11 +6,10 @@
     :sub-title="title"
     :items-total="totalNumberOfItems"
   >
-    <gokb-add-item-popup
+    <gokb-add-subject-popup
       v-if="addItemPopupVisible"
       v-model="addItemPopupVisible"
       width="500px"
-      :component="{ type: 'GokbSubjectField', name: $tc('component.subject.label') }"
       @add="addItem"
     />
     <template #buttons>
@@ -62,14 +61,16 @@
 </template>
 
 <script>
-  import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
+  import GokbAddSubjectPopup from '@/shared/popups/gokb-add-subject-popup'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import DDC from '@/resources/ddc_list.json'
 
   const ROWS_PER_PAGE = 10
 
   export default {
     name: 'GokbSubjectsSection',
-    components: { GokbAddItemPopup, GokbConfirmationPopup },
+    components: { GokbAddSubjectPopup, GokbConfirmationPopup },
+    ddcList: DDC,
     props: {
       value: {
         type: Array,
@@ -109,7 +110,17 @@
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: { text: undefined, vars: undefined }
+        messageToConfirm: {
+          text: undefined,
+          vars: undefined
+        },
+        knownSchemes: {
+          DDC: {
+            lookupOnly: true,
+            itemValue: 'notation',
+            itemText: 'label'
+          }
+        },
       }
     },
     computed: {
@@ -125,7 +136,8 @@
         return [...this.value]
           .map(item => ({
             ...item,
-            schemeName: item.scheme.heading,
+            schemeName: item.scheme.name,
+            label: this.knownSchemes[item.scheme.name] ? this.$options.ddcList.find(cls => (cls.notation === item.heading)).label[this.$i18n.locale] : item.heading,
             markError: this.apiErrors?.find(e => (e.baddata.scheme === item.scheme && e.baddata.heading === item.heading))
               ? this.$i18n.t('component.subject.error.' + this.apiErrors.find(e => (e.baddata.scheme === item.scheme && e.baddata.heading === item.heading)))
               : null
@@ -145,7 +157,7 @@
       tableHeaders () {
         return [
           { text: this.$i18n.tc('component.subject.scheme.label'), align: 'start', value: 'schemeName', sortable: false },
-          { text: this.$i18n.tc('component.subject.heading.label'), align: 'start', value: 'heading', sortable: false },
+          { text: this.$i18n.tc('component.subject.heading.label'), align: 'start', value: 'label', sortable: false },
         ]
       },
       title () {
@@ -183,7 +195,7 @@
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
         this.$emit('update', 'subjects')
       },
-      showAddVariantName () {
+      showAddSubject () {
         this.addItemPopupVisible = true
       },
       addItem (item) {
