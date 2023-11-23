@@ -136,7 +136,8 @@
               properties: {
                 initItem: 'Current',
                 width: '100%',
-                messagePath: 'component.general.status'
+                messagePath: 'component.general.status',
+                label: this.$i18n.tc('component.general.status.label')
               }
             },
             {

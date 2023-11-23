@@ -4,6 +4,7 @@
       expandable
       :hide-default="!expanded"
       :filters="filterAlign"
+      :expand-filters="expandFilters"
       :show-actions="isEditable"
       :sub-title="title"
       :items-total="totalNumberOfItems"
@@ -147,32 +148,42 @@
         </v-menu>
       </template>
       <template #search>
-        <gokb-text-field
-          v-if="pkg"
-          v-model="searchFilters.q"
-          class="ms-4"
-          :label="$tc('component.title.name.label')"
-        />
-        <gokb-text-field
-          v-if="pkg"
-          v-model="searchFilters.ids"
-          class="ms-4"
-          :label="$tc('component.identifier.label')"
-        />
-        <gokb-search-package-field
-          v-else
-          v-model="searchFilters.pkg"
-          class="ms-4"
-          :label="$tc('component.package.label')"
-        />
         <gokb-state-field
           v-model="searchFilters.status"
           width="150px"
-          class="ms-4"
+          class="ms-4 mt-1"
           init-item="Current"
           message-path="component.general.status"
           :label="$t('component.general.status.label')"
           return-object
+        />
+        <v-btn
+          text
+          class="ml-3"
+          @click="toggleFilters"
+        > {{ $t('btn.moreFilters') }} <v-icon> {{ expandFilters ? 'mdi-chevron-up' : 'mdi-chevron-down' }} </v-icon> </v-btn>
+      </template>
+      <template #filters>
+        <gokb-text-field
+          v-model="searchFilters.q"
+          class="ms-4 pt-3"
+          :label="$tc('component.title.name.label')"
+        />
+        <gokb-text-field
+          v-model="searchFilters.ids"
+          class="ms-4 pt-3"
+          :label="$tc('component.identifier.label')"
+        />
+        <gokb-subject-filter-field
+          v-model="searchFilters.subjects"
+          class="ms-4"
+          :label="$tc('component.subject.label')"
+        />
+        <gokb-search-package-field
+          v-if="!pkg"
+          v-model="searchFilters.pkg"
+          class="ms-4 pt-3"
+          :label="$tc('component.package.label')"
         />
       </template>
       <gokb-table
@@ -307,6 +318,7 @@
           ids: undefined,
           pkg: undefined
         },
+        expandFilters: false,
         newTipps: [],
         successMessage: undefined,
         items: [],
@@ -530,6 +542,9 @@
       },
       resultNewPaginate () {
         this.successMessage = false
+      },
+      toggleFilters () {
+        this.expandFilters = !this.expandFilters
       },
       async fetchTipps () {
         if (this.pkg || this.ttl) {

@@ -33,7 +33,8 @@
     "update": "Update",
     "validate": "Validate",
     "bulkSelect": "Set Status of {0} entries to ...",
-    "bulkCloseReview": "Mark {0} reviews as done"
+    "bulkCloseReview": "Mark {0} reviews as done",
+    "moreFilters": "More Filters"
   },
   "main": {
     "docs": {

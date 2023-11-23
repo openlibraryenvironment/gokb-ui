@@ -23,6 +23,7 @@
           item-value="notation"
           :placeholder="$tc('component.subject.heading.label')"
           return-object
+          clearable
           dense
           @click:append="$emit('delete', value)"
         />

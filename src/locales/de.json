@@ -33,7 +33,8 @@
     "update": "Aktualisieren",
     "validate": "Validieren",
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
-    "bulkCloseReview": "{0} als erledigt markieren"
+    "bulkCloseReview": "{0} als erledigt markieren",
+    "moreFilters": "Mehr Filter"
   },
   "main": {
     "docs": {

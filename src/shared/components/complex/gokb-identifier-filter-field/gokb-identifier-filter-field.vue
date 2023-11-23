@@ -2,16 +2,16 @@
   <div style="margin-top:-8px">
     <div style="font-size:13px;margin-bottom:4px"> {{ $tc('component.identifier.label') }} </div>
     <v-row dense>
-      <v-col cols="4">
+      <v-col cols="5">
         <gokb-namespace-field
           v-model="namespace"
           :target-type="targetType"
-          width="200px"
+          width="250px"
           :placeholder="$tc('component.identifier.namespace')"
           dense
         />
       </v-col>
-      <v-col cols="8">
+      <v-col cols="7">
         <gokb-text-field
           v-model="val"
           :placeholder="$tc('component.identifier.value')"
