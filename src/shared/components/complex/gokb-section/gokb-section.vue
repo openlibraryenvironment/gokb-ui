@@ -159,7 +159,7 @@
         default: false,
       },
       expandFilters: {
-        tyape: Boolean,
+        type: Boolean,
         required: false,
         default: false
       },
