@@ -199,7 +199,7 @@
         </div>
       </template>
     </v-data-table>
-    <div v-if="!hidePagination" class="text-center pt-2">
+    <div v-if="!hidePagination && pages > 1" class="text-center pt-2">
       <v-pagination
         v-model="options.page"
         color="secondary"
@@ -207,6 +207,26 @@
         :length="pages"
         :total-visible="7"
       />
+      <div style="margin-top:-40px;padding-bottom:10px;text-align:right;">
+        <v-btn
+          class="mr-1"
+          :color="options.itemsPerPage === 10 ? 'white' : 'primary'"
+          :style="{ backgroundColor: (options.itemsPerPage === 10 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
+          text
+          @click="setPageSize(10)">10</v-btn>
+        <v-btn
+          :color="options.itemsPerPage === 20 ? 'white' : 'primary'"
+          :style="{ backgroundColor: (options.itemsPerPage === 20 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
+          class="mr-1"
+          text
+          @click="setPageSize(20)">20</v-btn>
+        <v-btn
+          :color="options.itemsPerPage === 50 ? 'white' : 'primary'"
+          :style="{ backgroundColor: (options.itemsPerPage === 50 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
+          class="mr-1"
+          text
+          @click="setPageSize(50)">50</v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -364,6 +384,9 @@
       },
       clearSelection () {
         this.$refs.dtable.selection = {}
+      },
+      setPageSize(val) {
+        this.$emit('paginate', { page: 1, itemsPerPage: val })
       }
     }
   }

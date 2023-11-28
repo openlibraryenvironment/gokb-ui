@@ -192,6 +192,7 @@
             type: {}
           },
           warnings: {
+            missingColumns: [],
             single: [],
             type: {}
           },
@@ -233,6 +234,7 @@
         this.loadedFile.errors.missingColumns = []
         this.loadedFile.errors.single = []
         this.loadedFile.errors.type = {}
+        this.loadedFile.warnings.missingColumns = []
         this.loadedFile.warnings.single = []
         this.loadedFile.warnings.type = {}
         this.options.selectedFile = file

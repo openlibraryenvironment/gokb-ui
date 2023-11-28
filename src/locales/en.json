@@ -310,12 +310,12 @@
     "export": {
       "type": {
         "tipp": {
-          "label": "Raw",
-          "description": "Prefer original KBART info for all columns"
+          "label": "Package related",
+          "description": "Fields are preferably taken from imported KBART data"
         },
         "title": {
           "label": "Processed",
-          "description": "Fields like publication_name are preferably taken from global title records"
+          "description": "Fields are preferably taken from enriched reference title data"
         }
       }
     },
@@ -356,6 +356,7 @@
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
       "illegalPrintId": "Value for print identifier '{0}' is not valid.",
+      "longVal": "Value {0} is unusually long for this column.",
       "shortRow": "This line contains fewer columns than defined by the provided headings!",
       "noIds": "This line contains no usable identifiers!",
       "noTitleId": "This line does not contain a value for the common title id!",

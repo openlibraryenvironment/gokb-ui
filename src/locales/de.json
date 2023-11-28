@@ -215,7 +215,7 @@
       "label": "Archivierte Ergebnisse"
     },
     "context": {
-      "group": "Alle Jobs für die ausgewählte Gruppe anzeigen",
+      "group": "Alle Jobs für die ausgewählte Kuratorengruppe anzeigen",
       "profile": "Nur eigene Jobs anzeigen"
     },
     "dryRun": {
@@ -310,12 +310,12 @@
     "export": {
       "type": {
         "tipp": {
-          "label":"Original",
+          "label":"Paketbezogen",
           "description": "Informationen werden bevorzugt aus dem ursprünglichen KBART entnommen"
         },
         "title": {
           "label":"Angereichert",
-          "description": "Spalten werden bevorzugt aus Informationen zum angereicherten Referenztitel erzeugt"
+          "description": "Informationen werden bevorzugt aus den angereicherten Referenztiteln entnommen"
         }
       }
     },
@@ -356,6 +356,7 @@
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
+      "longVal": "Wert '{0}' ist ungewöhnlich lang für diese Spalte.",
       "shortRow": "Diese Zeile enthält weniger Spalten als im Datei-Header definiert wurden!",
       "noIds": "Diese Zeile enthält keine Identifikatoren und wird daher nicht prozessiert!",
       "noTitleId": "Diese Zeile enthält keinen Wert für den Anbieternamensraum!",
@@ -425,7 +426,7 @@
     },
     "validator": {
       "label": "KBART-Validator",
-      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKb automatisch interpolierten Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
+      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKb automatisch interpolierte Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
       "mode": "Strikter Modus"
     }
   },

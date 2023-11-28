@@ -90,6 +90,20 @@
           </v-col>
         </v-row>
         <v-row
+          class="text-caption pl-6"
+          dense
+        >
+          <v-col>
+            <a
+              href="https://github.com/openlibraryenvironment/gokb/wiki/API"
+              target="_blank"
+              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
+            >
+              API
+            </a>
+          </v-col>
+        </v-row>
+        <v-row
           v-if="imprintLink"
           class="text-caption pl-6"
           dense

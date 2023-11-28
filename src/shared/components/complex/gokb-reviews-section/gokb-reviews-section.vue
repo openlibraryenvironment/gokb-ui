@@ -116,7 +116,7 @@
       :show-loading="loading"
       :hide-select="!showEditActions"
       @selected-items="selectedItems = $event"
-      @paginate="retrieveReviews"
+      @paginate="resultPaginate"
       @edit="handlePopupChange"
       @close-review="closeReview"
     />
@@ -249,7 +249,7 @@
           const link = { value: component.name, route: componentRoutes[entry?.componentToReview?.type?.toLowerCase()], id: 'componentId' }
           const groupsList = entry.allocatedGroups.map(ag => ag.name)
           const isClosable = !!(status?.name === 'Open' && updateUrl)
-          return { id, name, status, dateCreated, statusLabel, stdDescLabel, groupsList, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
+          return { id, status, dateCreated, statusLabel, stdDescLabel, groupsList, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
         })
       },
       isContrib () {
@@ -395,6 +395,21 @@
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
+      },
+      resultPaginate (options) {
+        this.successMessage = false
+        if (options.sortBy) {
+          this.reviewsOptions.sortBy = [options.sortBy]
+        }
+        if (typeof options.desc === 'boolean') {
+          this.reviewsOptions.desc = options.desc
+        }
+
+        if (options.itemsPerPage) {
+          this.reviewsOptions.itemsPerPage = options.itemsPerPage
+        }
+
+        this.retrieveReviews()
       },
       async retrieveReviews () {
         this.selectedItems.length = 0

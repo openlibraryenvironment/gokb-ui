@@ -270,6 +270,11 @@
           this.resultOptions.sortBy = [options.sortBy]
         }
 
+        if (options.itemsPerPage) {
+          this.requestOptions.itemsPerPage = options.itemsPerPage
+          this.resultOptions.itemsPerPage = options.itemsPerPage
+        }
+
         if (options.sortBy && this.sortMappings?.link && this.requestOptions.sortBy.includes('link')) {
           this.requestOptions.sortBy = [this.sortMappings.link]
         } else if (options.sortBy && this.sortMappings?.linkTwo && this.requestOptions.sortBy.includes('linkTwo')) {
