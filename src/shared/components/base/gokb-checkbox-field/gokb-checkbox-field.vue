@@ -1,10 +1,17 @@
 <template>
-  <v-checkbox
-    v-model="localValue"
-    :label="label"
-    :disabled="disabled"
-    :readonly="readonly"
-  />
+  <v-row no-gutters>
+    <v-col>
+      <v-checkbox
+        v-model="localValue"
+        :label="label"
+        :disabled="disabled"
+        :readonly="readonly"
+      />
+    </v-col>
+    <v-col v-if="!!gokbToolTip" cols="1">
+      <gokb-tooltip :code="gokbToolTip" />
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -31,6 +38,11 @@
         required: false,
         default: false,
       },
+      gokbToolTip: {
+        type: String,
+        required: false,
+        default: undefined
+      }
     },
     computed: {
       localValue: {

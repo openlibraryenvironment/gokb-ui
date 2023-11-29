@@ -3,6 +3,7 @@
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         icon
+        :class="classes"
         v-bind="attrs"
         v-on="on"
       >
@@ -42,6 +43,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      classes: {
+        type: String,
+        required: false,
+        default: ""
       },
       code: {
         type: String,

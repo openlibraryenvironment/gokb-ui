@@ -10,31 +10,37 @@
     <div style="color:red;" v-if="localErrorMessage.length > 0"> {{ localErrorMessage }} </div>
   </div>
 
-  <v-select
-    v-else-if="items"
-    v-model="localValue"
-    :items="localizedItems"
-    :label="label"
-    :placeholder="placeholder"
-    item-text="name"
-    item-value="id"
-    :rules="rules"
-    :no-data-text="$t('search.results.empty')"
-    :style="{ maxWidth: width }"
-    :clearable="clearable && !required"
-    :return-object="returnObject"
-    :dense="dense"
-  >
-    <template #label>
-      {{ label }}
-      <span
-        v-if="required"
-        style="color:red"
+  <v-row v-else-if="!!items" no-gutters>
+    <v-col>
+      <v-select
+        v-model="localValue"
+        :items="localizedItems"
+        :label="label"
+        :placeholder="placeholder"
+        item-text="name"
+        item-value="id"
+        :rules="rules"
+        :no-data-text="$t('search.results.empty')"
+        :style="{ maxWidth: width }"
+        :clearable="clearable && !required"
+        :return-object="returnObject"
+        :dense="dense"
       >
-        *
-      </span>
-    </template>
-  </v-select>
+        <template #label>
+          {{ label }}
+          <span
+            v-if="required"
+            style="color:red"
+          >
+            *
+          </span>
+        </template>
+      </v-select>
+    </v-col>
+    <v-col v-if="!!gokbToolTip" cols="1">
+      <gokb-tooltip classes="mt-3" :code="gokbToolTip" />
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -106,6 +112,11 @@
       },
       apiErrors: {
         type: Array,
+        required: false,
+        default: undefined
+      },
+      gokbToolTip: {
+        type: String,
         required: false,
         default: undefined
       }

@@ -14,19 +14,24 @@
       <gokb-namespace-field
         v-model="options.selectedNamespace"
         target-type="Title"
+        gokb-tool-tip="kbart.propId.tooltip"
+        width="100%"
         :label="$t('kbart.propId.label')"
       />
       <gokb-checkbox-field
         v-model="options.addOnly"
         :label="$t('kbart.addOnly.label')"
+        gokbToolTip="kbart.addOnly.tooltip"
       />
       <gokb-checkbox-field
         v-model="options.deleteMissing"
         :label="$t('kbart.deleteMissing.label')"
+        gokbToolTip="kbart.deleteMissing.tooltip"
       />
       <gokb-checkbox-field
         v-model="options.dryRun"
         :label="$t('kbart.dryRun.label')"
+        gokbToolTip="job.dryRun.tooltip"
       />
       <div v-if="importRunning">
         <v-progress-circular indeterminate />
