@@ -199,7 +199,6 @@
       },
       setNewName () {
         if (!!this.currentName && this.keepCurrent && !this.localValue.alts.find(({ variantName }) => variantName === this.currentName)) {
-          console.log("Adding old name to alts..")
           this.localValue.alts.push({ id: this.tempId(), variantName: this.currentName, isDeletable: true })
         }
         this.currentName = this.editedVal

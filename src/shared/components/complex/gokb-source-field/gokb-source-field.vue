@@ -26,6 +26,7 @@
           target-type="Title"
           :readonly="readonly"
           :label="$t('kbart.propId.label')"
+          exclude-isxn
         />
       </v-col>
       <v-col cols="3">
