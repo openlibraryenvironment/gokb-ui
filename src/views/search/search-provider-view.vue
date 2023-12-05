@@ -91,15 +91,15 @@
                 messagePath: 'component.general.status'
               }
             },
-            // {
-            //   type: 'GokbNamespaceField',
-            //   name: 'titleNamespace',
-            //   value: 'titleNamespaceId',
-            //   properties: {
-            //     label: this.$i18n.t('component.provider.titleNamespace.label'),
-            //     returnObject: false
-            //   }
-            // },
+            {
+              type: 'GokbNamespaceField',
+              name: 'titleNamespace',
+              value: 'titleNamespaceId',
+              properties: {
+                label: this.$i18n.t('component.provider.titleNamespace.label'),
+                returnObject: false
+              }
+            },
           ],
         ]
       },
@@ -108,9 +108,14 @@
           {
             text: this.$i18n.t('component.general.name'),
             align: 'start',
-            width: '100%',
             sortable: true,
             value: 'link'
+          },
+          {
+            text: this.$i18n.tc('component.platform.label', 2),
+            align: 'end',
+            sortable: false,
+            value: 'platforms'
           },
         ]
       }
@@ -131,6 +136,7 @@
           id,
           name,
           status,
+          platforms,
           _links
         }) => ({
           id,
@@ -139,6 +145,7 @@
             route: EDIT_PROVIDER_ROUTE,
             id: 'id'
           },
+          platforms: platforms ? platforms.map(plt => ( plt.name )).join(', ') : undefined,
           status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined

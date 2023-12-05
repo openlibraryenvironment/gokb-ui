@@ -475,7 +475,7 @@
               <v-col cols="2">
                 <gokb-number-field
                   :value="totalNumberOfTitles"
-                  :label="$tc('component.tipp.label', 2)"
+                  :label="$t('component.package.count')"
                   dense
                   disabled
                 />

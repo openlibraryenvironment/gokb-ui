@@ -881,6 +881,7 @@
       },
       refreshReviewsCount (count) {
         this.reviewsCount = count
+        this.reset()
       },
       updateTippCount (count) {
         this.tippCount = count

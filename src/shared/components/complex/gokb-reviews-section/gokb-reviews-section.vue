@@ -561,13 +561,13 @@
           this.successMessage = this.$i18n.tc('component.review.edit.success.closedBulk', this.selectedItems.length, { count: this.selectedItems.length })
           this.reviewsOptions.page = 1
           this.loading = false
-          const newList = await this.retrieveReviews()
+          await this.retrieveReviews()
           this.$emit('update', this.totalNumberOfItems)
         }
       },
       async handlePopupChange (type) {
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
-        const newList = await this.retrieveReviews()
+        await this.retrieveReviews()
         this.$emit('update', this.totalNumberOfItems)
       }
     }

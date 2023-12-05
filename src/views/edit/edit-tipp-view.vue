@@ -1040,6 +1040,7 @@
         }
       },
       refreshReviewsCount (count) {
+        this.reviewsCount = count
         this.reload()
       },
       markDeleted (val) {
