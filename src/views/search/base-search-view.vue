@@ -116,6 +116,7 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
+  import baseServices from '@/shared/services/base-services'
   import searchServices from '@/shared/services/search-services'
   import exportServices from '@/shared/services/export-services'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
@@ -207,10 +208,26 @@
       },
       '$i18n.locale' (loc) {
         this.search()
+      },
+      searchFilters: {
+        handler() {
+          this.updateUrlParams()
+        },
+        deep: true
       }
     },
     mounted () {
       this.searchServices = searchServices(this.searchServicesUrl)
+
+      Object.keys(this.searchFilters).forEach(filter => {
+        var filter_val = this.$route.query[filter]
+
+        if (typeof filter_val === 'string') {
+          this.searchFilters[filter] = /^[1-9]\d+$/.test(filter_val) ? parseInt(filter_val) : filter_val
+        } else if (typeof filter_val === 'array') {
+          this.searchFilters[filter] = filter_val
+        }
+      })
     },
     methods: {
       resetSearch () {
@@ -227,7 +244,11 @@
             } else if (this.initVals[filter]) {
               this.searchFilters[filter] = this.initVals[filter]
             } else {
-              if (this.$refs[filter] && this.$refs[filter].length > 0 && typeof this.$refs[filter][0].clear !== 'undefined' && typeof this.$refs[filter][0].clear === 'function') {
+              if (this.$refs[filter] &&
+                  this.$refs[filter].length > 0 &&
+                  typeof this.$refs[filter][0].clear !== 'undefined' &&
+                  typeof this.$refs[filter][0].clear === 'function'
+              ) {
                 this.$refs[filter][0].clear()
               } else {
                 this.searchFilters[filter] = undefined
@@ -458,7 +479,13 @@
         this.search()
       },
       timeout(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        return new Promise(resolve => setTimeout(resolve, ms))
+      },
+      updateUrlParams () {
+        var urlBase = window.location.toString().split('?')[0] + '?'
+        var paramString = baseServices.createQueryParameters(this.searchFilters)
+
+        history.pushState({}, "", urlBase + paramString)
       }
     }
   }
