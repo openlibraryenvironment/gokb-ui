@@ -112,6 +112,22 @@
             </v-icon>
           </v-tab>
           <v-tab
+            key="subjects"
+            :active-class="tabClass"
+          >
+            {{ $tc('component.subject.label', 2) }}
+            <v-chip class="ma-2">
+              {{ packageTitleItem.subjects.length }}
+            </v-chip>
+            <v-icon
+              v-if="pendingChanges.subjects"
+              :title="$t('pending.lists.changed')"
+              small
+            >
+              mdi-alert-decagram
+            </v-icon>
+          </v-tab>
+          <v-tab
             v-if="id && loggedIn"
             key="reviews"
             :active-class="tabClass"
@@ -326,6 +342,18 @@
               :target-type="titleTypeString"
               :api-errors="errors.ids"
               :disabled="isReadonly"
+              no-tool-bar
+              @update="addPendingChange"
+            />
+          </v-tab-item>
+          <v-tab-item
+            key="subjects"
+            class="mt-4"
+          >
+            <gokb-subjects-section
+              v-model="packageTitleItem.subjects"
+              :disabled="isReadonly"
+              :api-errors="errors?.subjects"
               no-tool-bar
               @update="addPendingChange"
             />
@@ -621,6 +649,7 @@
           accessStartDate: undefined,
           accessEndDate: undefined,
           ids: [],
+          subjects: [],
           coverageStatements: [
             {
               coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
@@ -779,6 +808,10 @@
             variantType,
             id: typeof id === 'number' ? id : null
           })),
+          subjects: this.packageTitleItem.subjects.map(subject => ({
+            heading: subject.heading,
+            scheme: subject.scheme
+          })),
           status: typeof this.packageTitleItem.status === 'string' ? { name: this.packageTitleItem.status } : this.packageTitleItem.status,
           name: this.allNames.name,
           version: this.version,
@@ -880,6 +913,7 @@
           accessStartDate: undefined,
           accessEndDate: undefined,
           ids: [],
+          subjects: [],
           coverageStatements: [
             {
               coverageDepth: undefined,
@@ -988,6 +1022,11 @@
           }))
         }
 
+        this.packageTitleItem.subjects = data._embedded.subjects.map(subject => ({
+          ...subject,
+          isDeletable: !!this.updateUrl
+        }))
+
         this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
 
         if (data._embedded.coverageStatements?.length) {
@@ -1006,6 +1045,8 @@
             endDate: this.buildDateString(pobj.endDate)
           }))
         }
+
+
 
         this.titleType = data.title?.type || data.publicationType?.name
 

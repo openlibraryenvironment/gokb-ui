@@ -316,7 +316,8 @@
           status: undefined,
           q: undefined,
           ids: undefined,
-          pkg: undefined
+          pkg: undefined,
+          subjects: undefined
         },
         expandFilters: false,
         newTipps: [],
@@ -590,15 +591,32 @@
                   dateFirstOnline: tipp.dateFirstOnline && this.buildDateString(tipp.dateFirstOnline),
                   accessStartDate: tipp.accessStartDate && this.buildDateString(tipp.accessStartDate),
                   accessEndDate: tipp.accessEndDate && this.buildDateString(tipp.accessEndDate),
-                  variantNames: tipp._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })),
+                  variantNames: tipp._embedded.variantNames.map(variantName => ({
+                    ...variantName,
+                    isDeletable: !!this.updateUrl
+                  })),
                   lastUpdated: this.buildDateString(tipp.lastUpdated),
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
                   titleType: this.title?.type ? this.$i18n.tc('component.title.type.' + tipp.title.type) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
                   connectedTitleId: tipp.title?.id,
-                  ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!tipp._links.delete.href })),
+                  ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({
+                    id,
+                    value,
+                    namespace: namespace.value,
+                    nslabel: (namespace.name || namespace.value),
+                    isDeletable: !!tipp._links.delete.href
+                  })),
+                  subjects: tipp._embedded.subjects.map(subject => ({
+                    ...subject,
+                    isDeletable: !!this.updateUrl
+                  })),
                   prices: tipp._embedded.prices,
-                  popup: { value: (this.ttl ? tipp.pkg.name : (tipp.name || tipp.title?.name || this.$i18n.t('component.tipp.label') + ' ' + tipp.id)), label: 'tipp', type: 'GokbAddTitlePopup' },
+                  popup: {
+                    value: (this.ttl ? tipp.pkg.name : (tipp.name || tipp.title?.name || this.$i18n.t('component.tipp.label') + ' ' + tipp.id)),
+                    label: 'tipp',
+                    type: 'GokbAddTitlePopup'
+                  },
                   hostPlatformName: tipp.hostPlatform?.name,
                 }
               )

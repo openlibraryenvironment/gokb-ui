@@ -156,6 +156,15 @@
     </v-row>
     <v-row dense>
       <v-col>
+          <gokb-subjects-section
+            v-model="packageTitleItem.subjects"
+            :disabled="isReadonly"
+            :api-errors="errors?.subjects"
+          />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col>
         <v-toolbar
           dense
           flat
@@ -564,6 +573,7 @@
           accessEndDate: undefined,
           prices: [],
           ids: [],
+          subjects: [],
           coverageStatements: [
             {
               coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
@@ -702,6 +712,10 @@
               variantType,
               id: typeof id === 'number' ? id : null
             })),
+            subjects: this.packageTitleItem.subjects.map(subject => ({
+              heading: subject.heading,
+              scheme: subject.scheme
+            })),
             status: typeof this.packageTitleItem.status === 'string' ? { name: this.packageTitleItem.status } : this.packageTitleItem.status,
             id: this.id,
             activeGroup: activeGroup
@@ -832,6 +846,7 @@
         this.packageTitleItem.ids = data.ids
         this.packageTitleItem.prices = data.prices
         this.packageTitleItem.series = data.series
+        this.packageTitleItem.subjects = data.subjects
         this.packageTitleItem.subjectArea = data.subjectArea
         this.packageTitleItem.publisherName = data.publisherName
         this.packageTitleItem.dateFirstInPrint = data.dateFirstInPrint
@@ -862,6 +877,7 @@
             endDate: statement.endDate && this.buildDateString(statement.endDate)
           }))
         }
+
         this.id = data.id
         this.uuid = data.uuid
         this.packageTitleItem.id = this.id
