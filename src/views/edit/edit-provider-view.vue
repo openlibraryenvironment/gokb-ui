@@ -474,6 +474,9 @@
         if (this.loggedIn) {
           accountModel.useTabbedView(value)
         }
+      },
+      tab (val) {
+        history.pushState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
       }
     },
     async created () {
@@ -504,6 +507,9 @@
       if (this.loggedIn) {
         this.tabsView = accountModel.tabbedView()
       }
+    },
+    mounted () {
+      this.tab = parseInt(this.$route.query.tab) || null
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

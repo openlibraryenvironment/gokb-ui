@@ -178,11 +178,6 @@
         required: false,
         default: undefined
       },
-      candidates: {
-        type: Array,
-        required: false,
-        default: undefined
-      },
       reviewType: {
         type: String,
         required: false,

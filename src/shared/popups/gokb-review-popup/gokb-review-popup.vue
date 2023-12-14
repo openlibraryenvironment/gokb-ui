@@ -32,7 +32,6 @@
       :key="i"
       :value="error"
       :reviewed-component="reviewItem.component"
-      :candidates="reviewItem.candidates"
       :reference-components="reviewItem.otherComponents"
       :review-type="reviewItem.stdDesc?.name"
       :review-status="reviewItem.status.value"

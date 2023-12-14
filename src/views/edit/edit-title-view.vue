@@ -598,6 +598,9 @@
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
         }
+      },
+      tab (val) {
+        history.pushState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
       }
     },
     async created () {
@@ -628,6 +631,9 @@
           })
         }
       }
+    },
+    mounted () {
+      this.tab = parseInt(this.$route.query.tab) || null
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -883,6 +889,7 @@
       },
       refreshReviewsCount (count) {
         this.reviewsCount = count
+        this.reset()
       },
       updateTippCount (count) {
         this.tippCount = count

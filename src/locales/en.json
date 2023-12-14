@@ -692,7 +692,7 @@
         "step3": "Package Titles",
         "step4": "Summary",
         "newTitles": "Pending Changes",
-        "currentTitles": "Current Titles",
+        "currentTitles": "Package Titles",
         "confirm": {
           "kbartLocal": {
             "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'."
@@ -747,7 +747,7 @@
           "label": "Mixed"
         }
       },
-      "count": "Number of titles",
+      "count": "Current Package Titles",
       "listStatus": {
         "label": "List Status",
         "Checked": {

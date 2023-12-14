@@ -98,11 +98,6 @@
         required: false,
         default: 800
       },
-      keepCurrent: {
-        type: Boolean,
-        required: false,
-        default: false
-      },
       markRequired: {
         type: Boolean,
         required: false,
@@ -124,6 +119,7 @@
         editNamePopupVisible: false,
         confirmationPopUpVisible: false,
         editedVal: undefined,
+        keepCurrent: false,
         currentName: undefined,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -202,7 +198,8 @@
         }
       },
       setNewName () {
-        if (this.currentName && this.keepCurrent && !this.localValue.alts.find(({ variantName }) => variantName === this.editedVal)) {
+        if (!!this.currentName && this.keepCurrent && !this.localValue.alts.find(({ variantName }) => variantName === this.currentName)) {
+          console.log("Adding old name to alts..")
           this.localValue.alts.push({ id: this.tempId(), variantName: this.currentName, isDeletable: true })
         }
         this.currentName = this.editedVal

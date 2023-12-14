@@ -476,7 +476,7 @@
                 <v-col cols="2">
                   <gokb-number-field
                     :value="totalNumberOfTitles"
-                    :label="$tc('component.tipp.label', 2)"
+                    :label="$t('component.package.count')"
                     dense
                     disabled
                   />
@@ -894,9 +894,11 @@
           this.fetchDefaultNamespace(prov.id)
         }
       },
-      step () {
+      step (val) {
         this.$refs?.descInfo?.refreshRows()
         this.$refs?.descEdit?.refreshRows()
+
+        history.pushState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
       }
     },
     async created () {
@@ -932,6 +934,8 @@
     },
     mounted () {
       document.addEventListener('keydown', this.handleKeyboardNav.bind(this))
+
+      this.step = parseInt(this.$route.query.step) || 1
     },
     beforeDestroy() {
       document.removeEventListener("keydown", this.handleKeyboardNav)

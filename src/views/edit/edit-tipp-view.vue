@@ -729,6 +729,9 @@
       },
       '$i18n.locale' (l) {
         document.title = this.$i18n.tc('component.tipp.label') + ' – ' + this.packageTitleItem.name
+      },
+      tab (val) {
+        history.pushState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
       }
     },
     async mounted () {
@@ -755,6 +758,8 @@
           })
         }
       }
+
+      this.tab = parseInt(this.$route.query.tab) || null
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -1042,6 +1047,7 @@
         }
       },
       refreshReviewsCount (count) {
+        this.reviewsCount = count
         this.reload()
       },
       markDeleted (val) {

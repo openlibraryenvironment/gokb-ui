@@ -111,7 +111,11 @@ const api = (http, log, tokenModel, accountModel) => ({
             pars.push(`${name}=${typeof val === 'string' ? encodeURIComponent(val.trim()) : val}`)
           )
         } else if (value !== undefined && value !== null) {
-          pars.push(`${name}=${typeof value === 'string' ? encodeURIComponent(value.trim()) : value}`)
+          if (typeof value === 'object') {
+            pars.push(`${name}=${value.id || value.name }`)
+          } else {
+            pars.push(`${name}=${typeof value === 'string' ? encodeURIComponent(value.trim()) : value}`)
+          }
         }
       })
 
