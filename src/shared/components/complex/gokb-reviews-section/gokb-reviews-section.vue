@@ -83,28 +83,28 @@
       >
         {{ bulkCloseLabel }}
       </gokb-button>
-      <span v-if="errorMsg">
-        <v-alert
-          type="error"
-          dismissible
-        >
-          {{ localErrorMessage }}
-        </v-alert>
-      </span>
-      <span v-if="successMessage">
-        <v-alert
-          type="success"
-          dismissible
-        >
-          {{ successMessage }}
-        </v-alert>
-      </span>
     </template>
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
+    <span v-if="successMessage">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ successMessage }}
+      </v-alert>
+    </span>
     <gokb-table
       ref="rtable"
       :items="reviews"
