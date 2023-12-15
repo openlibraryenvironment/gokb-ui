@@ -219,6 +219,22 @@
               </v-icon>
             </v-tab>
             <v-tab
+              key="subjects"
+              :active-class="tabClass"
+            >
+              {{ $tc('component.subject.label', 2) }}
+              <v-chip class="ma-2">
+                {{ subjects.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.subjects"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
               v-if="id && isContrib"
               key="reviews"
               :active-class="tabClass"
@@ -300,6 +316,17 @@
                 :show-title="false"
                 :disabled="isReadonly"
                 :api-errors="errors.variantNames"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+            <v-tab-item
+              key="subjects"
+              class="mt-4"
+            >
+              <gokb-subjects-section
+                v-model="subjects"
+                :disabled="isReadonly"
+                :api-errors="errors?.subjects"
                 @update="addPendingChange"
               />
             </v-tab-item>
@@ -522,6 +549,7 @@
           name: undefined,
           alts: []
         },
+        subjects: [],
         reviewRequests: [],
         version: undefined,
         reference: undefined,
@@ -659,6 +687,10 @@
             variantType,
             id: typeof id === 'number' ? id : null
           })),
+          subjects: this.subjects.map(subject => ({
+            heading: subject.heading,
+            scheme: subject.scheme
+          })),
           publishedFrom: this.titleItem.publishedFrom,
           publishedTo: this.titleItem.publishedTo,
           dateFirstInPrint: this.titleItem.firstPublishedInPrint,
@@ -779,6 +811,7 @@
           name: undefined,
           alts: []
         }
+        this.subjects = []
         this.reviewRequests = []
         this.version = undefined
         this.reference = undefined
@@ -843,6 +876,10 @@
         this.tipps = data._embedded.tipps || []
         this.allAlternateNames = data._embedded.variantNames.map(variantName => ({
           ...variantName,
+          isDeletable: !!this.updateUrl
+        }))
+        this.subjects = data._embedded.subjects.map(subject => ({
+          ...subject,
           isDeletable: !!this.updateUrl
         }))
         this.allNames = { name: data.name, alts: this.allAlternateNames }

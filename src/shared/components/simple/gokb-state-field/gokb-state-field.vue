@@ -8,7 +8,7 @@
       label: {
         type: String,
         required: false,
-        default: 'Status',
+        default: undefined,
       },
       url: {
         type: String,

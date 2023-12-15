@@ -33,7 +33,8 @@
     "update": "Aktualisieren",
     "validate": "Validieren",
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
-    "bulkCloseReview": "{0} als erledigt markieren"
+    "bulkCloseReview": "{0} als erledigt markieren",
+    "moreFilters": "Mehr Filter"
   },
   "main": {
     "docs": {
@@ -1493,6 +1494,22 @@
         "Yearly": {
           "label": "Jährlich"
         }
+      }
+    },
+    "subject": {
+      "label": "Sacherschließung | Sacherschließung",
+      "scheme": {
+        "label": "System | Systeme",
+        "DDC": {
+          "label" : "DDC",
+          "error": {
+            "notationFormat": "Der Wert {0} ist keine valide DDC-Notation.",
+            "longNotation": "Tiefe DDC-Notationen werden nicht unterstützt!"
+          }
+        }
+      },
+      "heading": {
+        "label": "Wert | Werte"
       }
     },
     "general": {

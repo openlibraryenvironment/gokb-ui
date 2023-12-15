@@ -354,6 +354,16 @@
                   :api-errors="errors?.variantNames"
                 />
               </v-col>
+              <v-col
+                cols="12"
+                xl="6"
+              >
+                <gokb-subjects-section
+                  v-model="packageItem.subjects"
+                  :disabled="isReadonly"
+                  :api-errors="errors?.subjects"
+                />
+              </v-col>
             </v-row>
           </v-stepper-content>
 
@@ -768,6 +778,7 @@
           consistent: undefined,
           breakable: undefined,
           fixed: undefined,
+          subjects: [],
           listStatus: undefined,
           editStatus: undefined,
           ids: [],
@@ -1082,6 +1093,10 @@
               value: id.value,
               type: id.namespace
             })),
+            subjects: this.packageItem.subjects.map(subject => ({
+              heading: subject.heading,
+              scheme: subject.scheme
+            })),
             breakable: utils.asYesNo(this.packageItem.breakable),
             consistent: utils.asYesNo(this.packageItem.consistent),
             fixed: utils.asYesNo(this.packageItem.fixed),
@@ -1301,6 +1316,7 @@
           this.packageItem.listStatus = undefined
           this.packageItem.editStatus = undefined
           this.packageItem.ids = []
+          this.packageItem.subjects = []
           this.packageItem.provider = undefined // organisation
           this.packageItem.nominalPlatform = undefined
           this.allNames = { name: undefined, alts: [] }
@@ -1561,6 +1577,10 @@
           name: data.name,
           alts: this.allAlternateNames
         }
+        this.packageItem.subjects = data._embedded.subjects.map(subject => ({
+          ...subject,
+          isDeletable: !!this.updateUrl
+        }))
         this.listVerifiedDate = data.listVerifiedDate
 
         if (data.source && this.$refs.source) {
