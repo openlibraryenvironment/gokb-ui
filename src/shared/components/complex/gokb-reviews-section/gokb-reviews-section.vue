@@ -219,7 +219,7 @@
         ]
       },
       bulkCloseLabel () {
-        return this.$i18n.t('btn.bulkCloseReview', [(this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal)])
+        return this.$i18n.tc('btn.bulkCloseReview', (this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal), [(this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal)])
       },
       reviews () {
         const componentRoutes = {

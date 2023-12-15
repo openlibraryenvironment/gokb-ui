@@ -35,7 +35,7 @@
         return [
           {
             icon: 'mdi-close',
-            label: this.$i18n.t('btn.close'),
+            label: this.$i18n.t('btn.closeSelectedReviews'),
             disabled: 'isCloseSelectedDisabled',
             action: '_confirmCloseSelectedItems',
           }
