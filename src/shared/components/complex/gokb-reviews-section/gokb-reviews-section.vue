@@ -83,28 +83,28 @@
       >
         {{ bulkCloseLabel }}
       </gokb-button>
-      <span v-if="errorMsg">
-        <v-alert
-          type="error"
-          dismissible
-        >
-          {{ localErrorMessage }}
-        </v-alert>
-      </span>
-      <span v-if="successMessage">
-        <v-alert
-          type="success"
-          dismissible
-        >
-          {{ successMessage }}
-        </v-alert>
-      </span>
     </template>
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
+    <span v-if="successMessage">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ successMessage }}
+      </v-alert>
+    </span>
     <gokb-table
       ref="rtable"
       :items="reviews"
@@ -561,13 +561,13 @@
           this.successMessage = this.$i18n.tc('component.review.edit.success.closedBulk', this.selectedItems.length, { count: this.selectedItems.length })
           this.reviewsOptions.page = 1
           this.loading = false
-          const newList = await this.retrieveReviews()
+          await this.retrieveReviews()
           this.$emit('update', this.totalNumberOfItems)
         }
       },
       async handlePopupChange (type) {
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
-        const newList = await this.retrieveReviews()
+        await this.retrieveReviews()
         this.$emit('update', this.totalNumberOfItems)
       }
     }

@@ -748,7 +748,7 @@
           "label": "Gemischt"
         }
       },
-      "count": "Anzahl Titel",
+      "count": "Aktuelle Pakettitel",
       "listStatus": {
         "label": "Listenstatus",
         "Checked": {

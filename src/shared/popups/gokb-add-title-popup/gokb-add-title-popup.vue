@@ -640,7 +640,7 @@
         get () {
           return !!this.value
         },
-        set (localValue) {
+        set () {
           this.$emit('input', null)
         }
       },
@@ -658,16 +658,36 @@
       'packageTitleItem.title'(title) {
         if (!!title && !this.isEdit) {
           if (this.packageTitleItem.ids?.length == 0) {
-            this.packageTitleItem.ids = title._embedded.ids.map(({ value, namespace }) => ({
-              id: this.tempId(),
-              value,
-              namespace: namespace.value,
-              nslabel: (namespace.name || namespace.value),
-              isDeletable: true
-            }))
+            this.packageTitleItem.ids = title._embedded.ids
+              .filter(({ namespace }) => (
+                ['issn', 'eissn', 'isbn', 'pisbn', 'zdb'].includes(namespace.value))
+              )
+              .map(({ value, namespace }) => ({
+                id: this.tempId(),
+                value,
+                namespace: namespace.value,
+                nslabel: (namespace.name || namespace.value),
+                isDeletable: true
+              }))
           }
           if (!this.allNames.name) {
             this.allNames.name = title.name
+          }
+
+          if (!!title.firstAuthor) {
+            this.packageTitleItem.firstAuthor = title.firstAuthor
+          }
+
+          if (!!title.firstEditor) {
+            this.packageTitleItem.firstEditor = title.firstEditor
+          }
+
+          if (!!title.dateFirstInPrint) {
+            this.packageTitleItem.dateFirstInPrint = title.dateFirstInPrint
+          }
+
+          if (!!title.dateFirstOnline) {
+            this.packageTitleItem.dateFirstOnline = title.dateFirstOnline
           }
 
           if (!this.packageTitleItem.publisherName && !!title.publisher) {

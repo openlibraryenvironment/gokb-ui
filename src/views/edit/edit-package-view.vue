@@ -1,659 +1,661 @@
 <template>
-  <gokb-page
-    v-if="accessible && !notFound"
-    :key="version"
-    :title="title"
-    :sub-title="subTitle"
-    @submit="showSubmitPackageConfirm"
-  >
-    <gokb-error-component :value="error" />
+  <div>
     <v-snackbars :objects.sync="eventMessages">
       <template #action="{ close }">
         <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
       </template>
     </v-snackbars>
-    <span v-if="importJob?.result === 'success'">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
-          {{ $t('kbart.transmission.showResults') }}
-        </gokb-button>
-      </v-alert>
-    </span>
-    <span v-if="importJob?.result === 'error'">
-      <v-alert
-        type="error"
-        dismissible
-      >
-        {{ $t('kbart.transmission.error.processing') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
-          {{ $t('kbart.transmission.showResults') }}
-        </gokb-button>
-      </v-alert>
-    </span>
-    <span v-if="importJob?.result === 'warn'">
-      <v-alert
-        type="warning"
-        dismissible
-      >
-        {{ $t('kbart.transmission.warn.skipped') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
-          {{ $t('kbart.transmission.showResults') }}
-        </gokb-button>
-      </v-alert>
-    </span>
-    <span v-else-if="importJob?.result === 'info'">
-      <v-alert
-        type="info"
-        dismissible
-      >
-        <span>
-          {{ importJob.dryRun ? $t('kbart.dryRun.started') : $t('kbart.transmission.started') }} {{ '(' + importJob.progress + '%)' }}
-          <v-progress-linear
-            v-if="!!importJob.progress"
-            v-model="importJob.progress"
-          />
-          <div v-else>
-            {{ $t('kbart.transmission.preparing') }}
-          </div>
-        </span>
-      </v-alert>
-    </span>
-    <span v-if="matchingJob?.result === 'success'">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ $t('kbart.titleMatch.success') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">
-          {{ $t('kbart.transmission.showResults') }}
-        </gokb-button>
-      </v-alert>
-    </span>
-    <span v-if="matchingJob?.result === 'error'">
-      <v-alert
-        type="error"
-        dismissible
-      >
-        {{ $t(matchingJob.messageCode) }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">
-          {{ $t('kbart.transmission.showResults') }}
-        </gokb-button>
-      </v-alert>
-    </span>
-    <span v-else-if="matchingJob?.result === 'info'">
-      <v-alert
-        type="info"
-        dismissible
-      >
-        <span>
-          {{ $t('kbart.titleMatch.started') }} {{ '(' + matchingJob.progress + '%)' }}
-          <v-progress-linear
-            v-if="!!matchingJob.progress"
-            v-model="matchingJob.progress"
-          />
-          <div v-else>
-            {{ $t('kbart.transmission.preparing') }}
-          </div>
-        </span>
-      </v-alert>
-    </span>
-    <gokb-edit-job-popup
-      v-if="editJobPopupVisible"
-      v-model="editJobPopupVisible"
-      :selected="selectedJob"
-    />
-    <v-stepper
-      v-model="step"
-      alt-labels
+    <gokb-page
+      v-if="accessible && !notFound"
+      :key="version"
+      :title="title"
+      :sub-title="subTitle"
+      @submit="showSubmitPackageConfirm"
     >
-      <v-stepper-header>
-        <v-stepper-step
-          editable
-          :step="1"
+      <gokb-error-component :value="error" />
+      <span v-if="importJob?.result === 'success'">
+        <v-alert
+          type="success"
+          dismissible
         >
-          {{ isEdit ? $t('component.package.navigation.step4') : $t('component.package.navigation.step1') }}
-        </v-stepper-step>
-        <v-divider />
-        <v-stepper-step
-          :editable="currentStepValid"
-          :class="{ error: !!step2Error }"
-          :step="2"
+          {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
+            {{ $t('kbart.transmission.showResults') }}
+          </gokb-button>
+        </v-alert>
+      </span>
+      <span v-if="importJob?.result === 'error'">
+        <v-alert
+          type="error"
+          dismissible
         >
-          {{ isEdit ? $t('component.package.navigation.step1') : $t('component.package.navigation.step2') }}
-        </v-stepper-step>
-        <v-divider />
-        <v-stepper-step
-          :editable="currentStepValid"
-          :class="{ error: !!step3Error }"
-          :step="3"
+          {{ $t('kbart.transmission.error.processing') }}
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
+            {{ $t('kbart.transmission.showResults') }}
+          </gokb-button>
+        </v-alert>
+      </span>
+      <span v-if="importJob?.result === 'warn'">
+        <v-alert
+          type="warning"
+          dismissible
         >
-          {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
-        </v-stepper-step>
-        <v-divider />
-        <v-stepper-step
-          :editable="currentStepValid"
-          :step="4"
+          {{ $t('kbart.transmission.warn.skipped') }}
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
+            {{ $t('kbart.transmission.showResults') }}
+          </gokb-button>
+        </v-alert>
+      </span>
+      <span v-else-if="importJob?.result === 'info'">
+        <v-alert
+          type="info"
+          dismissible
         >
-          {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
-        </v-stepper-step>
-      </v-stepper-header>
-
-      <v-stepper-items>
-        <v-stepper-content :step="isEdit ? 2 : 1">
-          <gokb-section :no-tool-bar="true">
-            <gokb-name-field
-              v-model="allNames"
-              :disabled="isReadonly"
-              :required="!isReadonly"
-              check-dupes="Package"
-              :item-id="packageItem.id"
+          <span>
+            {{ importJob.dryRun ? $t('kbart.dryRun.started') : $t('kbart.transmission.started') }} {{ '(' + importJob.progress + '%)' }}
+            <v-progress-linear
+              v-if="!!importJob.progress"
+              v-model="importJob.progress"
             />
-            <gokb-url-field
-              v-model="packageItem.descriptionURL"
-              :disabled="isReadonly"
-              :label="$t('component.package.descriptionUrl')"
+            <div v-else>
+              {{ $t('kbart.transmission.preparing') }}
+            </div>
+          </span>
+        </v-alert>
+      </span>
+      <span v-if="matchingJob?.result === 'success'">
+        <v-alert
+          type="success"
+          dismissible
+        >
+          {{ $t('kbart.titleMatch.success') }}
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">
+            {{ $t('kbart.transmission.showResults') }}
+          </gokb-button>
+        </v-alert>
+      </span>
+      <span v-if="matchingJob?.result === 'error'">
+        <v-alert
+          type="error"
+          dismissible
+        >
+          {{ $t(matchingJob.messageCode) }}
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">
+            {{ $t('kbart.transmission.showResults') }}
+          </gokb-button>
+        </v-alert>
+      </span>
+      <span v-else-if="matchingJob?.result === 'info'">
+        <v-alert
+          type="info"
+          dismissible
+        >
+          <span>
+            {{ $t('kbart.titleMatch.started') }} {{ '(' + matchingJob.progress + '%)' }}
+            <v-progress-linear
+              v-if="!!matchingJob.progress"
+              v-model="matchingJob.progress"
             />
-            <gokb-textarea-field
-              ref="descEdit"
-              v-model="packageItem.description"
-              :label="$t('component.package.description')"
-              :disabled="isReadonly"
-            />
-          </gokb-section>
-          <v-row>
-            <v-col
-              cols="12"
-              xl="6"
-            >
-              <gokb-section
-                :sub-title="$t('component.package.provider')"
-                :mark-required="!isReadonly"
-              >
-                <gokb-search-organisation-field
-                  v-model="packageItem.provider"
-                  :items="providerSelection"
-                  :show-link="true"
-                  :readonly="isReadonly"
-                  return-object
-                />
-              </gokb-section>
-            </v-col>
-            <v-col
-              cols="12"
-              xl="6"
-            >
-              <gokb-section
-                :sub-title="$t('component.package.platform')"
-                :mark-required="!isReadonly"
-              >
-                <gokb-search-platform-field
-                  v-model="packageItem.nominalPlatform"
-                  :items="platformSelection"
-                  :readonly="isReadonly"
-                  return-object
-                />
-              </gokb-section>
-            </v-col>
-          </v-row>
-        </v-stepper-content>
-
-        <v-stepper-content :step="isEdit ? 3 : 2">
-          <gokb-section :no-tool-bar="true">
-            <v-row
-              class="pt-4"
-              dense
-            >
-              <v-col>
-                <gokb-state-field
-                  v-model="packageItem.scope"
-                  :init-item="packageItem.scope"
-                  width="100%"
-                  message-path="component.package.scope"
-                  url="refdata/categories/Package.Scope"
-                  :label="$t('component.package.scope.label')"
-                  :readonly="isReadonly"
-                  dense
-                />
-              </v-col>
-              <v-col>
-                <gokb-state-field
-                  v-model="packageItem.contentType"
-                  :init-item="packageItem.contentType"
-                  width="100%"
-                  message-path="component.package.contentType"
-                  url="refdata/categories/Package.ContentType"
-                  :label="$t('component.package.contentType.label')"
-                  :readonly="isReadonly"
-                  dense
-                />
-              </v-col>
-              <v-col>
-                <gokb-state-field
-                  v-if="!!id"
-                  v-model="packageItem.editStatus"
-                  :init-item="packageItem.editStatus"
-                  message-path="component.general.editStatus"
-                  url="refdata/categories/KBComponent.EditStatus"
-                  width="100%"
-                  :label="$t('component.general.editStatus.label')"
-                  :readonly="isReadonly"
-                  dense
-                />
-              </v-col>
-              <v-col>
-                <gokb-state-field
-                  v-if="!!id"
-                  v-model="packageItem.listStatus"
-                  message-path="component.package.listStatus"
-                  url="refdata/categories/Package.ListStatus"
-                  width="100%"
-                  :label="$t('component.package.listStatus.label')"
-                  :readonly="isReadonly"
-                  dense
-                />
-              </v-col>
-            </v-row>
-            <v-row dense>
-              <v-col cols="7">
-                <div>
-                  <label for="validity">{{ $t('component.package.global.label') }}</label>
-                </div>
-                <gokb-radiobutton-group
-                  id="validity"
-                  v-model="packageItem.global"
-                >
-                  <gokb-radiobutton-field
-                    value="Global"
-                    :label="$t('component.package.global.Global.label')"
-                    :readonly="isReadonly"
-                  />
-                  <gokb-radiobutton-field
-                    value="Consortium"
-                    :label="$t('component.package.global.Consortium.label')"
-                    :readonly="isReadonly"
-                  />
-                  <gokb-radiobutton-field
-                    value="Regional"
-                    :label="$t('component.package.global.Regional.label')"
-                    :readonly="isReadonly"
-                  />
-                  <gokb-radiobutton-field
-                    value="Other"
-                    :label="$t('component.package.global.Other.label')"
-                    :readonly="isReadonly"
-                  />
-                  <gokb-radiobutton-field
-                    value="Local"
-                    :label="$t('component.package.global.Local.label')"
-                    :readonly="isReadonly"
-                  />
-                </gokb-radiobutton-group>
-              </v-col>
-              <v-col cols="1">
-                <v-icon
-                  v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other' || packageItem.global === 'Local'"
-                  class="mt-6"
-                >
-                  mdi-chevron-triple-right
-                </v-icon>
-              </v-col>
-              <v-col cols="4">
-                <gokb-text-field
-                  v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other' || packageItem.global === 'Local'"
-                  v-model="packageItem.globalNote"
-                  :label="$t('component.package.globalNote.label')"
-                  :disabled="isReadonly"
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <gokb-checkbox-field
-                v-model="packageItem.consistent"
-                class="ml-3"
-                :label="$t('component.package.consistent')"
-                :readonly="isReadonly"
-              />
-              <gokb-checkbox-field
-                v-model="packageItem.breakable"
-                class="ml-3"
-                :label="$t('component.package.breakable')"
-                :readonly="isReadonly"
-              />
-              <gokb-checkbox-field
-                v-model="packageItem.fixed"
-                class="ml-3"
-                :label="$t('component.package.fixed')"
-                :readonly="isReadonly"
-              />
-            </v-row>
-          </gokb-section>
-          <v-row>
-            <v-col
-              cols="12"
-              xl="4"
-            >
-              <gokb-identifier-section
-                v-model="packageItem.ids"
-                target-type="Package"
-                :disabled="isReadonly"
-                :api-errors="errors?.ids"
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              xl="4"
-            >
-              <gokb-alternate-names-section
-                v-model="allNames.alts"
-                :disabled="isReadonly"
-                :api-errors="errors?.variantNames"
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              xl="4"
-            >
-              <gokb-subjects-section
-                v-model="packageItem.subjects"
-                :disabled="isReadonly"
-                :api-errors="errors?.subjects"
-              />
-            </v-col>
-          </v-row>
-        </v-stepper-content>
-
-        <v-stepper-content :step="isEdit ? 4 : 3">
-          <v-row v-if="kbart && kbart.selectedFile">
-            <v-col>
-              <v-chip
-                class="ml-6"
-                close
-                @click:close="kbart = undefined"
-              >
-                {{ kbart.selectedFile.name }} ({{ kbart.lineCount }} {{ $tc('kbart.row.label', kbart.lineCount) }})
-                <v-icon
-                  v-if="kbart.dryRun"
-                  class="ml-1"
-                  :title="$t('kbart.dryRun.label')"
-                  small
-                >
-                  mdi-content-save-off
-                </v-icon>
-              </v-chip>
-            </v-col>
-          </v-row>
-          <gokb-tipps-section
-            ref="tipps"
-            :pkg="id"
-            :filter-align="isEdit"
-            :platform="packageItem.nominalPlatform"
-            :provider="packageItem.provider"
-            :disabled="isReadonly"
-            :api-errors="errors?.tipps"
-            @kbart="setKbart"
-            @update="updateNewTipps"
-          />
-          <gokb-source-field
-            v-if="loggedIn"
-            ref="source"
-            v-model="sourceItem"
-            :default-title-namespace="providerTitleNamespace"
-            :expanded="false"
-            :api-errors="errors?.source"
-            :readonly="isReadonly"
-            @enable="triggerUpdate"
-          />
-        </v-stepper-content>
-
-        <v-stepper-content :step="isEdit ? 1 : 4">
-          <gokb-section :no-tool-bar="true">
-            <v-row>
-              <v-col>
-                <gokb-name-field
-                  v-model="allNames"
-                  dense
-                  readonly
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6">
-                <gokb-state-select-field
-                  v-if="packageItem.status"
-                  v-model="packageItem.status"
-                  dense
-                  :deletable="!isReadonly"
-                  :editable="!isReadonly"
-                  @delete="markDeleted"
-                />
-              </v-col>
-              <v-col cols="6" xl="3">
-                <gokb-uuid-field
-                  v-if="uuid"
-                  label="UUID"
-                  :value="uuid"
-                  path="/package"
-                  dense
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <gokb-text-field
-                  v-model="providerName"
-                  :label="$t('component.package.provider')"
-                  dense
-                  disabled
-                />
-              </v-col>
-              <v-col>
-                <gokb-text-field
-                  v-model="platformName"
-                  :label="$t('component.package.platform')"
-                  dense
-                  disabled
-                />
-              </v-col>
-            </v-row>
-            <v-row v-if="packageItem.description">
-              <v-col>
-                <gokb-textarea-field
-                  ref="descInfo"
-                  v-model="packageItem.description"
-                  :label="$t('component.package.description')"
-                  dense
-                  disabled
-                />
-              </v-col>
-            </v-row>
-            <v-row v-if="id">
-              <v-col cols="3">
-                <gokb-state-field
-                  v-model="overviewStates.contentType"
-                  :init-item="overviewStates.contentType"
-                  message-path="component.package.contentType"
-                  url="refdata/categories/Package.ContentType"
-                  :label="$t('component.package.contentType.label')"
-                  dense
-                  readonly
-                />
-              </v-col>
-              <v-col cols="2">
-                <gokb-number-field
-                  :value="totalNumberOfTitles"
-                  :label="$tc('component.tipp.label', 2)"
-                  dense
-                  disabled
-                />
-              </v-col>
-              <v-col cols="3">
-                <gokb-state-field
-                  v-model="overviewStates.listStatus"
-                  :init-item="overviewStates.listStatus"
-                  message-path="component.package.listStatus"
-                  url="refdata/categories/Package.ListStatus"
-                  :label="$t('component.package.listStatus.label')"
-                  :api-errors="errors?.listStatus"
-                  dense
-                  readonly
-                />
-              </v-col>
-              <v-col>
-                <gokb-text-field
-                  v-if="listVerifiedDate"
-                  v-model="localListVerifiedDate"
-                  :label="$t('component.package.listVerifiedDate.label')"
-                  dense
-                  disabled
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col v-if="kbart && kbart.selectedFile">
-                <gokb-text-field
-                  v-model="kbart.selectedFile.name"
-                  :label="kbartLabel"
-                  dense
-                  disabled
-                />
-              </v-col>
-            </v-row>
-          </gokb-section>
-          <gokb-section
-            v-if="maintenance"
-            :sub-title="$tc('component.maintenance.label', 2)"
-          >
-            <gokb-maintenance-cycle-field v-model="maintenanceCycle" />
-            <gokb-date-field
-              v-model="dueTo"
-              label="Fällig am"
-              disabled
-            />
-          </gokb-section>
-          <v-row>
-            <v-col
-              cols="12"
-              xl="5"
-            >
-              <gokb-curatory-group-section
-                v-model="allCuratoryGroups"
-                :disabled="!isAdmin"
-                :filter-align="false"
-                :expandable="false"
-                :sub-title="$tc('component.curatoryGroup.label', 2)"
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              xl="7"
-            >
-              <gokb-reviews-section
-                v-if="id && isContrib"
-                :expandable="false"
-                :review-component="packageItem"
-                :api-errors="errors?.listStatus"
-                @update=reload
-              />
-            </v-col>
-          </v-row>
-          <v-row v-if="id && !isReadonly">
-            <v-col>
-              <gokb-jobs-section
-                :linked-component="id"
-                :hide-default="true"
-                :auto-refresh="false"
-              />
-            </v-col>
-          </v-row>
-        </v-stepper-content>
-      </v-stepper-items>
-    </v-stepper>
-
-    <template #buttons>
-      <gokb-confirmation-popup
-        v-model="showSubmitConfirm"
-        :message="submitConfirmationMessage"
-        @confirmed="submitPackage"
+            <div v-else>
+              {{ $t('kbart.transmission.preparing') }}
+            </div>
+          </span>
+        </v-alert>
+      </span>
+      <gokb-edit-job-popup
+        v-if="editJobPopupVisible"
+        v-model="editJobPopupVisible"
+        :selected="selectedJob"
       />
-      <gokb-button
-        v-if="!isReadonly"
-        @click="reset"
+      <v-stepper
+        v-model="step"
+        alt-labels
       >
-        {{ $t('btn.reset') }}
-      </gokb-button>
-      <gokb-button
-        v-show="step !== 1"
-        @click="go2PreviousStep"
-      >
-        {{ $t('btn.back') }}
-      </gokb-button>
-      <v-spacer />
-      <div v-if="id">
-        <v-chip
-          class="ma-1"
-          label
-        >
-          <v-icon
-            :title="$t('component.general.dateCreated')"
-            class="pb-1"
-            medium
+        <v-stepper-header>
+          <v-stepper-step
+            editable
+            :step="1"
           >
-            mdi-file-plus-outline
-          </v-icon>
-          <span class="ml-1">{{ localDateCreated }}</span>
-        </v-chip>
-        <v-chip
-          class="ma-1"
-          label
+            {{ isEdit ? $t('component.package.navigation.step4') : $t('component.package.navigation.step1') }}
+          </v-stepper-step>
+          <v-divider />
+          <v-stepper-step
+            :editable="currentStepValid"
+            :class="{ error: !!step2Error }"
+            :step="2"
+          >
+            {{ isEdit ? $t('component.package.navigation.step1') : $t('component.package.navigation.step2') }}
+          </v-stepper-step>
+          <v-divider />
+          <v-stepper-step
+            :editable="currentStepValid"
+            :class="{ error: !!step3Error }"
+            :step="3"
+          >
+            {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
+          </v-stepper-step>
+          <v-divider />
+          <v-stepper-step
+            :editable="currentStepValid"
+            :step="4"
+          >
+            {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
+          </v-stepper-step>
+        </v-stepper-header>
+
+        <v-stepper-items>
+          <v-stepper-content :step="isEdit ? 2 : 1">
+            <gokb-section :no-tool-bar="true">
+              <gokb-name-field
+                v-model="allNames"
+                :disabled="isReadonly"
+                :required="!isReadonly"
+                check-dupes="Package"
+                :item-id="packageItem.id"
+              />
+              <gokb-url-field
+                v-model="packageItem.descriptionURL"
+                :disabled="isReadonly"
+                :label="$t('component.package.descriptionUrl')"
+              />
+              <gokb-textarea-field
+                ref="descEdit"
+                v-model="packageItem.description"
+                :label="$t('component.package.description')"
+                :disabled="isReadonly"
+              />
+            </gokb-section>
+            <v-row>
+              <v-col
+                cols="12"
+                xl="6"
+              >
+                <gokb-section
+                  :sub-title="$t('component.package.provider')"
+                  :mark-required="!isReadonly"
+                >
+                  <gokb-search-organisation-field
+                    v-model="packageItem.provider"
+                    :items="providerSelection"
+                    :show-link="true"
+                    :readonly="isReadonly"
+                    return-object
+                  />
+                </gokb-section>
+              </v-col>
+              <v-col
+                cols="12"
+                xl="6"
+              >
+                <gokb-section
+                  :sub-title="$t('component.package.platform')"
+                  :mark-required="!isReadonly"
+                >
+                  <gokb-search-platform-field
+                    v-model="packageItem.nominalPlatform"
+                    :items="platformSelection"
+                    :readonly="isReadonly"
+                    return-object
+                  />
+                </gokb-section>
+              </v-col>
+            </v-row>
+          </v-stepper-content>
+
+          <v-stepper-content :step="isEdit ? 3 : 2">
+            <gokb-section :no-tool-bar="true">
+              <v-row
+                class="pt-4"
+                dense
+              >
+                <v-col>
+                  <gokb-state-field
+                    v-model="packageItem.scope"
+                    :init-item="packageItem.scope"
+                    width="100%"
+                    message-path="component.package.scope"
+                    url="refdata/categories/Package.Scope"
+                    :label="$t('component.package.scope.label')"
+                    :readonly="isReadonly"
+                    dense
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-state-field
+                    v-model="packageItem.contentType"
+                    :init-item="packageItem.contentType"
+                    width="100%"
+                    message-path="component.package.contentType"
+                    url="refdata/categories/Package.ContentType"
+                    :label="$t('component.package.contentType.label')"
+                    :readonly="isReadonly"
+                    dense
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-state-field
+                    v-if="!!id"
+                    v-model="packageItem.editStatus"
+                    :init-item="packageItem.editStatus"
+                    message-path="component.general.editStatus"
+                    url="refdata/categories/KBComponent.EditStatus"
+                    width="100%"
+                    :label="$t('component.general.editStatus.label')"
+                    :readonly="isReadonly"
+                    dense
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-state-field
+                    v-if="!!id"
+                    v-model="packageItem.listStatus"
+                    message-path="component.package.listStatus"
+                    url="refdata/categories/Package.ListStatus"
+                    width="100%"
+                    :label="$t('component.package.listStatus.label')"
+                    :readonly="isReadonly"
+                    dense
+                  />
+                </v-col>
+              </v-row>
+              <v-row dense>
+                <v-col cols="7">
+                  <div>
+                    <label for="validity">{{ $t('component.package.global.label') }}</label>
+                  </div>
+                  <gokb-radiobutton-group
+                    id="validity"
+                    v-model="packageItem.global"
+                  >
+                    <gokb-radiobutton-field
+                      value="Global"
+                      :label="$t('component.package.global.Global.label')"
+                      :readonly="isReadonly"
+                    />
+                    <gokb-radiobutton-field
+                      value="Consortium"
+                      :label="$t('component.package.global.Consortium.label')"
+                      :readonly="isReadonly"
+                    />
+                    <gokb-radiobutton-field
+                      value="Regional"
+                      :label="$t('component.package.global.Regional.label')"
+                      :readonly="isReadonly"
+                    />
+                    <gokb-radiobutton-field
+                      value="Other"
+                      :label="$t('component.package.global.Other.label')"
+                      :readonly="isReadonly"
+                    />
+                    <gokb-radiobutton-field
+                      value="Local"
+                      :label="$t('component.package.global.Local.label')"
+                      :readonly="isReadonly"
+                    />
+                  </gokb-radiobutton-group>
+                </v-col>
+                <v-col cols="1">
+                  <v-icon
+                    v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other' || packageItem.global === 'Local'"
+                    class="mt-6"
+                  >
+                    mdi-chevron-triple-right
+                  </v-icon>
+                </v-col>
+                <v-col cols="4">
+                  <gokb-text-field
+                    v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other' || packageItem.global === 'Local'"
+                    v-model="packageItem.globalNote"
+                    :label="$t('component.package.globalNote.label')"
+                    :disabled="isReadonly"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <gokb-checkbox-field
+                  v-model="packageItem.consistent"
+                  class="ml-3"
+                  :label="$t('component.package.consistent')"
+                  :readonly="isReadonly"
+                />
+                <gokb-checkbox-field
+                  v-model="packageItem.breakable"
+                  class="ml-3"
+                  :label="$t('component.package.breakable')"
+                  :readonly="isReadonly"
+                />
+                <gokb-checkbox-field
+                  v-model="packageItem.fixed"
+                  class="ml-3"
+                  :label="$t('component.package.fixed')"
+                  :readonly="isReadonly"
+                />
+              </v-row>
+            </gokb-section>
+            <v-row>
+              <v-col
+                cols="12"
+                xl="6"
+              >
+                <gokb-identifier-section
+                  v-model="packageItem.ids"
+                  target-type="Package"
+                  :disabled="isReadonly"
+                  :api-errors="errors?.ids"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                xl="6"
+              >
+                <gokb-alternate-names-section
+                  v-model="allNames.alts"
+                  :disabled="isReadonly"
+                  :api-errors="errors?.variantNames"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                xl="6"
+              >
+                <gokb-subjects-section
+                  v-model="packageItem.subjects"
+                  :disabled="isReadonly"
+                  :api-errors="errors?.subjects"
+                />
+              </v-col>
+            </v-row>
+          </v-stepper-content>
+
+          <v-stepper-content :step="isEdit ? 4 : 3">
+            <v-row v-if="kbart && kbart.selectedFile">
+              <v-col>
+                <v-chip
+                  class="ml-6"
+                  close
+                  @click:close="kbart = undefined"
+                >
+                  {{ kbart.selectedFile.name }} ({{ kbart.lineCount }} {{ $tc('kbart.row.label', kbart.lineCount) }})
+                  <v-icon
+                    v-if="kbart.dryRun"
+                    class="ml-1"
+                    :title="$t('kbart.dryRun.label')"
+                    small
+                  >
+                    mdi-content-save-off
+                  </v-icon>
+                </v-chip>
+              </v-col>
+            </v-row>
+            <gokb-tipps-section
+              ref="tipps"
+              :pkg="id"
+              :filter-align="isEdit"
+              :platform="packageItem.nominalPlatform"
+              :provider="packageItem.provider"
+              :disabled="isReadonly"
+              :api-errors="errors?.tipps"
+              @kbart="setKbart"
+              @update="updateNewTipps"
+            />
+            <gokb-source-field
+              v-if="loggedIn"
+              ref="source"
+              v-model="sourceItem"
+              :default-title-namespace="providerTitleNamespace"
+              :expanded="false"
+              :api-errors="errors?.source"
+              :readonly="isReadonly"
+              @enable="triggerUpdate"
+            />
+          </v-stepper-content>
+
+          <v-stepper-content :step="isEdit ? 1 : 4">
+            <gokb-section :no-tool-bar="true">
+              <v-row>
+                <v-col>
+                  <gokb-name-field
+                    v-model="allNames"
+                    dense
+                    readonly
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="6">
+                  <gokb-state-select-field
+                    v-if="packageItem.status"
+                    v-model="packageItem.status"
+                    dense
+                    :deletable="!isReadonly"
+                    :editable="!isReadonly"
+                    @delete="markDeleted"
+                  />
+                </v-col>
+                <v-col cols="6" xl="3">
+                  <gokb-uuid-field
+                    v-if="uuid"
+                    label="UUID"
+                    :value="uuid"
+                    path="/package"
+                    dense
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <gokb-text-field
+                    v-model="providerName"
+                    :label="$t('component.package.provider')"
+                    dense
+                    disabled
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-text-field
+                    v-model="platformName"
+                    :label="$t('component.package.platform')"
+                    dense
+                    disabled
+                  />
+                </v-col>
+              </v-row>
+              <v-row v-if="packageItem.description">
+                <v-col>
+                  <gokb-textarea-field
+                    ref="descInfo"
+                    v-model="packageItem.description"
+                    :label="$t('component.package.description')"
+                    dense
+                    disabled
+                  />
+                </v-col>
+              </v-row>
+              <v-row v-if="id">
+                <v-col cols="3">
+                  <gokb-state-field
+                    v-model="overviewStates.contentType"
+                    :init-item="overviewStates.contentType"
+                    message-path="component.package.contentType"
+                    url="refdata/categories/Package.ContentType"
+                    :label="$t('component.package.contentType.label')"
+                    dense
+                    readonly
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <gokb-number-field
+                    :value="totalNumberOfTitles"
+                    :label="$t('component.package.count')"
+                    dense
+                    disabled
+                  />
+                </v-col>
+                <v-col cols="3">
+                  <gokb-state-field
+                    v-model="overviewStates.listStatus"
+                    :init-item="overviewStates.listStatus"
+                    message-path="component.package.listStatus"
+                    url="refdata/categories/Package.ListStatus"
+                    :label="$t('component.package.listStatus.label')"
+                    :api-errors="errors?.listStatus"
+                    dense
+                    readonly
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-text-field
+                    v-if="listVerifiedDate"
+                    v-model="localListVerifiedDate"
+                    :label="$t('component.package.listVerifiedDate.label')"
+                    dense
+                    disabled
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col v-if="kbart && kbart.selectedFile">
+                  <gokb-text-field
+                    v-model="kbart.selectedFile.name"
+                    :label="kbartLabel"
+                    dense
+                    disabled
+                  />
+                </v-col>
+              </v-row>
+            </gokb-section>
+            <gokb-section
+              v-if="maintenance"
+              :sub-title="$tc('component.maintenance.label', 2)"
+            >
+              <gokb-maintenance-cycle-field v-model="maintenanceCycle" />
+              <gokb-date-field
+                v-model="dueTo"
+                label="Fällig am"
+                disabled
+              />
+            </gokb-section>
+            <v-row>
+              <v-col
+                cols="12"
+                xl="5"
+              >
+                <gokb-curatory-group-section
+                  v-model="allCuratoryGroups"
+                  :disabled="!isAdmin"
+                  :filter-align="false"
+                  :expandable="false"
+                  :sub-title="$tc('component.curatoryGroup.label', 2)"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                xl="7"
+              >
+                <gokb-reviews-section
+                  v-if="id && isContrib"
+                  :expandable="false"
+                  :review-component="packageItem"
+                  :api-errors="errors?.listStatus"
+                  @update=reload
+                />
+              </v-col>
+            </v-row>
+            <v-row v-if="id && !isReadonly">
+              <v-col>
+                <gokb-jobs-section
+                  :linked-component="id"
+                  :hide-default="true"
+                  :auto-refresh="false"
+                />
+              </v-col>
+            </v-row>
+          </v-stepper-content>
+        </v-stepper-items>
+      </v-stepper>
+
+      <template #buttons>
+        <gokb-confirmation-popup
+          v-model="showSubmitConfirm"
+          :message="submitConfirmationMessage"
+          @confirmed="submitPackage"
+        />
+        <gokb-button
+          v-if="!isReadonly"
+          @click="reset"
         >
-          <v-icon
-            :title="$t('component.general.lastUpdated')"
-            class="pb-1"
+          {{ $t('btn.reset') }}
+        </gokb-button>
+        <gokb-button
+          v-show="step !== 1"
+          @click="go2PreviousStep"
+        >
+          {{ $t('btn.back') }}
+        </gokb-button>
+        <v-spacer />
+        <div v-if="id">
+          <v-chip
+            class="ma-1"
             label
-            medium
           >
-            mdi-refresh
-          </v-icon>
-          <span class="ml-1">{{ localLastUpdated }}</span>
-        </v-chip>
-      </div>
-      <v-spacer />
-      <gokb-button
-        v-if="!isInLastStep"
-        color="primary"
-        :disabled="!currentStepValid"
-        @click="go2NextStep"
-      >
-        {{ $t('btn.next') }}
-      </gokb-button>
-      <!-- without key, submit is executed on previous page -->
-      <gokb-button
-        v-else-if="!isReadonly"
-        key="add"
-        :disabled="!isValid"
-        default
-      >
-        {{ $i18n.t('btn.submit') }}
-      </gokb-button>
-    </template>
-  </gokb-page>
-  <gokb-no-access-field v-else-if="!accessible" />
-  <gokb-page
-    v-else
-    title=""
-  >
-    <v-card>
-      <v-card-text>
-        <div class="text-h5 primary--text">
-          {{ $t('component.general.notFound', [$tc('component.package.label')]) }}
+            <v-icon
+              :title="$t('component.general.dateCreated')"
+              class="pb-1"
+              medium
+            >
+              mdi-file-plus-outline
+            </v-icon>
+            <span class="ml-1">{{ localDateCreated }}</span>
+          </v-chip>
+          <v-chip
+            class="ma-1"
+            label
+          >
+            <v-icon
+              :title="$t('component.general.lastUpdated')"
+              class="pb-1"
+              label
+              medium
+            >
+              mdi-refresh
+            </v-icon>
+            <span class="ml-1">{{ localLastUpdated }}</span>
+          </v-chip>
         </div>
-      </v-card-text>
-    </v-card>
-  </gokb-page>
+        <v-spacer />
+        <gokb-button
+          v-if="!isInLastStep"
+          color="primary"
+          :disabled="!currentStepValid"
+          @click="go2NextStep"
+        >
+          {{ $t('btn.next') }}
+        </gokb-button>
+        <!-- without key, submit is executed on previous page -->
+        <gokb-button
+          v-else-if="!isReadonly"
+          key="add"
+          :disabled="!isValid"
+          default
+        >
+          {{ $i18n.t('btn.submit') }}
+        </gokb-button>
+      </template>
+    </gokb-page>
+    <gokb-no-access-field v-else-if="!accessible" />
+    <gokb-page
+      v-else
+      title=""
+    >
+      <v-card>
+        <v-card-text>
+          <div class="text-h5 primary--text">
+            {{ $t('component.general.notFound', [$tc('component.package.label')]) }}
+          </div>
+        </v-card-text>
+      </v-card>
+    </gokb-page>
+  </div>
 </template>
 
 <script>
@@ -903,9 +905,11 @@
           this.fetchDefaultNamespace(prov.id)
         }
       },
-      step () {
+      step (val) {
         this.$refs?.descInfo?.refreshRows()
         this.$refs?.descEdit?.refreshRows()
+
+        history.pushState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
       }
     },
     async created () {
@@ -916,7 +920,7 @@
           this.eventMessages.push({
             message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]),
             color: 'success',
-            timeout: 2000
+            timeout: 4000
           })
         } else if (this.initMessageCode.includes('failure')) {
           this.eventMessages.push({
@@ -941,6 +945,8 @@
     },
     mounted () {
       document.addEventListener('keydown', this.handleKeyboardNav.bind(this))
+
+      this.step = parseInt(this.$route.query.step) || 1
     },
     beforeDestroy() {
       document.removeEventListener("keydown", this.handleKeyboardNav)
@@ -1151,7 +1157,7 @@
                 this.eventMessages.push({
                   message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
                   color: 'success',
-                  timeout: 2000
+                  timeout: 4000
                 })
                 this.reload()
 
@@ -1208,7 +1214,7 @@
                 this.eventMessages.push({
                   message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
                   color: 'success',
-                  timeout: 2000
+                  timeout: 4000
                 })
                 this.reload()
 
@@ -1232,7 +1238,7 @@
                 this.eventMessages.push({
                   message: this.$i18n.t((this.isEdit ? 'success.update' : 'success.create'), [this.$i18n.tc('component.package.label'), this.allNames.name]),
                   color: 'success',
-                  timeout: 2000
+                  timeout: 4000
                 })
               } else {
                 this.$router.push({
