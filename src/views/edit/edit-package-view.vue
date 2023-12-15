@@ -1251,13 +1251,13 @@
               }
             }
           } else {
-            if (response.status === 409) {
+            if (response?.status === 409) {
               this.eventMessages.push({
                 message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')]),
                 color: 'error',
                 timeout: -1
               })
-            } else if (response.status === 500) {
+            } else if (response?.status === 500) {
               this.eventMessages.push({
                 message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.package.label')]),
                 color: 'error',
@@ -1269,7 +1269,7 @@
                 color: 'error',
                 timeout: -1
               })
-              this.errors = response.data.error || {}
+              this.errors = response?.data?.error || {}
               this.updateStepErrors()
               this.step = 1
             }
