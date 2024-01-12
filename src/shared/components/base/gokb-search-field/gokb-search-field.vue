@@ -298,17 +298,34 @@
       search (text) {
         // console.log('search', this.value, this.localValue, this.search, value)
         text && text !== this.value?.value && text.length > 2 && this.query({ text })
+      },
+      value (val) {
+        if (!!this.value && typeof this.value !== 'object') {
+          this.query({ id: val })
+        }
       }
     },
     mounted () {
       this.searchServices = searchServices(this.searchServicesResourceUrl)
-      this.items = this.value ? [this.value] : []
+
+      if (!!this.value && typeof this.value === 'object') {
+        this.items = [this.value]
+      }
+      else {
+        this.items = []
+      }
     },
     methods: {
       async query ({ id, text }) {
         this.loading = true
         var primaryParam = {}
-        primaryParam[this.mainParam] = text || this.value?.id
+
+        if (!!id) {
+          primaryParam['id'] = id
+        }
+        else {
+          primaryParam[this.mainParam] = text || this.value?.id
+        }
 
         if (this.queryFields?.length > 0) {
           this.searchParams['qfields'] = this.queryFields
@@ -323,6 +340,11 @@
         })
         this.loading = false
         this.items = this.transform(result)
+
+        if (!!id) {
+          this.$refs.autocomplete.lazyValue = this.items[0]
+        }
+
         this.$emit('searched', true)
       },
       transform (result) {

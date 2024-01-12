@@ -15,7 +15,7 @@
       </v-col>
       <v-col cols="8">
         <v-autocomplete
-          v-if="!!scheme && scheme.name === 'DDC'"
+          v-if="!!scheme && schemeName === 'DDC'"
           v-model="val"
           :disabled="!scheme"
           :items="$options.ddcList"
@@ -64,11 +64,21 @@
         }
       }
     },
+    computed: {
+      schemeName () {
+        return !!this.scheme ? (this.scheme.name || this.scheme.value) : undefined
+      }
+    },
     watch: {
       value (val) {
-        if (!val) {
-          this.namespace = undefined
-          this.val = undefined
+        if (!!val && !this.scheme && !this.val) {
+          var splitVal = val.split(';')
+
+          this.scheme = splitVal[0]
+
+          if (splitVal !== '*') {
+            this.val = splitVal[0] === 'DDC' ? this.$options.ddcList.filter(cls => (cls.notation === splitVal[1]))[0] : splitVal[1]
+          }
         }
       },
       scheme (val) {
@@ -89,8 +99,8 @@
       emitFinal () {
         let result = undefined
 
-        if (!!this.scheme && !!this.val) {
-          result = this.scheme.value + ';' + (this.knownSchemes[this.scheme.value] ? this.val[this.knownSchemes[this.scheme.value].itemValue] : this.val || '*')
+        if (!!this.scheme) {
+          result = this.scheme.value + ';' + (!!this.val ? (this.knownSchemes[this.scheme.value] ? this.val[this.knownSchemes[this.scheme.value].itemValue] : this.val) : '*')
         }
 
         this.$emit('input', result)

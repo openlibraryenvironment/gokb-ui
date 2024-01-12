@@ -17,7 +17,10 @@
           identifierValue: undefined,
           subjectValue: undefined,
           contentType: undefined,
+          qsName: undefined,
           status: 'Current',
+          listStatus: undefined,
+          editStatus: undefined,
           global: ['Global', 'Consortium', 'Regional', 'Other'],
           label: undefined,
         },
@@ -76,6 +79,7 @@
             {
               type: 'GokbTextField',
               name: 'qsName',
+              value: 'qsName',
               properties: {
                 label: this.$i18n.t('component.general.name'),
               }
@@ -222,7 +226,7 @@
             text: this.$i18n.tc('component.package.count'),
             align: 'start',
             sortable: false,
-            width: '150px',
+            width: '80px',
             value: 'count'
           },
           {
@@ -235,8 +239,15 @@
             text: this.$i18n.tc('component.general.lastUpdated'),
             align: 'start',
             sortable: true,
-            width: '150px',
+            width: '120px',
             value: 'lastUpdated'
+          },
+          {
+            text: this.$i18n.tc('component.general.dateCreated'),
+            align: 'start',
+            sortable: true,
+            width: '120px',
+            value: 'dateCreated'
           }
         ]
       },
@@ -277,6 +288,10 @@
           {
             text: this.$i18n.t('component.general.lastUpdated'),
             value: 'lastUpdated'
+          },
+          {
+            text: this.$i18n.t('component.general.dateCreated'),
+            value: 'dateCreated'
           }
         ]
       }
@@ -300,6 +315,7 @@
           name,
           provider,
           lastUpdated,
+          dateCreated,
           uuid,
           status,
           contentType,
@@ -315,6 +331,7 @@
           linkTwo: provider ? { value: provider.name, route: EDIT_PROVIDER_ROUTE, id: 'providerId' } : undefined,
           providerId: provider?.id || undefined,
           lastUpdated: lastUpdated ? new Date(lastUpdated).toLocaleString('sv').substring(0, 10) : undefined,
+          dateCreated: dateCreated ? new Date(dateCreated).toLocaleString('sv').substring(0, 10) : undefined,
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
           count: _tippCount || tippCount || 0,
@@ -329,6 +346,7 @@
           name,
           providerName,
           lastUpdatedDisplay,
+          dateCreated,
           uuid,
           status,
           contentType,
@@ -340,6 +358,7 @@
           name,
           providerName,
           lastUpdated: lastUpdatedDisplay ? new Date(lastUpdatedDisplay).toLocaleString('sv').substring(0, 10) : undefined,
+          dateCreated: dateCreated ? new Date(dateCreated).toLocaleString('sv').substring(0, 10) : undefined,
           nominalPlatformName,
           contentType,
           tippCount: titleCount.toString(),

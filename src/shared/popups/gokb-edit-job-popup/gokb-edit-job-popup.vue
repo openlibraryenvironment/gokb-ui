@@ -76,6 +76,13 @@
         <div v-else-if="!!selectedItem.results.messageCode">
           <span class="pt-4">{{ $tc('default.error.label') }} - {{ $t(selectedItem.results.messageCode) }}</span>
         </div>
+        <div v-else-if="!!selectedItem.results.result">
+          <span v-if="!!selectedItem.results.hasOwnProperty('error')" class="mr-4">{{ $i18n.t('job.error') }}: {{ selectedItem.results.error }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('matched')" class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('unmatched')" class="mr-4">{{ $i18n.t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('created')" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.created }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('reviews')" class="mr-4">{{ $i18n.tc('component.review.label', 2) }}: {{ selectedItem.results.reviews }}</span>
+        </div>
       </v-col>
     </v-row>
     <v-row v-if="selectedItem.messages">

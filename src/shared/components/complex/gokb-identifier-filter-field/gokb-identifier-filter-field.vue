@@ -52,6 +52,17 @@
           this.namespace = undefined
           this.val = undefined
         }
+        else if (!this.val && !this.namespace) {
+          var idparts = val.split(',')
+
+          if (idparts.length > 1) {
+            this.namespace = idparts[0]
+            this.val = idparts[1] !== '*' ? idparts[1] : undefined
+          }
+          else {
+            this.val = idparts[0]
+          }
+        }
       },
       namespace () {
         this.emitFinal()

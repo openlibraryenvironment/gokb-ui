@@ -228,6 +228,11 @@
           this.searchFilters[filter] = filter_val
         }
       })
+
+      this.search()
+    },
+    activated () {
+      this.updateUrlParams()
     },
     methods: {
       resetSearch () {
