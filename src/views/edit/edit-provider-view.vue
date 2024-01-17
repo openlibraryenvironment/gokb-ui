@@ -703,6 +703,7 @@
         const pkgResult = await this.catchError({
           promise: searchServices('rest/packages').search({
             status: 'Current',
+            global: ['Global', 'Consortium', 'Regional', 'Unknown'],
             provider: data.id,
             es: true
           }, this.cancelToken.token),

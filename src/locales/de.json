@@ -355,6 +355,7 @@
       "unusualChars": "Diese Zeile enthält unübliche Zeichen, die auf eine fehlgeschlagene Dateikonvertierung hinweisen.",
       "unusualCharsVal": "Wert '{0}' enthält unübliche Zeichen. Dies könnte auf ein fehlgeschlagene Dateikonvertierung hinweisen.",
       "illegalVal": "Wert '{0}' ist fehlerhaft!",
+      "illegalValForNamespace": "Wert '{0}' ist nicht zulässig für den Namensraum '{1}'.",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",

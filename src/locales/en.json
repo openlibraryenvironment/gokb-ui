@@ -355,6 +355,7 @@
       "unusualChars": "This line contains unusual characters, which may point to a corrupted file conversion.",
       "unusualCharsVal": "Value '{0}' contains unusual characters. This may point to a corrupted file conversion.",
       "illegalVal": "Value '{0}' is not valid!",
+      "illegalValForNamespace": "Value '{0}' is not valid for namespace '{1}'.",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
       "illegalPrintId": "Value for print identifier '{0}' is not valid.",
