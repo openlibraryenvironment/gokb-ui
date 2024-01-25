@@ -12,7 +12,7 @@
     :rules="rules"
     :type="type"
     :error="!!apiErrors"
-    :error-messages="apiErrorMessages"
+    :error-messages="errorMessages"
     maxlength="255"
     :placeholder="placeholder"
     :append-icon="appendIcon"
@@ -129,6 +129,11 @@
         default: true
       }
     },
+    data () {
+      return {
+        localErrorMessages: undefined
+      }
+    },
     computed: {
       localValue: {
         get () {
@@ -139,10 +144,13 @@
         },
       },
       isValid () {
-        return this.$refs.textField.valid
+        return !this.localErrorMessages && (!this.apiErrors || this.apiErrors.length === 0)
       },
       apiErrorMessages () {
         return this.apiErrors?.length > 0 ? this.apiErrors.map(e => (e.messageCode ? this.$i18n.t(e.messageCode) : (e.matches ? this.$i18n.t('validation.valueNotUnique') : e.message))) : undefined
+      },
+      errorMessages () {
+        return this.localErrorMessages || this.apiErrorMessages
       }
     },
     methods: {
