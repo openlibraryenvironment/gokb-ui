@@ -18,9 +18,14 @@
       rules: {
         type: Array,
         required: false,
-        default () {
-          return [v => ((!this.required && !v) || /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || this.$i18n.t('component.tipp.url.error')]
+        default (props) {
+          return [v => ((!props.required && !v) || /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || props.localError]
         }
+      }
+    },
+    computed: {
+      localError () {
+        return this.$i18n.t('component.tipp.url.error')
       }
     }
   }

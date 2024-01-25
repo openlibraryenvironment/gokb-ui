@@ -45,7 +45,7 @@
         type: Boolean,
         required: false
       },
-      value: {
+      modelValue: {
         type: Object,
         required: true,
         default: () => ({ variantName: undefined, locale: undefined })
@@ -57,18 +57,18 @@
       },
       language: {
         get () {
-          return this.value.locale?.name
+          return this.modelValue.locale?.name
         },
         set (locale) {
-          this.$emit('input', { locale: locale?.name, variantName: this.variant })
+          this.$emit('update:modelValue', { locale: locale?.name, variantName: this.variant })
         }
       },
       variant: {
         get () {
-          return this.value.variantName
+          return this.modelValue.variantName
         },
         set (variantName) {
-          this.$emit('input', { locale: this.language, variantName })
+          this.$emit('update:modelValue', { locale: this.language, variantName })
         }
       }
     }

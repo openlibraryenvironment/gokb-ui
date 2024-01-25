@@ -33,9 +33,14 @@
       rules: {
         type: Array,
         required: false,
-        default () {
-          return [v => (((!this.required && (!v || v.length === 0))) || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) || this.$i18n.t('validation.missingEmail')]
+        default (props) {
+          return [v => (((!props.required && (!v || v.length === 0))) || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) || props.localError]
         }
+      }
+    },
+    computed: {
+      localError () {
+        return this.$i18n.t('validation.missingEmail')
       }
     }
   }

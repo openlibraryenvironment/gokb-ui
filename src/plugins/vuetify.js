@@ -1,12 +1,14 @@
 import '@mdi/font/css/materialdesignicons.css'
-import Vue from 'vue'
-import Vuetify from 'vuetify/lib'
-import de from 'vuetify/es5/locale/de'
-import en from 'vuetify/es5/locale/en'
+import de from 'vuetify/lib/locale/de'
+import en from 'vuetify/lib/locale/en'
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify/dist/vuetify.js'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
-Vue.use(Vuetify)
-
-export default new Vuetify({
+const vuetify = createVuetify({
+  components,
+  directives,
   lang: {
     locales: { de, en },
     current: 'de'
@@ -15,26 +17,37 @@ export default new Vuetify({
     iconfont: 'mdiSvg',
   },
   theme: {
+    defaultTheme: 'light',
     themes: {
       light: {
-        primary: '#4f4f4f',
-        secondary: '#a0a0a0',
-        invert: '#fdfdfd',
-        accent: '#4f4f4f',
-        error: '#eb5757',
-        // warning: '',
-        info: '#2d9cdb',
+        dark: false,
+        colors: {
+          bg: '#fff',
+          primary: '#4f4f4f',
+          secondary: '#a0a0a0',
+          invert: '#fdfdfd',
+          accent: '#4f4f4f',
+          error: '#eb5757',
+          // warning: '',
+          info: '#2d9cdb',
+        }
       },
       dark: {
-        primary: '#d9d9d9',
-        secondary: '#5b5b5b',
-        invert: '#020202',
-        accent: '#d9d9d9',
-        error: '#eb5757',
-        // warning: '',
-        info: '#2d9cdb',
-        // success: ''
+        dark: true,
+        colors: {
+          bg: '#000',
+          primary: '#d9d9d9',
+          secondary: '#5b5b5b',
+          invert: '#020202',
+          accent: '#d9d9d9',
+          error: '#eb5757',
+          // warning: '',
+          info: '#2d9cdb',
+          // success: ''
+        }
       }
     }
   }
 })
+
+export default vuetify

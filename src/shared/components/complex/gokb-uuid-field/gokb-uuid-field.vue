@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    :value="value"
+    :value="modelValue"
     :label="label"
     :messages="messages"
     :dense="dense"
@@ -34,7 +34,7 @@
         required: false,
         default: '',
       },
-      value: {
+      modelValue: {
         type: String,
         required: false,
         default: undefined
@@ -64,7 +64,7 @@
     },
     methods: {
       copyUrl () {
-        const url = process.env.VUE_APP_BASE_URL + this.path + '/' + this.value
+        const url = process.env.VUE_APP_BASE_URL + this.path + '/' + this.modelValue
         navigator.clipboard.writeText(url)
         this.copied = true
       }

@@ -25,8 +25,8 @@
         required: false,
         default: false,
       },
-      value: {
-        type: File,
+      modelValue: {
+        type: [File, Array],
         required: false,
         default: null,
       },
@@ -39,10 +39,10 @@
     computed: {
       localSelectedFile: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (value) {
-          this.$emit('input', value)
+          this.$emit('update:modelValue', value)
         }
       }
     }

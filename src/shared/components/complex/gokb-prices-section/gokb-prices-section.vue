@@ -65,7 +65,7 @@
     },
     extends: BaseComponent,
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -107,14 +107,14 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
       prices () {
-        return [...this.value]
+        return [...this.modelValue]
           .map(item => ({
             ...item,
             localCurrency: (item.currency && item.currency.name),

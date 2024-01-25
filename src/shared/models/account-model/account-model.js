@@ -1,5 +1,5 @@
-const api = (vue, accountServices) => {
-  const state = vue.observable({
+const api = (reactive, accountServices) => {
+  const state = reactive({
     initialized: false,
     loggedIn: false,
     username: undefined,

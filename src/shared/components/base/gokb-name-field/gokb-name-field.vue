@@ -78,7 +78,7 @@
     name: 'GokbNameField',
     components: { GokbConfirmationPopup },
     props: {
-      value: {
+      modelValue: {
         required: true,
         default: undefined,
         type: [Object, String]

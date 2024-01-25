@@ -64,9 +64,8 @@
             </v-btn>
           </template>
           <v-list>
-            <template v-for="type in packageTypes">
+            <template v-for="type in packageTypes" :key="type.text">
               <v-list-item
-                :key="type.text"
                 @click="showAddNewTitlePopup(type)"
               >
                 <v-list-item-title>

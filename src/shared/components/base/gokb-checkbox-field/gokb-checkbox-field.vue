@@ -21,7 +21,7 @@
         required: false,
         default: false,
       },
-      value: {
+      modelValue: {
         type: Boolean,
         required: true,
         default: false
@@ -35,10 +35,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
     },

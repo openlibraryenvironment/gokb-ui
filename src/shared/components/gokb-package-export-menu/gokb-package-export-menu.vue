@@ -5,7 +5,7 @@
         icon-id="mdi-swap-vertical"
         color="primary"
         :disabled="disabled"
-        @click="on.click"
+        @click="on?.click"
       >
         KBART Download
       </gokb-button>

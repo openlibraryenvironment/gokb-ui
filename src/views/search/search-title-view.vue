@@ -101,7 +101,7 @@
               name: 'subject',
               value: 'subjectValue',
               properties: {
-                label: this.$i18n.tc('component.subjects.label')
+                label: this.$i18n.tc('component.subject.label')
               }
             },
             {

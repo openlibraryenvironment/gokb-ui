@@ -21,11 +21,11 @@
     },
     methods: {
       async query (value) {
-        // console.log('query', this.value, this.localValue, this.search, value)
+        // console.log('query', this.modelValue, this.localValue, this.search, value)
         const result = await this.catchError({
           promise: this.searchServices.search({
             targetType: this.$attrs.entity,
-            name: this.value,
+            name: this.modelValue,
             _include: [this.itemValue, this.itemText],
           }, this.cancelToken.token),
           instance: this

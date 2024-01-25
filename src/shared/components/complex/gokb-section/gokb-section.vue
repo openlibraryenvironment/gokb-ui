@@ -7,6 +7,8 @@
     >
       <v-toolbar
         v-if="title && !subTitle"
+        color="bg"
+        class="pl-4"
         dense
         flat
       >
@@ -42,6 +44,8 @@
       <v-toolbar
         v-else-if="!title && subTitle"
         height="63"
+        color="bg"
+        class="pl-4"
         dense
         flat
       >
@@ -80,7 +84,8 @@
       <v-toolbar
         v-if="filters && localValue"
         height="63"
-        class="pt-1"
+        color="bg"
+        class="pt-1 pl-4"
         flat
       >
         <slot
@@ -101,6 +106,8 @@
       <v-toolbar
         v-else-if="!subTitle && !title && !noToolBar"
         height="63"
+        color="bg"
+        class="pl-4"
         dense
         flat
       >
@@ -113,7 +120,8 @@
       <v-toolbar
         v-if="expandFilters"
         height="63"
-        class="pt-1"
+        color="bg"
+        class="pt-1 pl-4"
         flat
       >
         <v-toolbar-items
@@ -138,7 +146,7 @@
   export default {
     name: 'GokbSection',
     props: {
-      value: {
+      modelValue: {
         type: Boolean,
         required: false,
         default: true
@@ -207,10 +215,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
       expansionIcon () {

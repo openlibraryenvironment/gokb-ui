@@ -1,10 +1,80 @@
 <template>
   <v-app>
     <progress-overlay />
+    <v-app-bar
+      :color="appColor"
+      dark
+    >
+      <v-toolbar-title class="toolbar-title">
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+        <v-btn
+          text
+          :color="appColor"
+          :to="{ name: HOME_ROUTE }"
+        >
+          <v-icon
+            color="white"
+            class="mr-5"
+            style="vertical-align:text-top"
+          >
+            mdi-home
+          </v-icon>
+          <span
+            class="application-title text-h6"
+          >
+            {{ appName }}
+          </span>
+        </v-btn>
+      </v-toolbar-title>
+      <v-spacer/>
+      <v-btn
+        class="mr-2"
+        icon
+        small
+        :title="$t('btn.darkMode')"
+        @click="toggleDarkMode"
+      >
+        <v-icon small>
+          {{ $vuetify.theme.dark ? 'mdi-invert-colors-off' : 'mdi-invert-colors' }}
+        </v-icon>
+      </v-btn>
+      <a
+        icon
+        class="mb-1 mr-2"
+        target="_blank"
+        :href="docsLink || $t('main.docs.target')"
+        :title="$t('main.docs.label')"
+      >
+        <v-icon small>
+          mdi-help-circle
+        </v-icon>
+      </a>
+      <v-select
+        v-model="currentLocale"
+        offset-y
+        :items="locales"
+        :title="$t('component.general.language.label')"
+        class="pt-2 ma-2"
+        style="max-width:80px"
+        dense
+      />
+      <v-select
+        v-if="loggedIn"
+        v-model="activeGroup"
+        offset-y
+        :items="groups"
+        item-text="name"
+        item-value="id"
+        :title="$tc('component.curatoryGroup.label')"
+        class="pt-2 ma-2"
+        style="max-width:150px"
+        return-object
+        dense
+      />
+      <user-menu />
+    </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
-      :clipped="$vuetify.breakpoint.mdAndUp"
-      app
       fixed
       overflow
     >
@@ -24,11 +94,9 @@
                 {{ item.icon }}
               </v-icon>
             </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.text }}
-              </v-list-item-title>
-            </v-list-item-content>
+            <v-list-item-title>
+              {{ item.text }}
+            </v-list-item-title>
           </v-list-item>
           <v-divider
             v-else
@@ -135,151 +203,14 @@
         </v-row>
       </template>
     </v-navigation-drawer>
-    <v-app-bar
-      :clipped-left="$vuetify.breakpoint.mdAndUp"
-      app
-      :color="appColor"
-      dark
-    >
-      <v-toolbar-title class="toolbar-title">
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-        <v-btn
-          text
-          :color="appColor"
-          :to="{ name: HOME_ROUTE }"
-        >
-          <v-icon
-            color="white"
-            class="mr-5"
-            style="vertical-align:text-top"
-          >
-            mdi-home
-          </v-icon>
-          <span
-            class="application-title text-h6"
-          >
-            {{ appName }}
-          </span>
-        </v-btn>
-      </v-toolbar-title>
-      <!-- <v-autocomplete
-        v-model="globalSearchSelected"
-        :items="globalSearchItems"
-        :loading="globalSearchIsLoading"
-        :search-input.sync="globalSearchField"
-        class="hidden-sm-and-down pt-7 mx-7"
-        background-color="rgba(0,0,0,.26)"
-        clearable
-        hide-no-data
-        hide-selected
-        item-text="name"
-        item-value="id"
-        full-width
-        no-filter
-        :placeholder="globalSearchPlaceholder"
-        prepend-inner-icon="mdi-magnify"
-        return-object
-        solo
-      >
-        <template v-slot:item="{ item }">
-          <v-icon
-            :title="item.iconTitle"
-            class="mr-2"
-          >
-            {{ item.icon }}
-          </v-icon>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.name" />
-          </v-list-item-content>
-        </template>
-      </v-autocomplete> -->
-      <v-spacer/>
-      <v-btn
-        class="mr-2"
-        icon
-        small
-        :title="$t('btn.darkMode')"
-        @click="toggleDarkMode"
-      >
-        <v-icon small>
-          {{ $vuetify.theme.dark ? 'mdi-invert-colors-off' : 'mdi-invert-colors' }}
-        </v-icon>
-      </v-btn>
-      <a
-        icon
-        class="mb-1 mr-2"
-        target="_blank"
-        :href="docsLink || $t('main.docs.target')"
-        :title="$t('main.docs.label')"
-      >
-        <v-icon small>
-          mdi-help-circle
-        </v-icon>
-      </a>
-      <v-select
-        v-model="currentLocale"
-        offset-y
-        :items="locales"
-        :title="$t('component.general.language.label')"
-        class="pt-2 ma-2"
-        style="max-width:80px"
-        dense
-      />
-      <v-select
-        v-if="loggedIn"
-        v-model="activeGroup"
-        offset-y
-        :items="groups"
-        item-text="name"
-        item-value="id"
-        :title="$tc('component.curatoryGroup.label')"
-        class="pt-2 ma-2"
-        style="max-width:150px"
-        return-object
-        dense
-      />
-      <!-- <v-menu
-        ref="actions-menu"
-        :disabled="canCreate"
-        offset-y
-        open-on-hover
-      >
-        <template #activator="{ on }">
-          <v-btn
-            text
-            v-on="on"
-          >
-            <v-icon>add</v-icon>
-            Paket anlegen
-            <v-icon>keyboard_arrow_down</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <template v-for="item in visibleItems">
-            <v-list-item
-              v-if="item.text && item.toolbar"
-              :key="item.text"
-              :to="item.route"
-            >
-              <v-list-item-avatar>
-                <v-icon color="#F2994A">
-                  {{ item.icon }}
-                </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-title>
-                {{ item.text }}
-              </v-list-item-title>
-            </v-list-item>
-          </template>
-        </v-list>
-      </v-menu> -->
-      <user-menu />
-    </v-app-bar>
     <v-main>
       <v-container>
-        <keep-alive :exclude="/^Edit\w*$/">
-          <router-view :key="$route.fullPath" />
-        </keep-alive>
+
+          <router-view v-slot="{Component}" :key="$route.fullPath">
+            <keep-alive :exclude="/^Edit\w*$/">
+              <component :is="Component" />
+            </keep-alive>
+          </router-view>
       </v-container>
     </v-main>
   </v-app>
@@ -450,7 +381,7 @@
         }
       },
       $route (to, from) {
-        document.title = this.$i18n.t(to.meta.code)
+        document.title = to?.meta?.code ? this.$i18n.t(to.meta.code) : this.$i18n.t('route.home')
       },
       '$i18n.locale' (l) {
         document.title = this.$i18n.t(this.$route.meta.code)
@@ -527,5 +458,5 @@
   }
 </style>
 <style lang="scss">
-  @import '../node_modules/typeface-roboto/index.css'
+  @import '../node_modules/@fontsource/roboto/index.css'
 </style>

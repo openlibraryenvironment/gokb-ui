@@ -13,11 +13,11 @@
             <v-btn
               id="user-btn"
               icon
-              v-on="menuOn"
+              v-bind="menuOn"
             >
               <v-icon
                 v-if="!loggedIn"
-                v-on="tooltipOn"
+                v-bind="tooltipOn"
               >
                 mdi-account
               </v-icon>
@@ -41,11 +41,9 @@
                 v-for="item in menu.items"
                 :key="item.title"
                 :id="item.id"
+                :prepend-avatar="item.icon"
                 @click="execute(item)"
               >
-                <v-list-item-avatar>
-                  <v-icon>{{ item.icon }}</v-icon>
-                </v-list-item-avatar>
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item>
               <v-divider v-if="!menu.last" />

@@ -1,5 +1,5 @@
-const api = (vue) => {
-  const states = vue.observable({})
+const api = (reactive) => {
+  const states = reactive({})
 
   return {
     getCategory(label) {

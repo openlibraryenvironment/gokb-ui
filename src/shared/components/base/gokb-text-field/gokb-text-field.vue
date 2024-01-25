@@ -40,8 +40,8 @@
   export default {
     name: 'GokbTextField',
     props: {
-      value: {
-        required: true,
+      modelValue: {
+        required: false,
         default: '',
         validator: function (value) {
           return value === undefined || value === null || typeof value === 'string'
@@ -80,6 +80,7 @@
       required: {
         type: Boolean,
         required: false,
+        default: false
       },
       hideIcon: {
         type: Boolean,
@@ -114,8 +115,8 @@
       rules: {
         type: Array,
         required: false,
-        default () {
-          return [v => (v?.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
+        default (props) {
+          return [v => (v?.length > 0 || !props.required) || props.validLocal]
         }
       },
       apiErrors: {
@@ -132,11 +133,14 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         },
+      },
+      validLocal () {
+        return this.$i18n.t('validation.missingValue')
       },
       isValid () {
         return this.$refs.textField.valid
@@ -150,8 +154,8 @@
         return this.$refs.textField.validate()
       },
       iconAction () {
-        if (this.type == 'email' && this.value && this.validate()) {
-          window.location.href = 'mailto:' + this.value
+        if (this.type == 'email' && this.modelValue && this.validate()) {
+          window.location.href = 'mailto:' + this.modelValue
         }
       }
     }

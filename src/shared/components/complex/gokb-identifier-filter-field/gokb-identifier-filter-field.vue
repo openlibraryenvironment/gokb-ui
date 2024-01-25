@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top:-8px">
-    <div style="font-size:13px;margin-bottom:4px"> {{ $tc('component.identifier.label') }} </div>
+    <div style="font-size:13px;margin-bottom:4px" class="text-primary"> {{ $tc('component.identifier.label') }} </div>
     <v-row dense>
       <v-col cols="5">
         <gokb-namespace-field
@@ -35,7 +35,7 @@
         required: false,
         default: undefined
       },
-      value: {
+      modelValue: {
         required: true,
         default: '',
       }
@@ -47,7 +47,7 @@
       }
     },
     watch: {
-      value (val) {
+      modelValue (val) {
         if (!val) {
           this.namespace = undefined
           this.val = undefined
@@ -79,7 +79,7 @@
           result = this.namespace.value + ',' + (result || '*')
         }
 
-        this.$emit('input', result)
+        this.$emit('update:modelValue', result)
       }
     }
   }

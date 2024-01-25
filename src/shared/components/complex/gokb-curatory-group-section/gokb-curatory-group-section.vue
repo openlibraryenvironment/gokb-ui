@@ -65,7 +65,7 @@
       GokbConfirmationPopup
     },
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -118,14 +118,14 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
       curatoryGroups () {
-        return [...this.value]
+        return [...this.modelValue]
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .map(group => ({ ...group, popup: { value: group.name, label: 'name', type: 'GokbCuratoryGroupPopup' } }))
           .slice((this.curatoryGroupsOptions.page - 1) * ROWS_PER_PAGE, this.curatoryGroupsOptions.page * ROWS_PER_PAGE)

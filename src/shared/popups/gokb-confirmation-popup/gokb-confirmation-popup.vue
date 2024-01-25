@@ -6,7 +6,7 @@
     @submit="submit"
   >
     <v-sheet>
-      <i18n
+      <i18n-t
         v-if="message.vars"
         :path="message.text"
       >
@@ -16,7 +16,7 @@
         <template v-slot:1>
           <b>{{ message.vars[1] }}</b>
         </template>
-      </i18n>
+      </i18n-t>
       <span v-else> {{ message.text }} </span>
     </v-sheet>
     <template #buttons>
@@ -43,7 +43,7 @@
     name: 'GokbConfirmationPopup',
     extends: BaseComponent,
     props: {
-      value: {
+      modelValue: {
         type: Boolean,
         required: true,
         default: false
@@ -62,10 +62,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (value) {
-          this.$emit('input', value)
+          this.$emit('update:modelValue', value)
         }
       },
     },

@@ -72,7 +72,7 @@
       GokbEditPlatformPopup
     },
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -123,10 +123,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
       platforms () {

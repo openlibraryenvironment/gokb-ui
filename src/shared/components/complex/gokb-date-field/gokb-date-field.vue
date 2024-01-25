@@ -71,7 +71,7 @@
         required: false,
         default: true,
       },
-      value: {
+      modelValue: {
         type: String,
         required: false,
         default: undefined
@@ -100,10 +100,10 @@
     computed: {
       localDate: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localDate) {
-          this.$emit('input', localDate)
+          this.$emit('update:modelValue', localDate)
         }
       },
       combinedRules () {

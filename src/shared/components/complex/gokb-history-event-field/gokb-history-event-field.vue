@@ -89,7 +89,7 @@
         required: false,
         default: false
       },
-      value: {
+      modelValue: {
         type: Object,
         required: true,
         default: () => ({ date: undefined, item: undefined, successor: undefined })
@@ -107,18 +107,18 @@
     computed: {
       localDate: {
         get () {
-          return this.value.date
+          return this.modelValue.date
         },
         set (date) {
-          this.$emit('input', { date, successor: this.successor, item: this.value.item })
+          this.$emit('update:modelValue', { date, successor: this.successor, item: this.modelValue.item })
         }
       },
       localTitle: {
         get () {
-          return this.value.item
+          return this.modelValue.item
         },
         set (item) {
-          this.$emit('input', { date: this.value.date, successor: this.successor, item })
+          this.$emit('update:modelValue', { date: this.modelValue.date, successor: this.successor, item })
         }
       },
     },

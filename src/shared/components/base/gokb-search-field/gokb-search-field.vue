@@ -58,7 +58,7 @@
     :rules="activeRules"
     :dense="dense"
     :search-input.sync="search"
-    :item-text="itemText"
+    :item-title="itemText"
     :item-value="itemValue"
     :return-object="returnObject"
     :clearable="allowClear"
@@ -107,7 +107,7 @@
     :rules="activeRules"
     :dense="dense"
     :search-input.sync="search"
-    :item-text="itemText"
+    :item-title="itemText"
     :item-value="itemValue"
     :return-object="returnObject"
     no-filter
@@ -177,7 +177,7 @@
     searchServicesResourceUrl: undefined,
     searchParams: {},
     props: {
-      value: {
+      modelValue: {
         required: true,
         validator: function (value) {
           return value === undefined || typeof value === 'string' || typeof value === 'number' || typeof value === 'object'
@@ -274,18 +274,18 @@
     },
     computed: {
       localLabel () {
-        return this.value?.[this.itemText]
+        return this.modelValue?.[this.itemText]
       },
       localValue: {
         get () {
-          return this.returnObject ? this.value : this.value?.[this.itemValue]
+          return this.returnObject ? this.modelValue : this.modelValue?.[this.itemValue]
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
       componentRoute () {
-        return this.knownRoutes[this.value?.type || this.value?.componentType] || null
+        return this.knownRoutes[this.modelValue?.type || this.modelValue?.componentType] || null
       },
       activeRules () {
         if (this.rules.length > 0 && this.rules[0].length > 0){
@@ -296,11 +296,11 @@
     },
     watch: {
       search (text) {
-        // console.log('search', this.value, this.localValue, this.search, value)
-        text && text !== this.value?.value && text.length > 2 && this.query({ text })
+        // console.log('search', this.modelValue, this.localValue, this.search, value)
+        text && text !== this.modelValue?.value && text.length > 2 && this.query({ text })
       },
       value (val) {
-        if (!!this.value && typeof this.value !== 'object') {
+        if (!!this.modelValue && typeof this.modelValue !== 'object') {
           this.query({ id: val })
         }
       }
@@ -308,8 +308,8 @@
     mounted () {
       this.searchServices = searchServices(this.searchServicesResourceUrl)
 
-      if (!!this.value && typeof this.value === 'object') {
-        this.items = [this.value]
+      if (!!this.modelValue && typeof this.modelValue === 'object') {
+        this.items = [this.modelValue]
       }
       else {
         this.items = []
@@ -324,7 +324,7 @@
           primaryParam['id'] = id
         }
         else {
-          primaryParam[this.mainParam] = text || this.value?.id
+          primaryParam[this.mainParam] = text || this.modelValue?.id
         }
 
         if (this.queryFields?.length > 0) {

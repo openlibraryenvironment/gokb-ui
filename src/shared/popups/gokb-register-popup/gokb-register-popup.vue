@@ -5,11 +5,11 @@
     :title="$t('component.user.register')"
   >
     <v-alert type="info">
-      <i18n path="popups.register.info">
+      <i18n-t keypath="popups.register.info">
         <template slot:0>
           <a href="mailto:info@gokb.org">info@gokb.org</a>
         </template>
-      </i18n>
+      </i18n-t>
     </v-alert>
     <iframe
       id="register-embed"
@@ -33,7 +33,7 @@
   export default {
     name: 'GokbRegisterPopup',
     props: {
-      value: {
+      modelValue: {
         type: Boolean,
         required: true,
         default: false
@@ -42,10 +42,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
       link () {

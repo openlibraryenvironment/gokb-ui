@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import {reactive} from 'vue'
 import selection from './selection'
 
-export default selection(Vue)
+export default selection(reactive)

@@ -5,9 +5,9 @@ import {
   EDIT_PROVIDER_ROUTE, ADD_PROVIDER_ROUTE, EDIT_TITLE_ROUTE, NO_ACCESS_ROUTE, EDIT_TIPP_ROUTE, VALIDATOR_ROUTE
 } from './route-paths'
 
-const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
-  const router = new Router({
-    // mode: 'history', https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
+const api = (log, errorModel, accountModel, createRouter, HomeView, loading, createWebHistory) => {
+  const router = createRouter({
+    history: createWebHistory(),
     routes: [
       {
         path: HOME_ROUTE,
@@ -181,10 +181,6 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
           code: 'route.kbartValidator'
         },
         component: () => import('@/views/kbart-validator-view.vue')
-      },
-      {
-        path: '*',
-        component: () => import('@/views/not-found-view.vue')
       }
     ]
   })

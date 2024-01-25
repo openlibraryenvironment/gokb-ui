@@ -71,7 +71,7 @@
     name: 'GokbAlternateNamesSection',
     components: { GokbAddItemPopup, GokbConfirmationPopup },
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -115,14 +115,14 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
       variantNames () {
-        return [...this.value]
+        return [...this.modelValue]
           .map(item => ({
             ...item,
             locale: (item.locale?.name || item.locale),

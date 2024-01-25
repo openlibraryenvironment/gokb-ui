@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    :value="value"
+    :model-value="modelValue"
     :persistent="persistent"
     :fullscreen="fullscreen"
     :width="width"
@@ -47,7 +47,7 @@
   export default {
     name: 'GokbDialog',
     props: {
-      value: {
+      modelValue: {
         type: Boolean,
         required: true,
         default: false
@@ -85,15 +85,15 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       }
     },
     mounted () {
-      if (this.value) {
+      if (this.modelValue) {
         this.$nextTick(() => {
           const theElement = this.$refs.form.$el
           const input = theElement.querySelector('input:not([type=hidden]),textarea:not([type=hidden])')

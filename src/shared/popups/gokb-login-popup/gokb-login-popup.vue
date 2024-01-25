@@ -52,9 +52,9 @@
     name: 'GokbLoginPopup',
     extends: BaseComponent,
     props: {
-      value: {
+      modelValue: {
         type: Boolean,
-        required: true,
+        required: false,
         default: false
       },
       route: {
@@ -77,10 +77,10 @@
       },
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
       rules () {

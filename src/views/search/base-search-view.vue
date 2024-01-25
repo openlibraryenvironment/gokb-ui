@@ -7,9 +7,8 @@
     <gokb-error-component :value="error" />
     <v-snackbars ref="snackbars" :objects.sync="eventMessages"></v-snackbars>
     <gokb-section :sub-title="searchHeader">
-      <template v-for="(row, rowIndex) of searchInputFields">
+      <template v-for="(row, rowIndex) of searchInputFields" :key="`${title}_${rowIndex}`">
         <v-row
-          :key="`${title}_${rowIndex}`"
           dense
         >
           <v-col

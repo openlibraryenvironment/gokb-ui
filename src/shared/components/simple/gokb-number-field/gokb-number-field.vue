@@ -18,9 +18,14 @@
       rules: {
         type: Array,
         required: false,
-        default () {
-          return [v => ((/^[\d]+$/.test(v)) || (!this.required && (!v || v.length === 0))) || this.$i18n.t('validation.numberFormat')]
+        default (props) {
+          return [v => ((/^[\d]+$/.test(v)) || (!props.required && (!v || v.length === 0))) || props.localError]
         }
+      }
+    },
+    computed: {
+      localError () {
+        return this.$i18n.t('validation.numberFormat')
       }
     }
   }

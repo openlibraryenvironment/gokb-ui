@@ -27,7 +27,7 @@
   export default {
     name: 'GokbTextareaField',
     props: {
-      value: {
+      modelValue: {
         required: true,
         validator: value => {
           return value === null || typeof value === 'string'
@@ -96,7 +96,7 @@
           return this.value
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:moelValue', localValue)
         }
       },
     },

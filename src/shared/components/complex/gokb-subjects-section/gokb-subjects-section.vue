@@ -72,7 +72,7 @@
     components: { GokbAddSubjectPopup, GokbConfirmationPopup },
     ddcList: DDC,
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -126,14 +126,14 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
       subjects () {
-        return [...this.value]
+        return [...this.modelValue]
           .map(item => ({
             ...item,
             schemeName: item.scheme.name,

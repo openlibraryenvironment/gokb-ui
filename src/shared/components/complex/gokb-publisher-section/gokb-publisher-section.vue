@@ -66,7 +66,7 @@
       GokbConfirmationPopup
     },
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -109,14 +109,14 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
         }
       },
       publishers () {
-        return [...this.value]
+        return [...this.modelValue]
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },

@@ -64,7 +64,7 @@
         required: false,
         default: 'Status',
       },
-      value: {
+      modelValue: {
         type: [String, Object],
         required: false,
         default: undefined
@@ -92,10 +92,10 @@
     computed: {
       localValue: {
         get () {
-          return (typeof this.value === 'object' ? this.value.name : this.value)
+          return (typeof this.modelValue === 'object' ? this.modelValue.name : this.modelValue)
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:modelValue', localValue)
           this.$emit('delete', (localValue === 'Deleted'))
         }
       }

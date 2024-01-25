@@ -17,7 +17,7 @@
     :items="localizedItems"
     :label="label"
     :placeholder="placeholder"
-    item-text="name"
+    item-title="name"
     item-value="id"
     :rules="rules"
     :no-data-text="$t('search.results.empty')"
@@ -51,7 +51,7 @@
     entityName: undefined,
     searchParams: {},
     props: {
-      value: {
+      modelValue: {
         type: [Object, String, Number, Array, Boolean],
         required: false,
         default: () => undefined,
@@ -121,11 +121,11 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (value) {
           // console.log('select field', value)
-          this.$emit('input', value)
+          this.$emit('update:modelValue', value)
         }
       },
       localName () {
@@ -198,8 +198,8 @@
           if (this.initItem) {
             this.setInit(this.initItem)
           }
-          else if (!!this.value && typeof this.value === 'string') {
-            this.setInit(this.value)
+          else if (!!this.modelValue && typeof this.modelValue === 'string') {
+            this.setInit(this.modelValue)
           }
         } else if (this.$attrs.items) {
           this.items = this.$attrs.items

@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top:-8px">
-    <div style="font-size:13px;margin-bottom:4px"> {{ $tc('component.subject.label') }} </div>
+    <div style="font-size:13px;margin-bottom:4px" class="text-primary"> {{ $tc('component.subject.label') }} </div>
     <v-row dense>
       <v-col cols="4">
         <gokb-state-field
@@ -45,7 +45,7 @@
     name: 'GokbSubjectFilterField',
     ddcList: DDC,
     props: {
-      value: {
+      modelValue: {
         required: true,
         default: '',
       }
@@ -70,7 +70,7 @@
       }
     },
     watch: {
-      value (val) {
+      modelValue (val) {
         if (!!val && !this.scheme && !this.val) {
           var splitVal = val.split(';')
 
@@ -103,7 +103,7 @@
           result = this.scheme.value + ';' + (!!this.val ? (this.knownSchemes[this.scheme.value] ? this.val[this.knownSchemes[this.scheme.value].itemValue] : this.val) : '*')
         }
 
-        this.$emit('input', result)
+        this.$emit('update:modelValue', result)
       }
     }
   }

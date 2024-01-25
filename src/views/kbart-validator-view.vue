@@ -125,10 +125,10 @@
         <v-col>
           <v-expansion-panels>
             <v-expansion-panel>
-              <v-expansion-panel-header>
+              <v-expansion-panel-title>
                 {{ $tc('kbart.processing.error.label', 2) }}
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
                 <v-data-table
                   :items="loadedFile.errors.single"
                   :headers="errorHeaders"
@@ -136,20 +136,20 @@
                   sort-by="row"
                   group-by="row"
                 />
-              </v-expansion-panel-content>
+              </v-expansion-panel-text>
             </v-expansion-panel>
             <v-expansion-panel>
-              <v-expansion-panel-header>
+              <v-expansion-panel-title>
                 {{ $tc('kbart.processing.warning.label', 2) }}
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
                 <v-data-table
                   :items="loadedFile.warnings.single"
                   :headers="errorHeaders"
                   sort-by="row"
                   group-by="row"
                 />
-              </v-expansion-panel-content>
+              </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
         </v-col>
@@ -237,7 +237,7 @@
         this.loadedFile.warnings.missingColumns = []
         this.loadedFile.warnings.single = []
         this.loadedFile.warnings.type = {}
-        this.options.selectedFile = file
+        this.options.selectedFile = file ? file[0] : undefined
       },
       '$i18n.locale' (l) {
         if (this.selectedFile) {

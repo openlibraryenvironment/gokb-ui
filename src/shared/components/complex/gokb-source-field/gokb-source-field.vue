@@ -81,7 +81,7 @@
         required: false,
         default: true
       },
-      value: {
+      modelValue: {
         type: Object,
         required: false,
         default: undefined
@@ -115,7 +115,7 @@
         },
         set (val) {
           this.item.frequency = val
-          this.$emit('input', this.item)
+          this.$emit('update:modelValue', this.item)
         }
       },
       url: {
@@ -124,7 +124,7 @@
         },
         set (val) {
           this.item.url = val
-          this.$emit('input', this.item)
+          this.$emit('update:modelValue', this.item)
         }
       },
       targetNamespace: {
@@ -133,7 +133,7 @@
         },
         set (val) {
           this.item.targetNamespace = val
-          this.$emit('input', this.item)
+          this.$emit('update:modelValue', this.item)
         }
       },
       automaticUpdates: {
@@ -142,7 +142,7 @@
         },
         set (val) {
           this.item.automaticUpdates = val
-          this.$emit('input', this.item)
+          this.$emit('update:modelValue', this.item)
         }
       },
       update: {
@@ -151,20 +151,20 @@
         },
         set (val) {
           this.item.update = val
-          this.$emit('input', this.item)
+          this.$emit('update:modelValue', this.item)
         }
       },
     },
     watch: {
       defaultTitleNamespace (val) {
-        if (val && (!this.value?.id || !this.item.targetNamespace)) {
+        if (val && (!this.modelValue?.id || !this.item.targetNamespace)) {
           this.targetNamespace = this.defaultTitleNamespace
         }
       }
     },
     async mounted () {
-      if (this.value?.id) {
-        this.fetch(this.value.id)
+      if (this.modelValue?.id) {
+        this.fetch(this.modelValue.id)
       }
     },
     methods: {

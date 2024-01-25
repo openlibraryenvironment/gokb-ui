@@ -3,7 +3,7 @@
     :disabled="disabled"
     :readonly="readonly"
     :label="label"
-    :value="value"
+    :value="modelValue"
   />
 </template>
 
@@ -26,7 +26,7 @@
         required: false,
         default: false,
       },
-      value: {
+      modelValue: {
         type: String,
         required: true
       }

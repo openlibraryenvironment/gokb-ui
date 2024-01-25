@@ -1,7 +1,7 @@
 <template>
   <v-btn
     :color="colorValue"
-    :text="text"
+    :variant="text ? 'text' : undefined"
     :type="type"
     :class="text || 'invert--text'"
     :disabled="disabled"
