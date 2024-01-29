@@ -40,7 +40,7 @@
         value="Deleted"
         on-icon="mdi-delete"
         color="red"
-        :label="$t('component.general.status.Deleted.label')"
+        :label="activeDeletedLabel"
         readonly
         off-icon="mdi-delete-outline"
         :style="{'paddingRight': '4px', 'border': ((editable || value === 'Deleted') ? '1px solid red' : 'none'), 'borderRadius':'2px'}"
@@ -98,6 +98,9 @@
           this.$emit('input', localValue)
           this.$emit('delete', (localValue === 'Deleted'))
         }
+      },
+      activeDeletedLabel () {
+        return (this.localValue === 'Deleted' || !this.editable) ? this.$i18n.t('component.general.status.Deleted.label') : this.$i18n.t('btn.delete')
       }
     },
     methods: {
