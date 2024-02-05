@@ -6,7 +6,7 @@
   >
     <v-alert type="info">
       <i18n-t keypath="popups.register.info">
-        <template slot:0>
+        <template #mail>
           <a href="mailto:info@gokb.org">info@gokb.org</a>
         </template>
       </i18n-t>
@@ -17,15 +17,15 @@
       style="width:100%;min-height:600px;border:0px"
       :src="link"
     />
-    <template #buttons>
-      <v-spacer />
+    <v-spacer />
+    <div>
       <gokb-button
         text
         @click="close"
       >
         {{ $t('btn.close') }}
       </gokb-button>
-    </template>
+    </div>
   </gokb-dialog>
 </template>
 
@@ -49,7 +49,7 @@
         }
       },
       link () {
-        return `${process.env.VUE_APP_API_BASE_URL}/register/start?embed=true&lang=${this.$i18n.locale}`
+        return `${import.meta.env.VITE_API_BASE_URL}/register/start?embed=true&lang=${this.$i18n.locale}`
       }
     },
     methods: {

@@ -9,12 +9,9 @@
         *
       </span>
     </span>
-    <v-banner>
-      <div
-        style="font-size:1.1rem"
-        class="font-weight-bold"
-      >
-        {{ currentName || value.name }}
+    <v-banner class="bg-card">
+      <div class="font-weight-bold text-body-1">
+        {{ currentName || modelValue.name }}
       </div>
       <template v-slot:actions>
         <gokb-dialog
@@ -29,28 +26,26 @@
             v-model="editedVal"
             :rules="rules"
           />
-          <template #buttons>
-            <v-checkbox
-              v-if="currentName"
-              v-model="keepCurrent"
-              class="ml-2 mt-4"
-              :label="keepCurrentLabel"
-            />
-            <v-spacer />
-            <gokb-button
-              text
-              @click="close"
-            >
-              {{ $i18n.t('btn.cancel') }}
-            </gokb-button>
+          <v-checkbox
+            v-if="currentName"
+            v-model="keepCurrent"
+            class="ml-2 mt-4"
+            :label="keepCurrentLabel"
+          />
+          <v-spacer />
+          <gokb-button
+            text
+            @click="close"
+          >
+            {{ $i18n.t('btn.cancel') }}
+          </gokb-button>
 
-            <gokb-button
-              :disabled="!editedVal || editedVal === currentName || editedVal === inValidName"
-              default
-            >
-              {{ $i18n.t('btn.confirm') }}
-            </gokb-button>
-          </template>
+          <gokb-button
+            :disabled="!editedVal || editedVal === currentName || editedVal === inValidName"
+            default
+          >
+            {{ $i18n.t('btn.confirm') }}
+          </gokb-button>
         </gokb-dialog>
         <gokb-confirmation-popup
           v-model="confirmationPopUpVisible"
@@ -131,7 +126,7 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
           this.$emit('name', localValue)

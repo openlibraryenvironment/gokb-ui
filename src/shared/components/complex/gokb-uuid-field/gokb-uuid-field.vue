@@ -4,6 +4,7 @@
     :label="label"
     :messages="messages"
     :dense="dense"
+    variant="underlined"
     disabled
     readonly
   >
@@ -59,12 +60,12 @@
         return this.copied ? [this.$i18n.t('component.general.uuid.copy.success')] : []
       },
       urlBase () {
-        return process.env.VUE_APP_BASE_URL
+        return import.meta.env.VITE_BASE_URL
       }
     },
     methods: {
       copyUrl () {
-        const url = process.env.VUE_APP_BASE_URL + this.path + '/' + this.modelValue
+        const url = import.meta.env.VITE_BASE_URL + this.path + '/' + this.modelValue
         navigator.clipboard.writeText(url)
         this.copied = true
       }

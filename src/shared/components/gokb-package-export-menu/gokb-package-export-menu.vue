@@ -78,7 +78,7 @@
         }
       },
       currentTippUrl () {
-        var fullUrl = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`
+        var fullUrl = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart`
 
         if (this.pkgId) {
           fullUrl = fullUrl + `/${this.pkgId}` + `?exportType=tipp`
@@ -95,7 +95,7 @@
         return fullUrl
       },
       currentTitleUrl () {
-        var fullUrl = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`
+        var fullUrl = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart`
 
         if (this.pkgId) {
           fullUrl = fullUrl + `/${this.pkgId}` + `?exportType=title`

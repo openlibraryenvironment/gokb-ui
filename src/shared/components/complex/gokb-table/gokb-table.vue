@@ -6,14 +6,13 @@
     >
       {{ label }}
     </div>
-    <v-data-table
+    <v-data-table-server
       ref="dtable"
       v-model="localSelectedItems"
       :headers="localHeaders"
       :items="items"
       :options="options"
-      :server-items-length="totalNumberOfItems"
-      hide-default-footer
+      :items-length="totalNumberOfItems"
       :item-key="itemKey"
       :loading="showLoading"
       :show-select="showSelect"
@@ -143,6 +142,7 @@
           >
             <v-icon
               style="cursor:pointer"
+              color="primary"
               :title="$t('btn.linkext')"
               right
               small
@@ -154,6 +154,7 @@
             v-if="item.popup"
             class="mr-2"
             style="cursor:pointer"
+            color="primary"
             :title="item.updateUrl ? $t('btn.edit') : $t('btn.details')"
             right
             small
@@ -165,6 +166,7 @@
             v-if="editable && item.isRetireable !== undefined"
             class="mr-2"
             :disabled="disabled || !item.isRetireable"
+            color="primary"
             style="cursor:pointer"
             :title="$t('btn.retire')"
             right
@@ -176,6 +178,7 @@
           <v-icon
             v-if="editable && item.isDeletable !== undefined"
             :disabled="disabled || !item.isDeletable"
+            color="primary"
             style="cursor:pointer"
             :title="$t('btn.delete')"
             small
@@ -187,6 +190,7 @@
           <v-icon
             v-if="editable && item.isClosable"
             :disabled="disabled"
+            color="primary"
             style="cursor:pointer"
             class="font-weight-bold"
             :title="$t('btn.close')"
@@ -198,36 +202,38 @@
           </v-icon>
         </div>
       </template>
-    </v-data-table>
-    <div v-if="!hidePagination && pages > 1" class="text-center pt-2">
-      <v-pagination
-        v-model="options.page"
-        color="secondary"
-        :disabled="disabled"
-        :length="pages"
-        :total-visible="7"
-      />
-      <div style="margin-top:-40px;padding-bottom:10px;text-align:right;">
-        <v-btn
-          class="mr-1"
-          :color="options.itemsPerPage === 10 ? 'white' : 'primary'"
-          :style="{ backgroundColor: (options.itemsPerPage === 10 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
-          text
-          @click="setPageSize(10)">10</v-btn>
-        <v-btn
-          :color="options.itemsPerPage === 20 ? 'white' : 'primary'"
-          :style="{ backgroundColor: (options.itemsPerPage === 20 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
-          class="mr-1"
-          text
-          @click="setPageSize(20)">20</v-btn>
-        <v-btn
-          :color="options.itemsPerPage === 50 ? 'white' : 'primary'"
-          :style="{ backgroundColor: (options.itemsPerPage === 50 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
-          class="mr-1"
-          text
-          @click="setPageSize(50)">50</v-btn>
-      </div>
-    </div>
+      <template #bottom>
+        <div v-if="!hidePagination && pages > 1" class="text-center pt-2 bg-card">
+          <v-pagination
+            v-model="options.page"
+            color="primary"
+            :disabled="disabled"
+            :length="pages"
+            :total-visible="7"
+          />
+          <div style="margin-top:-40px;padding-bottom:10px;text-align:right;">
+            <v-btn
+              class="mr-1"
+              :color="options.itemsPerPage === 10 ? 'white' : 'primary'"
+              :style="{ backgroundColor: (options.itemsPerPage === 10 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
+              text
+              @click="setPageSize(10)">10</v-btn>
+            <v-btn
+              :color="options.itemsPerPage === 20 ? 'white' : 'primary'"
+              :style="{ backgroundColor: (options.itemsPerPage === 20 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
+              class="mr-1"
+              text
+              @click="setPageSize(20)">20</v-btn>
+            <v-btn
+              :color="options.itemsPerPage === 50 ? 'white' : 'primary'"
+              :style="{ backgroundColor: (options.itemsPerPage === 50 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
+              class="mr-1"
+              text
+              @click="setPageSize(50)">50</v-btn>
+          </div>
+        </div>
+      </template>
+    </v-data-table-server>
   </div>
 </template>
 
@@ -318,7 +324,7 @@
     },
     data () {
       return {
-        editItemPopupVisible: false,
+        editItemPopupVisible: false
       }
     },
     computed: {
@@ -395,5 +401,9 @@
   .table-action-icons {
     white-space: nowrap;
     text-align: right;
+  }
+
+  td > a {
+    color: rgba(var(--v-theme-primary))
   }
 </style>

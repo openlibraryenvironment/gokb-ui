@@ -21,7 +21,6 @@
               :key="`${title}_${rowIndex}_${columnIndex}`"
               :ref="column.value"
               v-model="searchFilters[column.value]"
-              :items="column.items"
               clearable
               v-bind="column.properties"
             />

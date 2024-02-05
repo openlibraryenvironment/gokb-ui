@@ -83,6 +83,9 @@
 <script>
   export default {
     name: 'GokbHistoryEventField',
+    emits: [
+      'delete'
+    ],
     props: {
       disabled: {
         type: Boolean,

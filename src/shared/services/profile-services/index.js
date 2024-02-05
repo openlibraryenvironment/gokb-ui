@@ -1,4 +1,4 @@
-import baseServices from '@/shared/services/base-services'
+const baseServices = await import('@/shared/services/base-services/base-services.js')
 
 import api from './profile-services'
 

@@ -12,21 +12,19 @@
       v-model="item"
       v-bind="component.properties"
     />
-    <template #buttons>
-      <v-spacer />
-      <gokb-button
-        text
-        @click="close"
-      >
-        {{ $t('btn.cancel') }}
-      </gokb-button>
-      <gokb-button
-        :disabled="!isValid"
-        default
-      >
-        {{ $t('btn.add') }}
-      </gokb-button>
-    </template>
+    <v-spacer />
+    <gokb-button
+      text
+      @click="close"
+    >
+      {{ $t('btn.cancel') }}
+    </gokb-button>
+    <gokb-button
+      :disabled="!isValid"
+      default
+    >
+      {{ $t('btn.add') }}
+    </gokb-button>
   </gokb-dialog>
 </template>
 

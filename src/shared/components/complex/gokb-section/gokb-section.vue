@@ -7,7 +7,7 @@
     >
       <v-toolbar
         v-if="title && !subTitle"
-        color="bg"
+        color="header"
         class="pl-4"
         dense
         flat
@@ -44,7 +44,7 @@
       <v-toolbar
         v-else-if="!title && subTitle"
         height="63"
-        color="bg"
+        color="header"
         class="pl-4"
         dense
         flat
@@ -84,7 +84,7 @@
       <v-toolbar
         v-if="filters && localValue"
         height="63"
-        color="bg"
+        color="header"
         class="pt-1 pl-4"
         flat
       >
@@ -106,7 +106,7 @@
       <v-toolbar
         v-else-if="!subTitle && !title && !noToolBar"
         height="63"
-        color="bg"
+        color="header"
         class="pl-4"
         dense
         flat
@@ -120,7 +120,7 @@
       <v-toolbar
         v-if="expandFilters"
         height="63"
-        color="bg"
+        color="header"
         class="pt-1 pl-4"
         flat
       >
@@ -132,8 +132,7 @@
       </v-toolbar>
       <v-card-text v-show="localValue">
         <div
-          class="pa-2"
-          :class="[!clearBackground ? (darkMode ? 'controls-dark' : 'controls') : '']"
+          class="pa-2 bg-card"
         >
           <slot />
         </div>
@@ -223,9 +222,6 @@
       },
       expansionIcon () {
         return this.localValue ? 'mdi-chevron-up' : 'mdi-chevron-down'
-      },
-      darkMode () {
-        return this.$vuetify.theme.dark
       },
       styles () {
         var result = {}

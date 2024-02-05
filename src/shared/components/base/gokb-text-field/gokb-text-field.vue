@@ -20,6 +20,7 @@
     :clearable="allowClear"
     :dense="dense"
     :persistent-placeholder="!!placeholder"
+    variant="underlined"
     @click:append="$emit('click:append', $event)"
     @click:prepend="iconAction"
     :class="[ (disabled ? 'v-input--is-disabled' : '') ]"

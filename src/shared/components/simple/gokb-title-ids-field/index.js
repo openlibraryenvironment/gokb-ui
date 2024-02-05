@@ -1,1 +1,1 @@
-export default from './gokb-title-ids-field'
+export {default} from './gokb-title-ids-field'

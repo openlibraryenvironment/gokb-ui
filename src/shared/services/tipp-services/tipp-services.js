@@ -4,12 +4,12 @@ const api = (baseServices) => ({
   get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/${id}`,
+      url: import.meta.env.VITE_API_BASE_URL + `${TIPP_PATH}/${id}`,
     }, cancelToken)
   },
   createOrUpdate (data, cancelToken) {
     const { id } = data
-    const url = id ? process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/${id}` : process.env.VUE_APP_API_BASE_URL + TIPP_PATH
+    const url = id ? import.meta.env.VITE_API_BASE_URL + `${TIPP_PATH}/${id}` : import.meta.env.VITE_API_BASE_URL + TIPP_PATH
     return baseServices.request({
       method: id ? 'PUT' : 'POST',
       url,
@@ -31,7 +31,7 @@ const api = (baseServices) => ({
   },
   bulkUpdate (parameters, field, value, cancelToken) {
     const urlParameters = baseServices.createQueryParameters(parameters)
-    const url = process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/bulk?_field=${field}&_value=${value}&${urlParameters}`
+    const url = import.meta.env.VITE_API_BASE_URL + `${TIPP_PATH}/bulk?_field=${field}&_value=${value}&${urlParameters}`
 
     return baseServices.request({
       method: 'GET',
@@ -39,7 +39,7 @@ const api = (baseServices) => ({
     }, cancelToken)
   },
   bulkUpdateStatus (body, cancelToken) {
-    const url = process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/bulk`
+    const url = import.meta.env.VITE_API_BASE_URL + `${TIPP_PATH}/bulk`
 
     return baseServices.request({
       method: 'POST',
@@ -48,7 +48,7 @@ const api = (baseServices) => ({
     }, cancelToken)
   },
   updateStatus (id, status, cancelToken) {
-    const url = process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/${id}/set-status?status=${status}`
+    const url = import.meta.env.VITE_API_BASE_URL + `${TIPP_PATH}/${id}/set-status?status=${status}`
 
     return baseServices.request({
       method: 'GET',

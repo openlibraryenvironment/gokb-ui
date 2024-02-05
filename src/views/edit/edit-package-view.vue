@@ -112,39 +112,40 @@
         alt-labels
       >
         <v-stepper-header>
-          <v-stepper-step
-            editable
-            :step="1"
+          <v-stepper-item
+            :value="1"
           >
             {{ isEdit ? $t('component.package.navigation.step4') : $t('component.package.navigation.step1') }}
-          </v-stepper-step>
+          </v-stepper-item>
           <v-divider />
-          <v-stepper-step
-            :editable="currentStepValid"
+          <v-stepper-item
             :class="{ error: !!step2Error }"
-            :step="2"
+            :error="!!step2Error"
+            :value="2"
           >
             {{ isEdit ? $t('component.package.navigation.step1') : $t('component.package.navigation.step2') }}
-          </v-stepper-step>
+          </v-stepper-item>
           <v-divider />
-          <v-stepper-step
-            :editable="currentStepValid"
+          <v-stepper-item
             :class="{ error: !!step3Error }"
-            :step="3"
+            :error="!!step3Error"
+            :value="3"
           >
             {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
-          </v-stepper-step>
+          </v-stepper-item>
           <v-divider />
-          <v-stepper-step
-            :editable="currentStepValid"
-            :step="4"
+          <v-stepper-item
+            :value="4"
           >
             {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
-          </v-stepper-step>
+          </v-stepper-item>
         </v-stepper-header>
 
-        <v-stepper-items>
-          <v-stepper-content :step="isEdit ? 2 : 1">
+        <v-stepper-window>
+          <v-stepper-window-item
+            :key="`${isEdit ? 2 : 1}-content`"
+            :value="isEdit ? 2 : 1"
+          >
             <gokb-section :no-tool-bar="true">
               <gokb-name-field
                 v-model="allNames"
@@ -200,9 +201,12 @@
                 </gokb-section>
               </v-col>
             </v-row>
-          </v-stepper-content>
+          </v-stepper-window-item>
 
-          <v-stepper-content :step="isEdit ? 3 : 2">
+          <v-stepper-window-item
+            :key="`${isEdit ? 3 : 2}-content`"
+            :value="isEdit ? 3 : 2"
+          >
             <gokb-section :no-tool-bar="true">
               <v-row
                 class="pt-4"
@@ -365,9 +369,12 @@
                 />
               </v-col>
             </v-row>
-          </v-stepper-content>
+          </v-stepper-window-item>
 
-          <v-stepper-content :step="isEdit ? 4 : 3">
+          <v-stepper-window-item
+            :key="`${isEdit ? 4 : 3}-content`"
+            :value="isEdit ? 4 : 3"
+          >
             <v-row v-if="kbart && kbart.selectedFile">
               <v-col>
                 <v-chip
@@ -408,9 +415,12 @@
               :readonly="isReadonly"
               @enable="triggerUpdate"
             />
-          </v-stepper-content>
+          </v-stepper-window-item>
 
-          <v-stepper-content :step="isEdit ? 1 : 4">
+          <v-stepper-window-item
+            :key="`${isEdit ? 1 : 4}-content`"
+            :value="isEdit ? 1 : 4"
+          >
             <gokb-section :no-tool-bar="true">
               <v-row>
                 <v-col>
@@ -436,7 +446,7 @@
                   <gokb-uuid-field
                     v-if="uuid"
                     label="UUID"
-                    :value="uuid"
+                    v-model="uuid"
                     path="/package"
                     dense
                   />
@@ -471,7 +481,7 @@
                   />
                 </v-col>
               </v-row>
-              <v-row v-if="id">
+              <v-row v-if="!!id">
                 <v-col cols="3">
                   <gokb-state-field
                     v-model="overviewStates.contentType"
@@ -524,17 +534,6 @@
                 </v-col>
               </v-row>
             </gokb-section>
-            <gokb-section
-              v-if="maintenance"
-              :sub-title="$tc('component.maintenance.label', 2)"
-            >
-              <gokb-maintenance-cycle-field v-model="maintenanceCycle" />
-              <gokb-date-field
-                v-model="dueTo"
-                label="Fällig am"
-                disabled
-              />
-            </gokb-section>
             <v-row>
               <v-col
                 cols="12"
@@ -570,8 +569,8 @@
                 />
               </v-col>
             </v-row>
-          </v-stepper-content>
-        </v-stepper-items>
+          </v-stepper-window-item>
+        </v-stepper-window>
       </v-stepper>
 
       <template #buttons>
@@ -1363,7 +1362,10 @@
               }
             }
           }
-          await this.$refs.tipps.fetchTipps()
+
+          if (!!this.$refs.tipps) {
+            await this.$refs.tipps.fetchTipps()
+          }
 
           loading.stopLoading()
         } else {

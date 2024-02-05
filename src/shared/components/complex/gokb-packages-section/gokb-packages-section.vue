@@ -83,6 +83,9 @@
       GokbConfirmationPopup
     },
     extends: BaseComponent,
+    emits: [
+      'update'
+    ],
     props: {
       user: {
         type: Boolean,

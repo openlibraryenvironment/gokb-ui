@@ -121,27 +121,27 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.general.name'),
+            title: this.$i18n.t('component.general.name'),
             align: 'start',
             sortable: true,
             value: 'link'
           },
           {
-            text: this.$i18n.tc('component.title.publisher.label'),
+            title: this.$i18n.tc('component.title.publisher.label'),
             align: 'start',
             width: '25%',
             sortable: true,
             value: 'publisher'
           },
           {
-            text: this.$i18n.t('component.title.type.label'),
+            title: this.$i18n.t('component.title.type.label'),
             align: 'start',
             width: '150px',
             sortable: false,
             value: 'type'
           },
           {
-            text: this.$i18n.t('component.title.publishStart'),
+            title: this.$i18n.t('component.title.publishStart'),
             align: 'end',
             width: '150px',
             sortable: false,

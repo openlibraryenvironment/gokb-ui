@@ -1,7 +1,7 @@
 const LOGIN_URL = '/rest/login'
 const REGISTER_URL = '/rest/register'
 
-const api = (assert, log, tokenModel, baseServices, profileServices) => ({
+const api = (log, tokenModel, baseServices, profileServices) => ({
 
   async initialize (cancelToken) {
     log.debug("initializing ..")
@@ -22,14 +22,16 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
   },
 
   async login ({ username, password, save }, cancelToken) {
-    assert.isDefined(username && password)
+    log.debug("login new..")
     // remove old authorization for requests
     this.logout()
+
+    log.debug("request..")
 
     const { data: result } = await baseServices.request({
       initiator: this.login.name,
       method: 'POST',
-      url: process.env.VUE_APP_API_BASE_URL + LOGIN_URL,
+      url: import.meta.env.VITE_API_BASE_URL + LOGIN_URL,
       data: { username, password },
       cancelToken
     })
@@ -44,13 +46,17 @@ const api = (assert, log, tokenModel, baseServices, profileServices) => ({
       tokenModel.removeToken()
       log.debug('logged out')
     }
-    baseServices.deleteAuthorization()
+    else {
+      log.debug("No token to remove!")
+    }
+
+    // baseServices.deleteAuthorization()
   },
 
   register ({ username, email, password, password2 }) {
     return baseServices.request({
       method: 'POST',
-      url: process.env.VUE_APP_API_BASE_URL + REGISTER_URL,
+      url: import.meta.env.VITE_API_BASE_URL + REGISTER_URL,
       data: { username, email, password, password2 },
     })
   },

@@ -28,8 +28,8 @@
     >
       {{ $t('popups.login.error.' + error.toString()) }}
     </span>
+    <v-spacer />
     <template #buttons>
-      <v-spacer />
       <gokb-button
         text
         @click="close"
@@ -99,9 +99,13 @@
           instance: this
         })
         this.error = response?.status
-        form.validate()
+
         if (accountModel.loggedIn()) {
           this.close()
+        }
+        else {
+          console.log(response)
+          this.error = 500
         }
       },
       close () {

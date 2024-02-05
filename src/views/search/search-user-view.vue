@@ -61,37 +61,37 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.user.username'),
+            title: this.$i18n.t('component.user.username'),
             align: 'left',
             sortable: false,
             value: 'link'
           },
           {
-            text: this.$i18n.t('component.user.enabled.label'),
+            title: this.$i18n.t('component.user.enabled.label'),
             align: 'left',
             sortable: false,
             value: 'enabled'
           },
           {
-            text: this.$i18n.t('component.user.role.contributor'),
+            title: this.$i18n.t('component.user.role.contributor'),
             align: 'left',
             sortable: false,
             value: 'contributor'
           },
           {
-            text: this.$i18n.t('component.user.role.editor'),
+            title: this.$i18n.t('component.user.role.editor'),
             align: 'left',
             sortable: false,
             value: 'editor'
           },
           {
-            text: this.$i18n.t('component.user.role.API'),
+            title: this.$i18n.t('component.user.role.API'),
             align: 'left',
             sortable: false,
             value: 'api'
           },
           {
-            text: this.$i18n.t('component.user.role.admin'),
+            title: this.$i18n.t('component.user.role.admin'),
             align: 'left',
             sortable: false,
             value: 'admin'

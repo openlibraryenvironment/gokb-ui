@@ -32,14 +32,12 @@
       </v-col>
     </v-row>
 
-    <template #buttons>
-      <v-spacer />
-      <gokb-button
-        default
-      >
-        {{ $t('btn.close') }}
-      </gokb-button>
-    </template>
+    <v-spacer />
+    <gokb-button
+      default
+    >
+      {{ $t('btn.close') }}
+    </gokb-button>
   </gokb-dialog>
 </template>
 

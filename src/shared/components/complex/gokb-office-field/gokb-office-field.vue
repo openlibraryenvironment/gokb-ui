@@ -51,6 +51,9 @@
   export default {
     name: 'GokbOfficeField',
     components: { GokbTextField },
+    emits: [
+      'delete'
+    ],
     props: {
       disabled: {
         type: Boolean,

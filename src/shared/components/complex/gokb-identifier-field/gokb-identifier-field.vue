@@ -29,6 +29,9 @@
   export default {
     name: 'GokbIdentifierField',
     components: { GokbNamespaceField, GokbTextField },
+    emits: [
+      'delete'
+    ],
     props: {
       namespaceFixed: {
         type: Boolean,

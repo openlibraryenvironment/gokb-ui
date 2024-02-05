@@ -117,21 +117,19 @@
         </v-expansion-panels>
       </div>
     </gokb-section>
-    <template #buttons>
-      <v-spacer />
-      <gokb-button
-        text
-        @click="close"
-      >
-        {{ $t('btn.cancel') }}
-      </gokb-button>
-      <gokb-button
-        default
-        :disabled="!options.selectedFile || importRunning"
-      >
-        {{ completion === 100 ? $t('btn.confirm') : $t('btn.validate') }}
-      </gokb-button>
-    </template>
+    <v-spacer />
+    <gokb-button
+      text
+      @click="close"
+    >
+      {{ $t('btn.cancel') }}
+    </gokb-button>
+    <gokb-button
+      default
+      :disabled="!options.selectedFile || importRunning"
+    >
+      {{ completion === 100 ? $t('btn.confirm') : $t('btn.validate') }}
+    </gokb-button>
   </gokb-dialog>
 </template>
 

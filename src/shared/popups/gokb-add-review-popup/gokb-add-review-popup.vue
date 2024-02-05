@@ -135,21 +135,19 @@
       </v-col>
     </v-row>
 
-    <template #buttons>
-      <v-spacer />
-      <gokb-button
-        @click="close"
-      >
-        {{ $t('btn.cancel') }}
-      </gokb-button>
-      <gokb-button
-        v-if="!isReadonly"
-        :disabled="!isValid"
-        default
-      >
-        {{ $t('btn.create') }}
-      </gokb-button>
-    </template>
+    <v-spacer />
+    <gokb-button
+      @click="close"
+    >
+      {{ $t('btn.cancel') }}
+    </gokb-button>
+    <gokb-button
+      v-if="!isReadonly"
+      :disabled="!isValid"
+      default
+    >
+      {{ $t('btn.create') }}
+    </gokb-button>
   </gokb-dialog>
 </template>
 

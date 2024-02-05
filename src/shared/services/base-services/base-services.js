@@ -6,7 +6,11 @@ const headers = {}
 const api = (http, log, tokenModel, accountModel) => ({
 
   deleteAuthorization () {
+    log.debug("Deleting header config ..")
+
     delete headers[HEADER_AUTHORIZATION_KEY]
+
+    return
   },
   setAuthorization (tokenType, accessToken) {
     headers[HEADER_AUTHORIZATION_KEY] = `${tokenType} ${accessToken}`
@@ -78,7 +82,7 @@ const api = (http, log, tokenModel, accountModel) => ({
     const refresh_data = this.createFormData(form_data)
     const refresh_pars = {
       method: 'POST',
-      url: process.env.VUE_APP_API_BASE_URL + REFRESH_URL,
+      url: import.meta.env.VITE_API_BASE_URL + REFRESH_URL,
       headers,
       data: refresh_data,
       cancelToken
@@ -130,7 +134,7 @@ const api = (http, log, tokenModel, accountModel) => ({
   },
 
   relativeUrl (url) {
-    return url.indexOf('http') == 0 ? url : new URL(url, process.env.VUE_APP_API_BASE_URL)
+    return url.indexOf('http') == 0 ? url : new URL(url, import.meta.env.VITE_API_BASE_URL)
   },
 })
 

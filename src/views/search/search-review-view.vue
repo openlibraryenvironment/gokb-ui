@@ -50,25 +50,25 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.review.componentToReview.label'),
+            title: this.$i18n.t('component.review.componentToReview.label'),
             align: 'start',
             sortable: true,
             value: 'popup'
           },
           {
-            text: this.$i18n.t('component.review.type.label'),
+            title: this.$i18n.t('component.review.type.label'),
             align: 'start',
             sortable: true,
             value: 'type'
           },
           {
-            text: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'start',
             sortable: true,
             value: 'localDesc'
           },
           {
-            text: this.$i18n.t('component.general.dateCreated'),
+            title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             width: '150px',
             sortable: true,

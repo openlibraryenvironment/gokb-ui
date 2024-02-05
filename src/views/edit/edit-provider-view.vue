@@ -87,8 +87,6 @@
             v-model="tab"
             class="mx-4"
           >
-            <v-tabs-slider color="primary" />
-
             <v-tab
               key="variants"
               :active-class="tabClass"
@@ -180,10 +178,8 @@
               </v-icon>
             </v-tab>
           </v-tabs>
-          <v-tabs-items
-            v-model="tab"
-          >
-            <v-tab-item
+          <v-window v-model="tab">
+            <v-window-item
               key="variants"
               class="mt-4"
             >
@@ -194,8 +190,8 @@
                 :api-errors="errors.variantNames"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
+            </v-window-item>
+            <v-window-item
               key="identifiers"
               class="mt-4"
             >
@@ -206,8 +202,8 @@
                 :api-errors="errors.ids"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
+            </v-window-item>
+            <v-window-item
               key="platforms"
               class="mt-4"
             >
@@ -219,8 +215,8 @@
                 :provider-id="providerObject.id"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
+            </v-window-item>
+            <v-window-item
               v-if="!!id"
               key="packages"
               class="mt-4"
@@ -232,8 +228,8 @@
                 :provider-id="providerObject.id"
                 @update="updatePackageCount"
               />
-            </v-tab-item>
-            <v-tab-item
+            </v-window-item>
+            <v-window-item
               key="curators"
               class="mt-4"
             >
@@ -244,8 +240,8 @@
                 :api-errors="errors.curatoryGroups"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
+            </v-window-item>
+            <v-window-item
               key="offices"
               class="mt-4"
             >
@@ -256,8 +252,8 @@
                 :api-errors="errors.offices"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-          </v-tabs-items>
+            </v-window-item>
+          </v-window>
         </v-col>
       </v-row>
       <div v-else>

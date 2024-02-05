@@ -111,9 +111,9 @@
         }
       },
       checkForSystemUpdate() {
-        let local_var = 'VUE_APP_SYSTEM_INFO_' + this.$i18n.locale.toUpperCase()
+        let local_var = 'VITE_SYSTEM_INFO_' + this.$i18n.locale.toUpperCase()
 
-        this.systemInfo = process.env[local_var]
+        this.systemInfo = import.meta.env[local_var]
       }
     }
   }

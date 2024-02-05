@@ -47,46 +47,44 @@
       @feedback-response="showResponse"
     />
 
-    <template #buttons>
-      <gokb-button
-        v-if="escalatable"
-        @click="escalate"
-      >
-        {{ $t('btn.escalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
-      </gokb-button>
-      <gokb-button
-        v-if="deescalatable"
-        @click="deescalate"
-      >
-        {{ $t('btn.deescalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
-      </gokb-button>
-      <v-spacer />
-      <gokb-button
-        @click="closePopup"
-      >
-        {{ (isReadonly || reviewItem.isClosed) ? $t('btn.close') : $t('component.review.edit.cancel.label') }}
-      </gokb-button>
-      <gokb-button
-        v-if="!isReadonly && !reviewItem.isClosed && showComponentCards && activeStep != workflow.length-1"
-        @click="activeStep++"
-      >
-        {{ $t('component.review.edit.next.label') }}
-      </gokb-button>
-      <gokb-button
-        v-else-if="!isReadonly && !reviewItem.isClosed"
-        class="ml-2"
-        color="primary"
-        @click="showConfirmCloseReview"
-      >
-        {{ $t('component.review.edit.close.label')}}
-      </gokb-button>
-      <gokb-button
-        v-else-if="!isReadonly && reviewItem.isClosed"
-        @click="showConfirmReopenReview"
-      >
-        {{ $t('component.review.edit.open.label')}}
-      </gokb-button>
-    </template>
+    <gokb-button
+      v-if="escalatable"
+      @click="escalate"
+    >
+      {{ $t('btn.escalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
+    </gokb-button>
+    <gokb-button
+      v-if="deescalatable"
+      @click="deescalate"
+    >
+      {{ $t('btn.deescalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
+    </gokb-button>
+    <v-spacer />
+    <gokb-button
+      @click="closePopup"
+    >
+      {{ (isReadonly || reviewItem.isClosed) ? $t('btn.close') : $t('component.review.edit.cancel.label') }}
+    </gokb-button>
+    <gokb-button
+      v-if="!isReadonly && !reviewItem.isClosed && showComponentCards && activeStep != workflow.length-1"
+      @click="activeStep++"
+    >
+      {{ $t('component.review.edit.next.label') }}
+    </gokb-button>
+    <gokb-button
+      v-else-if="!isReadonly && !reviewItem.isClosed"
+      class="ml-2"
+      color="primary"
+      @click="showConfirmCloseReview"
+    >
+      {{ $t('component.review.edit.close.label')}}
+    </gokb-button>
+    <gokb-button
+      v-else-if="!isReadonly && reviewItem.isClosed"
+      @click="showConfirmReopenReview"
+    >
+      {{ $t('component.review.edit.open.label')}}
+    </gokb-button>
   </gokb-dialog>
 </template>
 

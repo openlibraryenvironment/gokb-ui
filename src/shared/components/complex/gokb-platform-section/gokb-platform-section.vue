@@ -71,6 +71,9 @@
       GokbConfirmationPopup,
       GokbEditPlatformPopup
     },
+    emits: [
+      'update'
+    ],
     props: {
       modelValue: {
         type: Array,

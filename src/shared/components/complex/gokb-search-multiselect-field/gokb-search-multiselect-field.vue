@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label>
+    <label class="text-primary">
       {{ label }}
     </label>
     <v-row>

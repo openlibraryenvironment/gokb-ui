@@ -444,33 +444,31 @@
         </gokb-section>
       </v-col>
     </v-row>
-    <template #buttons>
-      <v-btn
-        v-if="isEdit"
-        class="ml-6 btn-default"
-        :to="{ name: '/package-title', params: { id: id} }"
-        target="_blank"
-      >
-        {{ $t('component.tipp.toFullView') }}
-      </v-btn>
-      <v-spacer />
-      <v-spacer />
-      <gokb-button
-        class="mr-6"
-        color="secondary"
-        @click="close"
-      >
-        {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
-      </gokb-button>
-      <gokb-button
-        v-if="updateUrl || !id"
-        :disabled="!isValid"
-        class="mr-6"
-        default
-      >
-        {{ selected ? $t('btn.update') : $t('btn.add') }}
-      </gokb-button>
-    </template>
+    <v-btn
+      v-if="isEdit"
+      class="ml-6 btn-default"
+      :to="{ name: '/package-title', params: { id: id} }"
+      target="_blank"
+    >
+      {{ $t('component.tipp.toFullView') }}
+    </v-btn>
+    <v-spacer />
+    <v-spacer />
+    <gokb-button
+      class="mr-6"
+      color="secondary"
+      @click="close"
+    >
+      {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
+    </gokb-button>
+    <gokb-button
+      v-if="updateUrl || !id"
+      :disabled="!isValid"
+      class="mr-6"
+      default
+    >
+      {{ selected ? $t('btn.update') : $t('btn.add') }}
+    </gokb-button>
   </gokb-dialog>
 </template>
 

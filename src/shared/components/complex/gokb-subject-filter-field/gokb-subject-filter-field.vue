@@ -19,9 +19,10 @@
           v-model="val"
           :disabled="!scheme"
           :items="$options.ddcList"
-          :item-text="currentLabel"
+          :item-title="currentLabel"
           item-value="notation"
           :placeholder="$tc('component.subject.heading.label')"
+          variant="underlined"
           return-object
           clearable
           dense
@@ -31,6 +32,7 @@
           v-else
           v-model="val"
           :label="$tc('component.subject.heading.label')"
+          variant="underlined"
           disabled
           dense
         />

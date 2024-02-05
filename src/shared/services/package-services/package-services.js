@@ -4,7 +4,7 @@ const api = (baseServices) => ({
   get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}`,
+      url: import.meta.env.VITE_API_BASE_URL + `${PACKAGE_URL}/${id}`,
     }, cancelToken)
   },
   getTipps (id, parameter, cancelToken) {
@@ -12,12 +12,12 @@ const api = (baseServices) => ({
 
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}/tipps?${urlParameter}`,
+      url: import.meta.env.VITE_API_BASE_URL + `${PACKAGE_URL}/${id}/tipps?${urlParameter}`,
     }, cancelToken)
   },
   getJobs (parameter, cancelToken) {
     const urlParameter = baseServices.createQueryParameters(parameter)
-    const url = process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${parameter.id}/jobs?${urlParameter}`
+    const url = import.meta.env.VITE_API_BASE_URL + `${PACKAGE_URL}/${parameter.id}/jobs?${urlParameter}`
 
     return baseServices.request({
       method: 'GET',
@@ -26,7 +26,7 @@ const api = (baseServices) => ({
   },
   createOrUpdate (data, cancelToken) {
     const { id } = data
-    const url = id ? process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}` : process.env.VUE_APP_API_BASE_URL + PACKAGE_URL
+    const url = id ? import.meta.env.VITE_API_BASE_URL + `${PACKAGE_URL}/${id}` : import.meta.env.VITE_API_BASE_URL + PACKAGE_URL
     return baseServices.request({
       method: id ? 'PUT' : 'POST',
       url,
@@ -37,7 +37,7 @@ const api = (baseServices) => ({
     const urlParameter = baseServices.createQueryParameters(parameters)
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}/triggerSourceUpdate?${urlParameter}`
+      url: import.meta.env.VITE_API_BASE_URL + `${PACKAGE_URL}/${id}/triggerSourceUpdate?${urlParameter}`
     }, cancelToken)
   },
   ingestKbart (id, file, parameters, cancelToken) {
@@ -50,7 +50,7 @@ const api = (baseServices) => ({
 
     return baseServices.request({
       method: 'POST',
-      url: process.env.VUE_APP_API_BASE_URL + `${PACKAGE_URL}/${id}/ingest?${urlParameter}`,
+      url: import.meta.env.VITE_API_BASE_URL + `${PACKAGE_URL}/${id}/ingest?${urlParameter}`,
       data,
     }, cancelToken)
   },

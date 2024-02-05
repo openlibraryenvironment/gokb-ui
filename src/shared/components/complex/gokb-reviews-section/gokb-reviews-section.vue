@@ -141,6 +141,9 @@
       GokbReviewPopup
     },
     extends: BaseComponent,
+    emits: [
+      'update'
+    ],
     props: {
       user: {
         type: Boolean,
@@ -270,89 +273,89 @@
       localizedReviewHeaders () {
         const compConfig = [
           {
-            text: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'start',
             sortable: false,
-            value: 'popup'
+            key: 'popup'
           },
           {
-            text: this.$i18n.t('component.general.status.label'),
+            title: this.$i18n.t('component.general.status.label'),
             align: 'end',
             sortable: false,
             width: '10%',
-            value: 'statusLabel'
+            key: 'statusLabel'
           },
           {
-            text: this.$i18n.t('component.general.dateCreated'),
+            title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             sortable: false,
             width: '20%',
-            value: 'dateCreated'
+            key: 'dateCreated'
           }
         ]
         const pkgTitlesConfig = [
           {
-            text: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'start',
             sortable: false,
             width: '100%',
-            value: 'popup'
+            key: 'popup'
           },
           {
-            text: this.$i18n.tc('component.curatoryGroup.label', 2),
+            title: this.$i18n.tc('component.curatoryGroup.label', 2),
             align: 'start',
             sortable: false,
-            value: 'groupsList'
+            key: 'groupsList'
           },
           {
-            text: this.$i18n.t('component.general.status.label'),
+            title: this.$i18n.t('component.general.status.label'),
             align: 'start',
             sortable: false,
             width: '10%',
-            value: 'statusLabel'
+            key: 'statusLabel'
           },
           {
-            text: this.$i18n.t('component.general.dateCreated'),
+            title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             sortable: false,
             width: '15%',
-            value: 'dateCreated'
+            key: 'dateCreated'
           }
         ]
         const defaultConfig = [
           {
-            text: this.$i18n.t('component.review.componentToReview.label'),
+            title: this.$i18n.t('component.review.componentToReview.label'),
             align: 'start',
             sortable: false,
-            value: 'popup'
+            key: 'popup'
           },
           {
-            text: this.$i18n.t('component.title.type.label'),
+            title: this.$i18n.t('component.title.type.label'),
             align: 'start',
             sortable: false,
             width: '10%',
-            value: 'type'
+            key: 'type'
           },
           {
-            text: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'start',
             sortable: false,
             width: '20%',
-            value: 'stdDescLabel'
+            key: 'stdDescLabel'
           },
           {
-            text: this.$i18n.t('component.general.status.label'),
+            title: this.$i18n.t('component.general.status.label'),
             align: 'start',
             sortable: false,
-            width: '10%',
-            value: 'statusLabel'
+            width: '40px',
+            key: 'statusLabel'
           },
           {
-            text: this.$i18n.t('component.general.dateCreated'),
+            title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             sortable: false,
-            width: '15%',
-            value: 'dateCreated'
+            width: '180px',
+            key: 'dateCreated'
           }
         ]
 

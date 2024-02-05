@@ -1,1 +1,1 @@
-export default from './gokb-reviews-header'
+export {default} from './gokb-reviews-header'

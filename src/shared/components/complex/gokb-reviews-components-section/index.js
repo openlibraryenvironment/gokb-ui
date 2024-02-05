@@ -1,1 +1,1 @@
-export default from './gokb-reviews-components-section'
+export {default} from './gokb-reviews-components-section'

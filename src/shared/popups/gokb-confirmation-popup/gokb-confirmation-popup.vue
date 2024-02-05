@@ -8,7 +8,7 @@
     <v-sheet>
       <i18n-t
         v-if="message.vars"
-        :path="message.text"
+        :keypath="message.text"
       >
         <template v-slot:0>
           <b>{{ message.vars[0] }}</b>
@@ -19,20 +19,18 @@
       </i18n-t>
       <span v-else> {{ message.text }} </span>
     </v-sheet>
-    <template #buttons>
-      <v-spacer />
-      <gokb-button
-        text
-        @click="close"
-      >
-        {{ $t('btn.cancel') }}
-      </gokb-button>
-      <gokb-button
-        default
-      >
-        {{ $t('btn.confirm') }}
-      </gokb-button>
-    </template>
+    <v-spacer />
+    <gokb-button
+      text
+      @click="close"
+    >
+      {{ $t('btn.cancel') }}
+    </gokb-button>
+    <gokb-button
+      default
+    >
+      {{ $t('btn.confirm') }}
+    </gokb-button>
   </gokb-dialog>
 </template>
 

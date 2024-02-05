@@ -9,41 +9,41 @@
     <v-radio-group
       v-model="localValue"
       dense
-      row
+      inline
     >
       <v-radio
         value="Current"
-        on-icon="mdi-check-circle"
+        true-icon="mdi-check-circle"
+        false-icon="mdi-check-circle-outline"
         color="success"
         :label="$t('component.general.status.Current.label')"
-        off-icon="mdi-check-circle-outline"
         :readonly="!editable"
       />
       <v-radio
         value="Retired"
-        on-icon="mdi-close-circle"
+        true-icon="mdi-close-circle"
+        false-icon="mdi-close"
         color="amber"
         :label="$t('component.general.status.Retired.label')"
         :readonly="!editable"
-        off-icon="mdi-close"
       />
       <v-radio
         value="Expected"
-        on-icon="mdi-clock"
+        true-icon="mdi-clock"
+        false-icon="mdi-clock-outline"
         color="info"
         :label="$t('component.general.status.Expected.label')"
         :readonly="!editable"
-        off-icon="mdi-clock-outline"
       />
       <v-radio
         ref="del"
         value="Deleted"
-        on-icon="mdi-delete"
+        true-icon="mdi-delete"
+        false-icon="mdi-delete-outline"
         color="red"
         :label="$t('component.general.status.Deleted.label')"
         readonly
-        off-icon="mdi-delete-outline"
-        :style="{'paddingRight': '4px', 'border': ((editable || value === 'Deleted') ? '1px solid red' : 'none'), 'borderRadius':'2px'}"
+        :style="{'paddingRight': '4px', 'border': ((editable || modelValue === 'Deleted') ? '1px solid red' : 'none'), 'borderRadius':'2px'}"
         @click="showConfirm(localValue)"
       />
     </v-radio-group>

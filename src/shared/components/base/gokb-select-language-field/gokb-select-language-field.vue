@@ -5,6 +5,7 @@
     item-value="iso3"
     :items="localizedItems"
     :label="label"
+    variant="underlined"
     :no-data-text="$t('search.results.empty')"
   />
 </template>

@@ -3,6 +3,7 @@
     <progress-overlay />
     <v-app-bar
       :color="appColor"
+      class="pr-3"
       dark
     >
       <v-toolbar-title class="toolbar-title">
@@ -40,7 +41,7 @@
       </v-btn>
       <a
         icon
-        class="mb-1 mr-2"
+        class="mr-2 text-invert"
         target="_blank"
         :href="docsLink || $t('main.docs.target')"
         :title="$t('main.docs.label')"
@@ -51,23 +52,23 @@
       </a>
       <v-select
         v-model="currentLocale"
-        offset-y
         :items="locales"
         :title="$t('component.general.language.label')"
         class="pt-2 ma-2"
         style="max-width:80px"
+        variant="underlined"
         dense
       />
       <v-select
         v-if="loggedIn"
         v-model="activeGroup"
-        offset-y
         :items="groups"
-        item-text="name"
+        item-title="name"
         item-value="id"
         :title="$tc('component.curatoryGroup.label')"
         class="pt-2 ma-2"
         style="max-width:150px"
+        variant="underlined"
         return-object
         dense
       />
@@ -89,13 +90,13 @@
             :key="item.text"
             :to="item.route"
           >
-            <v-list-item-action>
-              <v-icon color="accent">
+            <template #prepend>
+              <v-icon class="text-high-emphasis" color="primary">
                 {{ item.icon }}
               </v-icon>
-            </v-list-item-action>
+            </template>
             <v-list-item-title>
-              {{ item.text }}
+              <span class="font-weight-bold">{{ item.text }}</span>
             </v-list-item-title>
           </v-list-item>
           <v-divider
@@ -130,14 +131,15 @@
             class="text-caption"
           >
             <span
-              :style="{ cursor: 'pointer', padding: '3px', borderRadius: '3px', backgroundColor: (showCommit ? '#eee' : '') }"
+              class="text-primary"
+              :style="{ cursor: 'pointer', padding: '3px', borderRadius: '3px', backgroundColor: (showCommit ? 'bg' : 'card') }"
               @click="showCommit = !showCommit"
             >
               {{ appVersion }}
             </span>
             <span
               v-if="showCommit"
-              class="ml-4"
+              class="ml-4 text-primary"
             >
               UI Commit #{{ gitCommit }}
             </span>
@@ -151,7 +153,8 @@
             <a
               :href="docsLink || $t('main.docs.target')"
               target="_blank"
-              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
+              class="text-primary"
+              :style="{ textDecoration: 'none'}"
             >
               {{ $t('main.docs.label') }}
             </a>
@@ -165,7 +168,8 @@
             <a
               href="https://github.com/openlibraryenvironment/gokb/wiki/API"
               target="_blank"
-              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
+              class="text-primary"
+              :style="{ textDecoration: 'none' }"
             >
               API
             </a>
@@ -180,7 +184,8 @@
             <a
               :href="imprintLink"
               target="_blank"
-              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
+              class="text-primary"
+              :style="{ textDecoration: 'none' }"
             >
               {{ $t('main.legal.label') }}
             </a>
@@ -195,7 +200,8 @@
             <a
               :href="privacyLink"
               target="_blank"
-              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
+              class="text-primary"
+              :style="{ textDecoration: 'none' }"
             >
               {{ $t('main.privacy.label') }}
             </a>
@@ -221,7 +227,7 @@
   import { ROLE_ADMIN, ROLE_EDITOR } from '@/shared/models/roles'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
-  import profileServices from '@/shared/services/profile-services'
+  import baseServices from '@/shared/services/base-services'
   import update from './mixins/update'
   import pkg from '../package.json'
   import {
@@ -232,8 +238,8 @@
     // SEARCH_MAINTENANCE_ROUTE
   } from '@/router/route-paths'
   import { createCancelToken } from '@/shared/services/http'
+  import profileServices from '@/shared/services/profile-services'
   import searchServices from '@/shared/services/search-services'
-  import baseServices from '@/shared/services/base-services'
   import languageServices from '@/shared/services/language-services'
   import namespaceServices from '@/shared/services/namespace-services'
 
@@ -245,13 +251,13 @@
     mixins: [update],
     data: () => ({
       drawer: null,
-      privacyLink: process.env.VUE_APP_DP_LINK,
-      imprintLink: process.env.VUE_APP_IMP_LINK,
-      docsLink: process.env.VUE_APP_DOCS_LINK,
-      appName: process.env.VUE_APP_TITLE || 'GOKb Client',
-      appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
-      appVersion: pkg.version || process.env.VUE_APP_VERSION,
-      gitCommit: process.env.VUE_APP_GIT_HASH,
+      privacyLink: import.meta.env.VITE_DP_LINK,
+      imprintLink: import.meta.env.VITE_IMP_LINK,
+      docsLink: import.meta.env.VITE_DOCS_LINK,
+      appName: import.meta.env.VITE_TITLE || 'GOKb Client',
+      appColor: import.meta.env.VITE_COLOR || '#4f4f4f',
+      appVersion: pkg.version || import.meta.env.VITE_VERSION,
+      gitCommit: import.meta.env.VITE_GIT_HASH,
       loginExpiredMsg: false,
       globalSearchSelected: undefined,
       globalSearchField: undefined,
@@ -425,8 +431,9 @@
     },
     methods: {
       toggleDarkMode () {
+        this.$vuetify.theme.name = (this.$vuetify.theme.name === 'light' ? 'dark' : 'light')
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark
-        accountModel.toggleDarkMode(this.$vuetify.theme.dark)
+        accountModel.toggleDarkMode(this.$vuetify.theme.current)
         window.localStorage.setItem('darkMode', this.$vuetify.theme.dark)
       },
       async loadGroups () {
@@ -455,6 +462,9 @@
   }
   .application-title {
     color: white;
+  }
+  .v-data-table__td > a {
+    color: var(--v-theme-primary);
   }
 </style>
 <style lang="scss">

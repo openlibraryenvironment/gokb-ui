@@ -1,1 +1,1 @@
-export default from './gokb-text-field'
+export {default} from './gokb-text-field'

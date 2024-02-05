@@ -1,1 +1,1 @@
-export default from './gokb-search-multiselect-field'
+export {default} from './gokb-search-multiselect-field'

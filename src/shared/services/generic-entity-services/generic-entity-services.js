@@ -6,7 +6,7 @@ const api = (baseServices) =>
       const urlParameters = parameters
         ? baseServices.createQueryParameters(parameters)
         : baseServices.createQueryParameters({ _sort: 'name', _order: 'asc' })
-      const url = process.env.VUE_APP_API_BASE_URL + `/rest/${entityName}?${urlParameters}`
+      const url = import.meta.env.VITE_API_BASE_URL + `/rest/${entityName}?${urlParameters}`
       const result = CACHE[url]?.length > 0 || baseServices.request({
         method: 'GET',
         url,
@@ -16,7 +16,7 @@ const api = (baseServices) =>
     },
 
     checkNewName (name, type, cancelToken) {
-      const url = process.env.VUE_APP_API_BASE_URL + `/validation/componentName?value=${name}&componentType=${type}`
+      const url = import.meta.env.VITE_API_BASE_URL + `/validation/componentName?value=${name}&componentType=${type}`
       const result = baseServices.request({
         method: 'GET',
         url
@@ -25,7 +25,7 @@ const api = (baseServices) =>
     },
 
     checkIdentifier (value, namespace, cancelToken) {
-      const url = process.env.VUE_APP_API_BASE_URL + `/validation/identifier?value=${value}&namespace=${namespace}`
+      const url = import.meta.env.VITE_API_BASE_URL + `/validation/identifier?value=${value}&namespace=${namespace}`
       const result = baseServices.request({
         method: 'GET',
         url
@@ -34,7 +34,7 @@ const api = (baseServices) =>
     },
 
     checkUrl (value, cancelToken) {
-      const url = process.env.VUE_APP_API_BASE_URL + `/validation/url`
+      const url = import.meta.env.VITE_API_BASE_URL + `/validation/url`
       const data = { value: value }
       const result = baseServices.request({
         method: 'POST',

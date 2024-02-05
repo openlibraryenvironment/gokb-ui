@@ -108,13 +108,13 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.general.name'),
+            title: this.$i18n.t('component.general.name'),
             align: 'start',
             sortable: true,
             value: 'link'
           },
           {
-            text: this.$i18n.tc('component.platform.label', 2),
+            title: this.$i18n.tc('component.platform.label', 2),
             align: 'end',
             sortable: false,
             value: 'platforms'

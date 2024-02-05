@@ -1,1 +1,1 @@
-export default from './gokb-maintenance-cycle-field'
+export {default} from './gokb-maintenance-cycle-field'

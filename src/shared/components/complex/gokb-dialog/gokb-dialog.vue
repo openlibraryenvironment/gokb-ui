@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    :model-value="modelValue"
+    :model-value="localValue"
     :persistent="persistent"
     :fullscreen="fullscreen"
     :width="width"
@@ -14,30 +14,30 @@
       @submit.prevent="doSubmit"
     >
       <v-card class="elevation-12">
-          <v-card-title class="pt-0 px-0">
-            <v-toolbar
-              :color="appColor"
-              dark
+        <v-card-title class="pt-0 px-0">
+          <v-toolbar
+            :color="appColor"
+            theme="dark"
+          >
+            <v-toolbar-title>
+              {{ title }}
+            </v-toolbar-title>
+            <v-spacer />
+            <v-btn
+              icon
+              right
+              @click="localValue = false"
             >
-              <v-toolbar-title>
-                {{ title }}
-              </v-toolbar-title>
-              <v-spacer />
-              <v-btn
-                icon
-                right
-                @click="localValue = false"
-              >
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </v-toolbar>
-          </v-card-title>
-          <v-card-text>
-            <slot />
-          </v-card-text>
-          <v-card-actions>
-            <slot name="buttons" />
-          </v-card-actions>
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+        </v-card-title>
+        <v-card-text>
+          <slot />
+        </v-card-text>
+        <v-card-actions>
+          <slot name="buttons" />
+        </v-card-actions>
       </v-card>
     </v-form>
   </v-dialog>
@@ -79,7 +79,7 @@
     },
     data () {
       return {
-        appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
+        appColor: import.meta.env.VUE_APP_COLOR || '#4f4f4f',
       }
     },
     computed: {
@@ -94,15 +94,15 @@
     },
     mounted () {
       if (this.modelValue) {
-        this.$nextTick(() => {
-          const theElement = this.$refs.form.$el
-          const input = theElement.querySelector('input:not([type=hidden]),textarea:not([type=hidden])')
-          if (input) {
-            setTimeout(() => {
-              input.focus()
-            }, 0)
-          }
-        })
+        // this.$nextTick(() => {
+        //   const theElement = this.$refs.form.$el
+        //   const input = theElement.querySelector('input:not([type=hidden]),textarea:not([type=hidden])')
+        //   if (input) {
+        //     setTimeout(() => {
+        //       input.focus()
+        //     }, 0)
+        //   }
+        // })
       }
     },
     methods: {

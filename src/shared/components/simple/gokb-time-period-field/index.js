@@ -1,1 +1,1 @@
-export default from './gokb-time-period-field'
+export {default} from './gokb-time-period-field'

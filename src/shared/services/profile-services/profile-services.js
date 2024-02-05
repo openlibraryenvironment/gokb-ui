@@ -4,12 +4,12 @@ const api = (baseServices) => ({
   get (cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + PROFILE_URL,
+      url: import.meta.env.VITE_API_BASE_URL + PROFILE_URL,
     }, cancelToken)
   },
   getJobs (parameter, cancelToken) {
     const urlParameter = baseServices.createQueryParameters(parameter)
-    const url = process.env.VUE_APP_API_BASE_URL + PROFILE_URL + `/jobs?${urlParameter}`
+    const url = import.meta.env.VITE_API_BASE_URL + PROFILE_URL + `/jobs?${urlParameter}`
 
     return baseServices.request({
       method: 'GET',
@@ -30,7 +30,7 @@ const api = (baseServices) => ({
     }, cancelToken)
   },
   cancelJob (id, cancelToken) {
-    const url = process.env.VUE_APP_API_BASE_URL + `/rest/jobs/${id}/cancel`
+    const url = import.meta.env.VITE_API_BASE_URL + `/rest/jobs/${id}/cancel`
     return baseServices.request({
       method: 'PATCH',
       url,

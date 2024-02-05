@@ -1,1 +1,1 @@
-export default from './gokb-add-identifier-popup'
+export {default} from './gokb-add-identifier-popup'

@@ -7,6 +7,7 @@
     rows="1"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
     :required="required"
+    variant="underlined"
     validate-on-blur
     auto-grow
     clearable
@@ -93,7 +94,7 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
           this.$emit('update:moelValue', localValue)

@@ -3,7 +3,7 @@
     :color="colorValue"
     :variant="text ? 'text' : undefined"
     :type="type"
-    :class="text || 'invert--text'"
+    :class="text || 'invert-text'"
     :disabled="disabled"
     :to="to"
     @click="$emit('click', $event)"

@@ -3,18 +3,18 @@ import de from 'vuetify/lib/locale/de'
 import en from 'vuetify/lib/locale/en'
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify/dist/vuetify.js'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
+
 
 const vuetify = createVuetify({
-  components,
-  directives,
   lang: {
     locales: { de, en },
     current: 'de'
   },
   icons: {
     iconfont: 'mdiSvg',
+  },
+  styles: {
+    configFile: 'src/styles/settings.scss',
   },
   theme: {
     defaultTheme: 'light',
@@ -23,7 +23,10 @@ const vuetify = createVuetify({
         dark: false,
         colors: {
           bg: '#fff',
+          header: '#fff',
+          card: '#f2f2f2',
           primary: '#4f4f4f',
+          anchor: '#4f4f4f',
           secondary: '#a0a0a0',
           invert: '#fdfdfd',
           accent: '#4f4f4f',
@@ -35,8 +38,11 @@ const vuetify = createVuetify({
       dark: {
         dark: true,
         colors: {
-          bg: '#000',
+          bg: '#121212',
+          header: '#212121',
+          card: '#212121',
           primary: '#d9d9d9',
+          anchor: '#d9d9d9',
           secondary: '#5b5b5b',
           invert: '#020202',
           accent: '#d9d9d9',

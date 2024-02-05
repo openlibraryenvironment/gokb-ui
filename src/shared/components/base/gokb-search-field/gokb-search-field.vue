@@ -32,9 +32,9 @@
       </label>
     </div>
     <router-link
-      v-if="componentRoute"
+      v-if="!!componentRoute && !!selectedVal"
       :style="{ color: 'primary', fontSize: '1.1rem' }"
-      :to="{ name: componentRoute, params: { 'id': value.id } }"
+      :to="{ name: componentRoute, params: { 'id': selectedVal.id } }"
     >
       {{ localLabel }}
     </router-link>
@@ -57,7 +57,6 @@
     :placeholder="placeholder"
     :rules="activeRules"
     :dense="dense"
-    :search-input.sync="search"
     :item-title="itemText"
     :item-value="itemValue"
     :return-object="returnObject"
@@ -75,25 +74,25 @@
         *
       </span>
     </template>
-    <template #item="{ item }">
-      <span>
-        <div :style="{ color: (item.disabled ? '#888888' : 'inherit') }">
-          {{ item[itemText] }}
+    <template #item="{ item, props }">
+      <v-list-item v-bind="props">
+        <div :style="{ color: (item.raw.disabled ? '#888888' : 'inherit') }">
+          {{ item.raw[itemText] }}
           <span
-            v-if="!!item.status"
+            v-if="!!item.raw.status"
           >
-            <v-icon :color="statusColor(item.status)">
-              {{ statusIcon(item.status) }}
+            <v-icon :color="statusColor(item.raw.status)">
+              {{ statusIcon(item.raw.status) }}
             </v-icon>
           </span>
           <v-chip
-            v-if="item.disabled && !!item.disabledMessage"
+            v-if="item.raw.disabled && !!item.raw.disabledMessage"
             color="error"
           >
-            <span> {{ $t(item.disabledMessage) }} </span>
+            <span> {{ $t(item.raw.disabledMessage) }} </span>
           </v-chip>
         </div>
-      </span>
+      </v-list-item>
     </template>
   </v-combobox>
   <v-autocomplete
@@ -106,13 +105,16 @@
     :placeholder="placeholder"
     :rules="activeRules"
     :dense="dense"
-    :search-input.sync="search"
     :item-title="itemText"
     :item-value="itemValue"
-    :return-object="returnObject"
+    variant="underlined"
     no-filter
+    persistent-clear
     clearable
+    auto-select-first
     hide-no-data
+    return-object
+    @update:search="prepareQuery"
   >
     <template #label>
       {{ label }}
@@ -123,46 +125,51 @@
         *
       </span>
     </template>
-    <template v-slot:selection="data">
-      <router-link
-        v-if="showLink"
-        :style="{ color: 'accent', fontSize: '1.1rem', maxWidth: '75%' }"
-        class="text-truncate"
-        color="accent"
-        :to="{ name: componentRoute, params: { 'id': data.item.id } }"
+    <template #selection="{ item }">
+      <v-list-item
+        :title="undefined"
+        class="pl-0"
       >
-        <span
-          :title="data.item[itemText]"
+        <router-link
+          v-if="showLink"
+          :style="{ color: 'accent', fontSize: '1.1rem', maxWidth: '75%' }"
+          class="text-truncate"
+          color="accent"
+          :to="{ name: componentRoute, params: { 'id': item.raw.id } }"
         >
-          {{ data.item[itemText] }}
-        </span>
-      </router-link>
-      <span
-        v-else
-        style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:75%;"
-      >
+          <span
+            :title="item.raw[itemText]"
+          >
+            {{ item.raw[itemText] }}
+          </span>
+        </router-link>
         <span
-          :title="data.item[itemText]"
+          v-else
+          style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:75%;"
         >
-          {{ data.item[itemText] }}
+          <span>
+            {{ item.raw[itemText] }}
+          </span>
         </span>
-      </span>
+      </v-list-item>
     </template>
-    <template #item="{ item }">
-      {{ item[itemText] }}
-      <span
-        v-if="!!item.status"
-      >
-        <v-icon :color="statusColor(item.status)">
-          {{ statusIcon(item.status) }}
-        </v-icon>
-      </span>
-      <v-chip
-        v-if="item.disabled && !!item.disabledMessage"
-        color="error"
-      >
-        <span> {{ $t(item.disabledMessage) }} </span>
-      </v-chip>
+    <template #item="{ props, item }">
+      <v-list-item v-bind="props" :title="undefined">
+        <span> {{ item.raw[itemText] }} </span>
+        <span
+          v-if="!!item.raw.status"
+        >
+          <v-icon :color="statusColor(item.raw.status)">
+            {{ statusIcon(item.raw.status) }}
+          </v-icon>
+        </span>
+        <v-chip
+          v-if="item.rawdisabled && !!item.raw.disabledMessage"
+          color="error"
+        >
+          <span> {{ $t(item.disabledMessage) }} </span>
+        </v-chip>
+      </v-list-item>
     </template>
   </v-autocomplete>
 </template>
@@ -254,6 +261,7 @@
         loading: false,
         mainParam: 'q',
         items: [],
+        selectedVal: null,
         search: null,
         knownRoutes: {
           Organization: '/provider',
@@ -274,14 +282,15 @@
     },
     computed: {
       localLabel () {
-        return this.modelValue?.[this.itemText]
+        return this.selectedVal?.[this.itemText]
       },
       localValue: {
         get () {
-          return this.returnObject ? this.modelValue : this.modelValue?.[this.itemValue]
+          return this.selectedVal || undefined
         },
-        set (localValue) {
-          this.$emit('update:modelValue', localValue)
+        set (val) {
+          this.selectedVal = val
+          this.$emit('update:modelValue', this.returnObject ? val : val.id)
         }
       },
       componentRoute () {
@@ -295,27 +304,21 @@
       }
     },
     watch: {
-      search (text) {
-        // console.log('search', this.modelValue, this.localValue, this.search, value)
-        text && text !== this.modelValue?.value && text.length > 2 && this.query({ text })
-      },
-      value (val) {
-        if (!!this.modelValue && typeof this.modelValue !== 'object') {
+      modelValue (val) {
+        if (!!this.modelValue && !this.selectedVal) {
           this.query({ id: val })
         }
       }
     },
     mounted () {
       this.searchServices = searchServices(this.searchServicesResourceUrl)
-
-      if (!!this.modelValue && typeof this.modelValue === 'object') {
-        this.items = [this.modelValue]
-      }
-      else {
-        this.items = []
-      }
     },
     methods: {
+      prepareQuery (term) {
+        if (term?.length > 2) {
+          this.query({ text: term})
+        }
+      },
       async query ({ id, text }) {
         this.loading = true
         var primaryParam = {}
@@ -342,7 +345,7 @@
         this.items = this.transform(result)
 
         if (!!id) {
-          this.$refs.autocomplete.lazyValue = this.items[0]
+          this.selectedVal = this.items[0]
         }
 
         this.$emit('searched', true)
