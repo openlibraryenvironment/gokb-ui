@@ -346,7 +346,7 @@
       "tabsCountFile": "Diese Datei enthält Datenzeilen mit einer vom Datei-Header abweichenden Anzahl von Spalten!",
       "tabsCountRow": "Diese Zeile enthält {0} Spalten anstatt dem Datei-Header entsprechend {1} Spalten!",
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
-      "missingCols": "Fehlende Spalten: {0}",
+      "missingCols": "Fehlende Spalte: {0}",
       "correctedVal": "Wert '{0}' wird automatisch durch '{1}' ersetzt werden.",
       "replacementChars": "Die Datei enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
       "replacementCharsRow": "Diese Zeile enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
@@ -382,13 +382,15 @@
       },
       "warning": {
         "label": "Warnung | Warnungen",
-        "fields": "Spaltenstatistik - Warnungen"
+        "fields": "Spaltenstatistik - Warnungen",
+        "structure": "Dateistruktur - Warnungen"
       },
       "error": {
         "label": "Fehler | Fehler",
         "empty": "Fehlender Wert",
         "invalid": "Fehlerhafter Wert",
-        "fields": "Spaltenstatistik - Fehler"
+        "fields": "Spaltenstatistik - Fehler",
+        "structure": "Dateistruktur - Fehler"
       }
     },
     "transmission": {

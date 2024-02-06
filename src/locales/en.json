@@ -346,7 +346,7 @@
       "tabsCountFile": "This file contains rows with a different column count than defined by the provided headings!",
       "tabsCountRow": "This line contains {0} columns instead of {1} columns, as defined by the headings!",
       "missingVal": "Missing value in column '{0}'!",
-      "missingCols": "Missing columns: {0}",
+      "missingCols": "Missing column: {0}",
       "correctedVal": "Value '{0}' will be automatically replaced by '{1}'",
       "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
@@ -382,13 +382,15 @@
       },
       "warning": {
         "label": "Warning | Warnings",
-        "fields": "Column Statistics - Warnings"
+        "fields": "Column Statistics - Warnings",
+        "structure": "File Structure - Warnings"
       },
       "error": {
         "label": "Error | Errors",
         "empty": "Missing Value",
         "invalid": "Invalid Value",
-        "fields": "Column Statistics - Errors"
+        "fields": "Column Statistics - Errors",
+        "structure": "File Structure - Errors"
       }
     },
     "transmission": {
