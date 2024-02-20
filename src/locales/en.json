@@ -369,7 +369,8 @@
         "mimeType": "KBART URL returned a wrong content type!",
         "unknown": "There were errors saving the KBART file!",
         "notFound": "No KBART file was found for the provided URL!",
-        "protocol": "KBART URL has an unsupported protocol!"
+        "protocol": "KBART URL has an unsupported protocol!",
+        "fileSize": "The file returned is too big. Automated imports of files bigger than 20 MB need to be authorized by an administrator."
       },
       "reason": {
         "label": "Reason | Reasons"

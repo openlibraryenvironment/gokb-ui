@@ -37,8 +37,11 @@
             this.$emit('valid', false)
           }
         }
-        else if (!!this.localErrorMessages) {
-          this.localErrorMessages = undefined
+        else {
+          if (!!this.localErrorMessages) {
+           this.localErrorMessages = undefined
+          }
+
           this.$emit('valid', true)
         }
       }
