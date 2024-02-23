@@ -1,101 +1,105 @@
 <template>
-  <gokb-dialog
-    v-model="localValue"
-    :title="localTitle"
-    width="max-width"
-    fullscreen
-  >
-    <gokb-error-component :value="error" />
-    <v-snackbar v-model="showSuccessMsg" color="success" :timeout="5000"> {{ successMsg }} </v-snackbar>
-    <v-snackbar v-model="showErrorMsg" color="error" :timeout="5000"> {{ errorMsg }} </v-snackbar>
+  <div>
+    <v-snackbars :objects.sync="eventMessages">
+      <template #action="{ close }">
+        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
+      </template>
+    </v-snackbars>
+    <gokb-page
+      v-if="accessible && !notFound"
+      :key="version"
+      :title="localTitle"
+    >
+      <gokb-confirmation-popup
+        v-model="showSubmitConfirm"
+        :message="submitConfirmationMessage"
+        @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+      />
+      <gokb-section no-tool-bar>
+        <gokb-reviews-header
+          v-if="reviewItem?.component"
+          :value="error"
+          :component="reviewItem.component"
+          :editable="!isReadonly"
+          :review-component="reviewItem"
+          :has-component-cards="showComponentCards"
+          :additional-vars="reviewItem.additionalVars"
+        />
+      </gokb-section>
 
-    <gokb-confirmation-popup
-      v-model="showSubmitConfirm"
-      :message="submitConfirmationMessage"
-      @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-    />
+      <gokb-reviews-components-section
+        v-if="finishedLoading && showComponentCards"
+        v-for="(wf, i) in workflow"
+        :ref="'wf' + i"
+        :key="i"
+        :value="error"
+        :reviewed-component="reviewItem.component"
+        :reference-components="reviewItem.otherComponents"
+        :review-type="reviewItem.stdDesc?.name"
+        :review-status="reviewItem.status.value"
+        :more-steps="i+1 < workflow.length"
+        :workflow="wf"
+        :editable="!isReadonly"
+        :additional-vars="reviewItem.additionalVars"
+        :expanded="activeStep === i"
+        no-tool-bar
+        @expand="activateStep(i)"
+        @finished-step="changeActiveStep"
+        @added="addNewComponent"
+        @close="closeReview"
+        @feedback-response="showResponse"
+      />
 
-    <gokb-reviews-header
-      v-if="reviewItem?.component"
-      :value="error"
-      :component="reviewItem.component"
-      :editable="!isReadonly"
-      :review-component="reviewItem"
-      :has-component-cards="showComponentCards"
-      :additional-vars="reviewItem.additionalVars"
-    />
-
-    <gokb-reviews-components-section
-      v-if="finishedLoading && showComponentCards"
-      v-for="(wf, i) in workflow"
-      :ref="'wf' + i"
-      :key="i"
-      :value="error"
-      :reviewed-component="reviewItem.component"
-      :reference-components="reviewItem.otherComponents"
-      :review-type="reviewItem.stdDesc?.name"
-      :review-status="reviewItem.status.value"
-      :more-steps="i+1 < workflow.length"
-      :workflow="wf"
-      :editable="!isReadonly"
-      :additional-vars="reviewItem.additionalVars"
-      :expanded="activeStep === i"
-      @expand="activateStep(i)"
-      @finished-step="changeActiveStep"
-      @added="addNewComponent"
-      @close="closeReview"
-      @feedback-response="showResponse"
-    />
-
-    <template #buttons>
-      <v-btn
-        class="ml-6 btn-default"
-        :to="{ name: '/review', params: { id: id} }"
-        target="_blank"
-      >
-        {{ $t('component.tipp.toFullView') }}
-      </v-btn>
-      <v-spacer />
-      <gokb-button
-        v-if="escalatable"
-        @click="escalate"
-      >
-        {{ $t('btn.escalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
-      </gokb-button>
-      <gokb-button
-        v-if="deescalatable"
-        @click="deescalate"
-      >
-        {{ $t('btn.deescalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
-      </gokb-button>
-      <v-spacer />
-      <gokb-button
-        @click="closePopup"
-      >
-        {{ (isReadonly || reviewItem.isClosed) ? $t('btn.close') : $t('component.review.edit.cancel.label') }}
-      </gokb-button>
-      <gokb-button
-        v-if="!isReadonly && !reviewItem.isClosed && showComponentCards && activeStep != workflow.length-1"
-        @click="activeStep++"
-      >
-        {{ $t('component.review.edit.next.label') }}
-      </gokb-button>
-      <gokb-button
-        v-else-if="!isReadonly && !reviewItem.isClosed"
-        class="ml-2"
-        color="primary"
-        @click="showConfirmCloseReview"
-      >
-        {{ $t('component.review.edit.close.label')}}
-      </gokb-button>
-      <gokb-button
-        v-else-if="!isReadonly && reviewItem.isClosed"
-        @click="showConfirmReopenReview"
-      >
-        {{ $t('component.review.edit.open.label')}}
-      </gokb-button>
-    </template>
-  </gokb-dialog>
+      <template #buttons>
+        <gokb-button
+          v-if="escalatable"
+          @click="escalate"
+        >
+          {{ $t('btn.escalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
+        </gokb-button>
+        <gokb-button
+          v-if="deescalatable"
+          @click="deescalate"
+        >
+          {{ $t('btn.deescalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
+        </gokb-button>
+        <v-spacer />
+        <gokb-button
+          v-if="!isReadonly && !reviewItem.isClosed && showComponentCards && activeStep != workflow.length-1"
+          @click="activeStep++"
+        >
+          {{ $t('component.review.edit.next.label') }}
+        </gokb-button>
+        <gokb-button
+          v-else-if="!isReadonly && !reviewItem.isClosed"
+          class="ml-2"
+          color="primary"
+          @click="showConfirmCloseReview"
+        >
+          {{ $t('component.review.edit.close.label')}}
+        </gokb-button>
+        <gokb-button
+          v-else-if="!isReadonly && reviewItem.isClosed"
+          @click="showConfirmReopenReview"
+        >
+          {{ $t('component.review.edit.open.label')}}
+        </gokb-button>
+      </template>
+    </gokb-page>
+    <gokb-no-access-field v-else-if="!accessible" />
+    <gokb-page
+      v-else
+      title=""
+    >
+      <v-card>
+        <v-card-text>
+          <div class="text-h5 primary--text">
+            {{ $t('component.general.notFound', [$tc('component.review.label')]) }}
+          </div>
+        </v-card-text>
+      </v-card>
+    </gokb-page>
+  </div>
 </template>
 
 <script>
@@ -105,47 +109,39 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import 'vue-json-pretty/lib/styles.css'
   import GokbReviewsHeader from '@/shared/components/complex/gokb-reviews-header/gokb-reviews-header.vue'
+  import VSnackbars from 'v-snackbars'
 
   export default {
-    name: 'GokbReviewPopup',
+    name: 'EditReviewView',
     components: {
       GokbReviewsHeader,
-      GokbConfirmationPopup
+      GokbConfirmationPopup,
+      VSnackbars
     },
     extends: BaseComponent,
     props: {
-      selected: {
-        type: Object,
+      id: {
+        type: [Number, String],
         required: false,
         default: undefined
-      },
-      component: {
-        type: Object,
-        required: false,
-        default: undefined
-      },
-      readonly: {
-        type: Boolean,
-        required: false,
-        default: false
       }
     },
     data () {
       return {
-        successMsg: undefined,
-        showSuccessMsg: false,
-        showErrorMsg: false,
-        errorMsg: undefined,
+        eventMessages: [],
         submitConfirmationMessage: undefined,
         parameterToConfirm: undefined,
         showSubmitConfirm: false,
         escalatable: false,
         updateUrl: undefined,
+        accessible: true,
         deleteUrl: undefined,
+        notFound: false,
         deescalatable: false,
         deletedItems: [],
         workflow: [],
         activeStep: 0,
+        version: undefined,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,
@@ -178,19 +174,11 @@
       }
     },
     computed: {
-      localValue: {
-        get () {
-          return this.value || true
-        },
-        set (localValue) {
-          this.$emit('input', localValue)
-        }
-      },
       cmpType () {
         return this.reviewItem?.component?.type || undefined
       },
       cmpLabel () {
-        return (this.isEdit && !!this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+        return (!!this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       isReadonly () {
         return !this.updateUrl
@@ -209,41 +197,31 @@
       }
     },
     created () {
-      this.selectedItem = this.selected
-      if (this.selected) {
-        this.finishedLoading = false
-        this.id = this.selected.id
-        this.fetchReview(this.id)
-      }
-      else if (this.component) {
-        this.reviewItem.component = {
-          name: this.component.name,
-          id: this.component.id,
-          type: this.component.type.toLowerCase(),
-          route: this.componentRoutes[this.component.type.toLowerCase()]
-        }
-        this.finishedLoading = true
-      }
-      if (this.selectedItem) {
-        this.isEscalatable()
-        this.isDeescalatable()
-      }
+      this.fetchReview()
+      this.isEscalatable()
+      this.isDeescalatable()
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
-      async fetchReview (rid) {
+      async fetchReview () {
         const response = await this.catchError({
-          promise: reviewServices.get(rid, this.cancelToken.token),
+          promise: reviewServices.get(this.id, this.cancelToken.token),
           instance: this
         })
 
-        if (response.status === 200) {
+        if (response?.status === 200) {
           this.mapRecord(response.data)
+        } else if (response?.status === 404) {
+            this.notFound = true
         } else {
-          this.errorMsg = this.$i18n.t('error.general.500')
-          this.showErrorMsg = true
+          this.eventMessages.push({
+            message: this.$i18n.t('error.general.500'),
+            color: 'error',
+            timeout: -1
+          })
+          this.accessible = false
         }
         this.finishedLoading = true
       },
@@ -329,10 +307,18 @@
         const resp = await reviewServices.close(this.id, this.cancelToken.token)
 
         if (resp.status === 200) {
-          this.$emit('edit', 'closed')
-          this.closePopup()
+          this.eventMessages.push({
+            message: this.$i18n.t('component.review.edit.success.closed'),
+            color: 'success',
+            timeout: 4000
+          })
+          this.mapRecord(resp.data)
         } else {
-          this.errorMsg = this.$i18n.t('error.update.400')
+          this.eventMessages.push({
+            message: this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+            color: 'error',
+            timeout: -1
+          })
         }
       },
       async reopenReview () {
@@ -344,10 +330,18 @@
         const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
 
         if (resp.status === 200) {
-          this.$emit('edit', 'reopened')
+          this.eventMessages.push({
+            message: this.$i18n.t('component.review.edit.success.reopened'),
+            color: 'success',
+            timeout: 4000
+          })
           this.mapRecord(resp.data)
         } else {
-          this.errorMsg = this.$i18n.t('error.update.400')
+          this.eventMessages.push({
+            message: this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+            color: 'error',
+            timeout: -1
+          })
         }
       },
       async addNewComponent (info) {
@@ -376,14 +370,11 @@
           } else {
             this.showResponse({ type: 'error', resp: resp })
           }
-          await this.fetchReview(this.id)
+          await this.fetchReview()
           this.$refs["wf" + this.activeStep][0].refreshAll()
         } else {
           this.showResponse({ type: 'error', message: this.$i18n.t('component.review.otherComponents.error.duplicate') })
         }
-      },
-      closePopup () {
-        this.localValue = false
       },
       activateStep (index) {
         if (this.activeStep !== index) {
@@ -412,17 +403,26 @@
       },
       showResponse (response) {
         if (typeof response === 'string' || response instanceof String) {
-          this.errorMsg = response
-          this.showErrorMsg = true
+          this.eventMessages.push({
+            message: response,
+            color: 'error',
+            timeout: -1
+          })
         }
         else {
           if (response?.message) {
             if (response.type == 'success') {
-              this.successMsg = response.message
-              this.showSuccessMsg = true
+              this.eventMessages.push({
+                message: this.$i18n.t('success.update', [this.$i18n.tc('component.review.label'), ""]),
+                color: 'success',
+                timeout: 4000
+              })
             } else {
-              this.errorMsg = response.message
-              this.showErrorMsg = true
+              this.eventMessages.push({
+                message: this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+                color: 'error',
+                timeout: -1
+              })
             }
           }
           else {
@@ -430,20 +430,32 @@
             this.errors = response?.resp.data?.error
 
             if (response.resp.status === 403) {
-              this.errorMsg = this.$i18n.t('error.update.403')
-              this.showErrorMsg = true
+              this.eventMessages.push({
+                message: this.$i18n.t('error.update.403', [this.$i18n.tc('component.review.label')]),
+                color: 'error',
+                timeout: -1
+              })
             }
             else if (response.resp.status === 409) {
-              this.errorMsg = this.$i18n.t('error.update.409')
-              this.showErrorMsg = true
+              this.eventMessages.push({
+                message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.review.label')]),
+                color: 'error',
+                timeout: -1
+              })
             }
             else if (response.resp.status === 500) {
-              this.errorMsg = this.$i18n.t('error.general.500')
-              this.showErrorMsg = true
+              this.eventMessages.push({
+                message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.review.label')]),
+                color: 'error',
+                timeout: -1
+              })
             }
             else {
-              this.errorMsg = this.$i18n.t('error.update.400')
-              this.showErrorMsg = true
+              this.eventMessages.push({
+                message: this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+                color: 'error',
+                timeout: -1
+              })
             }
           }
         }
@@ -467,9 +479,6 @@
             this.deescalatable = response.data.isDeescalatable
             this.escalationTarget = response.data.escalationTargetGroup
           })
-      },
-      save () {
-        this.$emit('edit', 'edited')
       }
     }
   }
