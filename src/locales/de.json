@@ -24,6 +24,7 @@
     "reactivate": "Reaktivieren",
     "refresh": "Aktualisieren",
     "reload": "Neu laden",
+    "remove": "Entfernen",
     "reset": "Änderungen verwerfen",
     "retire": "Archivieren",
     "search": "Suchen",
@@ -54,6 +55,10 @@
     "false": "Nein",
     "all": "Alle",
     "ISOdateHint": "JJJJ-MM-TT",
+    "languages": {
+      "en": "Englisch",
+      "de": "Deutsch"
+    },
     "error": {
       "label": "Fehler | Fehler"
     },
@@ -177,7 +182,8 @@
         "401": "Die eingebebenen Informationen sind nicht korrekt.",
         "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
       },
-      "expired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an."
+      "expired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an.",
+      "forgotPassword": "Passwort vergessen"
     },
     "logout": {
       "label": "Ausloggen"
@@ -185,6 +191,11 @@
     "register":  {
       "label": "Registrieren",
       "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, registrieren Sie sich bitte und schicken uns falls nicht anderweitig abgesprochen eine Nachricht mit Ihrem gewählten Benutzernamen sowie Informationen zu Ihrer Einrichtung an {0}. Wir melden uns dann so schnell wie möglich bei Ihnen zurück!"
+    },
+    "activateUser": {
+      "label": "Benutzerkonto aktivieren",
+      "info": "Bitte Freischaltung des Accounts bestätigen. Dies entfernt die Sperre und vergibt Bearbeitungsrechte.",
+      "sendAlert": "Benutzer per E-Mail benachrichtigen"
     }
   },
   "validation": {
@@ -986,6 +997,9 @@
       "username": "Benutzername",
       "register": "Registrierung",
       "password": "Kennwort",
+      "preferredLocaleString": {
+        "label": "Bevorzugte Sprache"
+      },
       "email": "E-Mail",
       "role": {
         "label": "Rolle | Rollen",
@@ -1022,6 +1036,11 @@
         "missing": {
           "username": "Bitte geben Sie einen Benutzernamen an.",
           "password": "Bitte geben Sie ein Passwort an."
+        },
+        "activate": {
+          "invalidMail": "Die Benachrichtigung konnte nicht versendet werden, da die angegebene E-Mail-Adresse ungültig ist!",
+          "missingMail": "Die Benachrichtigung konnte nicht versendet werden, da keine E-Mail-Adresse angegeben wurde!",
+          "missingConfig": "Die Benachrichtigung konnte nicht versendet werden, da nicht alle notwendigen Server-Konfigurationswerte gesetzt wurden!"
         }
       }
     },

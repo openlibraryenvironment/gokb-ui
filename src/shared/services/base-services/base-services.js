@@ -52,8 +52,10 @@ const api = (http, log, tokenModel, accountModel) => ({
         await this.refreshAuth()
       }
 
-      response = await http.request(parameters).catch(e => {
+      response = await http.request(parameters)
+      .catch(e => {
         log.debug(e.response)
+        return e.response
       })
     }
     else {

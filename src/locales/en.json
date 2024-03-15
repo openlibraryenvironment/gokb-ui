@@ -24,6 +24,7 @@
     "reactivate": "Reactivate",
     "refresh": "Refresh",
     "reload": "Discard changes",
+    "remove": "Remove",
     "reset": "Reset",
     "retire": "Retire",
     "search": "Search",
@@ -54,6 +55,10 @@
     "false": "No",
     "all": "All",
     "ISOdateHint": "YYYY-MM-DD",
+    "languages": {
+      "en": "English",
+      "de": "German"
+    },
     "error": {
       "label": "Error | Errors"
     },
@@ -176,7 +181,8 @@
         "401": "The entered login information is not valid.",
         "500": "There was an error processing the login request. Please try again later."
       },
-      "expired": "Your login has timed out, please login again."
+      "expired": "Your login has timed out, please login again.",
+      "forgotPassword": "Forgot password"
     },
     "logout": {
       "label": "Log out"
@@ -184,6 +190,11 @@
     "register": {
       "label": "Register",
       "info": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and unless directed otherwise send an email with your chosen username and information about your institution to {0}. We will contact you as soon as possible!"
+    },
+    "activateUser": {
+      "label": "Activate User",
+      "info": "Please confirm the activation of this account. This will release the default lock and apply basic editing permissions.",
+      "sendAlert": "Alert user of the activation via email"
     }
   },
   "validation": {
@@ -986,6 +997,9 @@
       "username": "Username",
       "register": "Registration",
       "password": "Password",
+      "preferredLocaleString": {
+        "label": "Preferred Language"
+      },
       "email": "Email",
       "role": {
         "label": "Role | Roles",
@@ -1022,6 +1036,11 @@
         "missing": {
           "username": "Please enter a username.",
           "password": "Please enter a password."
+        },
+        "activate": {
+          "invalidMail": "Unable to send user notification due to invalid email address!",
+          "missingMail": "Unable to send user notification due to missing email address!",
+          "missingConfig": "Unable to send user notification due to missing configuration!"
         }
       }
     },

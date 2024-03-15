@@ -1,7 +1,7 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    width="500"
+    width="700"
     :title="$t('component.user.register')"
   >
     <v-alert type="info">

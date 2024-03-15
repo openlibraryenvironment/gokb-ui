@@ -52,11 +52,17 @@
               dense
             />
           </v-col>
-          <!--        <v-col md="4">-->
-          <!--          <gokb-search-organisation-field-->
-          <!--            v-model="organisation"-->
-          <!--          />-->
-          <!--        </v-col>-->
+          <v-col>
+            <div style="width:200px">
+              <v-select
+                v-model="preferredLocaleString"
+                :items="languageOptions"
+                :label="$t('component.user.preferredLocaleString.label')"
+                clearable
+                dense
+              />
+            </div>
+          </v-col>
         </v-row>
         <v-row>
           <v-col cols="2">
@@ -142,6 +148,18 @@
         >
           {{ $t('btn.cancel') }}
         </gokb-button>
+        <gokb-confirm-activate-popup
+          v-if="activateOptionsVisible"
+          v-model="activateOptionsVisible"
+          @submit="activate"
+        />
+        <gokb-button
+          v-if="isEdit"
+          :disabled="!valid"
+          @click="showActivateOptions"
+        >
+          {{ $t('btn.activate') }}
+        </gokb-button>
         <gokb-button
           default
           :disabled="!valid"
@@ -156,7 +174,7 @@
       title=""
     >
       <v-card>
-        <v-card-text>
+        <v-card-text align="center">
           <div class="text-h5 primary--text">
             {{ $t('component.general.notFound', [$tc('component.user.label')]) }}
           </div>
@@ -171,6 +189,7 @@
   import account from '@/shared/models/account-model'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbConfirmActivatePopup from '@/shared/popups/gokb-confirm-activate-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
   import VSnackbars from 'v-snackbars'
@@ -184,6 +203,7 @@
     components: {
       GokbAddItemPopup,
       GokbConfirmationPopup,
+      GokbConfirmActivatePopup,
       GokbErrorComponent,
       GokbCuratoryGroupSection,
       VSnackbars
@@ -204,6 +224,7 @@
     data () {
       return {
         addRolePopupVisible: false,
+        activateOptionsVisible: false,
         username: undefined,
         password: undefined,
         passwordExpired: undefined,
@@ -218,6 +239,8 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
+        languageOptions: ['de', 'en'],
+        preferredLocaleString: undefined,
         allRoles: [],
         selectedRoles: [],
         addedRoles: [],
@@ -315,6 +338,9 @@
       showAddNewRole () {
         this.addRolePopupVisible = true
       },
+      showActivateOptions () {
+        this.activateOptionsVisible = true
+      },
       async update () {
         this.eventMessages = []
 
@@ -322,6 +348,7 @@
           username: this.username,
           password: this.password,
           email: this.email,
+          preferredLocaleString: this.preferredLocaleString,
           accountLocked: this.accountLocked,
           enabled: this.enabled,
           version: this.version,
@@ -369,6 +396,35 @@
           })
         }
       },
+      async activate (alertUser) {
+        const response = await this.catchError({
+          promise: userServices.activate(this.id, alertUser, this.cancelToken.token),
+          instance: this
+        })
+
+        if (response?.status === 200) {
+          if (response.data.warnings) {
+            response.data.warnings.forEach (warning => {
+              if (warning.messageCode) {
+                this.eventMessages.push({
+                  message: this.$i18n.t(warning.messageCode),
+                  color: 'warning',
+                  timeout: -1
+                })
+              }
+            })
+          }
+
+          this.fetch()
+        }
+        else if (response.status === 200) {
+          this.eventMessages.push({
+            message: this.$i18n.t('component.general.notFound', [this.$i18n.tc('component.user.label')]),
+            color: 'error',
+            timeout: -1
+          })
+        }
+      },
       pageBack () {
         this.$router.go(-1)
       },
@@ -385,6 +441,7 @@
           this.email = response.data.data.email
           this.version = response.data.data.version
           this.accountLocked = response.data.data.accountLocked
+          this.preferredLocaleString = response.data.data.preferredLocaleString
           this.enabled = response.data.data.enabled
           this.passwordExpired = response.data.data.passwordExpired
           this.allRoles = response.data.data.roles.map(({ authority, ...rest }) => ({
@@ -397,6 +454,8 @@
             isDeletable: true
           }))
           // this.organisation = organisation
+        } else {
+          this.notFound = true
         }
       },
       confirmDeleteRole ({ id, value }) {
