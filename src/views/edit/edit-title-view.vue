@@ -465,7 +465,7 @@
       title=""
     >
       <v-card>
-        <v-card-text>
+        <v-card-text align="center">
           <div class="text-h5 primary--text">
             {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
           </div>
@@ -838,9 +838,9 @@
             instance: this
           })
 
-          if (result.status === 200) {
+          if (result?.status === 200) {
             this.mapRecord(result.data)
-          } else if (result.status === 404) {
+          } else {
             this.notFound = true
           }
         }
