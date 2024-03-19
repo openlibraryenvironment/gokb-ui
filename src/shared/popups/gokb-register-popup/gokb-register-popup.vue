@@ -5,11 +5,12 @@
     :title="$t('component.user.register')"
   >
     <v-alert type="info">
-      <i18n path="popups.register.info">
+      <i18n v-if="!!mail" path="popups.register.info">
         <template slot:0>
-          <a href="mailto:info@gokb.org">info@gokb.org</a>
+          <a :href="'mailto:' + mail">{{ mail }}</a>
         </template>
       </i18n>
+      <i18n v-else path="popups.register.nomail" />
     </v-alert>
     <iframe
       id="register-embed"
@@ -50,6 +51,9 @@
       },
       link () {
         return `${process.env.VUE_APP_API_BASE_URL}/register/start?embed=true&lang=${this.$i18n.locale}`
+      },
+      mail () {
+        return process.env.VUE_APP_CONTACT_EMAIL
       }
     },
     methods: {

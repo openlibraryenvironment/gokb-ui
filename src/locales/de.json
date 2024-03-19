@@ -190,7 +190,8 @@
     },
     "register":  {
       "label": "Registrieren",
-      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, registrieren Sie sich bitte und schicken uns falls nicht anderweitig abgesprochen eine Nachricht mit Ihrem gewählten Benutzernamen sowie Informationen zu Ihrer Einrichtung an {0}. Wir melden uns dann so schnell wie möglich bei Ihnen zurück!"
+      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte nach der Registrierung bei uns unter {0}, damit wir sie aufnehmen können.",
+      "nomail": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte bei uns, damit wir sie freischalten können."
     },
     "activateUser": {
       "label": "Benutzerkonto aktivieren",

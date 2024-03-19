@@ -189,7 +189,8 @@
     },
     "register": {
       "label": "Register",
-      "info": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and unless directed otherwise send an email with your chosen username and information about your institution to {0}. We will contact you as soon as possible!"
+      "info": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and we will contact you after a review. If your institution is not yet registered as a curator, please contact us at {0} and tell us about it.",
+      "nomail": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and we will contact you after a review. If your institution is not yet registered as a curator, please contact us and tell us about it."
     },
     "activateUser": {
       "label": "Activate User",
