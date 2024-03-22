@@ -880,7 +880,11 @@
         "issue": "Issue"
       },
       "embargo": {
-        "type": "Type",
+        "type": {
+          "label": "Type",
+          "rolling": "Rolling",
+          "period": "Period"
+        },
         "duration": "Duration",
         "unit": {
           "label": "Unit",

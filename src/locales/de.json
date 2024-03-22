@@ -880,7 +880,11 @@
         "issue": "Heft"
       },
       "embargo": {
-        "type": "Typ",
+        "type": {
+          "label": "Typ",
+          "rolling": "Rolling",
+          "period": "Period"
+        },
         "duration": "Dauer",
         "unit": {
           "label": "Einheit",
