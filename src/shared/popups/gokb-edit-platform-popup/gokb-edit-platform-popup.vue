@@ -2,6 +2,7 @@
   <gokb-dialog
     v-model="localValue"
     :title="localTitle"
+    :is-valid="isValid"
     @submit="save"
   >
     <gokb-error-component :value="error" />
@@ -67,9 +68,12 @@
         <v-row>
           <v-col>
             <gokb-url-field
+              ref="urlinput"
               v-if="!!platformUrl"
               v-model="platformUrl"
+              :api-errors="errors.primaryUrl"
               readonly
+              @valid="updateUrlValidationState"
             />
           </v-col>
         </v-row>
@@ -117,9 +121,12 @@
         <v-row>
           <v-col>
             <gokb-url-field
+              ref="urlinput"
               v-model="platform.primaryUrl"
+              :api-errors="errors.primaryUrl"
               :readonly="isReadonly"
               :required="!isReadonly"
+              @valid="updateUrlValidationState"
             />
           </v-col>
         </v-row>
@@ -161,9 +168,12 @@
       <v-row>
         <v-col>
           <gokb-url-field
+            ref="urlinput"
             v-model="platformUrl"
             :readonly="isReadonly"
+            :api-errors="errors.primaryUrl"
             required
+            @valid="updateUrlValidationState"
           />
         </v-col>
       </v-row>
@@ -228,14 +238,13 @@
         platformUrl: undefined,
         platformName: undefined,
         items: [],
+        validUrl: false,
         updateUrl: undefined,
         platform: {
           id: undefined,
           name: undefined,
           primaryUrl: undefined
         },
-        urlRules:
-          [v => (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || this.$i18n.t('component.tipp.url.error')],
         queryFields: ['primaryUrl'],
         disableIfLinked: true,
         searched: false
@@ -257,7 +266,7 @@
         return !!this.selected
       },
       isValid () {
-        return !!this.platform?.name && !!this.platform?.primaryUrl
+        return !!this.platform?.name && !!this.platform?.primaryUrl && this.validUrl
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.platform.label')]) : undefined
@@ -426,6 +435,9 @@
       },
       hasSearched () {
         this.searched = true
+      },
+      updateUrlValidationState (valid) {
+        this.validUrl = valid
       },
       resetFields () {
         if (this.searched) {

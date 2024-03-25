@@ -137,7 +137,7 @@
           .map(item => ({
             ...item,
             schemeName: item.scheme.name,
-            label: this.knownSchemes[item.scheme.name] ? this.$options.ddcList.find(cls => (cls.notation === item.heading)).label[this.$i18n.locale] : item.heading,
+            label: this.knownSchemes[item.scheme.name] ? (this.$options.ddcList.find(cls => (cls.notation === item.heading))?.label[this.$i18n.locale] || item.heading) : item.heading,
             markError: this.apiErrors?.find(e => (e.baddata.scheme === item.scheme && e.baddata.heading === item.heading))
               ? this.$i18n.t('component.subject.error.' + this.apiErrors.find(e => (e.baddata.scheme === item.scheme && e.baddata.heading === item.heading)))
               : null
@@ -147,6 +147,20 @@
       },
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
+      },
+      formatNotation(scheme, notation) {
+        var final_val
+
+        if (scheme === 'DDC') {
+          if (notation.length === 1) {
+            final_val = "00" + notation
+          }
+          else if (notation.length === 2) {
+            final_val = "0" + notation
+          }
+        }
+
+        return final_val || notation
       },
       totalNumberOfItems () {
         return this.localValue.length

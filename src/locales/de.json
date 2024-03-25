@@ -369,7 +369,8 @@
         "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
         "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
         "notFound": "Unter der angegebenen URL wurde keine KBART-Datei gefunden!",
-        "protocol": "Das Protokoll der KBART-URL wird nicht unterstützt!"
+        "protocol": "Das Protokoll der KBART-URL wird nicht unterstützt!",
+        "fileSize": "Die zurückgelieferte Datei ist zu groß. Der automatisierte Import von Dateien größer als 20 MB muss von einem Administrator autorisiert werden."
       },
       "reason": {
         "label": "Ursache | Ursachen"
