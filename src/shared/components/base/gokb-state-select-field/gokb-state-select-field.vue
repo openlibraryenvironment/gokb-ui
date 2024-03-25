@@ -12,47 +12,38 @@
       row
     >
       <v-radio
-        v-if="editable || localValue == 'Current'"
         value="Current"
-        :class="[(!editable ? 'status-icon-current' : '')]"
         on-icon="mdi-check-circle"
-        :color="current"
+        color="success"
         :label="$t('component.general.status.Current.label')"
         off-icon="mdi-check-circle-outline"
-        :disabled="!editable"
+        :readonly="!editable"
       />
       <v-radio
-        v-if="editable || localValue == 'Retired'"
         value="Retired"
-        :class="[(!editable ? 'status-icon-retired' : '')]"
         on-icon="mdi-close-circle"
-        :color="retired"
+        color="amber"
         :label="$t('component.general.status.Retired.label')"
-        :disabled="!editable"
+        :readonly="!editable"
         off-icon="mdi-close"
       />
       <v-radio
-        v-if="editable || localValue == 'Expected'"
         value="Expected"
-        :class="[(!editable ? 'status-icon-expected' : '')]"
         on-icon="mdi-clock"
-        :color="expected"
+        color="info"
         :label="$t('component.general.status.Expected.label')"
-        :disabled="!editable"
+        :readonly="!editable"
         off-icon="mdi-clock-outline"
       />
       <v-radio
-        v-if="editable || localValue == 'Deleted'"
         ref="del"
         value="Deleted"
-        :class="[(!editable ? 'status-icon-deleted' : '')]"
         on-icon="mdi-delete"
-        :color="deleted"
+        color="red"
         :label="activeDeletedLabel"
         readonly
-        :disabled="!editable"
         off-icon="mdi-delete-outline"
-        :style="{'paddingRight': '4px', 'border': ((editable || localValue === 'Deleted') ? '1px solid red' : 'none'), 'borderRadius':'2px'}"
+        :style="{'paddingRight': '4px', 'border': ((editable || value === 'Deleted') ? '1px solid red' : 'none'), 'borderRadius':'2px'}"
         @click="showConfirm(localValue)"
       />
     </v-radio-group>
@@ -95,11 +86,7 @@
         submitConfirmationMessage: {
           text: 'component.general.status.edit.delete.confirm',
           vars: []
-        },
-        current: '#4CAF50',
-        retired: '#FFC107',
-        expected: '#2196F3',
-        deleted: '#FF5252'
+        }
       }
     },
     computed: {
@@ -128,17 +115,3 @@
     }
   }
 </script>
-<style>
-  .status-icon-current > div > i {
-    color: v-bind(current) !important;
-  }
-  .status-icon-retired > div > i {
-    color: v-bind(retired) !important;
-  }
-  .status-icon-expected > div > i {
-    color: v-bind(expected) !important;
-  }
-  .status-icon-deleted > div > i {
-    color: v-bind(deleted) !important;
-  }
-</style>
