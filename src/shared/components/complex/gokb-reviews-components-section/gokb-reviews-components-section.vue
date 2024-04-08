@@ -2,6 +2,7 @@
   <gokb-section
     v-model="innerExpanded"
     :sub-title="workflowTitle"
+    :no-tool-bar="noToolBar"
     expandable
   >
     <gokb-confirmation-popup
@@ -212,6 +213,11 @@
         type: Boolean,
         required: false,
         default: true,
+      },
+      noToolBar: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

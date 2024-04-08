@@ -683,11 +683,18 @@
             "noDate": "Das hinzugefügte Ereignis hat kein Datum!"
           },
           "changedTo": {
-            "label": "wurde zu"
+            "label": "wurde zu",
+            "on": "am"
           }
         },
-        "from": "von",
-        "to": "nach"
+        "from": {
+          "label": "Titel Vorher",
+          "inline": "von"
+        },
+        "to": {
+          "label": "Titel Nachher",
+          "inline": "nach"
+        }
       }
     },
     "journal": {
@@ -892,7 +899,11 @@
         "issue": "Heft"
       },
       "embargo": {
-        "type": "Typ",
+        "type": {
+          "label": "Typ",
+          "rolling": "Rolling",
+          "period": "Period"
+        },
         "duration": "Dauer",
         "unit": {
           "label": "Einheit",

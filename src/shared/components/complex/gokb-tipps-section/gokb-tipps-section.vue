@@ -526,18 +526,18 @@
       },
       resultPaginate (options) {
         this.successMessage = false
-        if (options.sortBy) {
+        if (!!options.sortBy) {
           this.searchOptions.sortBy = [options.sortBy]
         }
         if (typeof options.desc === 'boolean') {
           this.searchOptions.desc = options.desc
         }
 
-        if (options.itemsPerPage) {
+        if (!!options.itemsPerPage) {
           this.searchOptions.itemsPerPage = options.itemsPerPage
         }
 
-        if (this.ttl || this.pkg) {
+        if (!!this.ttl || !!this.pkg) {
           this.fetchTipps(options)
         }
       },

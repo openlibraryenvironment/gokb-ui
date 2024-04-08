@@ -683,11 +683,18 @@
             "noDate": "The added event has no date!"
           },
           "changedTo": {
-            "label": "changed to"
+            "label": "changed to",
+            "on": "on"
           }
         },
-        "from": "from",
-        "to": "to"
+        "from": {
+          "label": "Title before",
+          "inline": "from"
+        },
+        "to": {
+          "label": "Title after",
+          "inline": "to"
+        }
       }
     },
     "journal": {
@@ -892,7 +899,11 @@
         "issue": "Issue"
       },
       "embargo": {
-        "type": "Type",
+        "type": {
+          "label": "Type",
+          "rolling": "Rolling",
+          "period": "Period"
+        },
         "duration": "Duration",
         "unit": {
           "label": "Unit",
