@@ -88,7 +88,7 @@
             class="mx-4"
           >
             <v-tab
-              key="variants"
+              value="variants"
               :active-class="tabClass"
             >
               {{ $tc('component.variantName.label', 2) }}
@@ -104,7 +104,7 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="identifiers"
+              value="identifiers"
               :active-class="tabClass"
             >
               {{ $tc('component.identifier.label', 2) }}
@@ -120,7 +120,7 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="platforms"
+              value="platforms"
               :active-class="tabClass"
             >
               {{ $tc('component.platform.label', 2) }}
@@ -137,7 +137,7 @@
             </v-tab>
             <v-tab
               v-if="!!id"
-              key="packages"
+              value="packages"
               :active-class="tabClass"
             >
               {{ $tc('component.package.label', 2) }}
@@ -146,7 +146,7 @@
               </v-chip>
             </v-tab>
             <v-tab
-              key="curators"
+              value="curators"
               :active-class="tabClass"
             >
               {{ $tc('component.curatoryGroup.label', 2) }}
@@ -162,7 +162,7 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="offices"
+              value="offices"
               :active-class="tabClass"
             >
               {{ $tc('component.office.label', 2) }}
@@ -180,7 +180,7 @@
           </v-tabs>
           <v-window v-model="tab">
             <v-window-item
-              key="variants"
+              value="variants"
               class="mt-4"
             >
               <gokb-alternate-names-section
@@ -192,7 +192,7 @@
               />
             </v-window-item>
             <v-window-item
-              key="identifiers"
+              value="identifiers"
               class="mt-4"
             >
               <gokb-identifier-section
@@ -204,7 +204,7 @@
               />
             </v-window-item>
             <v-window-item
-              key="platforms"
+              value="platforms"
               class="mt-4"
             >
               <gokb-platform-section
@@ -218,7 +218,7 @@
             </v-window-item>
             <v-window-item
               v-if="!!id"
-              key="packages"
+              value="packages"
               class="mt-4"
             >
               <gokb-packages-section
@@ -230,7 +230,7 @@
               />
             </v-window-item>
             <v-window-item
-              key="curators"
+              value="curators"
               class="mt-4"
             >
               <gokb-curatory-group-section
@@ -242,7 +242,7 @@
               />
             </v-window-item>
             <v-window-item
-              key="offices"
+              value="offices"
               class="mt-4"
             >
               <gokb-offices-section

@@ -7,7 +7,7 @@ import {
 
 const api = (log, errorModel, accountModel, createRouter, HomeView, loading, createWebHistory) => {
   const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
       {
         path: HOME_ROUTE,
