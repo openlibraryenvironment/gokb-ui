@@ -120,7 +120,7 @@
         </v-row>
         <v-row
           v-if="!!privacyLink"
-          class="text-caption pl-6 pb-6"
+          class="text-caption pl-6"
           dense
         >
           <v-col>
