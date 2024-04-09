@@ -57,7 +57,7 @@ const api = (http, log, tokenModel, accountModel) => ({
       }
 
       response = await http.request(parameters).catch(e => {
-        log.debug(e.response)
+        return e.response
       })
     }
     else {

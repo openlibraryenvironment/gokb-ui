@@ -482,13 +482,24 @@
                 </v-col>
               </v-row>
               <v-row v-if="!!id">
-                <v-col cols="3">
+                <v-col cols="2">
                   <gokb-state-field
                     v-model="overviewStates.contentType"
                     :init-item="overviewStates.contentType"
                     message-path="component.package.contentType"
                     url="refdata/categories/Package.ContentType"
                     :label="$t('component.package.contentType.label')"
+                    dense
+                    readonly
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <gokb-state-field
+                    v-model="overviewStates.global"
+                    :init-item="overviewStates.global"
+                    message-path="component.package.global"
+                    url="refdata/categories/Package.Global"
+                    :label="$t('component.package.global.label')"
                     dense
                     readonly
                   />
@@ -501,7 +512,7 @@
                     disabled
                   />
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="2">
                   <gokb-state-field
                     v-model="overviewStates.listStatus"
                     :init-item="overviewStates.listStatus"
@@ -786,7 +797,8 @@
         },
         overviewStates: {
           contentType: undefined,
-          listStatus: undefined
+          listStatus: undefined,
+          global: undefined
         },
         allCuratoryGroups: [],
         sourceItem: undefined,
@@ -1595,6 +1607,7 @@
 
         this.overviewStates.listStatus = data.listStatus
         this.overviewStates.contentType = data.contentType
+        this.overviewStates.global = data.global
 
         document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
       },

@@ -201,7 +201,10 @@
         messageToConfirm: undefined,
         reviewsOptions: {
           page: 1,
-          itemsPerPage: ROWS_PER_PAGE
+          itemsPerPage: ROWS_PER_PAGE,
+          mustSort: true,
+          sortBy: ['dateCreated'],
+          desc: false
         },
         reviewsRaisedBy: undefined,
         searchFilters: {
@@ -288,7 +291,7 @@
           {
             title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
-            sortable: false,
+            sortable: true,
             width: '20%',
             key: 'dateCreated'
           }
@@ -317,7 +320,7 @@
           {
             title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
-            sortable: false,
+            sortable: true,
             width: '15%',
             key: 'dateCreated'
           }
@@ -353,9 +356,9 @@
           {
             title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
-            sortable: false,
-            width: '180px',
-            key: 'dateCreated'
+            sortable: true,
+            width: '15%',
+            value: 'dateCreated'
           }
         ]
 
@@ -401,14 +404,14 @@
       },
       resultPaginate (options) {
         this.successMessage = false
-        if (options.sortBy) {
+        if (!!options.sortBy) {
           this.reviewsOptions.sortBy = [options.sortBy]
         }
         if (typeof options.desc === 'boolean') {
           this.reviewsOptions.desc = options.desc
         }
 
-        if (options.itemsPerPage) {
+        if (!!options.itemsPerPage) {
           this.reviewsOptions.itemsPerPage = options.itemsPerPage
         }
 
@@ -448,6 +451,8 @@
 
         const parameters = {
           ...(searchParams || {}),
+          _sort: this.reviewsOptions.sortBy[0],
+          _order: (this.reviewsOptions.desc ? 'desc' : 'asc'),
           offset: this.reviewsOptions.page ? (this.reviewsOptions.page - 1) * this.reviewsOptions.itemsPerPage : 0,
           limit: this.reviewsOptions.itemsPerPage
         }

@@ -12,35 +12,39 @@
       inline
     >
       <v-radio
+        v-if="editable || localValue == 'Current'"
         value="Current"
         true-icon="mdi-check-circle"
         false-icon="mdi-check-circle-outline"
-        color="success"
+        :color="current"
         :label="$t('component.general.status.Current.label')"
         :readonly="!editable"
       />
       <v-radio
+        v-if="editable || localValue == 'Retired'"
         value="Retired"
         true-icon="mdi-close-circle"
         false-icon="mdi-close"
-        color="amber"
+        :color="retired"
         :label="$t('component.general.status.Retired.label')"
         :readonly="!editable"
       />
       <v-radio
+        v-if="editable || localValue == 'Expected'"
         value="Expected"
         true-icon="mdi-clock"
         false-icon="mdi-clock-outline"
-        color="info"
+        :color="expected"
         :label="$t('component.general.status.Expected.label')"
         :readonly="!editable"
       />
       <v-radio
+        v-if="editable || localValue == 'Deleted'"
         ref="del"
         value="Deleted"
         true-icon="mdi-delete"
         false-icon="mdi-delete-outline"
-        color="red"
+        :color="deleted"
         :label="activeDeletedLabel"
         readonly
         :style="{'paddingRight': '4px', 'border': ((editable || modelValue === 'Deleted') ? '1px solid red' : 'none'), 'borderRadius':'2px'}"
@@ -86,7 +90,11 @@
         submitConfirmationMessage: {
           text: 'component.general.status.edit.delete.confirm',
           vars: []
-        }
+        },
+        current: '#4CAF50',
+        retired: '#FFC107',
+        expected: '#2196F3',
+        deleted: '#FF5252'
       }
     },
     computed: {
@@ -115,3 +123,17 @@
     }
   }
 </script>
+<style>
+  .status-icon-current > div > i {
+    color: v-bind(current) !important;
+  }
+  .status-icon-retired > div > i {
+    color: v-bind(retired) !important;
+  }
+  .status-icon-expected > div > i {
+    color: v-bind(expected) !important;
+  }
+  .status-icon-deleted > div > i {
+    color: v-bind(deleted) !important;
+  }
+</style>
