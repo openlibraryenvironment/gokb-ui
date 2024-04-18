@@ -125,7 +125,7 @@
       {{ $t('btn.cancel') }}
     </gokb-button>
     <gokb-button
-      default
+      is-submit
       :disabled="!options.selectedFile || importRunning"
     >
       {{ completion === 100 ? $t('btn.confirm') : $t('btn.validate') }}

@@ -4,7 +4,7 @@
       v-if="readonly"
       v-model="localName"
       :label="label"
-      :dense="dense"
+      :density="dense ? 'compact' : 'default'"
       disabled
     />
     <div style="color:red;" v-if="localErrorMessage.length > 0"> {{ localErrorMessage }} </div>
@@ -26,7 +26,7 @@
     :return-object="returnObject"
     :persistent-placeholder="!!placeholder"
     variant="underlined"
-    :dense="dense"
+    :density="dense ? 'compact' : 'default'"
   >
     <template #label>
       {{ label }}

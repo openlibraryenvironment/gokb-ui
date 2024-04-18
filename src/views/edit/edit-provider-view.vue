@@ -271,12 +271,14 @@
           v-model="allPlatforms"
           :expanded="allPlatforms.length > 0"
           :sub-title="$tc('component.platform.label', 2)"
+          :provider-id="providerObject.id"
           :disabled="isReadonly"
         />
         <gokb-packages-section
           v-if="!!id"
           :sub-title="$tc('component.package.label', 2)"
           :expanded="packageCount > 0"
+          :provider-id="providerObject.id"
           disabled
         />
         <gokb-curatory-group-section

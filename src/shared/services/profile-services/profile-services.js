@@ -1,40 +1,66 @@
 const PROFILE_URL = '/rest/profile'
 
-const api = (baseServices) => ({
+const api = (http, utils, tokenModel) => ({
   get (cancelToken) {
-    return baseServices.request({
-      method: 'GET',
-      url: import.meta.env.VITE_API_BASE_URL + PROFILE_URL,
-    }, cancelToken)
+    const token = tokenModel.getToken()
+
+    if (!!token) {
+      return http.request({
+        method: 'GET',
+        headers: { Authorization:  `Bearer ${token}`},
+        url: import.meta.env.VITE_API_BASE_URL + PROFILE_URL,
+        cancelToken
+      })
+    } else {
+      log.debug("No Token")
+    }
   },
-  getJobs (parameter, cancelToken) {
-    const urlParameter = baseServices.createQueryParameters(parameter)
+  getJobs (parameters, cancelToken) {
+    const urlParameter = utils.createQueryParameters(parameters)
     const url = import.meta.env.VITE_API_BASE_URL + PROFILE_URL + `/jobs?${urlParameter}`
 
-    return baseServices.request({
+    const token = tokenModel.getToken()
+
+    return http.request({
       method: 'GET',
+      headers: { Authorization:  `Bearer ${token}`},
       url: url,
-    }, cancelToken)
+      cancelToken
+    })
   },
   update (url, data, cancelToken) {
-    return baseServices.request({
+
+    const token = tokenModel.getToken()
+
+    return http.request({
       method: 'PUT',
+      headers: { Authorization:  `Bearer ${token}`},
       url,
       data,
-    }, cancelToken)
+      cancelToken
+    })
   },
   delete (url, cancelToken) {
-    return baseServices.request({
+
+    const token = tokenModel.getToken()
+
+    return http.request({
       method: 'DELETE',
+      headers: { Authorization:  `Bearer ${token}`},
       url,
-    }, cancelToken)
+      cancelToken
+    })
   },
   cancelJob (id, cancelToken) {
+    const token = tokenModel.getToken()
     const url = import.meta.env.VITE_API_BASE_URL + `/rest/jobs/${id}/cancel`
-    return baseServices.request({
+
+    return http.request({
       method: 'PATCH',
+      headers: { Authorization:  `Bearer ${token}`},
       url,
-    }, cancelToken)
+      cancelToken
+    })
   }
 })
 

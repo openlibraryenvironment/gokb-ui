@@ -21,7 +21,7 @@
     </gokb-button>
     <gokb-button
       :disabled="!isValid"
-      default
+      is-submit
     >
       {{ $t('btn.add') }}
     </gokb-button>

@@ -7,19 +7,19 @@
     :disabled="isDeleted"
     outlined
   >
-    <gokb-confirmation-popup
-      v-model="showSubmitConfirm"
-      :message="submitConfirmationMessage"
-      @confirmed="triggerConfirmedAction"
-    />
     <v-card-subtitle
-      class="text--h4"
+      class="text--h4 mt-4"
     >
+      <gokb-confirmation-popup
+        v-model="showSubmitConfirm"
+        :message="submitConfirmationMessage"
+        @confirmed="triggerConfirmedAction"
+      />
       <v-row dense>
         <v-col>
           <router-link
             v-if="!nameEditActive"
-            :style="{ color: 'primary' }"
+            class="text-anchor"
             :to="{ name: route, params: { 'id': originalRecord.id } }"
             target="_blank"
           >
@@ -50,7 +50,7 @@
         <v-col>
           <span> {{ $tc('component.package.label') }}: </span>
           <router-link
-            :style="{ color: 'primary' }"
+            class="text-anchor"
             :to="{ name: '/package', params: { 'id': linkedPackage.id } }"
             target="_blank"
           >
@@ -63,7 +63,7 @@
           <span> {{ $tc('component.title.label') }}: </span>
           <router-link
             v-if="!!linkedTitle"
-            :style="{ color: 'primary' }"
+            class="text-anchor"
             :to="{ name: '/title', params: { 'id': linkedTitle.id } }"
             target="_blank"
           >
@@ -88,7 +88,7 @@
             </v-icon>
           </span>
         </v-col>
-        <v-col cols="1">
+        <v-col cols="auto">
           <v-btn
             icon
             :title="$t('btn.refresh')"
@@ -412,8 +412,8 @@
     computed: {
       idHeaders () {
         return [
-          { text: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'namespace', sortable: false },
-          { text: this.$i18n.tc('component.identifier.label', 1), align: 'start', value: 'value', sortable: false }
+          { title: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'namespace', sortable: false },
+          { title: this.$i18n.tc('component.identifier.label', 1), align: 'start', value: 'value', sortable: false }
         ]
       },
       isEditable () {
@@ -446,9 +446,9 @@
       },
       historyHeaders () {
         return [
-          { text: this.$i18n.tc('component.title.history.date.label'), align: 'start', value: 'date', sortable: false },
-          { text: this.$i18n.tc('component.title.history.from', 1), align: 'start', value: 'from', sortable: false },
-          { text: this.$i18n.tc('component.title.history.to', 1), align: 'start', value: 'to', sortable: false }
+          { title: this.$i18n.tc('component.title.history.date.label'), align: 'start', value: 'date', sortable: false },
+          { title: this.$i18n.tc('component.title.history.from.label', 1), align: 'start', value: 'from', sortable: false },
+          { title: this.$i18n.tc('component.title.history.to.label', 1), align: 'start', value: 'to', sortable: false }
         ]
       },
       elevationClass () {
@@ -695,7 +695,7 @@
         return 'unselected'
       },
       updateVisibleIdentifiers () {
-        this.ids = this.originalRecord._embedded.ids
+        this.ids = this.originalRecord?._embedded?.ids || []
 
         if (this.isOtherCardSelected) {
           for (const id of this.ids) {
@@ -724,7 +724,7 @@
           })
         }
 
-        return val.sort(({ namespace: first }, { namespace: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+        return val?.length > 0 ? val.sort(({ namespace: first }, { namespace: second }) => (first > second) ? 1 : (second > first) ? -1 : 0) : []
       },
       fetchReviewMismatchIds () {
         for (const [count, idItem] of this.additionalVars[1].entries()) {
@@ -754,3 +754,11 @@
     }
   }
 </script>
+<style>
+  @use '@/styles/settings';
+
+.router-anchor-active {
+  opacity: 1;
+  color: rgb(var(--v-theme-anchor-darken-1));
+}
+</style>

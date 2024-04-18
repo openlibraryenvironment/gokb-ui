@@ -186,7 +186,7 @@
     </gokb-button>
     <gokb-button
       v-if="!isReadonly"
-      default
+      is-submit
       :disabled="!isValid"
     >
       {{ submitButtonLabel }}

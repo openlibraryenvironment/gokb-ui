@@ -183,7 +183,7 @@
             <gokb-button
               v-if="!isReadonly && coverageExpanded"
               icon-id="mdi-plus"
-              default
+              is-submit
               @click="addNewCoverage"
             >
               {{ $t('btn.add') }}
@@ -444,31 +444,33 @@
         </gokb-section>
       </v-col>
     </v-row>
-    <v-btn
-      v-if="isEdit"
-      class="ml-6 btn-default"
-      :to="{ name: '/package-title', params: { id: id} }"
-      target="_blank"
-    >
-      {{ $t('component.tipp.toFullView') }}
-    </v-btn>
-    <v-spacer />
-    <v-spacer />
-    <gokb-button
-      class="mr-6"
-      color="secondary"
-      @click="close"
-    >
-      {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
-    </gokb-button>
-    <gokb-button
-      v-if="updateUrl || !id"
-      :disabled="!isValid"
-      class="mr-6"
-      default
-    >
-      {{ selected ? $t('btn.update') : $t('btn.add') }}
-    </gokb-button>
+    <template #buttons>
+      <v-btn
+        v-if="isEdit"
+        class="ml-6 btn-default"
+        :to="{ name: '/package-title', params: { id: id} }"
+        target="_blank"
+      >
+        {{ $t('component.tipp.toFullView') }}
+      </v-btn>
+      <v-spacer />
+      <v-spacer />
+      <gokb-button
+        class="mr-6"
+        color="secondary"
+        @click="close"
+      >
+        {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
+      </gokb-button>
+      <gokb-button
+        v-if="updateUrl || !id"
+        :disabled="!isValid"
+        class="mr-6"
+        is-submit
+      >
+        {{ selected ? $t('btn.update') : $t('btn.add') }}
+      </gokb-button>
+    </template>
   </gokb-dialog>
 </template>
 
@@ -495,8 +497,9 @@
     name: 'GokbAddTitlePopup',
     components: { VSnackbars },
     extends: BaseComponent,
+    emits: ['update:model-value', 'edit', 'add'],
     props: {
-      value: {
+      modelValue: {
         type: [Number, String],
         required: true,
         default: undefined
@@ -636,10 +639,10 @@
       },
       localValue: {
         get () {
-          return !!this.value
+          return !!this.modelValue
         },
         set () {
-          this.$emit('input', null)
+          this.$emit('update:model-value', false)
         }
       },
       accessInterval: {

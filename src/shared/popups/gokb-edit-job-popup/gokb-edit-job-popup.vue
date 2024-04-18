@@ -150,9 +150,7 @@
     </v-row>
 
     <v-spacer />
-    <gokb-button
-      default
-    >
+    <gokb-button>
       {{ $t('btn.close') }}
     </gokb-button>
   </gokb-dialog>

@@ -120,7 +120,8 @@
     "profile": "Profile",
     "register": "Registration",
     "noaccess": "No Access",
-    "kbartValidator": "KBART Validator"
+    "kbartValidator": "KBART Validator",
+    "error": "Error"
   },
   "pending": {
     "lists": {

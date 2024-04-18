@@ -54,44 +54,47 @@
       >
         {{ $t('component.tipp.toFullView') }}
     </v-btn>
-    <gokb-button
-      v-if="escalatable"
-      @click="escalate"
-    >
-      {{ $t('btn.escalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
-    </gokb-button>
-    <gokb-button
-      v-if="deescalatable"
-      @click="deescalate"
-    >
-      {{ $t('btn.deescalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
-    </gokb-button>
-    <v-spacer />
-    <gokb-button
-      @click="closePopup"
-    >
-      {{ (isReadonly || reviewItem.isClosed) ? $t('btn.close') : $t('component.review.edit.cancel.label') }}
-    </gokb-button>
-    <gokb-button
-      v-if="!isReadonly && !reviewItem.isClosed && showComponentCards && activeStep != workflow.length-1"
-      @click="activeStep++"
-    >
-      {{ $t('component.review.edit.next.label') }}
-    </gokb-button>
-    <gokb-button
-      v-else-if="!isReadonly && !reviewItem.isClosed"
-      class="ml-2"
-      color="primary"
-      @click="showConfirmCloseReview"
-    >
-      {{ $t('component.review.edit.close.label')}}
-    </gokb-button>
-    <gokb-button
-      v-else-if="!isReadonly && reviewItem.isClosed"
-      @click="showConfirmReopenReview"
-    >
-      {{ $t('component.review.edit.open.label')}}
-    </gokb-button>
+
+    <template #buttons>
+      <gokb-button
+        v-if="escalatable"
+        @click="escalate"
+      >
+        {{ $t('btn.escalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
+      </gokb-button>
+      <gokb-button
+        v-if="deescalatable"
+        @click="deescalate"
+      >
+        {{ $t('btn.deescalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
+      </gokb-button>
+      <v-spacer />
+      <gokb-button
+        @click="closePopup"
+      >
+        {{ (isReadonly || reviewItem.isClosed) ? $t('btn.close') : $t('component.review.edit.cancel.label') }}
+      </gokb-button>
+      <gokb-button
+        v-if="!isReadonly && !reviewItem.isClosed && showComponentCards && activeStep != workflow.length-1"
+        @click="activeStep++"
+      >
+        {{ $t('component.review.edit.next.label') }}
+      </gokb-button>
+      <gokb-button
+        v-else-if="!isReadonly && !reviewItem.isClosed"
+        class="ml-2"
+        color="primary"
+        @click="showConfirmCloseReview"
+      >
+        {{ $t('component.review.edit.close.label')}}
+      </gokb-button>
+      <gokb-button
+        v-else-if="!isReadonly && reviewItem.isClosed"
+        @click="showConfirmReopenReview"
+      >
+        {{ $t('component.review.edit.open.label')}}
+      </gokb-button>
+    </template>
   </gokb-dialog>
 </template>
 
@@ -110,7 +113,13 @@
       GokbConfirmationPopup
     },
     extends: BaseComponent,
+    emits: ['update:model-value', 'edit'],
     props: {
+      modelValue: {
+        type: [Boolean, Number],
+        required: false,
+        default: false
+      },
       selected: {
         type: Object,
         required: false,
@@ -177,10 +186,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       cmpType () {
@@ -464,6 +473,38 @@
             this.deescalatable = response.data.isDeescalatable
             this.escalationTarget = response.data.escalationTargetGroup
           })
+      },
+      async escalate () {
+        const response = await this.catchError({
+          promise: reviewServices.escalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.successMsg = this.$i18n.t('component.review.edit.success.escalated')
+          this.showSuccessMsg = true
+
+          this.fetchReview (this.id)
+        }
+        else {
+          this.errorMsg = this.$i18n.t('error.general.500')
+          this.showErrorMsg = true
+        }
+      },
+      async deescalate () {
+        const response = await this.catchError({
+          promise: reviewServices.deescalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.successMsg = this.$i18n.t('component.review.edit.success.deescalated')
+          this.showSuccessMsg = true
+        }
+        else {
+          this.errorMsg = this.$i18n.t('error.general.500')
+          this.showErrorMsg = true
+        }
       },
       save () {
         this.$emit('edit', 'edited')

@@ -36,7 +36,7 @@
       >
         {{ $t('btn.cancel') }}
       </gokb-button>
-      <gokb-button default>
+      <gokb-button is-submit>
         {{ $t('btn.submit') }}
       </gokb-button>
     </template>
@@ -51,6 +51,7 @@
   export default {
     name: 'GokbLoginPopup',
     extends: BaseComponent,
+    emits: ["update:model-value"],
     props: {
       modelValue: {
         type: Boolean,
@@ -80,7 +81,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       rules () {
@@ -90,7 +91,8 @@
       },
     },
     methods: {
-      async login (form) {
+      async login () {
+        console.log("Triggered login ..")
         const username = this.username
         const password = this.password
         const save = this.save

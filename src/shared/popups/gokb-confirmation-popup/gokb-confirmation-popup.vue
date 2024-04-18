@@ -26,9 +26,7 @@
     >
       {{ $t('btn.cancel') }}
     </gokb-button>
-    <gokb-button
-      default
-    >
+    <gokb-button is-submit>
       {{ $t('btn.confirm') }}
     </gokb-button>
   </gokb-dialog>

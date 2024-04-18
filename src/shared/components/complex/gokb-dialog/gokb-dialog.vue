@@ -46,9 +46,10 @@
 <script>
   export default {
     name: 'GokbDialog',
+    emits: ['update:model-value', 'submit'],
     props: {
       modelValue: {
-        type: Boolean,
+        type: [Boolean, Number],
         required: true,
         default: false
       },
@@ -85,10 +86,10 @@
     computed: {
       localValue: {
         get () {
-          return this.modelValue
+          return !!this.modelValue || false
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       }
     },
@@ -107,7 +108,7 @@
     },
     methods: {
       doSubmit () {
-        if (this.$refs.form.validate()) {
+        if (this.$refs?.form?.validate()) {
           this.$emit('submit', this.$refs.form)
         }
       },

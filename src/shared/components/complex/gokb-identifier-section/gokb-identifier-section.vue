@@ -143,8 +143,8 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'nslabel', sortable: false, width: '15%' },
-          { text: this.$i18n.t('component.identifier.value'), align: 'start', value: 'value', sortable: false, width: '100%' },
+          { title: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'nslabel', sortable: false, width: '15%' },
+          { title: this.$i18n.t('component.identifier.value'), align: 'start', value: 'value', sortable: false, width: '100%' },
         ]
       },
       title () {

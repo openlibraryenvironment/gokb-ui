@@ -55,7 +55,7 @@
       <template #item.popup="{ item }">
         <a
           :href="$route.query.page"
-          :style="{ color: 'primary', textDecoration: 'underline' }"
+          :style="{ color: 'primary', textDecoration: 'underline', cursor: 'pointer' }"
           @click="editItemPopupVisible = item.id"
         >
           {{ item.popup.value }}

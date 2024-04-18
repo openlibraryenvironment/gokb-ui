@@ -124,11 +124,7 @@
         class="pt-1 pl-4"
         flat
       >
-        <v-toolbar-items
-          class="pa-2"
-        >
-          <slot name="filters" />
-        </v-toolbar-items>
+        <slot name="filters" />
       </v-toolbar>
       <v-card-text v-show="localValue">
         <div

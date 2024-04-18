@@ -3,7 +3,7 @@ const REFRESH_URL = '/oauth/access_token'
 
 const headers = {}
 
-const api = (http, log, tokenModel, accountModel) => ({
+const api = (http, log, utils, tokenModel, accountModel) => ({
 
   deleteAuthorization () {
     log.debug("Deleting header config ..")
@@ -21,19 +21,11 @@ const api = (http, log, tokenModel, accountModel) => ({
   },
 
   async request ({ method, url, data }, cancelToken) {
-    let parameters = {
-      method,
-      url,
-      headers,
-      data,
-      cancelToken
-    }
-
     let response
 
     if (!!tokenModel.getToken()) {
       if (!headers[HEADER_AUTHORIZATION_KEY]) {
-        log.error("Token exists but no header is defined!")
+        log.debug("Token exists but no header is defined!")
         this.setAuthorization('Bearer', tokenModel.getToken())
       }
 
@@ -56,7 +48,7 @@ const api = (http, log, tokenModel, accountModel) => ({
         await this.refreshAuth()
       }
 
-      response = await http.request(parameters).catch(e => {
+      response = await http.request({ method, url, headers, data, cancelToken }).catch(e => {
         return e.response
       })
     }
@@ -66,7 +58,7 @@ const api = (http, log, tokenModel, accountModel) => ({
         accountModel.default.logout()
       }
 
-      response = http.request(parameters)
+      response = http.request({ method, url, headers, data, cancelToken })
     }
 
     return response
@@ -106,24 +98,7 @@ const api = (http, log, tokenModel, accountModel) => ({
   },
 
   createQueryParameters (parameters) {
-    const pars = []
-
-    Object.entries(parameters)
-      .forEach(([name, value]) => {
-        if (Array.isArray(value)) {
-          value.forEach(val =>
-            pars.push(`${name}=${typeof val === 'string' ? encodeURIComponent(val.trim()) : val}`)
-          )
-        } else if (value !== undefined && value !== null) {
-          if (typeof value === 'object') {
-            pars.push(`${name}=${value.id || value.name }`)
-          } else {
-            pars.push(`${name}=${typeof value === 'string' ? encodeURIComponent(value.trim()) : value}`)
-          }
-        }
-      })
-
-    return pars.join('&')
+    return utils.createQueryParameters(parameters)
   },
 
   createFormData (parameters) {

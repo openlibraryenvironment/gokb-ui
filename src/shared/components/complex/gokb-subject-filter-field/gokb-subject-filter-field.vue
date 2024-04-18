@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top:-8px">
-    <div style="font-size:13px;margin-bottom:4px" class="text-primary"> {{ $tc('component.subject.label') }} </div>
+    <div style="font-size:13px;margin-bottom:-16px" class="text-primary"> {{ $tc('component.subject.label') }} </div>
     <v-row dense>
       <v-col cols="4">
         <gokb-state-field
@@ -25,7 +25,6 @@
           variant="underlined"
           return-object
           clearable
-          dense
           @click:append="$emit('delete', value)"
         />
         <v-text-field

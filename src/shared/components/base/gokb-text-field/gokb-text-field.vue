@@ -2,8 +2,7 @@
   <v-text-field
     ref="textField"
     v-model="localValue"
-    :disabled="disabled || readonly"
-    :readonly="readonly || disabled"
+    :disabled="!editable"
     :autocomplete="autocomplete"
     :full-width="fw"
     :label="label"
@@ -17,13 +16,12 @@
     :placeholder="placeholder"
     :append-icon="appendIcon"
     :validate-on-blur="validateOnBlur"
-    :clearable="allowClear"
-    :dense="dense"
+    :clearable="allowClear && editable"
+    :density="dense ? 'compact' : 'default'"
     :persistent-placeholder="!!placeholder"
     variant="underlined"
     @click:append="$emit('click:append', $event)"
     @click:prepend="iconAction"
-    :class="[ (disabled ? 'v-input--is-disabled' : '') ]"
   >
     <template #label>
       {{ label }}
@@ -40,6 +38,7 @@
 <script>
   export default {
     name: 'GokbTextField',
+    emits: ['update:modelValue', 'click:append'],
     props: {
       modelValue: {
         required: false,
@@ -156,6 +155,9 @@
       },
       errorMessages () {
         return this.localErrorMessages || this.apiErrorMessages
+      },
+      editable () {
+        return !this.readonly && !this.disabled
       }
     },
     methods: {
@@ -171,5 +173,27 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss">
+  @use '@/styles/settings';
+
+  .v-field--disabled {
+    pointer-events: auto !important;
+    opacity: var(--v-high-emphasis-opacity);
+    border-bottom: none !important;
+  }
+
+  .v-field-label {
+    opacity: var(--v-high-emphasis-opacity);
+    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
+  }
+
+  .v-field__overlay {
+    opacity: var(--v-high-emphasis-opacity);
+    border-bottom: none !important;
+  }
+
+  .v-progress-linear {
+    opacity: var(--v-high-emphasis-opacity);
+    border-bottom: none !important;
+  }
 </style>

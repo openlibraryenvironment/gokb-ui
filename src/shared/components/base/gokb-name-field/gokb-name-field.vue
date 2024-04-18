@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span>
+    <span class="text-caption v-label">
       {{ label }}
       <span
         v-if="!disabled && markRequired"
@@ -39,8 +39,8 @@
           >
             {{ $i18n.t('btn.cancel') }}
           </gokb-button>
-
           <gokb-button
+            class="ml-4"
             :disabled="!editedVal || editedVal === currentName || editedVal === inValidName"
             default
           >
@@ -52,12 +52,13 @@
           :message="messageToConfirm"
           @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
         />
-        <v-btn
+        <gokb-button
           v-if="!disabled"
+          text
           @click="showEditName"
         >
           {{ $i18n.t('header.edit.label', [$i18n.t('component.general.name')]) }}
-        </v-btn>
+        </gokb-button>
       </template>
     </v-banner>
   </div>

@@ -141,7 +141,7 @@
       },
       curatoryGroupsTableHeaders () {
         return [
-          { text: this.$i18n.t('component.general.name'), align: 'start', width: '100%', value: 'popup', sortable: false }
+          { title: this.$i18n.t('component.general.name'), align: 'start', width: '100%', value: 'popup', sortable: false }
         ]
       }
     },

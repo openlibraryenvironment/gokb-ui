@@ -10,7 +10,7 @@
       :message="submitConfirmationMessage"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
-    <v-alert v-if="editable && isStatusOpen" type="info"> {{ workflow.toDo }} </v-alert>
+    <v-alert v-if="editable && isStatusOpen" type="info"> <span class="font-weight-bold">{{ workflow.toDo }}</span> </v-alert>
     <v-container fluid>
       <v-row>
         <v-col

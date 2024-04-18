@@ -26,13 +26,21 @@ const vuetify = createVuetify({
           header: '#fff',
           card: '#f2f2f2',
           primary: '#4f4f4f',
+          'primary-darken-1': '#2b2b2b',
           anchor: '#4f4f4f',
+          'anchor-darken-1': '#2b2b2b',
           secondary: '#a0a0a0',
+          'secondary-darken-1': '#878787',
           invert: '#fdfdfd',
           accent: '#4f4f4f',
+          'accent-darken-1': '#2b2b2b',
           error: '#eb5757',
           // warning: '',
           info: '#2d9cdb',
+        },
+        variables: {
+          'disabled-opacity': 0.87,
+          'medium-opacity': 0.87
         }
       },
       dark: {
@@ -42,14 +50,22 @@ const vuetify = createVuetify({
           header: '#212121',
           card: '#212121',
           primary: '#d9d9d9',
+          'primary-darken-1': '#bdbdbd',
           anchor: '#d9d9d9',
+          'anchor-darken-1': '#cdcdcd',
           secondary: '#5b5b5b',
+          'secondary-darken-1': '#7d7d7d',
           invert: '#020202',
           accent: '#d9d9d9',
+          'accent-darken-1': '#bdbdbd',
           error: '#eb5757',
           // warning: '',
           info: '#2d9cdb',
           // success: ''
+        },
+        variables: {
+          'disabled-opacity': 0.87,
+          'medium-opacity': 0.87
         }
       }
     }

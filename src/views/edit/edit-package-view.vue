@@ -10,7 +10,6 @@
       :key="version"
       :title="title"
       :sub-title="subTitle"
-      @submit="showSubmitPackageConfirm"
     >
       <gokb-error-component :value="error" />
       <span v-if="importJob?.result === 'success'">
@@ -110,10 +109,13 @@
       <v-stepper
         v-model="step"
         alt-labels
+        :non-linear="isEdit"
       >
         <v-stepper-header>
           <v-stepper-item
             :value="1"
+            :editable="isEdit"
+            @selected="setActiveStep(1)"
           >
             {{ isEdit ? $t('component.package.navigation.step4') : $t('component.package.navigation.step1') }}
           </v-stepper-item>
@@ -122,6 +124,8 @@
             :class="{ error: !!step2Error }"
             :error="!!step2Error"
             :value="2"
+            :editable="isEdit"
+            @selected="setActiveStep(2)"
           >
             {{ isEdit ? $t('component.package.navigation.step1') : $t('component.package.navigation.step2') }}
           </v-stepper-item>
@@ -130,12 +134,16 @@
             :class="{ error: !!step3Error }"
             :error="!!step3Error"
             :value="3"
+            :editable="isEdit"
+            @selected="setActiveStep(3)"
           >
             {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
           </v-stepper-item>
           <v-divider />
           <v-stepper-item
             :value="4"
+            :editable="isEdit"
+            @selected="setActiveStep(4)"
           >
             {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
           </v-stepper-item>
@@ -646,7 +654,7 @@
           v-else-if="!isReadonly"
           key="add"
           :disabled="!isValid"
-          default
+          @click="showSubmitPackageConfirm"
         >
           {{ $i18n.t('btn.submit') }}
         </gokb-button>
@@ -964,10 +972,17 @@
     },
     methods: {
       go2NextStep () {
-        this.step < 4 && this.step++
+        if (this.step < 4) {
+          this.step = this.step + 1
+        }
       },
       go2PreviousStep () {
-        this.step > 1 && this.step--
+        if (this.step > 1) {
+          this.step = this.step - 1
+        }
+      },
+      setActiveStep (i) {
+        this.step = i
       },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)

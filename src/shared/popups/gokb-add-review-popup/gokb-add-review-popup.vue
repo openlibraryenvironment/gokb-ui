@@ -144,7 +144,7 @@
     <gokb-button
       v-if="!isReadonly"
       :disabled="!isValid"
-      default
+      is-submit
     >
       {{ $t('btn.create') }}
     </gokb-button>

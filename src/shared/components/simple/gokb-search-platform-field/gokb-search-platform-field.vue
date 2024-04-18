@@ -4,6 +4,7 @@
   export default {
     name: 'GokbSearchPlatformField',
     extends: GokbSearchField,
+    emits: ['update:model-value', 'searched'],
     props: {
       label: {
         type: String,

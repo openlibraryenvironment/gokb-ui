@@ -202,8 +202,7 @@ const api = (log, errorModel, accountModel, createRouter, HomeView, loading, cre
         try {
           await accountModel.initialize()
         } catch (exception) {
-          errorModel.set(exception)
-          next(ERROR_ROUTE)
+          console.log(exception)
         }
       }
     }

@@ -19,12 +19,7 @@
         type: String,
         required: false,
         default: 'component.general.status'
-      },
-      dense: {
-        type: Boolean,
-        required: false,
-        default: false
-      },
+      }
     },
     computed: {
       localName () {

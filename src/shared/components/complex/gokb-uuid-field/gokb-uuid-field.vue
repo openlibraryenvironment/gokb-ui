@@ -1,21 +1,23 @@
 <template>
   <v-text-field
-    :value="modelValue"
+    v-model="localValue"
     :label="label"
-    :messages="messages"
+    :messages="successMessage"
     :dense="dense"
     variant="underlined"
     disabled
-    readonly
+    persistent-placeholder
   >
     <template
-      v-slot:append-outer
+      v-slot:append
       v-if="!!urlBase"
     >
       <v-btn
+        id="exturl"
         :title="$t('component.general.uuid.copy.label')"
-        class="mt-n2"
         icon
+        flat
+        density="compact"
         @click="copyUrl"
       >
         <v-icon>
@@ -29,6 +31,7 @@
 <script>
   export default {
     name: 'GokbUuidField',
+    emits: ['update:modelValue'],
     props: {
       label: {
         type: String,
@@ -56,19 +59,49 @@
       }
     },
     computed: {
-      messages () {
+      successMessage () {
         return this.copied ? [this.$i18n.t('component.general.uuid.copy.success')] : []
       },
       urlBase () {
         return import.meta.env.VITE_BASE_URL
+      },
+      localValue: {
+        get () {
+          return this.modelValue
+        },
+        set (localValue) {
+          this.$emit('update:modelValue', localValue)
+        },
       }
     },
     methods: {
       copyUrl () {
-        const url = import.meta.env.VITE_BASE_URL + this.path + '/' + this.modelValue
+        console.log(this.localValue)
+        const url = import.meta.env.VITE_BASE_URL + this.path + '/' + this.$attrs.value
         navigator.clipboard.writeText(url)
         this.copied = true
       }
     }
   }
 </script>
+
+<style>
+  .v-field--disabled {
+    pointer-events: auto !important;
+    opacity: var(--v-high-emphasis-opacity);
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity)) !important;
+  }
+
+  .v-field-label {
+    opacity: var(--v-high-emphasis-opacity);
+    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
+  }
+
+  .v-field__overlay {
+    opacity: var(--v-high-emphasis-opacity);
+  }
+
+  #exturl {
+    pointer-events: auto !important;
+  }
+</style>

@@ -12,7 +12,8 @@
           :hint="$t('default.ISOdateHint')"
           :rules="combinedRules"
           :required="required"
-          :dense="dense"
+          :density="dense ? 'compact' : 'default'"
+          variant="underlined"
         />
       </v-col>
       <v-col
@@ -24,11 +25,10 @@
           :close-on-content-click="false"
           transition="scale-transition"
         >
-          <template v-slot:activator="{ on }">
+          <template v-slot:activator="{ props }">
             <v-icon
-              v-bind="$props"
               :class="dense ? 'pb-5' : 'pb-1'"
-              v-on="on"
+              v-bind="props"
             >
               mdi-calendar
             </v-icon>
@@ -46,7 +46,8 @@
       v-model="localDate"
       class="gokb-date-field-disabled"
       v-bind="$props"
-      :dense="dense"
+      :density="dense ? 'compact' : 'default'"
+      variant="underlined"
       disabled
     />
   </div>

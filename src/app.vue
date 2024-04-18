@@ -84,7 +84,7 @@
         expand
         nav
       >
-        <template v-for="(item, index) in visibleItems">
+        <div v-for="(item, index) in visibleItems">
           <v-list-item
             v-if="item.text"
             :key="item.text"
@@ -103,7 +103,7 @@
             v-else
             :key="index"
           />
-        </template>
+        </div>
       </v-list>
       <template v-slot:append>
         <v-row v-if="loginExpiredMsg">

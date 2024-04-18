@@ -121,7 +121,8 @@
     "profile": "Profil",
     "register": "Registrierung",
     "noaccess": "Kein Zugang",
-    "kbartValidator": "KBART-Validator"
+    "kbartValidator": "KBART-Validator",
+    "error": "Fehler"
   },
   "pending": {
     "lists": {
@@ -518,7 +519,7 @@
     },
     "welcome": "Willkommen zur Global Open Knowledgebase!",
     "dashboard": "Dashboard",
-    "search": "Suche",
+    "search": "Suchfilter",
     "results": "Ergebnisse"
   },
   "search": {

@@ -1,3 +1,7 @@
-@use 'vuetify/settings' with (
-  $text-field-disabled-affix-color: rgba(var(--v-theme-on-surface), 1)
+@forward 'vuetify/settings' with (
+  $utilities: (
+    "border-opacity": false,
+    "text-opacity": false
+  ),
+  $button-colored-disabled: false
 );

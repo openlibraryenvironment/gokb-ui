@@ -33,7 +33,8 @@
     </div>
     <router-link
       v-if="!!componentRoute && !!selectedVal"
-      :style="{ color: 'primary', fontSize: '1.1rem' }"
+      class="text-anchor"
+      :style="{ fontSize: '1.1rem' }"
       :to="{ name: componentRoute, params: { 'id': selectedVal.id } }"
     >
       {{ localLabel }}
@@ -132,8 +133,8 @@
       >
         <router-link
           v-if="showLink"
-          :style="{ color: 'accent', fontSize: '1.1rem', maxWidth: '75%' }"
-          class="text-truncate"
+          :style="{ fontSize: '1.1rem', maxWidth: '75%' }"
+          class="text-anchor"
           color="accent"
           :to="{ name: componentRoute, params: { 'id': item.raw.id } }"
         >
@@ -181,6 +182,7 @@
   export default {
     name: 'GokbSearchField',
     extends: BaseComponent,
+    emits: ['update:model-value', 'searched'],
     searchServicesResourceUrl: undefined,
     searchParams: {},
     props: {
@@ -286,11 +288,11 @@
       },
       localValue: {
         get () {
-          return this.selectedVal || undefined
+          return this.modelValue
         },
         set (val) {
           this.selectedVal = val
-          this.$emit('update:modelValue', this.returnObject ? val : val.id)
+          this.$emit('update:model-value', this.returnObject ? val : val.id)
         }
       },
       componentRoute () {
@@ -301,13 +303,6 @@
           return this.rules
         }
         return [v => !!v || !this.required || this.$i18n.t('validation.missingSelection')]
-      }
-    },
-    watch: {
-      modelValue (val) {
-        if (!!this.modelValue && !this.selectedVal) {
-          this.query({ id: val })
-        }
       }
     },
     mounted () {
