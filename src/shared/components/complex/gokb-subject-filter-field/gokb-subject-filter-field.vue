@@ -9,7 +9,7 @@
           message-path="component.subject.scheme"
           url="refdata/categories/Subject.Scheme"
           :placeholder="$tc('component.subject.scheme.label')"
-          dense
+          :density="dense ? 'compact' : 'default'"
           return-object
         />
       </v-col>
@@ -33,7 +33,7 @@
           :label="$tc('component.subject.heading.label')"
           variant="underlined"
           disabled
-          dense
+          :density="dense ? 'compact' : 'default'"
         />
       </v-col>
     </v-row>
@@ -49,6 +49,11 @@
       modelValue: {
         required: true,
         default: '',
+      },
+      dense: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

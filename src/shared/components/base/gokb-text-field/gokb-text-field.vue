@@ -38,14 +38,11 @@
 <script>
   export default {
     name: 'GokbTextField',
-    emits: ['update:modelValue', 'click:append'],
+    emits: ['update:model-value', 'click:append'],
     props: {
       modelValue: {
         required: false,
-        default: '',
-        validator: function (value) {
-          return value === undefined || value === null || typeof value === 'string'
-        }
+        default: ''
       },
       disabled: {
         type: Boolean,
@@ -141,7 +138,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         },
       },
       validLocal () {

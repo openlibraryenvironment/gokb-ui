@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="pa-2">
     <v-form
       ref="form"
       @input="$emit('valid', $event)"

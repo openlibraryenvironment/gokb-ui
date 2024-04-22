@@ -10,7 +10,7 @@
       </span>
     </span>
     <v-banner class="bg-card">
-      <div class="font-weight-bold text-body-1">
+      <div class="font-weight-bold" style="font-size: 1.1rem;">
         {{ currentName || modelValue.name }}
       </div>
       <template v-slot:actions>
@@ -42,7 +42,7 @@
           <gokb-button
             class="ml-4"
             :disabled="!editedVal || editedVal === currentName || editedVal === inValidName"
-            default
+            is-submit
           >
             {{ $i18n.t('btn.confirm') }}
           </gokb-button>
@@ -54,7 +54,7 @@
         />
         <gokb-button
           v-if="!disabled"
-          text
+          color="primary"
           @click="showEditName"
         >
           {{ $i18n.t('header.edit.label', [$i18n.t('component.general.name')]) }}

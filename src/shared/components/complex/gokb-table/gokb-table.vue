@@ -17,9 +17,8 @@
       :loading="showLoading"
       :show-select="showSelect"
       :must-sort="mustSort"
-      dense
-      @update:sort-by="changeSortBy"
-      @update:sort-desc="changeSortOrder"
+      density="compact"
+      @update:sortBy="changeSortBy"
     >
       <template #no-data>
         <v-row justify="center">
@@ -247,6 +246,7 @@
 
   export default {
     name: 'GokbTable',
+    emits: ['paginate', 'edit', 'delete-item', 'retire-item', 'close-review'],
     components: {
       GokbEditJobPopup,
       GokbEditPlatformPopup,
@@ -366,9 +366,6 @@
       },
       changeSortBy (sb) {
         this.$emit('paginate', { page: this.options.page, sortBy: sb })
-      },
-      changeSortOrder (desc) {
-        this.$emit('paginate', { page: this.options.page, desc: desc })
       },
       deleteItem (item) {
         this.$emit('delete-item', item)

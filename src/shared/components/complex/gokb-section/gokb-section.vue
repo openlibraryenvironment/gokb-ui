@@ -9,7 +9,7 @@
         v-if="title && !subTitle"
         color="header"
         class="pl-4"
-        dense
+        density="compact"
         flat
       >
         <span
@@ -25,7 +25,7 @@
         </span>
         <v-spacer />
         <slot
-          v-if="localValue"
+          v-if="show"
           name="buttons"
         />
       </v-toolbar>
@@ -46,7 +46,7 @@
         height="63"
         color="header"
         class="pl-4"
-        dense
+        density="compact"
         flat
       >
         <span
@@ -71,18 +71,18 @@
         <v-btn
           v-if="expandable"
           icon
-          @click="doExpandCollapse"
+          @click.prevent="doExpandCollapse"
         >
           <v-icon>{{ expansionIcon }}</v-icon>
         </v-btn>
         <v-spacer />
         <slot
-          v-if="localValue"
+          v-if="show"
           name="buttons"
         />
       </v-toolbar>
       <v-toolbar
-        v-if="filters && localValue"
+        v-if="filters && show"
         height="63"
         color="header"
         class="pt-1 pl-4"
@@ -108,12 +108,12 @@
         height="63"
         color="header"
         class="pl-4"
-        dense
+        density="compact"
         flat
       >
         <v-spacer />
         <slot
-          v-if="localValue"
+          v-if="show"
           name="buttons"
         />
       </v-toolbar>
@@ -126,20 +126,28 @@
       >
         <slot name="filters" />
       </v-toolbar>
-      <v-card-text v-show="localValue">
-        <div
-          class="pa-2 bg-card"
-        >
-          <slot />
+
+      <v-expand-transition>
+        <div v-show="show">
+          <v-card-text>
+            <div
+              class="pa-2 bg-card"
+            >
+              <slot />
+            </div>
+          </v-card-text>
         </div>
-      </v-card-text>
+      </v-expand-transition>
     </v-card>
   </span>
 </template>
 
 <script>
+import { createHydrationRenderer } from 'vue'
+
   export default {
     name: 'GokbSection',
+    emits: ['update:model-value'],
     props: {
       modelValue: {
         type: Boolean,
@@ -205,6 +213,16 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      hideDefault: {
+        type: Boolean,
+        required:false,
+        default: false
+      }
+    },
+    data () {
+      return {
+        show: true
       }
     },
     computed: {
@@ -213,11 +231,11 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       expansionIcon () {
-        return this.localValue ? 'mdi-chevron-up' : 'mdi-chevron-down'
+        return this.show ? 'mdi-chevron-up' : 'mdi-chevron-down'
       },
       styles () {
         var result = {}
@@ -233,19 +251,16 @@
         return [result]
       }
     },
+    mounted () {
+      if (this.hideDefault) {
+        this.show = false
+      }
+    },
     methods: {
       doExpandCollapse () {
         this.localValue = !this.localValue
+        this.show = !this.show
       }
     },
   }
 </script>
-
-<style scoped lang="scss">
-  ::v-deep .controls {
-    background-color: #f2f2f2;
-  }
-  ::v-deep .controls-dark {
-    background-color: #1e1e1e;
-  }
-</style>

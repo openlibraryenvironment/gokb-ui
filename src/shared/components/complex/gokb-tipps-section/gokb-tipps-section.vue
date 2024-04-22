@@ -11,7 +11,7 @@
       :filters="filterAlign"
       :expand-filters="expandFilters"
       :show-actions="isEditable"
-      :sub-title="title"
+      :sub-title="sectionTitle"
       :items-total="totalNumberOfItems"
       :errors="!!apiErrors"
       :mark-required="required"
@@ -308,8 +308,7 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE,
           mustSort: true,
-          sortBy: ['lastUpdated'],
-          desc: true
+          sortBy: [{ key: 'lastUpdated', order: 'desc' }],
         },
         newOptions: {
           page: 1,
@@ -397,7 +396,7 @@
       loggedIn () {
         return accountModel.loggedIn()
       },
-      title () {
+      sectionTitle () {
         return this.showTitle ? this.$i18n.tc('component.tipp.label', 2) : undefined
       },
       isLoading () {
@@ -537,11 +536,9 @@
       },
       resultPaginate (options) {
         this.successMessage = false
+
         if (!!options.sortBy) {
-          this.searchOptions.sortBy = [options.sortBy]
-        }
-        if (typeof options.desc === 'boolean') {
-          this.searchOptions.desc = options.desc
+          this.searchOptions.sortBy = options.sortBy
         }
 
         if (!!options.itemsPerPage) {
@@ -549,7 +546,7 @@
         }
 
         if (!!this.ttl || !!this.pkg) {
-          this.fetchTipps(options)
+          this.fetchTipps()
         }
       },
       resultNewPaginate () {
@@ -584,8 +581,8 @@
           const result = await this.catchError({
             promise: searchService.getTipps(reqId, {
               ...(searchParams || {}),
-              _sort: (this.linkSearchParameterValues[this.searchOptions.sortBy[0]] || this.searchOptions.sortBy[0]),
-              _order: (this.searchOptions.desc ? 'desc' : 'asc'),
+              _sort: (this.linkSearchParameterValues[this.searchOptions.sortBy[0]['key']] || this.searchOptions.sortBy[0]['key']),
+              _order: (this.searchOptions.sortBy[0]['order']),
               offset: ((this.searchOptions?.page || this.searchOptions.page) - 1) * this.searchOptions.itemsPerPage,
               limit: this.searchOptions.itemsPerPage
             }, this.cancelToken.token),
@@ -609,7 +606,7 @@
                   lastUpdated: this.buildDateString(tipp.lastUpdated),
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
-                  titleType: this.title?.type ? (this.$i18n.tc('component.title.type.' + tipp.title.type)) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
+                  titleType: tipp.title?.type ? (this.$i18n.tc('component.title.type.' + tipp.title.type)) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
                   connectedTitleId: tipp.title?.id,
                   ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({
                     id,

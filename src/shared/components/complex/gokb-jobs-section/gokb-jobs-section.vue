@@ -94,10 +94,6 @@
     extends: BaseComponent,
     emits: ["update:model-value"],
     props: {
-      modelValue: {
-        type: Number,
-        required: true
-      },
       disabled: {
         type: Boolean,
         required: false,
@@ -145,14 +141,6 @@
       }
     },
     computed: {
-      localValue: {
-        get () {
-          return this.modelValue
-        },
-        set (localValue) {
-          this.$emit('update:model-value', localValue)
-        }
-      },
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
       },

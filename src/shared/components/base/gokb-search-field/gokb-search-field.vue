@@ -307,6 +307,10 @@
     },
     mounted () {
       this.searchServices = searchServices(this.searchServicesResourceUrl)
+
+      if (!!this.modelValue) {
+        this.selectedVal = this.modelValue
+      }
     },
     methods: {
       prepareQuery (term) {

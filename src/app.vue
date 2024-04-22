@@ -11,7 +11,7 @@
         <v-btn
           text
           :color="appColor"
-          :to="{ name: HOME_ROUTE }"
+          :to="{ name: homeRoute }"
         >
           <v-icon
             color="white"
@@ -84,26 +84,50 @@
         expand
         nav
       >
-        <div v-for="(item, index) in visibleItems">
+        <div v-if="canCreate">
           <v-list-item
-            v-if="item.text"
+            v-for="item in createMenuItems"
             :key="item.text"
             :to="item.route"
           >
             <template #prepend>
-              <v-icon class="text-high-emphasis" color="primary">
+              <v-icon>
                 {{ item.icon }}
               </v-icon>
             </template>
-            <v-list-item-title>
-              <span class="font-weight-bold">{{ item.text }}</span>
-            </v-list-item-title>
+            <v-list-item-title class="font-weight-bold" v-text="item.text" />
           </v-list-item>
-          <v-divider
-            v-else
-            :key="index"
-          />
+
+          <v-divider />
         </div>
+
+        <v-list-item
+          v-for="item in searchMenuItems"
+          :key="item.text"
+          :to="item.route"
+        >
+          <template #prepend>
+            <v-icon>
+              {{ item.icon }}
+            </v-icon>
+          </template>
+          <v-list-item-title class="font-weight-bold" v-text="item.text" />
+        </v-list-item>
+
+        <v-divider />
+
+        <v-list-item
+          key="validator"
+          :to="validatorRoute"
+        >
+          <template #prepend>
+            <v-icon>
+              mdi-file-table
+            </v-icon>
+          </template>
+
+          <v-list-item-title class="font-weight-bold" v-text="$t('route.kbartValidator')" />
+        </v-list-item>
       </v-list>
       <template v-slot:append>
         <v-row v-if="loginExpiredMsg">
@@ -285,28 +309,37 @@
       groups: []
     }),
     computed: {
-      visibleItems () {
+      searchMenuItems () {
         const menuItems = [
-          { icon: 'mdi-folder-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.package.label')]), route: CREATE_PACKAGE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-text-box-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.title.label')]), route: CREATE_TITLE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-domain-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.provider.label')]), route: ADD_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-account-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.user.label')]), route: ADD_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
-          {},
           { icon: 'mdi-folder', text: this.$i18n.tc('component.package.label', 2), route: SEARCH_PACKAGE_ROUTE },
           { icon: 'mdi-text-box-multiple', text: this.$i18n.tc('component.title.label', 2), route: SEARCH_TITLE_ROUTE },
           { icon: 'mdi-domain', text: this.$i18n.tc('component.provider.label', 2), route: SEARCH_PROVIDER_ROUTE },
           { icon: 'mdi-message-draw', text: this.$i18n.tc('component.review.label', 2), route: SEARCH_REVIEW_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
           // { icon: 'keyboard', text: this.$i18n.tc('component.maintenance.label', 2), route: SEARCH_MAINTENANCE_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-account-multiple', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
-          {},
-          { icon: 'mdi-file-table', text: this.$i18n.t('route.kbartValidator'), route: VALIDATOR_ROUTE },
+          { icon: 'mdi-account-multiple', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN }
         ]
 
         return menuItems.filter(item => (!accountModel.loggedIn() && !item.needsLogin) || (accountModel.loggedIn() && (!item.needsRole || accountModel.hasRole(item.needsRole))))
       },
+      createMenuItems() {
+        const menuItems = [
+          { icon: 'mdi-folder-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.package.label')]), route: CREATE_PACKAGE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-text-box-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.title.label')]), route: CREATE_TITLE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-domain-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.provider.label')]), route: ADD_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-account-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.user.label')]), route: ADD_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
+        ]
+
+        return menuItems.filter(item => accountModel.hasRole(item.needsRole))
+      },
+      validatorRoute () {
+        return VALIDATOR_ROUTE
+      },
+      homeRoute () {
+        return HOME_ROUTE
+      },
       currentLocale: {
         get () {
-          return this.$i18n.locale
+          return this.$i18n?.locale || undefined
         },
         set (locale) {
           this.$i18n.locale = locale
@@ -333,7 +366,7 @@
         }
       },
       canCreate () {
-        return accountModel.hasRole('ROLE_CONTRIBUTOR')
+        return this.loggedIn && accountModel.hasRole('ROLE_CONTRIBUTOR')
       },
       globalSearchPlaceholder () {
         return this.$i18n.t('search.global.placeholder')
@@ -442,9 +475,6 @@
       namespaceServices.fetchNamespacesList(this.cancelToken.token)
       languageServices.fetchLanguagesList(this.cancelToken.token)
     },
-    created () {
-      this.HOME_ROUTE = HOME_ROUTE
-    },
     methods: {
       toggleDarkMode () {
         this.$vuetify.theme.name = (this.$vuetify.theme.name === 'light' ? 'dark' : 'light')
@@ -480,7 +510,7 @@
     color: white;
   }
   .v-data-table__td > a {
-    color: var(--v-theme-primary);
+    color: rgb(var(--v-theme-primary));
   }
 </style>
 <style lang="scss">

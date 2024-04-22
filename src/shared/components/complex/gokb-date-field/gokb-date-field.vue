@@ -6,7 +6,7 @@
         class="pr-0"
       >
         <v-text-field
-          v-model="localDate"
+          v-model="displayDate"
           :clearable="clearable"
           :label="label"
           :hint="$t('default.ISOdateHint')"
@@ -35,7 +35,7 @@
           </template>
           <v-date-picker
             v-if="!readonly"
-            v-model="localDate"
+            v-model="pickerDateValue"
             @input="menu = false"
           />
         </v-menu>
@@ -43,7 +43,7 @@
     </v-row>
     <v-text-field
       v-else
-      v-model="localDate"
+      :model-value="displayDate"
       class="gokb-date-field-disabled"
       v-bind="$props"
       :density="dense ? 'compact' : 'default'"
@@ -54,8 +54,12 @@
 </template>
 
 <script>
+  import BaseComponent from '@/shared/components/base-component'
+
   export default {
     name: 'GokbDateField',
+    extends: BaseComponent,
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -96,15 +100,16 @@
     data () {
       return {
         menu: false,
+        displayDate: undefined
       }
     },
     computed: {
-      localDate: {
+      pickerDateValue: {
         get () {
-          return this.modelValue
+          return new Date(this.displayDate || this.modelValue)
         },
         set (localDate) {
-          this.$emit('update:modelValue', localDate)
+          this.displayDate = localDate?.toISOString().substring(0, 10) || undefined
         }
       },
       combinedRules () {
@@ -113,6 +118,14 @@
           value => !value || (/^([12][0-9]{3})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$/.test(value) && !isNaN(new Date(value))) || this.$i18n.t('validation.dateFormat')
         ]
       }
+    },
+    watch: {
+      displayDate (date) {
+        this.$emit('update:model-value', date)
+      }
+    },
+    mounted () {
+      this.displayDate = this.modelValue
     }
   }
 </script>

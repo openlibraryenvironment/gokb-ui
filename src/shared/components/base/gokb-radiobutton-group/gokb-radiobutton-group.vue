@@ -1,7 +1,7 @@
 <template>
   <v-radio-group
     v-model="localValue"
-    row
+    inline
     :label="label"
   >
     <slot />

@@ -185,7 +185,6 @@
                 >
                   <gokb-search-organisation-field
                     v-model="packageItem.provider"
-                    :items="providerSelection"
                     :show-link="true"
                     :readonly="isReadonly"
                     return-object
@@ -202,7 +201,6 @@
                 >
                   <gokb-search-platform-field
                     v-model="packageItem.nominalPlatform"
-                    :items="platformSelection"
                     :readonly="isReadonly"
                     return-object
                   />
@@ -513,8 +511,8 @@
                   />
                 </v-col>
                 <v-col cols="2">
-                  <gokb-number-field
-                    :value="totalNumberOfTitles"
+                  <gokb-text-field
+                    v-model="totalNumberOfTitles"
                     :label="$t('component.package.count')"
                     dense
                     disabled

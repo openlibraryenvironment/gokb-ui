@@ -8,7 +8,7 @@
           :target-type="targetType"
           width="250px"
           :placeholder="$tc('component.identifier.namespace')"
-          dense
+          :density="dense ? 'compact' : 'default'"
         />
       </v-col>
       <v-col cols="7">
@@ -16,7 +16,7 @@
           v-model="val"
           :placeholder="$tc('component.identifier.value')"
           clearable
-          dense
+          :density="dense ? 'compact' : 'default'"
         />
       </v-col>
     </v-row>
@@ -38,6 +38,11 @@
       modelValue: {
         required: true,
         default: '',
+      },
+      dense: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

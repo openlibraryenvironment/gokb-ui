@@ -166,7 +166,9 @@
     <v-row dense>
       <v-col>
         <v-toolbar
-          dense
+          density="compact"
+          class="ml-4"
+          color="header"
           flat
         >
           <span class="text-h6">
@@ -190,112 +192,114 @@
             </gokb-button>
           </v-toolbar-items>
         </v-toolbar>
-        <div v-if="coverageExpanded">
-          <v-row
-            v-for="(statement, idx) in packageTitleItem.coverageStatements"
-            :key="idx"
-            dense
-          >
-            <v-col>
-              <gokb-section no-tool-bar>
-                <v-row>
-                  <v-col cols="4">
-                    <gokb-state-field
-                      v-model="statement.coverageDepth"
-                      :readonly="isReadonly"
-                      :init-item="statement.coverageDepth"
-                      :label="$t('component.tipp.coverage.depth.label')"
-                      message-path="component.tipp.coverage.depth"
-                      url="refdata/categories/TIPPCoverageStatement.CoverageDepth"
-                    />
-                  </v-col>
-                  <v-col>
-                    <gokb-textarea-field
-                      v-model="statement.coverageNote"
-                      :disabled="isReadonly"
-                      :label="$t('component.tipp.coverage.note')"
-                    />
-                  </v-col>
-                  <v-col
-                    v-if="!isReadonly"
-                    cols="1"
-                    class="pt-6 mr-2"
-                  >
-                    <v-btn
-                      icon
-                      :title="$t('btn.delete')"
-                      @click="removeCoverage(idx)"
-                    >
-                      <v-icon>
-                        mdi-delete
-                      </v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-                <v-row v-if="isJournal">
-                  <v-col md="4">
-                    <gokb-date-field
-                      v-model="statement.startDate"
-                      :readonly="isReadonly"
-                      dense
-                      :label="$t('component.tipp.coverage.startDate')"
-                    />
-                  </v-col>
-                  <v-col md="4">
-                    <gokb-text-field
-                      v-model="statement.startVolume"
-                      :disabled="isReadonly"
-                      dense
-                      :label="$t('component.tipp.coverage.startVolume')"
-                    />
-                  </v-col>
-                  <v-col md="4">
-                    <gokb-text-field
-                      v-model="statement.startIssue"
-                      :disabled="isReadonly"
-                      dense
-                      :label="$t('component.tipp.coverage.startIssue')"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row v-if="isJournal">
-                  <v-col md="4">
-                    <gokb-date-field
-                      v-model="statement.endDate"
-                      :readonly="isReadonly"
-                      dense
-                      :label="$t('component.tipp.coverage.endDate')"
-                    />
-                  </v-col>
-                  <v-col md="4">
-                    <gokb-text-field
-                      v-model="statement.endVolume"
-                      :disabled="isReadonly"
-                      dense
-                      :label="$t('component.tipp.coverage.endVolume')"
-                    />
-                  </v-col>
-                  <v-col md="4">
-                    <gokb-text-field
-                      v-model="statement.endIssue"
-                      :disabled="isReadonly"
-                      dense
-                      :label="$t('component.tipp.coverage.endIssue')"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row dense>
-                  <v-col>
-                    <gokb-embargo-field
-                      v-model="statement.embargo"
-                      :readonly="isReadonly"
-                    />
-                  </v-col>
-                </v-row>
-              </gokb-section>
-            </v-col>
-          </v-row>
-        </div>
+          <v-expand-transition>
+            <div v-if="coverageExpanded">
+              <v-row
+                v-for="(statement, idx) in packageTitleItem.coverageStatements"
+                :key="idx"
+                dense
+              >
+                <v-col>
+                  <gokb-section no-tool-bar>
+                    <v-row>
+                      <v-col cols="4">
+                        <gokb-state-field
+                          v-model="statement.coverageDepth"
+                          :readonly="isReadonly"
+                          :init-item="statement.coverageDepth"
+                          :label="$t('component.tipp.coverage.depth.label')"
+                          message-path="component.tipp.coverage.depth"
+                          url="refdata/categories/TIPPCoverageStatement.CoverageDepth"
+                        />
+                      </v-col>
+                      <v-col>
+                        <gokb-textarea-field
+                          v-model="statement.coverageNote"
+                          :disabled="isReadonly"
+                          :label="$t('component.tipp.coverage.note')"
+                        />
+                      </v-col>
+                      <v-col
+                        v-if="!isReadonly"
+                        cols="1"
+                        class="pt-6 mr-2"
+                      >
+                        <v-btn
+                          icon
+                          :title="$t('btn.delete')"
+                          @click="removeCoverage(idx)"
+                        >
+                          <v-icon>
+                            mdi-delete
+                          </v-icon>
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                    <v-row v-if="isJournal">
+                      <v-col md="4">
+                        <gokb-date-field
+                          v-model="statement.startDate"
+                          :readonly="isReadonly"
+                          dense
+                          :label="$t('component.tipp.coverage.startDate')"
+                        />
+                      </v-col>
+                      <v-col md="4">
+                        <gokb-text-field
+                          v-model="statement.startVolume"
+                          :disabled="isReadonly"
+                          dense
+                          :label="$t('component.tipp.coverage.startVolume')"
+                        />
+                      </v-col>
+                      <v-col md="4">
+                        <gokb-text-field
+                          v-model="statement.startIssue"
+                          :disabled="isReadonly"
+                          dense
+                          :label="$t('component.tipp.coverage.startIssue')"
+                        />
+                      </v-col>
+                    </v-row>
+                    <v-row v-if="isJournal">
+                      <v-col md="4">
+                        <gokb-date-field
+                          v-model="statement.endDate"
+                          :readonly="isReadonly"
+                          dense
+                          :label="$t('component.tipp.coverage.endDate')"
+                        />
+                      </v-col>
+                      <v-col md="4">
+                        <gokb-text-field
+                          v-model="statement.endVolume"
+                          :disabled="isReadonly"
+                          dense
+                          :label="$t('component.tipp.coverage.endVolume')"
+                        />
+                      </v-col>
+                      <v-col md="4">
+                        <gokb-text-field
+                          v-model="statement.endIssue"
+                          :disabled="isReadonly"
+                          dense
+                          :label="$t('component.tipp.coverage.endIssue')"
+                        />
+                      </v-col>
+                    </v-row>
+                    <v-row dense>
+                      <v-col>
+                        <gokb-embargo-field
+                          v-model="statement.embargo"
+                          :readonly="isReadonly"
+                        />
+                      </v-col>
+                    </v-row>
+                  </gokb-section>
+                </v-col>
+              </v-row>
+            </div>
+          </v-expand-transition>
       </v-col>
     </v-row>
     <v-row dense>
@@ -447,7 +451,8 @@
     <template #buttons>
       <v-btn
         v-if="isEdit"
-        class="ml-6 btn-default"
+        class="ml-6"
+        variant="elevated"
         :to="{ name: '/package-title', params: { id: id} }"
         target="_blank"
       >
@@ -605,7 +610,12 @@
     },
     computed: {
       header () {
-        return !this.isReadonly ? (this.id ? (this.$i18n.t('header.edit.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel) : (this.$i18n.t('header.add.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel)) : (this.typeLabel + ' – ' + this.$i18n.tc('component.tipp.label'))
+        return !this.isReadonly ?
+                (this.id ?
+                    (this.$i18n.t('header.edit.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel) :
+                    (this.$i18n.t('header.add.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel)
+                ) :
+                (this.typeLabel + ' – ' + this.$i18n.tc('component.tipp.label'))
       },
       typeLabel () {
         return this.titleTypeString ? this.$i18n.tc('component.title.type.' + this.titleTypeString) : this.$i18n.tc('component.title.label')

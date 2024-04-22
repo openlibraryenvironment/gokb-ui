@@ -2,7 +2,6 @@
   <v-textarea
     :key="hasUpdated"
     v-model="localValue"
-    v-bind="$props"
     :readonly="readonly"
     rows="1"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
@@ -27,6 +26,7 @@
 <script>
   export default {
     name: 'GokbTextareaField',
+    emits: ['update:model-value'],
     props: {
       modelValue: {
         required: true,
@@ -97,7 +97,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:moelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
     },

@@ -50,6 +50,7 @@
               :readonly="isReadonly"
               return-object
               show-link
+              dense
             />
           </v-col>
         </v-row>
@@ -71,16 +72,17 @@
             v-model="tab"
             class="mx-4"
           >
-            <v-tabs-slider color="black" />
             <v-tab
-              key="access"
+              value="access"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $t('component.tipp.access.label') }}
             </v-tab>
             <v-tab
-              key="coverage"
+              value="coverage"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $t('component.tipp.coverage.label') }}
               <v-icon
@@ -93,9 +95,10 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="identifiers"
+              value="identifiers"
               :style="[!!errors.ids ? { border: '1px solid red', borderRadius: '2px' } : {}]"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.identifier.label', 2) }}
               <v-chip
@@ -113,8 +116,9 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="subjects"
+              value="subjects"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.subject.label', 2) }}
               <v-chip class="ma-2">
@@ -130,8 +134,9 @@
             </v-tab>
             <v-tab
               v-if="id && loggedIn"
-              key="reviews"
+              value="reviews"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.review.label', 2) }}
               <v-chip
@@ -142,20 +147,22 @@
               </v-chip>
             </v-tab>
             <v-tab
-              key="other"
+              value="other"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $t('component.tipp.other.label') }}
             </v-tab>
             <v-tab
-              key="prices"
+              value="prices"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.tipp.prices.label', 2) }}
             </v-tab>
           </v-tabs>
-          <v-tabs-items v-model="tab">
-            <v-tab-item key="access">
+          <v-window v-model="tab">
+            <v-window-item value="access">
               <gokb-section no-tool-bar>
                 <v-row dense>
                   <v-col>
@@ -205,9 +212,10 @@
                   </v-col>
                 </v-row>
               </gokb-section>
-            </v-tab-item>
-            <v-tab-item key="coverage">
+            </v-window-item>
+            <v-window-item value="coverage">
               <v-toolbar
+                class="ps-4 bg-bg"
                 dense
                 flat
               >
@@ -336,8 +344,8 @@
                   </gokb-section>
                 </v-col>
               </v-row>
-            </v-tab-item>
-            <v-tab-item key="ids">
+            </v-window-item>
+            <v-window-item value="identifiers">
               <gokb-identifier-section
                 v-model="packageTitleItem.ids"
                 :target-type="titleTypeString"
@@ -346,9 +354,9 @@
                 no-tool-bar
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="subjects"
+            </v-window-item>
+            <v-window-item
+              value="subjects"
               class="mt-4"
             >
               <gokb-subjects-section
@@ -358,10 +366,10 @@
                 no-tool-bar
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
+            </v-window-item>
+            <v-window-item
               v-if="id && loggedIn"
-              key="reviews"
+              value="reviews"
             >
               <gokb-reviews-section
                 :review-component="packageTitleItem"
@@ -370,9 +378,9 @@
                 :expandable="false"
                 @update="refreshReviewsCount"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="other"
+            </v-window-item>
+            <v-window-item
+              value="other"
             >
               <gokb-section no-tool-bar>
                 <v-row>
@@ -503,16 +511,16 @@
                   </v-col>
                 </v-row>
               </gokb-section>
-            </v-tab-item>
-            <v-tab-item key="prices">
+            </v-window-item>
+            <v-window-item value="prices">
               <gokb-prices-section
                 v-model="packageTitleItem.prices"
                 :disabled="isReadonly"
                 no-tool-bar
                 @update="addPendingChange"
               />
-            </v-tab-item>
-          </v-tabs-items>
+            </v-window-item>
+          </v-window>
         </v-col>
       </v-row>
       <template #buttons>
@@ -556,8 +564,7 @@
         <gokb-button
           v-if="updateUrl || !id"
           :disabled="!packageTitleItem.title"
-          class="mr-6"
-          default
+          is-submit
         >
           {{ $t('btn.update') }}
         </gokb-button>
