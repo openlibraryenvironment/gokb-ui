@@ -60,7 +60,7 @@
           <span v-if="!!selectedItem.results.report.hasOwnProperty('matched')" class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</span>
           <span v-if="!!selectedItem.results.report.hasOwnProperty('partial')" class="mr-4">{{ $i18n.t('job.report.partial.label') }}: {{ selectedItem.results.report.partial }}</span>
           <span v-if="!!selectedItem.results.report.hasOwnProperty('created')" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
-          <span v-if="!!selectedItem.results.report.hasOwnProperty('reviews')" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.reviews }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('reviews')" class="mr-4">{{ $i18n.tc('component.review.label', 2) }}: {{ selectedItem.results.report.reviews }}</span>
           <span v-if="!selectedItem.dryRun && !!selectedItem.results.report.hasOwnProperty('retired')">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.matched">
@@ -75,6 +75,13 @@
         </div>
         <div v-else-if="!!selectedItem.results.messageCode">
           <span class="pt-4">{{ $tc('default.error.label') }} - {{ $t(selectedItem.results.messageCode) }}</span>
+        </div>
+        <div v-else-if="!!selectedItem.results.result">
+          <span v-if="!!selectedItem.results.hasOwnProperty('error')" class="mr-4">{{ $i18n.t('job.error') }}: {{ selectedItem.results.error }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('matched')" class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('unmatched')" class="mr-4">{{ $i18n.t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('created')" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.created }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('reviews')" class="mr-4">{{ $i18n.tc('component.review.label', 2) }}: {{ selectedItem.results.reviews }}</span>
         </div>
       </v-col>
     </v-row>

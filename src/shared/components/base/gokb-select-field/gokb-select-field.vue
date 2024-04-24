@@ -11,6 +11,7 @@
   </div>
 
   <v-select
+    ref="select"
     v-else-if="items"
     v-model="localValue"
     :items="localizedItems"
@@ -23,6 +24,7 @@
     :style="{ maxWidth: width }"
     :clearable="clearable && !required"
     :return-object="returnObject"
+    :persistent-placeholder="!!placeholder"
     :dense="dense"
   >
     <template #label>
@@ -147,23 +149,23 @@
         const { data: { data } } = result
         return data
       },
-      setInit () {
+      setInit (init) {
         var selected
 
-        if (this.initItem) {
-          if (typeof this.initItem === 'string') {
-            selected = this.items.filter(item => (item.name === this.initItem || item.value === this.initItem))
-          } else if (typeof this.initItem === 'number') {
-            selected = this.items.filter(item => (item.id === this.initItem))
-          } else if (this.initItem instanceof Object) {
-            if (this.initItem.id) {
-              selected = this.items.filter(item => item.id === this.initItem.id || item.value === this.initItem.id)
+        if (init) {
+          if (typeof init === 'string') {
+            selected = this.items.filter(item => (item.name === init || item.value === init))
+          } else if (typeof init === 'number') {
+            selected = this.items.filter(item => (item.id === init))
+          } else if (init instanceof Object) {
+            if (init.id) {
+              selected = this.items.filter(item => item.id === init.id || item.value === init.id)
             }
-            if (!selected && this.initItem.value) {
-              selected = this.items.filter(item => (item.name === this.initItem.value || item.value === this.initItem.value))
+            if (!selected && init.value) {
+              selected = this.items.filter(item => (item.name === init.value || item.value === init.value))
             }
-            if (!selected && this.initItem.name) {
-              selected = this.items.filter(item => (item.name === this.initItem.name || item.value === this.initItem.name))
+            if (!selected && init.name) {
+              selected = this.items.filter(item => (item.name === init.name || item.value === init.name))
             }
           }
 
@@ -194,13 +196,16 @@
           }
 
           if (this.initItem) {
-            this.setInit()
+            this.setInit(this.initItem)
+          }
+          else if (!!this.value && typeof this.value === 'string') {
+            this.setInit(this.value)
           }
         } else if (this.$attrs.items) {
           this.items = this.$attrs.items
 
           if (this.initItem) {
-            this.setInit()
+            this.setInit(this.initItem)
           }
         }
       }

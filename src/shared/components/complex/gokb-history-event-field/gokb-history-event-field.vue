@@ -64,7 +64,7 @@
           for="event-date"
           class="pb-1"
         >
-          on
+          {{ $t('component.title.history.add.changedTo.on') }}
         </v-label>
       </v-col>
       <v-col>

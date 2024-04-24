@@ -33,7 +33,9 @@
     "update": "Update",
     "validate": "Validate",
     "bulkSelect": "Set Status of {0} entries to ...",
-    "bulkCloseReview": "Mark {0} reviews as done"
+    "bulkCloseReview": "Close {0} selected review | Close {0} selected reviews",
+    "closeSelectedReviews": "Close selected reviews",
+    "moreFilters": "More Filters"
   },
   "main": {
     "docs": {
@@ -45,6 +47,9 @@
     },
     "privacy": {
       "label": "Privacy"
+    },
+    "accessibility": {
+      "label": "Accessibility"
     }
   },
   "default": {
@@ -353,6 +358,7 @@
       "unusualChars": "This line contains unusual characters, which may point to a corrupted file conversion.",
       "unusualCharsVal": "Value '{0}' contains unusual characters. This may point to a corrupted file conversion.",
       "illegalVal": "Value '{0}' is not valid!",
+      "illegalValForNamespace": "Value '{0}' is not valid for namespace '{1}'.",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
       "illegalOnlineId": "Value for online identifier '{0}' is not valid.",
       "illegalPrintId": "Value for print identifier '{0}' is not valid.",
@@ -366,7 +372,8 @@
         "mimeType": "KBART URL returned a wrong content type!",
         "unknown": "There were errors saving the KBART file!",
         "notFound": "No KBART file was found for the provided URL!",
-        "protocol": "KBART URL has an unsupported protocol!"
+        "protocol": "KBART URL has an unsupported protocol!",
+        "fileSize": "The file returned is too big. Automated imports of files bigger than 20 MB need to be authorized by an administrator."
       },
       "reason": {
         "label": "Reason | Reasons"
@@ -669,11 +676,18 @@
             "noDate": "The added event has no date!"
           },
           "changedTo": {
-            "label": "changed to"
+            "label": "changed to",
+            "on": "on"
           }
         },
-        "from": "from",
-        "to": "to"
+        "from": {
+          "label": "Title before",
+          "inline": "from"
+        },
+        "to": {
+          "label": "Title after",
+          "inline": "to"
+        }
       }
     },
     "journal": {
@@ -694,7 +708,7 @@
         "step3": "Package Titles",
         "step4": "Summary",
         "newTitles": "Pending Changes",
-        "currentTitles": "Current Titles",
+        "currentTitles": "Package Titles",
         "confirm": {
           "kbartLocal": {
             "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'."
@@ -749,7 +763,7 @@
           "label": "Mixed"
         }
       },
-      "count": "Number of titles",
+      "count": "Current Package Titles",
       "listStatus": {
         "label": "List Status",
         "Checked": {
@@ -878,7 +892,11 @@
         "issue": "Issue"
       },
       "embargo": {
-        "type": "Type",
+        "type": {
+          "label": "Type",
+          "rolling": "Rolling",
+          "period": "Period"
+        },
         "duration": "Duration",
         "unit": {
           "label": "Unit",
@@ -1063,19 +1081,19 @@
           "edited": "Request was successfully edited.",
           "escalated" : "The request has been successfully escalated.",
           "deescalated" : "The request has been successfully deescalated.",
-          "closed": "Request marked as finished",
-          "closedBulk": "Request marked as finished | {0} requests marked as finished",
+          "closed": "Request closed",
+          "closedBulk": "Request closed | {0} requests closed",
           "reopened": "Request has been reopened."
         },
         "confirm": {
-          "close": "Please confirm marking this review as finished.",
+          "close": "Please confirm closing this review.",
           "reopen": "Please confirm the reopening of this review."
         },
         "componentToReview": {
           "label": "{0} to review"
         },
         "close": {
-          "label": "Mark finished",
+          "label": "Close",
           "error": {
             "moreSteps": "Please check all workflow steps before closing this review."
           }
@@ -1485,6 +1503,22 @@
         "Yearly": {
           "label": "Yearly"
         }
+      }
+    },
+    "subject": {
+      "label": "Subject | Subjects",
+      "scheme": {
+        "label": "Type | Type",
+        "DDC": {
+          "label" : "DDC",
+          "error": {
+            "notationFormat": "Value {0} is not a valid DDC notation.",
+            "longNotation": "Deep DCC notations are not supported!"
+          }
+        }
+      },
+      "heading": {
+        "label": "Value | Values"
       }
     },
     "general": {

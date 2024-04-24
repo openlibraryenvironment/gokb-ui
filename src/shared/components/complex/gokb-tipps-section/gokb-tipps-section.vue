@@ -4,6 +4,7 @@
       expandable
       :hide-default="!expanded"
       :filters="filterAlign"
+      :expand-filters="expandFilters"
       :show-actions="isEditable"
       :sub-title="title"
       :items-total="totalNumberOfItems"
@@ -147,32 +148,42 @@
         </v-menu>
       </template>
       <template #search>
-        <gokb-text-field
-          v-if="pkg"
-          v-model="searchFilters.q"
-          class="ms-4"
-          :label="$tc('component.title.name.label')"
-        />
-        <gokb-text-field
-          v-if="pkg"
-          v-model="searchFilters.ids"
-          class="ms-4"
-          :label="$tc('component.identifier.label')"
-        />
-        <gokb-search-package-field
-          v-else
-          v-model="searchFilters.pkg"
-          class="ms-4"
-          :label="$tc('component.package.label')"
-        />
         <gokb-state-field
           v-model="searchFilters.status"
           width="150px"
-          class="ms-4"
+          class="ms-4 mt-1"
           init-item="Current"
           message-path="component.general.status"
           :label="$t('component.general.status.label')"
           return-object
+        />
+        <v-btn
+          text
+          class="ml-3"
+          @click="toggleFilters"
+        > {{ $t('btn.moreFilters') }} <v-icon> {{ expandFilters ? 'mdi-chevron-up' : 'mdi-chevron-down' }} </v-icon> </v-btn>
+      </template>
+      <template #filters>
+        <gokb-text-field
+          v-model="searchFilters.q"
+          class="ms-4 pt-3"
+          :label="$tc('component.title.name.label')"
+        />
+        <gokb-text-field
+          v-model="searchFilters.ids"
+          class="ms-4 pt-3"
+          :label="$tc('component.identifier.label')"
+        />
+        <gokb-subject-filter-field
+          v-model="searchFilters.subjects"
+          class="ms-4"
+          :label="$tc('component.subject.label')"
+        />
+        <gokb-search-package-field
+          v-if="!pkg"
+          v-model="searchFilters.pkg"
+          class="ms-4 pt-3"
+          :label="$tc('component.package.label')"
         />
       </template>
       <gokb-table
@@ -305,8 +316,10 @@
           status: undefined,
           q: undefined,
           ids: undefined,
-          pkg: undefined
+          pkg: undefined,
+          subjects: undefined
         },
+        expandFilters: false,
         newTipps: [],
         successMessage: undefined,
         items: [],
@@ -513,23 +526,26 @@
       },
       resultPaginate (options) {
         this.successMessage = false
-        if (options.sortBy) {
+        if (!!options.sortBy) {
           this.searchOptions.sortBy = [options.sortBy]
         }
         if (typeof options.desc === 'boolean') {
           this.searchOptions.desc = options.desc
         }
 
-        if (options.itemsPerPage) {
+        if (!!options.itemsPerPage) {
           this.searchOptions.itemsPerPage = options.itemsPerPage
         }
 
-        if (this.ttl || this.pkg) {
+        if (!!this.ttl || !!this.pkg) {
           this.fetchTipps(options)
         }
       },
       resultNewPaginate () {
         this.successMessage = false
+      },
+      toggleFilters () {
+        this.expandFilters = !this.expandFilters
       },
       async fetchTipps () {
         if (this.pkg || this.ttl) {
@@ -575,15 +591,32 @@
                   dateFirstOnline: tipp.dateFirstOnline && this.buildDateString(tipp.dateFirstOnline),
                   accessStartDate: tipp.accessStartDate && this.buildDateString(tipp.accessStartDate),
                   accessEndDate: tipp.accessEndDate && this.buildDateString(tipp.accessEndDate),
-                  variantNames: tipp._embedded.variantNames.map(variantName => ({ ...variantName, isDeletable: !!this.updateUrl })),
+                  variantNames: tipp._embedded.variantNames.map(variantName => ({
+                    ...variantName,
+                    isDeletable: !!this.updateUrl
+                  })),
                   lastUpdated: this.buildDateString(tipp.lastUpdated),
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
                   titleType: this.title?.type ? this.$i18n.tc('component.title.type.' + tipp.title.type) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
                   connectedTitleId: tipp.title?.id,
-                  ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({ id, value, namespace: namespace.value, nslabel: (namespace.name || namespace.value), isDeletable: !!tipp._links.delete.href })),
+                  ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({
+                    id,
+                    value,
+                    namespace: namespace.value,
+                    nslabel: (namespace.name || namespace.value),
+                    isDeletable: !!tipp._links.delete.href
+                  })),
+                  subjects: tipp._embedded.subjects.map(subject => ({
+                    ...subject,
+                    isDeletable: !!this.updateUrl
+                  })),
                   prices: tipp._embedded.prices,
-                  popup: { value: (this.ttl ? tipp.pkg.name : (tipp.name || tipp.title?.name || this.$i18n.t('component.tipp.label') + ' ' + tipp.id)), label: 'tipp', type: 'GokbAddTitlePopup' },
+                  popup: {
+                    value: (this.ttl ? tipp.pkg.name : (tipp.name || tipp.title?.name || this.$i18n.t('component.tipp.label') + ' ' + tipp.id)),
+                    label: 'tipp',
+                    type: 'GokbAddTitlePopup'
+                  },
                   hostPlatformName: tipp.hostPlatform?.name,
                 }
               )

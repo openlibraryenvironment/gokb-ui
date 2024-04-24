@@ -20,11 +20,11 @@
       this.items = [
         {
           id: 'R',
-          name: 'Rolling'
+          name: this.$i18n.t('component.tipp.embargo.type.rolling')
         },
         {
           id: 'P',
-          name: 'Static'
+          name: this.$i18n.t('component.tipp.embargo.type.period')
         }
       ]
     }

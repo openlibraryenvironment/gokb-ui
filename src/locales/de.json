@@ -33,7 +33,9 @@
     "update": "Aktualisieren",
     "validate": "Validieren",
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
-    "bulkCloseReview": "{0} als erledigt markieren"
+    "bulkCloseReview": "{0} ausgewählte Prüfanfrage schließen | {0} ausgewählte Prüfanfragen schließen",
+    "closeSelectedReviews": "Ausgewählte Prüfanfragen schließen",
+    "moreFilters": "Mehr Filter"
   },
   "main": {
     "docs": {
@@ -45,6 +47,9 @@
     },
     "privacy": {
       "label": "Datenschutz"
+    },
+    "accessibility": {
+      "label": "Barrierefreiheit"
     }
   },
   "default": {
@@ -353,6 +358,7 @@
       "unusualChars": "Diese Zeile enthält unübliche Zeichen, die auf eine fehlgeschlagene Dateikonvertierung hinweisen.",
       "unusualCharsVal": "Wert '{0}' enthält unübliche Zeichen. Dies könnte auf ein fehlgeschlagene Dateikonvertierung hinweisen.",
       "illegalVal": "Wert '{0}' ist fehlerhaft!",
+      "illegalValForNamespace": "Wert '{0}' ist nicht zulässig für den Namensraum '{1}'.",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
@@ -366,7 +372,8 @@
         "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
         "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
         "notFound": "Unter der angegebenen URL wurde keine KBART-Datei gefunden!",
-        "protocol": "Das Protokoll der KBART-URL wird nicht unterstützt!"
+        "protocol": "Das Protokoll der KBART-URL wird nicht unterstützt!",
+        "fileSize": "Die zurückgelieferte Datei ist zu groß. Der automatisierte Import von Dateien größer als 20 MB muss von einem Administrator autorisiert werden."
       },
       "reason": {
         "label": "Ursache | Ursachen"
@@ -669,11 +676,18 @@
             "noDate": "Das hinzugefügte Ereignis hat kein Datum!"
           },
           "changedTo": {
-            "label": "wurde zu"
+            "label": "wurde zu",
+            "on": "am"
           }
         },
-        "from": "von",
-        "to": "nach"
+        "from": {
+          "label": "Titel Vorher",
+          "inline": "von"
+        },
+        "to": {
+          "label": "Titel Nachher",
+          "inline": "nach"
+        }
       }
     },
     "journal": {
@@ -749,7 +763,7 @@
           "label": "Gemischt"
         }
       },
-      "count": "Anzahl Titel",
+      "count": "Aktuelle Pakettitel",
       "listStatus": {
         "label": "Listenstatus",
         "Checked": {
@@ -878,7 +892,11 @@
         "issue": "Heft"
       },
       "embargo": {
-        "type": "Typ",
+        "type": {
+          "label": "Typ",
+          "rolling": "Rolling",
+          "period": "Period"
+        },
         "duration": "Dauer",
         "unit": {
           "label": "Einheit",
@@ -1063,12 +1081,12 @@
           "edited": "Prüfanfrage erfolgreich bearbeitet.",
           "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
-          "closed": "Prüfanfrage als erledigt markiert",
-          "closedBulk": "Prüfanfrage als erledigt markiert | {0} Prüfanfragen als erledigt markiert",
+          "closed": "Prüfanfrage geschlossen",
+          "closedBulk": "Prüfanfrage wurde geschlossen | {0} Prüfanfragen wurden geschlossen",
           "reopened": "Die Prüfanfrage wurde erneut geöffnet."
         },
         "confirm": {
-          "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage als erledigt markieren wollen.",
+          "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage schließen möchten.",
           "reopen": "Bitte bestätigen Sie, dass Sie diese abgeschlossene Prüfanfrage erneut öffnen möchten."
         },
         "componentToReview": {
@@ -1495,6 +1513,22 @@
         "Yearly": {
           "label": "Jährlich"
         }
+      }
+    },
+    "subject": {
+      "label": "Sacherschließung | Sacherschließung",
+      "scheme": {
+        "label": "System | Systeme",
+        "DDC": {
+          "label" : "DDC",
+          "error": {
+            "notationFormat": "Der Wert {0} ist keine valide DDC-Notation.",
+            "longNotation": "Tiefe DDC-Notationen werden nicht unterstützt!"
+          }
+        }
+      },
+      "heading": {
+        "label": "Wert | Werte"
       }
     },
     "general": {

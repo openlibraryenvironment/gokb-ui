@@ -7,7 +7,7 @@
       <v-col cols="4">
         <gokb-embargo-type-field
           v-model="embargoType"
-          :label="$t('component.tipp.embargo.type')"
+          :label="$t('component.tipp.embargo.type.label')"
           :rules="[typeRules]"
           :readonly="readonly"
         />

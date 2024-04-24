@@ -1,449 +1,478 @@
 <template>
-  <gokb-page
-    v-if="accessible && !notFound"
-    :key="version"
-    :title="title"
-    @submit="update"
-  >
-    <gokb-error-component :value="error" />
+  <div>
     <v-snackbars :objects.sync="eventMessages">
       <template #action="{ close }">
         <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
       </template>
     </v-snackbars>
-    <v-row>
-      <v-col>
-        <gokb-select-field
-          v-if="!isEdit"
-          v-model="currentType"
-          :readonly="isReadonly"
-          :label="$t('component.title.type.label')"
-          class="ml-4"
-          :items="allTypes"
-          required
-        />
-      </v-col>
-      <v-spacer />
-    </v-row>
-    <gokb-section :no-tool-bar="true">
-      <v-row>
-        <v-col col="7">
-          <gokb-name-field
-            v-model="allNames"
-            :label="$t('component.general.name')"
-            :disabled="isReadonly"
-            :api-errors="errors.name"
-          />
-        </v-col>
-      </v-row>
-      <v-row v-if="id">
-        <v-col cols="6">
-          <gokb-state-select-field
-            v-model="titleItem.status"
-            :deletable="!isReadonly"
-            :editable="!isReadonly"
-            :api-errors="errors.status"
-            @delete="markDeleted"
-          />
-        </v-col>
-        <v-col cols="6" xl="3">
-          <gokb-uuid-field
-            v-if="id"
-            :label="$t('component.general.uuid.label')"
-            :value="titleItem.uuid"
-            path="/title"
-            dense
-          />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="3">
-          <gokb-state-field
-            v-model="titleItem.OAStatus"
-            message-path="component.title.OAStatus"
-            width="100%"
-            url="refdata/categories/TitleInstance.OAStatus"
-            :label="$t('component.title.OAStatus.label')"
-            :readonly="isReadonly"
-            :api-errors="errors.OAStatus"
-            dense
-          />
-        </v-col>
-        <v-col cols="3">
-          <gokb-state-field
-            v-model="titleItem.medium"
-            message-path="component.title.medium"
-            width="100%"
-            url="refdata/categories/TitleInstance.Medium"
-            :label="$t('component.title.medium.label')"
-            :readonly="isReadonly"
-            :api-errors="errors.medium"
-            dense
-          />
-        </v-col>
-        <v-col v-if="currentType == 'Book'">
-          <gokb-text-field
-            v-model="titleItem.firstAuthor"
-            :label="$t('component.title.firstAuthor.label')"
-            :disabled="isReadonly"
-            :api-errors="errors.firstAuthor"
-            dense
-          />
-        </v-col>
-        <v-col v-if="currentType == 'Book'">
-          <gokb-text-field
-            v-model="titleItem.firstEditor"
-            :label="$t('component.title.firstEditor.label')"
-            :disabled="isReadonly"
-            :api-errors="errors.firstEditor"
-            dense
-          />
-        </v-col>
-        <v-col v-if="currentType == 'Journal'">
-          <gokb-date-field
-            v-model="titleItem.publishedFrom"
-            :readonly="isReadonly"
-            :label="$t('component.title.publishedFrom')"
-            :api-errors="errors.publishedFrom"
-            dense
-          />
-        </v-col>
-        <v-col v-if="currentType == 'Journal'">
-          <gokb-date-field
-            v-model="titleItem.publishedTo"
-            :readonly="isReadonly"
-            :label="$t('component.title.publishedTo')"
-            :api-errors="errors.publishedTo"
-            dense
-          />
-        </v-col>
-      </v-row>
-      <v-row v-if="currentType == 'Book'">
-        <v-col cols="3">
-          <gokb-number-field
-            v-model="titleItem.volumeNumber"
-            :disabled="isReadonly"
-            :label="$t('component.title.volumeNumber')"
-            :api-errors="errors.volumeNumber"
-            dense
-          />
-        </v-col>
-        <v-col>
-          <gokb-text-field
-            v-model="titleItem.editionStatement"
-            :label="$t('component.title.editionStatement')"
-            :disabled="isReadonly"
-            :api-errors="errors.editionStatement"
-            dense
-          />
-        </v-col>
-        <v-col>
-          <gokb-date-field
-            v-model="titleItem.firstPublishedInPrint"
-            :readonly="isReadonly"
-            :label="$t('component.title.firstPublishedInPrint')"
-            :api-errors="errors.firstPublishedInPrint"
-            dense
-          />
-        </v-col>
-        <v-col>
-          <gokb-date-field
-            v-model="titleItem.firstPublishedOnline"
-            :readonly="isReadonly"
-            :label="$t('component.title.firstPublishedOnline')"
-            :api-errors="errors.firstPublishedOnline"
-            dense
-          />
-        </v-col>
-      </v-row>
-    </gokb-section>
-    <v-row
-      v-if="tabsView"
-      style="min-height:350px"
+    <gokb-page
+      v-if="accessible && !notFound"
+      :key="version"
+      :title="title"
+      @submit="update"
     >
-      <v-col>
-        <v-tabs
-          v-model="tab"
-          class="mx-4"
-        >
-          <v-tabs-slider color="black" />
+      <gokb-error-component :value="error" />
+      <v-row>
+        <v-col>
+          <gokb-select-field
+            v-if="!isEdit"
+            v-model="currentType"
+            :readonly="isReadonly"
+            :label="$t('component.title.type.label')"
+            class="ml-4"
+            :items="allTypes"
+            required
+          />
+        </v-col>
+        <v-spacer />
+      </v-row>
+      <gokb-section :no-tool-bar="true">
+        <v-row>
+          <v-col col="7">
+            <gokb-name-field
+              v-model="allNames"
+              :label="$t('component.general.name')"
+              :disabled="isReadonly"
+              :api-errors="errors.name"
+            />
+          </v-col>
+        </v-row>
+        <v-row v-if="id">
+          <v-col cols="6">
+            <gokb-state-select-field
+              v-model="titleItem.status"
+              :deletable="!isReadonly"
+              :editable="!isReadonly"
+              :api-errors="errors.status"
+              @delete="markDeleted"
+            />
+          </v-col>
+          <v-col cols="6" xl="3">
+            <gokb-uuid-field
+              v-if="id"
+              :label="$t('component.general.uuid.label')"
+              :value="titleItem.uuid"
+              path="/title"
+              dense
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="3">
+            <gokb-state-field
+              v-model="titleItem.OAStatus"
+              message-path="component.title.OAStatus"
+              width="100%"
+              url="refdata/categories/TitleInstance.OAStatus"
+              :label="$t('component.title.OAStatus.label')"
+              :readonly="isReadonly"
+              :api-errors="errors.OAStatus"
+              dense
+            />
+          </v-col>
+          <v-col cols="3">
+            <gokb-state-field
+              v-model="titleItem.medium"
+              message-path="component.title.medium"
+              width="100%"
+              url="refdata/categories/TitleInstance.Medium"
+              :label="$t('component.title.medium.label')"
+              :readonly="isReadonly"
+              :api-errors="errors.medium"
+              dense
+            />
+          </v-col>
+          <v-col v-if="currentType == 'Book'">
+            <gokb-text-field
+              v-model="titleItem.firstAuthor"
+              :label="$t('component.title.firstAuthor.label')"
+              :disabled="isReadonly"
+              :api-errors="errors.firstAuthor"
+              dense
+            />
+          </v-col>
+          <v-col v-if="currentType == 'Book'">
+            <gokb-text-field
+              v-model="titleItem.firstEditor"
+              :label="$t('component.title.firstEditor.label')"
+              :disabled="isReadonly"
+              :api-errors="errors.firstEditor"
+              dense
+            />
+          </v-col>
+          <v-col v-if="currentType == 'Journal'">
+            <gokb-date-field
+              v-model="titleItem.publishedFrom"
+              :readonly="isReadonly"
+              :label="$t('component.title.publishedFrom')"
+              :api-errors="errors.publishedFrom"
+              dense
+            />
+          </v-col>
+          <v-col v-if="currentType == 'Journal'">
+            <gokb-date-field
+              v-model="titleItem.publishedTo"
+              :readonly="isReadonly"
+              :label="$t('component.title.publishedTo')"
+              :api-errors="errors.publishedTo"
+              dense
+            />
+          </v-col>
+        </v-row>
+        <v-row v-if="currentType == 'Book'">
+          <v-col cols="3">
+            <gokb-number-field
+              v-model="titleItem.volumeNumber"
+              :disabled="isReadonly"
+              :label="$t('component.title.volumeNumber')"
+              :api-errors="errors.volumeNumber"
+              dense
+            />
+          </v-col>
+          <v-col>
+            <gokb-text-field
+              v-model="titleItem.editionStatement"
+              :label="$t('component.title.editionStatement')"
+              :disabled="isReadonly"
+              :api-errors="errors.editionStatement"
+              dense
+            />
+          </v-col>
+          <v-col>
+            <gokb-date-field
+              v-model="titleItem.firstPublishedInPrint"
+              :readonly="isReadonly"
+              :label="$t('component.title.firstPublishedInPrint')"
+              :api-errors="errors.firstPublishedInPrint"
+              dense
+            />
+          </v-col>
+          <v-col>
+            <gokb-date-field
+              v-model="titleItem.firstPublishedOnline"
+              :readonly="isReadonly"
+              :label="$t('component.title.firstPublishedOnline')"
+              :api-errors="errors.firstPublishedOnline"
+              dense
+            />
+          </v-col>
+        </v-row>
+      </gokb-section>
+      <v-row
+        v-if="tabsView"
+        style="min-height:350px"
+      >
+        <v-col>
+          <v-tabs
+            v-model="tab"
+            class="mx-4"
+          >
+            <v-tabs-slider color="black" />
 
-          <v-tab
-            key="identifiers"
-            :style="[!!errors.ids ? { border: '1px solid red', borderRadius: '2px' } : {}]"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.identifier.label', 2) }}
-            <v-chip class="ma-2">
-              {{ ids.length }}
-            </v-chip>
-            <v-icon
-              v-if="pendingChanges.ids"
-              :title="$t('pending.lists.changed')"
-              small
+            <v-tab
+              key="identifiers"
+              :style="[!!errors.ids ? { border: '1px solid red', borderRadius: '2px' } : {}]"
+              :active-class="tabClass"
             >
-              mdi-alert-decagram
-            </v-icon>
-          </v-tab>
-          <v-tab
-            key="publisher"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.title.publisher.label', 2) }}
-            <v-chip class="ma-2">
-              {{ publishers.length }}
-            </v-chip>
-            <v-icon
-              v-if="pendingChanges.publisher"
-              :title="$t('pending.lists.changed')"
-              small
+              {{ $tc('component.identifier.label', 2) }}
+              <v-chip class="ma-2">
+                {{ ids.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.ids"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
+              key="publisher"
+              :active-class="tabClass"
             >
-              mdi-alert-decagram
-            </v-icon>
-          </v-tab>
-          <v-tab
-            key="variants"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.variantName.label', 2) }}
-            <v-chip class="ma-2">
-              {{ allNames.alts.length }}
-            </v-chip>
-            <v-icon
-              v-if="pendingChanges.variants"
-              :title="$t('pending.lists.changed')"
-              small
+              {{ $tc('component.title.publisher.label', 2) }}
+              <v-chip class="ma-2">
+                {{ publishers.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.publisher"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
+              key="variants"
+              :active-class="tabClass"
             >
-              mdi-alert-decagram
-            </v-icon>
-          </v-tab>
-          <v-tab
-            v-if="id && isContrib"
-            key="reviews"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.review.label', 2) }}
-            <v-chip class="ma-2">
-              {{ reviewsCount }}
-            </v-chip>
-            <v-icon
-              v-if="pendingChanges.reviews"
-              :title="$t('pending.lists.changed')"
-              small
+              {{ $tc('component.variantName.label', 2) }}
+              <v-chip class="ma-2">
+                {{ allNames.alts.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.variants"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
+              key="subjects"
+              :active-class="tabClass"
             >
-              mdi-alert-decagram
-            </v-icon>
-          </v-tab>
-          <v-tab
-            v-if="id"
-            key="tipps"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.tipp.label', 2) }}
-            <v-chip class="ma-2">
-              {{ tippCount }}
-            </v-chip>
-          </v-tab>
-          <v-tab
-            v-if="isEdit && history"
-            key="history"
-            :active-class="tabClass"
-          >
-            {{ $t('component.title.history.label') }}
-            <v-chip class="ma-2">
-              {{ history.length }}
-            </v-chip>
-            <v-icon
-              v-if="pendingChanges.history"
-              :title="$t('pending.lists.changed')"
-              small
+              {{ $tc('component.subject.label', 2) }}
+              <v-chip class="ma-2">
+                {{ subjects.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.subjects"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
+              v-if="id && isContrib"
+              key="reviews"
+              :active-class="tabClass"
             >
-              mdi-alert-decagram
-            </v-icon>
-          </v-tab>
-        </v-tabs>
-        <v-tabs-items
-          v-model="tab"
-        >
-          <v-tab-item
-            key="identifiers"
-            class="mt-4"
+              {{ $tc('component.review.label', 2) }}
+              <v-chip class="ma-2">
+                {{ reviewsCount }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.reviews"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
+              v-if="id"
+              key="tipps"
+              :active-class="tabClass"
+            >
+              {{ $tc('component.tipp.label', 2) }}
+              <v-chip class="ma-2">
+                {{ tippCount }}
+              </v-chip>
+            </v-tab>
+            <v-tab
+              v-if="isEdit && history"
+              key="history"
+              :active-class="tabClass"
+            >
+              {{ $t('component.title.history.label') }}
+              <v-chip class="ma-2">
+                {{ history.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.history"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+          </v-tabs>
+          <v-tabs-items
+            v-model="tab"
           >
-            <gokb-identifier-section
-              v-model="ids"
-              :show-title="false"
-              :target-type="currentType"
-              :disabled="isReadonly || !currentType"
-              :api-errors="errors.ids"
-              @update="addPendingChange"
-            />
-          </v-tab-item>
-          <v-tab-item
-            key="publishers"
-            class="mt-4"
-          >
-            <gokb-publisher-section
-              v-model="publishers"
-              :show-title="false"
-              :disabled="isReadonly"
-              :api-errors="errors.publisher"
-              @update="addPendingChange"
-            />
-          </v-tab-item>
-          <v-tab-item
-            key="variants"
-            class="mt-4"
-          >
-            <gokb-alternate-names-section
-              v-model="allNames.alts"
-              :show-title="false"
-              :disabled="isReadonly"
-              :api-errors="errors.variantNames"
-              @update="addPendingChange"
-            />
-          </v-tab-item>
-          <v-tab-item
-            v-if="loggedIn && isContrib"
-            key="reviews"
-            class="mt-4"
-          >
-            <gokb-reviews-section
-              :review-component="titleItem"
-              :show-title="false"
-              :api-errors="errors.reviewRequests"
-              :expandable="false"
-              @update="refreshReviewsCount"
-            />
-          </v-tab-item>
-          <v-tab-item
-            key="tipps"
-            class="mt-4"
-          >
-            <gokb-tipps-section
-              :ttl="id"
-              :show-title="false"
-              :disabled="true"
-              :api-errors="errors.tipps"
-              @update="updateTippCount"
-            />
-          </v-tab-item>
-          <v-tab-item
-            key="history"
-            class="mt-4"
-          >
-            <gokb-title-history-section
-              v-model="history"
-              :title-info="shortTitleMap"
-              :show-title="false"
-              :disabled="isReadonly"
-              :api-errors="errors.history"
-              @update="addPendingChange"
-            />
-          </v-tab-item>
-        </v-tabs-items>
-      </v-col>
-    </v-row>
-    <div v-else>
-      <gokb-identifier-section
-        v-model="ids"
-        :disabled="isReadonly"
-        :target-type="currentType"
-        :api-errors="errors.ids"
-      />
-      <gokb-publisher-section
-        v-model="publishers"
-        :disabled="isReadonly"
-        :api-errors="errors.publisher"
-      />
-      <gokb-alternate-names-section
-        v-model="allNames.alts"
-        :disabled="isReadonly"
-        :api-errors="errors.variantNames"
-      />
-      <gokb-reviews-section
-        v-if="id && loggedIn"
-        :review-component="titleItem"
-        :api-errors="errors.reviewRequests"
-      />
-      <gokb-tipps-section
-        v-if="id"
-        :ttl="id"
-        :disabled="true"
-        :api-errors="errors.tipps"
-      />
-      <gokb-title-history-section
-        v-if="currentType === 'Journal'"
-        v-model="history"
-        :title-info="shortTitleMap"
-        :disabled="isReadonly"
-        :api-errors="errors.history"
-      />
-    </div>
-    <template #buttons>
-      <gokb-button
-        v-if="!isReadonly"
-        @click="reset"
-      >
-        {{ $i18n.t('btn.reset') }}
-      </gokb-button>
-      <v-spacer />
-      <div v-if="id">
-        <v-chip
-          class="ma-1"
-          label
-        >
-          <v-icon
-            :title="$t('component.general.dateCreated')"
-            class="pb-1"
-            medium
-          >
-            mdi-file-plus-outline
-          </v-icon>
-          <span class="ml-1">{{ localDateCreated }}</span>
-        </v-chip>
-        <v-chip
-          class="ma-1"
-          label
-        >
-          <v-icon
-            :title="$t('component.general.lastUpdated')"
-            class="pb-1"
-            label
-            medium
-          >
-            mdi-refresh
-          </v-icon>
-          <span class="ml-1">{{ localLastUpdated }}</span>
-        </v-chip>
+            <v-tab-item
+              key="identifiers"
+              class="mt-4"
+            >
+              <gokb-identifier-section
+                v-model="ids"
+                :show-title="false"
+                :target-type="currentType"
+                :disabled="isReadonly || !currentType"
+                :api-errors="errors.ids"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+            <v-tab-item
+              key="publishers"
+              class="mt-4"
+            >
+              <gokb-publisher-section
+                v-model="publishers"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.publisher"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+            <v-tab-item
+              key="variants"
+              class="mt-4"
+            >
+              <gokb-alternate-names-section
+                v-model="allNames.alts"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.variantNames"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+            <v-tab-item
+              key="subjects"
+              class="mt-4"
+            >
+              <gokb-subjects-section
+                v-model="subjects"
+                :disabled="isReadonly"
+                :api-errors="errors?.subjects"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+            <v-tab-item
+              v-if="loggedIn && isContrib"
+              key="reviews"
+              class="mt-4"
+            >
+              <gokb-reviews-section
+                :review-component="titleItem"
+                :show-title="false"
+                :api-errors="errors.reviewRequests"
+                :expandable="false"
+                @update="refreshReviewsCount"
+              />
+            </v-tab-item>
+            <v-tab-item
+              key="tipps"
+              class="mt-4"
+            >
+              <gokb-tipps-section
+                :ttl="id"
+                :show-title="false"
+                :disabled="true"
+                :api-errors="errors.tipps"
+                @update="updateTippCount"
+              />
+            </v-tab-item>
+            <v-tab-item
+              key="history"
+              class="mt-4"
+            >
+              <gokb-title-history-section
+                v-model="history"
+                :title-info="shortTitleMap"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.history"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+          </v-tabs-items>
+        </v-col>
+      </v-row>
+      <div v-else>
+        <gokb-identifier-section
+          v-model="ids"
+          :disabled="isReadonly"
+          :target-type="currentType"
+          :api-errors="errors.ids"
+        />
+        <gokb-publisher-section
+          v-model="publishers"
+          :disabled="isReadonly"
+          :api-errors="errors.publisher"
+        />
+        <gokb-alternate-names-section
+          v-model="allNames.alts"
+          :disabled="isReadonly"
+          :api-errors="errors.variantNames"
+        />
+        <gokb-reviews-section
+          v-if="id && loggedIn"
+          :review-component="titleItem"
+          :api-errors="errors.reviewRequests"
+        />
+        <gokb-tipps-section
+          v-if="id"
+          :ttl="id"
+          :disabled="true"
+          :api-errors="errors.tipps"
+        />
+        <gokb-title-history-section
+          v-if="currentType === 'Journal'"
+          v-model="history"
+          :title-info="shortTitleMap"
+          :disabled="isReadonly"
+          :api-errors="errors.history"
+        />
       </div>
-      <v-spacer />
-      <v-switch
-        v-model="tabsView"
-        class="pt-4 pr-6"
-        :label="$t('component.title.tabsView')"
-      />
-      <gokb-button
-        v-if="!isReadonly"
-        default
-        :disabled="!isValid"
-      >
-        {{ $i18n.t('btn.submit') }}
-      </gokb-button>
-    </template>
-  </gokb-page>
-  <gokb-no-access-field v-else-if="!accessible" />
-  <gokb-page
-    v-else
-    title=""
-  >
-    <v-card>
-      <v-card-text>
-        <div class="text-h5 primary--text">
-          {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
+      <template #buttons>
+        <gokb-button
+          v-if="!isReadonly"
+          @click="reset"
+        >
+          {{ $i18n.t('btn.reset') }}
+        </gokb-button>
+        <v-spacer />
+        <div v-if="id">
+          <v-chip
+            class="ma-1"
+            label
+          >
+            <v-icon
+              :title="$t('component.general.dateCreated')"
+              class="pb-1"
+              medium
+            >
+              mdi-file-plus-outline
+            </v-icon>
+            <span class="ml-1">{{ localDateCreated }}</span>
+          </v-chip>
+          <v-chip
+            class="ma-1"
+            label
+          >
+            <v-icon
+              :title="$t('component.general.lastUpdated')"
+              class="pb-1"
+              label
+              medium
+            >
+              mdi-refresh
+            </v-icon>
+            <span class="ml-1">{{ localLastUpdated }}</span>
+          </v-chip>
         </div>
-      </v-card-text>
-    </v-card>
-  </gokb-page>
+        <v-spacer />
+        <v-switch
+          v-model="tabsView"
+          class="pt-4 pr-6"
+          :label="$t('component.title.tabsView')"
+        />
+        <gokb-button
+          v-if="!isReadonly"
+          default
+          :disabled="!isValid"
+        >
+          {{ $i18n.t('btn.submit') }}
+        </gokb-button>
+      </template>
+    </gokb-page>
+    <gokb-no-access-field v-else-if="!accessible" />
+    <gokb-page
+      v-else
+      title=""
+    >
+      <v-card>
+        <v-card-text>
+          <div class="text-h5 primary--text">
+            {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
+          </div>
+        </v-card-text>
+      </v-card>
+    </gokb-page>
+  </div>
 </template>
 
 <script>
@@ -520,6 +549,7 @@
           name: undefined,
           alts: []
         },
+        subjects: [],
         reviewRequests: [],
         version: undefined,
         reference: undefined,
@@ -596,6 +626,9 @@
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
         }
+      },
+      tab (val) {
+        history.pushState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
       }
     },
     async created () {
@@ -627,6 +660,9 @@
         }
       }
     },
+    mounted () {
+      this.tab = parseInt(this.$route.query.tab) || null
+    },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
@@ -650,6 +686,10 @@
             locale,
             variantType,
             id: typeof id === 'number' ? id : null
+          })),
+          subjects: this.subjects.map(subject => ({
+            heading: subject.heading,
+            scheme: subject.scheme
           })),
           publishedFrom: this.titleItem.publishedFrom,
           publishedTo: this.titleItem.publishedTo,
@@ -771,6 +811,7 @@
           name: undefined,
           alts: []
         }
+        this.subjects = []
         this.reviewRequests = []
         this.version = undefined
         this.reference = undefined
@@ -837,6 +878,10 @@
           ...variantName,
           isDeletable: !!this.updateUrl
         }))
+        this.subjects = data._embedded.subjects.map(subject => ({
+          ...subject,
+          isDeletable: !!this.updateUrl
+        }))
         this.allNames = { name: data.name, alts: this.allAlternateNames }
         this.reviewRequests = data._embedded.reviewRequests
         this.titleItem.editionStatement = data.editionStatement
@@ -881,6 +926,7 @@
       },
       refreshReviewsCount (count) {
         this.reviewsCount = count
+        this.reset()
       },
       updateTippCount (count) {
         this.tippCount = count

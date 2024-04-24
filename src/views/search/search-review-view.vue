@@ -35,7 +35,7 @@
         return [
           {
             icon: 'mdi-close',
-            label: this.$i18n.t('btn.close'),
+            label: this.$i18n.t('btn.closeSelectedReviews'),
             disabled: 'isCloseSelectedDisabled',
             action: '_confirmCloseSelectedItems',
           }
@@ -80,25 +80,6 @@
         return [
           [
             {
-              type: 'GokbTextField',
-              name: 'cause',
-              properties: {
-                label: this.$i18n.t('component.review.cause.label')
-              }
-            },
-            {
-              type: 'GokbCuratoryGroupField',
-              name: 'allocatedGroups',
-              value: 'curatoryGroupIds',
-              properties: {
-                label: this.$i18n.tc('component.curatoryGroup.label'),
-                width: '100%',
-                returnObject: false
-              }
-            }
-          ],
-          [
-            {
               type: 'GokbSearchEntityField',
               name: 'componentToReview',
               value: 'componentToReview',
@@ -129,6 +110,16 @@
                 messagePath: 'component.review.status',
                 url: 'refdata/categories/ReviewRequest.Status',
                 width: '100%'
+              }
+            },
+            {
+              type: 'GokbCuratoryGroupField',
+              name: 'allocatedGroups',
+              value: 'curatoryGroupIds',
+              properties: {
+                label: this.$i18n.tc('component.curatoryGroup.label'),
+                width: '100%',
+                returnObject: false
               }
             }
           ]

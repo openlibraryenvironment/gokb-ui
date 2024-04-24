@@ -156,6 +156,15 @@
     </v-row>
     <v-row dense>
       <v-col>
+          <gokb-subjects-section
+            v-model="packageTitleItem.subjects"
+            :disabled="isReadonly"
+            :api-errors="errors?.subjects"
+          />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <v-col>
         <v-toolbar
           dense
           flat
@@ -564,6 +573,7 @@
           accessEndDate: undefined,
           prices: [],
           ids: [],
+          subjects: [],
           coverageStatements: [
             {
               coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
@@ -630,7 +640,7 @@
         get () {
           return !!this.value
         },
-        set (localValue) {
+        set () {
           this.$emit('input', null)
         }
       },
@@ -648,16 +658,36 @@
       'packageTitleItem.title'(title) {
         if (!!title && !this.isEdit) {
           if (this.packageTitleItem.ids?.length == 0) {
-            this.packageTitleItem.ids = title._embedded.ids.map(({ value, namespace }) => ({
-              id: this.tempId(),
-              value,
-              namespace: namespace.value,
-              nslabel: (namespace.name || namespace.value),
-              isDeletable: true
-            }))
+            this.packageTitleItem.ids = title._embedded.ids
+              .filter(({ namespace }) => (
+                ['issn', 'eissn', 'isbn', 'pisbn', 'zdb'].includes(namespace.value))
+              )
+              .map(({ value, namespace }) => ({
+                id: this.tempId(),
+                value,
+                namespace: namespace.value,
+                nslabel: (namespace.name || namespace.value),
+                isDeletable: true
+              }))
           }
           if (!this.allNames.name) {
             this.allNames.name = title.name
+          }
+
+          if (!!title.firstAuthor) {
+            this.packageTitleItem.firstAuthor = title.firstAuthor
+          }
+
+          if (!!title.firstEditor) {
+            this.packageTitleItem.firstEditor = title.firstEditor
+          }
+
+          if (!!title.dateFirstInPrint) {
+            this.packageTitleItem.dateFirstInPrint = title.dateFirstInPrint
+          }
+
+          if (!!title.dateFirstOnline) {
+            this.packageTitleItem.dateFirstOnline = title.dateFirstOnline
           }
 
           if (!this.packageTitleItem.publisherName && !!title.publisher) {
@@ -701,6 +731,10 @@
               locale,
               variantType,
               id: typeof id === 'number' ? id : null
+            })),
+            subjects: this.packageTitleItem.subjects.map(subject => ({
+              heading: subject.heading,
+              scheme: subject.scheme
             })),
             status: typeof this.packageTitleItem.status === 'string' ? { name: this.packageTitleItem.status } : this.packageTitleItem.status,
             id: this.id,
@@ -832,6 +866,7 @@
         this.packageTitleItem.ids = data.ids
         this.packageTitleItem.prices = data.prices
         this.packageTitleItem.series = data.series
+        this.packageTitleItem.subjects = data.subjects
         this.packageTitleItem.subjectArea = data.subjectArea
         this.packageTitleItem.publisherName = data.publisherName
         this.packageTitleItem.dateFirstInPrint = data.dateFirstInPrint
@@ -862,6 +897,7 @@
             endDate: statement.endDate && this.buildDateString(statement.endDate)
           }))
         }
+
         this.id = data.id
         this.uuid = data.uuid
         this.packageTitleItem.id = this.id

@@ -60,17 +60,9 @@
             {
               type: 'GokbTextField',
               name: 'qsName',
+              value: 'qsName',
               properties: {
-                label: this.$i18n.t('component.general.name')
-              }
-            },
-            {
-              type: 'GokbIdentifierFilterField',
-              name: 'ids',
-              value: 'identifierValue',
-              properties: {
-                label: this.$i18n.tc('component.identifier.label'),
-                targetType: 'Title'
+                label: this.$i18n.t('component.general.name'),
               }
             },
             {
@@ -87,13 +79,30 @@
                 { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
                 { name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
               ]
-            }
-          ],
-          [
+            },
             {
               type: 'GokbSearchPublisherField',
               name: 'publisher',
               value: 'publisherId'
+            }
+          ],
+          [
+            {
+              type: 'GokbIdentifierFilterField',
+              name: 'ids',
+              value: 'identifierValue',
+              properties: {
+                label: this.$i18n.tc('component.identifier.label'),
+                targetType: 'Title'
+              }
+            },
+            {
+              type: 'GokbSubjectFilterField',
+              name: 'subject',
+              value: 'subjectValue',
+              properties: {
+                label: this.$i18n.tc('component.subjects.label')
+              }
             },
             {
               type: 'GokbStateField',
@@ -102,7 +111,8 @@
               properties: {
                 initItem: 'Current',
                 width: '100%',
-                messagePath: 'component.general.status'
+                messagePath: 'component.general.status',
+                label: this.$i18n.tc('component.general.status.label')
               }
             }
           ]

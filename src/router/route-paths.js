@@ -19,6 +19,7 @@ export const EDIT_JOURNAL_ROUTE = '/title'
 export const EDIT_BOOK_ROUTE = '/title'
 export const EDIT_DATABASE_ROUTE = '/title'
 export const EDIT_TIPP_ROUTE = '/package-title'
+export const EDIT_REVIEW_ROUTE = '/review'
 
 export const ADD_PROVIDER_ROUTE = '/add-provider'
 export const ADD_USER_ROUTE = '/add-user'

@@ -1,365 +1,367 @@
 <template>
-  <gokb-page
-    v-if="accessible && !notFound"
-    :key="version"
-    :title="title"
-    @valid="valid = $event"
-    @submit="update"
-  >
-    <gokb-error-component :value="error" />
+  <div>
     <v-snackbars :objects.sync="eventMessages">
       <template #action="{ close }">
         <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
       </template>
     </v-snackbars>
-    <gokb-section :no-tool-bar="true">
-      <v-row>
-        <v-col md="12">
-          <gokb-name-field
-            v-model="allNames"
-            :disabled="isReadonly"
-            :label="$t('component.general.name')"
-            check-dupes="Org"
-            :item-id="providerObject.id"
-          />
-        </v-col>
-      </v-row>
-      <v-row v-if="id">
-        <v-col cols="6">
-          <gokb-state-select-field
-            v-model="providerObject.status"
-            :deletable="!isReadonly"
-            :editable="!isReadonly"
-            @delete="markDeleted"
-          />
-        </v-col>
-        <v-col cols="6" xl="3">
-          <gokb-uuid-field
-            v-if="id"
-            :label="$t('component.general.uuid.label')"
-            :value="uuid"
-            path="/provider"
-            dense
-          />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="2">
-          <gokb-text-field
-            v-model="providerObject.preferredShortname"
-            :label="$t('component.provider.preferredShortname.label')"
-            :disabled="isReadonly"
-          />
-        </v-col>
-        <v-col cols="4">
-          <gokb-text-field
-            v-model="providerObject.homepage"
-            :label="$t('component.provider.homepage.label')"
-            :disabled="isReadonly"
-          />
-        </v-col>
-        <v-col cols="3" xl="2">
-          <gokb-namespace-field
-            v-model="providerObject.titleNamespace"
-            target-type="Title"
-            :readonly="isReadonly"
-            :label="$t('component.provider.titleNamespace.label')"
-          />
-        </v-col>
-        <v-col cols="3" xl="2">
-          <gokb-namespace-field
-            v-model="providerObject.packageNamespace"
-            target-type="Package"
-            :readonly="isReadonly"
-            :label="$t('component.provider.packageNamespace.label')"
-          />
-        </v-col>
-        <v-col lg="2" />
-      </v-row>
-    </gokb-section>
-    <v-row
-      v-if="tabsView"
-      :style="{ minHeight:'330px' }"
+    <gokb-page
+      v-if="accessible && !notFound"
+      :key="version"
+      :title="title"
+      @valid="valid = $event"
+      @submit="update"
     >
-      <v-col>
-        <v-tabs
-          v-model="tab"
-          class="mx-4"
-        >
-          <v-tabs-slider color="primary" />
+      <gokb-error-component :value="error" />
+      <gokb-section :no-tool-bar="true">
+        <v-row>
+          <v-col md="12">
+            <gokb-name-field
+              v-model="allNames"
+              :disabled="isReadonly"
+              :label="$t('component.general.name')"
+              check-dupes="Org"
+              :item-id="providerObject.id"
+            />
+          </v-col>
+        </v-row>
+        <v-row v-if="id">
+          <v-col cols="6">
+            <gokb-state-select-field
+              v-model="providerObject.status"
+              :deletable="!isReadonly"
+              :editable="!isReadonly"
+              @delete="markDeleted"
+            />
+          </v-col>
+          <v-col cols="6" xl="3">
+            <gokb-uuid-field
+              v-if="id"
+              :label="$t('component.general.uuid.label')"
+              :value="uuid"
+              path="/provider"
+              dense
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="2">
+            <gokb-text-field
+              v-model="providerObject.preferredShortname"
+              :label="$t('component.provider.preferredShortname.label')"
+              :disabled="isReadonly"
+            />
+          </v-col>
+          <v-col cols="4">
+            <gokb-text-field
+              v-model="providerObject.homepage"
+              :label="$t('component.provider.homepage.label')"
+              :disabled="isReadonly"
+            />
+          </v-col>
+          <v-col cols="3" xl="2">
+            <gokb-namespace-field
+              v-model="providerObject.titleNamespace"
+              target-type="Title"
+              :readonly="isReadonly"
+              :label="$t('component.provider.titleNamespace.label')"
+            />
+          </v-col>
+          <v-col cols="3" xl="2">
+            <gokb-namespace-field
+              v-model="providerObject.packageNamespace"
+              target-type="Package"
+              :readonly="isReadonly"
+              :label="$t('component.provider.packageNamespace.label')"
+            />
+          </v-col>
+          <v-col lg="2" />
+        </v-row>
+      </gokb-section>
+      <v-row
+        v-if="tabsView"
+        :style="{ minHeight:'330px' }"
+      >
+        <v-col>
+          <v-tabs
+            v-model="tab"
+            class="mx-4"
+          >
+            <v-tabs-slider color="primary" />
 
-          <v-tab
-            key="variants"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.variantName.label', 2) }}
-            <v-chip class="ma-2">
-              {{ allNames.alts.length }}
-            </v-chip>
-            <v-icon
-              v-if="pendingChanges.variants"
-              :title="$t('pending.lists.changed')"
-              small
+            <v-tab
+              key="variants"
+              :active-class="tabClass"
             >
-              mdi-alert-decagram
-            </v-icon>
-          </v-tab>
-          <v-tab
-            key="identifiers"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.identifier.label', 2) }}
-            <v-chip class="ma-2">
-              {{ providerObject.ids.length }}
-            </v-chip>
-            <v-icon
-              v-if="pendingChanges.ids"
-              :title="$t('pending.lists.changed')"
-              small
+              {{ $tc('component.variantName.label', 2) }}
+              <v-chip class="ma-2">
+                {{ allNames.alts.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.variants"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
+              key="identifiers"
+              :active-class="tabClass"
             >
-              mdi-alert-decagram
-            </v-icon>
-          </v-tab>
-          <v-tab
-            key="platforms"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.platform.label', 2) }}
-            <v-chip class="ma-2">
-              {{ allPlatforms.length }}
-            </v-chip>
-            <v-icon
-              v-if="pendingChanges.platforms"
-              :title="$t('pending.lists.changed')"
-              small
+              {{ $tc('component.identifier.label', 2) }}
+              <v-chip class="ma-2">
+                {{ providerObject.ids.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.ids"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
+              key="platforms"
+              :active-class="tabClass"
             >
-              mdi-alert-decagram
-            </v-icon>
-          </v-tab>
-          <v-tab
-            v-if="!!id"
-            key="packages"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.package.label', 2) }}
-            <v-chip class="ma-2">
-              {{ packageCount }}
-            </v-chip>
-          </v-tab>
-          <v-tab
-            key="curators"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.curatoryGroup.label', 2) }}
-            <v-chip class="ma-2">
-              {{ allCuratoryGroups.length }}
-            </v-chip>
-            <v-icon
-              v-if="pendingChanges.curators"
-              :title="$t('pending.lists.changed')"
-              small
+              {{ $tc('component.platform.label', 2) }}
+              <v-chip class="ma-2">
+                {{ allPlatforms.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.platforms"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
+              v-if="!!id"
+              key="packages"
+              :active-class="tabClass"
             >
-              mdi-alert-decagram
-            </v-icon>
-          </v-tab>
-          <v-tab
-            key="offices"
-            :active-class="tabClass"
-          >
-            {{ $tc('component.office.label', 2) }}
-            <v-chip class="ma-2">
-              {{ offices.length }}
-            </v-chip>
-            <v-icon
-              v-if="pendingChanges.offices"
-              :title="$t('pending.lists.changed')"
-              small
+              {{ $tc('component.package.label', 2) }}
+              <v-chip class="ma-2">
+                {{ packageCount }}
+              </v-chip>
+            </v-tab>
+            <v-tab
+              key="curators"
+              :active-class="tabClass"
             >
-              mdi-alert-decagram
-            </v-icon>
-          </v-tab>
-        </v-tabs>
-        <v-tabs-items
-          v-model="tab"
-        >
-          <v-tab-item
-            key="variants"
-            class="mt-4"
+              {{ $tc('component.curatoryGroup.label', 2) }}
+              <v-chip class="ma-2">
+                {{ allCuratoryGroups.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.curators"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
+              key="offices"
+              :active-class="tabClass"
+            >
+              {{ $tc('component.office.label', 2) }}
+              <v-chip class="ma-2">
+                {{ offices.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.offices"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+          </v-tabs>
+          <v-tabs-items
+            v-model="tab"
           >
-            <gokb-alternate-names-section
-              v-model="allNames.alts"
-              :show-title="false"
-              :disabled="isReadonly"
-              :api-errors="errors.variantNames"
-              @update="addPendingChange"
-            />
-          </v-tab-item>
-          <v-tab-item
-            key="identifiers"
-            class="mt-4"
-          >
-            <gokb-identifier-section
-              v-model="providerObject.ids"
-              :show-title="false"
-              :disabled="isReadonly"
-              :api-errors="errors.ids"
-              @update="addPendingChange"
-            />
-          </v-tab-item>
-          <v-tab-item
-            key="platforms"
-            class="mt-4"
-          >
-            <gokb-platform-section
-              v-model="allPlatforms"
-              :show-title="false"
-              :disabled="isReadonly"
-              :api-errors="errors.providedPlatforms"
-              :provider-id="providerObject.id"
-              @update="addPendingChange"
-            />
-          </v-tab-item>
-          <v-tab-item
-            v-if="!!id"
-            key="packages"
-            class="mt-4"
-          >
-            <gokb-packages-section
-              :show-title="false"
-              disabled
-              :api-errors="errors.providedPackages"
-              :provider-id="providerObject.id"
-              @update="updatePackageCount"
-            />
-          </v-tab-item>
-          <v-tab-item
-            key="curators"
-            class="mt-4"
-          >
-            <gokb-curatory-group-section
-              v-model="allCuratoryGroups"
-              :show-title="false"
-              :disabled="isReadonly"
-              :api-errors="errors.curatoryGroups"
-              @update="addPendingChange"
-            />
-          </v-tab-item>
-          <v-tab-item
-            key="offices"
-            class="mt-4"
-          >
-            <gokb-offices-section
-              v-model="offices"
-              :show-title="false"
-              :disabled="isReadonly"
-              :api-errors="errors.offices"
-              @update="addPendingChange"
-            />
-          </v-tab-item>
-        </v-tabs-items>
-      </v-col>
-    </v-row>
-    <div v-else>
-      <gokb-alternate-names-section
-        v-model="allNames.alts"
-        :expanded="allNames.alts.length > 0"
-        :disabled="isReadonly"
-      />
-      <gokb-identifier-section
-        v-model="providerObject.ids"
-        :expanded="providerObject.ids.length > 0"
-        :disabled="isReadonly"
-      />
-      <gokb-platform-section
-        v-model="allPlatforms"
-        :expanded="allPlatforms.length > 0"
-        :sub-title="$tc('component.platform.label', 2)"
-        :disabled="isReadonly"
-      />
-      <gokb-packages-section
-        v-if="!!id"
-        :sub-title="$tc('component.package.label', 2)"
-        :expanded="packageCount > 0"
-        disabled
-      />
-      <gokb-curatory-group-section
-        v-model="allCuratoryGroups"
-        :expanded="allCuratoryGroups.length > 0"
-        :sub-title="$tc('component.curatoryGroup.label', 2)"
-        :disabled="isReadonly"
-      />
-      <gokb-offices-section
-        v-model="offices"
-        :expanded="offices.length > 0"
-        :sub-title="$tc('component.office.label', 2)"
-        :disabled="isReadonly"
-      />
-    </div>
-    <template #buttons>
-      <gokb-button
-        v-if="!isReadonly"
-        @click="reset"
-      >
-        {{ $t('btn.reset') }}
-      </gokb-button>
-      <v-spacer />
-      <div v-if="id">
-        <v-chip
-          class="ma-1"
-          label
-        >
-          <v-icon
-            :title="$t('component.general.dateCreated')"
-            class="pb-1"
-            medium
-          >
-            mdi-file-plus-outline
-          </v-icon>
-          <span class="ml-1">{{ localDateCreated }}</span>
-        </v-chip>
-        <v-chip
-          class="ma-1"
-          label
-        >
-          <v-icon
-            :title="$t('component.general.lastUpdated')"
-            class="pb-1"
-            label
-            medium
-          >
-            mdi-refresh
-          </v-icon>
-          <span class="ml-1">{{ localLastUpdated }}</span>
-        </v-chip>
+            <v-tab-item
+              key="variants"
+              class="mt-4"
+            >
+              <gokb-alternate-names-section
+                v-model="allNames.alts"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.variantNames"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+            <v-tab-item
+              key="identifiers"
+              class="mt-4"
+            >
+              <gokb-identifier-section
+                v-model="providerObject.ids"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.ids"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+            <v-tab-item
+              key="platforms"
+              class="mt-4"
+            >
+              <gokb-platform-section
+                v-model="allPlatforms"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.providedPlatforms"
+                :provider-id="providerObject.id"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+            <v-tab-item
+              v-if="!!id"
+              key="packages"
+              class="mt-4"
+            >
+              <gokb-packages-section
+                :show-title="false"
+                disabled
+                :api-errors="errors.providedPackages"
+                :provider-id="providerObject.id"
+                @update="updatePackageCount"
+              />
+            </v-tab-item>
+            <v-tab-item
+              key="curators"
+              class="mt-4"
+            >
+              <gokb-curatory-group-section
+                v-model="allCuratoryGroups"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.curatoryGroups"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+            <v-tab-item
+              key="offices"
+              class="mt-4"
+            >
+              <gokb-offices-section
+                v-model="offices"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.offices"
+                @update="addPendingChange"
+              />
+            </v-tab-item>
+          </v-tabs-items>
+        </v-col>
+      </v-row>
+      <div v-else>
+        <gokb-alternate-names-section
+          v-model="allNames.alts"
+          :expanded="allNames.alts.length > 0"
+          :disabled="isReadonly"
+        />
+        <gokb-identifier-section
+          v-model="providerObject.ids"
+          :expanded="providerObject.ids.length > 0"
+          :disabled="isReadonly"
+        />
+        <gokb-platform-section
+          v-model="allPlatforms"
+          :expanded="allPlatforms.length > 0"
+          :sub-title="$tc('component.platform.label', 2)"
+          :disabled="isReadonly"
+        />
+        <gokb-packages-section
+          v-if="!!id"
+          :sub-title="$tc('component.package.label', 2)"
+          :expanded="packageCount > 0"
+          disabled
+        />
+        <gokb-curatory-group-section
+          v-model="allCuratoryGroups"
+          :expanded="allCuratoryGroups.length > 0"
+          :sub-title="$tc('component.curatoryGroup.label', 2)"
+          :disabled="isReadonly"
+        />
+        <gokb-offices-section
+          v-model="offices"
+          :expanded="offices.length > 0"
+          :sub-title="$tc('component.office.label', 2)"
+          :disabled="isReadonly"
+        />
       </div>
-      <v-spacer />
-      <v-switch
-        v-model="tabsView"
-        class="pt-4 pr-6"
-        :label="$t('component.title.tabsView')"
-      />
-      <gokb-button
-        v-if="!isReadonly"
-        :disabled="!valid"
-        default
-      >
-        {{ updateButtonText }}
-      </gokb-button>
-    </template>
-  </gokb-page>
-  <gokb-no-access-field v-else-if="!accessible" />
-  <gokb-page
-    v-else
-    title=""
-  >
-    <v-card>
-      <v-card-text>
-        <div class="text-h5 primary--text">
-          {{ $t('component.general.notFound', [$tc('component.provider.label')]) }}
+      <template #buttons>
+        <gokb-button
+          v-if="!isReadonly"
+          @click="reset"
+        >
+          {{ $t('btn.reset') }}
+        </gokb-button>
+        <v-spacer />
+        <div v-if="id">
+          <v-chip
+            class="ma-1"
+            label
+          >
+            <v-icon
+              :title="$t('component.general.dateCreated')"
+              class="pb-1"
+              medium
+            >
+              mdi-file-plus-outline
+            </v-icon>
+            <span class="ml-1">{{ localDateCreated }}</span>
+          </v-chip>
+          <v-chip
+            class="ma-1"
+            label
+          >
+            <v-icon
+              :title="$t('component.general.lastUpdated')"
+              class="pb-1"
+              label
+              medium
+            >
+              mdi-refresh
+            </v-icon>
+            <span class="ml-1">{{ localLastUpdated }}</span>
+          </v-chip>
         </div>
-      </v-card-text>
-    </v-card>
-  </gokb-page>
+        <v-spacer />
+        <v-switch
+          v-model="tabsView"
+          class="pt-4 pr-6"
+          :label="$t('component.title.tabsView')"
+        />
+        <gokb-button
+          v-if="!isReadonly"
+          :disabled="!valid"
+          default
+        >
+          {{ updateButtonText }}
+        </gokb-button>
+      </template>
+    </gokb-page>
+    <gokb-no-access-field v-else-if="!accessible" />
+    <gokb-page
+      v-else
+      title=""
+    >
+      <v-card>
+        <v-card-text>
+          <div class="text-h5 primary--text">
+            {{ $t('component.general.notFound', [$tc('component.provider.label')]) }}
+          </div>
+        </v-card-text>
+      </v-card>
+    </gokb-page>
+  </div>
 </template>
 
 <script>
@@ -472,6 +474,9 @@
         if (this.loggedIn) {
           accountModel.useTabbedView(value)
         }
+      },
+      tab (val) {
+        history.pushState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
       }
     },
     async created () {
@@ -502,6 +507,9 @@
       if (this.loggedIn) {
         this.tabsView = accountModel.tabbedView()
       }
+    },
+    mounted () {
+      this.tab = parseInt(this.$route.query.tab) || null
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -695,6 +703,7 @@
         const pkgResult = await this.catchError({
           promise: searchServices('rest/packages').search({
             status: 'Current',
+            global: ['Global', 'Consortium', 'Regional', 'Unknown'],
             provider: data.id,
             es: true
           }, this.cancelToken.token),

@@ -110,6 +110,18 @@
           name="buttons"
         />
       </v-toolbar>
+      <v-toolbar
+        v-if="expandFilters"
+        height="63"
+        class="pt-1"
+        flat
+      >
+        <v-toolbar-items
+          class="pa-2"
+        >
+          <slot name="filters" />
+        </v-toolbar-items>
+      </v-toolbar>
       <v-card-text v-show="localValue">
         <div
           class="pa-2"
@@ -145,6 +157,11 @@
         type: Boolean,
         required: false,
         default: false,
+      },
+      expandFilters: {
+        type: Boolean,
+        required: false,
+        default: false
       },
       showActions: {
         type: Boolean,

@@ -83,28 +83,28 @@
       >
         {{ bulkCloseLabel }}
       </gokb-button>
-      <span v-if="errorMsg">
-        <v-alert
-          type="error"
-          dismissible
-        >
-          {{ localErrorMessage }}
-        </v-alert>
-      </span>
-      <span v-if="successMessage">
-        <v-alert
-          type="success"
-          dismissible
-        >
-          {{ successMessage }}
-        </v-alert>
-      </span>
     </template>
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <span v-if="errorMsg">
+      <v-alert
+        type="error"
+        dismissible
+      >
+        {{ localErrorMessage }}
+      </v-alert>
+    </span>
+    <span v-if="successMessage">
+      <v-alert
+        type="success"
+        dismissible
+      >
+        {{ successMessage }}
+      </v-alert>
+    </span>
     <gokb-table
       ref="rtable"
       :items="reviews"
@@ -198,7 +198,10 @@
         messageToConfirm: undefined,
         reviewsOptions: {
           page: 1,
-          itemsPerPage: ROWS_PER_PAGE
+          itemsPerPage: ROWS_PER_PAGE,
+          mustSort: true,
+          sortBy: ['dateCreated'],
+          desc: false
         },
         reviewsRaisedBy: undefined,
         searchFilters: {
@@ -219,7 +222,7 @@
         ]
       },
       bulkCloseLabel () {
-        return this.$i18n.t('btn.bulkCloseReview', [(this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal)])
+        return this.$i18n.tc('btn.bulkCloseReview', (this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal), [(this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal)])
       },
       reviews () {
         const componentRoutes = {
@@ -285,7 +288,7 @@
           {
             text: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
-            sortable: false,
+            sortable: true,
             width: '20%',
             value: 'dateCreated'
           }
@@ -314,7 +317,7 @@
           {
             text: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
-            sortable: false,
+            sortable: true,
             width: '15%',
             value: 'dateCreated'
           }
@@ -350,7 +353,7 @@
           {
             text: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
-            sortable: false,
+            sortable: true,
             width: '15%',
             value: 'dateCreated'
           }
@@ -398,14 +401,14 @@
       },
       resultPaginate (options) {
         this.successMessage = false
-        if (options.sortBy) {
+        if (!!options.sortBy) {
           this.reviewsOptions.sortBy = [options.sortBy]
         }
         if (typeof options.desc === 'boolean') {
           this.reviewsOptions.desc = options.desc
         }
 
-        if (options.itemsPerPage) {
+        if (!!options.itemsPerPage) {
           this.reviewsOptions.itemsPerPage = options.itemsPerPage
         }
 
@@ -445,6 +448,8 @@
 
         const parameters = {
           ...(searchParams || {}),
+          _sort: this.reviewsOptions.sortBy[0],
+          _order: (this.reviewsOptions.desc ? 'desc' : 'asc'),
           offset: this.reviewsOptions.page ? (this.reviewsOptions.page - 1) * this.reviewsOptions.itemsPerPage : 0,
           limit: this.reviewsOptions.itemsPerPage
         }
@@ -561,13 +566,13 @@
           this.successMessage = this.$i18n.tc('component.review.edit.success.closedBulk', this.selectedItems.length, { count: this.selectedItems.length })
           this.reviewsOptions.page = 1
           this.loading = false
-          const newList = await this.retrieveReviews()
+          await this.retrieveReviews()
           this.$emit('update', this.totalNumberOfItems)
         }
       },
       async handlePopupChange (type) {
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
-        const newList = await this.retrieveReviews()
+        await this.retrieveReviews()
         this.$emit('update', this.totalNumberOfItems)
       }
     }

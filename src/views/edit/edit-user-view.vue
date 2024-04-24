@@ -1,167 +1,169 @@
 <template>
-  <gokb-page
-    v-if="accessible && !notFound"
-    :title="title"
-    @submit="update"
-  >
-    <gokb-error-component :value="error" />
+  <div>
     <v-snackbars :objects.sync="eventMessages">
       <template #action="{ close }">
         <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
       </template>
     </v-snackbars>
-    <gokb-section :sub-title="$t('component.general.general')">
+    <gokb-page
+      v-if="accessible && !notFound"
+      :title="title"
+      @submit="update"
+    >
+      <gokb-error-component :value="error" />
+      <gokb-section :sub-title="$t('component.general.general')">
+        <v-row>
+          <v-col
+            class="pt-8"
+            md="4"
+          >
+            <gokb-username-field
+              v-model="username"
+              :label="$t('component.user.username')"
+              required
+              hide-icon
+              autocomplete="off"
+              dense
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            v-if="!id"
+            md="4"
+          >
+            <gokb-password-field
+              v-model="password"
+              :label="$t('component.user.password')"
+              hide-icon
+              required
+              validate-on-blur
+              autocomplete="off"
+              :rules="[passwordValidMessage]"
+              dense
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col md="4">
+            <gokb-email-field
+              v-model="email"
+              hide-icon
+              dense
+            />
+          </v-col>
+          <!--        <v-col md="4">-->
+          <!--          <gokb-search-organisation-field-->
+          <!--            v-model="organisation"-->
+          <!--          />-->
+          <!--        </v-col>-->
+        </v-row>
+        <v-row>
+          <v-col cols="2">
+            <gokb-checkbox-field
+              v-model="enabled"
+              :label="$t('component.user.enabled.active.label')"
+            />
+          </v-col>
+          <v-col cols="2">
+            <gokb-checkbox-field
+              v-model="accountLocked"
+              :label="$t('component.user.locked.label')"
+            />
+          </v-col>
+          <v-col md="3">
+            <gokb-checkbox-field
+              v-model="passwordExpired"
+              :label="$t('component.user.passwordExpired')"
+            />
+          </v-col>
+        </v-row>
+      </gokb-section>
+      <gokb-add-item-popup
+        v-if="addRolePopupVisible"
+        v-model="addRolePopupVisible"
+        :component="{ type: 'GokbRoleField', properties: { returnObject: true } }"
+        @add="addNewRole"
+      />
       <v-row>
         <v-col
-          class="pt-8"
-          md="4"
+          cols="12"
+          xl="6"
         >
-          <gokb-username-field
-            v-model="username"
-            :label="$t('component.user.username')"
-            required
-            hide-icon
-            autocomplete="off"
-            dense
-          />
+          <gokb-section :sub-title="$tc('component.user.role.label', 2)">
+            <template #buttons>
+              <gokb-button
+                class="mr-4"
+                icon-id="mdi-plus"
+                color="primary"
+                @click="showAddNewRole"
+              >
+                {{ $t('btn.add') }}
+              </gokb-button>
+              <gokb-button
+                icon-id="mdi-delete"
+                :disabled="isDeleteSelectedRolesDisabled"
+                @click="confirmDeleteSelectedRoles"
+              >
+                {{ $t('btn.delete') }}
+              </gokb-button>
+            </template>
+            <gokb-confirmation-popup
+              v-model="confirmationPopUpVisible"
+              :message="messageToConfirm"
+              @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+            />
+            <gokb-table
+              :headers="rolesTableHeaders"
+              :items="roles"
+              :selected-items="selectedRoles"
+              :total-number-of-items="totalNumberOfRoles"
+              :options.sync="rolesOptions"
+              @selected-items="selectedRoles = $event"
+              @delete-item="confirmDeleteRole"
+            />
+          </gokb-section>
         </v-col>
-      </v-row>
-      <v-row>
         <v-col
-          v-if="!id"
-          md="4"
+          cols="12"
+          xl="6"
         >
-          <gokb-password-field
-            v-model="password"
-            :label="$t('component.user.password')"
-            hide-icon
-            required
-            validate-on-blur
-            autocomplete="off"
-            :rules="[passwordValidMessage]"
-            dense
+          <gokb-curatory-group-section
+            v-model="allCuratoryGroups"
+            :sub-title="$tc('component.curatoryGroup.label', 2)"
           />
         </v-col>
       </v-row>
-      <v-row>
-        <v-col md="4">
-          <gokb-email-field
-            v-model="email"
-            hide-icon
-            dense
-          />
-        </v-col>
-        <!--        <v-col md="4">-->
-        <!--          <gokb-search-organisation-field-->
-        <!--            v-model="organisation"-->
-        <!--          />-->
-        <!--        </v-col>-->
-      </v-row>
-      <v-row>
-        <v-col cols="2">
-          <gokb-checkbox-field
-            v-model="enabled"
-            :label="$t('component.user.enabled.active.label')"
-          />
-        </v-col>
-        <v-col cols="2">
-          <gokb-checkbox-field
-            v-model="accountLocked"
-            :label="$t('component.user.locked.label')"
-          />
-        </v-col>
-        <v-col md="3">
-          <gokb-checkbox-field
-            v-model="passwordExpired"
-            :label="$t('component.user.passwordExpired')"
-          />
-        </v-col>
-      </v-row>
-    </gokb-section>
-    <gokb-add-item-popup
-      v-if="addRolePopupVisible"
-      v-model="addRolePopupVisible"
-      :component="{ type: 'GokbRoleField', properties: { returnObject: true } }"
-      @add="addNewRole"
-    />
-    <v-row>
-      <v-col
-        cols="12"
-        xl="6"
-      >
-        <gokb-section :sub-title="$tc('component.user.role.label', 2)">
-          <template #buttons>
-            <gokb-button
-              class="mr-4"
-              icon-id="mdi-plus"
-              color="primary"
-              @click="showAddNewRole"
-            >
-              {{ $t('btn.add') }}
-            </gokb-button>
-            <gokb-button
-              icon-id="mdi-delete"
-              :disabled="isDeleteSelectedRolesDisabled"
-              @click="confirmDeleteSelectedRoles"
-            >
-              {{ $t('btn.delete') }}
-            </gokb-button>
-          </template>
-          <gokb-confirmation-popup
-            v-model="confirmationPopUpVisible"
-            :message="messageToConfirm"
-            @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-          />
-          <gokb-table
-            :headers="rolesTableHeaders"
-            :items="roles"
-            :selected-items="selectedRoles"
-            :total-number-of-items="totalNumberOfRoles"
-            :options.sync="rolesOptions"
-            @selected-items="selectedRoles = $event"
-            @delete-item="confirmDeleteRole"
-          />
-        </gokb-section>
-      </v-col>
-      <v-col
-        cols="12"
-        xl="6"
-      >
-        <gokb-curatory-group-section
-          v-model="allCuratoryGroups"
-          :sub-title="$tc('component.curatoryGroup.label', 2)"
-        />
-      </v-col>
-    </v-row>
-    <template #buttons>
-      <v-spacer />
-      <gokb-button
-        text
-        @click="pageBack"
-      >
-        {{ $t('btn.cancel') }}
-      </gokb-button>
-      <gokb-button
-        default
-        :disabled="!valid"
-      >
-        {{ updateButtonText }}
-      </gokb-button>
-    </template>
-  </gokb-page>
-  <gokb-no-access-field v-else-if="!accessible" />
-  <gokb-page
-    v-else
-    title=""
-  >
-    <v-card>
-      <v-card-text>
-        <div class="text-h5 primary--text">
-          {{ $t('component.general.notFound', [$tc('component.user.label')]) }}
-        </div>
-      </v-card-text>
-    </v-card>
-  </gokb-page>
+      <template #buttons>
+        <v-spacer />
+        <gokb-button
+          text
+          @click="pageBack"
+        >
+          {{ $t('btn.cancel') }}
+        </gokb-button>
+        <gokb-button
+          default
+          :disabled="!valid"
+        >
+          {{ updateButtonText }}
+        </gokb-button>
+      </template>
+    </gokb-page>
+    <gokb-no-access-field v-else-if="!accessible" />
+    <gokb-page
+      v-else
+      title=""
+    >
+      <v-card>
+        <v-card-text>
+          <div class="text-h5 primary--text">
+            {{ $t('component.general.notFound', [$tc('component.user.label')]) }}
+          </div>
+        </v-card-text>
+      </v-card>
+    </gokb-page>
+  </div>
 </template>
 
 <script>

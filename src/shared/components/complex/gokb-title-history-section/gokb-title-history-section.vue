@@ -31,13 +31,13 @@
         <thead>
           <tr>
             <th class="text-left">
-              Date
+              {{ $t('component.title.history.date.label') }}
             </th>
             <th class="text-left">
-              From
+              {{ $t('component.title.history.from.label') }}
             </th>
             <th class="text-left">
-              To
+              {{ $t('component.title.history.to.label') }}
             </th>
             <th class="text-center" />
           </tr>
