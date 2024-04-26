@@ -32,3 +32,4 @@ export const ERROR_ROUTE = '/error'
 export const NO_ACCESS_ROUTE = '/no-access'
 
 export const VALIDATOR_ROUTE = '/kbart-validator'
+export const IMPORT_WEKB_ROUTE = '/import-wekb'

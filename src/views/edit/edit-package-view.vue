@@ -107,6 +107,13 @@
         v-model="editJobPopupVisible"
         :selected="selectedJob"
       />
+
+      <gokb-import-wekb-package-popup
+          v-if="wekbImportPopupVisible"
+          v-model="wekbImportPopupVisible"
+      />
+
+
       <v-stepper
         v-model="step"
         alt-labels
@@ -200,6 +207,10 @@
                 </gokb-section>
               </v-col>
             </v-row>
+
+           <!-- <gokb-section> -->
+
+            <!-- </gokb-section> -->
           </v-stepper-content>
 
           <v-stepper-content :step="isEdit ? 3 : 2">
@@ -634,6 +645,17 @@
           </v-chip>
         </div>
         <v-spacer />
+
+        <gokb-button
+            color="primary"
+            :disabled="false"
+            @click="showWekbImportPopup"
+            v-show="!isEdit && step == 1"
+        >
+         <!-- TODO: Text aus Properties-Datei {{ $t('btn.next') }} -->
+          Aus externer Datenquelle importieren
+        </gokb-button>
+
         <gokb-button
           v-if="!isInLastStep"
           color="primary"
@@ -691,6 +713,8 @@
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
   import VSnackbars from 'v-snackbars'
+  import GokbImportWekbPackagePopup from '@/shared/popups/gokb-import-wekb-package-popup'
+  import GokbSection from "@/shared/components/complex/gokb-section/gokb-section.vue";
 
   const ROWS_PER_PAGE = 10
 
@@ -712,6 +736,7 @@
   export default {
     name: 'EditPackageView',
     components: {
+      GokbSection,
       GokbDateField,
       GokbIdentifierSection,
       GokbSearchOrganisationField,
@@ -723,7 +748,8 @@
       GokbAlternateNamesSection,
       GokbConfirmationPopup,
       GokbEditJobPopup,
-      VSnackbars
+      VSnackbars,
+      GokbImportWekbPackagePopup
     },
     extends: BaseComponent,
     props: {
@@ -763,6 +789,7 @@
         showSubmitConfirm: false,
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
+        wekbImportPopupVisible: false,
         urlUpdate: false,
         currentName: undefined,
         lastUpdated: undefined,
@@ -964,6 +991,9 @@
       document.removeEventListener("keydown", this.handleKeyboardNav)
     },
     methods: {
+      showWekbImportPopup (){
+        this.wekbImportPopupVisible = true;
+      },
       go2NextStep () {
         this.step < 4 && this.step++
       },
