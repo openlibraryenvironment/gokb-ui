@@ -155,14 +155,15 @@
         />
         <gokb-button
           v-if="isEdit"
-          :disabled="!valid"
+          :disabled="!valid || isActivated"
+          color="primary"
           @click="showActivateOptions"
         >
           {{ $t('btn.activate') }}
         </gokb-button>
         <gokb-button
           default
-          :disabled="!valid"
+          :disabled="!valid || !isActivated"
         >
           {{ updateButtonText }}
         </gokb-button>
@@ -298,6 +299,9 @@
       },
       valid () {
         return this.username && (this.isEdit || this.isPasswordValid)
+      },
+      isActivated () {
+        return this.isEdit && !this.accountLocked && this.enabled && account.hasRole('ROLE_USER')
       }
     },
     watch: {
