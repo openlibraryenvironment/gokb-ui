@@ -66,6 +66,7 @@
     components: {
       GokbConfirmationPopup
     },
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -107,7 +108,7 @@
           return (typeof this.modelValue === 'object' ? this.modelValue.name : this.modelValue)
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
           this.$emit('delete', (localValue === 'Deleted'))
         }
       },

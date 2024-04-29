@@ -20,7 +20,7 @@
         density="compact"
         @click="copyUrl"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-clipboard-arrow-right
         </v-icon>
       </v-btn>
@@ -31,7 +31,7 @@
 <script>
   export default {
     name: 'GokbUuidField',
-    emits: ['update:modelValue'],
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -70,7 +70,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         },
       }
     },

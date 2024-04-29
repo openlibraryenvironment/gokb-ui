@@ -993,7 +993,10 @@
       "validation": {
         "value": "Value {0} is invalid!",
         "generic": "This identifier value is invalid!",
-        "pattern": "The entered value does not meet the format requirements."
+        "pattern": "The entered value does not meet the format requirements.",
+        "list": {
+          "duplicate": "This identifier is already present in this list!"
+        }
       }
     },
     "user": {

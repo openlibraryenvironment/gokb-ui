@@ -19,7 +19,7 @@
         <v-col>
           <router-link
             v-if="!nameEditActive"
-            class="text-anchor"
+            class="text-black"
             :to="{ name: route, params: { 'id': originalRecord.id } }"
             target="_blank"
           >
@@ -50,7 +50,7 @@
         <v-col>
           <span> {{ $tc('component.package.label') }}: </span>
           <router-link
-            class="text-anchor"
+          class="text-black"
             :to="{ name: '/package', params: { 'id': linkedPackage.id } }"
             target="_blank"
           >
@@ -63,7 +63,7 @@
           <span> {{ $tc('component.title.label') }}: </span>
           <router-link
             v-if="!!linkedTitle"
-            class="text-anchor"
+            class="text-black"
             :to="{ name: '/title', params: { 'id': linkedTitle.id } }"
             target="_blank"
           >
@@ -134,13 +134,14 @@
             :hide-pagination="true"
             :hide-select="!isEditable"
             actions
+            dense
             @delete-item="deleteId"
-            @selected-items="selectedIdItems = $event"
+            @selected-items="updateSelectedIdItems"
           />
         </v-col>
       </v-row>
 
-      <div v-if="originalRecord.type === 'Journal'">
+      <div v-if="originalRecord.type === 'Journal' && mappedHistory.length > 0">
         <v-row>
           <v-col>
             <span>{{ $t('component.title.publishedPeriod') }}: </span>
@@ -302,6 +303,15 @@
   export default {
     name: 'GokbReviewsTitleCard',
     components: {GokbTitleIdsField, GokbConfirmationPopup},
+    emits: [
+      'reviewed-card-selected-ids',
+      'loaded',
+      'set-selected',
+      'set-selected-ids',
+      'merge',
+      'link',
+      'feedback-response'
+    ],
     extends: BaseComponent,
     props: {
       id: {
@@ -379,6 +389,7 @@
         isNamePending: false,
         ids: [],
         titleName: undefined,
+        initialized: false,
         status: undefined,
         version: undefined,
         linkedPackage: undefined,
@@ -535,6 +546,10 @@
       selectedIdItems () {
         if (this.isReviewedCard && this.isMergeCandidate) {
           this.$emit('reviewed-card-selected-ids', this.selectedIdItems)
+
+          if (this.isOtherCardSelected) {
+            this.idsVisible = this.updateVisibleIdentifiers()
+          }
         }
       }
     },
@@ -544,6 +559,7 @@
     },
     async mounted () {
       this.fetchTitle()
+
       if (this.editable && this.isReviewedCard) {
         this.fetchReviewMismatchIds()
       }
@@ -579,7 +595,7 @@
             ]
           }
         }
-        this.$emit('loaded', { id: this.id, status: this.status })
+        this.$emit('loaded', { id: this.id, status: this.status, initialized: true })
         this.loading = false
       },
       selectCard () {
@@ -694,6 +710,9 @@
 
         return 'unselected'
       },
+      updateSelectedIdItems (items) {
+        this.selectedIdItems = items
+      },
       updateVisibleIdentifiers () {
         this.ids = this.originalRecord?._embedded?.ids || []
 
@@ -727,9 +746,11 @@
         return val?.length > 0 ? val.sort(({ namespace: first }, { namespace: second }) => (first > second) ? 1 : (second > first) ? -1 : 0) : []
       },
       fetchReviewMismatchIds () {
-        for (const [count, idItem] of this.additionalVars[1].entries()) {
-          for (const [namespace, id] of Object.entries(idItem)) {
-            this.addReviewMismatchId(namespace, id)
+        if (this.additionalVars?.length > 0) {
+          for (const [count, idItem] of this.additionalVars[1].entries()) {
+            for (const [namespace, id] of Object.entries(idItem)) {
+              this.addReviewMismatchId(namespace, id)
+            }
           }
         }
       },
@@ -754,11 +775,3 @@
     }
   }
 </script>
-<style>
-  @use '@/styles/settings';
-
-.router-anchor-active {
-  opacity: 1;
-  color: rgb(var(--v-theme-anchor-darken-1));
-}
-</style>

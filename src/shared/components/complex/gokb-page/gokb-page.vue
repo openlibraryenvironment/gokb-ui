@@ -1,8 +1,8 @@
 <template>
   <v-container class="pa-2">
     <v-form
-      ref="form"
-      @input="$emit('valid', $event)"
+      ref="pageform"
+      @update:model-value="$emit('valid', $event)"
       @submit.prevent="doSubmit"
     >
       <v-card flat>
@@ -33,6 +33,7 @@
 <script>
   export default {
     name: 'GokbPage',
+    emits: ['submit', 'valid'],
     props: {
       title: {
         type: String,
@@ -52,7 +53,7 @@
     },
     methods: {
       doSubmit () {
-        this.$emit('submit', this.$refs.form)
+        this.$emit('submit', this.$refs.pageform)
       },
       validate () {
         this.$refs.validate()

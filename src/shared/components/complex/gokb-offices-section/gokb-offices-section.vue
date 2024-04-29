@@ -61,6 +61,7 @@
   export default {
     name: 'GokbOfficesSection',
     components: { GokbAddItemPopup, GokbConfirmationPopup },
+    emits: ['update:model-value', 'update'],
     props: {
       modelValue: {
         type: Array,
@@ -118,7 +119,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       offices () {

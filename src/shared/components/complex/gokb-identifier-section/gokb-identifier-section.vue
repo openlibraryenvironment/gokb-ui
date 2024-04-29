@@ -13,6 +13,9 @@
       :target-type="targetType"
       @add="addNewIdentifier"
     />
+    <v-snackbar v-model="showError" color="error">
+      {{ errorMessage }}
+    </v-snackbar>
     <template #buttons>
       <gokb-button
         v-if="isEditable"
@@ -63,6 +66,7 @@
 
   export default {
     name: 'GokbIdentifierSection',
+    emits: ['update:model-value', 'update'],
     components: {
       GokbAddIdentifierPopup,
       GokbConfirmationPopup
@@ -121,6 +125,8 @@
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: { text: undefined, vars: undefined },
+        showError: false,
+        errorMessage: undefined
       }
     },
     computed: {
@@ -129,7 +135,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       isDeleteSelectedDisabled () {
@@ -143,8 +149,20 @@
       },
       tableHeaders () {
         return [
-          { title: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'nslabel', sortable: false, width: '15%' },
-          { title: this.$i18n.t('component.identifier.value'), align: 'start', value: 'value', sortable: false, width: '100%' },
+          {
+            title: this.$i18n.tc('component.identifier.namespace'),
+            align: 'start',
+            value: 'nslabel',
+            sortable: false,
+            width: '15%'
+          },
+          {
+            title: this.$i18n.t('component.identifier.value'),
+            align: 'start',
+            value: 'value',
+            sortable: false,
+            width: '100%'
+          }
         ]
       },
       title () {
@@ -152,7 +170,7 @@
       }
     },
     watch: {
-      value: {
+      modelValue: {
         deep: true,
         handler () {
           this.updateItems()
@@ -173,17 +191,23 @@
         this[actionMethodName](actionMethodParameter)
       },
       tempId () {
-        return 'tempId' + Math.random().toString(36).substr(2, 5)
+        return 'tempId' + Math.random().toString(36).substring(2, 5)
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.identifier.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [this.selectedItems.length, this.$i18n.tc('component.identifier.label', this.selectedItems.length)]
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       confirmDeleteItem ({ id, value }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.identifier.label'), value] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [this.$i18n.tc('component.identifier.label'), value]
+        }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -191,18 +215,35 @@
         this.localValue = this.localValue.filter(({ id }) => !this.selectedItems
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedItems = []
+
         this.$emit('update', 'ids')
       },
       _deleteItem (idToDelete) {
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
+
         this.$emit('update', 'ids')
       },
       showAddIdentifierPopup () {
         this.addIdentifierPopupVisible = true
       },
       addNewIdentifier (id) {
-        this.localValue.push({ id: this.tempId(), value: id.value, namespace: id.namespace.value, nslabel: (id.namespace.name || id.namespace.value), isDeletable: undefined, _pending: 'added' })
+
+        if (this.localValue.filter(v => v.value === id.value && v.namespace === id.namespace.value).length > 0) {
+          this.errorMessage = this.$i18n.t('component.identifier.validation.list.duplicate')
+          this.showError = true
+        }
+        else {
+          this.localValue.push({
+            id: this.tempId(),
+            value: id.value,
+            namespace: id.namespace.value,
+            nslabel: (id.namespace.name || id.namespace.value),
+            isDeletable: undefined,
+            _pending: 'added'
+          })
+        }
+
         this.$emit('update', 'ids')
       },
       deleteIdentifier (value) {

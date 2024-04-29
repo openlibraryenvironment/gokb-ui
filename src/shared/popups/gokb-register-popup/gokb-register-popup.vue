@@ -45,7 +45,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       link () {

@@ -42,7 +42,7 @@
             v-model="reviewItem.description"
             required
             :disabled="isEdit"
-            :label="$i18n.t('component.review.cause.label')"
+            :label="$t('component.review.cause.label')"
           />
           <div
             v-if="additionalInfo && additionalInfo.candidates"
@@ -129,7 +129,7 @@
             v-model="reviewItem.request"
             required
             :disabled="isEdit"
-            :label="$i18n.t('component.review.request.label')"
+            :label="$t('component.review.request.label')"
           />
         </template>
       </v-col>
@@ -162,6 +162,7 @@
     name: 'GokbAddReviewPopup',
     components: { VueJsonPretty },
     extends: BaseComponent,
+    emits: ['update:model-value', 'edit'],
     props: {
       selected: {
         type: Object,
@@ -226,10 +227,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       isReadonly () {

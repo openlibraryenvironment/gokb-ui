@@ -118,6 +118,10 @@
             @selected="setActiveStep(1)"
           >
             {{ isEdit ? $t('component.package.navigation.step4') : $t('component.package.navigation.step1') }}
+
+            <template #icon="props">
+              <span>1</span>
+            </template>
           </v-stepper-item>
           <v-divider />
           <v-stepper-item
@@ -128,6 +132,10 @@
             @selected="setActiveStep(2)"
           >
             {{ isEdit ? $t('component.package.navigation.step1') : $t('component.package.navigation.step2') }}
+            <template #icon="props">
+              <span v-if="!step2Error">2</span>
+              <v-icon v-else icon="mdi-close-thick"/>
+            </template>
           </v-stepper-item>
           <v-divider />
           <v-stepper-item
@@ -138,6 +146,10 @@
             @selected="setActiveStep(3)"
           >
             {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
+            <template #icon="props">
+              <span v-if="!step3Error">3</span>
+              <v-icon v-else icon="mdi-close-thick"/>
+            </template>
           </v-stepper-item>
           <v-divider />
           <v-stepper-item
@@ -146,6 +158,9 @@
             @selected="setActiveStep(4)"
           >
             {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
+            <template #icon="props">
+              <span>4</span>
+            </template>
           </v-stepper-item>
         </v-stepper-header>
 

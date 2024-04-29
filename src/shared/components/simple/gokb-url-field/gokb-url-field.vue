@@ -6,6 +6,7 @@
   export default {
     name: 'GokbUrlField',
     extends: GokbTextField,
+    emits: ['valid'],
     props: {
       type: {
         type: String,

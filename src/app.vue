@@ -343,6 +343,7 @@
         },
         set (locale) {
           this.$i18n.locale = locale
+          this.$vuetify.locale.current = locale
 
           if (this.$i18n.t('direction') === 'rtl') {
             this.$vuetify.rtl = true

@@ -72,7 +72,7 @@
       GokbEditPlatformPopup
     },
     emits: [
-      'update'
+      'update:model-value', 'update'
     ],
     props: {
       modelValue: {
@@ -129,7 +129,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       platforms () {

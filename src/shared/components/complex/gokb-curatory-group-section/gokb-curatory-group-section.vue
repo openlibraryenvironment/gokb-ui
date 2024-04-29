@@ -60,6 +60,7 @@
 
   export default {
     name: 'GokbCuratoryGroupSection',
+    emits: ['update:model-value'],
     components: {
       GokbAddItemPopup,
       GokbConfirmationPopup
@@ -121,7 +122,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       curatoryGroups () {

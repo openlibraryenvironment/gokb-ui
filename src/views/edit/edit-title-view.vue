@@ -1,15 +1,12 @@
 <template>
   <div>
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+    </v-snackbar>
     <gokb-page
       v-if="accessible && !notFound"
       :key="version"
       :title="title"
-      @submit="update"
     >
       <gokb-error-component :value="error" />
       <v-row>
@@ -167,10 +164,8 @@
             v-model="tab"
             class="mx-4"
           >
-            <v-tabs-slider color="black" />
-
             <v-tab
-              key="identifiers"
+              value="identifiers"
               :style="[!!errors.ids ? { border: '1px solid red', borderRadius: '2px' } : {}]"
               :active-class="tabClass"
             >
@@ -187,7 +182,7 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="publisher"
+              value="publishers"
               :active-class="tabClass"
             >
               {{ $tc('component.title.publisher.label', 2) }}
@@ -203,7 +198,7 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="variants"
+              value="variants"
               :active-class="tabClass"
             >
               {{ $tc('component.variantName.label', 2) }}
@@ -219,7 +214,7 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="subjects"
+              value="subjects"
               :active-class="tabClass"
             >
               {{ $tc('component.subject.label', 2) }}
@@ -236,7 +231,7 @@
             </v-tab>
             <v-tab
               v-if="id && isContrib"
-              key="reviews"
+              value="reviews"
               :active-class="tabClass"
             >
               {{ $tc('component.review.label', 2) }}
@@ -253,7 +248,7 @@
             </v-tab>
             <v-tab
               v-if="id"
-              key="tipps"
+              value="tipps"
               :active-class="tabClass"
             >
               {{ $tc('component.tipp.label', 2) }}
@@ -263,7 +258,7 @@
             </v-tab>
             <v-tab
               v-if="isEdit && history"
-              key="history"
+              value="history"
               :active-class="tabClass"
             >
               {{ $t('component.title.history.label') }}
@@ -279,11 +274,11 @@
               </v-icon>
             </v-tab>
           </v-tabs>
-          <v-tabs-items
+          <v-window
             v-model="tab"
           >
-            <v-tab-item
-              key="identifiers"
+            <v-window-item
+              value="identifiers"
               class="mt-4"
             >
               <gokb-identifier-section
@@ -294,9 +289,9 @@
                 :api-errors="errors.ids"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="publishers"
+            </v-window-item>
+            <v-window-item
+              value="publishers"
               class="mt-4"
             >
               <gokb-publisher-section
@@ -306,9 +301,9 @@
                 :api-errors="errors.publisher"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="variants"
+            </v-window-item>
+            <v-window-item
+              value="variants"
               class="mt-4"
             >
               <gokb-alternate-names-section
@@ -318,9 +313,9 @@
                 :api-errors="errors.variantNames"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="subjects"
+            </v-window-item>
+            <v-window-item
+              value="subjects"
               class="mt-4"
             >
               <gokb-subjects-section
@@ -329,10 +324,10 @@
                 :api-errors="errors?.subjects"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
+            </v-window-item>
+            <v-window-item
               v-if="loggedIn && isContrib"
-              key="reviews"
+              value="reviews"
               class="mt-4"
             >
               <gokb-reviews-section
@@ -342,9 +337,9 @@
                 :expandable="false"
                 @update="refreshReviewsCount"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="tipps"
+            </v-window-item>
+            <v-window-item
+              value="tipps"
               class="mt-4"
             >
               <gokb-tipps-section
@@ -354,9 +349,9 @@
                 :api-errors="errors.tipps"
                 @update="updateTippCount"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="history"
+            </v-window-item>
+            <v-window-item
+              value="history"
               class="mt-4"
             >
               <gokb-title-history-section
@@ -367,8 +362,8 @@
                 :api-errors="errors.history"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-          </v-tabs-items>
+            </v-window-item>
+          </v-window>
         </v-col>
       </v-row>
       <div v-else>
@@ -452,7 +447,7 @@
         />
         <gokb-button
           v-if="!isReadonly"
-          default
+          @click.prevent="update"
           :disabled="!isValid"
         >
           {{ $i18n.t('btn.submit') }}
@@ -562,6 +557,10 @@
         updateUrl: undefined,
         deleteUrl: undefined,
         eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         allTypes: [
           { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
           { name: this.$i18n.tc('component.title.type.Book'), id: 'Book' },
@@ -669,6 +668,8 @@
       },
       async update () {
         this.errors = {}
+        this.showSnackbar = false
+        this.snackbarMessage = undefined
         this.eventMessages = []
         var isUpdate = !!this.id
 
@@ -730,12 +731,12 @@
             this.errors.history = hresp.data.error
           } else {
             if (isUpdate) {
-              this.reload()
-              this.eventMessages.push({
-                message: this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), this.allNames.name]),
-                color: 'success',
-                timeout: 2000
-              })
+              await this.reload()
+
+              this.messageColor = 'success'
+              this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), this.allNames.name])
+              this.currentSnackBarTimeout = 5000
+              this.showSnackbar = true
             } else {
               this.$router.push({
                 name: '/title',
@@ -753,6 +754,11 @@
               color: 'error',
               timeout: -1
             })
+
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), this.allNames.name])
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else if (response.status === 500) {
             this.eventMessages.push({
               message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.title.label')]),

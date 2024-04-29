@@ -15,6 +15,7 @@
 
   export default {
     name: 'GokbSelectLanguageField',
+    emits: ['update:model-value'],
     extends: GokbSelectField,
     props: {
       label: {
@@ -52,7 +53,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       }
     },

@@ -29,6 +29,7 @@
 
   export default {
     name: 'GokbSubjectField',
+    emits: ['update:model-value', 'delete'],
     props: {
       disabled: {
         type: Boolean,
@@ -59,7 +60,7 @@
           return this.modelValue.heading
         },
         set (heading) {
-          this.$emit('update:modelValue', { heading, scheme: this.modelValue.scheme })
+          this.$emit('update:model-value', { heading, scheme: this.modelValue.scheme })
         }
       },
       localScheme: {

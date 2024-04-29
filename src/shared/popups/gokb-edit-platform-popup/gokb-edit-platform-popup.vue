@@ -207,7 +207,12 @@
       GokbSearchPlatformField
     },
     extends: BaseComponent,
+    emits: ['update:model-value', 'edit'],
     props: {
+      modelValue: {
+        type: Boolean,
+        required: true
+      },
       selected: {
         type: Object,
         required: false,
@@ -253,10 +258,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       isReadonly () {

@@ -17,11 +17,11 @@
         },
         allStates: [
           {
-            name: this.$i18n.t(),
+            name: this.$i18n.t('component.review.status.Open.label'),
             id: 'Open'
           },
           {
-            name: this.$i18n.t(),
+            name: this.$i18n.t('component.review.status.Closed.label'),
             id: 'Closed'
           }
         ]
@@ -177,7 +177,7 @@
           description: descriptionOfCause,
           status,
           stdDesc,
-          localDesc: stdDesc?.name ? this.$i18n.tc('component.review.stdDesc.' + stdDesc.name + '.label') : undefined,
+          localDesc: !!stdDesc?.name ? this.$i18n.tc('component.review.stdDesc.' + stdDesc.name + '.label') : undefined,
           popup: { value: (componentToReview.name || componentToReview.type + ' ' + componentToReview.id), label: 'review', type: 'GokbReviewPopup' },
           link: { value: componentToReview.name, route: componentRoutes[componentToReview.type.toLowerCase()], id: 'componentId' },
           updateUrl: _links?.update?.href,

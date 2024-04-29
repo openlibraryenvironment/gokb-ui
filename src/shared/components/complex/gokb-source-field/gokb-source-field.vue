@@ -41,6 +41,9 @@
         <v-checkbox
           v-model="automaticUpdates"
           class="mr-5"
+          :style="{ opacity: !url ? 0.25 : 0.87 }"
+          color="primary"
+          :disabled="!url"
           :readonly="readonly"
           :label="$t('component.source.enableUpdate')"
         />
@@ -49,6 +52,7 @@
         <v-checkbox
           v-model="update"
           class="mr-5"
+          :style="{ opacity: !url ? 0.25 : 0.87 }"
           :readonly="readonly"
           :disabled="!url"
           :label="$t('component.source.updateNow')"
@@ -65,6 +69,7 @@
   export default {
     name: 'GokbSourceField',
     extends: BaseComponent,
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -115,7 +120,7 @@
         },
         set (val) {
           this.item.frequency = val
-          this.$emit('update:modelValue', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       url: {
@@ -124,7 +129,7 @@
         },
         set (val) {
           this.item.url = val
-          this.$emit('update:modelValue', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       targetNamespace: {
@@ -133,7 +138,7 @@
         },
         set (val) {
           this.item.targetNamespace = val
-          this.$emit('update:modelValue', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       automaticUpdates: {
@@ -142,7 +147,7 @@
         },
         set (val) {
           this.item.automaticUpdates = val
-          this.$emit('update:modelValue', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       update: {
@@ -151,7 +156,7 @@
         },
         set (val) {
           this.item.update = val
-          this.$emit('update:modelValue', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
     },

@@ -19,16 +19,19 @@
       </i18n-t>
       <span v-else> {{ message.text }} </span>
     </v-sheet>
-    <v-spacer />
-    <gokb-button
-      text
-      @click="close"
-    >
-      {{ $t('btn.cancel') }}
-    </gokb-button>
-    <gokb-button is-submit>
-      {{ $t('btn.confirm') }}
-    </gokb-button>
+
+    <template #buttons>
+      <v-spacer />
+      <gokb-button
+        text
+        @click="close"
+      >
+        {{ $t('btn.cancel') }}
+      </gokb-button>
+      <gokb-button is-submit>
+        {{ $t('btn.confirm') }}
+      </gokb-button>
+    </template>
   </gokb-dialog>
 </template>
 
@@ -38,6 +41,7 @@
   export default {
     name: 'GokbConfirmationPopup',
     extends: BaseComponent,
+    emits: ['update:model-value', 'confirmed'],
     props: {
       modelValue: {
         type: Boolean,
@@ -61,7 +65,7 @@
           return this.modelValue
         },
         set (value) {
-          this.$emit('update:modelValue', value)
+          this.$emit('update:model-value', value)
         }
       },
     },
@@ -70,7 +74,7 @@
     methods: {
       submit () {
         this.close()
-        this.$emit('confirmed')
+        this.$emit('confirmed', true)
       },
       close () {
         this.localValue = false

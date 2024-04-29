@@ -150,7 +150,7 @@
         resultOptions: {
           page: 1,
           mustSort: true,
-          sortBy: ['name'],
+          sortBy: [{ key: 'name', order: 'asc' }],
           desc: false,
           itemsPerPage: ROWS_PER_PAGE
         },
@@ -262,12 +262,9 @@
         link: 'name',
         linkTwo: 'provider'
       }
-      if (this.defaultSortOrder === 'desc') {
-        this.resultOptions.desc = true
-      }
 
       if (this.defaultSortField) {
-        this.resultOptions.sortBy[0] = this.defaultSortField
+        this.resultOptions.sortBy = [{ key: this.defaultSortField, order: this.defaultSortOrder || 'asc'}]
       }
     },
     mounted () {
@@ -280,17 +277,14 @@
       },
       resultPaginate (options) {
         if (options.sortBy) {
-          this.resultOptions.sortBy = [options.sortBy]
-        }
-        if (typeof options.desc === 'boolean') {
-          this.resultOptions.desc = options.desc
+          this.resultOptions.sortBy = options.sortBy
         }
 
-        this.retrievePackages(options)
+        this.retrievePackages()
       },
-      async retrievePackages (options) {
-        const sort = this.resultOptions.sortBy.length > 0 ? (this.linkSearchParameterValues[this.resultOptions.sortBy[0]] || this.resultOptions.sortBy[0]) : this.defaultSortField
-        const order = this.resultOptions.desc[0] ? 'desc' : 'asc'
+      async retrievePackages () {
+        const sort = this.resultOptions.sortBy.length > 0 ? (this.linkSearchParameterValues[this.resultOptions.sortBy[0].key] || this.resultOptions.sortBy[0].key) : this.defaultSortField
+        const order = this.resultOptions.sortBy[0].order || 'asc'
         const searchServiceIncludes = 'id,uuid,name,status,provider,nominalPlatform,_links,contentType,lastUpdated'
         const searchParams = {}
 
@@ -313,7 +307,7 @@
             ...(searchParams || {}),
             ...((sort && { _sort: sort }) || {}),
             ...(this.hideLocal ? { global: ['Global', 'Consortium', 'Regional', 'Unknown'] } : {}),
-            _order: (this.resultOptions.desc ? 'desc' : 'asc'),
+            _order: order,
             _include: searchServiceIncludes,
             offset: this.resultOptions.page ? (this.resultOptions.page - 1) * this.resultOptions.itemsPerPage : 0,
             limit: this.resultOptions.itemsPerPage

@@ -32,19 +32,21 @@
         />
       </v-col>
     </v-row>
-    <v-spacer />
-    <gokb-button
-      text
-      @click="close"
-    >
-      {{ $t('btn.cancel') }}
-    </gokb-button>
-    <gokb-button
-      :disabled="!isValid"
-      is-submit
-    >
-      {{ $t('btn.add') }}
-    </gokb-button>
+    <template #buttons>
+      <v-spacer />
+      <gokb-button
+        text
+        @click="close"
+      >
+        {{ $t('btn.cancel') }}
+      </gokb-button>
+      <gokb-button
+        :disabled="!isValid"
+        is-submit
+      >
+        {{ $t('btn.add') }}
+      </gokb-button>
+    </template>
   </gokb-dialog>
 </template>
 
@@ -55,8 +57,13 @@
   export default {
     name: 'GokbAddSubjectPopup',
     extends: BaseComponent,
+    emits: ['update:model-value', 'add', 'delete'],
     ddcList: DDC,
     props: {
+      modelValue: {
+        type: Boolean,
+        required: true
+      },
       namespaceFixed: {
         type: Boolean,
         required: false
@@ -110,10 +117,10 @@
       },
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
     },

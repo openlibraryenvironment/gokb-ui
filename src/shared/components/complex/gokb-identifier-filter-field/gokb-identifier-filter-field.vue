@@ -29,6 +29,7 @@
   export default {
     name: 'GokbIdentifierFilterField',
     components: { GokbNamespaceField, GokbTextField },
+    emits: ['update:model-value'],
     props: {
       targetType: {
         type: String,
@@ -84,7 +85,7 @@
           result = this.namespace.value + ',' + (result || '*')
         }
 
-        this.$emit('update:modelValue', result)
+        this.$emit('update:model-value', result)
       }
     }
   }

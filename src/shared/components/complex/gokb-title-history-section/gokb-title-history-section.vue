@@ -128,6 +128,7 @@
     name: 'GokbTitleHistorySection',
     components: { GokbAddItemPopup, GokbConfirmationPopup },
     extends: BaseComponent,
+    emits: ['update:model-value'],
     props: {
       modelValue: {
         type: Array,
@@ -171,7 +172,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       isDeleteSelectedDisabled () {

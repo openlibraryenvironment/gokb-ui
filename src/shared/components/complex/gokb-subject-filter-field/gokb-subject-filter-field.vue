@@ -44,6 +44,7 @@
 
   export default {
     name: 'GokbSubjectFilterField',
+    emits: ['update:mode-value', 'delete'],
     ddcList: DDC,
     props: {
       modelValue: {
@@ -109,7 +110,7 @@
           result = this.scheme.value + ';' + (!!this.val ? (this.knownSchemes[this.scheme.value] ? this.val[this.knownSchemes[this.scheme.value].itemValue] : this.val) : '*')
         }
 
-        this.$emit('update:modelValue', result)
+        this.$emit('update:model-value', result)
       }
     }
   }

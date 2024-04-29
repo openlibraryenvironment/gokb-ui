@@ -9,7 +9,6 @@
       v-if="!notFound"
       :key="version"
       :title="$tc('component.tipp.label')"
-      @submit="update"
     >
       <gokb-error-component :value="error" />
       <gokb-section :sub-title="$t('component.general.general')">
@@ -564,6 +563,7 @@
         <gokb-button
           v-if="updateUrl || !id"
           :disabled="!packageTitleItem.title"
+          @click="update"
           is-submit
         >
           {{ $t('btn.update') }}

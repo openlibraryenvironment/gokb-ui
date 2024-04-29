@@ -48,6 +48,7 @@
   export default {
     name: 'GokbSelectField',
     extends: BaseComponent,
+    emits: ['update:model-value'],
     label: '',
     entityName: undefined,
     searchParams: {},
@@ -127,7 +128,7 @@
         },
         set (value) {
           // console.log('select field', value)
-          this.$emit('update:modelValue', value)
+          this.$emit('update:model-value', value)
         }
       },
       localName () {

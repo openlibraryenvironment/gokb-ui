@@ -8,7 +8,7 @@
     :label="label"
     :prepend-icon="hideIcon ? '' : prependIcon"
     :required="required"
-    :rules="rules"
+    :rules="localRules"
     :type="type"
     :error="!!apiErrors"
     :error-messages="errorMessages"
@@ -112,9 +112,6 @@
       rules: {
         type: Array,
         required: false,
-        default (props) {
-          return [v => (v?.length > 0 || !props.required) || props.validLocal]
-        }
       },
       apiErrors: {
         type: [Object, Array],
@@ -129,7 +126,8 @@
     },
     data () {
       return {
-        localErrorMessages: undefined
+        localErrorMessages: undefined,
+        localRules: []
       }
     },
     computed: {
@@ -140,9 +138,6 @@
         set (localValue) {
           this.$emit('update:model-value', localValue)
         },
-      },
-      validLocal () {
-        return this.$i18n.t('validation.missingValue')
       },
       isValid () {
         return !this.localErrorMessages && (!this.apiErrors || this.apiErrors.length === 0)
@@ -155,6 +150,16 @@
       },
       editable () {
         return !this.readonly && !this.disabled
+      }
+    },
+    watch: {
+      rules (r) {
+        if (r?.length > 0) {
+          this.localRules = r
+        }
+        else {
+          this.localRules = [v => (v.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
+        }
       }
     },
     methods: {

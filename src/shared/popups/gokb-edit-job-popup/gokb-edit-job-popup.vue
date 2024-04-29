@@ -10,7 +10,7 @@
         <gokb-text-field
           v-model="localType"
           disabled
-          :label="$i18n.t('job.type')"
+          :label="$t('job.type')"
         />
       </v-col>
     </v-row>
@@ -20,14 +20,14 @@
           v-if="!!selectedItem.link"
           class="primary--text"
         >
-          {{ $i18n.tc('component.package.label') }}
+          {{ $tc('component.package.label') }}
         </div>
         <router-link
           v-if="!!selectedItem.link"
           :style="{ color: 'primary' }"
           :to="{ name: '/package', params: { 'id': selectedItem.componentId } }"
         >
-          {{ selectedItem.link.value || $i18n.tc('component.package.label') + ' ' + selectedItem.componentId }}
+          {{ selectedItem.link.value || $tc('component.package.label') + ' ' + selectedItem.componentId }}
         </router-link>
       </v-col>
     </v-row>
@@ -36,14 +36,14 @@
         <gokb-text-field
           v-model="selectedItem.startTime"
           disabled
-          :label="$i18n.t('job.startTime')"
+          :label="$t('job.startTime')"
         />
       </v-col>
       <v-col md="4">
         <gokb-text-field
           v-model="selectedItem.endTime"
           disabled
-          :label="$i18n.t('job.endTime')"
+          :label="$t('job.endTime')"
         />
       </v-col>
     </v-row>
@@ -55,33 +55,33 @@
           {{ selectedItem.dryRun ? $t('job.report.dryRunLabel') : $t('job.report.label') }}
         </div>
         <div v-if="!!selectedItem.results.report">
-          <span class="mr-4">{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.report.invalid }}/{{ selectedItem.results.report.numRows }}</span>
-          <span v-if="!!selectedItem.results.report.hasOwnProperty('previous')" class="mr-4">{{ $i18n.t('job.report.previous.label') }}: {{ selectedItem.results.report.previous }}</span>
-          <span v-if="!!selectedItem.results.report.hasOwnProperty('matched')" class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</span>
-          <span v-if="!!selectedItem.results.report.hasOwnProperty('partial')" class="mr-4">{{ $i18n.t('job.report.partial.label') }}: {{ selectedItem.results.report.partial }}</span>
-          <span v-if="!!selectedItem.results.report.hasOwnProperty('created')" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
-          <span v-if="!!selectedItem.results.report.hasOwnProperty('reviews')" class="mr-4">{{ $i18n.tc('component.review.label', 2) }}: {{ selectedItem.results.report.reviews }}</span>
-          <span v-if="!selectedItem.dryRun && !!selectedItem.results.report.hasOwnProperty('retired')">{{ $i18n.t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
+          <span class="mr-4">{{ $t('job.report.invalid.label') }}: {{ selectedItem.results.report.invalid }}/{{ selectedItem.results.report.numRows }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('previous')" class="mr-4">{{ $t('job.report.previous.label') }}: {{ selectedItem.results.report.previous }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('matched')" class="mr-4">{{ $t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('partial')" class="mr-4">{{ $t('job.report.partial.label') }}: {{ selectedItem.results.report.partial }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('created')" class="mr-4">{{ $t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('reviews')" class="mr-4">{{ $tc('component.review.label', 2) }}: {{ selectedItem.results.report.reviews }}</span>
+          <span v-if="!selectedItem.dryRun && !!selectedItem.results.report.hasOwnProperty('retired')">{{ $t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.matched">
-          <span class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
-          <span class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.created }}</span>
-          <span class="mr-4">{{ $i18n.t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
-          <span class="mr-4">{{ $i18n.tc('default.error.label', 2) }}: {{ selectedItem.results.error }}</span>
+          <span class="mr-4">{{ $t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
+          <span class="mr-4">{{ $t('job.report.created.label') }}: {{ selectedItem.results.created }}</span>
+          <span class="mr-4">{{ $t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
+          <span class="mr-4">{{ $tc('default.error.label', 2) }}: {{ selectedItem.results.error }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.validation">
-          <span class="mr-4">{{ $i18n.t('job.report.invalid.label') }}: {{ selectedItem.results.validation.rows.error }}/{{ selectedItem.results.validation.rows.total }}</span>
-          <span class="mr-4">{{ $i18n.tc('kbart.processing.warning.label', 2) }}: {{ selectedItem.results.validation.rows.warning }}</span>
+          <span class="mr-4">{{ $t('job.report.invalid.label') }}: {{ selectedItem.results.validation.rows.error }}/{{ selectedItem.results.validation.rows.total }}</span>
+          <span class="mr-4">{{ $tc('kbart.processing.warning.label', 2) }}: {{ selectedItem.results.validation.rows.warning }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.messageCode">
           <span class="pt-4">{{ $tc('default.error.label') }} - {{ $t(selectedItem.results.messageCode) }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.result">
-          <span v-if="!!selectedItem.results.hasOwnProperty('error')" class="mr-4">{{ $i18n.t('job.error') }}: {{ selectedItem.results.error }}</span>
-          <span v-if="!!selectedItem.results.hasOwnProperty('matched')" class="mr-4">{{ $i18n.t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
-          <span v-if="!!selectedItem.results.hasOwnProperty('unmatched')" class="mr-4">{{ $i18n.t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
-          <span v-if="!!selectedItem.results.hasOwnProperty('created')" class="mr-4">{{ $i18n.t('job.report.created.label') }}: {{ selectedItem.results.created }}</span>
-          <span v-if="!!selectedItem.results.hasOwnProperty('reviews')" class="mr-4">{{ $i18n.tc('component.review.label', 2) }}: {{ selectedItem.results.reviews }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('error')" class="mr-4">{{ $t('job.error') }}: {{ selectedItem.results.error }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('matched')" class="mr-4">{{ $t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('unmatched')" class="mr-4">{{ $t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('created')" class="mr-4">{{ $t('job.report.created.label') }}: {{ selectedItem.results.created }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('reviews')" class="mr-4">{{ $tc('component.review.label', 2) }}: {{ selectedItem.results.reviews }}</span>
         </div>
       </v-col>
     </v-row>
@@ -90,7 +90,7 @@
         <div
           class="primary--text"
         >
-          {{ $i18n.t('job.messages') }}
+          {{ $t('job.messages') }}
         </div>
         <ul class="mt-2">
           <li
@@ -166,7 +166,12 @@
     name: 'GokbEditJobPopup',
     components: { VueJsonPretty },
     extends: BaseComponent,
+    emits: ['update:model-value'],
     props: {
+      modelValue: {
+        type: Boolean,
+        required: true
+      },
       selected: {
         type: Object,
         required: false,
@@ -197,10 +202,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       localType () {

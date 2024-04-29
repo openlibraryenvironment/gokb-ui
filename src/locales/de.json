@@ -993,7 +993,10 @@
       "validation": {
         "value": "Wert {0} ist ungültig!",
         "generic": "Dieser Wert ist ungültig!",
-        "pattern": "Der eingegebene Wert hat ein ungültiges Format."
+        "pattern": "Der eingegebene Wert hat ein ungültiges Format.",
+        "list": {
+          "duplicate": "Dieser Identifikator ist bereits in der Liste vorhanden!"
+        }
       }
     },
     "user": {

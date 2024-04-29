@@ -48,6 +48,7 @@
 
   export default {
     name: 'GokbPriceField',
+    emits: ['update:model-value'],
     props: {
       disabled: {
         type: Boolean,
@@ -80,7 +81,7 @@
           return this.modelValue.price
         },
         set (price) {
-          this.$emit('update:modelValue', {
+          this.$emit('update:model-value', {
             price,
             currency: this.modelValue.currency,
             priceType: this.modelValue.priceType,
@@ -95,7 +96,7 @@
           return this.modelValue.currency
         },
         set (currency) {
-          this.$emit('update:modelValue', {
+          this.$emit('update:model-value', {
             price: this.modelValue.price,
             currency,
             priceType: this.modelValue.priceType,
@@ -110,7 +111,7 @@
           return this.modelValue.startDate
         },
         set (startDate) {
-          this.$emit('update:modelValue', {
+          this.$emit('update:model-value', {
             price: this.modelValue.price,
             currency: this.modelValue.currency,
             priceType: this.modelValue.priceType,
@@ -125,7 +126,7 @@
           return this.modelValue.endDate
         },
         set (endDate) {
-          this.$emit('update:modelValue', {
+          this.$emit('update:model-value', {
             price: this.modelValue.price,
             currency: this.modelValue.currency,
             priceType: this.modelValue.priceType,

@@ -51,9 +51,7 @@
   export default {
     name: 'GokbOfficeField',
     components: { GokbTextField },
-    emits: [
-      'delete'
-    ],
+    emits: ['update:model-value', 'delete'],
     props: {
       disabled: {
         type: Boolean,
@@ -91,7 +89,7 @@
           return this.modelValue
         },
         set (value) {
-          this.$emit('update:modelValue', value)
+          this.$emit('update:model-value', value)
         }
       },
       officeType: {

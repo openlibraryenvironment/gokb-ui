@@ -8,8 +8,8 @@
       <v-col>
         <gokb-text-field
           v-model="selectedItem.name"
+          :label="$t('component.general.name')"
           disabled
-          :label="$i18n.t('component.general.name')"
         />
       </v-col>
     </v-row>
@@ -17,8 +17,8 @@
       <v-col>
         <gokb-text-field
           v-model="selectedItem.organisationType"
+          :label="$t('component.curatoryGroup.organisationType.label')"
           disabled
-          :label="$i18n.t('component.curatoryGroup.organisationType.label')"
         />
       </v-col>
     </v-row>
@@ -26,8 +26,8 @@
       <v-col>
         <gokb-email-field
           v-model="selectedItem.email"
+          :label="$t('component.user.email')"
           disabled
-          :label="$i18n.t('component.user.email')"
         />
       </v-col>
     </v-row>
@@ -47,6 +47,10 @@
     name: 'GokbCuratoryGroupPopup',
     extends: BaseComponent,
     props: {
+      modelValue: {
+        type: Boolean,
+        required: true
+      },
       selected: {
         type: Object,
         required: false,
@@ -67,10 +71,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       }
     },

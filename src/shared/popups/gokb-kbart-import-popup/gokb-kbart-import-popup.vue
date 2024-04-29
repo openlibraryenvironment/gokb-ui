@@ -145,8 +145,9 @@
     name: 'GokbKbartImportPopup',
     components: { GokbNamespaceField },
     extends: BaseComponent,
+    emits: ['update:model-value', 'kbart'],
     props: {
-      value: {
+      modelValue: {
         type: Boolean,
         required: true,
         default: true
@@ -199,10 +200,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       progressColor () {
@@ -210,9 +211,24 @@
       },
       errorHeaders () {
         return [
-          { text: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
-          { text: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
-          { text: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
+          {
+            title: this.$i18n.tc('kbart.row.label'),
+            align: 'start',
+            width: '10%',
+            value: 'row',
+            groupable: false
+          },
+          {
+            title: this.$i18n.tc('kbart.column.label'),
+            align: 'start',
+            width: '15%',
+            value: 'column'
+          },
+          {
+            title: this.$i18n.tc('kbart.errors.reason.label'),
+            align: 'start',
+            value: 'reason'
+          }
         ]
       },
       expandWidth () {

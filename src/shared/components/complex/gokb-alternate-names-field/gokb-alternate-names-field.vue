@@ -26,6 +26,7 @@
   export default {
     name: 'GokbAlternateNamesField',
     components: { GokbLocaleField, GokbTextField },
+    emits: ['update:model-value'],
     props: {
       namespaceFixed: {
         type: Boolean,
@@ -60,7 +61,7 @@
           return this.modelValue.locale?.name
         },
         set (locale) {
-          this.$emit('update:modelValue', { locale: locale?.name, variantName: this.variant })
+          this.$emit('update:model-value', { locale: locale?.name, variantName: this.variant })
         }
       },
       variant: {
@@ -68,7 +69,7 @@
           return this.modelValue.variantName
         },
         set (variantName) {
-          this.$emit('update:modelValue', { locale: this.language, variantName })
+          this.$emit('update:model-value', { locale: this.language, variantName })
         }
       }
     }

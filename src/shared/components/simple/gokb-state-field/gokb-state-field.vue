@@ -3,6 +3,7 @@
 
   export default {
     name: 'GokbStateField',
+    emits: ['update:model-value'],
     extends: GokbSelectField,
     props: {
       label: {

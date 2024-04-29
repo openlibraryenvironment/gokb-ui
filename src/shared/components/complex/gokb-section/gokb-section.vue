@@ -143,14 +143,12 @@
 </template>
 
 <script>
-import { createHydrationRenderer } from 'vue'
-
   export default {
     name: 'GokbSection',
     emits: ['update:model-value'],
     props: {
       modelValue: {
-        type: Boolean,
+        type: [Boolean, Number],
         required: false,
         default: true
       },

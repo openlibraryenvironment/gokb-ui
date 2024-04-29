@@ -14,6 +14,7 @@
 <script>
   export default {
     name: 'GokbFileInputField',
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -42,7 +43,7 @@
           return this.modelValue
         },
         set (value) {
-          this.$emit('update:modelValue', value)
+          this.$emit('update:model-value', value)
         }
       }
     }

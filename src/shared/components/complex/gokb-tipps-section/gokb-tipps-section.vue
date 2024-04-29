@@ -205,7 +205,6 @@
         :total-number-of-items="totalNumberOfItems"
         :show-loading="isLoading"
         :options.sync="searchOptions"
-        :hide-select="!isEditable"
         @selected-items="selectedItems = $event"
         @paginate="resultPaginate"
         @edit="editTitle"
@@ -222,7 +221,6 @@
         :editable="isEditable"
         :total-number-of-items="totalNumberOfNewItems"
         :options.sync="newOptions"
-        :hide-select="!isEditable"
         @paginate="resultNewPaginate"
         @edit="editTitle"
       />
@@ -250,6 +248,7 @@
       GokbKbartImportPopup
     },
     extends: BaseComponent,
+    emits: ['update', 'kbart'],
     props: {
       disabled: {
         type: Boolean,
@@ -362,7 +361,7 @@
       },
       tableHeaders () {
         return [
-          { title: (this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.tipp.label')), align: 'start', value: 'popup', width: '50%', sortable: true },
+          { title: (!!this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.tipp.label')), align: 'start', value: 'popup', width: '50%', sortable: true },
           { title: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
           { title: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
           { title: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' },

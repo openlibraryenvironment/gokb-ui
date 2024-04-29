@@ -1,14 +1,13 @@
 import '@mdi/font/css/materialdesignicons.css'
-import de from 'vuetify/lib/locale/de'
-import en from 'vuetify/lib/locale/en'
+import { de, en } from 'vuetify/locale'
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify/dist/vuetify.js'
 
-
 const vuetify = createVuetify({
-  lang: {
-    locales: { de, en },
-    current: 'de'
+  locale: {
+    locale: import.meta.env.VITE_I18N_LOCALE || navigator.language.split('-')[0],
+    fallback: 'en',
+    messages: { de, en },
   },
   icons: {
     iconfont: 'mdiSvg',

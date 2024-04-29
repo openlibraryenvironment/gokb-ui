@@ -2,7 +2,7 @@
   <gokb-dialog
     ref="dialog"
     v-model="localValue"
-    title="Login"
+    :title="$t('popups.login.label')"
     @submit="login"
   >
     <gokb-username-field
@@ -30,6 +30,7 @@
     </span>
     <v-spacer />
     <template #buttons>
+      <v-spacer />
       <gokb-button
         text
         @click="close"

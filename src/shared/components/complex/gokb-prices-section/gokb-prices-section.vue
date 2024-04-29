@@ -59,6 +59,7 @@
 
   export default {
     name: 'GokbPricesSection',
+    emits: ['update:model-value', 'update'],
     components: {
       GokbConfirmationPopup,
       GokbAddItemPopup
@@ -110,7 +111,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       prices () {

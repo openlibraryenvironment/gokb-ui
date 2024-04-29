@@ -70,6 +70,7 @@
   export default {
     name: 'GokbSubjectsSection',
     components: { GokbAddSubjectPopup, GokbConfirmationPopup },
+    emits: ['update:model-value', 'update'],
     ddcList: DDC,
     props: {
       modelValue: {
@@ -129,7 +130,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       subjects () {

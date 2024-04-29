@@ -17,7 +17,9 @@
       :loading="showLoading"
       :show-select="showSelect"
       :must-sort="mustSort"
+      :value-comparator="comparator"
       density="compact"
+      return-object
       @update:sortBy="changeSortBy"
     >
       <template #no-data>
@@ -246,7 +248,6 @@
 
   export default {
     name: 'GokbTable',
-    emits: ['paginate', 'edit', 'delete-item', 'retire-item', 'close-review'],
     components: {
       GokbEditJobPopup,
       GokbEditPlatformPopup,
@@ -255,6 +256,7 @@
       GokbCuratoryGroupPopup
     },
     extends: BaseComponent,
+    emits: ['paginate', 'edit', 'delete-item', 'retire-item', 'close-review', 'selected-items'],
     props: {
       disabled: {
         type: Boolean,
@@ -288,10 +290,10 @@
         required: false,
         default: () => []
       },
-      hideSelect: {
+      forceShowSelect: {
         type: Boolean,
         required: false,
-        default: true,
+        default: false,
       },
       hidePagination: {
         type: Boolean,
@@ -320,6 +322,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      comparator: {
+        type: Function,
+        required: false,
+        default: (a, b) => (!!a.id && !!b.id ? a.id === b.id : a.value === b.value)
       }
     },
     data () {
@@ -346,8 +353,8 @@
         return Math.min(Math.ceil(this.totalNumberOfItems / this.options.itemsPerPage), this.options.page + 10, 1000)
       },
       showSelect () {
-        return this.editable && !this.hideSelect
-      }
+        return this.forceShowSelect || this.editable
+      },
     },
     watch: {
       'options.page' () {

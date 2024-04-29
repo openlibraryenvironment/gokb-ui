@@ -5,6 +5,8 @@
     :disabled="disabled"
     :type="isSubmit ? 'submit' : undefined"
     :to="to"
+    :target="newTab ? '_blank' : undefined"
+    class="font-weight-bold"
     @click="$emit('click', $event)"
   >
     <v-progress-circular
@@ -43,7 +45,7 @@
         default: undefined,
       },
       to: {
-        type: String,
+        type: [String, Object],
         required: false,
         default: undefined,
       },
@@ -63,6 +65,11 @@
         default: undefined
       },
       loading: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      newTab: {
         type: Boolean,
         required: false,
         default: false

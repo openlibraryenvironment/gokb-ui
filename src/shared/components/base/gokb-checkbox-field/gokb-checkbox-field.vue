@@ -10,6 +10,7 @@
 <script>
   export default {
     name: 'GokbCheckboxField',
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -38,7 +39,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
     },

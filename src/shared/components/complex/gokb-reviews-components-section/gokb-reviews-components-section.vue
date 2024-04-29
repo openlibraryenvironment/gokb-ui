@@ -10,6 +10,7 @@
       :message="submitConfirmationMessage"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <v-overlay  v-model="initializing" />
     <v-alert v-if="editable && isStatusOpen" type="info"> <span class="font-weight-bold">{{ workflow.toDo }}</span> </v-alert>
     <v-container fluid>
       <v-row>
@@ -22,12 +23,12 @@
         >
           <v-row>
             <v-col>
-              <h3 class="mb-1">
+              <div class="font-weight-bold mb-1">
                 <v-icon class="mr-1 mt-n1">
                   {{ reviewedComponent.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
                 {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
-              </h3>
+              </div>
               <gokb-reviews-title-card
                 :id="reviewedComponent.id"
                 :ref="reviewedComponent.id.toString()"
@@ -42,6 +43,7 @@
                 @merge="mergeCards"
                 @feedback-response="feedbackResponse"
                 @reviewed-card-selected-ids="setSelectedReviewItemIds"
+                @loaded="toggleLoaded"
               />
             </v-col>
             <v-col v-if="reviewType === 'Ambiguous Title Matches'" cols="1">
@@ -63,18 +65,17 @@
         >
           <v-row>
             <v-col>
-              <h3 class="mb-1">
+              <div class="font-weight-bold mb-1">
                 <v-icon class="mr-1 mt-n1">
                   {{ i.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
                 {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) : $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
                 <b>#{{ idx + 1 }}</b>
-              </h3>
+              </div>
               <gokb-reviews-title-card
                 :id="i.id"
                 :ref="i.id.toString()"
                 role="candidateComponent"
-                height="100%"
                 :route="i.route"
                 :candidate-index="idx + 1"
                 :reviewed-component-name="reviewedComponent.name"
@@ -169,6 +170,7 @@
       GokbConfirmationPopup
     },
     extends: BaseComponent,
+    emits: ['expand', 'close', 'added', 'finished-step', 'initialized', 'feedback-response'],
     props: {
       reviewedComponent: {
         type: Object,
@@ -222,7 +224,7 @@
     },
     data () {
       return {
-        finishedLoading: false,
+        initializing: true,
         selectedCard: undefined,
         selectedCardIds: undefined,
         selectedReviewItemIds: [],
@@ -280,6 +282,7 @@
     created() {
       if (this.workflow.showReviewed) {
         this.linkedComponents[this.reviewedComponent.id.toString()] = {
+          initialized: false,
           loaded: false,
           active: true,
           role: 'reviewedComponent',
@@ -288,6 +291,7 @@
       }
       this.referenceComponents.forEach(rc => {
         this.linkedComponents[rc.id.toString()] = {
+          initialized: false,
           loaded: false,
           active: true,
           role: 'referenceComponent',
@@ -446,11 +450,15 @@
       toggleLoaded (info) {
         if (!this.linkedComponents[info.id.toString()]) {
           this.linkedComponents[info.id.toString()] = {
+            initialized: info.initialized,
             loaded: false,
             active: true,
             role: 'referenceComponent',
             route: rc.route
           }
+        }
+        else {
+          this.linkedComponents[info.id.toString()].initialized = info.initialized
         }
 
         if (!info.status) {
@@ -465,6 +473,10 @@
           }
 
           this.activeComponents = Object.values(this.linkedComponents).filter(lc => (lc.active === true)).length
+        }
+
+        if (Object.values(this.linkedComponents).filter(lc => (lc.initialized === false)).length === 0) {
+          this.initializing = false
         }
       },
       nextStep () {

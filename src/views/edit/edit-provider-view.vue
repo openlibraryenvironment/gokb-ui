@@ -6,11 +6,10 @@
       </template>
     </v-snackbars>
     <gokb-page
+      ref="titlepage"
       v-if="accessible && !notFound"
       :key="version"
       :title="title"
-      @valid="valid = $event"
-      @submit="update"
     >
       <gokb-error-component :value="error" />
       <gokb-section :no-tool-bar="true">
@@ -340,7 +339,7 @@
         <gokb-button
           v-if="!isReadonly"
           :disabled="!valid"
-          default
+          @click="update"
         >
           {{ updateButtonText }}
         </gokb-button>

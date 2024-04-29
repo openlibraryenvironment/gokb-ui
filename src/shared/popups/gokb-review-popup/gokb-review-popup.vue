@@ -47,15 +47,14 @@
       @feedback-response="showResponse"
     />
 
-    <v-btn
+    <template #buttons>
+      <gokb-button
         class="ml-6 btn-default"
         :to="{ name: '/review', params: { id: id} }"
-        target="_blank"
+        new-tab
       >
         {{ $t('component.tipp.toFullView') }}
-    </v-btn>
-
-    <template #buttons>
+    </gokb-button>
       <gokb-button
         v-if="escalatable"
         @click="escalate"

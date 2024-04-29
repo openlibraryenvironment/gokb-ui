@@ -95,7 +95,7 @@
         :headers="resultHeaders"
         :items="resultItems"
         :editable="!isReadonly"
-        :hide-select="!showSelect"
+        :force-show-select="showSelect"
         :options.sync="resultOptions"
         :total-number-of-items="totalNumberOfItems"
         :show-loading="isLoading"

@@ -203,7 +203,7 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE,
           mustSort: true,
-          sortBy: ['dateCreated'],
+          sortBy: [{ key:'dateCreated', order: 'asc' }],
           desc: false
         },
         reviewsRaisedBy: undefined,
@@ -404,11 +404,9 @@
       },
       resultPaginate (options) {
         this.successMessage = false
-        if (!!options.sortBy) {
-          this.reviewsOptions.sortBy = [options.sortBy]
-        }
-        if (typeof options.desc === 'boolean') {
-          this.reviewsOptions.desc = options.desc
+
+        if (options.sortBy) {
+          this.resultOptions.sortBy = options.sortBy
         }
 
         if (!!options.itemsPerPage) {
@@ -451,8 +449,8 @@
 
         const parameters = {
           ...(searchParams || {}),
-          _sort: this.reviewsOptions.sortBy[0],
-          _order: (this.reviewsOptions.desc ? 'desc' : 'asc'),
+          _sort: this.reviewsOptions.sortBy[0].key,
+          _order: this.reviewsOptions.sortBy[0].order || 'asc',
           offset: this.reviewsOptions.page ? (this.reviewsOptions.page - 1) * this.reviewsOptions.itemsPerPage : 0,
           limit: this.reviewsOptions.itemsPerPage
         }

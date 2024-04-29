@@ -61,6 +61,7 @@
 
   export default {
     name: 'GokbPublisherSection',
+    emits: ['update:model-value', 'update'],
     components: {
       GokbAddItemPopup,
       GokbConfirmationPopup
@@ -112,7 +113,7 @@
           return this.modelValue
         },
         set (localValue) {
-          this.$emit('update:modelValue', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       publishers () {

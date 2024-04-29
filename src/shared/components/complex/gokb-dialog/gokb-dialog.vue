@@ -6,22 +6,22 @@
     :width="width"
     :retain-focus="false"
     scrollable
-    @keydown="closeWithEscape"
+    @keydown.escape="closeWithEscape"
   >
     <v-form
       ref="form"
-      :value="isValid"
+      v-model="formStatus"
       @submit.prevent="doSubmit"
     >
-      <v-card class="elevation-12">
+      <v-card class="elevation-12" :height="fullscreen ? '100vh' : undefined">
         <v-card-title class="pt-0 px-0">
           <v-toolbar
             :color="appColor"
             theme="dark"
           >
-            <v-toolbar-title>
+            <div class="ml-5">
               {{ title }}
-            </v-toolbar-title>
+            </div>
             <v-spacer />
             <v-btn
               icon
@@ -46,7 +46,7 @@
 <script>
   export default {
     name: 'GokbDialog',
-    emits: ['update:model-value', 'submit'],
+    emits: ['update:model-value', 'submit', 'update-valid'],
     props: {
       modelValue: {
         type: [Boolean, Number],
@@ -81,6 +81,7 @@
     data () {
       return {
         appColor: import.meta.env.VUE_APP_COLOR || '#4f4f4f',
+        formIsValid: false
       }
     },
     computed: {
@@ -90,6 +91,15 @@
         },
         set (localValue) {
           this.$emit('update:model-value', localValue)
+        }
+      },
+      formStatus: {
+        get () {
+          return this.isValid
+        },
+        set (localValue) {
+          this.formIsValid = localValue
+          this.$emit('update-valid', localValue)
         }
       }
     },
