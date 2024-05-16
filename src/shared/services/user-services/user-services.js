@@ -27,6 +27,12 @@ const api = (baseServices) => ({
       method: 'PATCH',
       url: process.env.VUE_APP_API_BASE_URL + `${USER_URL}/${id}/activate?sendAlert=${sendAlert}`
     }, cancelToken)
+  },
+  delete (id, cancelToken) {
+    return baseServices.request({
+      method: 'DELETE',
+      url: process.env.VUE_APP_API_BASE_URL + `${USER_URL}/${id}`
+    }, cancelToken)
   }
 })
 

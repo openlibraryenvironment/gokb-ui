@@ -118,6 +118,12 @@
       },
       isAdmin () {
         return account.loggedIn() && account.hasRole('ROLE_ADMIN')
+      },
+      isReadonly () {
+        return !this.isAdmin
+      },
+      showSelect () {
+        return this.isAdmin
       }
     },
     watch: {

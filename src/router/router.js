@@ -71,6 +71,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         meta: {
           code: 'route.package.search'
         },
+        props: true,
         component: () => import('@/views/search/search-package-view.vue')
       },
       {
@@ -88,6 +89,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         meta: {
           code: 'route.review.search'
         },
+        props: true,
         component: () => import('@/views/search/search-review-view.vue')
       },
 
@@ -97,6 +99,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         meta: {
           code: 'route.provider.search'
         },
+        props: true,
         component: () => import('@/views/search/search-provider-view.vue')
       },
       {
@@ -122,6 +125,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         meta: {
           code: 'route.title.search'
         },
+        props: true,
         component: () => import('@/views/search/search-title-view.vue')
       },
       {
@@ -157,6 +161,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         meta: {
           code: 'route.user.search'
         },
+        props: true,
         component: () => import('@/views/search/search-user-view.vue')
       },
       {

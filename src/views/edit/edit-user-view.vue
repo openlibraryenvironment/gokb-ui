@@ -125,6 +125,8 @@
               :selected-items="selectedRoles"
               :total-number-of-items="totalNumberOfRoles"
               :options.sync="rolesOptions"
+              :hide-select="false"
+              editable
               @selected-items="selectedRoles = $event"
               @delete-item="confirmDeleteRole"
             />
@@ -141,6 +143,17 @@
         </v-col>
       </v-row>
       <template #buttons>
+        <gokb-confirmation-popup
+          v-model="deleteConfirmationPopUpVisible"
+          :message="messageToConfirm"
+          @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+        />
+        <gokb-button
+          v-if="isEdit"
+          @click="confirmDeleteUser"
+        >
+          {{ $t('profile.delete.label') }}
+        </gokb-button>
         <v-spacer />
         <gokb-button
           text
@@ -154,7 +167,7 @@
           @submit="activate"
         />
         <gokb-button
-          v-if="isEdit"
+          v-if="isEdit && !isActivated"
           :disabled="!valid || isActivated"
           color="primary"
           @click="showActivateOptions"
@@ -186,6 +199,7 @@
 </template>
 
 <script>
+  import { SEARCH_USER_ROUTE } from '@/router/route-paths'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
@@ -249,6 +263,7 @@
         updateUserUrl: undefined,
         notFound: false,
         confirmationPopUpVisible: false,
+        deleteConfirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
@@ -344,6 +359,24 @@
       },
       showActivateOptions () {
         this.activateOptionsVisible = true
+      },
+      confirmDeleteUser () {
+        this.actionToConfirm = '_deleteUser'
+        this.messageToConfirm = { text: this.$i18n.t('profile.delete.confirm') }
+        this.parameterToConfirm = undefined
+        this.deleteConfirmationPopUpVisible = true
+      },
+      async _deleteUser () {
+        await this.catchError({
+          promise: userServices.delete(this.id, this.cancelToken.token),
+          instance: this
+        })
+        await this.$router.push({
+          name: SEARCH_USER_ROUTE,
+          params: {
+            initRefresh: true
+          }
+        })
       },
       async update () {
         this.eventMessages = []
