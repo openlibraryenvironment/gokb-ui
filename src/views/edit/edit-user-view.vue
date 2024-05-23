@@ -18,7 +18,7 @@
             md="4"
           >
             <gokb-username-field
-              v-model="username"
+              v-model="active.username"
               :label="$t('component.user.username')"
               required
               hide-icon
@@ -33,7 +33,7 @@
             md="4"
           >
             <gokb-password-field
-              v-model="password"
+              v-model="active.password"
               :label="$t('component.user.password')"
               hide-icon
               required
@@ -47,7 +47,7 @@
         <v-row>
           <v-col md="4">
             <gokb-email-field
-              v-model="email"
+              v-model="active.email"
               hide-icon
               dense
             />
@@ -55,7 +55,7 @@
           <v-col>
             <div style="width:200px">
               <v-select
-                v-model="preferredLocaleString"
+                v-model="active.preferredLocaleString"
                 :items="languageOptions"
                 :label="$t('component.user.preferredLocaleString.label')"
                 clearable
@@ -67,19 +67,19 @@
         <v-row>
           <v-col cols="2">
             <gokb-checkbox-field
-              v-model="enabled"
+              v-model="active.enabled"
               :label="$t('component.user.enabled.active.label')"
             />
           </v-col>
           <v-col cols="2">
             <gokb-checkbox-field
-              v-model="accountLocked"
+              v-model="active.accountLocked"
               :label="$t('component.user.locked.label')"
             />
           </v-col>
           <v-col md="3">
             <gokb-checkbox-field
-              v-model="passwordExpired"
+              v-model="active.passwordExpired"
               :label="$t('component.user.passwordExpired')"
             />
           </v-col>
@@ -137,7 +137,7 @@
           xl="6"
         >
           <gokb-curatory-group-section
-            v-model="allCuratoryGroups"
+            v-model="active.curatoryGroups"
             :sub-title="$tc('component.curatoryGroup.label', 2)"
           />
         </v-col>
@@ -150,6 +150,7 @@
         />
         <gokb-button
           v-if="isEdit"
+          :disabled="!isUserDeletable"
           @click="confirmDeleteUser"
         >
           {{ $t('profile.delete.label') }}
@@ -176,7 +177,7 @@
         </gokb-button>
         <gokb-button
           default
-          :disabled="!valid || !isActivated"
+          :disabled="!valid"
         >
           {{ updateButtonText }}
         </gokb-button>
@@ -241,7 +242,6 @@
         addRolePopupVisible: false,
         activateOptionsVisible: false,
         username: undefined,
-        password: undefined,
         passwordExpired: undefined,
         email: undefined,
         enabled: undefined,
@@ -254,12 +254,32 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
+        persisted: {
+          username: undefined,
+          password: undefined,
+          passwordExpired: undefined,
+          email: undefined,
+          enabled: undefined,
+          successMsg: undefined,
+          accountLocked: undefined,
+          curatoryGroups: []
+        },
+        active: {
+          username: undefined,
+          password: undefined,
+          passwordExpired: undefined,
+          email: undefined,
+          enabled: undefined,
+          successMsg: undefined,
+          accountLocked: undefined,
+          curatoryGroups: []
+        },
         languageOptions: ['de', 'en'],
         preferredLocaleString: undefined,
         allRoles: [],
         selectedRoles: [],
         addedRoles: [],
-        allCuratoryGroups: [],
+        curatoryGroups: [],
         updateUserUrl: undefined,
         notFound: false,
         confirmationPopUpVisible: false,
@@ -307,16 +327,19 @@
         return this.id ? this.$i18n.t('btn.update') : this.$i18n.t('btn.add')
       },
       isPasswordValid () {
-        return (this.password?.length > 5 && this.password?.length < 64)
+        return (this.active.password?.length > 5 && this.active.password?.length < 64)
       },
       passwordValidMessage () {
         return this.isPasswordValid || this.$i18n.t('validation.passwordLength')
       },
       valid () {
-        return this.username && (this.isEdit || this.isPasswordValid)
+        return this.active.username && (this.isEdit || this.isPasswordValid)
       },
       isActivated () {
-        return this.isEdit && !this.accountLocked && this.enabled && account.hasRole('ROLE_USER')
+        return !this.isEdit || this.allRoles.length > 1 || (!this.persisted?.accountLocked && this.persisted?.enabled)
+      },
+      isUserDeletable () {
+        return account.hasRole('ROLE_SUPERUSER') || this.allRoles.filter(role => (role.name === 'ROLE_ADMIN')).length === 0
       }
     },
     watch: {
@@ -367,32 +390,41 @@
         this.deleteConfirmationPopUpVisible = true
       },
       async _deleteUser () {
-        await this.catchError({
+        const response = await this.catchError({
           promise: userServices.delete(this.id, this.cancelToken.token),
           instance: this
         })
-        await this.$router.push({
-          name: SEARCH_USER_ROUTE,
-          params: {
-            initRefresh: true
-          }
-        })
+
+        if (response?.status < 400) {
+          await this.$router.push({
+            name: SEARCH_USER_ROUTE,
+            params: {
+              initRefresh: true
+            }
+          })
+        } else if (response?.status == 403) {
+          this.eventMessages.push({
+            message: this.$i18n.t('user.error.delete.forbidden'),
+            color: 'error',
+            timeout: -1
+          })
+        } else if (response?.status === 404) {
+          this.notFound = true
+        } else {
+          this.eventMessages.push({
+            message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')]),
+            color: 'error',
+            timeout: -1
+          })
+        }
       },
       async update () {
         this.eventMessages = []
 
         const data = {
-          username: this.username,
-          password: this.password,
-          email: this.email,
-          preferredLocaleString: this.preferredLocaleString,
-          accountLocked: this.accountLocked,
-          enabled: this.enabled,
+          ...this.active,
           version: this.version,
-          passwordExpired: this.passwordExpired,
-          roleIds: this.roles.map(({ id }) => id),
-          curatoryGroupIds: this.allCuratoryGroups.map(({ id }) => id),
-          // organisation: this.organisation
+          roleIds: this.roles.map(({ id }) => id)
         }
         const response = await this.catchError({
           promise: userServices.createOrUpdate(this.id, data, this.cancelToken.token),
@@ -425,6 +457,12 @@
           })
         } else if (response?.status === 404) {
           this.notFound = true
+        } else if (response?.status === 403) {
+          this.eventMessages.push({
+            message: this.$i18n.t('user.error.update.forbidden'),
+            color: 'error',
+            timeout: -1
+          })
         } else {
           this.eventMessages.push({
             message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')]),
@@ -451,10 +489,17 @@
               }
             })
           }
+          else {
+            this.eventMessages.push({
+              message: this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username]),
+              color: 'success',
+              timeout: 2000
+            })
+          }
 
           this.fetch()
         }
-        else if (response.status === 200) {
+        else if (response.status === 404) {
           this.eventMessages.push({
             message: this.$i18n.t('component.general.notFound', [this.$i18n.tc('component.user.label')]),
             color: 'error',
@@ -473,24 +518,27 @@
 
         if (response?.status === 200) {
           this.addedRoles = []
-          this.username = response.data.data.username
-          this.password = undefined
-          this.email = response.data.data.email
           this.version = response.data.data.version
-          this.accountLocked = response.data.data.accountLocked
-          this.preferredLocaleString = response.data.data.preferredLocaleString
-          this.enabled = response.data.data.enabled
-          this.passwordExpired = response.data.data.passwordExpired
+          this.persisted.username = response.data.data.username
+          this.persisted.email = response.data.data.email
+          this.persisted.accountLocked = response.data.data.accountLocked
+          this.persisted.preferredLocaleString = response.data.data.preferredLocaleString
+          this.persisted.enabled = response.data.data.enabled
+          this.persisted.passwordExpired = response.data.data.passwordExpired
+          this.persisted.curatoryGroups = response.data.data.curatoryGroups.map(group => ({
+            ...group,
+            isDeletable: true
+          }))
+
+          this.active = this.persisted
+
           this.allRoles = response.data.data.roles.map(({ authority, ...rest }) => ({
             ...rest,
             name: authority
           }))
           this.updateUserUrl = response.data.data.updateUserUrl
-          this.allCuratoryGroups = response.data.data.curatoryGroups.map(group => ({
-            ...group,
-            isDeletable: true
-          }))
-          // this.organisation = organisation
+
+
         } else {
           this.notFound = true
         }
@@ -513,7 +561,7 @@
         this.actionToConfirm = '_deleteSelectedRoles'
         this.messageToConfirm = {
           text: 'popups.confirm.delete.list',
-          vars: [this.selectedItems.length, this.$i18n.tc('component.user.role.label', this.selectedItems.length)]
+          vars: [this.selectedRoles.length, this.$i18n.tc('component.user.role.label', this.selectedRoles.length)]
         }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true

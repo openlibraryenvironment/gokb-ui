@@ -1053,6 +1053,15 @@
           "invalidMail": "Die Benachrichtigung konnte nicht versendet werden, da die angegebene E-Mail-Adresse ungültig ist!",
           "missingMail": "Die Benachrichtigung konnte nicht versendet werden, da keine E-Mail-Adresse angegeben wurde!",
           "missingConfig": "Die Benachrichtigung konnte nicht versendet werden, da nicht alle notwendigen Server-Konfigurationswerte gesetzt wurden!"
+        },
+        "create": {
+          "nameInUse": "Ein Konto mit diesem Benutzernamen existiert bereits!"
+        },
+        "update": {
+          "forbidden": "Sie sind nicht dazu berechtigt, dieses Konto zu bearbeiten!"
+        },
+        "delete": {
+          "forbidden": "Benutzer mit Administrationsrechten können nur von Server-Admins gelöscht werden!"
         }
       }
     },

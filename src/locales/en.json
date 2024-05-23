@@ -1053,6 +1053,15 @@
           "invalidMail": "Unable to send user notification due to invalid email address!",
           "missingMail": "Unable to send user notification due to missing email address!",
           "missingConfig": "Unable to send user notification due to missing configuration!"
+        },
+        "create": {
+          "nameInUse": "An account with this username already exists!"
+        },
+        "update": {
+          "forbidden": "You are not allowed to edit this account!"
+        },
+        "delete": {
+          "forbidden": "Only system admins are allowed to delete admin accounts!"
         }
       }
     },
