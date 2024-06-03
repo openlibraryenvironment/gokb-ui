@@ -284,10 +284,15 @@
         this.deleteUrl = record._links?.delete?.href || undefined
         this.version = record.version
 
-        let merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/title')).map(c => (c.id))
+        let title_merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/title')).map(c => (c.id))
+        let tipp_merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/package-title')).map(c => (c.id))
 
         if (this.reviewItem.component.route === '/title') {
-          merge_ids.push(this.reviewItem.component.id)
+          title_merge_ids.push(this.reviewItem.component.id)
+        }
+
+        if (this.reviewItem.component.route === '/package-title') {
+          tipp_merge_ids.push(this.reviewItem.component.id)
         }
 
         this.workflow = []
@@ -297,31 +302,39 @@
             title: "",
             toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
-            components: merge_ids,
+            components: title_merge_ids,
             actions: []
           })
-        } else if (this.reviewItem.component.route === '/package-title' && merge_ids.length > 1) {
+        } else if (this.reviewItem.component.route === '/package-title' && title_merge_ids.length > 1) {
           this.workflow.push({
             title: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step1.label'),
             toDo: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step1.toDo'),
             showReviewed: false,
-            components: merge_ids,
+            components: title_merge_ids,
             actions: ['merge', 'ids']
           })
           this.workflow.push({
             title: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step2.label'),
             toDo: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step2.toDo'),
             showReviewed: true,
-            components: merge_ids,
+            components: title_merge_ids,
             actions: ['link', 'add']
+          })
+        } else if (this.reviewItem.component.route === '/package-title' && tipp_merge_ids.length > 1) {
+          this.workflow.push({
+            title: "",
+            toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
+            showReviewed: true,
+            components: tipp_merge_ids,
+            actions: (tipp_merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
           })
         } else {
           this.workflow.push({
             title: "",
             toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
-            components: merge_ids,
-            actions: (merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
+            components: title_merge_ids,
+            actions: (title_merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
           })
         }
       },
