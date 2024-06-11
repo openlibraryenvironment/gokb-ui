@@ -104,7 +104,7 @@
           </v-col>
         </v-row>
         <v-row
-          v-if="imprintLink"
+          v-if="!!imprintLink"
           class="text-caption pl-6"
           dense
         >
@@ -119,8 +119,8 @@
           </v-col>
         </v-row>
         <v-row
-          v-if="privacyLink"
-          class="text-caption pl-6 pb-6"
+          v-if="!!privacyLink"
+          class="text-caption pl-6"
           dense
         >
           <v-col>
@@ -130,6 +130,21 @@
               :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
             >
               {{ $t('main.privacy.label') }}
+            </a>
+          </v-col>
+        </v-row>
+        <v-row
+          v-if="!!accessibilityLink"
+          class="text-caption pl-6 pb-6"
+          dense
+        >
+          <v-col>
+            <a
+              :href="accessibilityLink"
+              target="_blank"
+              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
+            >
+              {{ $t('main.accessibility.label') }}
             </a>
           </v-col>
         </v-row>
@@ -317,6 +332,7 @@
       privacyLink: process.env.VUE_APP_DP_LINK,
       imprintLink: process.env.VUE_APP_IMP_LINK,
       docsLink: process.env.VUE_APP_DOCS_LINK,
+      accessibilityLink: process.env.VUE_APP_ACC_LINK,
       appName: process.env.VUE_APP_TITLE || 'GOKb Client',
       appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
       appVersion: pkg.version || process.env.VUE_APP_VERSION,

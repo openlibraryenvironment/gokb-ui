@@ -48,6 +48,9 @@
     },
     "privacy": {
       "label": "Datenschutz"
+    },
+    "accessibility": {
+      "label": "Barrierefreiheit"
     }
   },
   "default": {

@@ -104,7 +104,7 @@
 
       <v-row v-if="!!ids?.length > 0">
         <v-col>
-          <div v-if="isReviewedCard && isOtherCardSelected && mergeEnabled && isEditable">
+          <div v-if="isReviewedCard && isOtherCardSelected && mergeEnabled && isEditable && isTippComponent">
             <v-chip
               class="mb-1 info font-weight-bold"
               pill
@@ -422,6 +422,9 @@
       idsEditable () {
         return this.editable || (this.isReviewedCard && this.isOtherCardSelected)
       },
+      isTitleComponent () {
+        return this.route === '/title'
+      },
       roleColor () {
         if (this.role == "reviewedComponent") {
           if (this.mergeEnabled && this.originalRecord.type !== 'TIPP' && this.isOtherCardSelected) {
@@ -504,7 +507,7 @@
         else return true
       },
       isMergeCandidate () {
-        return !this.isDeleted && this.mergeEnabled && this.route === '/title'
+        return !this.isDeleted && this.mergeEnabled && (this.route === '/title' || this.route === '/package-title')
       },
       isLinkCandidate () {
         return !this.isDeleted && this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
@@ -727,9 +730,11 @@
         return val.sort(({ namespace: first }, { namespace: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
       },
       fetchReviewMismatchIds () {
-        for (const [count, idItem] of this.additionalVars[1].entries()) {
-          for (const [namespace, id] of Object.entries(idItem)) {
-            this.addReviewMismatchId(namespace, id)
+        if (!!this.additionalVars) {
+          for (const [count, idItem] of this.additionalVars[1].entries()) {
+            for (const [namespace, id] of Object.entries(idItem)) {
+              this.addReviewMismatchId(namespace, id)
+            }
           }
         }
       },
