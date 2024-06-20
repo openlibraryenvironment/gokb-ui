@@ -198,4 +198,13 @@
     opacity: var(--v-high-emphasis-opacity);
     border-bottom: none !important;
   }
+
+  .v-text-field .v-field--active.v-field--dirty {
+    opacity: var(--v-high-emphasis-opacity);
+  }
+
+  .v-text-field .v-field--active {
+    opacity: var(--v-medium-emphasis-opacity);
+  }
+
 </style>
