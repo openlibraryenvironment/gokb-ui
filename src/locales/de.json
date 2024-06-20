@@ -1048,7 +1048,7 @@
         "label": "Durchgeführte Aktion"
       },
       "type": {
-        "label": "Typ"
+        "label": "Kategorie"
       },
       "todo": {
         "label": "ToDo"
