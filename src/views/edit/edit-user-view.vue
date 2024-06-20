@@ -77,12 +77,6 @@
               :label="$t('component.user.locked.label')"
             />
           </v-col>
-          <v-col md="3">
-            <gokb-checkbox-field
-              v-model="active.passwordExpired"
-              :label="$t('component.user.passwordExpired')"
-            />
-          </v-col>
         </v-row>
       </gokb-section>
       <gokb-add-item-popup
@@ -242,7 +236,6 @@
         addRolePopupVisible: false,
         activateOptionsVisible: false,
         username: undefined,
-        passwordExpired: undefined,
         email: undefined,
         enabled: undefined,
         version: undefined,
@@ -257,7 +250,6 @@
         persisted: {
           username: undefined,
           password: undefined,
-          passwordExpired: undefined,
           email: undefined,
           enabled: undefined,
           successMsg: undefined,
@@ -267,7 +259,6 @@
         active: {
           username: undefined,
           password: undefined,
-          passwordExpired: undefined,
           email: undefined,
           enabled: undefined,
           successMsg: undefined,
@@ -524,7 +515,6 @@
           this.persisted.accountLocked = response.data.data.accountLocked
           this.persisted.preferredLocaleString = response.data.data.preferredLocaleString
           this.persisted.enabled = response.data.data.enabled
-          this.persisted.passwordExpired = response.data.data.passwordExpired
           this.persisted.curatoryGroups = response.data.data.curatoryGroups.map(group => ({
             ...group,
             isDeletable: true
