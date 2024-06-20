@@ -80,9 +80,9 @@
       "search": "Packages"
     },
     "title": {
-      "edit": "Edit Title",
-      "create": "Create Title",
-      "search": "Titles"
+      "edit": "Edit Reference Title",
+      "create": "Create Reference Title",
+      "search": "Reference Title"
     },
     "tipp": {
       "edit": "Edit Package Title",
