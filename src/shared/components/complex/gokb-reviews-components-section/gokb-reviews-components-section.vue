@@ -314,41 +314,71 @@
       },
       async mergeCards (val) {
         let mergedId = val
-        let mergeParams = { mergeTipps: true }
         let targetId = this.selectedCard
         let mergeData = {
-          id: mergedId,
-          target: targetId
+            id: mergedId,
+            target: targetId
         }
 
-        if (val === this.reviewedComponent.id) {
-          mergeData.ids = this.selectedReviewItemIds
-        } else {
-          mergeParams.mergeIds = true
-        }
+        let isTippMerge = this.referenceComponents.filter(comp => (comp.id === this.selectedCard))[0].route === '/package-title'
 
-        const mergeResponse = await this.catchError({
-          promise: titleServices.merge(mergeData, mergeParams, this.cancelToken.token),
-          instance: this
-        })
-        if (typeof mergeResponse == 'undefined') {
-          this.feedbackResponse({ type: 'error', message: 'error.general.500' })
-        }
-        else {
-          if (mergeResponse.status < 400) {
-            this.linkedComponents[mergedId.toString()].active = false
+        if (isTippMerge) {
+          let mergeParams = {}
 
-            if (mergedId === this.reviewedComponent.id) {
-              this.$emit('close', true)
+          const mergeResponse = await this.catchError({
+            promise: tippServices.merge(mergeData, mergeParams, this.cancelToken.token),
+            instance: this
+          })
+
+          if (typeof mergeResponse == 'undefined') {
+            this.feedbackResponse({ type: 'error', message: 'error.general.500' })
+          }
+          else {
+            if (mergeResponse.status < 400) {
+              this.linkedComponents[mergedId.toString()].active = false
+
+              if (mergedId === this.reviewedComponent.id) {
+                this.$emit('close', true)
+              } else {
+                this.refreshAll()
+                this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)]) })
+              }
             } else {
-              this.refreshAll()
-              this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.title.label', 2)]) })
+              this.feedbackResponse({ type: 'error', resp: mergeResponse })
             }
+          }
+        } else {
+          let mergeParams = { mergeTipps: true }
+
+          if (val === this.reviewedComponent.id) {
+            mergeData.ids = this.selectedReviewItemIds
           } else {
-            this.feedbackResponse({ type: 'error', resp: mergeResponse })
+            mergeParams.mergeIds = true
+          }
+
+          const mergeResponse = await this.catchError({
+            promise: titleServices.merge(mergeData, mergeParams, this.cancelToken.token),
+            instance: this
+          })
+
+          if (typeof mergeResponse == 'undefined') {
+            this.feedbackResponse({ type: 'error', message: 'error.general.500' })
+          }
+          else {
+            if (mergeResponse.status < 400) {
+              this.linkedComponents[mergedId.toString()].active = false
+
+              if (mergedId === this.reviewedComponent.id) {
+                this.$emit('close', true)
+              } else {
+                this.refreshAll()
+                this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.title.label', 2)]) })
+              }
+            } else {
+              this.feedbackResponse({ type: 'error', resp: mergeResponse })
+            }
           }
         }
-
       },
       refreshItem (id) {
         this.$refs[id.toString()].fetchTitle()

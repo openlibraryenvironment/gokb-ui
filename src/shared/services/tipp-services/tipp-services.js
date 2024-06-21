@@ -54,6 +54,22 @@ const api = (baseServices) => ({
       method: 'GET',
       url,
     }, cancelToken)
+  },
+  merge (data, params, cancelToken) {
+    const { id, target } = data
+    let parameterData = { target: target }
+
+    if (params.keepOld) {
+      parameterData.keepOld = true
+    }
+
+    const queryParameters = baseServices.createQueryParameters(parameterData)
+    const url = process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/${id}/merge?${queryParameters}`
+    return baseServices.request({
+      method: 'PUT',
+      url,
+      data,
+    }, cancelToken)
   }
 })
 
