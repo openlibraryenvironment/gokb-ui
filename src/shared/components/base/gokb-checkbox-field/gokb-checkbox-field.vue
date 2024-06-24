@@ -4,6 +4,7 @@
     :label="label"
     :disabled="disabled"
     :readonly="readonly"
+    :density="dense ? 'compact' : 'default'"
   />
 </template>
 
@@ -32,6 +33,11 @@
         required: false,
         default: false,
       },
+      dense: {
+        type: Boolean,
+        required: false,
+        default: false
+      }
     },
     computed: {
       localValue: {

@@ -6,7 +6,7 @@
     @submit="save"
   >
     <gokb-error-component :value="error" />
-    <span v-if="successMsg">
+    <span v-if="!!successMsg">
       <v-alert
         type="success"
         dismissible
@@ -14,7 +14,7 @@
         {{ localSuccessMessage }}
       </v-alert>
     </span>
-    <span v-if="errorMsg">
+    <span v-if="!!errorMsg">
       <v-alert
         type="error"
         dismissible
@@ -37,117 +37,114 @@
     </v-row>
     <v-row>
       <v-col md="12">
-        <template>
-          <gokb-text-field
-            v-model="reviewItem.description"
-            required
-            :disabled="isEdit"
-            :label="$t('component.review.cause.label')"
-          />
-          <div
-            v-if="additionalInfo && additionalInfo.candidates"
-            class="pt-3"
+        <gokb-text-field
+          v-model="reviewItem.description"
+          required
+          :disabled="isEdit"
+          :label="$t('component.review.cause.label')"
+        />
+        <div
+          v-if="additionalInfo && additionalInfo.candidates"
+          class="pt-3"
+        >
+          <label
+            class="v-label"
+            style="display:block;font-size:0.9em;"
+            for="otherComponents"
           >
-            <label
-              class="v-label"
-              style="display:block;font-size:0.9em;"
-              for="otherComponents"
-            >
-              {{ $t('component.review.candidates.label') }}
-            </label>
-            <v-row dense>
-              <v-col
-                v-for="(c, idx) in additionalInfo.candidates"
-                :key="idx"
-              >
-                {{ c.title }} ({{ c.id }})
-              </v-col>
-            </v-row>
-          </div>
-          <div class="pt-3">
-            <label
-              class="v-label"
-              style="display:block;font-size:0.9em;"
-              for="otherComponents"
-            >
-              {{ $tc('component.review.otherComponents.label') }}
-            </label>
-            <v-row
-              v-for="(oc, idx) in reviewItem.otherComponents"
+            {{ $t('component.review.candidates.label') }}
+          </label>
+          <v-row dense>
+            <v-col
+              v-for="(c, idx) in additionalInfo.candidates"
               :key="idx"
-              dense
             >
-              <v-col>
-                <router-link
-                  v-if="oc.route"
-                  :style="{ color: 'primary', fontSize: '1.2em', marginRight: '4px' }"
-                  :to="{ name: oc.route, params: { 'id': oc.id } }"
-                >
-                  {{ oc.name }}
-                </router-link>
-                <span v-else>
-                  {{ oc.name }} ({{ oc.type }})
-                </span>
-                <v-icon
-                  class="mr-3"
-                  :disabled="isReadonly"
-                  style="cursor:pointer"
-                  :title="$t('btn.delete')"
-                  small
-                  @click="removeOtherComponent(oc.id)"
-                >
-                  mdi-close
-                </v-icon>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="5">
-                <gokb-entity-field
-                  v-model="newAdditionalComponent"
-                  :readonly="!!isReadonly"
-                  :show-link="true"
-                  :label="$t('component.review.otherComponents.add')"
-                  return-object
-                  @input="addNewOtherComponent"
-                />
-                <div
-                  v-if="ocError"
-                  class="mb-3 error--text"
-                >
-                  {{ $t('component.review.otherComponents.error.duplicate') }}
-                </div>
-              </v-col>
-            </v-row>
-          </div>
-        </template>
+              {{ c.title }} ({{ c.id }})
+            </v-col>
+          </v-row>
+        </div>
+        <div class="pt-3">
+          <label
+            class="v-label"
+            style="display:block;font-size:0.9em;"
+            for="otherComponents"
+          >
+            {{ $tc('component.review.otherComponents.label') }}
+          </label>
+          <v-row
+            v-for="(oc, idx) in reviewItem.otherComponents"
+            :key="idx"
+            dense
+          >
+            <v-col>
+              <router-link
+                v-if="oc.route"
+                :style="{ color: 'primary', fontSize: '1.2em', marginRight: '4px' }"
+                :to="{ name: oc.route, params: { 'id': oc.id } }"
+              >
+                {{ oc.name }}
+              </router-link>
+              <span v-else>
+                {{ oc.name }} ({{ oc.type }})
+              </span>
+              <v-icon
+                class="mr-3"
+                :disabled="isReadonly"
+                style="cursor:pointer"
+                :title="$t('btn.delete')"
+                small
+                @click="removeOtherComponent(oc.id)"
+              >
+                mdi-close
+              </v-icon>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="7">
+              <gokb-entity-field
+                v-model="newAdditionalComponent"
+                :readonly="!!isReadonly"
+                :show-link="true"
+                :label="$t('component.review.otherComponents.add')"
+                return-object
+                @update:modelValue="addNewOtherComponent"
+              />
+              <div
+                v-if="ocError"
+                class="mb-3 error--text"
+              >
+                {{ $t('component.review.otherComponents.error.duplicate') }}
+              </div>
+            </v-col>
+          </v-row>
+        </div>
       </v-col>
     </v-row>
     <v-row>
       <v-col md="12">
-        <template>
-          <gokb-textarea-field
-            v-model="reviewItem.request"
-            required
-            :disabled="isEdit"
-            :label="$t('component.review.request.label')"
-          />
-        </template>
+        <gokb-textarea-field
+          v-model="reviewItem.request"
+          required
+          :disabled="isEdit"
+          :label="$t('component.review.request.label')"
+        />
       </v-col>
     </v-row>
 
-    <v-spacer />
-    <gokb-button
-      @click="close"
-    >
-      {{ $t('btn.cancel') }}
-    </gokb-button>
-    <gokb-button
-      v-if="!isReadonly"
-      :disabled="!isValid"
-      is-submit
-    >
-      {{ $t('btn.create') }}
-    </gokb-button>
+    <template #buttons>
+      <gokb-button
+        @click="close"
+      >
+        {{ $t('btn.cancel') }}
+      </gokb-button>
+      <gokb-button
+        v-if="!isReadonly"
+        :disabled="!isValid"
+        is-submit
+      >
+        {{ $t('btn.create') }}
+      </gokb-button>
+    </template>
   </gokb-dialog>
 </template>
 
@@ -164,6 +161,10 @@
     extends: BaseComponent,
     emits: ['update:model-value', 'edit'],
     props: {
+      modelValue: {
+        type: [Boolean, Number],
+        required: true
+      },
       selected: {
         type: Object,
         required: false,
@@ -329,7 +330,15 @@
   }
 </script>
 
-<style>
-  .vjs-tree__node.is-highlight, .vjs-tree__node:hover {background-color:#9b9b9b }
-  .vjs-value__string { color: #3c804b }
+<style scoped>
+  .vjs-tree__node.is-highlight, .vjs-tree__node:hover {
+    background-color:#9b9b9b
+  }
+  .vjs-value__string {
+    color: #3c804b
+  }
+
+  a {
+    color: rgba(var(--v-theme-primary))
+  }
 </style>

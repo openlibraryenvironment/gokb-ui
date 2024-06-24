@@ -26,7 +26,7 @@
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
-    <v-simple-table>
+    <v-table>
       <template v-slot:default>
         <thead>
           <tr>
@@ -115,7 +115,7 @@
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-table>
   </gokb-section>
 </template>
 

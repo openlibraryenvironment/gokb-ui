@@ -12,7 +12,7 @@
       <v-switch
         v-if="!!reviewComponent"
         v-model="fetchTitleReviews"
-        class="pt-4 pr-6"
+        class="pt-8 pr-6"
         :label="$tc('component.title.label', 2)"
       />
       <gokb-state-field
@@ -253,7 +253,7 @@
           const deleteUrl = entry?._links.delete.href
           const popup = { value: this.reviewComponent ? stdDescLabel : (component.name || type + ' ' + component.id), label: 'review', type: 'GokbReviewPopup' }
           const link = { value: component.name, route: componentRoutes[entry?.componentToReview?.type?.toLowerCase()], id: 'componentId' }
-          const groupsList = entry.allocatedGroups.map(ag => ag.name)
+          const groupsList = entry.allocatedGroups.map(ag => ag.name).join(', ')
           const isClosable = !!(status?.name === 'Open' && updateUrl)
           return { id, status, dateCreated, statusLabel, stdDescLabel, groupsList, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
         })
@@ -321,7 +321,7 @@
             title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             sortable: true,
-            width: '15%',
+            width: '20%',
             key: 'dateCreated'
           }
         ]

@@ -106,15 +106,16 @@
       <v-col md="12">
         <v-expansion-panels accordion>
           <v-expansion-panel>
-            <v-expansion-panel-header>{{ $tc('kbart.processing.error.label', 2) }}</v-expansion-panel-header>
-            <v-expansion-panel-content>
+            <v-expansion-panel-title>
+              {{ $tc('kbart.processing.error.label', 2) }}
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
               <v-data-table
                 :items="rowErrors"
                 :headers="errorHeaders"
-                sort-by="row"
-                group-by="row"
+                :sort-by="[{key: 'row', order: 'asc'}]"
               />
-            </v-expansion-panel-content>
+            </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
       </v-col>
@@ -123,15 +124,16 @@
       <v-col md="12">
         <v-expansion-panels accordion>
           <v-expansion-panel>
-            <v-expansion-panel-header>{{ $tc('kbart.processing.warning.label', 2) }}</v-expansion-panel-header>
-            <v-expansion-panel-content>
+            <v-expansion-panel-title>
+              {{ $tc('kbart.processing.warning.label', 2) }}
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
               <v-data-table
                 :items="rowWarnings"
                 :headers="errorHeaders"
-                sort-by="row"
-                group-by="row"
+                :sort-by="[{key: 'row', order: 'asc'}]"
               />
-            </v-expansion-panel-content>
+            </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
       </v-col>
@@ -140,19 +142,22 @@
       <v-col md="12">
         <v-expansion-panels accordion>
           <v-expansion-panel>
-            <v-expansion-panel-header>{{ $t('component.review.additionalInfo.label') }}</v-expansion-panel-header>
-            <v-expansion-panel-content>
+            <v-expansion-panel-title>
+              {{ $t('component.review.additionalInfo.label') }}
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
               <vue-json-pretty :data="selectedItem.results" />
-            </v-expansion-panel-content>
+            </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
       </v-col>
     </v-row>
 
-    <v-spacer />
-    <gokb-button>
-      {{ $t('btn.close') }}
-    </gokb-button>
+    <template #buttons>
+      <gokb-button>
+        {{ $t('btn.close') }}
+      </gokb-button>
+    </template>
   </gokb-dialog>
 </template>
 
@@ -295,7 +300,12 @@
   }
 </script>
 
-<style>
+<style scoped>
   .vjs-tree__node.is-highlight, .vjs-tree__node:hover { background-color:#9b9b9b }
   .vjs-value__string { color: #3c804b }
+
+
+  a {
+    color: rgba(var(--v-theme-primary))
+  }
 </style>

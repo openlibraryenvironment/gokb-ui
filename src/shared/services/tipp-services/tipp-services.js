@@ -64,7 +64,7 @@ const api = (baseServices) => ({
     }
 
     const queryParameters = baseServices.createQueryParameters(parameterData)
-    const url = process.env.VUE_APP_API_BASE_URL + `${TIPP_PATH}/${id}/merge?${queryParameters}`
+    const url = import.meta.env.VITE_API_BASE_URL + `${TIPP_PATH}/${id}/merge?${queryParameters}`
     return baseServices.request({
       method: 'PUT',
       url,

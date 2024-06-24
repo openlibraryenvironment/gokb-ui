@@ -436,6 +436,9 @@
       isTitleComponent () {
         return this.route === '/title'
       },
+      isTippComponent () {
+        return this.route === '/package-title'
+      },
       roleColor () {
         if (this.role == "reviewedComponent") {
           if (this.mergeEnabled && this.originalRecord.type !== 'TIPP' && this.isOtherCardSelected) {

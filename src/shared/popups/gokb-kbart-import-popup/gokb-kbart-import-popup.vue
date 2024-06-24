@@ -10,6 +10,7 @@
         v-model="selectedFile"
         :label="$t('kbart.file.label')"
         :disabled="importRunning"
+        dense
       />
       <gokb-namespace-field
         v-model="options.selectedNamespace"
@@ -19,14 +20,17 @@
       <gokb-checkbox-field
         v-model="options.addOnly"
         :label="$t('kbart.addOnly.label')"
+        dense
       />
       <gokb-checkbox-field
         v-model="options.deleteMissing"
         :label="$t('kbart.deleteMissing.label')"
+        dense
       />
       <gokb-checkbox-field
         v-model="options.dryRun"
         :label="$t('kbart.dryRun.label')"
+        dense
       />
       <div v-if="importRunning">
         <v-progress-circular indeterminate />
@@ -88,55 +92,53 @@
       <div v-if="loadedFile.rows.error > 0 || loadedFile.rows.warning > 0">
         <v-expansion-panels>
           <v-expansion-panel>
-            <v-expansion-panel-header>
+            <v-expansion-panel-title>
               {{ $tc('kbart.processing.error.label', 2) }}
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
               <v-data-table
                 :items="loadedFile.errors.single"
                 :headers="errorHeaders"
                 width="1000px"
-                sort-by="row"
-                group-by="row"
+                :sort-by="[{key: 'row', order: 'asc'}]"
               />
-            </v-expansion-panel-content>
+            </v-expansion-panel-text>
           </v-expansion-panel>
           <v-expansion-panel>
-            <v-expansion-panel-header>
+            <v-expansion-panel-title>
               {{ $tc('kbart.processing.warning.label', 2) }}
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
               <v-data-table
                 :items="loadedFile.warnings.single"
                 :headers="errorHeaders"
-                sort-by="row"
-                group-by="row"
+                :sort-by="[{key: 'row', order: 'asc'}]"
               />
-            </v-expansion-panel-content>
+            </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
       </div>
     </gokb-section>
-    <v-spacer />
-    <gokb-button
-      text
-      @click="close"
-    >
-      {{ $t('btn.cancel') }}
-    </gokb-button>
-    <gokb-button
-      is-submit
-      :disabled="!options.selectedFile || importRunning"
-    >
-      {{ completion === 100 ? $t('btn.confirm') : $t('btn.validate') }}
-    </gokb-button>
+
+    <template #buttons>
+      <gokb-button
+        text
+        @click="close"
+      >
+        {{ $t('btn.cancel') }}
+      </gokb-button>
+      <gokb-button
+        is-submit
+        :disabled="!options.selectedFile || importRunning"
+      >
+        {{ completion === 100 ? $t('btn.confirm') : $t('btn.validate') }}
+      </gokb-button>
+    </template>
   </gokb-dialog>
 </template>
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
-  import math from '@/shared/utils/math'
-  import jschardet from 'jschardet'
   import GokbNamespaceField from '@/shared/components/simple/gokb-namespace-field'
   import providerServices from '@/shared/services/provider-services'
   import kbartServices from '@/shared/services/kbart-services'
@@ -232,7 +234,7 @@
         ]
       },
       expandWidth () {
-        return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 400
+        return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 450
       }
     },
     watch: {

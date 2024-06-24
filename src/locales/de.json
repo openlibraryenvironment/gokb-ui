@@ -57,8 +57,15 @@
     "false": "Nein",
     "all": "Alle",
     "ISOdateHint": "JJJJ-MM-TT",
+    "loading": "Lädt ...",
     "error": {
       "label": "Fehler | Fehler"
+    },
+    "table": {
+      "noData": {
+        "search": "Keine Ergebnisse",
+        "props": "Keine Einträge"
+      }
     },
     "404": {
       "title": "Unbekannter Pfad",
@@ -656,8 +663,8 @@
       "volumeNumber": "Bandnr.",
       "editionNumber": "Ausgabenr.",
       "editionStatement": "Ausgabe",
-      "firstPublishedInPrint": "Veröffentlichungsdatum (Print)",
-      "firstPublishedOnline": "Veröffentlichungsdatum (Online)",
+      "firstPublishedInPrint": "Print-Erscheinungsdatum",
+      "firstPublishedOnline": "Online-Erscheinungsdatum",
       "firstAuthor": {
         "label": "Erster Autor"
       },

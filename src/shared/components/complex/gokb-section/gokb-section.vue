@@ -8,7 +8,7 @@
       <v-toolbar
         v-if="title && !subTitle"
         color="header"
-        class="pl-4"
+        class="pl-4 pr-4"
         density="compact"
         flat
       >
@@ -45,7 +45,7 @@
         v-else-if="!title && subTitle"
         height="63"
         color="header"
-        class="pl-4"
+        class="pl-4 pr-4"
         density="compact"
         flat
       >
@@ -107,7 +107,7 @@
         v-else-if="!subTitle && !title && !noToolBar"
         height="63"
         color="header"
-        class="pl-4"
+        class="pl-4 pr-4"
         density="compact"
         flat
       >
@@ -121,7 +121,7 @@
         v-if="expandFilters"
         height="63"
         color="header"
-        class="pt-1 pl-4"
+        class="pt-1 pl-4 pr-4"
         flat
       >
         <slot name="filters" />

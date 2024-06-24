@@ -60,7 +60,7 @@
       width: {
         type: [Number, String],
         required: false,
-        default: 400
+        default: 500
       },
       persistent: {
         type: Boolean,
@@ -119,7 +119,7 @@
     methods: {
       doSubmit () {
         if (this.$refs?.form?.validate()) {
-          this.$emit('submit', this.$refs.form)
+          this.$emit('submit', true)
         }
       },
       closeWithEscape (event) {

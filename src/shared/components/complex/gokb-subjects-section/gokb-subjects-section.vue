@@ -171,8 +171,8 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.subject.scheme.label'), align: 'start', value: 'schemeName', sortable: false },
-          { text: this.$i18n.tc('component.subject.heading.label'), align: 'start', value: 'label', sortable: false },
+          { title: this.$i18n.tc('component.subject.scheme.label'), align: 'start', value: 'schemeName', sortable: false },
+          { title: this.$i18n.tc('component.subject.heading.label'), align: 'start', value: 'label', sortable: false },
         ]
       },
       title () {

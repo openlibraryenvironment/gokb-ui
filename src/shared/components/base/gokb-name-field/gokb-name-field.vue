@@ -31,21 +31,24 @@
             v-model="keepCurrent"
             class="ml-2 mt-4"
             :label="keepCurrentLabel"
+            dense
           />
-          <v-spacer />
-          <gokb-button
-            text
-            @click="close"
-          >
-            {{ $i18n.t('btn.cancel') }}
-          </gokb-button>
-          <gokb-button
-            class="ml-4"
-            :disabled="!editedVal || editedVal === currentName || editedVal === inValidName"
-            is-submit
-          >
-            {{ $i18n.t('btn.confirm') }}
-          </gokb-button>
+
+          <template #buttons>
+            <gokb-button
+              text
+              @click="close"
+            >
+              {{ $i18n.t('btn.cancel') }}
+            </gokb-button>
+            <gokb-button
+              class="ml-4"
+              :disabled="!editedVal || editedVal === currentName || editedVal === inValidName"
+              is-submit
+            >
+              {{ $i18n.t('btn.confirm') }}
+            </gokb-button>
+          </template>
         </gokb-dialog>
         <gokb-confirmation-popup
           v-model="confirmationPopUpVisible"
@@ -55,7 +58,7 @@
         <gokb-button
           v-if="!disabled"
           color="primary"
-          @click="showEditName"
+          @click.prevent="showEditName"
         >
           {{ $i18n.t('header.edit.label', [$i18n.t('component.general.name')]) }}
         </gokb-button>

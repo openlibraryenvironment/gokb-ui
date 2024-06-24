@@ -19,24 +19,22 @@
       v-model="tab"
     >
       <v-tab
-        key="search"
+        value="search"
         @click="resetFields()"
       >
         {{ $tc('btn.select') }}
       </v-tab>
       <v-tab
         v-if="!isEdit"
-        key="new"
+        value="new"
         :disabled="!searched"
         @click="resetFields()"
       >
         {{ $tc('btn.new') }}
       </v-tab>
     </v-tabs>
-    <v-tabs-items v-model="tab">
-      <v-tab-item
-        key="search"
-      >
+    <v-window v-model="tab" v-if="!isEdit" >
+      <v-window-item value="search">
         <v-row
           v-if="isEdit"
           class="text-h6 mt-4 ml-0"
@@ -96,10 +94,8 @@
             </router-link>
           </v-col>
         </v-row>
-      </v-tab-item>
-      <v-tab-item
-        key="new"
-      >
+      </v-window-item>
+      <v-window-item value="new">
         <v-row
           class="text-h6 mt-4 ml-0"
         >
@@ -149,8 +145,8 @@
             </router-link>
           </v-col>
         </v-row>
-      </v-tab-item>
-    </v-tabs-items>
+      </v-window-item>
+    </v-window>
     <div v-if="isEdit">
       <v-row
         dense
@@ -178,19 +174,20 @@
         </v-col>
       </v-row>
     </div>
-    <v-spacer />
-    <gokb-button
-      @click="close"
-    >
-      {{ $t('btn.cancel') }}
-    </gokb-button>
-    <gokb-button
-      v-if="!isReadonly"
-      is-submit
-      :disabled="!isValid"
-    >
-      {{ submitButtonLabel }}
-    </gokb-button>
+    <template #buttons>
+      <gokb-button
+        @click="close"
+      >
+        {{ $t('btn.cancel') }}
+      </gokb-button>
+      <gokb-button
+        v-if="!isReadonly"
+        is-submit
+        :disabled="!isValid"
+      >
+        {{ submitButtonLabel }}
+      </gokb-button>
+    </template>
   </gokb-dialog>
 </template>
 
@@ -210,7 +207,7 @@
     emits: ['update:model-value', 'edit'],
     props: {
       modelValue: {
-        type: Boolean,
+        type: [Boolean, Number],
         required: true
       },
       selected: {

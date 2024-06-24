@@ -57,8 +57,15 @@
     "false": "No",
     "all": "All",
     "ISOdateHint": "YYYY-MM-DD",
+    "loading": "Loading ...",
     "error": {
       "label": "Error | Errors"
+    },
+    "table": {
+      "noData": {
+        "search": "No Results",
+        "props": "No Entries"
+      }
     },
     "404": {
       "title": "Unknown Path",

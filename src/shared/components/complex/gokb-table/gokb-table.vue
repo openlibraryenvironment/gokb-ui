@@ -32,7 +32,7 @@
             {{ error }}
           </v-alert>
           <div v-else>
-            {{ $i18n.t('search.results.empty') }}
+            {{ noDataTableText }}
           </div>
         </v-row>
       </template>
@@ -215,18 +215,18 @@
           <div style="margin-top:-40px;padding-bottom:10px;text-align:right;">
             <v-btn
               class="mr-1"
-              :color="options.itemsPerPage === 10 ? 'white' : 'primary'"
+              :color="options.itemsPerPage === 10 ? 'white' : 'secondary'"
               :style="{ backgroundColor: (options.itemsPerPage === 10 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
               text
               @click="setPageSize(10)">10</v-btn>
             <v-btn
-              :color="options.itemsPerPage === 20 ? 'white' : 'primary'"
+              :color="options.itemsPerPage === 20 ? 'white' : 'secondary'"
               :style="{ backgroundColor: (options.itemsPerPage === 20 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
               class="mr-1"
               text
               @click="setPageSize(20)">20</v-btn>
             <v-btn
-              :color="options.itemsPerPage === 50 ? 'white' : 'primary'"
+              :color="options.itemsPerPage === 50 ? 'white' : 'secondary'"
               :style="{ backgroundColor: (options.itemsPerPage === 50 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
               class="mr-1"
               text
@@ -327,6 +327,11 @@
         type: Function,
         required: false,
         default: (a, b) => (!!a.id && !!b.id ? a.id === b.id : a.value === b.value)
+      },
+      isSearchResults: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -355,6 +360,9 @@
       showSelect () {
         return this.forceShowSelect || this.editable
       },
+      noDataTableText () {
+        return this.isSearchResults ? this.$i18n.t('default.table.noData.search') : this.$i18n.t('default.table.noData.props')
+      }
     },
     watch: {
       'options.page' () {
@@ -397,7 +405,7 @@
       },
       setPageSize(val) {
         this.$emit('paginate', { page: 1, itemsPerPage: val })
-      }
+      },
     }
   }
 </script>

@@ -269,7 +269,7 @@
         }
 
         if (!!this.sortMappings?.linkTwo &&
-            options.sortBy.length === 1 &&
+            options.sortBy?.length === 1 &&
             options.sortBy[0]['key'] == 'linkTwo'
         ) {
           this.requestOptions.sortBy = [
@@ -279,7 +279,7 @@
             }
           ]
         } else if (!!this.sortMappings?.link &&
-            options.sortBy.length === 1 &&
+            options.sortBy?.length === 1 &&
             options.sortBy[0]['key'] == 'link'
         ) {
           this.requestOptions.sortBy = [
@@ -289,7 +289,7 @@
             }
           ]
         }
-        else {
+        else if(!!options.sortBy) {
           this.requestOptions.sortBy = options.sortBy
         }
 

@@ -41,7 +41,7 @@
       </v-btn>
       <a
         icon
-        class="mr-2 text-invert"
+        :class="['mr-2', ($vuetify.theme.dark ? 'text-primary' : 'text-invert')]"
         target="_blank"
         :href="docsLink || $t('main.docs.target')"
         :title="$t('main.docs.label')"

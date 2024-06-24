@@ -795,7 +795,7 @@
         }
       }
 
-      this.tab = parseInt(this.$route.query.tab) || null
+      this.tab = parseInt(this.$route.query.tab) || 0
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

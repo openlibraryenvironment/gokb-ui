@@ -167,7 +167,7 @@
             <v-tab
               value="identifiers"
               :style="[!!errors.ids ? { border: '1px solid red', borderRadius: '2px' } : {}]"
-              :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.identifier.label', 2) }}
               <v-chip class="ma-2">
@@ -183,7 +183,7 @@
             </v-tab>
             <v-tab
               value="publishers"
-              :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.title.publisher.label', 2) }}
               <v-chip class="ma-2">
@@ -199,7 +199,7 @@
             </v-tab>
             <v-tab
               value="variants"
-              :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.variantName.label', 2) }}
               <v-chip class="ma-2">
@@ -215,7 +215,7 @@
             </v-tab>
             <v-tab
               value="subjects"
-              :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.subject.label', 2) }}
               <v-chip class="ma-2">
@@ -232,7 +232,7 @@
             <v-tab
               v-if="id && isContrib"
               value="reviews"
-              :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.review.label', 2) }}
               <v-chip class="ma-2">
@@ -249,7 +249,7 @@
             <v-tab
               v-if="id"
               value="tipps"
-              :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.tipp.label', 2) }}
               <v-chip class="ma-2">
@@ -259,7 +259,7 @@
             <v-tab
               v-if="isEdit && history"
               value="history"
-              :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $t('component.title.history.label') }}
               <v-chip class="ma-2">
@@ -600,9 +600,6 @@
       localLastUpdated () {
         return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
-      tabClass () {
-        return this.$vuetify.theme.dark ? 'tab-dark' : ''
-      },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_EDITOR'))
       },
@@ -660,7 +657,7 @@
       }
     },
     mounted () {
-      this.tab = parseInt(this.$route.query.tab) || null
+      this.tab = parseInt(this.$route.query.tab) || 0
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -946,10 +943,5 @@
 <style>
   .v-slide-group__prev {
     margin-left: -50px;
-  }
-</style>
-<style scoped>
-  .tab-dark {
-    color: rgba(255, 255, 255, 0.6);
   }
 </style>

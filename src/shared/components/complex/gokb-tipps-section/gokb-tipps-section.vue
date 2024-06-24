@@ -29,7 +29,7 @@
         @kbart="addKbartFile"
       />
       <gokb-add-title-popup
-        v-if="addTitlePopupVisible"
+        v-if="!!addTitlePopupVisible"
         v-model="addTitlePopupVisible"
         :title-type="addTitleType"
         :pkg="pkg"
@@ -82,7 +82,7 @@
         <v-btn
           icon
           :title="$t('btn.refresh')"
-          style="margin-top:-4px"
+          class="mt-4"
           @click="fetchTipps"
         >
           <v-icon>
@@ -151,7 +151,7 @@
         <gokb-state-field
           v-model="searchFilters.status"
           width="150px"
-          class="ms-4 mt-1"
+          class="ms-4"
           init-item="Current"
           message-path="component.general.status"
           :label="$t('component.general.status.label')"
