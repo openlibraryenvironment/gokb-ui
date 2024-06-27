@@ -214,22 +214,6 @@
               </v-icon>
             </v-tab>
             <v-tab
-              value="subjects"
-              class="font-weight-bold"
-            >
-              {{ $tc('component.subject.label', 2) }}
-              <v-chip class="ma-2">
-                {{ subjects.length }}
-              </v-chip>
-              <v-icon
-                v-if="pendingChanges.subjects"
-                :title="$t('pending.lists.changed')"
-                small
-              >
-                mdi-alert-decagram
-              </v-icon>
-            </v-tab>
-            <v-tab
               v-if="id && isContrib"
               value="reviews"
               class="font-weight-bold"
@@ -267,6 +251,22 @@
               </v-chip>
               <v-icon
                 v-if="pendingChanges.history"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
+            <v-tab
+              value="subjects"
+              class="font-weight-bold"
+            >
+              {{ $tc('component.subject.label', 2) }}
+              <v-chip class="ma-2">
+                {{ subjects.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.subjects"
                 :title="$t('pending.lists.changed')"
                 small
               >
@@ -941,7 +941,11 @@
   }
 </script>
 <style>
+  .v-tab.v-btn--size-default {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
   .v-slide-group__prev {
-    margin-left: -50px;
+    margin-left: -20px;
   }
 </style>

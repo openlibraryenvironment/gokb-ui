@@ -18,6 +18,7 @@
       :show-select="showSelect"
       :must-sort="mustSort"
       :value-comparator="comparator"
+      :item-selectable="itemSelectable"
       density="compact"
       return-object
       @update:sortBy="changeSortBy"
@@ -332,6 +333,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      itemSelectable: {
+        type: String,
+        required: false,
+        default: null
       }
     },
     data () {
