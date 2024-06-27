@@ -147,12 +147,6 @@
             >
               {{ $t('component.tipp.other.label') }}
             </v-tab>
-            <v-tab
-              key="prices"
-              :active-class="tabClass"
-            >
-              {{ $tc('component.tipp.prices.label', 2) }}
-            </v-tab>
           </v-tabs>
           <v-tabs-items v-model="tab">
             <v-tab-item key="access">
@@ -504,14 +498,6 @@
                 </v-row>
               </gokb-section>
             </v-tab-item>
-            <v-tab-item key="prices">
-              <gokb-prices-section
-                v-model="packageTitleItem.prices"
-                :disabled="isReadonly"
-                no-tool-bar
-                @update="addPendingChange"
-              />
-            </v-tab-item>
           </v-tabs-items>
         </v-col>
       </v-row>
@@ -645,7 +631,6 @@
           hostPlatform: undefined,
           status: undefined,
           paymentType: undefined,
-          prices: [],
           url: undefined,
           name: undefined,
           accessStartDate: undefined,
@@ -804,11 +789,6 @@
             value: id.value,
             type: id.namespace
           })),
-          prices: this.packageTitleItem.prices.map(price => ({
-            ...price,
-            type: (price.type || price.priceType),
-            id: (typeof price.id === 'number' ? price.id : null)
-          })),
           variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
             variantName,
             locale,
@@ -914,7 +894,6 @@
           hostPlatform: undefined,
           status: undefined,
           paymentType: undefined,
-          prices: [],
           url: undefined,
           name: undefined,
           accessStartDate: undefined,
@@ -1043,17 +1022,6 @@
             endDate: statement.endDate && this.buildDateString(statement.endDate),
           }))
         }
-
-        if (data._embedded.prices?.length) {
-          this.packageTitleItem.prices = data._embedded.prices.map(pobj => ({
-            ...pobj,
-            type: pobj.priceType,
-            startDate: this.buildDateString(pobj.startDate),
-            endDate: this.buildDateString(pobj.endDate)
-          }))
-        }
-
-
 
         this.titleType = data.title?.type || data.publicationType?.name
 
