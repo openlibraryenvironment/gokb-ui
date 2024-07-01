@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-2">
+  <v-container fluid>
     <v-form
       ref="pageform"
       @update:model-value="$emit('valid', $event)"

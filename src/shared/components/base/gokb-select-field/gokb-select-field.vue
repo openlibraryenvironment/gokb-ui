@@ -112,6 +112,11 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      staticItems: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -153,7 +158,16 @@
       }
     },
     async mounted () {
-      this.fetch()
+      if (!this.staticItems) {
+        this.fetch()
+      }
+      else {
+        this.rawItems = this.staticItems
+
+        if (!!this.initItem) {
+          this.setInit(this.initItem)
+        }
+      }
     },
     methods: {
       transform (result) {

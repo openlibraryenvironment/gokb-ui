@@ -132,7 +132,13 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.general.name'), align: 'start', value: 'link', sortable: false, width: '100%' }
+          {
+            title: this.$i18n.tc('component.general.name'),
+            align: 'start',
+            value: 'link',
+            sortable: false,
+            width: '100%'
+          }
         ]
       },
       title () {

@@ -71,14 +71,14 @@
               value: 'type',
               properties: {
                 label: this.$i18n.t('component.title.type.label'),
-                width: '100%'
-              },
-              items: [
-                { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
-                { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
-                { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
-                { name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
-              ]
+                width: '100%',
+                staticItems: [
+                  { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
+                  { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
+                  { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
+                  { name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
+                ]
+              }
             },
             {
               type: 'GokbSearchPublisherField',

@@ -192,7 +192,7 @@
             <v-row>
               <v-col
                 cols="12"
-                xl="6"
+                md="6"
               >
                 <gokb-section
                   :sub-title="$t('component.package.provider')"
@@ -208,7 +208,7 @@
               </v-col>
               <v-col
                 cols="12"
-                xl="6"
+                md="6"
               >
                 <gokb-section
                   :sub-title="$t('component.package.platform')"
@@ -360,7 +360,7 @@
             <v-row>
               <v-col
                 cols="12"
-                xl="6"
+                md="6"
               >
                 <gokb-identifier-section
                   v-model="packageItem.ids"
@@ -371,7 +371,7 @@
               </v-col>
               <v-col
                 cols="12"
-                xl="6"
+                md="6"
               >
                 <gokb-alternate-names-section
                   v-model="allNames.alts"
@@ -381,7 +381,7 @@
               </v-col>
               <v-col
                 cols="12"
-                xl="6"
+                md="6"
               >
                 <gokb-subjects-section
                   v-model="packageItem.subjects"
@@ -569,7 +569,7 @@
             <v-row>
               <v-col
                 cols="12"
-                xl="5"
+                md="5"
               >
                 <gokb-curatory-group-section
                   v-model="allCuratoryGroups"
@@ -581,7 +581,7 @@
               </v-col>
               <v-col
                 cols="12"
-                xl="7"
+                md="7"
               >
                 <gokb-reviews-section
                   v-if="id && isContrib"
