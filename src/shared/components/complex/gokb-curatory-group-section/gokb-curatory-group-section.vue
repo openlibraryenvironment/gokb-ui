@@ -16,7 +16,7 @@
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddNewCuratoryGroup"
+        @click.prevent="showAddNewCuratoryGroup"
       >
         {{ $t('btn.add') }}
       </gokb-button>
@@ -26,7 +26,7 @@
         icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
-        @click="confirmDeleteSelectedItems"
+        @click.prevent="confirmDeleteSelectedItems"
       >
         {{ $t('btn.delete') }}
       </gokb-button>
@@ -106,6 +106,7 @@
         addCuratoryGroupPopupVisible: false,
         curatoryGroupsOptions: {
           page: 1,
+          sortBy: [],
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedCuratoryGroups: [],

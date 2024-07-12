@@ -1,10 +1,8 @@
 <template>
   <div>
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+    </v-snackbar>
     <gokb-page
       v-if="accessible && !notFound"
       :key="version"
@@ -128,7 +126,10 @@
     },
     data () {
       return {
-        eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         submitConfirmationMessage: undefined,
         parameterToConfirm: undefined,
         showSubmitConfirm: false,
@@ -216,11 +217,10 @@
         } else if (response?.status === 404) {
             this.notFound = true
         } else {
-          this.eventMessages.push({
-            message: this.$i18n.t('error.general.500'),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('error.general.500'),
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
           this.accessible = false
         }
         this.finishedLoading = true
@@ -304,24 +304,26 @@
         }
       },
       async closeReview () {
+        this.showSnackbar = false
         const resp = await reviewServices.close(this.id, this.cancelToken.token)
 
         if (resp.status === 200) {
-          this.eventMessages.push({
-            message: this.$i18n.t('component.review.edit.success.closed'),
-            color: 'success',
-            timeout: 4000
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t('component.review.edit.success.closed')
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
+
           this.mapRecord(resp.data)
         } else {
-          this.eventMessages.push({
-            message: this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         }
       },
       async reopenReview () {
+        this.showSnackbar = false
+
         let body = {
           id: this.id,
           status: 'Open'
@@ -330,18 +332,17 @@
         const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
 
         if (resp.status === 200) {
-          this.eventMessages.push({
-            message: this.$i18n.t('component.review.edit.success.reopened'),
-            color: 'success',
-            timeout: 4000
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t('component.review.edit.success.reopened')
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
+
           this.mapRecord(resp.data)
         } else {
-          this.eventMessages.push({
-            message: this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         }
       },
       async addNewComponent (info) {
@@ -402,27 +403,26 @@
         }
       },
       showResponse (response) {
+        this.showSnackbar = false
+
         if (typeof response === 'string' || response instanceof String) {
-          this.eventMessages.push({
-            message: response,
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = response,
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         }
         else {
           if (response?.message) {
             if (response.type == 'success') {
-              this.eventMessages.push({
-                message: this.$i18n.t('success.update', [this.$i18n.tc('component.review.label'), ""]),
-                color: 'success',
-                timeout: 4000
-              })
+              this.messageColor = 'success'
+              this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.review.label'), ""])
+              this.currentSnackBarTimeout = 5000
+              this.showSnackbar = true
             } else {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
             }
           }
           else {
@@ -430,32 +430,28 @@
             this.errors = response?.resp.data?.error
 
             if (response.resp.status === 403) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.403', [this.$i18n.tc('component.review.label')]),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.update.404', [this.$i18n.tc('component.review.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
             }
             else if (response.resp.status === 409) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.review.label')]),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.review.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
             }
             else if (response.resp.status === 500) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.review.label')]),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.update.500', [this.$i18n.tc('component.review.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
             }
             else {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
             }
           }
         }

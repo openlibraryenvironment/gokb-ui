@@ -3,6 +3,7 @@
     v-model="localValue"
     :title="header"
     :width="1000"
+    :min-height="800"
     @submit="submitTipp"
   >
     <v-snackbars :objects.sync="eventMessages">
@@ -11,7 +12,7 @@
       </template>
     </v-snackbars>
 
-    <v-row v-if="!init" align="center" style="height:200px;">
+    <v-row v-if="!init" align="center" style="height:72vh;">
       <v-col cols="12" class="text-center">
         {{ $t('default.loading') }}
       </v-col>
@@ -168,6 +169,7 @@
                 v-model="packageTitleItem.subjects"
                 :disabled="isReadonly"
                 :api-errors="errors?.subjects"
+                :expanded="false"
               />
           </v-col>
         </v-row>
@@ -185,16 +187,17 @@
               <v-btn
                 icon
                 @click="doExpandCoverage"
+                color="primary"
               >
                 <v-icon>{{ expansionIcon }}</v-icon>
               </v-btn>
               <v-spacer />
-              <v-toolbar-items class="pa-2">
+              <v-toolbar-items class="mr-8">
                 <gokb-button
                   v-if="!isReadonly && coverageExpanded"
                   icon-id="mdi-plus"
-                  is-submit
-                  @click="addNewCoverage"
+                  color="primary"
+                  @click.prevent="addNewCoverage"
                 >
                   {{ $t('btn.add') }}
                 </gokb-button>
@@ -228,14 +231,15 @@
                             />
                           </v-col>
                           <v-col
-                            v-if="!isReadonly"
+                            v-if="!isReadonly && packageTitleItem.coverageStatements.length > 1"
                             cols="1"
                             class="pt-6 mr-2"
                           >
                             <v-btn
                               icon
                               :title="$t('btn.delete')"
-                              @click="removeCoverage(idx)"
+                              color="primary"
+                              @click.prevent="removeCoverage(idx)"
                             >
                               <v-icon>
                                 mdi-delete
@@ -473,7 +477,7 @@
       <gokb-button
         class="mr-6"
         color="secondary"
-        @click="close"
+        @click.prevent="close"
       >
         {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
       </gokb-button>

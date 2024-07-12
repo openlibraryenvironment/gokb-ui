@@ -162,19 +162,22 @@
     },
     watch: {
       defaultTitleNamespace (val) {
-        if (val && (!this.modelValue?.id || !this.item.targetNamespace)) {
+        if (!!val && (!this.modelValue?.id || !this.item.targetNamespace)) {
           this.targetNamespace = this.defaultTitleNamespace
         }
       }
     },
     async mounted () {
-      if (this.modelValue?.id) {
+      if (!!this.modelValue?.id) {
         this.fetch(this.modelValue.id)
+      }
+      else {
+        console.log("NO SOURCE IN" + this.modelValue)
       }
     },
     methods: {
       async fetch (sid) {
-        if (sid) {
+        if (!!sid) {
           const result = await this.catchError({
             promise: sourceServices.getSource(sid, this.cancelToken.token),
             instance: this

@@ -23,7 +23,7 @@
         </v-col>
         <v-spacer />
       </v-row>
-      <gokb-section :no-tool-bar="true">
+      <gokb-section no-tool-bar>
         <v-row>
           <v-col col="7">
             <gokb-name-field
@@ -475,7 +475,6 @@
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import titleServices from '@/shared/services/title-services'
-  import namespaceServices from '@/shared/services/namespace-services'
   import accountModel from '@/shared/models/account-model'
   import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
   import loading from '@/shared/models/loading'
@@ -556,7 +555,6 @@
         currentType: undefined,
         updateUrl: undefined,
         deleteUrl: undefined,
-        eventMessages: [],
         showSnackbar: false,
         snackbarMessage: undefined,
         messageColor: undefined,
@@ -636,28 +634,25 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]),
-            color: 'success',
-            timeout: -1
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]),
-            color: 'warning',
-            timeout: -1
-          })
+          this.messageColor = 'warning'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         }
       }
     },
     mounted () {
-      this.tab = parseInt(this.$route.query.tab) || 0
+      this.tab = this.$route.query.tab || 'identifiers'
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -667,7 +662,6 @@
         this.errors = {}
         this.showSnackbar = false
         this.snackbarMessage = undefined
-        this.eventMessages = []
         var isUpdate = !!this.id
 
         const activeGroup = accountModel.activeGroup()
@@ -746,28 +740,20 @@
           }
         } else {
           if (response.status === 409) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.title.label')]),
-              color: 'error',
-              timeout: -1
-            })
-
             this.messageColor = 'error'
-            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), this.allNames.name])
+            this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.title.label')])
             this.currentSnackBarTimeout = -1
             this.showSnackbar = true
           } else if (response.status === 500) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.title.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.title.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else {
-            this.eventMessages.push({
-              message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.title.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.title.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
             this.errors = response.data.error
           }
         }
@@ -777,6 +763,7 @@
       reset () {
         this.tab = null
         this.pendingChanges = {}
+        this.showSnackbar = false
         this.reviewsCount = undefined
         this.tippCount = undefined
         this.shortTitleMap = {
@@ -826,7 +813,6 @@
         this.currentType = undefined
         this.updateUrl = undefined
         this.deleteUrl = undefined
-        this.eventMessages = []
         this.reload()
       },
       async reload () {

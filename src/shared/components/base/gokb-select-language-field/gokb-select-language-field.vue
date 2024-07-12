@@ -35,19 +35,8 @@
       }
     },
     data () {
-      return {
-        items: undefined
-      }
     },
     computed: {
-      localizedItems () {
-        if (!!this.items && this.items.length > 0) {
-          return this.items.sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-        }
-        else {
-          return []
-        }
-      },
       localValue: {
         get () {
           return this.modelValue
@@ -68,6 +57,14 @@
           return values
         } else {
           return []
+        }
+      },
+      updateItems() {
+        if (!!this.rawItems && this.rawItems.length > 0) {
+          this.localizedItems = this.rawItems.sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+        }
+        else {
+          this.localizedItems = []
         }
       }
     }

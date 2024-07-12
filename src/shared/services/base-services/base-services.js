@@ -56,6 +56,7 @@ const api = (http, log, utils, tokenModel, accountModel) => ({
       if (!!headers[HEADER_AUTHORIZATION_KEY]) {
         log.debug("No token but remaining header to delete")
         accountModel.default.logout()
+        this.deleteAuthorization()
       }
 
       response = http.request({ method, url, headers, data, cancelToken })

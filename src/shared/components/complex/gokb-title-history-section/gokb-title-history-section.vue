@@ -16,7 +16,7 @@
         v-if="isEditable"
         color="primary"
         icon-id="mdi-plus"
-        @click="showAddHistoryEvent"
+        @click.prevent="showAddHistoryEvent"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>

@@ -10,7 +10,7 @@
       :hide-default="!expanded"
       :filters="filterAlign"
       :expand-filters="expandFilters"
-      :show-actions="isEditable"
+      show-actions
       :sub-title="sectionTitle"
       :items-total="totalNumberOfItems"
       :errors="!!apiErrors"
@@ -46,7 +46,7 @@
           v-if="isEditable"
           class="mx-4"
           color="primary"
-          @click="showKbartImportPopup"
+          @click.prevent="showKbartImportPopup"
         >
           KBART Import
         </gokb-button>
@@ -58,7 +58,8 @@
         >
           <template #activator="{ props }">
             <v-btn
-              class="mr-4 invert--text"
+              class="mr-4"
+              variant="elevated"
               color="primary"
               v-bind="props"
             >
@@ -82,10 +83,10 @@
         <v-btn
           icon
           :title="$t('btn.refresh')"
-          class="mt-4"
+          :class="[ttl ? 'mt-4' : '']"
           @click="fetchTipps"
         >
-          <v-icon>
+          <v-icon color="primary">
             mdi-refresh
           </v-icon>
         </v-btn>
@@ -103,13 +104,13 @@
             <v-checkbox
               id="bulkCheck"
               v-model="bulkSelect"
-              class="mx-4"
+              class="mx-2 mt-4"
             />
           </div>
         </span>
 
         <v-menu
-          v-if="isEditable"
+          v-if="isEditable && selectedItems.length > 0"
           v-model="bulkselectMenuOpen"
           offset-y
           open-on-hover
@@ -117,7 +118,8 @@
           <template #activator="{ props }">
             <v-btn
               :disabled="selectedItems.length == 0"
-              class="mr-4"
+              class="mr-4 mt-4"
+              variant="elevated"
               color="primary"
               v-bind="props"
             >
@@ -161,7 +163,12 @@
           text
           class="ml-3"
           @click="toggleFilters"
-        > {{ $t('btn.moreFilters') }} <v-icon> {{ expandFilters ? 'mdi-chevron-up' : 'mdi-chevron-down' }} </v-icon> </v-btn>
+        >
+          {{ $t('btn.moreFilters') }}
+          <v-icon>
+            {{ expandFilters ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+          </v-icon>
+        </v-btn>
       </template>
       <template #filters>
         <v-row>

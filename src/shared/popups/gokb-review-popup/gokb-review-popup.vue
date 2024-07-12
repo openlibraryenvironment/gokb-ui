@@ -5,47 +5,56 @@
     width="max-width"
     fullscreen
   >
-    <gokb-error-component :value="error" />
-    <v-snackbar v-model="showSuccessMsg" color="success" :timeout="5000"> {{ successMsg }} </v-snackbar>
-    <v-snackbar v-model="showErrorMsg" color="error" :timeout="5000"> {{ errorMsg }} </v-snackbar>
+    <v-row v-if="!init" align="center" style="height:80vh;">
+      <v-col cols="12" class="text-center">
+        {{ $t('default.loading') }}
+      </v-col>
+    </v-row>
+    <v-lazy v-model="init">
+      <div>
+        <gokb-error-component :value="error" />
+        <v-snackbar v-model="showSuccessMsg" color="success" :timeout="5000"> {{ successMsg }} </v-snackbar>
+        <v-snackbar v-model="showErrorMsg" color="error" :timeout="5000"> {{ errorMsg }} </v-snackbar>
 
-    <gokb-confirmation-popup
-      v-model="showSubmitConfirm"
-      :message="submitConfirmationMessage"
-      @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-    />
+        <gokb-confirmation-popup
+          v-model="showSubmitConfirm"
+          :message="submitConfirmationMessage"
+          @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+        />
 
-    <gokb-reviews-header
-      v-if="reviewItem?.component"
-      :value="error"
-      :component="reviewItem.component"
-      :editable="!isReadonly"
-      :review-component="reviewItem"
-      :has-component-cards="showComponentCards"
-      :additional-vars="reviewItem.additionalVars"
-    />
+        <gokb-reviews-header
+          v-if="reviewItem?.component"
+          :value="error"
+          :component="reviewItem.component"
+          :editable="!isReadonly"
+          :review-component="reviewItem"
+          :has-component-cards="showComponentCards"
+          :additional-vars="reviewItem.additionalVars"
+        />
 
-    <gokb-reviews-components-section
-      v-if="finishedLoading && showComponentCards"
-      v-for="(wf, i) in workflow"
-      :ref="'wf' + i"
-      :key="i"
-      :value="error"
-      :reviewed-component="reviewItem.component"
-      :reference-components="reviewItem.otherComponents"
-      :review-type="reviewItem.stdDesc?.name"
-      :review-status="reviewItem.status.value"
-      :more-steps="i+1 < workflow.length"
-      :workflow="wf"
-      :editable="!isReadonly"
-      :additional-vars="reviewItem.additionalVars"
-      :expanded="activeStep === i"
-      @expand="activateStep(i)"
-      @finished-step="changeActiveStep"
-      @added="addNewComponent"
-      @close="closeReview"
-      @feedback-response="showResponse"
-    />
+        <gokb-reviews-components-section
+          v-if="finishedLoading && showComponentCards"
+          v-for="(wf, i) in workflow"
+          :ref="'wf' + i"
+          :key="i"
+          :value="error"
+          :reviewed-component="reviewItem.component"
+          :reference-components="reviewItem.otherComponents"
+          :review-type="reviewItem.stdDesc?.name"
+          :review-status="reviewItem.status.value"
+          :more-steps="i+1 < workflow.length"
+          :workflow="wf"
+          :editable="!isReadonly"
+          :additional-vars="reviewItem.additionalVars"
+          :expanded="activeStep === i"
+          @expand="activateStep(i)"
+          @finished-step="changeActiveStep"
+          @added="addNewComponent"
+          @close="closeReview"
+          @feedback-response="showResponse"
+        />
+      </div>
+    </v-lazy>
 
     <template #buttons>
       <gokb-button
@@ -151,6 +160,7 @@
         deletedItems: [],
         workflow: [],
         activeStep: 0,
+        init: false,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,

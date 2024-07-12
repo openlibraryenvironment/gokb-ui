@@ -233,7 +233,7 @@
         </v-row>
         <v-row
           v-if="!!accessibilityLink"
-          class="text-caption pl-6 pb-6"
+          class="text-caption pl-6"
           dense
         >
           <v-col>
@@ -246,6 +246,7 @@
             </a>
           </v-col>
         </v-row>
+        <v-row style="height:20px"></v-row>
       </template>
     </v-navigation-drawer>
     <v-main>
@@ -439,7 +440,7 @@
         document.title = to?.meta?.code ? this.$i18n.t(to.meta.code) : this.$i18n.t('route.home')
       },
       '$i18n.locale' (l) {
-        document.title = this.$i18n.t(this.$route.meta.code)
+        document.title = this.$i18n.t(this.$route?.meta?.code || 'route.home')
       },
       loggedIn (val) {
         if (val) {

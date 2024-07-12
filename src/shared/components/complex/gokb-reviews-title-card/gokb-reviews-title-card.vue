@@ -3,8 +3,7 @@
     v-if="!!originalRecord?.name"
     :loading="loading"
     :color="roleColor"
-    :class="elevationClass"
-    :disabled="isDeleted"
+    :class="[elevationClass, isDeleted ? 'text-disabled' : '']"
     outlined
   >
     <v-card-subtitle
@@ -19,7 +18,7 @@
         <v-col>
           <router-link
             v-if="!nameEditActive"
-            class="text-black"
+            :class="[darkMode ? 'text-primary' : 'text-black', 'font-weight-bold']"
             :to="{ name: route, params: { 'id': originalRecord.id } }"
             target="_blank"
           >
@@ -50,7 +49,7 @@
         <v-col>
           <span> {{ $tc('component.package.label') }}: </span>
           <router-link
-          class="text-black"
+            :class="[darkMode ? 'text-primary' : 'text-black']"
             :to="{ name: '/package', params: { 'id': linkedPackage.id } }"
             target="_blank"
           >
@@ -63,7 +62,7 @@
           <span> {{ $tc('component.title.label') }}: </span>
           <router-link
             v-if="!!linkedTitle"
-            class="text-black"
+            :class="[darkMode ? 'text-primary' : 'text-black']"
             :to="{ name: '/title', params: { 'id': linkedTitle.id } }"
             target="_blank"
           >
@@ -95,7 +94,7 @@
             class="mt-n1"
             @click="fetchTitle"
           >
-            <v-icon>
+            <v-icon color="primary">
               mdi-refresh
             </v-icon>
           </v-btn>
@@ -439,15 +438,18 @@
       isTippComponent () {
         return this.route === '/package-title'
       },
+      darkMode () {
+        return this.$vuetify.theme.dark
+      },
       roleColor () {
         if (this.role == "reviewedComponent") {
           if (this.mergeEnabled && this.originalRecord.type !== 'TIPP' && this.isOtherCardSelected) {
-            return (this.$vuetify.theme.dark ? "#670000" : "#f2d2d2")
+            return (this.darkMode ? "#670000" : "#f2d2d2")
           }
           return null
         }
         if (this.role == "candidateComponent" && this.isCardSelected) {
-          return (this.$vuetify.theme.dark ? "#1D5D0D" : "#d2f2d2")
+          return (this.darkMode ? "#1D5D0D" : "#d2f2d2")
         }
       },
       typeLabel () {
@@ -781,3 +783,8 @@
     }
   }
 </script>
+<style scoped>
+  .v-card-subtitle {
+    white-space: normal;
+  }
+</style>

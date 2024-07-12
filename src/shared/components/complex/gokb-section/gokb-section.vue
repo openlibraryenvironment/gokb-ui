@@ -82,7 +82,7 @@
         />
       </v-toolbar>
       <v-toolbar
-        v-if="filters && show"
+        v-if="showActions && filters && show"
         height="63"
         color="header"
         class="pt-1 pl-4"
@@ -98,7 +98,7 @@
           name="buttons"
         />
         <v-toolbar-items
-          class="pa-2"
+          class="pa-2 mr-4"
         >
           <slot name="search" />
         </v-toolbar-items>

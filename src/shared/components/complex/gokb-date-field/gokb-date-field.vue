@@ -29,6 +29,7 @@
             <v-icon
               :class="dense ? 'pb-5' : 'pb-1'"
               v-bind="props"
+              color="primary"
             >
               mdi-calendar
             </v-icon>

@@ -18,7 +18,7 @@
       <v-col>
         <div
           v-if="!!selectedItem.link"
-          class="primary--text"
+          class="text-caption v-field-label"
         >
           {{ $tc('component.package.label') }}
         </div>
@@ -50,7 +50,7 @@
     <v-row v-if="!!selectedItem.results">
       <v-col>
         <div
-          class="primary--text"
+          class="text-caption v-field-label mb-1"
         >
           {{ selectedItem.dryRun ? $t('job.report.dryRunLabel') : $t('job.report.label') }}
         </div>
@@ -88,7 +88,7 @@
     <v-row v-if="selectedItem.messages">
       <v-col>
         <div
-          class="primary--text"
+          class="text-caption v-field-label"
         >
           {{ $t('job.messages') }}
         </div>
@@ -174,7 +174,7 @@
     emits: ['update:model-value'],
     props: {
       modelValue: {
-        type: Boolean,
+        type: [Boolean, Number, String],
         required: true
       },
       selected: {
@@ -218,9 +218,9 @@
       },
       errorHeaders () {
         return [
-          { text: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
-          { text: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
-          { text: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
+          { title: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
+          { title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
+          { title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
         ]
       }
     },

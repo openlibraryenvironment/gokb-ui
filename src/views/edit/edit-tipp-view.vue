@@ -1,10 +1,8 @@
 <template>
   <div>
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+    </v-snackbar>
     <gokb-page
       v-if="!notFound"
       :key="version"
@@ -151,13 +149,6 @@
               class="font-weight-bold"
             >
               {{ $t('component.tipp.other.label') }}
-            </v-tab>
-            <v-tab
-              value="prices"
-              :active-class="tabClass"
-              class="font-weight-bold"
-            >
-              {{ $tc('component.tipp.prices.label', 2) }}
             </v-tab>
           </v-tabs>
           <v-window v-model="tab">
@@ -511,14 +502,6 @@
                 </v-row>
               </gokb-section>
             </v-window-item>
-            <v-window-item value="prices">
-              <gokb-prices-section
-                v-model="packageTitleItem.prices"
-                :disabled="isReadonly"
-                no-tool-bar
-                @update="addPendingChange"
-              />
-            </v-window-item>
           </v-window>
         </v-col>
       </v-row>
@@ -623,7 +606,10 @@
         coverageExpanded: true,
         selectedTitle: undefined,
         selectedItem: undefined,
-        eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         coverageObject: {
           coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
           startDate: undefined,
@@ -652,7 +638,6 @@
           hostPlatform: undefined,
           status: undefined,
           paymentType: undefined,
-          prices: [],
           url: undefined,
           name: undefined,
           accessStartDate: undefined,
@@ -775,27 +760,24 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')]),
-            color: 'success',
-            timeout: 3000
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]),
-            color: 'warning',
-            timeout: -1
-          })
+          this.messageColor = 'warning'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         }
       }
 
-      this.tab = parseInt(this.$route.query.tab) || 0
+      this.tab = this.$route?.query?.tab || 'access'
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -803,18 +785,13 @@
       },
       async update () {
         const activeGroup = accountModel.activeGroup()
-        this.eventMessages = []
+        this.showSnackbar = false
 
         const newTipp = {
           ...this.packageTitleItem,
           ids: this.packageTitleItem.ids.map(id => ({
             value: id.value,
             type: id.namespace
-          })),
-          prices: this.packageTitleItem.prices.map(price => ({
-            ...price,
-            type: (price.type || price.priceType),
-            id: (typeof price.id === 'number' ? price.id : null)
           })),
           variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
             variantName,
@@ -841,11 +818,10 @@
 
         if (response.status < 400) {
           if (this.isEdit) {
-            this.eventMessages.push({
-              message: this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label'), this.allNames.name]),
-              color: 'success',
-              timeout: 3000
-            })
+            this.messageColor = 'success'
+            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label')])
+            this.currentSnackBarTimeout = 5000
+            this.showSnackbar = true
             this.reload()
           } else {
             this.$router.push({
@@ -858,23 +834,20 @@
           }
         } else {
           if (response.status === 409) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.tipp.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.tipp.label')])
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else if (response.status === 500) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.tipp.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.tipp.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else {
-            this.eventMessages.push({
-              message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.tipp.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.tipp.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
             this.errors = response.data.error
           }
         }
@@ -892,7 +865,7 @@
         this.coverageExpanded = true
         this.selectedTitle = undefined
         this.selectedItem = undefined
-        this.eventMessages = []
+        this.showSnackbar = false
         this.coverageObject = {
           coverageDepth: undefined,
           startDate: undefined,
@@ -921,7 +894,6 @@
           hostPlatform: undefined,
           status: undefined,
           paymentType: undefined,
-          prices: [],
           url: undefined,
           name: undefined,
           accessStartDate: undefined,
@@ -1050,17 +1022,6 @@
             endDate: statement.endDate && this.buildDateString(statement.endDate),
           }))
         }
-
-        if (data._embedded.prices?.length) {
-          this.packageTitleItem.prices = data._embedded.prices.map(pobj => ({
-            ...pobj,
-            type: pobj.priceType,
-            startDate: this.buildDateString(pobj.startDate),
-            endDate: this.buildDateString(pobj.endDate)
-          }))
-        }
-
-
 
         this.titleType = data.title?.type || data.publicationType?.name
 

@@ -24,7 +24,7 @@
           <v-row>
             <v-col>
               <div class="font-weight-bold mb-1">
-                <v-icon class="mr-1 mt-n1">
+                <v-icon class="mr-1 mt-n1" color="primary">
                   {{ reviewedComponent.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
                 {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
@@ -49,7 +49,7 @@
             <v-col v-if="reviewType === 'Ambiguous Title Matches'" cols="1">
               <v-container fill-height fluid>
                 <v-row align="center" justify="space-around">
-                  <v-icon> mdi-chevron-right </v-icon>
+                  <v-icon color="primary"> mdi-chevron-right </v-icon>
                 </v-row>
               </v-container>
             </v-col>
@@ -66,7 +66,7 @@
           <v-row>
             <v-col>
               <div class="font-weight-bold mb-1">
-                <v-icon class="mr-1 mt-n1">
+                <v-icon class="mr-1 mt-n1" color="primary">
                   {{ i.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
                 {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) : $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
@@ -126,6 +126,7 @@
                             class="mt-4"
                             style="cursor:pointer"
                             :title="$t('btn.add')"
+                            color="primary"
                             @click="confirmAddComponent"
                           >
                             mdi-check-bold

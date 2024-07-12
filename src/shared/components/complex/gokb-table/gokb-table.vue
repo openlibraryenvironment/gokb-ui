@@ -19,6 +19,7 @@
       :must-sort="mustSort"
       :value-comparator="comparator"
       :item-selectable="itemSelectable"
+      :items-per-page="options.itemsPerPage"
       density="compact"
       return-object
       @update:sortBy="changeSortBy"
@@ -205,7 +206,7 @@
         </div>
       </template>
       <template #bottom>
-        <div v-if="!hidePagination && pages > 1" class="text-center pt-2 bg-card">
+        <div v-if="!hidePagination && (pages > 1 || totalNumberOfItems > 10)" class="text-center pt-2 bg-card">
           <v-pagination
             v-model="options.page"
             color="primary"

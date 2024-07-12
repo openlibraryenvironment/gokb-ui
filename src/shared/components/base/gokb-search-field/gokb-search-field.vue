@@ -58,6 +58,7 @@
     :placeholder="placeholder"
     :rules="activeRules"
     :dense="dense"
+    min-width="150px"
     :item-title="itemText"
     :item-value="itemValue"
     :return-object="returnObject"
@@ -109,12 +110,14 @@
     :item-title="itemText"
     :item-value="itemValue"
     variant="underlined"
+    min-width="150px"
     no-filter
     persistent-clear
     clearable
     auto-select-first
     hide-no-data
     return-object
+    single-line
     @update:search="prepareQuery"
   >
     <template #label>
@@ -140,6 +143,7 @@
         >
           <span
             :title="item.raw[itemText]"
+            style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:75%;"
           >
             {{ item.raw[itemText] }}
           </span>
@@ -292,7 +296,7 @@
         },
         set (val) {
           this.selectedVal = val
-          this.$emit('update:model-value', this.returnObject ? val : val.id)
+          this.$emit('update:model-value', this.returnObject ? val : (val?.id || null) )
         }
       },
       componentRoute () {
@@ -312,6 +316,13 @@
         this.selectedVal = this.modelValue
       }
     },
+    watch: {
+      modelValue(val) {
+        if (!!val && this.items.length === 0 && typeof val === 'number') {
+          this.query({ id: val })
+        }
+      }
+    },
     methods: {
       prepareQuery (term) {
         if (term?.length > 2) {
@@ -319,6 +330,7 @@
         }
       },
       async query ({ id, text }) {
+
         this.loading = true
         var primaryParam = {}
 

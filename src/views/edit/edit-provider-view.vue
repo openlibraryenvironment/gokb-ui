@@ -1,10 +1,8 @@
 <template>
   <div>
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+    </v-snackbar>
     <gokb-page
       ref="titlepage"
       v-if="accessible && !notFound"
@@ -411,7 +409,10 @@
         offices: [],
         errors: {},
         updateUrl: undefined,
-        eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         version: undefined,
         providerObject: {
           id: undefined,
@@ -481,23 +482,20 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name]),
-            color: 'success',
-            timeout: 2000
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label')])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name]),
-            color: 'warning',
-            timeout: -1
-          })
+          this.messageColor = 'warning'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         }
       }
 
@@ -506,7 +504,7 @@
       }
     },
     mounted () {
-      this.tab = parseInt(this.$route.query.tab) || 0
+      this.tab = this.$route?.query?.tab || 'variants'
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -514,7 +512,7 @@
       },
       async update () {
         var isUpdate = !!this.id
-        this.eventMessages = []
+        this.showSnackbar = false
         const activeGroup = accountModel.activeGroup()
 
         const data = {
@@ -550,11 +548,11 @@
         // todo: check error code
         if (response?.status < 400) {
           if (isUpdate) {
-            this.eventMessages.push({
-              message: this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.allNames.name]),
-              color: 'success',
-              timeout: 2000
-            })
+            this.messageColor = 'success'
+            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.allNames.name])
+            this.currentSnackBarTimeout = 4000
+            this.showSnackbar = true
+
             this.reload()
           } else {
             this.$router.push({
@@ -567,23 +565,20 @@
           }
         } else {
           if (response.status === 409) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.provider.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.provider.label')])
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else if (response.status === 500) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.provider.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.provider.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else {
-            this.eventMessages.push({
-              message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.provider.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.provider.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
             this.errors = response.data.error
           }
         }
@@ -609,7 +604,7 @@
         this.offices = []
         this.errors = {}
         this.updateUrl = undefined
-        this.eventMessages = []
+        this.showSnackbar = false
         this.version = undefined
         this.providerObject = {
           id: undefined,

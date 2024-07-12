@@ -4,6 +4,7 @@
     :persistent="persistent"
     :fullscreen="fullscreen"
     :width="width"
+    :min-height="minHeight"
     :retain-focus="false"
     scrollable
     @keydown.escape="closeWithEscape"
@@ -49,7 +50,7 @@
     emits: ['update:model-value', 'submit', 'update-valid'],
     props: {
       modelValue: {
-        type: [Boolean, Number],
+        type: [Boolean, Number, String],
         required: true,
         default: false
       },
@@ -76,6 +77,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      minHeight: {
+        type: [Number, String],
+        required: false,
+        default: undefined
       }
     },
     data () {

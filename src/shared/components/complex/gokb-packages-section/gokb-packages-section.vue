@@ -2,6 +2,7 @@
   <gokb-section
     expandable
     filters
+    show-actions
     :sub-title="localTitle"
     :errors="!!apiErrors"
   >
@@ -9,9 +10,10 @@
       <v-btn
         icon
         :title="$t('btn.refresh')"
+        class="mt-4"
         @click="retrievePackages"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-refresh
         </v-icon>
       </v-btn>
@@ -209,34 +211,34 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.general.name'),
+            title: this.$i18n.t('component.general.name'),
             align: 'start',
             sortable: true,
             value: 'link'
           },
           {
-            text: (this.providerId ? this.$i18n.tc('component.platform.label') : this.$i18n.tc('component.provider.label')),
+            title: (this.providerId ? this.$i18n.tc('component.platform.label') : this.$i18n.tc('component.provider.label')),
             align: 'start',
             sortable: true,
             width: '20%',
             value: (this.providerId ? 'nominalPlatform' : 'linkTwo')
           },
           {
-            text: this.$i18n.tc('component.package.contentType.label'),
+            title: this.$i18n.tc('component.package.contentType.label'),
             align: 'start',
             sortable: true,
             width: '15%',
             value: 'contentType'
           },
           {
-            text: this.$i18n.tc('component.package.count'),
+            title: this.$i18n.tc('component.package.count'),
             align: 'start',
             sortable: false,
             width: '150px',
             value: 'count'
           },
           {
-            text: this.$i18n.tc('component.general.lastUpdated'),
+            title: this.$i18n.tc('component.general.lastUpdated'),
             align: 'end',
             sortable: true,
             width: '18%',

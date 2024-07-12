@@ -18,7 +18,7 @@
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddPlatformPopup"
+        @click.prevent="showAddPlatformPopup"
       >
         {{ $t('btn.add') }}
       </gokb-button>
@@ -28,7 +28,7 @@
         icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
-        @click="confirmDeleteSelectedItems"
+        @click.prevent="confirmDeleteSelectedItems"
       >
         {{ $t('btn.delete') }}
       </gokb-button>
@@ -61,8 +61,8 @@
   const ROWS_PER_PAGE = 10
 
   const TABLE_HEADERS = [
-    { text: 'Name', align: 'start', value: 'popup', sortable: false, width: '40%' },
-    { text: 'URL', align: 'start', value: 'primaryUrl', sortable: false, width: '60%' }
+    { title: 'Name', align: 'start', value: 'popup', sortable: false, width: '40%' },
+    { title: 'URL', align: 'start', value: 'primaryUrl', sortable: false, width: '60%' }
   ]
 
   export default {

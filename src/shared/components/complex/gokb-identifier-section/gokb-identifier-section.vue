@@ -21,7 +21,7 @@
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddIdentifierPopup"
+        @click.prevent="showAddIdentifierPopup"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
@@ -31,7 +31,7 @@
         icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
-        @click="confirmDeleteSelectedItems"
+        @click.prevent="confirmDeleteSelectedItems"
       >
         {{ $i18n.t('btn.delete') }}
       </gokb-button>
@@ -48,10 +48,11 @@
       :editable="isEditable"
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
-      :options.sync="options"
+      :options.sync="idsOptions"
       :hide-select="!isEditable"
       @selected-items="selectedItems = $event"
       @delete-item="confirmDeleteItem"
+      @paginate="updateItems"
       actions
     />
   </gokb-section>
@@ -115,7 +116,7 @@
     data () {
       return {
         addIdentifierPopupVisible: false,
-        options: {
+        idsOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
@@ -249,7 +250,11 @@
       deleteIdentifier (value) {
         this.localValue = this.localValue.filter(v => v !== value)
       },
-      updateItems () {
+      async updateItems (options) {
+        if (!!options) {
+          this.idsOptions = options
+        }
+
         this.identifiers = this.localValue.map(item => ({
           ...item,
           extlink: namespaceServices.getBaseurl(item.namespace) ? namespaceServices.getBaseurl(item.namespace)+item.value : undefined,
@@ -257,7 +262,7 @@
           isDeletable : undefined
         }))
         .sort(({ nslabel: first }, { nslabel: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-        .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
+        .slice((this.idsOptions.page - 1) * this.idsOptions.itemsPerPage, this.idsOptions.page * this.idsOptions.itemsPerPage)
       },
       mapErrorForItem (item) {
         let result = null

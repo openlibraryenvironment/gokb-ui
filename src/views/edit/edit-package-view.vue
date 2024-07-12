@@ -1,10 +1,8 @@
 <template>
   <div>
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+    </v-snackbar>
     <gokb-page
       v-if="accessible && !notFound"
       :key="version"
@@ -18,7 +16,7 @@
           dismissible
         >
           {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
-          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id, 'import')">
             {{ $t('kbart.transmission.showResults') }}
           </gokb-button>
         </v-alert>
@@ -29,7 +27,7 @@
           dismissible
         >
           {{ $t('kbart.transmission.error.processing') }}
-          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id, 'import')">
             {{ $t('kbart.transmission.showResults') }}
           </gokb-button>
         </v-alert>
@@ -40,7 +38,7 @@
           dismissible
         >
           {{ $t('kbart.transmission.warn.skipped') }}
-          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id, 'import')">
             {{ $t('kbart.transmission.showResults') }}
           </gokb-button>
         </v-alert>
@@ -68,7 +66,7 @@
           dismissible
         >
           {{ $t('kbart.titleMatch.success') }}
-          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id, 'matching')">
             {{ $t('kbart.transmission.showResults') }}
           </gokb-button>
         </v-alert>
@@ -79,7 +77,7 @@
           dismissible
         >
           {{ $t(matchingJob.messageCode) }}
-          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id, 'matching')">
             {{ $t('kbart.transmission.showResults') }}
           </gokb-button>
         </v-alert>
@@ -667,6 +665,7 @@
           v-else-if="!isReadonly"
           key="add"
           :disabled="!isValid"
+          color="primary"
           @click="showSubmitPackageConfirm"
         >
           {{ $i18n.t('btn.submit') }}
@@ -777,7 +776,10 @@
         version: undefined,
         errors: {},
         toDelete: false,
-        eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         uuid: undefined,
         isCurator: false,
         showSubmitConfirm: false,
@@ -923,14 +925,14 @@
           this.reload()
         }
 
-        this.eventMessages = []
+        this.showSnackbar = false
       },
       '$i18n.locale' (l) {
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.package.label') + ' – ' + this.allNames.name
         }
 
-        this.eventMessages = []
+        this.showSnackbar = false
       },
       'packageItem.provider' (prov) {
         if (prov) {
@@ -949,23 +951,20 @@
 
       if (!!this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]),
-            color: 'success',
-            timeout: 4000
-          })
-        } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 4000
+          this.showSnackbar = true
+        } else if (this.initMessageCode.includes('error')) {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')])
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]),
-            color: 'warning',
-            timeout: -1
-          })
+          this.messageColor = 'warning'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         }
       }
 
@@ -1020,6 +1019,7 @@
       },
       setKbart (options) {
         this.kbart = options
+        this.showSnackbar = false
 
         if (!this.sourceItem) {
           this.sourceItem = {
@@ -1038,11 +1038,10 @@
                     !!options.selectedNamespace &&
                     options.selectedNamespace.id != this.sourceItem.targetNamespace.id
         ) {
-          this.eventMessages.push({
-            message: this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict'),
-            color: 'warn',
-            timeout: -1
-          })
+          this.messageColor = 'warn'
+          this.snackbarMessage = this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         }
       },
       showSubmitPackageConfirm (form) {
@@ -1067,14 +1066,14 @@
           this.showSubmitConfirm = true
         }
       },
-      showJobPopup(uuid) {
-        this.selectedJob = { id: uuid, archived: false }
+      showJobPopup(uuid, type) {
+        this.selectedJob = { id: uuid, archived: type === 'import' }
         this.editJobPopupVisible = true
       },
       async submitPackage () {
         loading.startLoading()
         var isUpdate = !!this.id
-        this.eventMessages = []
+        this.showSnackbar = false
         this.errors = {}
         this.updateStepErrors()
 
@@ -1170,34 +1169,34 @@
               })
 
               this.kbart = undefined
+              let kbartMessage = undefined
 
               if (kbartResult.status === 403) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.denied'),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.denied'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t(kbartMessage)
+                this.currentSnackBarTimeout = -1
               } else if (kbartResult.status >= 400 && kbartResult.status < 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.processing'),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.processing'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t('kbart.transmission.error.processing')
+                this.currentSnackBarTimeout = -1
               } else if (kbartResult.status >= 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.unknown'),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.unknown'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t('kbart.transmission.error.unknown')
+                this.currentSnackBarTimeout = -1
               }
 
               if (isUpdate) {
                 this.step = 1
-                this.eventMessages.push({
-                  message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
-                  color: 'success',
-                  timeout: 4000
-                })
+
+                if (kbartResult.status === 200) {
+                  this.messageColor = 'success'
+                  this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name])
+                  this.currentSnackBarTimeout = 4000
+                }
+                this.showSnackbar = true
                 this.reload()
 
                 if (kbartResult?.data?.jobId) {
@@ -1209,7 +1208,7 @@
                   params: {
                     id: this.packageItem.id,
                     kbartJob: kbartResult?.data?.jobId,
-                    initMessageCode: 'success.create'
+                    initMessageCode: kbartResult.status === 200 ? 'success.create' : kbartMessage
                   }
                 })
               }
@@ -1223,38 +1222,37 @@
               })
 
               if (sourceUpdateResult.status === 403) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.denied', [this.$i18n.tc('component.package.label')]),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.denied'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t(kbartMessage)
+                this.currentSnackBarTimeout = -1
               } else if (sourceUpdateResult.status >= 400 && sourceUpdateResult.status < 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.processing', [this.$i18n.tc('component.package.label')]),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.processing'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t(kbartMessage)
+                this.currentSnackBarTimeout = -1
               } else if (sourceUpdateResult.status >= 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.unknown', [this.$i18n.tc('component.package.label')]),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.unknown'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t(kbartMessage)
+                this.currentSnackBarTimeout = -1
               } else if (sourceUpdateResult.data?.status === 'SKIPPED' || sourceUpdateResult.data?.result === 'SKIPPED') {
-                this.eventMessages.push({
-                  message: this.$i18n.t(sourceUpdateResult.data.messageCode),
-                  color: 'warn',
-                  timeout: -1
-                })
+                kbartMessage = sourceUpdateResult.data.messageCode
+                this.messageColor = 'warn'
+                this.snackbarMessage = this.$i18n.t(kbartMessage)
+                this.currentSnackBarTimeout = -1
               }
 
               if (isUpdate) {
                 this.step = 1
-                this.eventMessages.push({
-                  message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
-                  color: 'success',
-                  timeout: 4000
-                })
+
+                if (sourceUpdateResult.status === 200) {
+                  this.messageColor = 'success'
+                  this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name])
+                  this.currentSnackBarTimeout = 4000
+                }
+                this.showSnackbar = true
+
                 this.reload()
 
                 if (sourceUpdateResult?.data?.jobId) {
@@ -1266,7 +1264,7 @@
                   params: {
                     id: this.packageItem.id,
                     kbartJob: sourceUpdateResult?.data?.jobId,
-                    initMessageCode: 'success.create'
+                    initMessageCode: kbartResult.status === 200 ? 'success.create' : kbartMessage
                   }
                 })
               }
@@ -1274,11 +1272,11 @@
               if (isUpdate) {
                 this.step = 1
                 this.reload()
-                this.eventMessages.push({
-                  message: this.$i18n.t((this.isEdit ? 'success.update' : 'success.create'), [this.$i18n.tc('component.package.label'), this.allNames.name]),
-                  color: 'success',
-                  timeout: 4000
-                })
+
+                this.messageColor = 'success'
+                this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name])
+                this.currentSnackBarTimeout = 4000
+                this.showSnackbar = true
               } else {
                 this.$router.push({
                   name: '/package',
@@ -1290,24 +1288,21 @@
               }
             }
           } else {
-            if (response?.status === 409) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')]),
-                color: 'error',
-                timeout: -1
-              })
-            } else if (response?.status === 500) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.package.label')]),
-                color: 'error',
-                timeout: -1
-              })
+            if (response.status === 409) {
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')])
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
+            } else if (response.status === 500) {
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.package.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
             } else {
-              this.eventMessages.push({
-                message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
               this.errors = response?.data?.error || {}
               this.updateStepErrors()
               this.step = 1
@@ -1315,11 +1310,10 @@
           }
         }
         else {
-          this.eventMessages.push({
-            message: this.$i18n.t('validation.hasErrors'),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('validation.hasErrors'),
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         }
 
         loading.stopLoading()
@@ -1361,7 +1355,7 @@
           this.allNames = { name: undefined, alts: [] }
         }
         this.kbart = undefined
-        this.eventMessages = []
+        this.showSnackbar = false
         this.reload(true)
       },
       async reload () {
@@ -1453,37 +1447,20 @@
 
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobResult.data.messageCode || 'kbart.transmission.error.processing'),
-                  color: 'error',
-                  importResult: true,
-                  timeout: -1
-                })
               } else if (!!jobResult.data.job_result?.badrows || jobResult.data.job_result.result === 'SKIPPED') {
                 jobInfo.result = 'warn'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobResult.data.job_result?.messageCode || 'kbart.transmission.warn.skipped'),
-                  color: 'warn',
-                  importResult: true,
-                  timeout: -1
-                })
 
                 if (jobResult.data.job_result.matchingJob) {
                   this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
                 }
               } else {
                 jobInfo.result = 'success'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobInfo.dryRun ? 'kbart.dryRun.success' : 'kbart.transmission.success'),
-                  color: 'success',
-                  importResult: true,
-                  timeout: -1
-                })
 
                 if (jobResult.data.job_result.matchingJob) {
                   this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
                 }
               }
+
               this.reload()
 
               finished = true
@@ -1523,20 +1500,8 @@
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
                 jobInfo.result = 'error'
                 jobInfo.messageCode = jobResult.data.job_result?.messageCode || 'kbart.titleMatch.failure'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobResult.data.job_result?.messageCode),
-                  color: 'error',
-                  timeout: -1,
-                  matchingResult: true
-                })
               } else {
                 jobInfo.result = 'success'
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.titleMatch.success'),
-                  color: 'success',
-                  timeout: -1,
-                  importResult: true
-                })
               }
 
               finished = true
@@ -1625,9 +1590,12 @@
         }))
         this.listVerifiedDate = data.listVerifiedDate
 
-        if (data.source && this.$refs.source) {
+        if (!!data.source) {
           this.sourceItem = data.source
-          this.$refs.source.fetch(data.source.id)
+
+          if (!!this.$refs.source) {
+            this.$refs.source.fetch(this.sourceItem.id)
+          }
         }
 
         this.lastUpdated = data.lastUpdated

@@ -2,7 +2,7 @@
   <v-checkbox
     v-model="localValue"
     :label="label"
-    :disabled="disabled"
+    :disabled="disabled || readonly"
     :readonly="readonly"
     :density="dense ? 'compact' : 'default'"
   />

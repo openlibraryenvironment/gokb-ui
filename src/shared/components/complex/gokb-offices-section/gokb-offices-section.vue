@@ -17,7 +17,7 @@
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddItem"
+        @click.prevent="showAddItem"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
@@ -27,7 +27,7 @@
         icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
-        @click="confirmDeleteSelectedItems"
+        @click.prevent="confirmDeleteSelectedItems"
       >
         {{ $i18n.t('btn.delete') }}
       </gokb-button>

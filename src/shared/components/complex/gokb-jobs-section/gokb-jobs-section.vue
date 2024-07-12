@@ -13,7 +13,7 @@
         :title="$t('job.context.profile')"
         @click="switchContext"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-account
         </v-icon>
       </v-btn>
@@ -23,7 +23,7 @@
         :title="$t('job.context.group')"
         @click="switchContext"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-account-group
         </v-icon>
       </v-btn>
@@ -32,7 +32,7 @@
         :title="$t('btn.refresh')"
         @click="fetchJobs"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-refresh
         </v-icon>
       </v-btn>
@@ -42,7 +42,7 @@
         :title="$t('btn.enableSync')"
         @click="startAutoUpdate"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-sync
         </v-icon>
       </v-btn>
@@ -52,7 +52,7 @@
         :title="$t('btn.disableSync')"
         @click="stopAutoUpdate"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-sync-off
         </v-icon>
       </v-btn>
@@ -189,7 +189,7 @@
 
       this.startAutoUpdate()
     },
-    activated () {
+    mounted () {
       if (this.autoJobRefresh && !this.interval) {
         this.startAutoUpdate()
       }

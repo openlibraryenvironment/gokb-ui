@@ -12,6 +12,7 @@
     :type="type"
     :error="!!apiErrors"
     :error-messages="errorMessages"
+    min-width="150px"
     maxlength="255"
     :placeholder="placeholder"
     :append-icon="appendIcon"

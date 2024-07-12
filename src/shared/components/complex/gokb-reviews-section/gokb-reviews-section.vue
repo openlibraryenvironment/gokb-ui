@@ -5,7 +5,7 @@
     :filters="showEditActions"
     :sub-title="title"
     :errors="!!apiErrors"
-    :show-actions="showEditActions"
+    :show-actions="showBulkActions"
     :items-total="totalNumberOfItems"
   >
     <template #buttons>
@@ -35,10 +35,9 @@
       <v-btn
         icon
         :title="$t('btn.refresh')"
-        style="margin-top:-4px"
         @click="retrieveReviews"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-refresh
         </v-icon>
       </v-btn>
@@ -53,12 +52,12 @@
         class="mr-4"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddReviewPopup"
+        @click.prevent="showAddReviewPopup"
       >
         {{ $t('btn.add') }}
       </gokb-button>
     </template>
-    <template #actions>
+    <template #actions v-if="showBulkActions">
       <span
         style="min-width:82px"
       >
@@ -263,6 +262,9 @@
       isContrib () {
         return account.loggedIn() && account.hasRole('ROLE_CONTRIBUTOR')
       },
+      showBulkActions () {
+        return this.selectedItemsTotal > 1 || this.allPagesSelected
+      },
       showEditActions () {
         return this.reviews && (this.reviews?.filter(item => (item.updateUrl)).length > 0)
       },
@@ -408,7 +410,7 @@
         this.successMessage = false
 
         if (options.sortBy) {
-          this.resultOptions.sortBy = options.sortBy
+          this.reviewsOptions.sortBy = options.sortBy
         }
 
         if (!!options.itemsPerPage) {

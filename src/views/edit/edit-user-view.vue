@@ -1,10 +1,8 @@
 <template>
   <div>
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+    </v-snackbar>
     <gokb-page
       v-if="accessible && !notFound"
       :title="title"
@@ -116,9 +114,11 @@
             <gokb-table
               :headers="rolesTableHeaders"
               :items="roles"
+              :editable="accessible"
               :selected-items="selectedRoles"
               :total-number-of-items="totalNumberOfRoles"
               :options.sync="rolesOptions"
+              :hide-select="!accessible"
               @selected-items="selectedRoles = $event"
               @delete-item="confirmDeleteRole"
             />
@@ -135,16 +135,15 @@
         </v-col>
       </v-row>
       <template #buttons>
-        <v-spacer />
         <gokb-button
-          text
           @click="pageBack"
         >
           {{ $t('btn.cancel') }}
         </gokb-button>
+        <v-spacer />
         <gokb-button
-          default
           :disabled="!valid"
+          is-submit
         >
           {{ updateButtonText }}
         </gokb-button>
@@ -228,7 +227,10 @@
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
-        eventMessages: []
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
       }
     },
     computed: {
@@ -238,7 +240,7 @@
       rolesTableHeaders () {
         return [
           {
-            text: this.$i18n.tc('component.user.role.label'),
+            title: this.$i18n.tc('component.user.role.label'),
             align: 'left',
             value: 'localName',
             sortable: false,
@@ -291,11 +293,10 @@
         }
 
         if (this.isCreated) {
-          this.eventMessages.push({
-            message: this.$i18n.t('success.create', [this.$i18n.tc('component.user.label'), this.username]),
-            color: 'success',
-            timeout: 2000
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t('success.create', [this.$i18n.tc('component.user.label'), this.username])
+          this.currentSnackBarTimeout = 4000
+          this.showSnackbar = true
         }
       }
     },
@@ -316,7 +317,7 @@
         this.addRolePopupVisible = true
       },
       async update () {
-        this.eventMessages = []
+        this.showSnackbar = false
 
         const data = {
           username: this.username,
@@ -337,11 +338,11 @@
         // todo: check error code
         if (response?.status < 400) {
           if (this.isEdit) {
-            this.eventMessages.push({
-              message: this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username]),
-              color: 'success',
-              timeout: 2000
-            })
+            this.messageColor = 'success'
+            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username])
+            this.currentSnackBarTimeout = 4000
+            this.showSnackbar = true
+
             this.fetch()
           } else {
             console.log("No ID")
@@ -354,19 +355,17 @@
             })
           }
         } else if (response.status === 409) {
-          this.eventMessages.push({
-            message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.user.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.user.label')])
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         } else if (response?.status === 404) {
           this.notFound = true
         } else {
-          this.eventMessages.push({
-            message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')])
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         }
       },
       pageBack () {
