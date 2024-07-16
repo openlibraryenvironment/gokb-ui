@@ -171,9 +171,6 @@
       if (!!this.modelValue?.id) {
         this.fetch(this.modelValue.id)
       }
-      else {
-        console.log("NO SOURCE IN" + this.modelValue)
-      }
     },
     methods: {
       async fetch (sid) {

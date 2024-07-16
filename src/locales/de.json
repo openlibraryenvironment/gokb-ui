@@ -35,7 +35,8 @@
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
     "bulkCloseReview": "{0} ausgewählte Prüfanfrage schließen | {0} ausgewählte Prüfanfragen schließen",
     "closeSelectedReviews": "Ausgewählte Prüfanfragen schließen",
-    "moreFilters": "Mehr Filter"
+    "moreFilters": "Mehr Filter",
+    "moreOptions": "Weitere Optionen"
   },
   "main": {
     "docs": {

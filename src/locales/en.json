@@ -35,7 +35,8 @@
     "bulkSelect": "Set Status of {0} entries to ...",
     "bulkCloseReview": "Close {0} selected review | Close {0} selected reviews",
     "closeSelectedReviews": "Close selected reviews",
-    "moreFilters": "More Filters"
+    "moreFilters": "More Filters",
+    "moreOptions": "More Options"
   },
   "main": {
     "docs": {

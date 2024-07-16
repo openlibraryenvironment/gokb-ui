@@ -63,7 +63,8 @@
           <ul>
             <li
               v-for="er in errors"
-              :key="er">
+              :key="er"
+              class="ml-4">
               {{ er }}
             </li>
           </ul>
@@ -93,6 +94,7 @@
           <ul
             v-for="(val, col) in loadedFile.errors.type"
             :key="col"
+            class="ml-4"
           >
             <li>
               <b>{{ col }}</b> - {{ val }}
@@ -111,6 +113,7 @@
           <ul
             v-for="(val, col) in loadedFile.warnings.type"
             :key="col"
+            class="ml-4"
           >
             <li>
               <b>{{ col }}</b> - {{ val }}
@@ -158,12 +161,13 @@
       <v-spacer />
       <gokb-button
         text
-        @click="reset"
+        @click.prevent="reset"
       >
         {{ $t('btn.reset') }}
       </gokb-button>
       <gokb-button
-        default
+        color="primary"
+        is-submit
         :disabled="!selectedFile || importRunning || completion === 100"
       >
         {{ $t('btn.validate') }}
@@ -225,7 +229,7 @@
       }
     },
     watch: {
-      selectedFile (file) {
+      selectedFile () {
         this.options.lineCount = undefined
         this.completion = 0
         this.loadedFile.rows = { total: 0, warning: 0, error: 0 }
@@ -236,15 +240,20 @@
         this.loadedFile.warnings.single = []
         this.loadedFile.warnings.type = {}
       },
-      '$i18n.locale' (l) {
-        if (this.selectedFile) {
+      '$i18n.locale' () {
+        if (!!this.selectedFile) {
           this.doImport()
         }
+      },
+      useStrict() {
+        this.completion = 0
       }
     },
     methods: {
       reset() {
+        this.errors = []
         this.selectedFile = null
+        this.completion = 0
       },
       async doImport () {
         this.errors = []

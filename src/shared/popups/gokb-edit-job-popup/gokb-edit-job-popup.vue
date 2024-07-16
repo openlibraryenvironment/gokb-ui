@@ -95,6 +95,7 @@
         <ul class="mt-2">
           <li
             v-for="(m, idx) in selectedItem.messages"
+            class="ml-4"
             :key="idx"
           >
             {{ (typeof m === "string" ? m : m.message) }}

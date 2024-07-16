@@ -18,20 +18,33 @@
         :label="$t('kbart.propId.label')"
       />
       <gokb-checkbox-field
-        v-model="options.addOnly"
-        :label="$t('kbart.addOnly.label')"
-        dense
-      />
-      <gokb-checkbox-field
-        v-model="options.deleteMissing"
-        :label="$t('kbart.deleteMissing.label')"
-        dense
-      />
-      <gokb-checkbox-field
         v-model="options.dryRun"
         :label="$t('kbart.dryRun.label')"
         dense
       />
+      <gokb-button
+          text
+          class="ml-n3"
+          color="primary"
+          @click.prevent="toggleOptions"
+        >
+          {{ $t('btn.moreOptions') }}
+          <v-icon>
+            {{ expandOtherOptions ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+          </v-icon>
+      </gokb-button>
+      <div v-if="expandOtherOptions">
+        <gokb-checkbox-field
+          v-model="options.addOnly"
+          :label="$t('kbart.addOnly.label')"
+          dense
+        />
+        <gokb-checkbox-field
+          v-model="options.deleteMissing"
+          :label="$t('kbart.deleteMissing.label')"
+          dense
+        />
+      </div>
       <div v-if="importRunning">
         <v-progress-circular indeterminate />
         {{ $t('kbart.processing.started') }}
@@ -196,7 +209,8 @@
           lineCount: undefined,
           addOnly: false,
           dryRun: false
-        }
+        },
+        expandOtherOptions: false
       }
     },
     computed: {
@@ -260,6 +274,9 @@
     methods: {
       close () {
         this.localValue = false
+      },
+      toggleOptions () {
+        this.expandOtherOptions = !this.expandOtherOptions
       },
       async fetchDefaultNamespace () {
         const providerResult = await this.catchError({

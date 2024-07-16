@@ -10,10 +10,10 @@
       :sub-title="subTitle"
     >
       <gokb-error-component :value="error" />
-      <span v-if="importJob?.result === 'success'">
+      <span v-if="importStatus === 'success'">
         <v-alert
           type="success"
-          dismissible
+          closable
         >
           {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
           <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id, 'import')">
@@ -21,10 +21,10 @@
           </gokb-button>
         </v-alert>
       </span>
-      <span v-if="importJob?.result === 'error'">
+      <span v-if="importStatus === 'error'">
         <v-alert
           type="error"
-          dismissible
+          closable
         >
           {{ $t('kbart.transmission.error.processing') }}
           <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id, 'import')">
@@ -32,10 +32,10 @@
           </gokb-button>
         </v-alert>
       </span>
-      <span v-if="importJob?.result === 'warn'">
+      <span v-if="importStatus === 'warn'">
         <v-alert
           type="warning"
-          dismissible
+          closable
         >
           {{ $t('kbart.transmission.warn.skipped') }}
           <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id, 'import')">
@@ -43,16 +43,16 @@
           </gokb-button>
         </v-alert>
       </span>
-      <span v-else-if="importJob?.result === 'info'">
+      <span v-else-if="importStatus === 'info'">
         <v-alert
           type="info"
-          dismissible
+          closable
         >
           <span>
-            {{ importJob.dryRun ? $t('kbart.dryRun.started') : $t('kbart.transmission.started') }} {{ '(' + importJob.progress + '%)' }}
+            {{ importJob.dryRun ? $t('kbart.dryRun.started') : $t('kbart.transmission.started') }} {{ !!importProgress ? '(' + importProgress + '%)' : '' }}
             <v-progress-linear
-              v-if="!!importJob.progress"
-              v-model="importJob.progress"
+              v-if="importRunning"
+              v-model="importProgress"
             />
             <div v-else>
               {{ $t('kbart.transmission.preparing') }}
@@ -60,10 +60,11 @@
           </span>
         </v-alert>
       </span>
-      <span v-if="matchingJob?.result === 'success'">
+      <span v-if="matchStatus === 'success'">
         <v-alert
           type="success"
-          dismissible
+          class="mt-2"
+          closable
         >
           {{ $t('kbart.titleMatch.success') }}
           <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id, 'matching')">
@@ -71,10 +72,11 @@
           </gokb-button>
         </v-alert>
       </span>
-      <span v-if="matchingJob?.result === 'error'">
+      <span v-if="matchStatus === 'error'">
         <v-alert
           type="error"
-          dismissible
+          class="mt-2"
+          closable
         >
           {{ $t(matchingJob.messageCode) }}
           <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id, 'matching')">
@@ -82,16 +84,17 @@
           </gokb-button>
         </v-alert>
       </span>
-      <span v-else-if="matchingJob?.result === 'info'">
+      <span v-else-if="matchStatus === 'info'">
         <v-alert
           type="info"
-          dismissible
+          class="mt-2"
+          closable
         >
           <span>
-            {{ $t('kbart.titleMatch.started') }} {{ '(' + matchingJob.progress + '%)' }}
+            {{ $t('kbart.titleMatch.started') }} {{ !!matchProgress ? '(' + matchProgress + '%)' : '' }}
             <v-progress-linear
-              v-if="!!matchingJob.progress"
-              v-model="matchingJob.progress"
+              v-if="matchRunning"
+              v-model="matchProgress"
             />
             <div v-else>
               {{ $t('kbart.transmission.preparing') }}
@@ -790,8 +793,22 @@
         lastUpdated: undefined,
         listVerifiedDate: undefined,
         dateCreated: undefined,
-        importJob: {},
-        matchingJob: {},
+        importRunning: false,
+        importProgress: undefined,
+        importStatus: undefined,
+        importJob: {
+          id: undefined,
+          dryRun: undefined,
+          dismissed: false
+        },
+        matchingJob: {
+          id: undefined,
+          messageCode: undefined,
+          dismissed: false
+        },
+        matchRunning: false,
+        matchProgress: undefined,
+        matchStatus: undefined,
         selectedJob: undefined,
         kbartProgress: undefined,
         providerTitleNamespace: undefined,
@@ -910,7 +927,7 @@
         return this.isReadonly || (this.isEdit && (this.step !== 2 || this.isValid)) || (!this.isEdit && (this.step !== 1 || this.isValid))
       },
       isValid () {
-        return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
+        return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider && !this.importRunning && !this.matchRunning)
       },
       activeGroup () {
         return this.loggedIn && accountModel.activeGroup()
@@ -1077,12 +1094,18 @@
         this.errors = {}
         this.updateStepErrors()
 
-        if (this.importJob?.status !== 'info') {
-          this.importJob = {}
+        if (this.importStatus !== 'info') {
+          this.importStatus = undefined
+          this.importJob.id = undefined
+          this.importJob.dryRun = undefined
+          this.importJob.dismissed = false
         }
 
-        if (this.matchingJob?.status !== 'info') {
-          this.matchingJob = {}
+        if (this.matchingStatus !== 'info') {
+          this.matchStatus = undefined
+          this.matchingJob.id = undefined
+          this.matchingJob.messageCode = undefined
+          this.matchingJob.dismissed = false
         }
 
         if (this.isValid) {
@@ -1424,13 +1447,7 @@
       },
       async loadImportJobStatus (jobId) {
         var finished = false
-        var jobInfo = {
-          id: jobId,
-          progress: undefined,
-          result: 'info',
-          dryRun: undefined,
-          dismissed: false
-        }
+        this.importJob.dismissed = false
 
         while (!finished) {
           const jobResult = await this.catchError({
@@ -1438,23 +1455,26 @@
             instance: this
           })
 
+          this.importJob.id = jobId
+
           if (jobResult?.status < 400) {
-            jobInfo.progress = jobResult.data.progress
+            this.importProgress = jobResult.data.progress
 
             if (jobResult.data.finished) {
-              jobInfo.progress = undefined
-              jobInfo.dryRun = jobResult.data.job_result.dryRun
+              this.importRunning = false
+              this.importProgress = undefined
+              this.importJob.dryRun = jobResult.data.job_result.dryRun
 
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
-                jobInfo.result = 'error'
+                this.importStatus = 'error'
               } else if (!!jobResult.data.job_result?.badrows || jobResult.data.job_result.result === 'SKIPPED') {
-                jobInfo.result = 'warn'
+                this.importStatus = 'warn'
 
                 if (jobResult.data.job_result.matchingJob) {
                   this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
                 }
               } else {
-                jobInfo.result = 'success'
+                this.importStatus = 'success'
 
                 if (jobResult.data.job_result.matchingJob) {
                   this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
@@ -1465,25 +1485,19 @@
 
               finished = true
             } else {
+              this.importRunning = true
+              this.importStatus = 'info'
               await this.wait(500)
             }
           } else {
-            jobInfo.result = 'error'
+            this.importStatus = 'error'
             finished = true
           }
-
-          this.importJob = jobInfo
         }
       },
       async loadMatchingJobStatus (jobId) {
         var finished = false
-        var jobInfo = {
-          id: jobId,
-          progress: undefined,
-          result: 'info',
-          messageCode: undefined,
-          dismissed: false
-        }
+        this.matchingJob.dismissed = false
 
         while (!finished) {
           const jobResult = await this.catchError({
@@ -1491,29 +1505,32 @@
             instance: this
           })
 
+          this.matchingJob.id = jobId
+
           if (jobResult.status < 400) {
-            jobInfo.progress = jobResult.data.progress
+            this.matchProgress = jobResult.data.progress
 
             if (jobResult.data.finished) {
-              jobInfo.progress = undefined
+              this.matchRunning = false
+              this.matchProgress = undefined
 
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
-                jobInfo.result = 'error'
-                jobInfo.messageCode = jobResult.data.job_result?.messageCode || 'kbart.titleMatch.failure'
+                this.matchStatus = 'error'
+                this.matchingJob.messageCode = jobResult.data.job_result?.messageCode || 'kbart.titleMatch.failure'
               } else {
-                jobInfo.result = 'success'
+                this.matchStatus = 'success'
               }
 
               finished = true
             } else {
+              this.matchRunning = true
+              this.matchStatus = 'info'
               await this.wait(500)
             }
           } else {
-            jobInfo.result = 'error'
+            this.matchStatus = 'error'
             finished = true
           }
-
-          this.matchingJob = jobInfo
         }
       },
       async getActiveJobs () {

@@ -24,7 +24,7 @@
       <v-spacer />
       <gokb-button
         text
-        @click="close"
+        @click.prevent="close"
       >
         {{ $t('btn.cancel') }}
       </gokb-button>
