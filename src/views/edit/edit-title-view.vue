@@ -405,7 +405,7 @@
       <template #buttons>
         <gokb-button
           v-if="!isReadonly"
-          @click="reset"
+          @click.prevent="reset"
         >
           {{ $i18n.t('btn.reset') }}
         </gokb-button>
@@ -447,7 +447,8 @@
         />
         <gokb-button
           v-if="!isReadonly"
-          @click.prevent="update"
+          is-submit
+          @click="update"
           :disabled="!isValid"
         >
           {{ $i18n.t('btn.submit') }}

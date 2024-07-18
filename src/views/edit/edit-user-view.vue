@@ -136,7 +136,7 @@
       </v-row>
       <template #buttons>
         <gokb-button
-          @click="pageBack"
+          @click.prevent="pageBack"
         >
           {{ $t('btn.cancel') }}
         </gokb-button>
