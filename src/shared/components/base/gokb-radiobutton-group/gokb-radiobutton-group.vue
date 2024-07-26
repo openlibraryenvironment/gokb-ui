@@ -3,6 +3,7 @@
     v-model="localValue"
     inline
     :label="label"
+    :disabled="disabled"
   >
     <slot />
   </v-radio-group>
@@ -24,6 +25,11 @@
         validator: function (value) {
           return value === undefined || value === null || typeof value === 'string'
         }
+      },
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
     },
     computed: {

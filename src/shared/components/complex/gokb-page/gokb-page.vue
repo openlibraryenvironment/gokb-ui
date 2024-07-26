@@ -22,7 +22,7 @@
         <v-card-text>
           <slot />
         </v-card-text>
-        <v-card-actions class="ml-6 mr-6">
+        <v-card-actions v-if="!hideActions" class="ml-6 mr-6">
           <slot name="buttons" />
         </v-card-actions>
       </v-card>
@@ -49,6 +49,11 @@
         type: String,
         required: false,
         default: '1400px'
+      },
+      hideActions: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     methods: {

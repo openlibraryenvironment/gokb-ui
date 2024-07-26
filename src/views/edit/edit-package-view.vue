@@ -287,10 +287,11 @@
               <v-row dense>
                 <v-col cols="7">
                   <div>
-                    <label for="validity">{{ $t('component.package.global.label') }}</label>
+                    <label class="text-primary text-subtitle-2 ml-2" for="validity">{{ $t('component.package.global.label') }}</label>
                   </div>
                   <gokb-radiobutton-group
                     id="validity"
+                    :disabled="isReadonly"
                     v-model="packageItem.global"
                   >
                     <gokb-radiobutton-field

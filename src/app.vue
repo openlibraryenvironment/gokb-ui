@@ -267,6 +267,10 @@
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
   import baseServices from '@/shared/services/base-services'
+  import "@fontsource/roboto"
+  import "@fontsource/roboto/500.css"
+  import "@fontsource/roboto/700.css"
+  import "@fontsource/roboto/900.css"
   import update from './mixins/update'
   import pkg from '../package.json'
   import {
@@ -513,7 +517,4 @@
   .v-data-table__td > a {
     color: rgb(var(--v-theme-primary));
   }
-</style>
-<style lang="scss">
-  @import '../node_modules/@fontsource/roboto/index.css'
 </style>

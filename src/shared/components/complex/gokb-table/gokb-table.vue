@@ -214,22 +214,19 @@
             :length="pages"
             :total-visible="7"
           />
-          <div style="margin-top:-40px;padding-bottom:10px;text-align:right;">
+          <div style="margin-top:-48px;padding-bottom:10px;text-align:right;">
             <v-btn
               class="mr-1"
-              :color="options.itemsPerPage === 10 ? 'white' : 'secondary'"
-              :style="{ backgroundColor: (options.itemsPerPage === 10 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
+              :color="options.itemsPerPage === 10 ? 'primary' : 'card'"
               text
               @click="setPageSize(10)">10</v-btn>
             <v-btn
-              :color="options.itemsPerPage === 20 ? 'white' : 'secondary'"
-              :style="{ backgroundColor: (options.itemsPerPage === 20 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
+              :color="options.itemsPerPage === 20 ? 'primary' : 'card'"
               class="mr-1"
               text
               @click="setPageSize(20)">20</v-btn>
             <v-btn
-              :color="options.itemsPerPage === 50 ? 'white' : 'secondary'"
-              :style="{ backgroundColor: (options.itemsPerPage === 50 ? $vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary : 'inherit') }"
+              :color="options.itemsPerPage === 50 ? 'primary' : 'card'"
               class="mr-1"
               text
               @click="setPageSize(50)">50</v-btn>
@@ -369,6 +366,12 @@
       },
       noDataTableText () {
         return this.isSearchResults ? this.$i18n.t('default.table.noData.search') : this.$i18n.t('default.table.noData.props')
+      },
+      pagesizeButtonActive () {
+        return this.$vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].secondary
+      },
+      pagesizeButtonInactive () {
+        return this.$vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].card
       }
     },
     watch: {
@@ -416,13 +419,25 @@
     }
   }
 </script>
-<style scoped>
+<style>
   .table-action-icons {
     white-space: nowrap;
     text-align: right;
   }
 
   td > a {
-    color: rgba(var(--v-theme-primary))
+    color: rgba(var(--v-theme-primary));
+  }
+
+  .v-data-table-header__content > span {
+    color: rgba(var(--v-theme-primary));
+    font-weight: 700;
+    font-size: 12px !important;
+    letter-spacing: 0.1px;
+    white-space:nowrap;
+  }
+
+  .v-data-table__th--sorted.v-data-table__th {
+    color: rgba(0, 0, 0, 0.87);
   }
 </style>

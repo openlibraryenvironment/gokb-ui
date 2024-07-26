@@ -9,7 +9,8 @@ process.env.VITE_GIT_HASH = execSync('git rev-parse --short HEAD').toString().tr
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    port: 8081
+    port: 8081,
+    host: '127.0.0.1'
   },
   base: process.env.VITE_PUBLIC_PATH || '/gokb-ui', // base path for the application
   plugins: [

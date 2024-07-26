@@ -2,6 +2,7 @@
   <gokb-page
     v-if="accessible"
     :title="title"
+    hide-actions
     @submit="search"
   >
     <gokb-error-component :value="error" />

@@ -51,3 +51,8 @@
     },
   }
 </script>
+<style>
+  .v-selection-control--disabled.v-checkbox-btn {
+    color: rgba(var(--v-theme-primary));
+  }
+</style>

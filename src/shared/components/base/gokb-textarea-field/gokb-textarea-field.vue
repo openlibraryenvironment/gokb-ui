@@ -2,7 +2,7 @@
   <v-textarea
     :key="hasUpdated"
     v-model="localValue"
-    :readonly="readonly"
+    :disabled="!editable"
     rows="1"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
     :required="required"
@@ -100,6 +100,9 @@
           this.$emit('update:model-value', localValue)
         }
       },
+      editable () {
+        return !this.readonly && !this.disabled
+      }
     },
     methods: {
       refreshRows () {
