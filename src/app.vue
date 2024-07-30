@@ -518,3 +518,37 @@
     color: rgb(var(--v-theme-primary));
   }
 </style>
+
+<style lang="scss">
+  @use '@/styles/settings';
+
+  .v-field--disabled {
+    pointer-events: auto !important;
+    opacity: var(--v-high-emphasis-opacity);
+    border-bottom: none !important;
+  }
+
+  .v-field-label {
+    opacity: var(--v-high-emphasis-opacity);
+    color: rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)) !important;
+  }
+
+  .v-field__overlay {
+    opacity: var(--v-high-emphasis-opacity);
+    border-bottom: none !important;
+  }
+
+  .v-progress-linear {
+    opacity: var(--v-high-emphasis-opacity);
+    border-bottom: none !important;
+  }
+
+  .v-text-field .v-field--active.v-field--dirty {
+    opacity: var(--v-high-emphasis-opacity);
+  }
+
+  .v-text-field .v-field--active {
+    opacity: var(--v-medium-emphasis-opacity);
+  }
+
+</style>

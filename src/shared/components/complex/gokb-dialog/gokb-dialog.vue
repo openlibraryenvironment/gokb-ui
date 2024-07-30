@@ -14,7 +14,7 @@
       v-model="formStatus"
       @submit.prevent="doSubmit"
     >
-      <v-card class="elevation-12" :height="fullscreen ? '100vh' : undefined">
+      <v-card class="elevation-12">
         <v-card-title class="pt-0 px-0">
           <v-toolbar
             :color="appColor"

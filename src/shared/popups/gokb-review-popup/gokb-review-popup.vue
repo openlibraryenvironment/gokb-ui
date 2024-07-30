@@ -5,7 +5,7 @@
     width="max-width"
     fullscreen
   >
-    <v-row v-if="!init" align="center" style="height:80vh;">
+    <v-row v-if="!init" align="center" style="height:100vh;">
       <v-col cols="12" class="text-center">
         {{ $t('default.loading') }}
       </v-col>
@@ -160,7 +160,7 @@
         deletedItems: [],
         workflow: [],
         activeStep: 0,
-        init: false,
+        init: true,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,

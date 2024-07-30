@@ -3,7 +3,7 @@
     :color="disabled ? 'disabled' : colorValue"
     :variant="!!text ? 'text' : 'elevated'"
     :disabled="disabled"
-    :type="isSubmit ? 'submit' : undefined"
+    :type="isSubmit ? 'submit' : 'button'"
     :to="to"
     :target="newTab ? '_blank' : undefined"
     class="font-weight-bold"

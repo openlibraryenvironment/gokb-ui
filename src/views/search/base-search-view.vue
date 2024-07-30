@@ -50,7 +50,7 @@
             {{ $i18n.t('btn.reset') }}
           </gokb-button>
           <gokb-button
-            default
+            is-submit
             color="accent"
             class="mr-4 mb-4"
           >
@@ -134,6 +134,7 @@
         resultItems: [],
         selectedItems: [],
         staticParams: {},
+        searchFilters: {},
         resultOptions: {
           page: 1,
           sortBy: [],
