@@ -33,7 +33,7 @@
         :disabled="isDeleteSelectedDisabled"
         @click.prevent="confirmDeleteSelectedItems"
       >
-        {{ $i18n.t('btn.delete') }}
+        {{ $i18n.t('btn.remove') }}
       </gokb-button>
     </template>
 

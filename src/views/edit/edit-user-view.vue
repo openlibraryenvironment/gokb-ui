@@ -5,8 +5,8 @@
     </v-snackbar>
     <gokb-page
       v-if="accessible && !notFound"
+      :key="version"
       :title="title"
-      @submit="update"
     >
       <gokb-error-component :value="error" />
       <gokb-section :sub-title="$t('component.general.general')">
@@ -16,7 +16,7 @@
             md="4"
           >
             <gokb-username-field
-              v-model="username"
+              v-model="active.username"
               :label="$t('component.user.username')"
               required
               hide-icon
@@ -31,7 +31,7 @@
             md="4"
           >
             <gokb-password-field
-              v-model="password"
+              v-model="active.password"
               :label="$t('component.user.password')"
               hide-icon
               required
@@ -45,34 +45,35 @@
         <v-row>
           <v-col md="4">
             <gokb-email-field
-              v-model="email"
+              v-model="active.email"
               hide-icon
               dense
             />
           </v-col>
-          <!--        <v-col md="4">-->
-          <!--          <gokb-search-organisation-field-->
-          <!--            v-model="organisation"-->
-          <!--          />-->
-          <!--        </v-col>-->
+          <v-col>
+            <div style="width:200px">
+              <v-select
+                v-model="active.preferredLocaleString"
+                :items="languageOptions"
+                :label="$t('component.user.preferredLocaleString.label')"
+                variant="underlined"
+                density="compact"
+                clearable
+              />
+            </div>
+          </v-col>
         </v-row>
         <v-row>
           <v-col cols="2">
             <gokb-checkbox-field
-              v-model="enabled"
+              v-model="active.enabled"
               :label="$t('component.user.enabled.active.label')"
             />
           </v-col>
           <v-col cols="2">
             <gokb-checkbox-field
-              v-model="accountLocked"
+              v-model="active.accountLocked"
               :label="$t('component.user.locked.label')"
-            />
-          </v-col>
-          <v-col md="3">
-            <gokb-checkbox-field
-              v-model="passwordExpired"
-              :label="$t('component.user.passwordExpired')"
             />
           </v-col>
         </v-row>
@@ -129,21 +130,47 @@
           xl="6"
         >
           <gokb-curatory-group-section
-            v-model="allCuratoryGroups"
+            v-model="active.curatoryGroups"
             :sub-title="$tc('component.curatoryGroup.label', 2)"
           />
         </v-col>
       </v-row>
       <template #buttons>
+        <gokb-confirmation-popup
+          v-model="deleteConfirmationPopUpVisible"
+          :message="messageToConfirm"
+          @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+        />
         <gokb-button
-          @click.prevent="pageBack"
+          v-if="isEdit"
+          :disabled="!isUserDeletable"
+          @click="confirmDeleteUser"
         >
-          {{ $t('btn.cancel') }}
+          {{ $t('profile.delete.label') }}
         </gokb-button>
         <v-spacer />
         <gokb-button
+          @click="fetch"
+        >
+          {{ $t('btn.reset') }}
+        </gokb-button>
+        <gokb-confirm-activate-popup
+          v-if="activateOptionsVisible"
+          v-model="activateOptionsVisible"
+          @submit="activate"
+        />
+        <gokb-button
+          v-if="isEdit && !isActivated"
+          :disabled="!valid || isActivated"
+          color="primary"
+          @click="showActivateOptions"
+        >
+          {{ $t('btn.activate') }}
+        </gokb-button>
+        <gokb-button
           :disabled="!valid"
           is-submit
+          @click="update"
         >
           {{ updateButtonText }}
         </gokb-button>
@@ -155,7 +182,7 @@
       title=""
     >
       <v-card>
-        <v-card-text>
+        <v-card-text align="center">
           <div class="text-h5 primary--text">
             {{ $t('component.general.notFound', [$tc('component.user.label')]) }}
           </div>
@@ -166,13 +193,14 @@
 </template>
 
 <script>
+  import { SEARCH_USER_ROUTE } from '@/router/route-paths'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import GokbConfirmActivatePopup from '@/shared/popups/gokb-confirm-activate-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
-  import VSnackbars from 'v-snackbars'
 
   import userServices from '@/shared/services/user-services'
 
@@ -183,9 +211,9 @@
     components: {
       GokbAddItemPopup,
       GokbConfirmationPopup,
+      GokbConfirmActivatePopup,
       GokbErrorComponent,
-      GokbCuratoryGroupSection,
-      VSnackbars
+      GokbCuratoryGroupSection
     },
     extends: BaseComponent,
     props: {
@@ -203,9 +231,8 @@
     data () {
       return {
         addRolePopupVisible: false,
+        activateOptionsVisible: false,
         username: undefined,
-        password: undefined,
-        passwordExpired: undefined,
         email: undefined,
         enabled: undefined,
         version: undefined,
@@ -217,25 +244,46 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
+        persisted: {
+          username: undefined,
+          password: undefined,
+          email: undefined,
+          enabled: undefined,
+          successMsg: undefined,
+          accountLocked: undefined,
+          curatoryGroups: []
+        },
+        active: {
+          username: undefined,
+          password: undefined,
+          email: undefined,
+          enabled: undefined,
+          successMsg: undefined,
+          accountLocked: undefined,
+          curatoryGroups: []
+        },
+        languageOptions: ['de', 'en'],
+        preferredLocaleString: undefined,
         allRoles: [],
         selectedRoles: [],
         addedRoles: [],
-        allCuratoryGroups: [],
+        curatoryGroups: [],
         updateUserUrl: undefined,
         notFound: false,
         confirmationPopUpVisible: false,
+        deleteConfirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
         showSnackbar: false,
         snackbarMessage: undefined,
         messageColor: undefined,
-        currentSnackBarTimeout: '-1',
+        currentSnackBarTimeout: '-1'
       }
     },
     computed: {
       accessible () {
-        return account.loggedIn() && account.hasRole('ROLE_ADMIN')
+        return account?.loggedIn() && account?.hasRole('ROLE_ADMIN')
       },
       rolesTableHeaders () {
         return [
@@ -270,13 +318,19 @@
         return this.id ? this.$i18n.t('btn.update') : this.$i18n.t('btn.add')
       },
       isPasswordValid () {
-        return (this.password?.length > 5 && this.password?.length < 64)
+        return (this.active.password?.length > 5 && this.active.password?.length < 64)
       },
       passwordValidMessage () {
         return this.isPasswordValid || this.$i18n.t('validation.passwordLength')
       },
       valid () {
-        return this.username && (this.isEdit || this.isPasswordValid)
+        return this.active.username && (this.isEdit || this.isPasswordValid)
+      },
+      isActivated () {
+        return !this.isEdit || this.allRoles.length > 1 || (!this.persisted?.accountLocked && this.persisted?.enabled)
+      },
+      isUserDeletable () {
+        return account.hasRole('ROLE_SUPERUSER') || this.allRoles.filter(role => (role.name === 'ROLE_ADMIN')).length === 0
       }
     },
     watch: {
@@ -316,20 +370,49 @@
       showAddNewRole () {
         this.addRolePopupVisible = true
       },
+      showActivateOptions () {
+        this.activateOptionsVisible = true
+      },
+      confirmDeleteUser () {
+        this.actionToConfirm = '_deleteUser'
+        this.messageToConfirm = { text: this.$i18n.t('profile.delete.confirm') }
+        this.parameterToConfirm = undefined
+        this.deleteConfirmationPopUpVisible = true
+      },
+      async _deleteUser () {
+        const response = await this.catchError({
+          promise: userServices.delete(this.id, this.cancelToken.token),
+          instance: this
+        })
+
+        if (response?.status < 400) {
+          await this.$router.push({
+            name: SEARCH_USER_ROUTE,
+            params: {
+              initRefresh: true
+            }
+          })
+        } else if (response?.status == 403) {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('user.error.update.forbidden')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+        } else if (response?.status === 404) {
+          this.notFound = true
+        } else {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')])
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+        }
+      },
       async update () {
         this.showSnackbar = false
 
         const data = {
-          username: this.username,
-          password: this.password,
-          email: this.email,
-          accountLocked: this.accountLocked,
-          enabled: this.enabled,
+          ...this.active,
           version: this.version,
-          passwordExpired: this.passwordExpired,
-          roleIds: this.roles.map(({ id }) => id),
-          curatoryGroupIds: this.allCuratoryGroups.map(({ id }) => id),
-          // organisation: this.organisation
+          roleIds: this.roles.map(({ id }) => id)
         }
         const response = await this.catchError({
           promise: userServices.createOrUpdate(this.id, data, this.cancelToken.token),
@@ -361,6 +444,11 @@
           this.showSnackbar = true
         } else if (response?.status === 404) {
           this.notFound = true
+        } else if (response?.status === 403) {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('user.error.update.forbidden')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         } else {
           this.messageColor = 'error'
           this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')])
@@ -368,8 +456,37 @@
           this.showSnackbar = true
         }
       },
-      pageBack () {
-        this.$router.go(-1)
+      async activate (alertUser) {
+        this.showSnackbar = false
+
+        const response = await this.catchError({
+          promise: userServices.activate(this.id, alertUser, this.cancelToken.token),
+          instance: this
+        })
+
+        if (response?.status === 200) {
+          if (response.data.warnings) {
+            response.data.warnings.forEach (warning => {
+              if (warning.messageCode) {
+                this.messageColor = 'warning'
+                this.snackbarMessage = this.$i18n.t(warning.messageCode)
+                this.currentSnackBarTimeout = -1
+                this.showSnackbar = true
+              }
+            })
+          }
+          else {
+            this.messageColor = 'success'
+            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username])
+            this.currentSnackBarTimeout = 4000
+            this.showSnackbar = true
+          }
+
+          this.fetch()
+        }
+        else if (response.status === 404) {
+          this.notFound = true
+        }
       },
       async fetch () {
         const response = await this.catchError({
@@ -379,23 +496,28 @@
 
         if (response?.status === 200) {
           this.addedRoles = []
-          this.username = response.data.data.username
-          this.password = undefined
-          this.email = response.data.data.email
           this.version = response.data.data.version
-          this.accountLocked = response.data.data.accountLocked
-          this.enabled = response.data.data.enabled
-          this.passwordExpired = response.data.data.passwordExpired
+          this.persisted.username = response.data.data.username
+          this.persisted.email = response.data.data.email
+          this.persisted.accountLocked = response.data.data.accountLocked
+          this.persisted.preferredLocaleString = response.data.data.preferredLocaleString
+          this.persisted.enabled = response.data.data.enabled
+          this.persisted.curatoryGroups = response.data.data.curatoryGroups.map(group => ({
+            ...group,
+            isDeletable: true
+          }))
+
+          this.active = this.persisted
+
           this.allRoles = response.data.data.roles.map(({ authority, ...rest }) => ({
             ...rest,
             name: authority
           }))
           this.updateUserUrl = response.data.data.updateUserUrl
-          this.allCuratoryGroups = response.data.data.curatoryGroups.map(group => ({
-            ...group,
-            isDeletable: true
-          }))
-          // this.organisation = organisation
+
+
+        } else {
+          this.notFound = true
         }
       },
       confirmDeleteRole ({ id, value }) {
@@ -416,7 +538,7 @@
         this.actionToConfirm = '_deleteSelectedRoles'
         this.messageToConfirm = {
           text: 'popups.confirm.delete.list',
-          vars: [this.selectedItems.length, this.$i18n.tc('component.user.role.label', this.selectedItems.length)]
+          vars: [this.selectedRoles.length, this.$i18n.tc('component.user.role.label', this.selectedRoles.length)]
         }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true

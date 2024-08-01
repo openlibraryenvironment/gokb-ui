@@ -558,7 +558,7 @@
       title=""
     >
       <v-card>
-        <v-card-text>
+        <v-card-text align="center">
           <div class="text-h5 primary--text">
             {{ $t('component.general.notFound', [$tc('component.tipp.label')]) }}
           </div>
@@ -939,9 +939,11 @@
           instance: this
         })
 
-        if (result.status === 200) {
+        console.log(result)
+
+        if (result?.status === 200) {
           this.mapRecord(result.data)
-        } else if (result.status === 401) {
+        } else if (result?.status === 401) {
           accountModel.logout()
           const retry = await this.catchError({
             promise: tippServices.get(this.id, this.cancelToken.token),
@@ -953,7 +955,7 @@
           } else {
             this.mapRecord(retry.data)
           }
-        } else if (result.status === 404) {
+        } else {
           this.notFound = true
         }
         loading.stopLoading()

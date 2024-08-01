@@ -2,42 +2,58 @@
   <gokb-dialog
     ref="dialog"
     v-model="localValue"
-    :title="$t('popups.login.label')"
+    :title="localTitle"
     @submit="login"
   >
-    <gokb-username-field
-      v-model="username"
-      name="username"
-      :label="$t('component.user.username')"
-      :rules="rules"
-    />
-    <gokb-password-field
-      v-model="password"
-      name="password"
-      :label="$t('component.user.password')"
-      :rules="rules"
-    />
-    <v-checkbox
-      v-model="save"
-      :label="$t('popups.login.automatic')"
-      prepend-icon="mdi-cached"
-    />
-    <span
+    <div v-if="!showForgotPass">
+      <gokb-username-field
+        v-model="username"
+        name="username"
+        :label="$t('component.user.username')"
+        :rules="rules"
+      />
+      <gokb-password-field
+        v-model="password"
+        name="password"
+        :label="$t('component.user.password')"
+        :rules="rules"
+      />
+      <v-checkbox
+        v-model="save"
+        :label="$t('popups.login.automatic')"
+        prepend-icon="mdi-cached"
+      />
+      <div
+        class="fp-toggle-link"
+        @click="toggleForgotPassword"
+      >
+        {{ $t('popups.login.forgotPassword') }}
+      </div>
+      <span
       v-if="error"
       class="error--text"
-    >
-      {{ $t('popups.login.error.' + error.toString()) }}
-    </span>
-    <v-spacer />
+      >
+        {{ $t('popups.login.error.' + error.toString()) }}
+      </span>
+    </div>
+
+    <div v-else>
+      <iframe
+        id="fp-embed"
+        frameborder="0"
+        style="width:100%;min-height:350px;border:0px"
+        :src="forgotPasswordlink"
+      />
+    </div>
     <template #buttons>
       <v-spacer />
       <gokb-button
         text
         @click="close"
       >
-        {{ $t('btn.cancel') }}
+        {{ $t('btn.close') }}
       </gokb-button>
-      <gokb-button is-submit>
+      <gokb-button v-if="!showForgotPass" is-submit>
         {{ $t('btn.submit') }}
       </gokb-button>
     </template>
@@ -71,6 +87,7 @@
         username: undefined,
         password: undefined,
         save: undefined,
+        showForgotPass: false
       }
     },
     computed: {
@@ -82,6 +99,7 @@
           return this.modelValue
         },
         set (localValue) {
+          this.showForgotPass = false
           this.$emit('update:model-value', localValue)
         }
       },
@@ -90,10 +108,15 @@
           value => !!value || this.$i18n.t('validation.missingValue')
         ]
       },
+      forgotPasswordlink () {
+        return `${import.meta.env.VITE_API_BASE_URL}/register/forgotPasswordExt?embed=true&lang=${this.$i18n.locale}`
+      },
+      localTitle () {
+        return !this.showForgotPass ? this.$i18n.t('popups.login.label') : this.$i18n.t('popups.login.forgotPassword')
+      }
     },
     methods: {
       async login () {
-        console.log("Triggered login ..")
         const username = this.username
         const password = this.password
         const save = this.save
@@ -107,11 +130,11 @@
           this.close()
         }
         else {
-          console.log(response)
           this.error = 500
         }
       },
       close () {
+        this.showForgotPass = false
         this.error = undefined
         this.username = undefined
         this.password = undefined
@@ -119,6 +142,15 @@
         this.localValue = false
         this.$refs.dialog.$refs.form.resetValidation()
       },
+      toggleForgotPassword () {
+        this.showForgotPass = !this.showForgotPass
+      }
     }
   }
 </script>
+<style scoped>
+  .fp-toggle-link {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+</style>

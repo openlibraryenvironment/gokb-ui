@@ -129,6 +129,13 @@
     name: 'BaseSearch',
     components: { GokbErrorComponent, GokbConfirmationPopup, VSnackbars },
     extends: BaseComponent,
+    props: {
+      initRefresh: {
+        type: Boolean,
+        required: false,
+        default: false
+      }
+    },
     data () {
       return {
         resultItems: [],
@@ -231,6 +238,10 @@
     },
     activated () {
       this.updateUrlParams()
+
+      if (this.initRefresh) {
+        this.search()
+      }
     },
     methods: {
       resetSearch () {

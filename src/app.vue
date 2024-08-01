@@ -274,11 +274,10 @@
   import update from './mixins/update'
   import pkg from '../package.json'
   import {
-    HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
+    HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE, CREATE_USER_ROUTE,
     SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
-    SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_USER_ROUTE, ADD_PROVIDER_ROUTE,
+    SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, CREATE_PROVIDER_ROUTE,
     VALIDATOR_ROUTE
-    // SEARCH_MAINTENANCE_ROUTE
   } from '@/router/route-paths'
   import { createCancelToken } from '@/shared/services/http'
   import profileServices from '@/shared/services/profile-services'
@@ -329,8 +328,8 @@
         const menuItems = [
           { icon: 'mdi-folder-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.package.label')]), route: CREATE_PACKAGE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
           { icon: 'mdi-text-box-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.title.label')]), route: CREATE_TITLE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-domain-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.provider.label')]), route: ADD_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-account-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.user.label')]), route: ADD_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
+          { icon: 'mdi-domain-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.provider.label')]), route: CREATE_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-account-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.user.label')]), route: CREATE_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
         ]
 
         return menuItems.filter(item => accountModel.hasRole(item.needsRole))

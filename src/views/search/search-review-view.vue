@@ -139,7 +139,6 @@
       }
     },
     created () {
-      this.component = 'g:reviewRequests'
       this.searchServicesUrl = 'rest/reviews'
       this.linkValue = 'componentToReview'
       this.staticParams = {

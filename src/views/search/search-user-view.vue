@@ -1,6 +1,6 @@
 <script>
   import BaseSearch from './base-search-view'
-  import { EDIT_USER_ROUTE, ADD_USER_ROUTE } from '@/router/route-paths'
+  import { EDIT_USER_ROUTE } from '@/router/route-paths'
   import account from '@/shared/models/account-model'
   import userServices from '@/shared/services/user-services'
 
@@ -101,15 +101,10 @@
       resultActionButtons () {
         return [
           {
-            icon: 'mdi-plus',
-            label: this.$i18n.t('btn.add'),
-            route: ADD_USER_ROUTE,
-          },
-          {
             icon: 'mdi-close-circle',
             label: this.$i18n.t('btn.deactivate'),
             disabled: 'isNothingSelected',
-            action: '_confirmDeactivateSelectedItems',
+            action: '_confirmDeactivateSelectedItems'
           }
         ]
       },
@@ -117,7 +112,13 @@
         return this.$i18n.tc('component.user.label', 2)
       },
       isAdmin () {
-        return account.loggedIn() && account.hasRole('ROLE_ADMIN')
+        return account?.loggedIn() && account?.hasRole('ROLE_ADMIN')
+      },
+      isReadonly () {
+        return !this.isAdmin
+      },
+      showSelect () {
+        return this.isAdmin
       }
     },
     watch: {

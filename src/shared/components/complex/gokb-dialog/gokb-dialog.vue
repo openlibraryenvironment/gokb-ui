@@ -14,7 +14,7 @@
       v-model="formStatus"
       @submit.prevent="doSubmit"
     >
-      <v-card class="elevation-12">
+      <v-card class="elevation-12" :min-height="fullscreen ? '100vh' : 'undefined'">
         <v-card-title class="pt-0 px-0">
           <v-toolbar
             :color="appColor"
@@ -86,7 +86,7 @@
     },
     data () {
       return {
-        appColor: import.meta.env.VUE_APP_COLOR || '#4f4f4f',
+        appColor: import.meta.env.VITE_COLOR || '#4f4f4f',
         formIsValid: false
       }
     },

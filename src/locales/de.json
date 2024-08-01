@@ -24,6 +24,7 @@
     "reactivate": "Reaktivieren",
     "refresh": "Aktualisieren",
     "reload": "Neu laden",
+    "remove": "Entfernen",
     "reset": "Änderungen verwerfen",
     "retire": "Archivieren",
     "search": "Suchen",
@@ -59,6 +60,10 @@
     "all": "Alle",
     "ISOdateHint": "JJJJ-MM-TT",
     "loading": "Lädt ...",
+    "languages": {
+      "en": "Englisch",
+      "de": "Deutsch"
+    },
     "error": {
       "label": "Fehler | Fehler"
     },
@@ -189,14 +194,21 @@
         "401": "Die eingebebenen Informationen sind nicht korrekt.",
         "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
       },
-      "expired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an."
+      "expired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an.",
+      "forgotPassword": "Passwort vergessen"
     },
     "logout": {
       "label": "Ausloggen"
     },
     "register":  {
       "label": "Registrieren",
-      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, registrieren Sie sich bitte und schicken uns falls nicht anderweitig abgesprochen eine Nachricht mit Ihrem gewählten Benutzernamen sowie Informationen zu Ihrer Einrichtung an {mail}. Wir melden uns dann so schnell wie möglich bei Ihnen zurück!"
+      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte nach der Registrierung bei uns unter {0}, damit wir sie aufnehmen können.",
+      "nomail": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte bei uns, damit wir sie freischalten können."
+    },
+    "activateUser": {
+      "label": "Benutzerkonto aktivieren",
+      "info": "Bitte Freischaltung des Accounts bestätigen. Dies entfernt die Sperre und vergibt Bearbeitungsrechte.",
+      "sendAlert": "Benutzer per E-Mail benachrichtigen"
     }
   },
   "validation": {
@@ -1012,6 +1024,9 @@
       "username": "Benutzername",
       "register": "Registrierung",
       "password": "Kennwort",
+      "preferredLocaleString": {
+        "label": "Bevorzugte Sprache"
+      },
       "email": "E-Mail",
       "role": {
         "label": "Rolle | Rollen",
@@ -1048,6 +1063,20 @@
         "missing": {
           "username": "Bitte geben Sie einen Benutzernamen an.",
           "password": "Bitte geben Sie ein Passwort an."
+        },
+        "activate": {
+          "invalidMail": "Die Benachrichtigung konnte nicht versendet werden, da die angegebene E-Mail-Adresse ungültig ist!",
+          "missingMail": "Die Benachrichtigung konnte nicht versendet werden, da keine E-Mail-Adresse angegeben wurde!",
+          "missingConfig": "Die Benachrichtigung konnte nicht versendet werden, da nicht alle notwendigen Server-Konfigurationswerte gesetzt wurden!"
+        },
+        "create": {
+          "nameInUse": "Ein Konto mit diesem Benutzernamen existiert bereits!"
+        },
+        "update": {
+          "forbidden": "Sie sind nicht dazu berechtigt, dieses Konto zu bearbeiten!"
+        },
+        "delete": {
+          "forbidden": "Benutzer mit Administrationsrechten können nur von Server-Admins gelöscht werden!"
         }
       }
     },

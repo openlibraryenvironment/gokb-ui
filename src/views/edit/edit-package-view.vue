@@ -682,7 +682,7 @@
       title=""
     >
       <v-card>
-        <v-card-text>
+        <v-card-text align="center">
           <div class="text-h5 primary--text">
             {{ $t('component.general.notFound', [$tc('component.package.label')]) }}
           </div>
@@ -1400,25 +1400,25 @@
 
           if (result?.status === 200) {
             this.mapRecord(result.data)
-          } else if (result?.status === 404) {
-            this.notFound = true
-          } else {
-            this.$router.push({ name: '/error' })
-          }
 
-          if (this.providerSelect) {
-            const providerResult = await this.catchError({
-              promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
-              instance: this
-            })
+            if (this.providerSelect) {
+              const providerResult = await this.catchError({
+                promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
+                instance: this
+              })
 
-            if (providerResult?.status === 200) {
-              const fullProvider = providerResult.data
+              if (providerResult?.status === 200) {
+                const fullProvider = providerResult.data
 
-              if (fullProvider.titleNamespace) {
-                this.providerTitleNamespace = fullProvider.titleNamespace
+                if (fullProvider.titleNamespace) {
+                  this.providerTitleNamespace = fullProvider.titleNamespace
+                }
               }
             }
+          } else if (result.status === 404) {
+            this.notFound = true
+          } else {
+            this.$router.push({name: '/error'})
           }
 
           if (!!this.$refs.tipps) {

@@ -1,15 +1,17 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    width="500"
+    width="700"
     :title="$t('component.user.register')"
   >
     <v-alert type="info">
-      <i18n-t keypath="popups.register.info">
+      <i18n-t v-if="!!mail" keypath="popups.register.info">
         <template #mail>
-          <a href="mailto:info@gokb.org">info@gokb.org</a>
+          <a :href="'mailto:' + mail">{{ mail }}</a>
         </template>
       </i18n-t>
+
+      <i18n-t v-else path="popups.register.nomail" />
     </v-alert>
     <iframe
       id="register-embed"
@@ -50,6 +52,9 @@
       },
       link () {
         return `${import.meta.env.VITE_API_BASE_URL}/register/start?embed=true&lang=${this.$i18n.locale}`
+      },
+      mail () {
+        return import.meta.env.VITE_CONTACT_EMAIL
       }
     },
     methods: {

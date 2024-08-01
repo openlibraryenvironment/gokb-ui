@@ -107,14 +107,12 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import 'vue-json-pretty/lib/styles.css'
   import GokbReviewsHeader from '@/shared/components/complex/gokb-reviews-header/gokb-reviews-header.vue'
-  import VSnackbars from 'v-snackbars'
 
   export default {
     name: 'EditReviewView',
     components: {
       GokbReviewsHeader,
-      GokbConfirmationPopup,
-      VSnackbars
+      GokbConfirmationPopup
     },
     extends: BaseComponent,
     props: {
