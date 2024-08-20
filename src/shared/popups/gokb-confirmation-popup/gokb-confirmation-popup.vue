@@ -6,16 +6,17 @@
     @submit="submit"
   >
     <v-sheet>
+      <span v-if="typeof message === 'string'">
+        {{ $t(message) }}
+      </span>
       <i18n-t
-        v-if="message.vars"
+        v-else-if="!!message.vars"
         :keypath="message.text"
+        scope="global"
       >
-        <template v-slot:0>
-          <b>{{ message.vars[0] }}</b>
-        </template>
-        <template v-slot:1>
-          <b>{{ message.vars[1] }}</b>
-        </template>
+        <b>{{ message.vars[0] }}</b>
+        <b>{{ message.vars[1] }}</b>
+
       </i18n-t>
       <span v-else> {{ message.text }} </span>
     </v-sheet>
