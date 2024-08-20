@@ -145,7 +145,7 @@
         return !this.selectedItems.length
       },
       isEditable () {
-        return !this.disabled
+        return false
       },
       tableHeaders () {
         if (this.linkedComponent) {
@@ -306,7 +306,7 @@
       },
       async _cancelJob (id) {
         this.catchError({
-          promise: profileServices.cancel(id, this.cancelToken.token),
+          promise: profileServices.cancelJob(id, this.cancelToken.token),
           instance: this
         })
       },
