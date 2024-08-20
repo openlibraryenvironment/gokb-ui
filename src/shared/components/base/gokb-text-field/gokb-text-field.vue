@@ -150,13 +150,16 @@
       }
     },
     watch: {
-      rules (r) {
-        if (r?.length > 0) {
-          this.localRules = r
-        }
-        else {
-          this.localRules = [v => (v.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
-        }
+      rules: {
+        handler (r) {
+          if (r?.length > 0) {
+            this.localRules = r
+          }
+          else {
+            this.localRules = [v => (v.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
+          }
+        },
+        deep: true
       }
     },
     methods: {

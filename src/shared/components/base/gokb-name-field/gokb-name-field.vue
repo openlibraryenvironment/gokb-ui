@@ -25,6 +25,7 @@
             ref="nameTextField"
             v-model="editedVal"
             :rules="rules"
+            :api-errors="activeApiError"
           />
           <v-checkbox
             v-if="currentName"
@@ -43,7 +44,7 @@
             </gokb-button>
             <gokb-button
               class="ml-4"
-              :disabled="!editedVal || editedVal === currentName || editedVal === inValidName"
+              :disabled="!editedVal || editedVal === currentName || activeApiError"
               is-submit
             >
               {{ $i18n.t('btn.confirm') }}
@@ -146,12 +147,14 @@
       rules () {
         return [
           value => value?.length > 0 || this.$i18n.t('validation.missingName'),
-          value => !/.*([(\-]|\(\))$/.test(value) || this.$i18n.t('error.general.name.malformedEnding'),
-          value => !this.inValidName || value.trim().toLowerCase() !== this.inValidName || this.$i18n.t('error.general.name.notUnique')
+          value => !/.*([(\-]|\(\))$/.test(value) || this.$i18n.t('error.general.name.malformedEnding')
         ]
       },
       valid () {
         return !!this.editedVal
+      },
+      activeApiError () {
+        return !!this.inValidName && this.editedVal?.toLowerCase() === this.inValidName ? [{ messageCode: 'error.general.name.notUnique' }] : undefined
       }
     },
     watch: {
@@ -166,7 +169,7 @@
         }
       },
       tempId () {
-        return 'tempId' + Math.random().toString(36).substr(2, 5)
+        return 'tempId' + Math.random().toString(36).substring(2, 5)
       },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
