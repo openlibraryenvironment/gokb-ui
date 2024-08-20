@@ -16,18 +16,18 @@
     <iframe
       id="register-embed"
       frameborder="0"
-      style="width:100%;min-height:600px;border:0px"
+      style="width:100%;min-height:650px;border:0px"
       :src="link"
     />
     <v-spacer />
-    <div>
+    <template #buttons>
       <gokb-button
         text
         @click="close"
       >
         {{ $t('btn.close') }}
       </gokb-button>
-    </div>
+    </template>
   </gokb-dialog>
 </template>
 

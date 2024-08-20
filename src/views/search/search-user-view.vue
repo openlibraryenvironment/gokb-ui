@@ -10,7 +10,7 @@
     data () {
       return {
         searchFilters: {
-          name: undefined,
+          username: undefined,
           curatoryGroupIds: [],
           roleIds: [],
           status: undefined,
@@ -24,6 +24,7 @@
             {
               type: 'GokbTextField',
               name: 'name',
+              value: 'username',
               properties: {
                 hideIcon: true,
                 label: this.$i18n.t('component.user.username')
