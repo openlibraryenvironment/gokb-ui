@@ -263,7 +263,7 @@
         return account.loggedIn() && account.hasRole('ROLE_CONTRIBUTOR')
       },
       showBulkActions () {
-        return this.selectedItemsTotal > 1 || this.allPagesSelected
+        return this.selectedItemsTotal > 0 || this.allPagesSelected
       },
       showEditActions () {
         return this.reviews && (this.reviews?.filter(item => (item.updateUrl)).length > 0)
