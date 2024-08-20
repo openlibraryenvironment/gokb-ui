@@ -12,6 +12,7 @@
           curatoryGroupIds: [],
           identifierValue: undefined,
           componentToReview: undefined,
+          stdDesc: undefined,
           status: undefined,
           name: undefined,
         },
