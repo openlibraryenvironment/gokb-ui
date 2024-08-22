@@ -1,6 +1,6 @@
 <template>
-  <div style="margin-top:-8px">
-    <div style="font-size:13px;margin-bottom:-16px" class="text-primary"> {{ $tc('component.identifier.label') }} </div>
+  <div style="margin-top:-5px">
+    <div style="font-size:12px;margin-bottom:-16px" class="text-medium-emphasis"> {{ $tc('component.identifier.label') }} </div>
     <v-row dense>
       <v-col cols="5">
         <gokb-namespace-field

@@ -189,7 +189,7 @@
           <v-col>
             <gokb-subject-filter-field
               v-model="searchFilters.subjects"
-              class="mt-1"
+              class="mt-2"
               :label="$tc('component.subject.label')"
             />
           </v-col>
