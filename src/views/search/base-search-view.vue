@@ -6,7 +6,12 @@
     @submit="search"
   >
     <gokb-error-component :value="error" />
-    <v-snackbars ref="snackbars" :objects.sync="eventMessages"></v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+        <template #actions>
+          <v-icon @click="showSnackbar = false" color="white">mdi-close</v-icon>
+        </template>
+    </v-snackbar>
     <gokb-section :sub-title="searchHeader">
       <template v-for="(row, rowIndex) of searchInputFields" :key="`${title}_${rowIndex}`">
         <v-row
@@ -161,7 +166,10 @@
         accessible: true,
         loading: false,
         exportLoading: false,
-        eventMessages: []
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: -1
       }
     },
     computed: {
@@ -399,6 +407,7 @@
         }))
       },
       async search ({ page } = { page: undefined }) {
+        this.showSnackbar = false
         const searchParameters = this._searchParameters(this.searchInputFields)
 
         let sort = undefined
@@ -450,10 +459,9 @@
         }
         else {
           this.totalNumberOfItems = 0
-          this.eventMessages.push({
-            message: this.$i18n.t(result?.data?.messageCode || 'error.search.unknown'),
-            color: 'error'
-          })
+          this.snackbarMessage = this.$i18n.t(result?.data?.messageCode || 'error.search.unknown')
+          this.messageColor = 'error'
+          this.showSnackbar = true
         }
 
         this.selectedItems = []

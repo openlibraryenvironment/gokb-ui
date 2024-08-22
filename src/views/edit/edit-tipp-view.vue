@@ -2,6 +2,9 @@
   <div>
     <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
         {{ snackbarMessage }}
+        <template #actions>
+          <v-icon @click="showSnackbar = false" color="white">mdi-close</v-icon>
+        </template>
     </v-snackbar>
     <gokb-page
       v-if="!notFound"
