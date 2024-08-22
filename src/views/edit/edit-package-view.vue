@@ -391,6 +391,18 @@
                   :api-errors="errors?.subjects"
                 />
               </v-col>
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <gokb-curatory-group-section
+                  v-if="isAdmin"
+                  v-model="allCuratoryGroups"
+                  :filter-align="false"
+                  :expandable="false"
+                  :sub-title="$tc('component.curatoryGroup.label', 2)"
+                />
+              </v-col>
             </v-row>
           </v-stepper-window-item>
 
@@ -454,11 +466,12 @@
                   />
                 </v-col>
               </v-row>
-              <v-row>
+              <v-row dense>
                 <v-col cols="6">
                   <gokb-state-select-field
                     v-if="packageItem.status"
                     v-model="packageItem.status"
+                    class="mt-1"
                     dense
                     :deletable="!isReadonly"
                     :editable="!isReadonly"
@@ -469,18 +482,17 @@
                   <gokb-uuid-field
                     v-if="uuid"
                     label="UUID"
+                    class="mt-2"
                     v-model="uuid"
                     path="/package"
-                    dense
                   />
                 </v-col>
               </v-row>
-              <v-row>
+              <v-row dense>
                 <v-col>
                   <gokb-text-field
                     v-model="providerName"
                     :label="$t('component.package.provider')"
-                    dense
                     disabled
                   />
                 </v-col>
@@ -488,7 +500,6 @@
                   <gokb-text-field
                     v-model="platformName"
                     :label="$t('component.package.platform')"
-                    dense
                     disabled
                   />
                 </v-col>
@@ -504,7 +515,35 @@
                   />
                 </v-col>
               </v-row>
-              <v-row v-if="!!id">
+              <v-row dense>
+                <v-col cols="2">
+                  <gokb-curatory-group-popup
+                    v-model="showGroupInfoPopup"
+                    :selected="selectedGroupPopup"
+                  />
+                  <div class="text-caption text-medium-emphasis" style="margin-top:-2px">
+                    {{ $tc('component.curatoryGroup.label', allCuratoryGroups.length || 1) }}
+                  </div>
+                  <v-chip-group
+                    v-model="selectedGroupPopup"
+                    id="cgroups"
+                    variant="elevated"
+                    color="primary"
+                    mandatory
+                    style="margin-top:-7px"
+                  >
+                    <v-chip
+                      v-for="group in allCuratoryGroups"
+                      :key="group.id"
+                      :text="group.name"
+                      :value="group"
+                      class="text-button"
+                      rounded="lg"
+                      density="compact"
+                      @click="showGroupDetails"
+                    />
+                  </v-chip-group>
+                </v-col>
                 <v-col cols="2">
                   <gokb-state-field
                     v-model="overviewStates.contentType"
@@ -512,7 +551,6 @@
                     message-path="component.package.contentType"
                     url="refdata/categories/Package.ContentType"
                     :label="$t('component.package.contentType.label')"
-                    dense
                     readonly
                   />
                 </v-col>
@@ -523,7 +561,6 @@
                     message-path="component.package.global"
                     url="refdata/categories/Package.Global"
                     :label="$t('component.package.global.label')"
-                    dense
                     readonly
                   />
                 </v-col>
@@ -531,7 +568,6 @@
                   <gokb-text-field
                     v-model="totalNumberOfTitles"
                     :label="$t('component.package.count')"
-                    dense
                     disabled
                   />
                 </v-col>
@@ -543,16 +579,14 @@
                     url="refdata/categories/Package.ListStatus"
                     :label="$t('component.package.listStatus.label')"
                     :api-errors="errors?.listStatus"
-                    dense
                     readonly
                   />
                 </v-col>
-                <v-col>
+                <v-col cols="1">
                   <gokb-text-field
                     v-if="listVerifiedDate"
                     v-model="localListVerifiedDate"
                     :label="$t('component.package.listVerifiedDate.label')"
-                    dense
                     disabled
                   />
                 </v-col>
@@ -569,22 +603,7 @@
               </v-row>
             </gokb-section>
             <v-row>
-              <v-col
-                cols="12"
-                md="5"
-              >
-                <gokb-curatory-group-section
-                  v-model="allCuratoryGroups"
-                  :disabled="!isAdmin"
-                  :filter-align="false"
-                  :expandable="false"
-                  :sub-title="$tc('component.curatoryGroup.label', 2)"
-                />
-              </v-col>
-              <v-col
-                cols="12"
-                md="7"
-              >
+              <v-col>
                 <gokb-reviews-section
                   v-if="id && isContrib"
                   :expandable="false"
@@ -704,6 +723,7 @@
   import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
+  import GokbCuratoryGroupPopup from '@/shared/popups/gokb-curatory-group-popup'
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
@@ -742,6 +762,7 @@
       GokbUrlField,
       GokbSourceField,
       GokbCuratoryGroupSection,
+      GokbCuratoryGroupPopup,
       GokbMaintenanceCycleField,
       GokbAlternateNamesSection,
       GokbConfirmationPopup,
@@ -787,6 +808,8 @@
         uuid: undefined,
         isCurator: false,
         showSubmitConfirm: false,
+        selectedGroupPopup: undefined,
+        showGroupInfoPopup: false,
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
         urlUpdate: false,
@@ -1633,6 +1656,9 @@
       },
       markDeleted (val) {
         this.toDelete = val
+      },
+      showGroupDetails (info) {
+        this.showGroupInfoPopup = true
       }
     }
   }

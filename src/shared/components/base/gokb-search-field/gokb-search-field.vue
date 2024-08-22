@@ -57,7 +57,7 @@
     :loading="loading"
     :placeholder="placeholder"
     :rules="activeRules"
-    :dense="dense"
+    :density="dense ? 'compact' : 'default'"
     min-width="150px"
     :item-title="itemText"
     :item-value="itemValue"
@@ -106,18 +106,18 @@
     :loading="loading"
     :placeholder="placeholder"
     :rules="activeRules"
-    :dense="dense"
+    :density="dense ? 'compact' : 'default'"
     :item-title="itemText"
     :item-value="itemValue"
     variant="underlined"
     min-width="150px"
+    :multiple="false"
     no-filter
     persistent-clear
     clearable
     auto-select-first
     hide-no-data
     return-object
-    single-line
     @update:search="prepareQuery"
   >
     <template #label>
@@ -259,6 +259,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      initItem: {
+        type: Object,
+        required: false,
+        default: undefined
       }
     },
     data () {

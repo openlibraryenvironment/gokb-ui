@@ -101,11 +101,9 @@
                 <v-col>
                   <gokb-search-platform-field
                     v-model="packageTitleItem.hostPlatform"
-                    :items="platformSelection"
                     :label="$tc('component.platform.label')"
                     :readonly="isEdit || isReadonly"
                     required
-                    dense
                     return-object
                   />
                 </v-col>
@@ -550,7 +548,6 @@
         errors: {},
         toDelete: false,
         urlValid: false,
-        platformSelection: [],
         coverageExpanded: false,
         titleTypeString: undefined,
         init: false,
@@ -913,7 +910,6 @@
         this.packageTitleItem.importId = data.importId
         this.updateUrl = data.updateUrl
         this.deleteUrl = data.deleteUrl
-        this.platformSelection.push(data.hostPlatform)
         this.status = data.status
         this.version = data.version
         this.lastUpdated = data.lastUpdated

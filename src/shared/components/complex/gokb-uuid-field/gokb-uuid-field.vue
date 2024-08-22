@@ -3,7 +3,7 @@
     v-model="localValue"
     :label="label"
     :messages="successMessage"
-    :dense="dense"
+    :density="dense ? 'dense' : 'default'"
     variant="underlined"
     disabled
     persistent-placeholder

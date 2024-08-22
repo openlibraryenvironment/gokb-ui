@@ -22,6 +22,16 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      required: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      dense: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     created () {

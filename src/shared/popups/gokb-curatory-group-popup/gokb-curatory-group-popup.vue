@@ -2,7 +2,6 @@
   <gokb-dialog
     v-model="localValue"
     :title="$tc('component.curatoryGroup.label')"
-    @submit="close"
   >
     <v-row>
       <v-col>
@@ -32,10 +31,11 @@
       </v-col>
     </v-row>
 
-    <v-spacer />
-    <gokb-button>
-      {{ $t('btn.close') }}
-    </gokb-button>
+    <template #buttons>
+      <gokb-button @click="close">
+        {{ $t('btn.close') }}
+      </gokb-button>
+    </template>
   </gokb-dialog>
 </template>
 
@@ -46,6 +46,7 @@
   export default {
     name: 'GokbCuratoryGroupPopup',
     extends: BaseComponent,
+    emits: ['update:model-value'],
     props: {
       modelValue: {
         type: Boolean,
@@ -71,18 +72,25 @@
     computed: {
       localValue: {
         get () {
-          return this.modelValue || true
+          return this.modelValue || false
         },
         set (localValue) {
           this.$emit('update:model-value', localValue)
         }
       }
     },
-    async created () {
-      if (this.selected?.id) {
-        this.fetchGroup()
-      } else {
-        this.selectedItem = this.selected
+    watch: {
+      selected (val) {
+        this.selectedItem = {
+          name: undefined,
+          email: undefined,
+          users: undefined,
+          organisationType: undefined
+        }
+
+        if (!!val) {
+          this.fetchGroup()
+        }
       }
     },
     methods: {
