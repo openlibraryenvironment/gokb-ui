@@ -23,9 +23,10 @@
           v-model="selectedClass"
           :disabled="!item.scheme"
           :items="$options.ddcList"
-          :item-text="currentLabel"
+          :item-title="currentLabel"
           item-value="notation"
           :label="$tc('component.subject.heading.label')"
+          variant="underlined"
           return-object
           required
           @click:append="$emit('delete', value)"
@@ -113,7 +114,7 @@
         return !!this.item.scheme && !!this.item.heading
       },
       currentLabel () {
-        return (!!this.item.scheme && this.knownSchemes[this.item.scheme.value]) ? this.knownSchemes[this.item.scheme.value].itemText + '.' + this.$i18n.locale : undefined
+        return (!!this.item.scheme && !!this.knownSchemes[this.item.scheme.value]) ? this.knownSchemes[this.item.scheme.value].itemText + '.' + this.$i18n.locale : undefined
       },
       localValue: {
         get () {
