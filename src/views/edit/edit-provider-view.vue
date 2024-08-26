@@ -29,8 +29,8 @@
           <v-col cols="6">
             <gokb-state-select-field
               v-model="providerObject.status"
-              :deletable="!isReadonly"
-              :editable="!isReadonly"
+              :deletable="isAdmin"
+              :editable="isAdmin"
               @delete="markDeleted"
             />
           </v-col>
@@ -444,6 +444,9 @@
       },
       isReadonly () {
         return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
+      },
+      isAdmin () {
+        return accountModel.loggedIn() && accountModel.hasRole('ROLE_ADMIN')
       },
       loggedIn () {
         return accountModel.loggedIn()
