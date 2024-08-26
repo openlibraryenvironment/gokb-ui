@@ -622,7 +622,7 @@
       },
       '$i18n.locale' (l) {
         if (this.isEdit) {
-          document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
+          document.title = this.$i18n.tc('component.title.label') + ' – ' + this.allNames.name
         }
       },
       tab (val) {
@@ -901,7 +901,7 @@
         }
         this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
 
-        document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
+        document.title = this.$i18n.tc('component.title.label') + ' – ' + this.allNames.name
 
         const tippsResult = await this.catchError({
           promise: titleServices.getTipps(this.id, { status: 'Current' }, this.cancelToken.token),

@@ -84,23 +84,6 @@
         expand
         nav
       >
-        <div v-if="canCreate">
-          <v-list-item
-            v-for="item in createMenuItems"
-            :key="item.text"
-            :to="item.route"
-          >
-            <template #prepend>
-              <v-icon>
-                {{ item.icon }}
-              </v-icon>
-            </template>
-            <v-list-item-title class="font-weight-bold" v-text="item.text" />
-          </v-list-item>
-
-          <v-divider />
-        </div>
-
         <v-list-item
           v-for="item in searchMenuItems"
           :key="item.text"
@@ -113,6 +96,23 @@
           </template>
           <v-list-item-title class="font-weight-bold" v-text="item.text" />
         </v-list-item>
+
+        <div v-if="canCreate">
+          <v-divider />
+
+          <v-list-item
+            v-for="item in createMenuItems"
+            :key="item.text"
+            :to="item.route"
+          >
+            <template #prepend>
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
+            </template>
+            <v-list-item-title class="font-weight-bold" v-text="item.text" />
+          </v-list-item>
+        </div>
 
         <v-divider />
 

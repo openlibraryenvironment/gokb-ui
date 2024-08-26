@@ -673,9 +673,9 @@
       "name": {
         "label": "Titelname | Titelnamen"
       },
-      "volumeNumber": "Bandnr.",
+      "volumeNumber": "Bandnummer",
       "editionNumber": "Ausgabenr.",
-      "editionStatement": "Ausgabe",
+      "editionStatement": "Auflage",
       "firstPublishedInPrint": "Print-Erscheinungsdatum",
       "firstPublishedOnline": "Online-Erscheinungsdatum",
       "firstAuthor": {
