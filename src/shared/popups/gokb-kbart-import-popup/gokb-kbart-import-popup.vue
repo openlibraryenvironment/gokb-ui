@@ -15,6 +15,7 @@
       <gokb-namespace-field
         v-model="options.selectedNamespace"
         target-type="Title"
+        width="350px"
         :label="$t('kbart.propId.label')"
       />
       <gokb-checkbox-field
@@ -81,7 +82,7 @@
           v-for="(val, col) in loadedFile.errors.type"
           :key="col"
         >
-          <li>
+          <li class="ml-4">
             <b>{{ col }}</b> - {{ val }}
           </li>
         </ul>
@@ -326,6 +327,10 @@
                 this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
               )
             )
+
+            if (this.loadedFile.errors.single.length > 0) {
+              this.errors.push(this.$i18n.t('kbart.processing.error.general'))
+            }
 
             this.loadedFile.warnings.single = []
             Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) =>

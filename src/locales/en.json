@@ -414,6 +414,7 @@
       },
       "error": {
         "label": "Error | Errors",
+        "general": "Validation has identified errors in this file!",
         "empty": "Missing Value",
         "invalid": "Invalid Value",
         "fields": "Column Statistics - Errors"

@@ -414,6 +414,7 @@
       },
       "error": {
         "label": "Fehler | Fehler",
+        "general": "Bei der Validierung der Datei wurden Fehler festgestellt!",
         "empty": "Fehlender Wert",
         "invalid": "Fehlerhafter Wert",
         "fields": "Spaltenstatistik - Fehler"
