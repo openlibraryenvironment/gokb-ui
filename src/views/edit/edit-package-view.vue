@@ -129,8 +129,8 @@
           </v-stepper-item>
           <v-divider />
           <v-stepper-item
-            :class="{ error: !!step2Error }"
-            :error="!!step2Error"
+            :class="{ error: step2Error }"
+            :error="step2Error"
             :value="2"
             :editable="isEdit"
             @selected="setActiveStep(2)"
@@ -143,8 +143,8 @@
           </v-stepper-item>
           <v-divider />
           <v-stepper-item
-            :class="{ error: !!step3Error }"
-            :error="!!step3Error"
+            :class="{ error: step3Error }"
+            :error="step3Error"
             :value="3"
             :editable="isEdit"
             @selected="setActiveStep(3)"
@@ -988,6 +988,11 @@
         this.$refs?.descEdit?.refreshRows()
 
         history.pushState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
+      },
+      isValid (val) {
+        if (!val) {
+          this.updateStepErrors()
+        }
       }
     },
     async created () {
@@ -1418,7 +1423,6 @@
           this.toDelete = false
           this.showSnackbar = false
           this.newTipps = []
-          this.updateStepErrors()
 
           const result = await this.catchError({
             promise: packageServices.get(this.id, this.cancelToken.token),
@@ -1427,6 +1431,7 @@
 
           if (result?.status === 200) {
             this.mapRecord(result.data)
+            this.updateStepErrors()
 
             if (this.providerSelect) {
               const providerResult = await this.catchError({
