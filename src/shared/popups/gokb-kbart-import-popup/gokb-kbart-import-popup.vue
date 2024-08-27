@@ -55,7 +55,7 @@
         <div
           v-for="er in errors"
           :key="er"
-          class="ma-2">
+          class="ma-2 text-error font-weight-bold">
           {{ er }}
         </div>
       </div>
@@ -142,7 +142,7 @@
       </gokb-button>
       <gokb-button
         is-submit
-        :disabled="!options.selectedFile || importRunning"
+        :disabled="!options.selectedFile || importRunning || hasErrors"
       >
         {{ completion === 100 ? $t('btn.confirm') : $t('btn.validate') }}
       </gokb-button>
@@ -249,10 +249,14 @@
       },
       expandWidth () {
         return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 450
+      },
+      hasErrors () {
+        return this.errors.length > 0
       }
     },
     watch: {
       selectedFile (file) {
+        this.errors = []
         this.options.lineCount = undefined
         this.completion = 0
         this.loadedFile.rows = { total: 0, warning: 0, error: 0 }
@@ -309,23 +313,29 @@
         const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, this.cancelToken.token)
 
         if (validationResult.status === 200 && validationResult?.data?.report) {
-          this.loadedFile = validationResult.data.report
 
-          this.loadedFile.errors.single = []
-          Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) =>
-            Object.entries(colobj).forEach(([colname, eo]) =>
-              this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+          if (!!validationResult.data.errors?.missingColumns) {
+            this.errors.push(this.$i18n.t('kbart.errors.missingCols', [validationResult.data.errors.missingColumns.join(', ')]))
+            this.loadedFile = validationResult.data.report
+          } else {
+            this.loadedFile = validationResult.data.report
+
+            this.loadedFile.errors.single = []
+            Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) =>
+              Object.entries(colobj).forEach(([colname, eo]) =>
+                this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+              )
             )
-          )
 
-          this.loadedFile.warnings.single = []
-          Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) =>
-            Object.entries(colobj).forEach(([colname, wo]) =>
-              this.loadedFile.warnings.single.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
+            this.loadedFile.warnings.single = []
+            Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) =>
+              Object.entries(colobj).forEach(([colname, wo]) =>
+                this.loadedFile.warnings.single.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
+              )
             )
-          )
 
-          this.options.lineCount = validationResult.data.report.rows.total
+            this.options.lineCount = validationResult.data.report.rows.total
+          }
           this.completion = 100
         } else {
           this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))
