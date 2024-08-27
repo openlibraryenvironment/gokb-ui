@@ -1089,7 +1089,7 @@
         "label": "Action taken"
       },
       "type": {
-        "label": "Category"
+        "label": "Component Type"
       },
       "todo": {
         "label": "ToDo"

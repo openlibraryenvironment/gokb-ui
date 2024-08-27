@@ -1089,7 +1089,7 @@
         "label": "Durchgeführte Aktion"
       },
       "type": {
-        "label": "Kategorie"
+        "label": "Komponententyp"
       },
       "todo": {
         "label": "ToDo"

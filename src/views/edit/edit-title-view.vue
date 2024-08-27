@@ -765,7 +765,6 @@
         window.scrollTo(0, 0)
       },
       reset () {
-        this.tab = null
         this.pendingChanges = {}
         this.showSnackbar = false
         this.reviewsCount = undefined

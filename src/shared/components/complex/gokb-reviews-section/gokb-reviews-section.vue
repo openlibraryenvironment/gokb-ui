@@ -337,7 +337,7 @@
             key: 'popup'
           },
           {
-            title: this.$i18n.t('component.title.type.label'),
+            title: this.$i18n.t('component.review.type.label'),
             align: 'start',
             sortable: false,
             width: '10%',

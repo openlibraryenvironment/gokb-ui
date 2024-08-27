@@ -76,14 +76,16 @@
         />
       </template>
       <template #item._pending="{ item }">
-        <v-icon
-          v-if="item.markError"
-          class="mr-6"
-          color="red"
-          :title="item.markError"
-        >
-          mdi-alert
-        </v-icon>
+        <div v-if="item.markError" style="white-space:nowrap;">
+          <v-icon
+            class="mr-2"
+            color="red"
+            :title="item.markError"
+          >
+            mdi-alert
+          </v-icon>
+          <span class="text-error" style="white-space:nowrap;"> {{ item.markError }}</span>
+        </div>
         <v-icon
           v-else-if="item._pending === 'added'"
           class="mr-6"

@@ -278,6 +278,7 @@
                   <gokb-state-field
                     v-if="!!id"
                     v-model="packageItem.listStatus"
+                    :init-item="packageItem.listStatus"
                     message-path="component.package.listStatus"
                     url="refdata/categories/Package.ListStatus"
                     width="100%"
@@ -290,7 +291,7 @@
               <v-row dense>
                 <v-col cols="7">
                   <div>
-                    <label class="text-primary text-subtitle-2 ml-2" for="validity">{{ $t('component.package.global.label') }}</label>
+                    <label class="text-primary text-caption ml-2" for="validity">{{ $t('component.package.global.label') }}</label>
                   </div>
                   <gokb-radiobutton-group
                     id="validity"
