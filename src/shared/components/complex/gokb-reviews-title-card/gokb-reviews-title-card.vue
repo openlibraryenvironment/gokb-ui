@@ -105,8 +105,9 @@
         <v-col>
           <div v-if="isReviewedCard && isOtherCardSelected && mergeEnabled && isEditable && isTippComponent">
             <v-chip
-              class="mb-1 info font-weight-bold"
-              pill
+              class="mb-1 font-weight-bold"
+              color="info"
+              variant="flat"
             >
               {{ $t('component.review.edit.components.merge.selectIds.label') }}
             </v-chip>
@@ -118,8 +119,9 @@
           </div>
           <v-chip
             v-else-if="isEditable && idsEditable"
-            class="mb-1 info font-weight-bold"
-            pill
+            class="mb-1 font-weight-bold"
+            color="info"
+            variant="flat"
           >
               {{ $t('component.review.edit.components.single.selectIds') }}
           </v-chip>
