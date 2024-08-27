@@ -1490,6 +1490,12 @@
           "info": "There are invalid identifiers linked to this component!",
           "action": "-",
           "toDo": "Please delete invalid identifiers and replace them with the correct ones."
+        },
+        "Existing Identifiers": {
+          "label": "Duplicated Identifiers",
+          "info": "Title {0} was manually created with at least one important identifier already connected to another title!",
+          "action": "-",
+          "toDo": "If this has generated duplicated reference titles, please merge them by first selecting a reference title via 'Select Merge Target' and then clicking on 'Merge Duplicate'."
         }
       }
     },

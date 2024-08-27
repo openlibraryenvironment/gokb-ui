@@ -6,9 +6,7 @@
   >
     <v-alert type="info">
       <i18n-t v-if="!!mail" keypath="popups.register.info">
-        <template #mail>
-          <a :href="'mailto:' + mail">{{ mail }}</a>
-        </template>
+          <a :href="'mailto:' + mail" class="text-primary">{{ mail }}</a>
       </i18n-t>
 
       <i18n-t v-else path="popups.register.nomail" />

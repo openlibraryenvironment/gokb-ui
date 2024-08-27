@@ -1500,6 +1500,12 @@
           "info": "Unter den verknüpften Identifikatoren wurden ungültige Werte entdeckt!",
           "action": "-",
           "toDo": "Bitte überprüfen Sie die Validität der Identifikatoren und korrigieren Sie eventuelle Fehler."
+        },
+        "Existing Identifiers": {
+          "label": "Identifikatorendublette",
+          "info": "Referenztitel {0} wurde manuell mit mindestens einem wichtigen Identifikator angelegt, der bereits mit einem anderen Referenztitel verknüpft war!",
+          "action": "-",
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, wählen Sie den bestehenden Titel über den Button 'Ziel auswählen' aus. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht)."
         }
       }
     },

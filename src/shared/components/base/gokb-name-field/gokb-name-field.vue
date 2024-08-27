@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="text-caption v-label">
+    <span class="text-primary">
       {{ label }}
       <span
         v-if="!disabled && markRequired"

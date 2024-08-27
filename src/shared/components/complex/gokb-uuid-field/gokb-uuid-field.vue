@@ -15,6 +15,7 @@
       <v-btn
         id="exturl"
         :title="$t('component.general.uuid.copy.label')"
+        base-color="card"
         icon
         flat
         density="compact"
@@ -86,11 +87,6 @@
 </script>
 
 <style scoped>
-  .v-field-label {
-    opacity: var(--v-high-emphasis-opacity);
-    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity)) !important;
-  }
-
   #exturl {
     pointer-events: auto !important;
   }

@@ -4,6 +4,7 @@
     filters
     show-actions
     :sub-title="localTitle"
+    :items-total="totalNumberOfResults"
     :errors="!!apiErrors"
   >
     <template #buttons>
