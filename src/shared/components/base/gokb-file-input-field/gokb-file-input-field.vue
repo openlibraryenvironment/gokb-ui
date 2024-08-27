@@ -61,11 +61,12 @@
       truncateFileName(file) {
         if (!!file) {
           if (file.name?.length < Number(this.truncateLength)) {
-            this.truncatedFileName = str
+            this.truncatedFileName = file.name
           }
-
-          const charsKeepOneSide = Math.floor((Number(this.truncateLength) - 1) / 2)
-          this.truncatedFileName = `${file.name?.slice(0, charsKeepOneSide)}…${file.name?.slice(file.name?.length - charsKeepOneSide)}`
+          else {
+            const charsKeepOneSide = Math.floor((Number(this.truncateLength) - 1) / 2)
+            this.truncatedFileName = `${file.name?.slice(0, charsKeepOneSide)}…${file.name?.slice(file.name?.length - charsKeepOneSide)}`
+          }
         }
       }
     }
