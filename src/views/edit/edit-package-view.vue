@@ -222,6 +222,7 @@
                     v-model="packageItem.nominalPlatform"
                     :readonly="isReadonly"
                     return-object
+                    only-current
                   />
                 </gokb-section>
               </v-col>

@@ -32,11 +32,20 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      onlyCurrent: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     created () {
       this.searchServicesResourceUrl = 'rest/platforms'
       this.searchParams = { max: 20, es: true }
+
+      if (this.onlyCurrent) {
+        this.searchParams.status = 'Current'
+      }
     },
     methods: {
       transform (result) {

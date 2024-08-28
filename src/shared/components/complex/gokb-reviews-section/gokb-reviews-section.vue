@@ -20,7 +20,7 @@
         class="mr-4 mt-4"
         message-path="component.review.stdDesc"
         url="refdata/categories/ReviewRequest.StdDesc"
-        :label="$t('component.review.type.label')"
+        :label="$t('component.review.stdDesc.label')"
       />
       <gokb-state-field
         v-model="searchFilters.status"

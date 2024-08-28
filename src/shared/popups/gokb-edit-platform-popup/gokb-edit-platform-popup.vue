@@ -58,6 +58,7 @@
               :query-fields="['name', 'primaryUrl']"
               return-object
               disable-if-linked
+              only-current
               @searched="hasSearched"
             />
           </v-col>

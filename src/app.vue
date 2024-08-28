@@ -521,6 +521,10 @@
 <style lang="scss">
   @use '@/styles/settings';
 
+  .v-field__input {
+    pointer-events: initial !important;
+  }
+
   .v-field__overlay {
     border-bottom: none !important;
   }
