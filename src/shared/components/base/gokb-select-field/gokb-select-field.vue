@@ -207,7 +207,7 @@
         }
       },
       async fetch () {
-        if (this.entityName) {
+        if (!!this.entityName) {
           if (!!this.stateLabel && states.hasCategory(this.stateLabel)) {
             this.rawItems = states.getCategory(this.stateLabel)
           } else {
@@ -218,16 +218,16 @@
               instance: this
             })
 
-            if (response) {
+            if (!!response) {
               this.rawItems = this.transform(response)
 
-              if (this.stateLabel) {
+              if (!!this.stateLabel) {
                 states.addCategory(this.stateLabel, this.rawItems)
               }
             }
           }
 
-          if (this.initItem) {
+          if (!!this.initItem) {
             this.setInit(this.initItem)
           }
           else if (!!this.modelValue && typeof this.modelValue === 'string') {

@@ -3,7 +3,6 @@
     v-model="localValue"
     :title="$t('job.details')"
     width="70%"
-    @submit="close"
   >
     <v-row>
       <v-col md="4">
@@ -155,7 +154,7 @@
     </v-row>
 
     <template #buttons>
-      <gokb-button>
+      <gokb-button @click="close">
         {{ $t('btn.close') }}
       </gokb-button>
     </template>

@@ -1320,7 +1320,7 @@
                   params: {
                     id: this.packageItem.id,
                     kbartJob: sourceUpdateResult?.data?.jobId,
-                    initMessageCode: kbartResult.status === 200 ? 'success.create' : kbartMessage
+                    initMessageCode: sourceUpdateResult.status === 200 ? 'success.create' : kbartMessage
                   }
                 })
               }

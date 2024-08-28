@@ -22,7 +22,6 @@
       <v-col cols="3">
         <gokb-namespace-field
           v-model="targetNamespace"
-          :items="[targetNamespace]"
           target-type="Title"
           :readonly="readonly"
           :label="$t('kbart.propId.label')"
