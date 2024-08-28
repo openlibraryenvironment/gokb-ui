@@ -54,12 +54,11 @@
           <v-col>
             <gokb-search-platform-field
               v-model="platformName"
-              :items="items"
               :label="$tc('component.general.name')"
               :query-fields="['name', 'primaryUrl']"
               return-object
               disable-if-linked
-              @searched="hasSearched()"
+              @searched="hasSearched"
             />
           </v-col>
         </v-row>
@@ -239,7 +238,6 @@
         conflictLinks: [],
         platformUrl: undefined,
         platformName: undefined,
-        items: [],
         validUrl: false,
         updateUrl: undefined,
         platform: {
@@ -293,7 +291,6 @@
         this.platformName = this.selected
 
         this.updateUrl = this.selected.updateUrl
-        this.items = [this.platform]
       }
     },
     watch: {
@@ -445,7 +442,6 @@
         if (this.searched) {
           this.platformUrl = undefined
           this.platformName = undefined
-          this.items = []
           this.updateUrl = undefined
           this.platform = {
             id: undefined,

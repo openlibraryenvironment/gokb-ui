@@ -132,7 +132,7 @@
     <template #selection="{ item }">
       <v-list-item
         :title="undefined"
-        class="pl-0"
+        class="px-0"
       >
         <router-link
           v-if="showLink"
@@ -169,10 +169,10 @@
           </v-icon>
         </span>
         <v-chip
-          v-if="item.rawdisabled && !!item.raw.disabledMessage"
+          v-if="item.raw.disabled && !!item.raw.disabledMessage"
           color="error"
         >
-          <span> {{ $t(item.disabledMessage) }} </span>
+          <span> {{ $t(item.raw.disabledMessage) }} </span>
         </v-chip>
       </v-list-item>
     </template>
@@ -393,3 +393,8 @@
     }
   }
 </script>
+<style>
+  .v-autocomplete .v-field--dirty .v-autocomplete__selection {
+    margin-inline-end: 0px;
+  }
+</style>
