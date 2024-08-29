@@ -15,6 +15,7 @@
           stdDesc: undefined,
           status: undefined,
           name: undefined,
+          linkedComponentType: undefined
         },
         allStates: [
           {
@@ -89,6 +90,16 @@
               }
             },
             {
+              type: 'GokbSelectField',
+              name: 'linkedComponentType',
+              value: 'linkedComponentType',
+              properties: {
+                label: this.$i18n.t('component.review.type.label'),
+                staticItems: this.localLinkedComponentTypes,
+                width: '100%'
+              }
+            },
+            {
               type: 'GokbStateField',
               name: 'stdDesc',
               value: 'stdDesc',
@@ -128,6 +139,34 @@
       },
       isContributor () {
         return account.loggedIn() && account.hasRole('ROLE_CONTRIBUTOR')
+      },
+      localLinkedComponentTypes () {
+        return [
+          {
+            name: this.$i18n.tc('component.package.label'),
+            id: 'Package'
+          },
+          {
+            name: this.$i18n.tc('component.title.label'),
+            id: 'ReferenceTitle'
+          },
+          {
+            name: this.$i18n.tc('component.tipp.label'),
+            id: 'PackageTitle'
+          },
+          {
+            name: this.$i18n.tc('component.journal.label'),
+            id: 'Journal'
+          },
+          {
+            name: this.$i18n.tc('component.book.label'),
+            id: 'Monograph'
+          },
+          {
+            name: this.$i18n.tc('component.database.label'),
+            id: 'Database'
+          },
+        ]
       }
     },
     watch: {
