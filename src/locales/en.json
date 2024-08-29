@@ -731,7 +731,7 @@
         "currentTitles": "Package Titles",
         "confirm": {
           "kbartLocal": {
-            "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'."
+            "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'. Please make sure to set the List Status to 'Checked' after the import has finished and has been verified."
           },
           "kbartDryRun": {
             "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'. The file is only processed as a dry run!"
@@ -744,6 +744,9 @@
           },
           "noTipps": {
             "label": "Please confirm your changes to the package {0}."
+          },
+          "noTippsListInProgress": {
+            "label": "Please confirm your changes to the package {0}. Please also make sure to set the List Status to 'Checked' after a KBART import has finished and has been verified."
           }
         }
       },

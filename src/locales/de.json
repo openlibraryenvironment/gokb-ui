@@ -731,7 +731,7 @@
         "currentTitles": "Aktueller Bestand",
         "confirm": {
           "kbartLocal": {
-            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}."
+            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}. Beachten Sie, dass zur Freigabe des Pakets nach Abschluss und Prüfung des Imports der Listenstatus 'Geprüft' gesetzt werden sollte."
           },
           "kbartDryRun": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}. Beachten Sie, dass die Datei lediglich als Testdurchlauf verarbeitet wird!"
@@ -740,10 +740,13 @@
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei unter der Adresse {1}."
           },
           "tippBulkUpdate": {
-            "label": "Bitte bestätigen Sie, dass sie die {0} ausgeählten Paket-Titel auf {1} setzen möchten. Falls Sie noch weitere ungespeicherte Änderungen für dieses Paket haben, klicken Sie bitte auf 'Abbrechen' und speichern Sie zunächst die restlichen Änderungen."
+            "label": "Bitte bestätigen Sie, dass sie die {0} ausgewählten Paket-Titel auf {1} setzen möchten. Falls Sie noch weitere ungespeicherte Änderungen für dieses Paket haben, klicken Sie bitte auf 'Abbrechen' und speichern Sie zunächst die restlichen Änderungen."
           },
           "noTipps": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0}."
+          },
+          "noTippsListInProgress": {
+            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0}. Beachten Sie, dass zur Freigabe des Pakets nach Abschluss und Prüfung eines KBART-Imports der Listenstatus 'Geprüft' gesetzt werden sollte."
           }
         }
       },

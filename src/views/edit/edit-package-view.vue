@@ -1111,6 +1111,11 @@
               text: 'component.package.navigation.confirm.sourceUpdate.label',
               vars: [this.allNames.name, this.sourceItem.url]
               }
+          } else if (this.isEdit && this.packageItem.listStatus.value === 'In Progress') {
+            this.submitConfirmationMessage = {
+              text: 'component.package.navigation.confirm.noTippsListInProgress.label',
+              vars: [this.allNames.name]
+            }
           } else {
             this.submitConfirmationMessage = {
               text: 'component.package.navigation.confirm.noTipps.label',

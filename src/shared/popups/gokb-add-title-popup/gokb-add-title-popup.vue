@@ -314,15 +314,6 @@
         </v-row>
         <v-row dense>
           <v-col>
-            <gokb-prices-section
-              v-model="packageTitleItem.prices"
-              :disabled="isReadonly"
-              :expanded="false"
-            />
-          </v-col>
-        </v-row>
-        <v-row dense>
-          <v-col>
             <gokb-section
               :sub-title="$t('component.tipp.other.label')"
               hide-default
@@ -590,7 +581,6 @@
           name: undefined,
           accessStartDate: undefined,
           accessEndDate: undefined,
-          prices: [],
           ids: [],
           subjects: [],
           coverageStatements: [
@@ -749,10 +739,6 @@
               value: id.value,
               type: id.namespace
             })),
-            prices: this.packageTitleItem.prices.map(price => ({
-              ...price,
-              id: (typeof price.id === 'number' ? price.id : null)
-            })),
             publicationType: this.packageTitleItem.publicationType ? (this.packageTitleItem.publicationType.name || this.packageTitleItem.publicationType.value) : null,
             variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
               variantName,
@@ -823,11 +809,6 @@
               value: ido.value,
               type: ido.namespace
             })),
-            prices: this.packageTitleItem.prices.map(price => ({
-              ...price,
-              type: price.priceType,
-              id: (typeof price.id === 'number' ? price.id : null)
-            })),
             variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
               variantName,
               locale,
@@ -892,7 +873,6 @@
         this.packageTitleItem.accessStartDate = data.accessStartDate
         this.packageTitleItem.accessEndDate = data.accessEndDate
         this.packageTitleItem.ids = data.ids
-        this.packageTitleItem.prices = data.prices
         this.packageTitleItem.series = data.series
         this.packageTitleItem.subjects = data.subjects
         this.packageTitleItem.subjectArea = data.subjectArea
