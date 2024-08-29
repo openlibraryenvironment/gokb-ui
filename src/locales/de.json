@@ -1507,7 +1507,13 @@
         },
         "Existing Identifiers": {
           "label": "Identifikatorendublette",
-          "info": "Referenztitel {0} wurde manuell mit mindestens einem wichtigen Identifikator angelegt, der bereits mit einem anderen Referenztitel verknüpft war!",
+          "info": "Die Angaben des manuell angelegten Referenztitels überlappen sich mit denen eines bestehenden Referenztitels!",
+          "action": "-",
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, wählen Sie den bestehenden Titel über den Button 'Ziel auswählen' aus. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht)."
+        },
+        "Duplicate Title Info": {
+          "label": "Duplizierte Titelinformationen",
+          "info": "Die Angaben des manuell angelegten Referenztitels überlappen sich mit denen eines bestehenden Referenztitels!",
           "action": "-",
           "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, wählen Sie den bestehenden Titel über den Button 'Ziel auswählen' aus. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht)."
         }
