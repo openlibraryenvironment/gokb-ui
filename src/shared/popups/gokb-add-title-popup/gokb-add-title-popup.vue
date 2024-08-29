@@ -333,7 +333,7 @@
                   <gokb-text-field
                     v-model="packageTitleItem.publisherName"
                     :disabled="isReadonly"
-                    :label="$tc('component.title.publisher.label')"
+                    label="KBART publisher_name"
                   />
                 </v-col>
                 <v-col>

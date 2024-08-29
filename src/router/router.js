@@ -20,6 +20,7 @@ const api = (log, errorModel, accountModel, createRouter, HomeView, loading, cre
       },
       {
         path: ERROR_ROUTE,
+        name: ERROR_ROUTE,
         meta: {
           code: 'route.error'
         },

@@ -1,23 +1,25 @@
 <template>
   <v-menu id="export-menu" offset-y>
-    <template v-slot:activator="{ on }">
+    <template v-slot:activator="{ props }">
       <gokb-button
         icon-id="mdi-swap-vertical"
         color="primary"
         :disabled="disabled"
-        @click="on?.click"
+        v-bind="props"
       >
         KBART Download
       </gokb-button>
     </template>
     <v-list>
       <v-list-item
-        v-for="(exportType, name) of exportVariants"
+        v-for="(exportType, name) in exportVariants"
         :key="name"
+        :value="name"
       >
         <v-list-item-title>
           <a
             download
+            class="text-primary"
             :href="exportType.url"
             :type="type"
           >

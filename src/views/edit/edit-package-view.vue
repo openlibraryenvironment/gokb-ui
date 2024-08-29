@@ -377,6 +377,18 @@
                 />
               </v-col>
               <v-col
+                v-if="isAdmin"
+                cols="12"
+                md="6"
+              >
+                <gokb-curatory-group-section
+                  v-model="allCuratoryGroups"
+                  :filter-align="false"
+                  :expandable="false"
+                  :sub-title="$tc('component.curatoryGroup.label', 2)"
+                />
+              </v-col>
+              <v-col
                 cols="12"
                 md="6"
               >
@@ -396,18 +408,6 @@
                   :api-errors="errors?.subjects"
                 />
               </v-col>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <gokb-curatory-group-section
-                  v-if="isAdmin"
-                  v-model="allCuratoryGroups"
-                  :filter-align="false"
-                  :expandable="false"
-                  :sub-title="$tc('component.curatoryGroup.label', 2)"
-                />
-              </v-col>
             </v-row>
           </v-stepper-window-item>
 
@@ -419,7 +419,7 @@
               <v-col>
                 <v-chip
                   class="ml-6"
-                  close
+                  closable
                   @click:close="kbart = undefined"
                 >
                   {{ kbart.selectedFile.name }} ({{ kbart.lineCount }} {{ $tc('kbart.row.label', kbart.lineCount) }})
@@ -692,7 +692,7 @@
         <gokb-button
           v-else-if="!isReadonly"
           key="add"
-          :disabled="!isValid"
+          :disabled="!isValid || hasRunningJob"
           color="primary"
           @click="showSubmitPackageConfirm"
         >
@@ -956,7 +956,10 @@
         return this.isReadonly || (this.isEdit && (this.step !== 2 || this.isValid)) || (!this.isEdit && (this.step !== 1 || this.isValid))
       },
       isValid () {
-        return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider && !this.importRunning && !this.matchRunning)
+        return !!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider
+      },
+      hasRunningJob () {
+        return this.importRunning || this.matchRunning
       },
       activeGroup () {
         return this.loggedIn && accountModel.activeGroup()

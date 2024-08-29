@@ -14,9 +14,7 @@
         :keypath="message.text"
         scope="global"
       >
-        <b>{{ message.vars[0] }}</b>
-        <b>{{ message.vars[1] }}</b>
-
+        <b v-for="(v, i) in message.vars">{{ v }}</b>
       </i18n-t>
       <span v-else> {{ message.text }} </span>
     </v-sheet>

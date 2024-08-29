@@ -309,7 +309,8 @@
       showCommit: false,
       dialog: false,
       locales: ['de', 'en'],
-      groups: []
+      groups: [],
+      activeGroup: undefined
     }),
     computed: {
       searchMenuItems () {
@@ -359,14 +360,6 @@
           }
 
           baseServices.setLanguage(locale)
-        }
-      },
-      activeGroup: {
-        get () {
-          return accountModel.activeGroup()
-        },
-        set (group) {
-          accountModel.setActiveGroup(group)
         }
       },
       canCreate () {
@@ -431,6 +424,9 @@
         } finally {
           this.isLoading = false
         }
+      },
+      activeGroup (group) {
+        accountModel.setActiveGroup(group)
       },
       globalSearchSelected () {
         if (this.globalSearchSelected.path) {
@@ -497,8 +493,10 @@
 
           this.groups = result.data.data.curatoryGroups
 
-          if (!this.activeGroup && this.groups.length > 0) {
-            this.activeGroup = this.groups[0]
+          console.log("Loading groups!")
+
+          if (this.groups.length > 0) {
+            this.activeGroup = accountModel.activeGroup() || this.groups[0]
           }
         }
       }
