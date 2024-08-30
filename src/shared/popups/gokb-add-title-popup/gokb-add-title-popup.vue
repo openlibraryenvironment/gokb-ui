@@ -38,7 +38,7 @@
               <v-row>
                 <v-col cols="6">
                   <gokb-state-select-field
-                    v-if="status"
+                    v-if="!!status"
                     v-model="packageTitleItem.status"
                     :deletable="!!deleteUrl"
                     :editable="!!updateUrl"
@@ -46,7 +46,7 @@
                 </v-col>
                 <v-col cols="6">
                   <gokb-uuid-field
-                    v-if="id"
+                    v-if="!!status"
                     :label="$t('component.general.uuid.label')"
                     :value="uuid"
                     path="/package-title"
@@ -471,7 +471,7 @@
         {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
       </gokb-button>
       <gokb-button
-        v-if="updateUrl || !id"
+        v-if="updateUrl || !status"
         :disabled="!isValid"
         class="mr-6"
         is-submit

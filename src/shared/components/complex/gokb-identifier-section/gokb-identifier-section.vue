@@ -257,6 +257,7 @@
 
         this.identifiers = this.localValue.map(item => ({
           ...item,
+          nslabel: item.nslabel || item.type,
           extlink: namespaceServices.getBaseurl(item.namespace) ? namespaceServices.getBaseurl(item.namespace)+item.value : undefined,
           markError: this.mapErrorForItem(item),
           isDeletable : undefined

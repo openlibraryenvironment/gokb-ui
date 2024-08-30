@@ -16,9 +16,9 @@
         id="exturl"
         :title="$t('component.general.uuid.copy.label')"
         base-color="card"
+        density="compact"
         icon
         flat
-        density="compact"
         @click="copyUrl"
       >
         <v-icon color="primary">
