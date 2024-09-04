@@ -81,9 +81,9 @@
       "search": "Pakete"
     },
     "title": {
-      "edit": "Einzeltitel bearbeiten",
-      "create": "Einzeltitel anlegen",
-      "search": "Einzeltitel"
+      "edit": "Referenztitel bearbeiten",
+      "create": "Referenztitel anlegen",
+      "search": "Referenztitel"
     },
     "tipp": {
       "edit": "Pakettitel bearbeiten",
@@ -1050,7 +1050,7 @@
         "label": "Durchgeführte Aktion"
       },
       "type": {
-        "label": "Typ"
+        "label": "Kategorie"
       },
       "todo": {
         "label": "ToDo"

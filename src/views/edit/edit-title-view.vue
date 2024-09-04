@@ -624,7 +624,7 @@
       },
       '$i18n.locale' (l) {
         if (this.isEdit) {
-          document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
+          document.title = this.$i18n.tc('component.title.label') + ' – ' + this.allNames.name
         }
       },
       tab (val) {
