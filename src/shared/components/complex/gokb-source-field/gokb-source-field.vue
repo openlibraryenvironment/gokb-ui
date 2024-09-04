@@ -160,6 +160,11 @@
         if (val && (!this.value?.id || !this.item.targetNamespace)) {
           this.targetNamespace = this.defaultTitleNamespace
         }
+      },
+      value (val) {
+        if (!!val && !val.id) {
+          this.item = val
+        }
       }
     },
     async mounted () {

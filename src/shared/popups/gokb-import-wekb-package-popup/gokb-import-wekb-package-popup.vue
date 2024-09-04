@@ -1,9 +1,9 @@
 <template>
   <gokb-dialog
-      v-model="localValue"
-      :title="header"
-      :width="1000"
-      @submit=""
+    v-model="localValue"
+    :title="header"
+    :width="1000"
+    @submit=""
   >
     <v-snackbars :objects.sync="eventMessages">
       <template #action="{ close }">
@@ -11,32 +11,165 @@
       </template>
     </v-snackbars>
 
-    <gokb-section
-
-    >
-      <v-row dense>
+    <gokb-section>
+      <v-row >
         <v-col>
-          <gokb-state-field
-              label="Quelle"
-              v-model="import_sources"
-          />
+          <!-- <gokb-state-field
+            label="Quelle"
+            v-model="import_sources"
+            init-item="WEKB"
+          /> -->
+          <span><b>Import-Quelle</b></span><br/>
+          <span>WE:KB</span>
         </v-col>
         <v-col>
           <gokb-text-field
-              label="Paket-UUID"
-              v-model="wekb_package_uuid"
+            label="UUID des zu importierenden Pakets in der WEKB"
+            v-model="wekb_package_uuid"
+
           />
 
         </v-col>
       </v-row>
-      <v-row dense >
+
+      <v-row>
+        <v-spacer />
         <gokb-button
+          v-if="!wekbDataLoaded"
+          v-on:click="fetchWekbPackageData"
+          v-bind:disabled="wekbDataLoaded || !wekb_package_uuid"
         >
           Abschicken
         </gokb-button>
       </v-row>
     </gokb-section>
-    <template #buttons></template>
+
+    <div v-if="wekbDataLoaded">
+      <v-row>
+        <v-col cols="5"><h3> Paket aus der externen Quelle </h3></v-col>
+        <v-col cols="5"><h3>Paket in der GOKB</h3></v-col>
+
+      </v-row>
+
+      <v-row>
+        <v-col><h4>Name: </h4></v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="5"><span>{{ externalPackageName }}</span></v-col>
+        <v-col cols="5">
+          <gokb-text-field
+            label="Paketname"
+            v-model="packageName"
+          />
+        </v-col>
+        <v-col cols="2"></v-col>
+      </v-row>
+
+      <v-row>
+        <v-col><h4>Plattform: </h4></v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="5"><span>{{ externalPlatformName }}</span><br/><span>{{ externalPlatformURL }}</span></v-col>
+        <v-col cols="5">
+          <gokb-text-field
+            label="Plattform"
+            value=""
+            v-model="platformName"
+            v-bind:disabled="platformAlreadyExists"
+          />
+          <span v-if="platformAlreadyExists">
+            <v-icon color="success">
+              mdi-check-circle
+            </v-icon>
+          </span>
+        </v-col>
+        <v-col cols="2">
+          <gokb-checkbox-field
+            v-model="adaptPlatformData"
+            label="Quelle übernehmen"
+            v-if="!platformAlreadyExists"
+          />
+
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col><h4>Anbieter: </h4></v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="5"><span>{{ externalProviderName }}</span></v-col>
+        <v-col cols="5">
+          <gokb-text-field
+            label="Anbieter"
+            value=""
+            v-model="providerName"
+            v-bind:disabled="providerAlreadyExists"
+          />
+
+          <span v-if="providerAlreadyExists">
+            <v-icon color="success">
+              mdi-check-circle
+            </v-icon>
+          </span>
+
+        </v-col>
+        <v-col cols="2">
+          <gokb-checkbox-field
+            label="Quelle übernehmen"
+            v-model="adaptProviderData"
+            v-if="!providerAlreadyExists"
+          >
+
+          </gokb-checkbox-field>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col><h3>Titelidentifikatoren: </h3></v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="4">
+          <span>Im Paket befinden sich Medien vom Inhaltstyp <strong>{{ contentTypeOfTipps }}</strong>. <br/>
+            Welcher Identifikatoren-Namensraum soll für das Feld "title_id" verwendet werden?
+          </span>
+        </v-col>
+        <v-col cols="4" v-if="showJournalNamespaceSelect">
+          <gokb-namespace-field
+
+            v-model="namespaceJournal"
+            target-type="Journal"
+            :label="'title_id Namensraum für Journals'"
+            v-bind:exclude-isxn="true"
+          />
+          <!-- :label="$t('kbart.propId.label')" -->
+
+        </v-col>
+        <v-col cols="4" v-if="showMonographNamespaceSelect">
+          <gokb-namespace-field
+
+            v-model="namespaceMonograph"
+            target-type="Book"
+            :label="'title_id Namensraum für Monographien'"
+            v-bind:exclude-isxn="true"
+          />
+          <!-- :label="$t('kbart.propId.label')" -->
+        </v-col>
+      </v-row>
+
+
+      <v-row>
+        <v-spacer />
+        <gokb-button
+
+          v-on:click="submit"
+          v-bind:disabled="!valid"
+        >
+          Abschicken
+        </gokb-button>
+      </v-row>
+
+
+    </div>
   </gokb-dialog>
 </template>
 
@@ -47,24 +180,67 @@ import GokbSection from "@/shared/components/complex/gokb-section/gokb-section.v
 import GokbStateField from "@/shared/components/simple/gokb-state-field/gokb-state-field.vue";
 import GokbTextField from "@/shared/components/base/gokb-text-field/gokb-text-field.vue";
 import GokbButton from "@/shared/components/base/gokb-button/gokb-button.vue";
+import GokbCheckboxField from "@/shared/components/base/gokb-checkbox-field/gokb-checkbox-field.vue";
+import GokbTable from "@/shared/components/complex/gokb-table/gokb-table.vue";
+import axios from 'axios';
+import wekbImportServices from "@/shared/services/wekb-import-services";
+import tippServices from "@/shared/services/tipp-services";
+import platformServices from "@/shared/services/platform-services";
+import GokbNamespaceField from "@/shared/components/simple/gokb-namespace-field";
+import genericServices from "@/shared/services/generic-entity-services";
+import GokbSearchOrganisationField from "@/shared/components/simple/gokb-search-organisation-field";
+import providerServices from "@/shared/services/provider-services";
+import genericEntityServices from "@/shared/services/generic-entity-services";
 
 
 export default {
   name: 'GokbImportWekbPackagePopup',
-  components: {GokbButton, GokbTextField, GokbStateField, GokbSection, VSnackbars },
+  components: {
+    GokbSearchOrganisationField,
+    GokbNamespaceField, GokbTable, GokbCheckboxField, GokbButton, GokbTextField, GokbStateField, GokbSection, VSnackbars },
   extends: BaseComponent,
   props: {
     value: {
       type: Boolean,
       required: true
     },
+    importData: {
+      type: Object,
+      required: false,
+    }
   },
   data () {
     return {
       eventMessages: [],
       wekb_package_uuid: undefined,
-      import_sources: ["WE:KB"]
-
+      import_sources: ["WE:KB"],
+      wekbDataLoaded: false,
+      adaptPlatformData: false,
+      adaptProviderData: false,
+      externalPackageName: "",
+      packageName: "",
+      externalPlatformName: "",
+      externalPlatformURL: "",
+      platformName: "",
+      platformURL: "",
+      internalPlatformId: undefined,
+      externalProviderName: "",
+      externalProviderHomepage: "",
+      externalProviderUuid: "",
+      providerName: "",
+      internalProviderId: undefined,
+      externalPlatformUuidWekb: "",
+      contentTypeOfTipps: "",
+      contentTypeOfTippsCode: undefined,
+      packageScope: undefined,
+      namespaceMonograph: undefined,
+      namespaceJournal: undefined,
+      titleCount: undefined,
+      platformAlreadyExists: undefined,
+      providerAlreadyExists: undefined,
+      //valid: false,
+      localPackageItem: {},
+      externalSource: {}
     }
   },
   computed: {
@@ -76,12 +252,338 @@ export default {
         this.$emit('input', val)
       }
     },
-    header () {
+    header() {
       return "Ein Paket aus einer externen Quelle importieren";
+    },
+    /*tableHeaders() {
+      return [
+        {text: "aaa"}, {text: "bbb"}, {text: "ccc"}
+      ]
+    },*/
+    showMonographNamespaceSelect() {
+      return (this.contentTypeOfTipps === "Book" || this.contentTypeOfTipps === "Mixed")
+    },
+    showJournalNamespaceSelect() {
+      return (this.contentTypeOfTipps === "Journal" || this.contentTypeOfTipps === "Mixed")
+    },
+    valid() {
+      return ( (this.providerAlreadyExists || this.adaptProviderData) && (this.platformAlreadyExists || this.adaptPlatformData) && this.wekbDataLoaded)
     }
   },
   watch: {},
-  methods: {}
+  methods: {
+    async fetchWekbPackageData() {
+
+      let result = null
+      if (this.validatePackageUUID()) {
+        try {
+          const response = await this.catchError({
+            promise: wekbImportServices.getPackageMetaData({'uuid': this.wekb_package_uuid}, this.cancelToken.token),
+            instance: this
+          })
+
+          if (response?.status === 200 && response.data?.length) {
+            result = response.data[0]
+            this.externalPackageName = result?.name
+            this.packageName = this.externalPackageName
+            this.externalPlatformName = result?.nominalPlatformName
+            this.platformName = this.externalPlatformName
+            this.externalProviderName = result?.providerName
+            this.providerName = this.externalProviderName
+            this.externalPlatformUuidWekb = result?.nominalPlatformUuid
+            this.contentTypeOfTipps = result?.contentType
+            this.titleCount = result?.titleCount
+            this.externalProviderUuid = result?.providerUuid
+
+            // Plattform
+            let platformResult = await this.fetchWekbPlatformData()
+            this.externalPlatformURL = platformResult?.primaryUrl
+
+            this.platformAlreadyExists = await this.platformExists()
+            /*if (!this.platformAlreadyExists) {
+
+              console.log("### Plattform muss zunächst angelegt werden")
+            } else {
+
+            } */
+            //Provider
+            const providerResult = await this.providerExists()
+            this.externalProviderHomepage = providerResult?.data?.providerHomepage
+            this.providerAlreadyExists = providerResult?.data?.providerExists
+            if(this.providerAlreadyExists) {
+              this.internalProviderId = providerResult?.data?.providerId
+              this.providerName = this.externalProviderName
+            }
+
+            // SOURCE
+            let source = {
+              type: 'WEKB',
+              url: 'https://wekb.hbz-nrw.de/api2/searchApi?componentType=package&uuid='.concat(this.wekb_package_uuid),
+              frequency: "",
+              targetNamespace: {},
+              automaticUpdates: false,
+              update: true
+            }
+            this.externalSource = source
+
+            // get Code for packagetype
+            let entityService = genericEntityServices('refdata/categories/Package.Scope')
+
+            const responseScope = await this.catchError({
+              promise: entityService.get({}, this.cancelToken.token),
+              instance: this
+            })
+
+            this.packageScope = responseScope?.data?._embedded.values.filter(a => a.value == result.file)[0].id;
+
+            // get Code for contenttype
+            entityService = genericEntityServices('refdata/categories/Package.ContentType')
+
+            const responseContentType = await this.catchError({
+              promise: entityService.get({}, this.cancelToken.token),
+              instance: this
+            })
+            console.log("responseContentType: ", responseContentType)
+            this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id;
+            console.log("responseContentType ", this.contentTypeOfTippsCode)
+          }
+
+        } catch (error) {
+          if (error.response) {
+            // The request was made and the server responded with a status code > 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+          }
+
+        }
+      }
+      if (result) {
+        console.log("result: ", result)
+        this.wekbDataLoaded = true;
+      }
+
+      //TODO: zu Testzwecken
+      //this.wekbDataLoaded = true;
+
+    },
+    async fetchWekbPlatformData() {
+      let result = null
+      try {
+        const response = await this.catchError({
+          promise: wekbImportServices.getPlatformMetadata({'uuid': this.externalPlatformUuidWekb}, this.cancelToken.token),
+          instance: this
+        })
+
+        //TODO: handle Response Status
+        if (response?.status === 200 && response.data?.length) {
+          result = response.data[0]
+          console.log("+++ ", result)
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+      return result
+    },
+    validatePackageUUID() {
+      return true;
+    },
+    async platformExists() {
+      const wekbPlatform = {
+        name: this.externalPlatformName,
+        primaryUrl: this.externalPlatformURL,
+      }
+
+      const response = await this.catchError({
+        promise: platformServices.check(wekbPlatform, this.cancelToken.token),
+        instance: this
+      })
+
+      // console.log("#### ", response)
+
+      if (response?.data) {
+        if (!response.data.to_create) {
+
+          console.log("Platform already exists - set existing")
+          let platformId = null
+          if (response.data.conflicts) {
+            if (response.data.conflicts.primaryUrl) {
+              platformId = response.data.conflicts?.primaryUrl[0]?.matches
+            } else if (response.data.conflicts.name[0]) {
+              platformId = response.data.conflicts?.name[0]?.matches
+            }
+          }
+          const platform = await this.catchError({
+            promise: platformServices.get(platformId, this.cancelToken.token),
+            instance: this
+          })
+          // console.log("PLATTFORM: ", platform)
+          this.internalPlatformId = platformId
+          this.platformName = this.externalPlatformName
+          this.platformURL = this.externalPlatformURL
+          return true
+        }
+      }
+      console.log("Platform not exists - create it")
+      return false
+    },
+    async fetchTippsOfPackage() {
+      let result = null
+      try {
+        const response = await this.catchError({
+          promise: wekbImportServices.getTippsOfPackage({
+            'uuid': this.wekb_package_uuid,
+            'max': this.titleCount ? this.titleCount : 1000
+          }, this.cancelToken.token),
+          instance: this
+        })
+
+        //TODO: handle Response Status
+        if (response?.status === 200 && response.data?.length) {
+          result = response.data
+          // console.log("+++ ", result)
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+      return result
+    },
+    async providerExists() {
+
+      const response = await this.catchError({
+        promise: wekbImportServices.getProviderData({'uuid': this.externalProviderUuid}, this.cancelToken.token),
+        instance: this
+      })
+
+      console.log("+++ check PROVIDER: ", response)
+
+      return response
+    },
+    async submit() {
+
+      // console.log("SUBMIT")
+
+      if (this.valid) {
+
+        let platformObject = undefined
+        let platfResponse = undefined
+        if (this.platformAlreadyExists) {
+          platfResponse = await this.catchError({
+            promise: platformServices.get(this.internalPlatformId, this.cancelToken.token),
+            instance: this
+          })
+
+          platformObject = platfResponse?.data
+        } else {
+          // create new Plattform and retrieve object
+          const newPlatform = {
+            name: this.externalPlatformName,
+            primaryUrl: this.externalPlatformURL,
+          }
+          platfResponse = await this.catchError({
+            promise: platformServices.createOrUpdate(newPlatform, this.cancelToken.token),
+            instance: this
+          })
+
+          platformObject = platfResponse?.data
+
+
+        }
+
+        let providerObject = undefined
+
+        if (this.providerAlreadyExists) {
+          const provResponse = await this.catchError({
+            promise: providerServices.get(this.internalProviderId, this.cancelToken.token),
+            instance: this
+          })
+
+          providerObject = provResponse?.data
+        } else {
+          // create new Provider and retrieve the Object
+          const newProvider = {
+            id: undefined,
+            ids: [],
+            status: undefined,
+            source: undefined,
+            titleNamespace: undefined,
+            packageNamespace: undefined,
+            homepage: this.externalProviderHomepage[0], //TODO: ARRAY!!!????
+            name: this.externalProviderName,
+            providedPlatforms: [
+              {
+                name: this.platformName,
+                primaryUrl: this.platformURL,
+                id: this.internalPlatformId
+              }
+            ]
+          }
+
+          const provResponse = await this.catchError({
+            promise: providerServices.createOrUpdate(newProvider, this.cancelToken.token),
+            instance: this
+          })
+
+          providerObject = provResponse?.data
+          console.log("NEW PROVIDEROBJECT: " + providerObject)
+          console.log("NEW PROVIDER: " + provResponse)
+
+        }
+
+        const pckg = {
+          id: undefined,
+          name: this.packageName,
+          source: undefined,
+          type: 'package',
+          status: undefined,
+          descriptionURL: undefined,
+          description: undefined,
+          scope: this.packageScope,
+          global: undefined,
+          globalNote: undefined,
+          contentType: this.contentTypeOfTippsCode,
+          consistent: undefined,
+          breakable: undefined,
+          fixed: undefined,
+          subjects: [],
+          listStatus: undefined,
+          editStatus: undefined,
+          ids: [],
+
+        }
+
+        // TODO: Übergangslösung bis wir 2 Felder für Title-Namespaces haben
+        if (this.contentTypeOfTipps === "Book" || this.contentTypeOfTipps === "Mixed") {
+          this.externalSource.targetNamespace = this.namespaceMonograph
+        } else {
+          this.externalSource.targetNamespace = this.namespaceJournal
+        }
+
+
+        const allData = {
+          platform: platformObject,
+          provider: providerObject,
+          source: this.externalSource,
+          package: pckg
+
+        }
+
+        this.$emit("import", allData)
+
+      }
+
+    }
+
+
+  }
 
 }
 

@@ -109,8 +109,9 @@
       />
 
       <gokb-import-wekb-package-popup
-          v-if="wekbImportPopupVisible"
-          v-model="wekbImportPopupVisible"
+        v-if="wekbImportPopupVisible"
+        v-model="wekbImportPopupVisible"
+        @import="mapImportData"
       />
 
 
@@ -208,7 +209,7 @@
               </v-col>
             </v-row>
 
-           <!-- <gokb-section> -->
+            <!-- <gokb-section> -->
 
             <!-- </gokb-section> -->
           </v-stepper-content>
@@ -647,12 +648,12 @@
         <v-spacer />
 
         <gokb-button
-            color="primary"
-            :disabled="false"
-            @click="showWekbImportPopup"
-            v-show="!isEdit && step == 1"
+          color="primary"
+          :disabled="false"
+          @click="showWekbImportPopup"
+          v-show="!isEdit && step == 1"
         >
-         <!-- TODO: Text aus Properties-Datei {{ $t('btn.next') }} -->
+          <!-- TODO: Text aus Properties-Datei {{ $t('btn.next') }} -->
           Aus externer Datenquelle importieren
         </gokb-button>
 
@@ -692,962 +693,982 @@
 </template>
 
 <script>
-  import utils from '@/shared/utils/utils'
-  import accountModel from '@/shared/models/account-model'
-  import BaseComponent from '@/shared/components/base-component'
-  import GokbSearchOrganisationField from '@/shared/components/simple/gokb-search-organisation-field'
-  import GokbSearchPlatformField from '@/shared/components/simple/gokb-search-platform-field'
-  import GokbUrlField from '@/shared/components/simple/gokb-url-field'
-  import GokbSourceField from '@/shared/components/complex/gokb-source-field'
-  import GokbMaintenanceCycleField from '@/shared/components/simple/gokb-maintenance-cycle-field'
-  import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
-  import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
-  import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
-  import GokbDateField from '@/shared/components/complex/gokb-date-field'
-  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
-  import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
-  import { HOME_ROUTE } from '@/router/route-paths'
-  import packageServices from '@/shared/services/package-services'
-  import jobServices from '@/shared/services/job-services'
-  import providerServices from '@/shared/services/provider-services'
-  import sourceServices from '@/shared/services/source-services'
-  import loading from '@/shared/models/loading'
-  import VSnackbars from 'v-snackbars'
-  import GokbImportWekbPackagePopup from '@/shared/popups/gokb-import-wekb-package-popup'
-  import GokbSection from "@/shared/components/complex/gokb-section/gokb-section.vue";
+import utils from '@/shared/utils/utils'
+import accountModel from '@/shared/models/account-model'
+import BaseComponent from '@/shared/components/base-component'
+import GokbSearchOrganisationField from '@/shared/components/simple/gokb-search-organisation-field'
+import GokbSearchPlatformField from '@/shared/components/simple/gokb-search-platform-field'
+import GokbUrlField from '@/shared/components/simple/gokb-url-field'
+import GokbSourceField from '@/shared/components/complex/gokb-source-field'
+import GokbMaintenanceCycleField from '@/shared/components/simple/gokb-maintenance-cycle-field'
+import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
+import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
+import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
+import GokbDateField from '@/shared/components/complex/gokb-date-field'
+import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
+import { HOME_ROUTE } from '@/router/route-paths'
+import packageServices from '@/shared/services/package-services'
+import jobServices from '@/shared/services/job-services'
+import providerServices from '@/shared/services/provider-services'
+import sourceServices from '@/shared/services/source-services'
+import loading from '@/shared/models/loading'
+import VSnackbars from 'v-snackbars'
+import GokbImportWekbPackagePopup from '@/shared/popups/gokb-import-wekb-package-popup'
+import GokbSection from "@/shared/components/complex/gokb-section/gokb-section.vue";
 
-  const ROWS_PER_PAGE = 10
+const ROWS_PER_PAGE = 10
 
-  const TITLES_HEADER = [
-    {
-      text: 'Titel',
-      align: 'left',
-      sortable: false,
-      value: 'title'
-    },
-    {
-      text: 'Plattform',
-      align: 'left',
-      sortable: false,
-      value: 'platform'
-    },
-  ]
+const TITLES_HEADER = [
+  {
+    text: 'Titel',
+    align: 'left',
+    sortable: false,
+    value: 'title'
+  },
+  {
+    text: 'Plattform',
+    align: 'left',
+    sortable: false,
+    value: 'platform'
+  },
+]
 
-  export default {
-    name: 'EditPackageView',
-    components: {
-      GokbSection,
-      GokbDateField,
-      GokbIdentifierSection,
-      GokbSearchOrganisationField,
-      GokbSearchPlatformField,
-      GokbUrlField,
-      GokbSourceField,
-      GokbCuratoryGroupSection,
-      GokbMaintenanceCycleField,
-      GokbAlternateNamesSection,
-      GokbConfirmationPopup,
-      GokbEditJobPopup,
-      VSnackbars,
-      GokbImportWekbPackagePopup
+export default {
+  name: 'EditPackageView',
+  components: {
+    GokbSection,
+    GokbDateField,
+    GokbIdentifierSection,
+    GokbSearchOrganisationField,
+    GokbSearchPlatformField,
+    GokbUrlField,
+    GokbSourceField,
+    GokbCuratoryGroupSection,
+    GokbMaintenanceCycleField,
+    GokbAlternateNamesSection,
+    GokbConfirmationPopup,
+    GokbEditJobPopup,
+    VSnackbars,
+    GokbImportWekbPackagePopup
+  },
+  extends: BaseComponent,
+  props: {
+    id: {
+      type: [Number, String],
+      required: false,
+      default: undefined
     },
-    extends: BaseComponent,
-    props: {
-      id: {
-        type: [Number, String],
-        required: false,
-        default: undefined
-      },
-      maintenance: {
-        type: Boolean,
-        required: false,
-        default: false
-      },
-      kbartJob: {
-        type: String,
-        required: false,
-        default: undefined
-      },
-      initMessageCode: {
-        type: String,
-        required: false,
-        default: undefined
-      }
+    maintenance: {
+      type: Boolean,
+      required: false,
+      default: false
     },
-    data () {
-      return {
-        valid: false,
-        step: 1,
-        waiting: false,
-        notFound: false,
-        version: undefined,
-        errors: {},
-        toDelete: false,
-        eventMessages: [],
-        uuid: undefined,
-        isCurator: false,
-        showSubmitConfirm: false,
-        submitConfirmationMessage: undefined,
-        editJobPopupVisible: false,
-        wekbImportPopupVisible: false,
-        urlUpdate: false,
-        currentName: undefined,
-        lastUpdated: undefined,
-        listVerifiedDate: undefined,
-        dateCreated: undefined,
-        importJob: {},
-        matchingJob: {},
-        selectedJob: undefined,
-        kbartProgress: undefined,
-        providerTitleNamespace: undefined,
-        newTipps: [],
-        packageItem: {
-          id: undefined,
-          name: undefined,
-          source: undefined,
-          type: 'package',
-          status: undefined,
-          descriptionURL: undefined,
-          description: undefined,
-          scope: undefined,
-          global: undefined,
-          globalNote: undefined,
-          contentType: undefined,
-          consistent: undefined,
-          breakable: undefined,
-          fixed: undefined,
-          subjects: [],
-          listStatus: undefined,
-          editStatus: undefined,
-          ids: [],
-          provider: undefined, // organisation
-          nominalPlatform: undefined,
-        },
-        overviewStates: {
-          contentType: undefined,
-          listStatus: undefined,
-          global: undefined
-        },
-        allCuratoryGroups: [],
-        sourceItem: undefined,
-        kbartResult: undefined,
-        titlesHeader: TITLES_HEADER,
-        titlesOptions: {
-          page: 1,
-          itemsPerPage: ROWS_PER_PAGE
-        },
-        providerSelect: [],
-        platformSelect: [],
-        selectedTitles: [],
-        allAlternateNames: [],
-        allNames: {
-          name: undefined,
-          alts: []
-        },
-        titleCount: 0,
-        maintenanceCycle: undefined,
-        step3Error: false,
-        step2Error: false,
-        updateUrl: undefined,
-        deleteUrl: undefined,
-        kbart: undefined
-      }
+    kbartJob: {
+      type: String,
+      required: false,
+      default: undefined
     },
-    computed: {
-      title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.package.label')])
+    initMessageCode: {
+      type: String,
+      required: false,
+      default: undefined
+    }
+  },
+  data () {
+    return {
+      valid: false,
+      step: 1,
+      waiting: false,
+      notFound: false,
+      version: undefined,
+      errors: {},
+      toDelete: false,
+      eventMessages: [],
+      uuid: undefined,
+      isCurator: false,
+      showSubmitConfirm: false,
+      submitConfirmationMessage: undefined,
+      editJobPopupVisible: false,
+      wekbImportPopupVisible: false,
+      urlUpdate: false,
+      currentName: undefined,
+      lastUpdated: undefined,
+      listVerifiedDate: undefined,
+      dateCreated: undefined,
+      importJob: {},
+      matchingJob: {},
+      selectedJob: undefined,
+      kbartProgress: undefined,
+      providerTitleNamespace: undefined,
+      newTipps: [],
+      packageItem: {
+        id: undefined,
+        name: undefined,
+        source: undefined,
+        type: 'package',
+        status: undefined,
+        descriptionURL: undefined,
+        description: undefined,
+        scope: undefined,
+        global: undefined,
+        globalNote: undefined,
+        contentType: undefined,
+        consistent: undefined,
+        breakable: undefined,
+        fixed: undefined,
+        subjects: [],
+        listStatus: undefined,
+        editStatus: undefined,
+        ids: [],
+        provider: undefined, // organisation
+        nominalPlatform: undefined,
       },
-      subTitle () {
-        return this.currentName
+      overviewStates: {
+        contentType: undefined,
+        listStatus: undefined,
+        global: undefined
       },
-      titleCode () {
-        return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
+      allCuratoryGroups: [],
+      sourceItem: undefined,
+      kbartResult: undefined,
+      titlesHeader: TITLES_HEADER,
+      titlesOptions: {
+        page: 1,
+        itemsPerPage: ROWS_PER_PAGE
       },
-      isEdit () {
-        return !!this.id
+      providerSelect: [],
+      platformSelect: [],
+      selectedTitles: [],
+      allAlternateNames: [],
+      allNames: {
+        name: undefined,
+        alts: []
       },
-      isAdmin () {
-        return this.loggedIn && accountModel.hasRole('ROLE_ADMIN')
-      },
-      isReadonly () {
-        return !this.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
-      },
-      isContrib () {
-        return this.loggedIn && accountModel.hasRole('ROLE_CONTRIBUTOR')
-      },
-      isInLastStep () {
-        return this.step === 4
-      },
-      providerSelection () {
-        return this.providerSelect
-      },
-      platformSelection () {
-        return this.platformSelect
-      },
-      providerName () {
+      titleCount: 0,
+      maintenanceCycle: undefined,
+      step3Error: false,
+      step2Error: false,
+      updateUrl: undefined,
+      deleteUrl: undefined,
+      kbart: undefined,
+      importData: undefined
+    }
+  },
+  computed: {
+    title () {
+      return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.package.label')])
+    },
+    subTitle () {
+      return this.currentName
+    },
+    titleCode () {
+      return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
+    },
+    isEdit () {
+      return !!this.id
+    },
+    isAdmin () {
+      return this.loggedIn && accountModel.hasRole('ROLE_ADMIN')
+    },
+    isReadonly () {
+      return !this.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
+    },
+    isContrib () {
+      return this.loggedIn && accountModel.hasRole('ROLE_CONTRIBUTOR')
+    },
+    isInLastStep () {
+      return this.step === 4
+    },
+    providerSelection () {
+      return this.providerSelect
+    },
+    platformSelection () {
+      return this.platformSelect
+    },
+    /*providerName () {
+      return this.packageItem?.provider?.name
+    },*/
+    providerName: {
+      get() {
+        this.test
         return this.packageItem?.provider?.name
       },
-      platformName () {
-        return this.packageItem?.nominalPlatform?.name
-      },
-      totalNumberOfTitles () {
-        return this.titleCount
-      },
-      dueTo () {
-        return this.maintenanceCycle ? this.maintenanceCycle.createMaintenanceDate(new Date()) : null
-      },
-      loggedIn () {
-        return accountModel.loggedIn()
-      },
-      localDateCreated () {
-        return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
-      },
-      localLastUpdated () {
-        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
-      },
-      localListVerifiedDate () {
-        return this.listVerifiedDate ? this.buildDateString(this.listVerifiedDate) : ''
-      },
-      accessible () {
-        return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
-      },
-      currentStepValid () {
-        return this.isReadonly || (this.isEdit && (this.step !== 2 || this.isValid)) || (!this.isEdit && (this.step !== 1 || this.isValid))
-      },
-      isValid () {
-        return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
-      },
-      activeGroup () {
-        return this.loggedIn && accountModel.activeGroup()
-      },
-      kbartLabel () {
-        return 'KBART' + (this.kbart?.dryRun ? ' (' + this.$i18n.t('kbart.dryRun.label') + ')' : '')
+      set(newName) {
+        return newName
       }
     },
-    watch: {
-      loggedIn (value) {
-        if (value) {
-          this.reload()
-        }
-
-        this.eventMessages = []
-      },
-      '$i18n.locale' (l) {
-        if (this.isEdit) {
-          document.title = this.$i18n.tc('component.package.label') + ' – ' + this.allNames.name
-        }
-
-        this.eventMessages = []
-      },
-      'packageItem.provider' (prov) {
-        if (prov) {
-          this.fetchDefaultNamespace(prov.id)
-        }
-      },
-      step (val) {
-        this.$refs?.descInfo?.refreshRows()
-        this.$refs?.descEdit?.refreshRows()
-
-        history.pushState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
-      }
+    platformName () {
+      return this.packageItem?.nominalPlatform?.name
     },
-    async created () {
-      await this.reload()
-
-      if (!!this.initMessageCode) {
-        if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]),
-            color: 'success',
-            timeout: 4000
-          })
-        } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]),
-            color: 'error',
-            timeout: -1
-          })
-        } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]),
-            color: 'warning',
-            timeout: -1
-          })
-        }
+    totalNumberOfTitles () {
+      return this.titleCount
+    },
+    dueTo () {
+      return this.maintenanceCycle ? this.maintenanceCycle.createMaintenanceDate(new Date()) : null
+    },
+    loggedIn () {
+      return accountModel.loggedIn()
+    },
+    localDateCreated () {
+      return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
+    },
+    localLastUpdated () {
+      return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
+    },
+    localListVerifiedDate () {
+      return this.listVerifiedDate ? this.buildDateString(this.listVerifiedDate) : ''
+    },
+    accessible () {
+      return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
+    },
+    currentStepValid () {
+      return this.isReadonly || (this.isEdit && (this.step !== 2 || this.isValid)) || (!this.isEdit && (this.step !== 1 || this.isValid))
+    },
+    isValid () {
+      return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
+    },
+    activeGroup () {
+      return this.loggedIn && accountModel.activeGroup()
+    },
+    kbartLabel () {
+      return 'KBART' + (this.kbart?.dryRun ? ' (' + this.$i18n.t('kbart.dryRun.label') + ')' : '')
+    }
+  },
+  watch: {
+    loggedIn (value) {
+      if (value) {
+        this.reload()
       }
 
-      if (!!this.kbartJob) {
-        this.loadImportJobStatus(this.kbartJob)
-      } else if (this.isEdit && !this.isReadonly) {
-        this.getActiveJobs()
+      this.eventMessages = []
+    },
+    '$i18n.locale' (l) {
+      if (this.isEdit) {
+        document.title = this.$i18n.tc('component.package.label') + ' – ' + this.allNames.name
+      }
+
+      this.eventMessages = []
+    },
+    'packageItem.provider' (prov) {
+      if (prov) {
+        this.fetchDefaultNamespace(prov.id)
       }
     },
-    mounted () {
-      document.addEventListener('keydown', this.handleKeyboardNav.bind(this))
+    step (val) {
+      this.$refs?.descInfo?.refreshRows()
+      this.$refs?.descEdit?.refreshRows()
 
-      this.step = parseInt(this.$route.query.step) || 1
+      history.pushState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
+    }
+  },
+  async created () {
+    await this.reload()
+
+    if (!!this.initMessageCode) {
+      if (this.initMessageCode.includes('success')) {
+        this.eventMessages.push({
+          message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]),
+          color: 'success',
+          timeout: 4000
+        })
+      } else if (this.initMessageCode.includes('failure')) {
+        this.eventMessages.push({
+          message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]),
+          color: 'error',
+          timeout: -1
+        })
+      } else if (this.initMessageCode.includes('warning')) {
+        this.eventMessages.push({
+          message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]),
+          color: 'warning',
+          timeout: -1
+        })
+      }
+    }
+
+    if (!!this.kbartJob) {
+      this.loadImportJobStatus(this.kbartJob)
+    } else if (this.isEdit && !this.isReadonly) {
+      this.getActiveJobs()
+    }
+  },
+  mounted () {
+    document.addEventListener('keydown', this.handleKeyboardNav.bind(this))
+
+    this.step = parseInt(this.$route.query.step) || 1
+  },
+  beforeDestroy() {
+    document.removeEventListener("keydown", this.handleKeyboardNav)
+  },
+  methods: {
+    showWekbImportPopup () {
+      this.wekbImportPopupVisible = true
     },
-    beforeDestroy() {
-      document.removeEventListener("keydown", this.handleKeyboardNav)
+    async mapImportData (importData) {
+      this.allNames.name = importData.package.name
+
+      this.packageItem = importData.package
+      this.packageItem.provider = importData.provider
+      this.packageItem.nominalPlatform = importData.platform
+      this.sourceItem = importData.source
+
+      this.wekbImportPopupVisible = false
     },
-    methods: {
-      showWekbImportPopup (){
-        this.wekbImportPopupVisible = true;
-      },
-      go2NextStep () {
-        this.step < 4 && this.step++
-      },
-      go2PreviousStep () {
-        this.step > 1 && this.step--
-      },
-      executeAction (actionMethodName, actionMethodParameter) {
-        this[actionMethodName](actionMethodParameter)
-      },
-      cancelPackage () {
-        this.$router.push(HOME_ROUTE)
-      },
-      updateNewTipps (tipps) {
-        this.newTipps = tipps
-      },
-      handleKeyboardNav (e) {
-        if (this.step > 1 && e.key === "ArrowLeft" && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault()
-            this.go2PreviousStep()
-        } else if (this.step < 4 && e.key === "ArrowRight" && (e.ctrlKey || e.metaKey)) {
-          e.preventDefault()
-          this.go2NextStep()
-        } else if (['1', '2', '3', '4'].includes(e.key) && (e.ctrlKey || e.metaKey)) {
-          e.preventDefault()
-          this.step = parseInt(e.key)
+    go2NextStep () {
+      this.step < 4 && this.step++
+    },
+    go2PreviousStep () {
+      this.step > 1 && this.step--
+    },
+    executeAction (actionMethodName, actionMethodParameter) {
+      this[actionMethodName](actionMethodParameter)
+    },
+    cancelPackage () {
+      this.$router.push(HOME_ROUTE)
+    },
+    updateNewTipps (tipps) {
+      this.newTipps = tipps
+    },
+    handleKeyboardNav (e) {
+      if (this.step > 1 && e.key === "ArrowLeft" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault()
+        this.go2PreviousStep()
+      } else if (this.step < 4 && e.key === "ArrowRight" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault()
+        this.go2NextStep()
+      } else if (['1', '2', '3', '4'].includes(e.key) && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault()
+        this.step = parseInt(e.key)
+      }
+    },
+    setKbart (options) {
+      this.kbart = options
+
+      if (!this.sourceItem) {
+        this.sourceItem = {
+          name: undefined,
+          menu: false,
+          update: false,
+          url: undefined,
+          ezbMatch: false,
+          automaticUpdates: false,
+          targetNamespace: options.selectedNamespace,
+          duration: undefined,
+          unit: undefined,
         }
-      },
-      setKbart (options) {
-        this.kbart = options
-
-        if (!this.sourceItem) {
-          this.sourceItem = {
-            name: undefined,
-            menu: false,
-            update: false,
-            url: undefined,
-            ezbMatch: false,
-            automaticUpdates: false,
-            targetNamespace: options.selectedNamespace,
-            duration: undefined,
-            unit: undefined,
+      } else if (!!this.sourceItem.targetNamespace &&
+        !!this.sourceItem.update &&
+        !!options.selectedNamespace &&
+        options.selectedNamespace.id != this.sourceItem.targetNamespace.id
+      ) {
+        this.eventMessages.push({
+          message: this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict'),
+          color: 'warn',
+          timeout: -1
+        })
+      }
+    },
+    showSubmitPackageConfirm (form) {
+      if (this.isValid) {
+        if (this.kbart?.selectedFile) {
+          let code = this.kbart.dryRun ? 'component.package.navigation.confirm.kbartDryRun.label' : 'component.package.navigation.confirm.kbartLocal.label'
+          this.submitConfirmationMessage = {
+            text: code,
+            vars: [this.allNames.name, this.kbart.selectedFile.name]
           }
-        } else if (!!this.sourceItem.targetNamespace &&
-                    !!this.sourceItem.update &&
-                    !!options.selectedNamespace &&
-                    options.selectedNamespace.id != this.sourceItem.targetNamespace.id
-        ) {
-          this.eventMessages.push({
-            message: this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict'),
-            color: 'warn',
-            timeout: -1
-          })
+        } else if (this.urlUpdate) {
+          this.submitConfirmationMessage = {
+            text: 'component.package.navigation.confirm.sourceUpdate.label',
+            vars: [this.allNames.name, this.sourceItem.url]
+          }
+        } else {
+          this.submitConfirmationMessage = {
+            text: 'component.package.navigation.confirm.noTipps.label',
+            vars: [this.allNames.name]
+          }
         }
-      },
-      showSubmitPackageConfirm (form) {
-        if (this.isValid) {
-          if (this.kbart?.selectedFile) {
-            let code = this.kbart.dryRun ? 'component.package.navigation.confirm.kbartDryRun.label' : 'component.package.navigation.confirm.kbartLocal.label'
-            this.submitConfirmationMessage = {
-              text: code,
-              vars: [this.allNames.name, this.kbart.selectedFile.name]
-            }
-          } else if (this.urlUpdate) {
-            this.submitConfirmationMessage = {
-              text: 'component.package.navigation.confirm.sourceUpdate.label',
-              vars: [this.allNames.name, this.sourceItem.url]
-              }
+        this.showSubmitConfirm = true
+      }
+    },
+    showJobPopup(uuid) {
+      this.selectedJob = { id: uuid, archived: false }
+      this.editJobPopupVisible = true
+    },
+    async submitPackage () {
+      loading.startLoading()
+      var isUpdate = !!this.id
+      this.eventMessages = []
+      this.errors = {}
+      this.updateStepErrors()
+
+      if (this.importJob?.status !== 'info') {
+        this.importJob = {}
+      }
+
+      if (this.matchingJob?.status !== 'info') {
+        this.matchingJob = {}
+      }
+
+      if (this.isValid) {
+        if (this.sourceItem) {
+          var sourceItem = this.sourceItem
+
+          if (sourceItem.name !== this.allNames.name) {
+            sourceItem.name = this.allNames.name
+          }
+
+          if (this.sourceItem?.update) {
+            this.urlUpdate = true
+          }
+
+          const sourceResponse = await this.catchError({
+            promise: sourceServices.createOrUpdateSource(sourceItem, this.cancelToken.token),
+            instance: this
+          })
+
+          if (sourceResponse.status < 400) {
+            this.packageItem.source = sourceResponse.data
+            this.sourceItem = sourceResponse.data
           } else {
-            this.submitConfirmationMessage = {
-              text: 'component.package.navigation.confirm.noTipps.label',
-              vars: [this.allNames.name]
-            }
+            this.errors.source = sourceResponse?.data?.data
           }
-          this.showSubmitConfirm = true
-        }
-      },
-      showJobPopup(uuid) {
-        this.selectedJob = { id: uuid, archived: false }
-        this.editJobPopupVisible = true
-      },
-      async submitPackage () {
-        loading.startLoading()
-        var isUpdate = !!this.id
-        this.eventMessages = []
-        this.errors = {}
-        this.updateStepErrors()
-
-        if (this.importJob?.status !== 'info') {
-          this.importJob = {}
         }
 
-        if (this.matchingJob?.status !== 'info') {
-          this.matchingJob = {}
-        }
-
-        if (this.isValid) {
-          if (this.sourceItem) {
-            var sourceItem = this.sourceItem
-
-            if (sourceItem.name !== this.allNames.name) {
-              sourceItem.name = this.allNames.name
-            }
-
-            if (this.sourceItem?.update) {
-              this.urlUpdate = true
-            }
-
-            const sourceResponse = await this.catchError({
-              promise: sourceServices.createOrUpdateSource(sourceItem, this.cancelToken.token),
-              instance: this
-            })
-
-            if (sourceResponse.status < 400) {
-              this.packageItem.source = sourceResponse.data
-              this.sourceItem = sourceResponse.data
-            } else {
-              this.errors.source = sourceResponse?.data?.data
-            }
-          }
-
-          const newPackage = {
-            ...this.packageItem,
-            ...(this.newTipps.length > 0 ? {
-              tipps: this.newTipps.map(tipp => ({
-                ...tipp,
-                id: typeof id === 'number' ? id : null
-              }))
-            } : {}),
-            name: this.allNames.name,
-            version: this.version,
-            variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
-              variantName,
-              locale,
-              variantType,
+        const newPackage = {
+          ...this.packageItem,
+          ...(this.newTipps.length > 0 ? {
+            tipps: this.newTipps.map(tipp => ({
+              ...tipp,
               id: typeof id === 'number' ? id : null
-            })),
-            curatoryGroups: this.allCuratoryGroups,
-            ids: this.packageItem.ids.map(id => ({
-              value: id.value,
-              type: id.namespace
-            })),
-            subjects: this.packageItem.subjects.map(subject => ({
-              heading: subject.heading,
-              scheme: subject.scheme
-            })),
-            breakable: utils.asYesNo(this.packageItem.breakable),
-            consistent: utils.asYesNo(this.packageItem.consistent),
-            fixed: utils.asYesNo(this.packageItem.fixed),
-            nominalPlatform: this.packageItem.nominalPlatform?.id,
-            provider: this.packageItem.provider?.id,
-            activeGroup: this.activeGroup
-          }
-
-          if (!this.isUpdate || this.kbart || this.urlUpdate) {
-            newPackage.generateToken = true
-          }
-
-          const response = await this.catchError({
-            promise: packageServices.createOrUpdate(newPackage, this.cancelToken.token),
-            instance: this
-          })
-
-          if (response?.status < 400) {
-            this.packageItem.id = response.data.id
-
-            if (this.kbart) {
-              const kbartPars = {
-                activeGroup: this.activeGroup?.id,
-                titleIdNamespace: this.kbart.selectedNamespace?.id || this.sourceItem?.targetNamespace?.id,
-                dryRun: this.kbart.dryRun,
-                addOnly: this.kbart.addOnly,
-                deleteMissing: this.kbart.deleteMissing
-              }
-              const kbartResult = await this.catchError({
-                promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, kbartPars, this.cancelToken.token),
-                instance: this
-              })
-
-              this.kbart = undefined
-
-              if (kbartResult.status === 403) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.denied'),
-                  color: 'error',
-                  timeout: -1
-                })
-              } else if (kbartResult.status >= 400 && kbartResult.status < 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.processing'),
-                  color: 'error',
-                  timeout: -1
-                })
-              } else if (kbartResult.status >= 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.unknown'),
-                  color: 'error',
-                  timeout: -1
-                })
-              }
-
-              if (isUpdate) {
-                this.step = 1
-                this.eventMessages.push({
-                  message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
-                  color: 'success',
-                  timeout: 4000
-                })
-                this.reload()
-
-                if (kbartResult?.data?.jobId) {
-                  this.loadImportJobStatus(kbartResult?.data?.jobId)
-                }
-              } else {
-                this.$router.push({
-                  name: '/package',
-                  params: {
-                    id: this.packageItem.id,
-                    kbartJob: kbartResult?.data?.jobId,
-                    initMessageCode: 'success.create'
-                  }
-                })
-              }
-            } else if (this.urlUpdate) {
-              const updateParams = {
-                activeGroup: this.activeGroup?.id
-              }
-              const sourceUpdateResult = await this.catchError({
-                promise: packageServices.triggerSourceUpdate(response.data.id, updateParams, this.cancelToken.token),
-                instance: this
-              })
-
-              if (sourceUpdateResult.status === 403) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.denied', [this.$i18n.tc('component.package.label')]),
-                  color: 'error',
-                  timeout: -1
-                })
-              } else if (sourceUpdateResult.status >= 400 && sourceUpdateResult.status < 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.processing', [this.$i18n.tc('component.package.label')]),
-                  color: 'error',
-                  timeout: -1
-                })
-              } else if (sourceUpdateResult.status >= 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.unknown', [this.$i18n.tc('component.package.label')]),
-                  color: 'error',
-                  timeout: -1
-                })
-              } else if (sourceUpdateResult.data?.status === 'SKIPPED' || sourceUpdateResult.data?.result === 'SKIPPED') {
-                this.eventMessages.push({
-                  message: this.$i18n.t(sourceUpdateResult.data.messageCode),
-                  color: 'warn',
-                  timeout: -1
-                })
-              }
-
-              if (isUpdate) {
-                this.step = 1
-                this.eventMessages.push({
-                  message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
-                  color: 'success',
-                  timeout: 4000
-                })
-                this.reload()
-
-                if (sourceUpdateResult?.data?.jobId) {
-                  this.loadImportJobStatus(sourceUpdateResult?.data?.jobId)
-                }
-              } else {
-                this.$router.push({
-                  name: '/package',
-                  params: {
-                    id: this.packageItem.id,
-                    kbartJob: sourceUpdateResult?.data?.jobId,
-                    initMessageCode: 'success.create'
-                  }
-                })
-              }
-            } else {
-              if (isUpdate) {
-                this.step = 1
-                this.reload()
-                this.eventMessages.push({
-                  message: this.$i18n.t((this.isEdit ? 'success.update' : 'success.create'), [this.$i18n.tc('component.package.label'), this.allNames.name]),
-                  color: 'success',
-                  timeout: 4000
-                })
-              } else {
-                this.$router.push({
-                  name: '/package',
-                  params: {
-                    id: this.packageItem.id,
-                    initMessageCode: 'success.create'
-                  }
-                })
-              }
-            }
-          } else {
-            if (response?.status === 409) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')]),
-                color: 'error',
-                timeout: -1
-              })
-            } else if (response?.status === 500) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.package.label')]),
-                color: 'error',
-                timeout: -1
-              })
-            } else {
-              this.eventMessages.push({
-                message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
-                color: 'error',
-                timeout: -1
-              })
-              this.errors = response?.data?.error || {}
-              this.updateStepErrors()
-              this.step = 1
-            }
-          }
-        }
-        else {
-          this.eventMessages.push({
-            message: this.$i18n.t('validation.hasErrors'),
-            color: 'error',
-            timeout: -1
-          })
+            }))
+          } : {}),
+          name: this.allNames.name,
+          version: this.version,
+          variantNames: this.allNames.alts.map(({ variantName, id, locale, variantType }) => ({
+            variantName,
+            locale,
+            variantType,
+            id: typeof id === 'number' ? id : null
+          })),
+          curatoryGroups: this.allCuratoryGroups,
+          ids: this.packageItem.ids.map(id => ({
+            value: id.value,
+            type: id.namespace
+          })),
+          subjects: this.packageItem.subjects.map(subject => ({
+            heading: subject.heading,
+            scheme: subject.scheme
+          })),
+          breakable: utils.asYesNo(this.packageItem.breakable),
+          consistent: utils.asYesNo(this.packageItem.consistent),
+          fixed: utils.asYesNo(this.packageItem.fixed),
+          nominalPlatform: this.packageItem.nominalPlatform?.id,
+          provider: this.packageItem.provider?.id,
+          activeGroup: this.activeGroup
         }
 
-        loading.stopLoading()
-      },
-      updateStepErrors () {
-        if ((this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids)) || (!this.isEdit && !!this.errors?.tipps)) {
-          this.step3Error = true
-        } else {
-          this.step3Error = false
+        if (!this.isUpdate || this.kbart || this.urlUpdate) {
+          newPackage.generateToken = true
         }
 
-        if ((this.isEdit && !this.isReadonly && !this.isValid) || (!this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids))) {
-          this.step2Error = true
-        } else {
-          this.step2Error = false
-        }
-      },
-      reset () {
-        if (!this.isEdit) {
-          this.packageItem.id = undefined
-          this.packageItem.name = undefined
-          this.packageItem.source = undefined
-          this.packageItem.status = undefined
-          this.packageItem.descriptionURL = undefined
-          this.packageItem.description = undefined
-          this.packageItem.scope = undefined
-          this.packageItem.global = undefined
-          this.packageItem.globalNote = undefined
-          this.packageItem.contentType = undefined
-          this.packageItem.consistent = undefined
-          this.packageItem.breakable = undefined
-          this.packageItem.fixed = undefined
-          this.packageItem.listStatus = undefined
-          this.packageItem.editStatus = undefined
-          this.packageItem.ids = []
-          this.packageItem.subjects = []
-          this.packageItem.provider = undefined // organisation
-          this.packageItem.nominalPlatform = undefined
-          this.allNames = { name: undefined, alts: [] }
-        }
-        this.kbart = undefined
-        this.eventMessages = []
-        this.reload(true)
-      },
-      async reload () {
-        if (this.isEdit) {
-          if(!loading.isLoading()) {
-            loading.startLoading()
-          }
-
-          this.errors = {}
-          this.toDelete = false
-          this.newTipps = []
-          this.updateStepErrors()
-
-          const result = await this.catchError({
-            promise: packageServices.get(this.id, this.cancelToken.token),
-            instance: this
-          })
-
-          if (result?.status === 200) {
-            this.mapRecord(result.data)
-          } else if (result?.status === 404) {
-            this.notFound = true
-          } else {
-            this.$router.push({ name: '/error' })
-          }
-
-          if (this.providerSelect) {
-            const providerResult = await this.catchError({
-              promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
-              instance: this
-            })
-
-            if (providerResult?.status === 200) {
-              const fullProvider = providerResult.data
-
-              if (fullProvider.titleNamespace) {
-                this.providerTitleNamespace = fullProvider.titleNamespace
-              }
-            }
-          }
-          await this.$refs.tipps.fetchTipps()
-
-          loading.stopLoading()
-        } else {
-          if (this.loggedIn && !!this.activeGroup) {
-            this.allCuratoryGroups = [this.activeGroup]
-          }
-        }
-      },
-      async fetchDefaultNamespace (providerId) {
-        const providerResult = await this.catchError({
-          promise: providerServices.get(providerId, this.cancelToken.token),
+        const response = await this.catchError({
+          promise: packageServices.createOrUpdate(newPackage, this.cancelToken.token),
           instance: this
         })
 
-        if (providerResult?.status === 200) {
-          const fullProvider = providerResult.data
+        if (response?.status < 400) {
+          this.packageItem.id = response.data.id
 
-          if (fullProvider.titleNamespace) {
-            this.providerTitleNamespace= fullProvider.titleNamespace
-          }
-        }
-      },
-      async loadImportJobStatus (jobId) {
-        var finished = false
-        var jobInfo = {
-          id: jobId,
-          progress: undefined,
-          result: 'info',
-          dryRun: undefined,
-          dismissed: false
-        }
+          if (this.kbart) {
+            const kbartPars = {
+              activeGroup: this.activeGroup?.id,
+              titleIdNamespace: this.kbart.selectedNamespace?.id || this.sourceItem?.targetNamespace?.id,
+              dryRun: this.kbart.dryRun,
+              addOnly: this.kbart.addOnly,
+              deleteMissing: this.kbart.deleteMissing
+            }
+            const kbartResult = await this.catchError({
+              promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, kbartPars, this.cancelToken.token),
+              instance: this
+            })
 
-        while (!finished) {
-          const jobResult = await this.catchError({
-            promise: jobServices.get(jobId, false, this.cancelToken.token),
-            instance: this
-          })
+            this.kbart = undefined
 
-          if (jobResult?.status < 400) {
-            jobInfo.progress = jobResult.data.progress
+            if (kbartResult.status === 403) {
+              this.eventMessages.push({
+                message: this.$i18n.t('kbart.transmission.error.denied'),
+                color: 'error',
+                timeout: -1
+              })
+            } else if (kbartResult.status >= 400 && kbartResult.status < 500) {
+              this.eventMessages.push({
+                message: this.$i18n.t('kbart.transmission.error.processing'),
+                color: 'error',
+                timeout: -1
+              })
+            } else if (kbartResult.status >= 500) {
+              this.eventMessages.push({
+                message: this.$i18n.t('kbart.transmission.error.unknown'),
+                color: 'error',
+                timeout: -1
+              })
+            }
 
-            if (jobResult.data.finished) {
-              jobInfo.progress = undefined
-              jobInfo.dryRun = jobResult.data.job_result.dryRun
-
-              if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
-                jobInfo.result = 'error'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobResult.data.messageCode || 'kbart.transmission.error.processing'),
-                  color: 'error',
-                  importResult: true,
-                  timeout: -1
-                })
-              } else if (!!jobResult.data.job_result?.badrows || jobResult.data.job_result.result === 'SKIPPED') {
-                jobInfo.result = 'warn'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobResult.data.job_result?.messageCode || 'kbart.transmission.warn.skipped'),
-                  color: 'warn',
-                  importResult: true,
-                  timeout: -1
-                })
-
-                if (jobResult.data.job_result.matchingJob) {
-                  this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
-                }
-              } else {
-                jobInfo.result = 'success'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobInfo.dryRun ? 'kbart.dryRun.success' : 'kbart.transmission.success'),
-                  color: 'success',
-                  importResult: true,
-                  timeout: -1
-                })
-
-                if (jobResult.data.job_result.matchingJob) {
-                  this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
-                }
-              }
+            if (isUpdate) {
+              this.step = 1
+              this.eventMessages.push({
+                message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
+                color: 'success',
+                timeout: 4000
+              })
               this.reload()
 
-              finished = true
+              if (kbartResult?.data?.jobId) {
+                this.loadImportJobStatus(kbartResult?.data?.jobId)
+              }
             } else {
-              await this.wait(500)
+              this.$router.push({
+                name: '/package',
+                params: {
+                  id: this.packageItem.id,
+                  kbartJob: kbartResult?.data?.jobId,
+                  initMessageCode: 'success.create'
+                }
+              })
+            }
+          } else if (this.urlUpdate) {
+            const updateParams = {
+              activeGroup: this.activeGroup?.id
+            }
+            const sourceUpdateResult = await this.catchError({
+              promise: packageServices.triggerSourceUpdate(response.data.id, updateParams, this.cancelToken.token),
+              instance: this
+            })
+
+            if (sourceUpdateResult.status === 403) {
+              this.eventMessages.push({
+                message: this.$i18n.t('kbart.transmission.error.denied', [this.$i18n.tc('component.package.label')]),
+                color: 'error',
+                timeout: -1
+              })
+            } else if (sourceUpdateResult.status >= 400 && sourceUpdateResult.status < 500) {
+              this.eventMessages.push({
+                message: this.$i18n.t('kbart.transmission.error.processing', [this.$i18n.tc('component.package.label')]),
+                color: 'error',
+                timeout: -1
+              })
+            } else if (sourceUpdateResult.status >= 500) {
+              this.eventMessages.push({
+                message: this.$i18n.t('kbart.transmission.error.unknown', [this.$i18n.tc('component.package.label')]),
+                color: 'error',
+                timeout: -1
+              })
+            } else if (sourceUpdateResult.data?.status === 'SKIPPED' || sourceUpdateResult.data?.result === 'SKIPPED') {
+              this.eventMessages.push({
+                message: this.$i18n.t(sourceUpdateResult.data.messageCode),
+                color: 'warn',
+                timeout: -1
+              })
+            }
+
+            if (isUpdate) {
+              this.step = 1
+              this.eventMessages.push({
+                message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
+                color: 'success',
+                timeout: 4000
+              })
+              this.reload()
+
+              if (sourceUpdateResult?.data?.jobId) {
+                this.loadImportJobStatus(sourceUpdateResult?.data?.jobId)
+              }
+            } else {
+              this.$router.push({
+                name: '/package',
+                params: {
+                  id: this.packageItem.id,
+                  kbartJob: sourceUpdateResult?.data?.jobId,
+                  initMessageCode: 'success.create'
+                }
+              })
             }
           } else {
-            jobInfo.result = 'error'
-            finished = true
+            if (isUpdate) {
+              this.step = 1
+              this.reload()
+              this.eventMessages.push({
+                message: this.$i18n.t((this.isEdit ? 'success.update' : 'success.create'), [this.$i18n.tc('component.package.label'), this.allNames.name]),
+                color: 'success',
+                timeout: 4000
+              })
+            } else {
+              this.$router.push({
+                name: '/package',
+                params: {
+                  id: this.packageItem.id,
+                  initMessageCode: 'success.create'
+                }
+              })
+            }
           }
-
-          this.importJob = jobInfo
+        } else {
+          if (response?.status === 409) {
+            this.eventMessages.push({
+              message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')]),
+              color: 'error',
+              timeout: -1
+            })
+          } else if (response?.status === 500) {
+            this.eventMessages.push({
+              message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.package.label')]),
+              color: 'error',
+              timeout: -1
+            })
+          } else {
+            this.eventMessages.push({
+              message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
+              color: 'error',
+              timeout: -1
+            })
+            this.errors = response?.data?.error || {}
+            this.updateStepErrors()
+            this.step = 1
+          }
         }
-      },
-      async loadMatchingJobStatus (jobId) {
-        var finished = false
-        var jobInfo = {
-          id: jobId,
-          progress: undefined,
-          result: 'info',
-          messageCode: undefined,
-          dismissed: false
+      }
+      else {
+        this.eventMessages.push({
+          message: this.$i18n.t('validation.hasErrors'),
+          color: 'error',
+          timeout: -1
+        })
+      }
+
+      loading.stopLoading()
+    },
+    updateStepErrors () {
+      if ((this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids)) || (!this.isEdit && !!this.errors?.tipps)) {
+        this.step3Error = true
+      } else {
+        this.step3Error = false
+      }
+
+      if ((this.isEdit && !this.isReadonly && !this.isValid) || (!this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids))) {
+        this.step2Error = true
+      } else {
+        this.step2Error = false
+      }
+    },
+    reset () {
+      if (!this.isEdit) {
+        this.packageItem.id = undefined
+        this.packageItem.name = undefined
+        this.packageItem.source = undefined
+        this.packageItem.status = undefined
+        this.packageItem.descriptionURL = undefined
+        this.packageItem.description = undefined
+        this.packageItem.scope = undefined
+        this.packageItem.global = undefined
+        this.packageItem.globalNote = undefined
+        this.packageItem.contentType = undefined
+        this.packageItem.consistent = undefined
+        this.packageItem.breakable = undefined
+        this.packageItem.fixed = undefined
+        this.packageItem.listStatus = undefined
+        this.packageItem.editStatus = undefined
+        this.packageItem.ids = []
+        this.packageItem.subjects = []
+        this.packageItem.provider = undefined // organisation
+        this.packageItem.nominalPlatform = undefined
+        this.allNames = { name: undefined, alts: [] }
+      }
+      this.kbart = undefined
+      this.eventMessages = []
+      this.reload(true)
+    },
+    async reload () {
+      if (this.isEdit) {
+        if(!loading.isLoading()) {
+          loading.startLoading()
         }
 
-        while (!finished) {
-          const jobResult = await this.catchError({
-            promise: jobServices.get(jobId, false, this.cancelToken?.token),
+        this.errors = {}
+        this.toDelete = false
+        this.newTipps = []
+        this.updateStepErrors()
+
+        const result = await this.catchError({
+          promise: packageServices.get(this.id, this.cancelToken.token),
+          instance: this
+        })
+
+        if (result?.status === 200) {
+          this.mapRecord(result.data)
+        } else if (result?.status === 404) {
+          this.notFound = true
+        } else {
+          this.$router.push({ name: '/error' })
+        }
+
+        if (this.providerSelect) {
+          const providerResult = await this.catchError({
+            promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
             instance: this
           })
 
-          if (jobResult.status < 400) {
-            jobInfo.progress = jobResult.data.progress
+          if (providerResult?.status === 200) {
+            const fullProvider = providerResult.data
 
-            if (jobResult.data.finished) {
-              jobInfo.progress = undefined
-
-              if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
-                jobInfo.result = 'error'
-                jobInfo.messageCode = jobResult.data.job_result?.messageCode || 'kbart.titleMatch.failure'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobResult.data.job_result?.messageCode),
-                  color: 'error',
-                  timeout: -1,
-                  matchingResult: true
-                })
-              } else {
-                jobInfo.result = 'success'
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.titleMatch.success'),
-                  color: 'success',
-                  timeout: -1,
-                  importResult: true
-                })
-              }
-
-              finished = true
-            } else {
-              await this.wait(500)
+            if (fullProvider.titleNamespace) {
+              this.providerTitleNamespace = fullProvider.titleNamespace
             }
-          } else {
-            jobInfo.result = 'error'
-            finished = true
           }
-
-          this.matchingJob = jobInfo
         }
-      },
-      async getActiveJobs () {
+        await this.$refs.tipps.fetchTipps()
+
+        loading.stopLoading()
+      } else {
+        if (this.loggedIn && !!this.activeGroup) {
+          this.allCuratoryGroups = [this.activeGroup]
+        }
+      }
+    },
+    async fetchDefaultNamespace (providerId) {
+      const providerResult = await this.catchError({
+        promise: providerServices.get(providerId, this.cancelToken.token),
+        instance: this
+      })
+
+      if (providerResult?.status === 200) {
+        const fullProvider = providerResult.data
+
+        if (fullProvider.titleNamespace) {
+          this.providerTitleNamespace= fullProvider.titleNamespace
+        }
+      }
+    },
+    async loadImportJobStatus (jobId) {
+      var finished = false
+      var jobInfo = {
+        id: jobId,
+        progress: undefined,
+        result: 'info',
+        dryRun: undefined,
+        dismissed: false
+      }
+
+      while (!finished) {
         const jobResult = await this.catchError({
-          promise: jobServices.search({ linkedItem: this.packageItem.id }, this.cancelToken.token),
+          promise: jobServices.get(jobId, false, this.cancelToken.token),
+          instance: this
+        })
+
+        if (jobResult?.status < 400) {
+          jobInfo.progress = jobResult.data.progress
+
+          if (jobResult.data.finished) {
+            jobInfo.progress = undefined
+            jobInfo.dryRun = jobResult.data.job_result.dryRun
+
+            if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
+              jobInfo.result = 'error'
+              this.eventMessages.push({
+                message: this.$i18n.t(jobResult.data.messageCode || 'kbart.transmission.error.processing'),
+                color: 'error',
+                importResult: true,
+                timeout: -1
+              })
+            } else if (!!jobResult.data.job_result?.badrows || jobResult.data.job_result.result === 'SKIPPED') {
+              jobInfo.result = 'warn'
+              this.eventMessages.push({
+                message: this.$i18n.t(jobResult.data.job_result?.messageCode || 'kbart.transmission.warn.skipped'),
+                color: 'warn',
+                importResult: true,
+                timeout: -1
+              })
+
+              if (jobResult.data.job_result.matchingJob) {
+                this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
+              }
+            } else {
+              jobInfo.result = 'success'
+              this.eventMessages.push({
+                message: this.$i18n.t(jobInfo.dryRun ? 'kbart.dryRun.success' : 'kbart.transmission.success'),
+                color: 'success',
+                importResult: true,
+                timeout: -1
+              })
+
+              if (jobResult.data.job_result.matchingJob) {
+                this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
+              }
+            }
+            this.reload()
+
+            finished = true
+          } else {
+            await this.wait(500)
+          }
+        } else {
+          jobInfo.result = 'error'
+          finished = true
+        }
+
+        this.importJob = jobInfo
+      }
+    },
+    async loadMatchingJobStatus (jobId) {
+      var finished = false
+      var jobInfo = {
+        id: jobId,
+        progress: undefined,
+        result: 'info',
+        messageCode: undefined,
+        dismissed: false
+      }
+
+      while (!finished) {
+        const jobResult = await this.catchError({
+          promise: jobServices.get(jobId, false, this.cancelToken?.token),
           instance: this
         })
 
         if (jobResult.status < 400) {
-          if (jobResult.data?.data.length > 0) {
-            this.activeJobs = true
+          jobInfo.progress = jobResult.data.progress
 
-            jobResult.data.data.forEach((job) => {
-              if (job.type?.value === 'PackageTitleMatch') {
-                this.loadMatchingJobStatus(job.uuid, job.type.value)
-              }
-              else {
-                this.loadImportJobStatus(job.uuid, job.type.value)
-              }
-            })
+          if (jobResult.data.finished) {
+            jobInfo.progress = undefined
+
+            if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
+              jobInfo.result = 'error'
+              jobInfo.messageCode = jobResult.data.job_result?.messageCode || 'kbart.titleMatch.failure'
+              this.eventMessages.push({
+                message: this.$i18n.t(jobResult.data.job_result?.messageCode),
+                color: 'error',
+                timeout: -1,
+                matchingResult: true
+              })
+            } else {
+              jobInfo.result = 'success'
+              this.eventMessages.push({
+                message: this.$i18n.t('kbart.titleMatch.success'),
+                color: 'success',
+                timeout: -1,
+                importResult: true
+              })
+            }
+
+            finished = true
+          } else {
+            await this.wait(500)
           }
-        }
-      },
-      mapRecord (data) {
-        this.updateUrl = data._links?.update?.href || null
-        this.deleteUrl = data._links?.delete?.href || null
-        this.packageItem.id = data.id
-        this.uuid = data.uuid
-        this.currentName = data.name
-        this.packageItem.name = data.name
-        this.packageItem.source = data.source
-        this.packageItem.status = data.status
-        this.packageItem.descriptionURL = data.descriptionURL
-        this.packageItem.description = data.description
-        this.packageItem.scope = data.scope
-        this.packageItem.global = data.global?.name
-        this.packageItem.globalNote = data.globalNote
-        this.packageItem.consistent = data.consistent?.name === 'Yes'
-        this.packageItem.breakable = data.breakable?.name === 'Yes'
-        this.packageItem.fixed = data.fixed?.name === 'Yes'
-        this.packageItem.provider = data.provider
-        this.packageItem.nominalPlatform = data.nominalPlatform
-        this.packageItem.contentType = data.contentType
-        this.packageItem.listStatus = data.listStatus
-        this.packageItem.editStatus = data.editStatus
-        this.version = data.version
-        this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
-          id,
-          value,
-          namespace: namespace.value,
-          nslabel: namespace.name || namespace.value,
-          isDeletable: !!this.updateUrl
-        }))
-        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({
-          ...variantName,
-          isDeletable: !!this.updateUrl
-        }))
-        this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({
-          id,
-          name,
-          isDeletable: !!this.updateUrl
-        }))
-        this.reviewRequests = data._embedded.reviewRequests
-        this.providerSelect = data.provider
-        this.platformSelect = data.nominalPlatform
-        this.titleCount = data._tippCount
-        this.allNames = {
-          name: data.name,
-          alts: this.allAlternateNames
-        }
-        this.packageItem.subjects = data._embedded.subjects.map(subject => ({
-          ...subject,
-          isDeletable: !!this.updateUrl
-        }))
-        this.listVerifiedDate = data.listVerifiedDate
-
-        if (data.source && this.$refs.source) {
-          this.sourceItem = data.source
-          this.$refs.source.fetch(data.source.id)
+        } else {
+          jobInfo.result = 'error'
+          finished = true
         }
 
-        this.lastUpdated = data.lastUpdated
-        this.dateCreated = data.dateCreated
-
-        this.overviewStates.listStatus = data.listStatus
-        this.overviewStates.contentType = data.contentType
-        this.overviewStates.global = data.global
-
-        document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
-      },
-      triggerUpdate (checked) {
-        this.urlUpdate = checked
-      },
-      wait (ms) {
-        return new Promise((resolve) => { setTimeout(resolve, ms) })
-      },
-      markDeleted (val) {
-        this.toDelete = val
+        this.matchingJob = jobInfo
       }
+    },
+    async getActiveJobs () {
+      const jobResult = await this.catchError({
+        promise: jobServices.search({ linkedItem: this.packageItem.id }, this.cancelToken.token),
+        instance: this
+      })
+
+      if (jobResult.status < 400) {
+        if (jobResult.data?.data.length > 0) {
+          this.activeJobs = true
+
+          jobResult.data.data.forEach((job) => {
+            if (job.type?.value === 'PackageTitleMatch') {
+              this.loadMatchingJobStatus(job.uuid, job.type.value)
+            }
+            else {
+              this.loadImportJobStatus(job.uuid, job.type.value)
+            }
+          })
+        }
+      }
+    },
+    mapRecord (data) {
+      this.updateUrl = data._links?.update?.href || null
+      this.deleteUrl = data._links?.delete?.href || null
+      this.packageItem.id = data.id
+      this.uuid = data.uuid
+      this.currentName = data.name
+      this.packageItem.name = data.name
+      this.packageItem.source = data.source
+      this.packageItem.status = data.status
+      this.packageItem.descriptionURL = data.descriptionURL
+      this.packageItem.description = data.description
+      this.packageItem.scope = data.scope
+      this.packageItem.global = data.global?.name
+      this.packageItem.globalNote = data.globalNote
+      this.packageItem.consistent = data.consistent?.name === 'Yes'
+      this.packageItem.breakable = data.breakable?.name === 'Yes'
+      this.packageItem.fixed = data.fixed?.name === 'Yes'
+      this.packageItem.provider = data.provider
+      this.packageItem.nominalPlatform = data.nominalPlatform
+      this.packageItem.contentType = data.contentType
+      this.packageItem.listStatus = data.listStatus
+      this.packageItem.editStatus = data.editStatus
+      this.version = data.version
+      this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
+        id,
+        value,
+        namespace: namespace.value,
+        nslabel: namespace.name || namespace.value,
+        isDeletable: !!this.updateUrl
+      }))
+      this.allAlternateNames = data._embedded.variantNames.map(variantName => ({
+        ...variantName,
+        isDeletable: !!this.updateUrl
+      }))
+      this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({
+        id,
+        name,
+        isDeletable: !!this.updateUrl
+      }))
+      this.reviewRequests = data._embedded.reviewRequests
+      this.providerSelect = data.provider
+      this.platformSelect = data.nominalPlatform
+      this.titleCount = data._tippCount
+      this.allNames = {
+        name: data.name,
+        alts: this.allAlternateNames
+      }
+      this.packageItem.subjects = data._embedded.subjects.map(subject => ({
+        ...subject,
+        isDeletable: !!this.updateUrl
+      }))
+      this.listVerifiedDate = data.listVerifiedDate
+
+      if (data.source && this.$refs.source) {
+        this.sourceItem = data.source
+        this.$refs.source.fetch(data.source.id)
+      }
+
+      this.lastUpdated = data.lastUpdated
+      this.dateCreated = data.dateCreated
+
+      this.overviewStates.listStatus = data.listStatus
+      this.overviewStates.contentType = data.contentType
+      this.overviewStates.global = data.global
+
+      document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
+    },
+    triggerUpdate (checked) {
+      this.urlUpdate = checked
+    },
+    wait (ms) {
+      return new Promise((resolve) => { setTimeout(resolve, ms) })
+    },
+    markDeleted (val) {
+      this.toDelete = val
     }
   }
+}
 </script>
