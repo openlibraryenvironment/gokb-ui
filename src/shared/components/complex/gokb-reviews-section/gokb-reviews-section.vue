@@ -283,6 +283,8 @@
             title: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'start',
             sortable: false,
+            nowrap: true,
+            width: '100%',
             key: 'popup'
           },
           {
@@ -296,7 +298,7 @@
             title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             sortable: true,
-            width: '20%',
+            nowrap: true,
             key: 'dateCreated'
           }
         ]
@@ -325,7 +327,7 @@
             title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             sortable: true,
-            width: '20%',
+            nowrap: true,
             key: 'dateCreated'
           }
         ]
@@ -334,13 +336,13 @@
             title: this.$i18n.t('component.review.componentToReview.label'),
             align: 'start',
             sortable: false,
+            width: '100%',
             key: 'popup'
           },
           {
             title: this.$i18n.t('component.review.type.label'),
             align: 'start',
             sortable: false,
-            width: '10%',
             key: 'type'
           },
           {
@@ -348,20 +350,20 @@
             align: 'start',
             sortable: false,
             width: '20%',
+            nowrap: true,
             key: 'stdDescLabel'
           },
           {
             title: this.$i18n.t('component.general.status.label'),
             align: 'start',
             sortable: false,
-            width: '40px',
             key: 'statusLabel'
           },
           {
             title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             sortable: true,
-            width: '15%',
+            nowrap: true,
             value: 'dateCreated'
           }
         ]

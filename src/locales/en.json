@@ -1225,6 +1225,12 @@
           "add": {
             "label": "Generate new title",
             "message": "Please confirm the creation of a new reference title with ALL remaining identifiers of the reviewed package title."
+          },
+          "tippCleanup": {
+            "confirm": {
+              "label": "Cleanup",
+              "message": "Please confirm the cleanup of all archived package titles connected to the same reference title."
+            }
           }
         }
       },

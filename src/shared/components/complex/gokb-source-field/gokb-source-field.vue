@@ -8,6 +8,7 @@
       v-model="url"
       :label="$t('component.source.url')"
       :readonly="readonly"
+      replace-date
     />
     <v-row>
       <v-col cols="3">

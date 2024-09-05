@@ -90,6 +90,7 @@
         <v-col cols="auto">
           <v-btn
             icon
+            flat
             :title="$t('btn.refresh')"
             class="mt-n1"
             @click="fetchTitle"
@@ -103,7 +104,7 @@
 
       <v-row v-if="!!ids?.length > 0">
         <v-col>
-          <div v-if="isReviewedCard && isOtherCardSelected && mergeEnabled && isEditable && isTippComponent">
+          <div v-if="isReviewedCard && isOtherCardSelected && mergeEnabled && isEditable && isTitleComponent">
             <v-chip
               class="mb-1 font-weight-bold"
               color="info"
@@ -234,7 +235,7 @@
       </div>
       <v-row class="mt-3">
         <v-col>
-          <v-row v-if="isEditable && (!isReviewedCard || !mergeEnabled || !isOtherCardSelected)">
+          <v-row v-if="isEditable && (!isReviewedCard || !mergeEnabled || !isOtherCardSelected || !isTitleComponent)">
             <v-col>
               <gokb-button
                 :disabled="selectedIdItems.length === 0 && !isNamePending"
@@ -265,20 +266,20 @@
           <v-row v-if="isCardSelected && isLinkCandidate">
             <v-col>
               <gokb-button
-                primary
+                color="primary"
                 @click="showConfirmSelectedCard('link')"
               >
                 {{ $i18n.t('component.review.edit.components.link.confirmLink.label') }}
               </gokb-button>
             </v-col>
           </v-row>
-          <v-row v-else-if="isOtherCardSelected && isMergeCandidate">
+          <v-row v-else-if="isMergeCandidate && (isOtherCardSelected || isTippComponent)">
             <v-col>
               <gokb-button
-                primary
+                color="primary"
                 @click="showConfirmSelectedCard('merge')"
               >
-                {{ $i18n.t('component.review.edit.components.link.selectDeprecated.label')  }}
+                {{ isTippComponent ? $i18n.t('component.review.edit.components.tippCleanup.confirm.label') : $i18n.t('component.review.edit.components.link.selectDeprecated.label')  }}
               </gokb-button>
             </v-col>
           </v-row>
@@ -292,7 +293,6 @@
   import BaseComponent from '@/shared/components/base-component'
   import titleServices from '@/shared/services/title-services'
   import tippServices from '@/shared/services/tipp-services'
-  import identifierServices from '@/shared/services/identifier-services'
   import namespaceServices from '@/shared/services/namespace-services'
   import genericEntityServices from '@/shared/services/generic-entity-services'
   import GokbTitleIdsField from '@/shared/components/simple/gokb-title-ids-field/gokb-title-ids-field.vue'
@@ -525,7 +525,7 @@
         else return true
       },
       isMergeCandidate () {
-        return !this.isDeleted && this.mergeEnabled && (this.route === '/title' || this.route === '/package-title')
+        return !this.isDeleted && this.mergeEnabled && (this.route === '/title' || (this.route === '/package-title' && this.isReviewedCard))
       },
       isLinkCandidate () {
         return !this.isDeleted && this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
@@ -628,7 +628,7 @@
 
         if (type === 'merge') {
           if (this.isReviewedCard) {
-            this.submitConfirmationMessage = { text: 'component.review.edit.components.merge.confirm.message', vars: [cardReference] }
+            this.submitConfirmationMessage = { text: this.isTippComponent ? 'component.review.edit.components.tippCleanup.confirm.message' : 'component.review.edit.components.merge.confirm.message', vars: [cardReference] }
             this.parameterToConfirm = 'merge'
           } else {
             this.submitConfirmationMessage = { text: 'component.review.edit.components.link.confirmMerge.message', vars: [cardReference] }
@@ -696,7 +696,7 @@
         this.idsVisible = this.updateVisibleIdentifiers()
       },
       getPendingStatus (id) {
-        if ( !this.isReviewedCard || (this.isReviewedCard && !this.isOtherCardSelected) || this.singleCardReview){
+        if ( !this.isReviewedCard || (this.isReviewedCard && !this.isOtherCardSelected) || this.singleCardReview || !this.isTitleComponent){
           return null
         } else {
           return this.getMergeStatus(id)

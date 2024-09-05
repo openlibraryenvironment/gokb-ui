@@ -82,14 +82,6 @@
         return [
           [
             {
-              type: 'GokbSearchEntityField',
-              name: 'componentToReview',
-              value: 'componentToReview',
-              properties: {
-                label: this.$i18n.t('component.review.componentToReview.label'),
-              }
-            },
-            {
               type: 'GokbSelectField',
               name: 'linkedComponentType',
               value: 'linkedComponentType',

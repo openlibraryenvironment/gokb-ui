@@ -61,7 +61,7 @@ export default {
     buildDateString (ts) {
       if (ts && ts.length > 10) {
         var obj = new Date(ts)
-        obj.setHours(obj.getHours() + 2)
+        obj.setHours(obj.getHours() + (import.meta.env.VITE_UTC_OFFSET || 0))
 
         return obj.toISOString().substring(0, 10)
       }

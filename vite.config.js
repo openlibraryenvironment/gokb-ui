@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { VitePWA } from 'vite-plugin-pwa'
 import vuetify from 'vite-plugin-vuetify'
 import { execSync } from 'child_process'
 import path from 'path'
@@ -15,6 +16,7 @@ export default defineConfig({
   base: process.env.VITE_PUBLIC_PATH || '/gokb-ui', // base path for the application
   plugins: [
     vue(),
+    VitePWA(),
     vuetify({
       autoImport: {
         labs: true,

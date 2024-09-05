@@ -44,7 +44,7 @@
             </gokb-button>
             <gokb-button
               class="ml-4"
-              :disabled="!editedVal || editedVal === currentName || activeApiError"
+              :disabled="!editedVal || editedVal === currentName || !!activeApiError"
               is-submit
             >
               {{ $i18n.t('btn.confirm') }}

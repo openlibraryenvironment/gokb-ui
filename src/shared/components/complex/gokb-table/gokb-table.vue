@@ -353,8 +353,8 @@
       localHeaders () {
         return [
           ...this.headers,
-          { value: '_pending', sortable: false },
-          { value: 'action', sortable: false }
+          { value: '_pending', sortable: false},
+          { value: 'action', sortable: false, nowrap: true }
         ].filter(header => (
           (!this.editable ? header.value !== '_pending' : true) &&
           (!this.actions ? header.value !== 'action' : true)

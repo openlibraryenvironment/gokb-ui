@@ -2,12 +2,17 @@
   <v-text-field
     v-model="localValue"
     :label="label"
+    density="compact"
     :messages="successMessage"
-    :density="dense ? 'dense' : 'default'"
     variant="underlined"
     disabled
     persistent-placeholder
   >
+    <template #label>
+      <span class="mt-n4">
+        {{ label }}
+      </span>
+    </template>
     <template
       v-slot:append
       v-if="!!urlBase"
@@ -77,8 +82,7 @@
     },
     methods: {
       copyUrl () {
-        console.log(this.localValue)
-        const url = import.meta.env.VITE_BASE_URL + this.path + '/' + this.$attrs.value
+        const url = import.meta.env.VITE_BASE_URL + this.path + '/' + this.localValue
         navigator.clipboard.writeText(url)
         this.copied = true
       }

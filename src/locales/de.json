@@ -1225,6 +1225,12 @@
           "add": {
             "label": "Neuen Referenztitel erzeugen",
             "message": "Bitte bestätigen Sie die Erzeugung eines neuen Referenztitels mit ALLEN verbleibenden Identifikatoren des zu prüfenden Pakettitels."
+          },
+          "tippCleanup": {
+            "confirm": {
+              "label": "Bereinigen",
+              "message": "Bitte bestätigen Sie die Bereinigung der archivierten Pakettitel mit dem gleichen Referenztitel."
+            }
           }
         }
       },

@@ -70,6 +70,13 @@ const api = (baseServices) => ({
       url,
       data,
     }, cancelToken)
+  },
+  cleanup (id, cancelToken) {
+    const url = import.meta.env.VITE_API_BASE_URL + `${TIPP_PATH}/${id}/merge`
+    return baseServices.request({
+      method: 'PUT',
+      url
+    }, cancelToken)
   }
 })
 

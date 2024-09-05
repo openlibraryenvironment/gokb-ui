@@ -211,7 +211,7 @@
         return !this.updateUrl
       },
       showComponentCards () {
-        return this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title'
+        return this.reviewItem?.component?.route === '/title' || this.reviewItem?.component?.route === '/package-title'
       },
       isValid () {
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)

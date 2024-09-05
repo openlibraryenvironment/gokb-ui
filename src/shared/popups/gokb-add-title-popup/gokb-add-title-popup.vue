@@ -48,7 +48,7 @@
                   <gokb-uuid-field
                     v-if="!!status"
                     :label="$t('component.general.uuid.label')"
-                    :value="uuid"
+                    v-model="uuid"
                     path="/package-title"
                     dense
                   />
@@ -670,8 +670,8 @@
     },
     watch: {
       'packageTitleItem.title'(title) {
-        if (!!title && !this.isEdit) {
-          if (this.packageTitleItem.ids?.length == 0) {
+        if (!this.status) {
+          if (!!title) {
             this.packageTitleItem.ids = title._embedded.ids
               .filter(({ namespace }) => (
                 ['issn', 'eissn', 'isbn', 'pisbn', 'zdb'].includes(namespace.value))
@@ -683,29 +683,20 @@
                 nslabel: (namespace.name || namespace.value),
                 isDeletable: true
               }))
-          }
-          if (!this.allNames.name) {
             this.allNames.name = title.name
-          }
 
-          if (!!title.firstAuthor) {
-            this.packageTitleItem.firstAuthor = title.firstAuthor
+            if (title.type === 'Book') {
+              this.packageTitleItem.firstAuthor = title.firstAuthor
+              this.packageTitleItem.firstEditor = title.firstEditor
+              this.packageTitleItem.dateFirstInPrint = title.dateFirstInPrint
+              this.packageTitleItem.dateFirstOnline = title.dateFirstOnline
+              this.packageTitleItem.editionStatement = title.editionStatement
+              this.packageTitleItem.volumeNumber = title.volumeNumber
+            }
+            this.packageTitleItem.publisherName = title.publisher?.name || undefined
           }
-
-          if (!!title.firstEditor) {
-            this.packageTitleItem.firstEditor = title.firstEditor
-          }
-
-          if (!!title.dateFirstInPrint) {
-            this.packageTitleItem.dateFirstInPrint = title.dateFirstInPrint
-          }
-
-          if (!!title.dateFirstOnline) {
-            this.packageTitleItem.dateFirstOnline = title.dateFirstOnline
-          }
-
-          if (!this.packageTitleItem.publisherName && !!title.publisher) {
-            this.packageTitleItem.publisherName = title.publisher.name
+          else {
+            this.packageTitleItem.ids = []
           }
         }
       }

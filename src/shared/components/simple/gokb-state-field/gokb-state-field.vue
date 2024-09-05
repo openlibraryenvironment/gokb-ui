@@ -46,7 +46,7 @@
         }))
       },
       localizeValue (val) {
-        return this.$i18n ? this.$i18n.t(this.messagePath + '.' + val + '.label') : undefined
+        return this.$i18n ? this.$i18n.t(this.messagePath + '.' + val + '.label') : val
       },
       transform (result) {
         if (result?.data?._embedded) {

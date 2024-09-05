@@ -20,7 +20,8 @@
             :readonly="isReadonly"
             :label="$t('component.title.type.label')"
             class="ml-4"
-            :items="allTypes"
+            :static-items="allTypes"
+            :init-item="currentType"
             required
           />
         </v-col>
@@ -67,6 +68,7 @@
               :label="$t('component.title.OAStatus.label')"
               :readonly="isReadonly"
               :api-errors="errors.OAStatus"
+              :init-item="titleItem.OAStatus"
               dense
             />
           </v-col>
@@ -79,6 +81,7 @@
               :label="$t('component.title.medium.label')"
               :readonly="isReadonly"
               :api-errors="errors.medium"
+              :init-item="titleItem.medium"
               dense
             />
           </v-col>

@@ -101,18 +101,11 @@
     data () {
       return {
         menu: false,
-        displayDate: undefined
+        displayDate: undefined,
+        pickerDateValue: undefined
       }
     },
     computed: {
-      pickerDateValue: {
-        get () {
-          return new Date(this.displayDate || this.modelValue)
-        },
-        set (localDate) {
-          this.displayDate = localDate?.toISOString().substring(0, 10) || undefined
-        }
-      },
       combinedRules () {
         return this.rules || [
           value => !this.required || !!value || this.$i18n.t('validation.missingValue'),
@@ -121,12 +114,16 @@
       }
     },
     watch: {
+      pickerDateValue (date) {
+        this.displayDate = date.toLocaleString('sv').substring(0, 10) || undefined
+      },
       displayDate (date) {
         this.$emit('update:model-value', date)
       }
     },
     mounted () {
       this.displayDate = this.modelValue
+      this.pickerDateValue = this.modelValue ? new Date(this.modelValue) : undefined
     }
   }
 </script>
