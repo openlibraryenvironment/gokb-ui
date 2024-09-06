@@ -83,7 +83,10 @@
             {
               type: 'GokbSearchPublisherField',
               name: 'publisher',
-              value: 'publisherId'
+              value: 'publisherId',
+              properties: {
+                label: this.$i18n.tc('component.title.publisher.label')
+              }
             }
           ],
           [

@@ -548,6 +548,9 @@
     "global": {
       "placeholder": "Titles, Packages, Providers"
     },
+    "generic": {
+      "label": "Name, UUID, Identifiers"
+    },
     "results": {
       "label": "Results",
       "empty": "No Results"

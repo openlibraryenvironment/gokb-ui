@@ -22,7 +22,7 @@
     <template #search>
       <gokb-text-field
         v-model="searchFilters.q"
-        :label="$t('component.general.name')"
+        :label="$t('search.generic.label')"
       />
       <v-spacer class="ms-4" />
       <gokb-search-platform-field

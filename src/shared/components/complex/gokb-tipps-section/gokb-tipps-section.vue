@@ -176,14 +176,7 @@
             <gokb-text-field
               v-model="searchFilters.q"
               class="pt-3"
-              :label="$tc('component.title.name.label')"
-            />
-          </v-col>
-          <v-col>
-            <gokb-text-field
-              v-model="searchFilters.ids"
-              class="pt-3"
-              :label="$tc('component.identifier.label')"
+              :label="$tc('search.generic.label')"
             />
           </v-col>
           <v-col>

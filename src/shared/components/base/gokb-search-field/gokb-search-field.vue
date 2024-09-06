@@ -4,11 +4,11 @@
     :class="[(dense ? '' : 'mt-2 pt-4')]"
   >
     <div
-      v-if="localLabel"
+      v-if="!!localLabel"
       style="font-size:0.8rem"
     >
       <label class="text-caption">
-        {{ label }}
+        {{ localLabel }}
         <span
           v-if="required"
           style="color:red"

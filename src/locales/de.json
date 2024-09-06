@@ -548,6 +548,9 @@
     "global": {
       "placeholder": "Titel, Pakete, Verlage"
     },
+    "generic": {
+      "label": "Name, UUID, Identifikatoren"
+    },
     "results": {
       "label": "Ergebnisse",
       "empty": "Keine Ergebnisse"
