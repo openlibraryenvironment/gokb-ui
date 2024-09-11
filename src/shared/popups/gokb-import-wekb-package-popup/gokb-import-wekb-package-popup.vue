@@ -62,6 +62,11 @@
             v-model="packageName"
           />
         </v-col>
+          <span v-if="!packageAlreadyExists">
+            <v-icon color="success">
+              mdi-check-circle
+            </v-icon>
+          </span>
         <v-col cols="2"></v-col>
       </v-row>
 
@@ -240,7 +245,8 @@ export default {
       providerAlreadyExists: undefined,
       //valid: false,
       localPackageItem: {},
-      externalSource: {}
+      externalSource: {},
+      packageAlreadyExists: false
     }
   },
   computed: {
@@ -267,11 +273,34 @@ export default {
       return (this.contentTypeOfTipps === "Journal" || this.contentTypeOfTipps === "Mixed")
     },
     valid() {
-      return ( (this.providerAlreadyExists || this.adaptProviderData) && (this.platformAlreadyExists || this.adaptPlatformData) && this.wekbDataLoaded)
+      return ( (this.providerAlreadyExists || this.adaptProviderData) && (this.platformAlreadyExists || this.adaptPlatformData) && this.wekbDataLoaded && !this.packageAlreadyExists)
     }
   },
-  watch: {},
+  watch: {
+      packageName: function(val) {
+          if(val) {
+              this.checkIfPackageExists()
+          }
+      }
+  },
   methods: {
+    async checkIfPackageExists() {
+        let response = await genericServices('rest/entities').checkNewName(
+            encodeURIComponent(this.packageName),
+            'Package',
+            this.cancelToken.token
+        )
+
+        console.log("CHECK PCKAGENAME EXISTS: ", response)
+        if (response?.status < 400) {
+            if (response.data.result === 'ERROR') {
+                this.packageAlreadyExists = true
+                return true
+            }
+        }
+        this.packageAlreadyExists = false
+        return false
+    },
     async fetchWekbPackageData() {
 
       let result = null
@@ -294,6 +323,8 @@ export default {
             this.contentTypeOfTipps = result?.contentType
             this.titleCount = result?.titleCount
             this.externalProviderUuid = result?.providerUuid
+
+            // check if Package already exists --> executed by implicitly changed packagename variable
 
             // Plattform
             let platformResult = await this.fetchWekbPlatformData()
