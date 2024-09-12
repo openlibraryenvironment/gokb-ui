@@ -61,12 +61,13 @@
             label="Paketname"
             v-model="packageName"
           />
-        </v-col>
-          <span v-if="!packageAlreadyExists">
-            <v-icon color="success">
-              mdi-check-circle
+          <span v-if="packageAlreadyExists">
+            <v-icon class="pb-1" color="error">
+              mdi-close-thick
             </v-icon>
           </span>
+        </v-col>
+
         <v-col cols="2"></v-col>
       </v-row>
 
