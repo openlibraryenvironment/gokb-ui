@@ -134,6 +134,20 @@
         <v-col><h3>Titelidentifikatoren: </h3></v-col>
       </v-row>
       <v-row>
+        <span>Folgende exemplarische Identifikatoren befinden sich innerhalb des Pakets:</span>
+      </v-row>
+      <v-row>
+        <v-col cols="4">Name: </v-col>
+        <v-col cols="4">Wert: </v-col>
+      </v-row>
+      <v-row v-for="id in identifierExamples"
+             v-bind:data="id"
+             v-bind:key="id.namespace"
+      >
+        <v-col cols="4">{{ id.namespace }} </v-col>
+        <v-col cols="4">{{ id.value }}</v-col>
+      </v-row>
+      <v-row>
         <v-col cols="4">
           <span>Im Paket befinden sich Medien vom Inhaltstyp <strong>{{ contentTypeOfTipps }}</strong>. <br/>
             Welcher Identifikatoren-Namensraum soll für das Feld "title_id" verwendet werden?
@@ -247,7 +261,10 @@ export default {
       //valid: false,
       localPackageItem: {},
       externalSource: {},
-      packageAlreadyExists: false
+      packageAlreadyExists: false,
+      identifierExamples: [],
+      errors: {},
+      errorMessages: []
     }
   },
   computed: {
@@ -378,6 +395,26 @@ export default {
             console.log("responseContentType: ", responseContentType)
             this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id;
             console.log("responseContentType ", this.contentTypeOfTippsCode)
+
+            // get Title Data to provide identifier examples
+            const responseTitleData = await this.getTippsOfPackage()
+            if(responseTitleData && responseTitleData.length > 0) {
+              /*responseTitleData.forEach(function(tipp, idx){
+                console.log("TIPP: ", idx, tipp)
+              })*/
+              //Umsetzung zunächst ohne ContentType-Differenzierung
+              var that = this
+              responseTitleData[0].identifiers?.forEach(function(id){
+                that.identifierExamples.push( {namespace: that.mapIdentifierNames(id.namespaceName), value: id.value} )
+              })
+              console.log("IDENTIFIERS: ", this.identifierExamples)
+            }
+
+          } else {
+              console.log("UUID der Form nach korrekt, aber existiert anscheinend nicht in der WEKB")
+              /* this.errors.uuid = true
+              this.errorMessages.push( {uuid: "UUID der Form nach korrekt, aber existiert anscheinend nicht in der WEKB"} )
+               */
           }
 
         } catch (error) {
@@ -404,6 +441,22 @@ export default {
       //TODO: zu Testzwecken
       //this.wekbDataLoaded = true;
 
+    },
+    mapIdentifierNames: function(wekbName){
+      var identifierName
+      switch (wekbName) {
+        case "eISBN":
+          identifierName = "ISBN"
+          break;
+        case "ISBN":
+          identifierName = "p-ISBN"
+          break;
+        /*case "Title_ID":
+          break;*/
+        default:
+          identifierName = wekbName
+      }
+      return identifierName
     },
     async fetchWekbPlatformData() {
       let result = null
@@ -466,13 +519,13 @@ export default {
       console.log("Platform not exists - create it")
       return false
     },
-    async fetchTippsOfPackage() {
+    async getTippsOfPackage() {
       let result = null
       try {
         const response = await this.catchError({
           promise: wekbImportServices.getTippsOfPackage({
             'uuid': this.wekb_package_uuid,
-            'max': this.titleCount ? this.titleCount : 1000
+            'max': this.titleCount ? this.titleCount : 10
           }, this.cancelToken.token),
           instance: this
         })
