@@ -253,6 +253,8 @@ export default {
       contentTypeOfTipps: "",
       contentTypeOfTippsCode: undefined,
       packageScope: undefined,
+      packageDescription: undefined,
+      packageDescriptionURL: undefined,
       namespaceMonograph: undefined,
       namespaceJournal: undefined,
       titleCount: undefined,
@@ -333,6 +335,8 @@ export default {
             result = response.data[0]
             this.externalPackageName = result?.name
             this.packageName = this.externalPackageName
+            this.packageDescription = result?.description
+            this.packageDescriptionURL = result?.descriptionURL
             this.externalPlatformName = result?.nominalPlatformName
             this.platformName = this.externalPlatformName
             this.externalProviderName = result?.providerName
@@ -412,9 +416,13 @@ export default {
 
           } else {
               console.log("UUID der Form nach korrekt, aber existiert anscheinend nicht in der WEKB")
-              /* this.errors.uuid = true
-              this.errorMessages.push( {uuid: "UUID der Form nach korrekt, aber existiert anscheinend nicht in der WEKB"} )
-               */
+              this.errors.uuid = true
+              this.eventMessages.push({
+                message: 'Ein Paket mit dieser UUID existiert anscheinend nicht in der we:kb',
+                color: 'error',
+                timeout: -1
+              })
+
           }
 
         } catch (error) {
@@ -629,8 +637,8 @@ export default {
           source: undefined,
           type: 'package',
           status: undefined,
-          descriptionURL: undefined,
-          description: undefined,
+          descriptionURL: this.packageDescriptionURL,
+          description: this.packageDescription,
           scope: this.packageScope,
           global: undefined,
           globalNote: undefined,
