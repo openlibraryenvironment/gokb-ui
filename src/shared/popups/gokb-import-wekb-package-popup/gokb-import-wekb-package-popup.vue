@@ -140,12 +140,35 @@
         <v-col cols="4">Name: </v-col>
         <v-col cols="4">Wert: </v-col>
       </v-row>
-      <v-row v-for="id in identifierExamples"
+      <!-- <v-row v-for="id in identifierExamples"
              v-bind:data="id"
              v-bind:key="id.namespace"
       >
         <v-col cols="4">{{ id.namespace }} </v-col>
         <v-col cols="4">{{ id.value }}</v-col>
+      </v-row> -->
+      <v-row>
+        <v-col cols="4">
+          <span>Beispielhafte Identifikatoren des Pakets: </span>
+        </v-col>
+        <v-col cols="8">
+        <div v-for="pubtype in identifierExamples"
+          v-bind:data="pubtype"
+          v-bind:key="pubtype.publicationType"
+        >
+          <v-col cols="6">
+           <strong> {{ pubtype.publicationType }} </strong>
+            <v-row v-for="id in pubtype.identifiers"
+              v-bind:data="id"
+              v-bind:key="id.namespace"
+            >
+              <v-col cols="4">{{ id.namespace }}: </v-col>
+              <v-col cols="4">{{ id.value }}</v-col>
+            </v-row>
+          </v-col>
+          <!-- <v-col cols="4">{{ id.value }}</v-col> -->
+          </div>
+        </v-col>
       </v-row>
       <v-row>
         <v-col cols="4">
@@ -382,35 +405,61 @@ export default {
             // get Code for packagetype
             let entityService = genericEntityServices('refdata/categories/Package.Scope')
 
-            const responseScope = await this.catchError({
-              promise: entityService.get({}, this.cancelToken.token),
-              instance: this
-            })
+            if (result?.file) {
+              const responseScope = await this.catchError({
+                promise: entityService.get({}, this.cancelToken.token),
+                instance: this
+              })
 
-            this.packageScope = responseScope?.data?._embedded.values.filter(a => a.value == result.file)[0].id;
-
+              console.log("resonseScope: ", responseScope)
+              this.packageScope = responseScope?.data?._embedded.values.filter(a => a.value == result.file)[0].id;
+            }
             // get Code for contenttype
-            entityService = genericEntityServices('refdata/categories/Package.ContentType')
+            if (this.contentTypeOfTipps) {
+              entityService = genericEntityServices('refdata/categories/Package.ContentType')
 
-            const responseContentType = await this.catchError({
-              promise: entityService.get({}, this.cancelToken.token),
-              instance: this
-            })
-            console.log("responseContentType: ", responseContentType)
-            this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id;
-            console.log("responseContentType ", this.contentTypeOfTippsCode)
-
+              const responseContentType = await this.catchError({
+                promise: entityService.get({}, this.cancelToken.token),
+                instance: this
+              })
+              console.log("responseContentType: ", responseContentType)
+              this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id;
+              console.log("responseContentType ", this.contentTypeOfTippsCode)
+            }
             // get Title Data to provide identifier examples
             const responseTitleData = await this.getTippsOfPackage()
             if(responseTitleData && responseTitleData.length > 0) {
-              /*responseTitleData.forEach(function(tipp, idx){
-                console.log("TIPP: ", idx, tipp)
-              })*/
-              //Umsetzung zunächst ohne ContentType-Differenzierung
-              var that = this
-              responseTitleData[0].identifiers?.forEach(function(id){
-                that.identifierExamples.push( {namespace: that.mapIdentifierNames(id.namespaceName), value: id.value} )
+              const publicationTypes = new Set()
+              const titleExamples = []
+              responseTitleData.forEach(function(tipp, idx){
+                //console.log("TIPP: ", idx, tipp)
+                if(tipp.publicationType && tipp.status !== 'Deleted') {
+                  publicationTypes.add(tipp.publicationType)
+                }
               })
+
+              console.log("### PUBLICATIONTYPES IN PACKAGE: ", publicationTypes)
+              if (publicationTypes.size > 1) {
+                publicationTypes.forEach(function(pub){
+                  let titleByPubType = responseTitleData.find(x => x.publicationType === pub)
+                  console.log("FOUND for pubtype: ", pub, titleByPubType)
+                  titleExamples.push(titleByPubType)
+                })
+              }
+              var that = this
+
+              titleExamples.forEach(function(title){
+                let identifiers = []
+                /*title.identifiers?.forEach(function(id){
+                  identifiers.push( {namespace: that.mapIdentifierNames(id.namespaceName), value: id.value} )
+                })*/
+                for(var i = 0; i < title.identifiers?.length; i++){
+                  var id = title.identifiers[i]
+                  identifiers.push( {namespace: that.mapIdentifierNames(id.namespaceName), value: id.value} )
+                }
+                that.identifierExamples.push( { publicationType: title.publicationType, identifiers: identifiers} )
+              })
+
               console.log("IDENTIFIERS: ", this.identifierExamples)
             }
 
