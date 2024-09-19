@@ -37,7 +37,7 @@
         <gokb-button
           v-if="!wekbDataLoaded"
           v-on:click="fetchWekbPackageData"
-          v-bind:disabled="wekbDataLoaded || !wekb_package_uuid"
+          v-bind:disabled="wekbDataLoaded || !wekb_package_uuid || wekbDataIsLoading"
         >
           Abschicken
         </gokb-button>
@@ -151,13 +151,14 @@
         <v-col cols="4">
           <span>Beispielhafte Identifikatoren des Pakets: </span>
         </v-col>
-        <v-col cols="8">
-        <div v-for="pubtype in identifierExamples"
+
+        <v-col cols="4" v-for="pubtype in identifierExamples"
           v-bind:data="pubtype"
           v-bind:key="pubtype.publicationType"
         >
-          <v-col cols="6">
-           <strong> {{ pubtype.publicationType }} </strong>
+          <v-row>
+            <strong> {{ pubtype.publicationType }} </strong>
+          </v-row>
             <v-row v-for="id in pubtype.identifiers"
               v-bind:data="id"
               v-bind:key="id.namespace"
@@ -165,10 +166,10 @@
               <v-col cols="4">{{ id.namespace }}: </v-col>
               <v-col cols="4">{{ id.value }}</v-col>
             </v-row>
-          </v-col>
+
           <!-- <v-col cols="4">{{ id.value }}</v-col> -->
-          </div>
         </v-col>
+
       </v-row>
       <v-row>
         <v-col cols="4">
@@ -258,6 +259,7 @@ export default {
       wekb_package_uuid: undefined,
       import_sources: ["WE:KB"],
       wekbDataLoaded: false,
+      wekbDataIsLoading: false,
       adaptPlatformData: false,
       adaptProviderData: false,
       externalPackageName: "",
@@ -345,7 +347,7 @@ export default {
         return false
     },
     async fetchWekbPackageData() {
-
+      this.wekbDataIsLoading = true
       let result = null
       if (this.validatePackageUUID()) {
         try {
@@ -426,42 +428,64 @@ export default {
               this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id;
               console.log("responseContentType ", this.contentTypeOfTippsCode)
             }
-            // get Title Data to provide identifier examples
-            const responseTitleData = await this.getTippsOfPackage()
-            if(responseTitleData && responseTitleData.length > 0) {
-              const publicationTypes = new Set()
-              const titleExamples = []
-              responseTitleData.forEach(function(tipp, idx){
-                //console.log("TIPP: ", idx, tipp)
-                if(tipp.publicationType && tipp.status !== 'Deleted') {
-                  publicationTypes.add(tipp.publicationType)
-                }
-              })
 
-              console.log("### PUBLICATIONTYPES IN PACKAGE: ", publicationTypes)
-              if (publicationTypes.size > 1) {
-                publicationTypes.forEach(function(pub){
-                  let titleByPubType = responseTitleData.find(x => x.publicationType === pub)
-                  console.log("FOUND for pubtype: ", pub, titleByPubType)
-                  titleExamples.push(titleByPubType)
-                })
+            // get Title Data to provide identifier examples
+            // Batch-Verarbeitung: Titel-Zählung beginnt bei offset := 0
+            const max = 500
+            const publicationTypes = new Set()
+            const titleExamples = []
+            const titleData = []
+
+            for(var offset = 0; offset < this.titleCount; offset = offset + max) {
+              let responseTitleData = await this.getTippsOfPackage(max, offset)
+              if (responseTitleData && responseTitleData.length > 0) {
+                titleData.push(responseTitleData)
+                for (var i = 0; i < responseTitleData.length; i++) {
+                  if (responseTitleData[i].publicationType && responseTitleData[i].status !== 'Deleted') {
+                    publicationTypes.add(responseTitleData[i].publicationType)
+                  }
+                }
               }
+              if (publicationTypes.size >= 2) {
+                break;
+              }
+            }
+
+            console.log("### PUBLICATIONTYPES IN PACKAGE: ", publicationTypes)
+            // auch wenn nur Titel mit einem Contenttype im Paket sind, muss zu diesem Type ein Beispiel gefunden werden
+            if (publicationTypes.size > 0) {
+              for(var i = 0; i < titleData.length; i++){
+                publicationTypes.forEach(function (pub) {
+                  let titleByPubType = titleData[i].find(x => x.publicationType === pub)
+                  console.log("FOUND for pubtype: ", pub, titleByPubType)
+                  if(titleByPubType) {
+                    titleExamples.push(titleByPubType)
+                    publicationTypes.delete(pub)
+                  }
+                })
+                if(publicationTypes.size === 0){
+                  break;
+                }
+              }
+            }
+
+
               var that = this
 
-              titleExamples.forEach(function(title){
+              titleExamples.forEach(function (title) {
                 let identifiers = []
                 /*title.identifiers?.forEach(function(id){
                   identifiers.push( {namespace: that.mapIdentifierNames(id.namespaceName), value: id.value} )
                 })*/
-                for(var i = 0; i < title.identifiers?.length; i++){
+                for (var i = 0; i < title.identifiers?.length; i++) {
                   var id = title.identifiers[i]
-                  identifiers.push( {namespace: that.mapIdentifierNames(id.namespaceName), value: id.value} )
+                  identifiers.push({namespace: that.mapIdentifierNames(id.namespaceName), value: id.value})
                 }
-                that.identifierExamples.push( { publicationType: title.publicationType, identifiers: identifiers} )
+                that.identifierExamples.push({publicationType: title.publicationType, identifiers: identifiers})
               })
 
               console.log("IDENTIFIERS: ", this.identifierExamples)
-            }
+
 
           } else {
               console.log("UUID der Form nach korrekt, aber existiert anscheinend nicht in der WEKB")
@@ -494,6 +518,8 @@ export default {
         console.log("result: ", result)
         this.wekbDataLoaded = true;
       }
+
+      this.wekbDataIsLoading = false
 
       //TODO: zu Testzwecken
       //this.wekbDataLoaded = true;
@@ -576,13 +602,14 @@ export default {
       console.log("Platform not exists - create it")
       return false
     },
-    async getTippsOfPackage() {
+    async getTippsOfPackage(max, offset) {
       let result = null
       try {
         const response = await this.catchError({
           promise: wekbImportServices.getTippsOfPackage({
             'uuid': this.wekb_package_uuid,
-            'max': this.titleCount ? this.titleCount : 10
+            'max': max ? max : 10,
+            'offset': offset ? offset : 0
           }, this.cancelToken.token),
           instance: this
         })
