@@ -12,36 +12,42 @@
     </v-snackbars>
 
     <gokb-section>
-      <v-row >
-        <v-col>
-          <!-- <gokb-state-field
-            label="Quelle"
-            v-model="import_sources"
-            init-item="WEKB"
-          /> -->
-          <span><b>Import-Quelle</b></span><br/>
-          <span>WE:KB</span>
-        </v-col>
-        <v-col>
-          <gokb-text-field
-            label="UUID des zu importierenden Pakets in der WEKB"
-            v-model="wekb_package_uuid"
+      <!-- <v-card :loading="wekbDataIsLoading"/> -->
+      <v-progress-circular
+        indeterminate
+        v-if="wekbDataIsLoading"
+      ></v-progress-circular>
+        <v-row >
+          <v-col>
+            <!-- <gokb-state-field
+              label="Quelle"
+              v-model="import_sources"
+              init-item="WEKB"
+            /> -->
+            <span><b>Import-Quelle</b></span><br/>
+            <span>WE:KB</span>
+          </v-col>
+          <v-col>
+            <gokb-text-field
+              label="UUID des zu importierenden Pakets in der WEKB"
+              v-model="wekb_package_uuid"
 
-          />
+            />
 
-        </v-col>
-      </v-row>
+          </v-col>
+        </v-row>
 
-      <v-row>
-        <v-spacer />
-        <gokb-button
-          v-if="!wekbDataLoaded"
-          v-on:click="fetchWekbPackageData"
-          v-bind:disabled="wekbDataLoaded || !wekb_package_uuid || wekbDataIsLoading"
-        >
-          Abschicken
-        </gokb-button>
-      </v-row>
+        <v-row>
+          <v-spacer />
+          <gokb-button
+            v-if="!wekbDataLoaded"
+            v-on:click="fetchWekbPackageData"
+            v-bind:disabled="wekbDataLoaded || !wekb_package_uuid || wekbDataIsLoading"
+          >
+            Abschicken
+          </gokb-button>
+        </v-row>
+
     </gokb-section>
 
     <div v-if="wekbDataLoaded">
