@@ -1,5 +1,5 @@
 const api = (console, utils) => {
-  const isProduction = utils.isProduction()
+  const isProduction = !utils.isDevelopment()
   const loggerFunction = level => (...optionalParams) => !isProduction && console[level](...optionalParams)
 
   const api = {

@@ -140,11 +140,11 @@
             </v-alert>
           </v-col>
         </v-row>
-        <v-row v-if="updateExists">
+        <v-row v-if="needRefresh" align="center">
           <v-col>
             <v-btn
-              text
-              @click="refreshApp"
+              variant="text"
+              @click="updateServiceWorker"
             >
               - Update -
             </v-btn>
@@ -271,7 +271,7 @@
   import "@fontsource/roboto/500.css"
   import "@fontsource/roboto/700.css"
   import "@fontsource/roboto/900.css"
-  import update from './mixins/update'
+  import useRegisterSW from '@/mixins/useRegisterSW'
   import pkg from '../package.json'
   import {
     HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE, CREATE_USER_ROUTE,
@@ -290,7 +290,7 @@
   export default {
     name: 'App',
     components: { UserMenu, ProgressOverlay },
-    mixins: [update],
+    mixins: [useRegisterSW],
     data: () => ({
       drawer: null,
       privacyLink: import.meta.env.VITE_DP_LINK,

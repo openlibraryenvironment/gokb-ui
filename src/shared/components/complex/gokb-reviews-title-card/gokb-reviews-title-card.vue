@@ -66,7 +66,7 @@
             :to="{ name: '/title', params: { 'id': linkedTitle.id } }"
             target="_blank"
           >
-            {{ linkedTitle?.name }}
+            {{ linkedTitle?.name + " (" + linkedTitle.id + ")" }}
           </router-link>
           <span v-else> - </span>
         </v-col>

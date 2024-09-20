@@ -10,8 +10,8 @@ const api = {
     return string.charAt(0).toUpperCase() + string.slice(1)
   },
 
-  isProduction () {
-    return import.meta.env.NODE_ENV === 'production'
+  isDevelopment () {
+    return import.meta.env.NODE_ENV === 'development'
   },
 
   asYesNo (value) {

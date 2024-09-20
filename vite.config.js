@@ -16,7 +16,10 @@ export default defineConfig({
   base: process.env.VITE_PUBLIC_PATH || '/gokb-ui', // base path for the application
   plugins: [
     vue(),
-    VitePWA(),
+    VitePWA({
+      filename: 'service-worker.js',
+      injectRegister: 'script'
+    }),
     vuetify({
       autoImport: {
         labs: true,

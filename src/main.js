@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import vuetify from './plugins/vuetify'
 import i18n from './plugins/i18n'
 import router from './router'
-import './register-service-worker'
 import utils from '@/shared/utils/utils'
 import VueJsonPretty from 'vue-json-pretty'
 import App from './app.vue'
@@ -15,9 +14,13 @@ app.use(vuetify)
 app.use(i18n)
 
 // configuration vue itself
-const isNotProduction = !utils.isProduction()
+const isNotProduction = utils.isDevelopment()
 app.config.devtools = isNotProduction
 app.config.performance = isNotProduction
+
+if (isNotProduction) {
+  console.log("DEV MODE ACTIVE")
+}
 
 // make all gokb components global available
 const gokbComponents = await import.meta.glob(
