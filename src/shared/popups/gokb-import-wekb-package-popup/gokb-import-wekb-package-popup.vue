@@ -13,10 +13,7 @@
 
     <gokb-section>
       <!-- <v-card :loading="wekbDataIsLoading"/> -->
-      <v-progress-circular
-        indeterminate
-        v-if="wekbDataIsLoading"
-      ></v-progress-circular>
+
         <v-row >
           <v-col>
             <!-- <gokb-state-field
@@ -47,7 +44,27 @@
             Abschicken
           </gokb-button>
         </v-row>
-
+      <div v-if="wekbDataIsLoading">
+      <v-row >
+        <v-col cols="4"></v-col>
+        <v-col cols="6">
+          <v-progress-circular
+            color="primary"
+            size="100"
+            width="8"
+            indeterminate
+          />
+        </v-col>
+        <v-col cols="2"></v-col>
+      </v-row>
+        <v-row>
+          <v-col cols="4"></v-col>
+          <v-col cols="6">
+            <span>Die Daten werden geladen - je nach Größe des angeforderten Pakets kann das einige Zeit dauern. Bitte schließen Sie nicht das Fenster während des Ladeprozesses. </span>
+          </v-col>
+          <v-col cols="2"></v-col>
+        </v-row>
+      </div>
     </gokb-section>
 
     <div v-if="wekbDataLoaded">
