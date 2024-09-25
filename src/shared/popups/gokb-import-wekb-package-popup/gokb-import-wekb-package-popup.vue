@@ -140,12 +140,14 @@
         <v-col><h3>Titelidentifikatoren: </h3></v-col>
       </v-row>
       <v-row>
-        <span>Folgende exemplarische Identifikatoren befinden sich innerhalb des Pakets:</span>
+        <v-col cols="12">
+          <span>Folgende exemplarische Identifikatoren pro unterschiedlichem Inhaltstyp befinden sich innerhalb des Pakets:</span>
+        </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="4">Name: </v-col>
+      <!-- <v-row>
+         <v-col cols="4">Name: </v-col>
         <v-col cols="4">Wert: </v-col>
-      </v-row>
+      </v-row> -->
       <!-- <v-row v-for="id in identifierExamples"
              v-bind:data="id"
              v-bind:key="id.namespace"
@@ -154,33 +156,37 @@
         <v-col cols="4">{{ id.value }}</v-col>
       </v-row> -->
       <v-row>
-        <v-col cols="4">
+       <!-- <v-col cols="4">
           <span>Beispielhafte Identifikatoren des Pakets: </span>
-        </v-col>
+        </v-col> -->
 
         <v-col cols="4" v-for="pubtype in identifierExamples"
           v-bind:data="pubtype"
           v-bind:key="pubtype.publicationType"
         >
           <v-row>
-            <strong> {{ pubtype.publicationType }} </strong>
+            <v-col cols="12">
+              <h4> {{ pubtype.publicationType }} </h4>
+            </v-col>
           </v-row>
             <v-row v-for="id in pubtype.identifiers"
               v-bind:data="id"
               v-bind:key="id.namespace"
             >
-              <v-col cols="4">{{ id.namespace }}: </v-col>
-              <v-col cols="4">{{ id.value }}</v-col>
+              <v-col cols="3">{{ id.namespace }}: </v-col>
+              <v-col cols="9">{{ id.value }}</v-col>
             </v-row>
 
           <!-- <v-col cols="4">{{ id.value }}</v-col> -->
         </v-col>
 
       </v-row>
+      <br/><br/>
       <v-row>
+
         <v-col cols="4">
           <span>Im Paket befinden sich Medien vom Inhaltstyp <strong>{{ contentTypeOfTipps }}</strong>. <br/>
-            Welcher Identifikatoren-Namensraum soll für das Feld "title_id" verwendet werden?
+            Welcher Identifikatoren-Namensraum soll für das Feld "title_id" verwendet werden (Angabe optional)?
           </span>
         </v-col>
         <v-col cols="4" v-if="showJournalNamespaceSelect">
@@ -422,18 +428,7 @@ export default {
               console.log("resonseScope: ", responseScope)
               this.packageScope = responseScope?.data?._embedded.values.filter(a => a.value == result.file)[0].id;
             }
-            // get Code for contenttype
-            if (this.contentTypeOfTipps) {
-              entityService = genericEntityServices('refdata/categories/Package.ContentType')
 
-              const responseContentType = await this.catchError({
-                promise: entityService.get({}, this.cancelToken.token),
-                instance: this
-              })
-              console.log("responseContentType: ", responseContentType)
-              this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id;
-              console.log("responseContentType ", this.contentTypeOfTippsCode)
-            }
 
             // get Title Data to provide identifier examples
             // Batch-Verarbeitung: Titel-Zählung beginnt bei offset := 0
@@ -491,6 +486,36 @@ export default {
               })
 
               console.log("IDENTIFIERS: ", this.identifierExamples)
+
+
+            // set contenttype according to containing tipps and get GOKB code for it
+            if(titleExamples.length > 1) {
+              this.contentTypeOfTipps = 'Mixed'
+            } else {
+                switch (titleExamples[0].publicationType) {
+                  case 'Monograph':
+                    this.contentTypeOfTipps = 'Book'
+                    break;
+                  case 'Serial':
+                    this.contentTypeOfTipps = 'Journal'
+                    break;
+                  default:
+                    this.contentTypeOfTipps = 'Database'
+                    break;
+                }
+            }
+
+            entityService = genericEntityServices('refdata/categories/Package.ContentType')
+
+            const responseContentType = await this.catchError({
+              promise: entityService.get({}, this.cancelToken.token),
+              instance: this
+            })
+            console.log("responseContentType: ", responseContentType)
+            this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id;
+            console.log("responseContentType ", this.contentTypeOfTippsCode)
+
+
 
 
           } else {
