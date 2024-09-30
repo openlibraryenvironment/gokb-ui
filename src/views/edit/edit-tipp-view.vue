@@ -175,6 +175,7 @@
                       v-model="packageTitleItem.accessStartDate"
                       :readonly="isReadonly"
                       :label="$t('component.tipp.accessStartDate')"
+                      :api-errors="errors.accessStartDate"
                     />
                   </v-col>
                   <v-col>
@@ -182,6 +183,7 @@
                       v-model="packageTitleItem.accessEndDate"
                       :readonly="isReadonly"
                       :label="$t('component.tipp.accessEndDate')"
+                      :api-errors="errors.accessEndDate"
                     />
                   </v-col>
                   <v-col>
@@ -277,6 +279,7 @@
                           :readonly="isReadonly"
                           dense
                           :label="$t('component.tipp.coverage.startDate')"
+                          :api-errors="statement.errors ? statement.errors.startDate : undefined"
                         />
                       </v-col>
                       <v-col cols="4">
@@ -306,6 +309,7 @@
                           :readonly="isReadonly"
                           dense
                           :label="$t('component.tipp.coverage.endDate')"
+                          :api-errors="statement.errors ? statement.errors.endDate : undefined"
                         />
                       </v-col>
                       <v-col cols="4">
@@ -852,6 +856,12 @@
             this.currentSnackBarTimeout = -1
             this.showSnackbar = true
             this.errors = response.data.error
+
+            if (!!response.data.error.coverageStatements) {
+              for (const [key, val] of Object.entries(response.data.error.coverageStatements)) {
+                this.packageTitleItem.coverageStatements[parseInt(key)].errors = val
+              }
+            }
           }
         }
       },

@@ -11,6 +11,8 @@
           :label="label"
           :hint="$t('default.ISOdateHint')"
           :rules="combinedRules"
+          :error="hasApiErrors"
+          :error-messages="localErrorMessages"
           :required="required"
           :density="dense ? 'compact' : 'default'"
           variant="underlined"
@@ -96,13 +98,21 @@
         type: Boolean,
         required: false,
         default: false
-      }
+      },
+      apiErrors: {
+        type: [Object, Array],
+        required: false,
+        default: undefined
+      },
     },
     data () {
       return {
         menu: false,
         displayDate: undefined,
-        pickerDateValue: undefined
+        pickerDateValue: undefined,
+        localErrorMessages: [],
+        hasApiErrors: false,
+        badApiValue: undefined
       }
     },
     computed: {
@@ -118,7 +128,36 @@
         this.displayDate = date.toLocaleString('sv').substring(0, 10) || undefined
       },
       displayDate (date) {
+        if (!!this.badApiValue && date != this.badApiValue) {
+          this.badApiValue = undefined
+          this.localErrorMessages = []
+          this.hasApiErrors = false
+        }
+
         this.$emit('update:model-value', date)
+      },
+      apiErrors (items) {
+        if (items.length > 0) {
+          this.hasApiErrors = true
+
+          if (!!items[0].baddata) {
+            this.badApiValue = items[0].baddata
+          }
+
+          this.localErrorMessages = items.map(e => (!!e.messageCode ? this.$i18n.t(e.messageCode) : (e.matches ? this.$i18n.t('validation.valueNotUnique') : e.message)))
+        } else if (!!items) {
+          this.hasApiErrors = true
+
+          if (!!items.baddata) {
+            this.badApiValue = items.baddata
+          }
+
+          this.localErrorMessages = !!items.messageCode ? this.$i18n.t(items.messageCode) : (items.matches ? this.$i18n.t('validation.valueNotUnique') : items.message)
+        } else {
+          this.badApiValue = undefined
+          this.localErrorMessages = []
+          this.hasApiErrors = false
+        }
       }
     },
     mounted () {

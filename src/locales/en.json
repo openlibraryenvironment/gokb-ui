@@ -227,7 +227,8 @@
     "volumeRange": "The start volume must be before the end volume",
     "issueRange": "The start issue must be before the end issue",
     "missingStartIssue": "An end issue requires a set start issue!",
-    "missingStartVolume": "An end volume requires a set start volume!"
+    "missingStartVolume": "An end volume requires a set start volume!",
+    "refdataLookup": "Unable to save unrecognized value!"
   },
   "job": {
     "label": "Import | Imports",

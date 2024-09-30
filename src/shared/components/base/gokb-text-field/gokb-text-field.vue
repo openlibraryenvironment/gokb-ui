@@ -7,7 +7,7 @@
     :prepend-icon="hideIcon ? '' : prependIcon"
     :rules="localRules"
     :type="type"
-    :error="!!apiErrors"
+    :error="hasApiErrors"
     :error-messages="errorMessages"
     min-width="150px"
     :placeholder="placeholder"
@@ -124,6 +124,9 @@
     data () {
       return {
         localErrorMessages: undefined,
+        apiErrorMessages: [],
+        hasApiErrors: false,
+        badApiValue: undefined,
         localRules: []
       }
     },
@@ -133,14 +136,17 @@
           return this.modelValue
         },
         set (localValue) {
+          if (!!this.badApiValue && localValue != this.badApiValue) {
+            this.badApiValue = undefined
+            this.apiErrorMessages = []
+            this.hasApiErrors = false
+          }
+
           this.$emit('update:model-value', localValue)
         },
       },
       isValid () {
-        return !this.localErrorMessages && (!this.apiErrors || this.apiErrors.length === 0)
-      },
-      apiErrorMessages () {
-        return this.apiErrors?.length > 0 ? this.apiErrors.map(e => (e.messageCode ? this.$i18n.t(e.messageCode) : (e.matches ? this.$i18n.t('validation.valueNotUnique') : e.message))) : undefined
+        return !this.localErrorMessages && !this.hasApiErrors
       },
       errorMessages () {
         return this.localErrorMessages || this.apiErrorMessages
@@ -160,6 +166,29 @@
           }
         },
         deep: true
+      },
+      apiErrors (items) {
+        if (!!items && items.length > 0) {
+          this.hasApiErrors = true
+
+          if (!!items[0].baddata) {
+            this.badApiValue = items[0].baddata
+          }
+
+          this.apiErrorMessages = this.apiErrors.map(e => (!!e.messageCode ? this.$i18n.t(e.messageCode) : (e.matches ? this.$i18n.t('validation.valueNotUnique') : e.message)))
+        } else if (!!items) {
+          this.hasApiErrors = true
+
+          if (!!items.baddata) {
+            this.badApiValue = items.baddata
+          }
+
+          this.apiErrorMessages = !!items.messageCode ? this.$i18n.t(items.messageCode) : (items.matches ? this.$i18n.t('validation.valueNotUnique') : items.message)
+        } else {
+          this.badApiValue = undefined
+          this.apiErrorMessages = []
+          this.hasApiErrors = false
+        }
       }
     },
     methods: {

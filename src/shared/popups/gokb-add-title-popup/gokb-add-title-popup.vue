@@ -6,11 +6,12 @@
     :min-height="800"
     @submit="submitTipp"
   >
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+        <template #actions>
+          <v-icon @click="showSnackbar = false" color="white">mdi-close</v-icon>
+        </template>
+    </v-snackbar>
 
     <v-row v-if="!init" align="center" style="height:72vh;">
       <v-col cols="12" class="text-center">
@@ -114,6 +115,7 @@
                     v-model="packageTitleItem.accessStartDate"
                     :readonly="isReadonly"
                     :label="$t('component.tipp.accessStartDate')"
+                    :api-errors="errors.accessStartDate"
                   />
                 </v-col>
                 <v-col cols="4">
@@ -121,6 +123,7 @@
                     v-model="packageTitleItem.accessEndDate"
                     :readonly="isReadonly"
                     :label="$t('component.tipp.accessEndDate')"
+                    :api-errors="errors.accessEndDate"
                   />
                 </v-col>
                 <v-col cols="4">
@@ -252,6 +255,7 @@
                               :readonly="isReadonly"
                               dense
                               :label="$t('component.tipp.coverage.startDate')"
+                              :api-errors="statement.errors ? statement.errors.startDate : undefined"
                             />
                           </v-col>
                           <v-col md="4">
@@ -278,6 +282,7 @@
                               :readonly="isReadonly"
                               dense
                               :label="$t('component.tipp.coverage.endDate')"
+                              :api-errors="statement.errors ? statement.errors.endDate : undefined"
                             />
                           </v-col>
                           <v-col md="4">
@@ -302,6 +307,7 @@
                             <gokb-embargo-field
                               v-model="statement.embargo"
                               :readonly="isReadonly"
+                              :api-errors="statement.errors ? statement.errors.embargo : undefined"
                             />
                           </v-col>
                         </v-row>
@@ -558,7 +564,10 @@
         deleteUrl: undefined,
         successMsg: undefined,
         errorMsg: undefined,
-        eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         status: undefined,
         version: undefined,
         items: [],
@@ -716,9 +725,8 @@
     },
     methods: {
       async submitTipp () {
-        console.log("Submit ..")
         this.errors = {}
-        this.eventMessages = []
+        this.showSnackbar = false
 
         if (this.selected && typeof this.selected.id === 'number') {
           const activeGroup = accountModel.activeGroup()
@@ -766,24 +774,28 @@
             this.close()
           } else {
             if (response.status === 409) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.409'),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.tipp.label')])
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
             } else if (response.status === 500) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.general.500'),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.tipp.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
             } else {
-              this.eventMessages.push({
-                message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400'),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.tipp.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
               this.errors = response.data.error
+
+
+              if (!!response.data.error.coverageStatements) {
+                for (const [key, val] of Object.entries(response.data.error.coverageStatements)) {
+                  this.packageTitleItem.coverageStatements[parseInt(key)].errors = val
+                }
+              }
             }
           }
         } else {

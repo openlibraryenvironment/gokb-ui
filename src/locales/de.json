@@ -227,7 +227,8 @@
     "volumeRange": "Der erste Band muss vor dem letzten Band liegen.",
     "issueRange": "Das erste Heft muss vor dem letzten Heft liegen.",
     "missingStartIssue": "Die Angabe eines letzten Hefts erfordert ein Anfangsheft.",
-    "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband."
+    "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband.",
+    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden."
   },
   "job": {
     "label": "Import | Importe",
