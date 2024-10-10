@@ -28,7 +28,7 @@
             <gokb-text-field
               label="UUID des zu importierenden Pakets in der WEKB"
               v-model="wekb_package_uuid"
-
+              :required="true"
             />
 
           </v-col>
@@ -60,7 +60,7 @@
         <v-row>
           <v-col cols="4"></v-col>
           <v-col cols="6">
-            <span>Die Daten werden geladen - je nach Größe des angeforderten Pakets kann das einige Zeit dauern. Bitte schließen Sie nicht das Fenster während des Ladeprozesses. </span>
+            <span>Die Daten werden geladen - je nach Größe des angeforderten Pakets kann das einige Zeit dauern. </span>
           </v-col>
           <v-col cols="2"></v-col>
         </v-row>
@@ -84,10 +84,11 @@
             label="Paketname"
             v-model="packageName"
           />
-          <span v-if="packageAlreadyExists">
+          <span v-if="packageAlreadyExists" style="color:red">
             <v-icon class="pb-1" color="error">
               mdi-close-thick
             </v-icon>
+            Ein Paket mit diesem Namen existiert bereits in der GOKB. Prüfen Sie bitte, ob es sich um das selbe Paket handelt.
           </span>
         </v-col>
 
@@ -541,7 +542,7 @@ export default {
               this.eventMessages.push({
                 message: 'Ein Paket mit dieser UUID existiert anscheinend nicht in der we:kb',
                 color: 'error',
-                timeout: -1
+                timeout: 3000
               })
 
           }
