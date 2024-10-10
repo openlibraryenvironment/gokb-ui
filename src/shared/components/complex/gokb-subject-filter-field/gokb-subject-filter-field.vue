@@ -1,6 +1,6 @@
 <template>
-  <div style="margin-top:-8px">
-    <div style="font-size:13px;margin-bottom:4px"> {{ $tc('component.subject.label') }} </div>
+  <div style="margin-top:-5px">
+    <div style="font-size:12px;margin-bottom:-16px" class="text-medium-emphasis"> {{ $tc('component.subject.label') }} </div>
     <v-row dense>
       <v-col cols="4">
         <gokb-state-field
@@ -9,7 +9,7 @@
           message-path="component.subject.scheme"
           url="refdata/categories/Subject.Scheme"
           :placeholder="$tc('component.subject.scheme.label')"
-          dense
+          :density="dense ? 'compact' : 'default'"
           return-object
         />
       </v-col>
@@ -19,20 +19,21 @@
           v-model="val"
           :disabled="!scheme"
           :items="$options.ddcList"
-          :item-text="currentLabel"
+          :item-title="currentLabel"
           item-value="notation"
           :placeholder="$tc('component.subject.heading.label')"
+          variant="underlined"
           return-object
           clearable
-          dense
           @click:append="$emit('delete', value)"
         />
         <v-text-field
           v-else
           v-model="val"
           :label="$tc('component.subject.heading.label')"
+          variant="underlined"
           disabled
-          dense
+          :density="dense ? 'compact' : 'default'"
         />
       </v-col>
     </v-row>
@@ -43,11 +44,17 @@
 
   export default {
     name: 'GokbSubjectFilterField',
+    emits: ['update:mode-value', 'delete'],
     ddcList: DDC,
     props: {
-      value: {
+      modelValue: {
         required: true,
         default: '',
+      },
+      dense: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -70,7 +77,7 @@
       }
     },
     watch: {
-      value (val) {
+      modelValue (val) {
         if (!!val && !this.scheme && !this.val) {
           var splitVal = val.split(';')
 
@@ -103,7 +110,7 @@
           result = this.scheme.value + ';' + (!!this.val ? (this.knownSchemes[this.scheme.value] ? this.val[this.knownSchemes[this.scheme.value].itemValue] : this.val) : '*')
         }
 
-        this.$emit('input', result)
+        this.$emit('update:model-value', result)
       }
     }
   }

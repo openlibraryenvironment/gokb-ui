@@ -4,7 +4,7 @@ const api = (baseServices) => ({
   get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${TITLE_PATH}/${id}?history=true`,
+      url: import.meta.env.VITE_API_BASE_URL + `${TITLE_PATH}/${id}?history=true`,
     }, cancelToken)
   },
   getTipps (id, parameter, cancelToken) {
@@ -12,12 +12,12 @@ const api = (baseServices) => ({
 
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${TITLE_PATH}/${id}/tipps?${urlParameter}`,
+      url: import.meta.env.VITE_API_BASE_URL + `${TITLE_PATH}/${id}/tipps?${urlParameter}`,
     }, cancelToken)
   },
   createOrUpdate (data, cancelToken) {
     const { id } = data
-    const url = id ? process.env.VUE_APP_API_BASE_URL + `${TITLE_PATH}/${id}` : process.env.VUE_APP_API_BASE_URL + TITLE_PATH
+    const url = id ? import.meta.env.VITE_API_BASE_URL + `${TITLE_PATH}/${id}` : import.meta.env.VITE_API_BASE_URL + TITLE_PATH
     return baseServices.request({
       method: id ? 'PUT' : 'POST',
       url,
@@ -25,7 +25,7 @@ const api = (baseServices) => ({
     }, cancelToken)
   },
   updateHistory (id, data, cancelToken) {
-    const url = process.env.VUE_APP_API_BASE_URL + `${TITLE_PATH}/${id}/history`
+    const url = import.meta.env.VITE_API_BASE_URL + `${TITLE_PATH}/${id}/history`
     return baseServices.request({
       method: 'PUT',
       url,
@@ -61,7 +61,7 @@ const api = (baseServices) => ({
     }
 
     const queryParameters = baseServices.createQueryParameters(parameterData)
-    const url = process.env.VUE_APP_API_BASE_URL + `${TITLE_PATH}/${id}/merge?${queryParameters}`
+    const url = import.meta.env.VITE_API_BASE_URL + `${TITLE_PATH}/${id}/merge?${queryParameters}`
     return baseServices.request({
       method: 'PUT',
       url,

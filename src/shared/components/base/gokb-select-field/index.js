@@ -1,1 +1,1 @@
-export default from './gokb-select-field'
+export {default} from './gokb-select-field'

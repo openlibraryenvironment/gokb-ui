@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import {reactive} from 'vue'
 import loading from './loading'
 
-export default loading(Vue)
+export default loading(reactive)

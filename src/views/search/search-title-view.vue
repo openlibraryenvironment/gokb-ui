@@ -71,19 +71,22 @@
               value: 'type',
               properties: {
                 label: this.$i18n.t('component.title.type.label'),
-                width: '100%'
-              },
-              items: [
-                { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
-                { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
-                { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
-                { name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
-              ]
+                width: '100%',
+                staticItems: [
+                  { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
+                  { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
+                  { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
+                  { name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
+                ]
+              }
             },
             {
               type: 'GokbSearchPublisherField',
               name: 'publisher',
-              value: 'publisherId'
+              value: 'publisherId',
+              properties: {
+                label: this.$i18n.tc('component.title.publisher.label')
+              }
             }
           ],
           [
@@ -101,7 +104,7 @@
               name: 'subject',
               value: 'subjectValue',
               properties: {
-                label: this.$i18n.tc('component.subjects.label')
+                label: this.$i18n.tc('component.subject.label')
               }
             },
             {
@@ -121,27 +124,27 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.general.name'),
+            title: this.$i18n.t('component.general.name'),
             align: 'start',
             sortable: true,
             value: 'link'
           },
           {
-            text: this.$i18n.tc('component.title.publisher.label'),
+            title: this.$i18n.tc('component.title.publisher.label'),
             align: 'start',
             width: '25%',
             sortable: true,
             value: 'publisher'
           },
           {
-            text: this.$i18n.t('component.title.type.label'),
+            title: this.$i18n.t('component.title.type.label'),
             align: 'start',
             width: '150px',
             sortable: false,
             value: 'type'
           },
           {
-            text: this.$i18n.t('component.title.publishStart'),
+            title: this.$i18n.t('component.title.publishStart'),
             align: 'end',
             width: '150px',
             sortable: false,
@@ -203,7 +206,7 @@
           startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
           linkTwo: publisher ? { value: publisher.name, route: EDIT_PROVIDER_ROUTE, id: 'publisherId' } : undefined,
-          publisher: _embedded.publisher.map(pub => pub.name),
+          publisher: _embedded.publisher.map(pub => pub.name).join(', '),
           status: status?.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined

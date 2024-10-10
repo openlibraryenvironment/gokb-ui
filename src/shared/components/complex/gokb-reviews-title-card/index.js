@@ -1,1 +1,1 @@
-export default from './gokb-reviews-title-card'
+export {default} from './gokb-reviews-title-card'

@@ -4,28 +4,30 @@
       v-if="readonly"
       v-model="localName"
       :label="label"
-      :dense="dense"
+      :density="dense ? 'compact' : 'default'"
       disabled
     />
     <div style="color:red;" v-if="localErrorMessage.length > 0"> {{ localErrorMessage }} </div>
   </div>
 
   <v-select
+    v-else
     ref="select"
-    v-else-if="items"
     v-model="localValue"
     :items="localizedItems"
     :label="label"
     :placeholder="placeholder"
-    item-text="name"
+    item-title="name"
     item-value="id"
-    :rules="rules"
+    :rules="selectRules"
     :no-data-text="$t('search.results.empty')"
-    :style="{ maxWidth: width }"
+    min-width="150px"
+    :max-width="width"
     :clearable="clearable && !required"
     :return-object="returnObject"
     :persistent-placeholder="!!placeholder"
-    :dense="dense"
+    variant="underlined"
+    :density="dense ? 'compact' : 'default'"
   >
     <template #label>
       {{ label }}
@@ -47,11 +49,12 @@
   export default {
     name: 'GokbSelectField',
     extends: BaseComponent,
+    emits: ['update:model-value'],
     label: '',
     entityName: undefined,
     searchParams: {},
     props: {
-      value: {
+      modelValue: {
         type: [Object, String, Number, Array, Boolean],
         required: false,
         default: () => undefined,
@@ -110,74 +113,103 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      staticItems: {
+        type: Array,
+        required: false,
+        default: undefined
       }
     },
     data () {
       return {
-        items: [],
+        rawItems: [],
+        localizedItems: [],
         stateLabel: undefined
       }
     },
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (value) {
           // console.log('select field', value)
-          this.$emit('input', value)
+          this.$emit('update:model-value', value)
         }
       },
       localName () {
         return this.localValue?.name || undefined
       },
-      rules () {
+      selectRules () {
         return [value => (!!this.required && !!value) || !this.required || this.$i18n.t('validation.missingSelection')]
       },
       localErrorMessage () {
         return this.apiErrors ? this.$i18n.t(this.apiErrors[0].messageCode) : []
+      }
+    },
+    watch: {
+      rawItems: {
+        handler () {
+          this.updateItems()
+        },
+        deep: true
       },
-      localizedItems () {
-        return this.items
+      '$i18n.locale'() {
+        this.updateItems()
       }
     },
     async mounted () {
-      this.fetch()
+      if (!this.staticItems) {
+        this.fetch()
+      }
+      else {
+        this.rawItems = this.staticItems
+
+        if (!!this.initItem) {
+          this.setInit(this.initItem)
+        }
+      }
     },
     methods: {
       transform (result) {
         const { data: { data } } = result
         return data
       },
+      updateItems (){
+        this.localizedItems = this.rawItems
+      },
+      localizeValue (val) {
+        return val
+      },
       setInit (init) {
         var selected
 
         if (init) {
           if (typeof init === 'string') {
-            selected = this.items.filter(item => (item.name === init || item.value === init))
+            selected = this.rawItems.filter(item => (item.name === init || item.value === init))
           } else if (typeof init === 'number') {
-            selected = this.items.filter(item => (item.id === init))
+            selected = this.rawItems.filter(item => (item.id === init))
           } else if (init instanceof Object) {
             if (init.id) {
-              selected = this.items.filter(item => item.id === init.id || item.value === init.id)
+              selected = this.rawItems.filter(item => item.id === init.id || item.value === init.id)
             }
             if (!selected && init.value) {
-              selected = this.items.filter(item => (item.name === init.value || item.value === init.value))
+              selected = this.rawItems.filter(item => (item.name === init.value || item.value === init.value))
             }
             if (!selected && init.name) {
-              selected = this.items.filter(item => (item.name === init.name || item.value === init.name))
+              selected = this.rawItems.filter(item => (item.name === init.name || item.value === init.name))
             }
           }
 
           if (selected?.length === 1) {
-            this.localValue = selected[0]
+            this.localValue = selected.map (item => ({ value: item.value, id: item.id, name: this.localizeValue(item.value) }))[0]
           }
         }
       },
       async fetch () {
-        if (this.entityName) {
+        if (!!this.entityName) {
           if (!!this.stateLabel && states.hasCategory(this.stateLabel)) {
-            this.items = states.getCategory(this.stateLabel)
+            this.rawItems = states.getCategory(this.stateLabel)
           } else {
             const entityService = genericEntityServices(this.entityName)
             const parameters = { _sort: 'name', _order: 'asc', ...this.searchParams }
@@ -186,26 +218,20 @@
               instance: this
             })
 
-            if (response) {
-              this.items = this.transform(response)
+            if (!!response) {
+              this.rawItems = this.transform(response)
 
-              if (this.stateLabel) {
-                states.addCategory(this.stateLabel, this.items)
+              if (!!this.stateLabel) {
+                states.addCategory(this.stateLabel, this.rawItems)
               }
             }
           }
 
-          if (this.initItem) {
+          if (!!this.initItem) {
             this.setInit(this.initItem)
           }
-          else if (!!this.value && typeof this.value === 'string') {
-            this.setInit(this.value)
-          }
-        } else if (this.$attrs.items) {
-          this.items = this.$attrs.items
-
-          if (this.initItem) {
-            this.setInit(this.initItem)
+          else if (!!this.modelValue && typeof this.modelValue === 'string') {
+            this.setInit(this.modelValue)
           }
         }
       }

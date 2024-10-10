@@ -1,1 +1,1 @@
-export default from './gokb-namespace-field'
+export {default} from './gokb-namespace-field'

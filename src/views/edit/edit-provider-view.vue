@@ -1,16 +1,16 @@
 <template>
   <div>
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+        <template #actions>
+          <v-icon @click="showSnackbar = false" color="white">mdi-close</v-icon>
+        </template>
+    </v-snackbar>
     <gokb-page
+      ref="titlepage"
       v-if="accessible && !notFound"
       :key="version"
       :title="title"
-      @valid="valid = $event"
-      @submit="update"
     >
       <gokb-error-component :value="error" />
       <gokb-section :no-tool-bar="true">
@@ -29,8 +29,8 @@
           <v-col cols="6">
             <gokb-state-select-field
               v-model="providerObject.status"
-              :deletable="!isReadonly"
-              :editable="!isReadonly"
+              :deletable="isAdmin"
+              :editable="isAdmin"
               @delete="markDeleted"
             />
           </v-col>
@@ -87,10 +87,8 @@
             v-model="tab"
             class="mx-4"
           >
-            <v-tabs-slider color="primary" />
-
             <v-tab
-              key="variants"
+              value="variants"
               :active-class="tabClass"
             >
               {{ $tc('component.variantName.label', 2) }}
@@ -106,7 +104,7 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="identifiers"
+              value="identifiers"
               :active-class="tabClass"
             >
               {{ $tc('component.identifier.label', 2) }}
@@ -122,7 +120,7 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="platforms"
+              value="platforms"
               :active-class="tabClass"
             >
               {{ $tc('component.platform.label', 2) }}
@@ -139,7 +137,7 @@
             </v-tab>
             <v-tab
               v-if="!!id"
-              key="packages"
+              value="packages"
               :active-class="tabClass"
             >
               {{ $tc('component.package.label', 2) }}
@@ -148,7 +146,7 @@
               </v-chip>
             </v-tab>
             <v-tab
-              key="curators"
+              value="curators"
               :active-class="tabClass"
             >
               {{ $tc('component.curatoryGroup.label', 2) }}
@@ -164,7 +162,7 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="offices"
+              value="offices"
               :active-class="tabClass"
             >
               {{ $tc('component.office.label', 2) }}
@@ -180,11 +178,9 @@
               </v-icon>
             </v-tab>
           </v-tabs>
-          <v-tabs-items
-            v-model="tab"
-          >
-            <v-tab-item
-              key="variants"
+          <v-window v-model="tab">
+            <v-window-item
+              value="variants"
               class="mt-4"
             >
               <gokb-alternate-names-section
@@ -194,9 +190,9 @@
                 :api-errors="errors.variantNames"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="identifiers"
+            </v-window-item>
+            <v-window-item
+              value="identifiers"
               class="mt-4"
             >
               <gokb-identifier-section
@@ -206,9 +202,9 @@
                 :api-errors="errors.ids"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="platforms"
+            </v-window-item>
+            <v-window-item
+              value="platforms"
               class="mt-4"
             >
               <gokb-platform-section
@@ -219,10 +215,10 @@
                 :provider-id="providerObject.id"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
+            </v-window-item>
+            <v-window-item
               v-if="!!id"
-              key="packages"
+              value="packages"
               class="mt-4"
             >
               <gokb-packages-section
@@ -232,9 +228,9 @@
                 :provider-id="providerObject.id"
                 @update="updatePackageCount"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="curators"
+            </v-window-item>
+            <v-window-item
+              value="curators"
               class="mt-4"
             >
               <gokb-curatory-group-section
@@ -244,9 +240,9 @@
                 :api-errors="errors.curatoryGroups"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="offices"
+            </v-window-item>
+            <v-window-item
+              value="offices"
               class="mt-4"
             >
               <gokb-offices-section
@@ -256,8 +252,8 @@
                 :api-errors="errors.offices"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-          </v-tabs-items>
+            </v-window-item>
+          </v-window>
         </v-col>
       </v-row>
       <div v-else>
@@ -275,12 +271,14 @@
           v-model="allPlatforms"
           :expanded="allPlatforms.length > 0"
           :sub-title="$tc('component.platform.label', 2)"
+          :provider-id="providerObject.id"
           :disabled="isReadonly"
         />
         <gokb-packages-section
           v-if="!!id"
           :sub-title="$tc('component.package.label', 2)"
           :expanded="packageCount > 0"
+          :provider-id="providerObject.id"
           disabled
         />
         <gokb-curatory-group-section
@@ -299,7 +297,7 @@
       <template #buttons>
         <gokb-button
           v-if="!isReadonly"
-          @click="reset"
+          @click.prevent="reset"
         >
           {{ $t('btn.reset') }}
         </gokb-button>
@@ -342,7 +340,8 @@
         <gokb-button
           v-if="!isReadonly"
           :disabled="!valid"
-          default
+          is-submit
+          @click="update"
         >
           {{ updateButtonText }}
         </gokb-button>
@@ -354,7 +353,7 @@
       title=""
     >
       <v-card>
-        <v-card-text>
+        <v-card-text align="center">
           <div class="text-h5 primary--text">
             {{ $t('component.general.notFound', [$tc('component.provider.label')]) }}
           </div>
@@ -414,7 +413,10 @@
         offices: [],
         errors: {},
         updateUrl: undefined,
-        eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         version: undefined,
         providerObject: {
           id: undefined,
@@ -442,6 +444,9 @@
       },
       isReadonly () {
         return !accountModel.loggedIn || (this.isEdit && !this.updateUrl) || (!this.isEdit && !accountModel.hasRole('ROLE_EDITOR'))
+      },
+      isAdmin () {
+        return accountModel.loggedIn() && accountModel.hasRole('ROLE_ADMIN')
       },
       loggedIn () {
         return accountModel.loggedIn()
@@ -484,23 +489,20 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name]),
-            color: 'success',
-            timeout: 2000
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label')])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name]),
-            color: 'warning',
-            timeout: -1
-          })
+          this.messageColor = 'warning'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         }
       }
 
@@ -509,7 +511,7 @@
       }
     },
     mounted () {
-      this.tab = parseInt(this.$route.query.tab) || null
+      this.tab = this.$route?.query?.tab || 'variants'
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -517,7 +519,7 @@
       },
       async update () {
         var isUpdate = !!this.id
-        this.eventMessages = []
+        this.showSnackbar = false
         const activeGroup = accountModel.activeGroup()
 
         const data = {
@@ -553,11 +555,11 @@
         // todo: check error code
         if (response?.status < 400) {
           if (isUpdate) {
-            this.eventMessages.push({
-              message: this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.allNames.name]),
-              color: 'success',
-              timeout: 2000
-            })
+            this.messageColor = 'success'
+            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.allNames.name])
+            this.currentSnackBarTimeout = 4000
+            this.showSnackbar = true
+
             this.reload()
           } else {
             this.$router.push({
@@ -570,23 +572,20 @@
           }
         } else {
           if (response.status === 409) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.provider.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.provider.label')])
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else if (response.status === 500) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.provider.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.provider.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else {
-            this.eventMessages.push({
-              message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.provider.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.provider.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
             this.errors = response.data.error
           }
         }
@@ -612,7 +611,7 @@
         this.offices = []
         this.errors = {}
         this.updateUrl = undefined
-        this.eventMessages = []
+        this.showSnackbar = false
         this.version = undefined
         this.providerObject = {
           id: undefined,

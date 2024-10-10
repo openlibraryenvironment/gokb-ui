@@ -1,15 +1,15 @@
 <template>
   <div>
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+        <template #actions>
+          <v-icon @click="showSnackbar = false" color="white">mdi-close</v-icon>
+        </template>
+    </v-snackbar>
     <gokb-page
       v-if="!notFound"
       :key="version"
       :title="$tc('component.tipp.label')"
-      @submit="update"
     >
       <gokb-error-component :value="error" />
       <gokb-section :sub-title="$t('component.general.general')">
@@ -50,6 +50,7 @@
               :readonly="isReadonly"
               return-object
               show-link
+              dense
             />
           </v-col>
         </v-row>
@@ -71,16 +72,17 @@
             v-model="tab"
             class="mx-4"
           >
-            <v-tabs-slider color="black" />
             <v-tab
-              key="access"
+              value="access"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $t('component.tipp.access.label') }}
             </v-tab>
             <v-tab
-              key="coverage"
+              value="coverage"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $t('component.tipp.coverage.label') }}
               <v-icon
@@ -93,9 +95,10 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="identifiers"
+              value="identifiers"
               :style="[!!errors.ids ? { border: '1px solid red', borderRadius: '2px' } : {}]"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.identifier.label', 2) }}
               <v-chip
@@ -113,8 +116,9 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="subjects"
+              value="subjects"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.subject.label', 2) }}
               <v-chip class="ma-2">
@@ -130,8 +134,9 @@
             </v-tab>
             <v-tab
               v-if="id && loggedIn"
-              key="reviews"
+              value="reviews"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.review.label', 2) }}
               <v-chip
@@ -142,14 +147,15 @@
               </v-chip>
             </v-tab>
             <v-tab
-              key="other"
+              value="other"
               :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $t('component.tipp.other.label') }}
             </v-tab>
           </v-tabs>
-          <v-tabs-items v-model="tab">
-            <v-tab-item key="access">
+          <v-window v-model="tab">
+            <v-window-item value="access">
               <gokb-section no-tool-bar>
                 <v-row dense>
                   <v-col>
@@ -169,6 +175,7 @@
                       v-model="packageTitleItem.accessStartDate"
                       :readonly="isReadonly"
                       :label="$t('component.tipp.accessStartDate')"
+                      :api-errors="errors.accessStartDate"
                     />
                   </v-col>
                   <v-col>
@@ -176,6 +183,7 @@
                       v-model="packageTitleItem.accessEndDate"
                       :readonly="isReadonly"
                       :label="$t('component.tipp.accessEndDate')"
+                      :api-errors="errors.accessEndDate"
                     />
                   </v-col>
                   <v-col>
@@ -199,9 +207,10 @@
                   </v-col>
                 </v-row>
               </gokb-section>
-            </v-tab-item>
-            <v-tab-item key="coverage">
+            </v-window-item>
+            <v-window-item value="coverage">
               <v-toolbar
+                class="ps-4 bg-bg"
                 dense
                 flat
               >
@@ -270,6 +279,7 @@
                           :readonly="isReadonly"
                           dense
                           :label="$t('component.tipp.coverage.startDate')"
+                          :api-errors="statement.errors ? statement.errors.startDate : undefined"
                         />
                       </v-col>
                       <v-col cols="4">
@@ -299,6 +309,7 @@
                           :readonly="isReadonly"
                           dense
                           :label="$t('component.tipp.coverage.endDate')"
+                          :api-errors="statement.errors ? statement.errors.endDate : undefined"
                         />
                       </v-col>
                       <v-col cols="4">
@@ -330,8 +341,8 @@
                   </gokb-section>
                 </v-col>
               </v-row>
-            </v-tab-item>
-            <v-tab-item key="ids">
+            </v-window-item>
+            <v-window-item value="identifiers">
               <gokb-identifier-section
                 v-model="packageTitleItem.ids"
                 :target-type="titleTypeString"
@@ -340,9 +351,9 @@
                 no-tool-bar
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="subjects"
+            </v-window-item>
+            <v-window-item
+              value="subjects"
               class="mt-4"
             >
               <gokb-subjects-section
@@ -352,10 +363,10 @@
                 no-tool-bar
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
+            </v-window-item>
+            <v-window-item
               v-if="id && loggedIn"
-              key="reviews"
+              value="reviews"
             >
               <gokb-reviews-section
                 :review-component="packageTitleItem"
@@ -364,9 +375,9 @@
                 :expandable="false"
                 @update="refreshReviewsCount"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="other"
+            </v-window-item>
+            <v-window-item
+              value="other"
             >
               <gokb-section no-tool-bar>
                 <v-row>
@@ -374,7 +385,7 @@
                     <gokb-text-field
                       v-model="packageTitleItem.publisherName"
                       :disabled="isReadonly"
-                      :label="$tc('component.title.publisher.label')"
+                      label="KBART publisher_name"
                     />
                   </v-col>
                   <v-col>
@@ -497,8 +508,8 @@
                   </v-col>
                 </v-row>
               </gokb-section>
-            </v-tab-item>
-          </v-tabs-items>
+            </v-window-item>
+          </v-window>
         </v-col>
       </v-row>
       <template #buttons>
@@ -542,8 +553,8 @@
         <gokb-button
           v-if="updateUrl || !id"
           :disabled="!packageTitleItem.title"
-          class="mr-6"
-          default
+          @click="update"
+          is-submit
         >
           {{ $t('btn.update') }}
         </gokb-button>
@@ -554,7 +565,7 @@
       title=""
     >
       <v-card>
-        <v-card-text>
+        <v-card-text align="center">
           <div class="text-h5 primary--text">
             {{ $t('component.general.notFound', [$tc('component.tipp.label')]) }}
           </div>
@@ -602,7 +613,10 @@
         coverageExpanded: true,
         selectedTitle: undefined,
         selectedItem: undefined,
-        eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         coverageObject: {
           coverageDepth: undefined, // Abstracts, Fulltext, Selected Articles
           startDate: undefined,
@@ -753,27 +767,24 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')]),
-            color: 'success',
-            timeout: 3000
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]),
-            color: 'warning',
-            timeout: -1
-          })
+          this.messageColor = 'warning'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         }
       }
 
-      this.tab = parseInt(this.$route.query.tab) || null
+      this.tab = this.$route?.query?.tab || 'access'
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -781,7 +792,7 @@
       },
       async update () {
         const activeGroup = accountModel.activeGroup()
-        this.eventMessages = []
+        this.showSnackbar = false
 
         const newTipp = {
           ...this.packageTitleItem,
@@ -814,11 +825,10 @@
 
         if (response.status < 400) {
           if (this.isEdit) {
-            this.eventMessages.push({
-              message: this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label'), this.allNames.name]),
-              color: 'success',
-              timeout: 3000
-            })
+            this.messageColor = 'success'
+            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label')])
+            this.currentSnackBarTimeout = 5000
+            this.showSnackbar = true
             this.reload()
           } else {
             this.$router.push({
@@ -831,24 +841,27 @@
           }
         } else {
           if (response.status === 409) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.tipp.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.tipp.label')])
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else if (response.status === 500) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.tipp.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.tipp.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else {
-            this.eventMessages.push({
-              message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.tipp.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.tipp.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
             this.errors = response.data.error
+
+            if (!!response.data.error.coverageStatements) {
+              for (const [key, val] of Object.entries(response.data.error.coverageStatements)) {
+                this.packageTitleItem.coverageStatements[parseInt(key)].errors = val
+              }
+            }
           }
         }
       },
@@ -865,7 +878,7 @@
         this.coverageExpanded = true
         this.selectedTitle = undefined
         this.selectedItem = undefined
-        this.eventMessages = []
+        this.showSnackbar = false
         this.coverageObject = {
           coverageDepth: undefined,
           startDate: undefined,
@@ -939,9 +952,11 @@
           instance: this
         })
 
-        if (result.status === 200) {
+        console.log(result)
+
+        if (result?.status === 200) {
           this.mapRecord(result.data)
-        } else if (result.status === 401) {
+        } else if (result?.status === 401) {
           accountModel.logout()
           const retry = await this.catchError({
             promise: tippServices.get(this.id, this.cancelToken.token),
@@ -953,7 +968,7 @@
           } else {
             this.mapRecord(retry.data)
           }
-        } else if (result.status === 404) {
+        } else {
           this.notFound = true
         }
         loading.stopLoading()

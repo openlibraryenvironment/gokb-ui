@@ -5,57 +5,65 @@
     width="max-width"
     fullscreen
   >
-    <gokb-error-component :value="error" />
-    <v-snackbar v-model="showSuccessMsg" color="success" :timeout="5000"> {{ successMsg }} </v-snackbar>
-    <v-snackbar v-model="showErrorMsg" color="error" :timeout="5000"> {{ errorMsg }} </v-snackbar>
+    <v-row v-if="!init" align="center" style="height:100vh;">
+      <v-col cols="12" class="text-center">
+        {{ $t('default.loading') }}
+      </v-col>
+    </v-row>
+    <v-lazy v-model="init">
+      <div>
+        <gokb-error-component :value="error" />
+        <v-snackbar v-model="showSuccessMsg" color="success" :timeout="5000"> {{ successMsg }} </v-snackbar>
+        <v-snackbar v-model="showErrorMsg" color="error" :timeout="5000"> {{ errorMsg }} </v-snackbar>
 
-    <gokb-confirmation-popup
-      v-model="showSubmitConfirm"
-      :message="submitConfirmationMessage"
-      @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-    />
+        <gokb-confirmation-popup
+          v-model="showSubmitConfirm"
+          :message="submitConfirmationMessage"
+          @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+        />
 
-    <gokb-reviews-header
-      v-if="reviewItem?.component"
-      :value="error"
-      :component="reviewItem.component"
-      :editable="!isReadonly"
-      :review-component="reviewItem"
-      :has-component-cards="showComponentCards"
-      :additional-vars="reviewItem.additionalVars"
-    />
+        <gokb-reviews-header
+          v-if="reviewItem?.component"
+          :value="error"
+          :component="reviewItem.component"
+          :editable="!isReadonly"
+          :review-component="reviewItem"
+          :has-component-cards="showComponentCards"
+          :additional-vars="reviewItem.additionalVars"
+        />
 
-    <gokb-reviews-components-section
-      v-if="finishedLoading && showComponentCards"
-      v-for="(wf, i) in workflow"
-      :ref="'wf' + i"
-      :key="i"
-      :value="error"
-      :reviewed-component="reviewItem.component"
-      :reference-components="reviewItem.otherComponents"
-      :review-type="reviewItem.stdDesc?.name"
-      :review-status="reviewItem.status.value"
-      :more-steps="i+1 < workflow.length"
-      :workflow="wf"
-      :editable="!isReadonly"
-      :additional-vars="reviewItem.additionalVars"
-      :expanded="activeStep === i"
-      @expand="activateStep(i)"
-      @finished-step="changeActiveStep"
-      @added="addNewComponent"
-      @close="closeReview"
-      @feedback-response="showResponse"
-    />
+        <gokb-reviews-components-section
+          v-if="finishedLoading && showComponentCards"
+          v-for="(wf, i) in workflow"
+          :ref="'wf' + i"
+          :key="i"
+          :value="error"
+          :reviewed-component="reviewItem.component"
+          :reference-components="reviewItem.otherComponents"
+          :review-type="reviewItem.stdDesc?.name"
+          :review-status="reviewItem.status.value"
+          :more-steps="i+1 < workflow.length"
+          :workflow="wf"
+          :editable="!isReadonly"
+          :additional-vars="reviewItem.additionalVars"
+          :expanded="activeStep === i"
+          @expand="activateStep(i)"
+          @finished-step="changeActiveStep"
+          @added="addNewComponent"
+          @close="closeReview"
+          @feedback-response="showResponse"
+        />
+      </div>
+    </v-lazy>
 
     <template #buttons>
-      <v-btn
+      <gokb-button
         class="ml-6 btn-default"
         :to="{ name: '/review', params: { id: id} }"
-        target="_blank"
+        new-tab
       >
         {{ $t('component.tipp.toFullView') }}
-      </v-btn>
-      <v-spacer />
+    </gokb-button>
       <gokb-button
         v-if="escalatable"
         @click="escalate"
@@ -113,7 +121,13 @@
       GokbConfirmationPopup
     },
     extends: BaseComponent,
+    emits: ['update:model-value', 'edit'],
     props: {
+      modelValue: {
+        type: [Boolean, Number],
+        required: false,
+        default: false
+      },
       selected: {
         type: Object,
         required: false,
@@ -146,6 +160,7 @@
         deletedItems: [],
         workflow: [],
         activeStep: 0,
+        init: true,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,
@@ -180,10 +195,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       cmpType () {
@@ -196,7 +211,7 @@
         return !this.updateUrl
       },
       showComponentCards () {
-        return this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title'
+        return this.reviewItem?.component?.route === '/title' || this.reviewItem?.component?.route === '/package-title'
       },
       isValid () {
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
@@ -480,6 +495,38 @@
             this.deescalatable = response.data.isDeescalatable
             this.escalationTarget = response.data.escalationTargetGroup
           })
+      },
+      async escalate () {
+        const response = await this.catchError({
+          promise: reviewServices.escalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.successMsg = this.$i18n.t('component.review.edit.success.escalated')
+          this.showSuccessMsg = true
+
+          this.fetchReview (this.id)
+        }
+        else {
+          this.errorMsg = this.$i18n.t('error.general.500')
+          this.showErrorMsg = true
+        }
+      },
+      async deescalate () {
+        const response = await this.catchError({
+          promise: reviewServices.deescalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.successMsg = this.$i18n.t('component.review.edit.success.deescalated')
+          this.showSuccessMsg = true
+        }
+        else {
+          this.errorMsg = this.$i18n.t('error.general.500')
+          this.showErrorMsg = true
+        }
       },
       save () {
         this.$emit('edit', 'edited')

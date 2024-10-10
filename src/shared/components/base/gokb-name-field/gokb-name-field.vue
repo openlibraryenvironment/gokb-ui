@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span>
+    <span class="text-primary">
       {{ label }}
       <span
         v-if="!disabled && markRequired"
@@ -9,12 +9,9 @@
         *
       </span>
     </span>
-    <v-banner>
-      <div
-        style="font-size:1.1rem"
-        class="font-weight-bold"
-      >
-        {{ currentName || value.name }}
+    <v-banner class="bg-card">
+      <div class="font-weight-bold" style="font-size: 1.1rem;">
+        {{ currentName || modelValue.name }}
       </div>
       <template v-slot:actions>
         <gokb-dialog
@@ -28,25 +25,27 @@
             ref="nameTextField"
             v-model="editedVal"
             :rules="rules"
+            :api-errors="activeApiError"
           />
+          <v-checkbox
+            v-if="currentName"
+            v-model="keepCurrent"
+            class="ml-2 mt-4"
+            :label="keepCurrentLabel"
+            dense
+          />
+
           <template #buttons>
-            <v-checkbox
-              v-if="currentName"
-              v-model="keepCurrent"
-              class="ml-2 mt-4"
-              :label="keepCurrentLabel"
-            />
-            <v-spacer />
             <gokb-button
               text
               @click="close"
             >
               {{ $i18n.t('btn.cancel') }}
             </gokb-button>
-
             <gokb-button
-              :disabled="!editedVal || editedVal === currentName || editedVal === inValidName"
-              default
+              class="ml-4"
+              :disabled="!editedVal || editedVal === currentName || !!activeApiError"
+              is-submit
             >
               {{ $i18n.t('btn.confirm') }}
             </gokb-button>
@@ -57,12 +56,13 @@
           :message="messageToConfirm"
           @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
         />
-        <v-btn
+        <gokb-button
           v-if="!disabled"
-          @click="showEditName"
+          color="primary"
+          @click.prevent="showEditName"
         >
           {{ $i18n.t('header.edit.label', [$i18n.t('component.general.name')]) }}
-        </v-btn>
+        </gokb-button>
       </template>
     </v-banner>
   </div>
@@ -77,8 +77,9 @@
   export default {
     name: 'GokbNameField',
     components: { GokbConfirmationPopup },
+    emits: ['name'],
     props: {
-      value: {
+      modelValue: {
         required: true,
         default: undefined,
         type: [Object, String]
@@ -131,7 +132,7 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
           this.$emit('name', localValue)
@@ -146,12 +147,14 @@
       rules () {
         return [
           value => value?.length > 0 || this.$i18n.t('validation.missingName'),
-          value => !/.*([(\-]|\(\))$/.test(value) || this.$i18n.t('error.general.name.malformedEnding'),
-          value => !this.inValidName || value.trim().toLowerCase() !== this.inValidName || this.$i18n.t('error.general.name.notUnique')
+          value => !/.*([(\-]|\(\))$/.test(value) || this.$i18n.t('error.general.name.malformedEnding')
         ]
       },
       valid () {
         return !!this.editedVal
+      },
+      activeApiError () {
+        return !!this.inValidName && this.editedVal?.toLowerCase() === this.inValidName ? [{ messageCode: 'error.general.name.notUnique' }] : undefined
       }
     },
     watch: {
@@ -166,7 +169,7 @@
         }
       },
       tempId () {
-        return 'tempId' + Math.random().toString(36).substr(2, 5)
+        return 'tempId' + Math.random().toString(36).substring(2, 5)
       },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
@@ -199,7 +202,6 @@
       },
       setNewName () {
         if (!!this.currentName && this.keepCurrent && !this.localValue.alts.find(({ variantName }) => variantName === this.currentName)) {
-          console.log("Adding old name to alts..")
           this.localValue.alts.push({ id: this.tempId(), variantName: this.currentName, isDeletable: true })
         }
         this.currentName = this.editedVal

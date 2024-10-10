@@ -12,13 +12,28 @@
       </v-alert>
     </span>
     <gokb-section :title="$t('component.general.general')">
-      <gokb-email-field
-        id="email"
-        v-model="email"
-        :label="$t('component.user.email')"
-        :disabled="!updateProfileAvailable"
-        :api-errors="errors.email"
-      />
+      <v-row>
+        <v-col>
+          <gokb-email-field
+            id="email"
+            v-model="email"
+            :label="$t('component.user.email')"
+            :disabled="!updateProfileAvailable"
+            :api-errors="errors.email"
+          />
+        </v-col>
+        <v-col>
+          <div style="width:200px">
+            <v-select
+              v-model="preferredLocaleString"
+              :items="languageOptions"
+              variant="underlined"
+              :label="$t('component.user.preferredLocaleString.label')"
+              clearable
+            />
+          </div>
+        </v-col>
+      </v-row>
     </gokb-section>
     <gokb-section :title="$t('component.user.password')">
       <gokb-password-field
@@ -109,17 +124,18 @@
         origpass: undefined,
         newpass: undefined,
         repeatpass: undefined,
-
         allCuratoryGroups: [],
-
+        languageOptions: ['de', 'en'],
+        preferredLocaleString: undefined,
         updateProfileUrl: undefined,
         deleteProfileUrl: undefined,
-
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: { text: undefined, vars: undefined },
-
+        messageToConfirm: {
+          text: undefined,
+          vars: undefined
+        },
         passwordWrongMessage: undefined,
       }
     },
@@ -135,7 +151,7 @@
       },
       loggedIn () {
         return account.loggedIn()
-      },
+      }
     },
     watch: {
       passwordWrongMessage () {
@@ -194,36 +210,29 @@
         this.confirmationPopUpVisible = true
       },
       async fetchProfile () {
-        const {
-          data: {
-            data: {
-              email,
-              curatoryGroups,
-              _links: {
-                update: { href: updateProfileUrl },
-                delete: { href: deleteProfileUrl }
-              }
-            }
-          }
-        } = await this.catchError({
+        const response = await this.catchError({
           promise: profileServices.get(this.cancelToken.token),
           instance: this
         })
 
-        this.updateProfileUrl = updateProfileUrl
-        this.deleteProfileUrl = deleteProfileUrl
-        this.email = email
-        this.allCuratoryGroups = curatoryGroups.map(group => ({
-          ...group,
-          isDeletable: true
-        }))
+        if (response.status === 200) {
+          this.updateProfileUrl = response.data.data._links.update?.href
+          this.deleteProfileUrl = response.data.data._links.delete?.href
+          this.preferredLocaleString = response.data.data.preferredLocaleString
+          this.email = response.data.data.email
+          this.allCuratoryGroups = response.data.data.curatoryGroups.map(group => ({
+            ...group,
+            isDeletable: true
+          }))
+        }
       },
-      async updateProfile (form) {
+      async updateProfile () {
         this.successMsgShown = false
 
         const result = await this.catchError({
           promise: profileServices.update(this.updateProfileUrl, {
             email: this.email,
+            preferredLocaleString: this.preferredLocaleString,
             ...(this.origpass ? { password: this.origpass } : {}),
             ...(this.newpass ? { new_password: this.newpass } : {}),
             ...(account.hasRole('ROLE_ADMIN') ? { curatoryGroupIds: this.allCuratoryGroups.map(({ id }) => id) } : {}),

@@ -24,6 +24,7 @@
     "reactivate": "Reactivate",
     "refresh": "Refresh",
     "reload": "Discard changes",
+    "remove": "Remove",
     "reset": "Reset",
     "retire": "Retire",
     "search": "Search",
@@ -35,7 +36,8 @@
     "bulkSelect": "Set Status of {0} entries to ...",
     "bulkCloseReview": "Close {0} selected review | Close {0} selected reviews",
     "closeSelectedReviews": "Close selected reviews",
-    "moreFilters": "More Filters"
+    "moreFilters": "More Filters",
+    "moreOptions": "More Options"
   },
   "main": {
     "docs": {
@@ -57,8 +59,19 @@
     "false": "No",
     "all": "All",
     "ISOdateHint": "YYYY-MM-DD",
+    "loading": "Loading ...",
+    "languages": {
+      "en": "English",
+      "de": "German"
+    },
     "error": {
       "label": "Error | Errors"
+    },
+    "table": {
+      "noData": {
+        "search": "No Results",
+        "props": "No Entries"
+      }
     },
     "404": {
       "title": "Unknown Path",
@@ -120,7 +133,8 @@
     "profile": "Profile",
     "register": "Registration",
     "noaccess": "No Access",
-    "kbartValidator": "KBART Validator"
+    "kbartValidator": "KBART Validator",
+    "error": "Error"
   },
   "pending": {
     "lists": {
@@ -179,14 +193,21 @@
         "401": "The entered login information is not valid.",
         "500": "There was an error processing the login request. Please try again later."
       },
-      "expired": "Your login has timed out, please login again."
+      "expired": "Your login has timed out, please login again.",
+      "forgotPassword": "Forgot password"
     },
     "logout": {
       "label": "Log out"
     },
     "register": {
       "label": "Register",
-      "info": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and unless directed otherwise send an email with your chosen username and information about your institution to {0}. We will contact you as soon as possible!"
+      "info": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and we will contact you after a review. If your institution is not yet registered as a curator, please contact us at {0} and tell us about it.",
+      "nomail": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and we will contact you after a review. If your institution is not yet registered as a curator, please contact us and tell us about it."
+    },
+    "activateUser": {
+      "label": "Activate User",
+      "info": "Please confirm the activation of this account. This will release the default lock and apply basic editing permissions.",
+      "sendAlert": "Alert user of the activation via email"
     }
   },
   "validation": {
@@ -206,7 +227,8 @@
     "volumeRange": "The start volume must be before the end volume",
     "issueRange": "The start issue must be before the end issue",
     "missingStartIssue": "An end issue requires a set start issue!",
-    "missingStartVolume": "An end volume requires a set start volume!"
+    "missingStartVolume": "An end volume requires a set start volume!",
+    "refdataLookup": "Unable to save unrecognized value!"
   },
   "job": {
     "label": "Import | Imports",
@@ -393,6 +415,7 @@
       },
       "error": {
         "label": "Error | Errors",
+        "general": "Validation has identified errors in this file!",
         "empty": "Missing Value",
         "invalid": "Invalid Value",
         "fields": "Column Statistics - Errors"
@@ -525,6 +548,9 @@
     "label": "Search",
     "global": {
       "placeholder": "Titles, Packages, Providers"
+    },
+    "generic": {
+      "label": "Name, UUID, Identifiers"
     },
     "results": {
       "label": "Results",
@@ -709,7 +735,7 @@
         "currentTitles": "Package Titles",
         "confirm": {
           "kbartLocal": {
-            "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'."
+            "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'. Please make sure to set the List Status to 'Checked' after the import has finished and has been verified."
           },
           "kbartDryRun": {
             "label": "Please confirm your changes to the package {0} and the processing of the KBART file '{1}'. The file is only processed as a dry run!"
@@ -722,6 +748,9 @@
           },
           "noTipps": {
             "label": "Please confirm your changes to the package {0}."
+          },
+          "noTippsListInProgress": {
+            "label": "Please confirm your changes to the package {0}. Please also make sure to set the List Status to 'Checked' after a KBART import has finished and has been verified."
           }
         }
       },
@@ -992,7 +1021,10 @@
       "validation": {
         "value": "Value {0} is invalid!",
         "generic": "This identifier value is invalid!",
-        "pattern": "The entered value does not meet the format requirements."
+        "pattern": "The entered value does not meet the format requirements.",
+        "list": {
+          "duplicate": "This identifier is already present in this list!"
+        }
       }
     },
     "user": {
@@ -1000,6 +1032,9 @@
       "username": "Username",
       "register": "Registration",
       "password": "Password",
+      "preferredLocaleString": {
+        "label": "Preferred Language"
+      },
       "email": "Email",
       "role": {
         "label": "Role | Roles",
@@ -1036,6 +1071,20 @@
         "missing": {
           "username": "Please enter a username.",
           "password": "Please enter a password."
+        },
+        "activate": {
+          "invalidMail": "Unable to send user notification due to invalid email address!",
+          "missingMail": "Unable to send user notification due to missing email address!",
+          "missingConfig": "Unable to send user notification due to missing configuration!"
+        },
+        "create": {
+          "nameInUse": "An account with this username already exists!"
+        },
+        "update": {
+          "forbidden": "You are not allowed to edit this account!"
+        },
+        "delete": {
+          "forbidden": "Only system admins are allowed to delete admin accounts!"
         }
       }
     },
@@ -1048,7 +1097,7 @@
         "label": "Action taken"
       },
       "type": {
-        "label": "Category"
+        "label": "Component Type"
       },
       "todo": {
         "label": "ToDo"
@@ -1180,6 +1229,12 @@
           "add": {
             "label": "Generate new title",
             "message": "Please confirm the creation of a new reference title with ALL remaining identifiers of the reviewed package title."
+          },
+          "tippCleanup": {
+            "confirm": {
+              "label": "Cleanup",
+              "message": "Please confirm the cleanup of all archived package titles connected to the same reference title."
+            }
           }
         }
       },

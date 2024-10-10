@@ -1,1 +1,1 @@
-export default from './gokb-title-history-section'
+export {default} from './gokb-title-history-section'

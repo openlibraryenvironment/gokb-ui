@@ -59,13 +59,14 @@
 
   export default {
     name: 'GokbPricesSection',
+    emits: ['update:model-value', 'update'],
     components: {
       GokbConfirmationPopup,
       GokbAddItemPopup
     },
     extends: BaseComponent,
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -107,14 +108,14 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       prices () {
-        return [...this.value]
+        return [...this.modelValue]
           .map(item => ({
             ...item,
             localCurrency: (item.currency && item.currency.name),

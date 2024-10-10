@@ -16,7 +16,7 @@
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddNewCuratoryGroup"
+        @click.prevent="showAddNewCuratoryGroup"
       >
         {{ $t('btn.add') }}
       </gokb-button>
@@ -26,9 +26,9 @@
         icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
-        @click="confirmDeleteSelectedItems"
+        @click.prevent="confirmDeleteSelectedItems"
       >
-        {{ $t('btn.delete') }}
+        {{ $t('btn.remove') }}
       </gokb-button>
     </template>
     <template #actions>
@@ -60,12 +60,13 @@
 
   export default {
     name: 'GokbCuratoryGroupSection',
+    emits: ['update:model-value'],
     components: {
       GokbAddItemPopup,
       GokbConfirmationPopup
     },
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -105,6 +106,7 @@
         addCuratoryGroupPopupVisible: false,
         curatoryGroupsOptions: {
           page: 1,
+          sortBy: [],
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedCuratoryGroups: [],
@@ -118,14 +120,14 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       curatoryGroups () {
-        return [...this.value]
+        return [...this.modelValue]
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .map(group => ({ ...group, popup: { value: group.name, label: 'name', type: 'GokbCuratoryGroupPopup' } }))
           .slice((this.curatoryGroupsOptions.page - 1) * ROWS_PER_PAGE, this.curatoryGroupsOptions.page * ROWS_PER_PAGE)
@@ -141,7 +143,7 @@
       },
       curatoryGroupsTableHeaders () {
         return [
-          { text: this.$i18n.t('component.general.name'), align: 'start', width: '100%', value: 'popup', sortable: false }
+          { title: this.$i18n.t('component.general.name'), align: 'start', width: '100%', value: 'popup', sortable: false }
         ]
       }
     },

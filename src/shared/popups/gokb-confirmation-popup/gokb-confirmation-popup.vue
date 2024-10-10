@@ -6,30 +6,28 @@
     @submit="submit"
   >
     <v-sheet>
-      <i18n
-        v-if="message.vars"
-        :path="message.text"
+      <span v-if="typeof message === 'string'">
+        {{ $t(message) }}
+      </span>
+      <i18n-t
+        v-else-if="!!message.vars"
+        :keypath="message.text"
+        scope="global"
       >
-        <template v-slot:0>
-          <b>{{ message.vars[0] }}</b>
-        </template>
-        <template v-slot:1>
-          <b>{{ message.vars[1] }}</b>
-        </template>
-      </i18n>
+        <b v-for="(v, i) in message.vars">{{ v }}</b>
+      </i18n-t>
       <span v-else> {{ message.text }} </span>
     </v-sheet>
+
     <template #buttons>
       <v-spacer />
       <gokb-button
         text
-        @click="close"
+        @click.prevent="close"
       >
         {{ $t('btn.cancel') }}
       </gokb-button>
-      <gokb-button
-        default
-      >
+      <gokb-button is-submit>
         {{ $t('btn.confirm') }}
       </gokb-button>
     </template>
@@ -42,8 +40,9 @@
   export default {
     name: 'GokbConfirmationPopup',
     extends: BaseComponent,
+    emits: ['update:model-value', 'confirmed'],
     props: {
-      value: {
+      modelValue: {
         type: Boolean,
         required: true,
         default: false
@@ -62,10 +61,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (value) {
-          this.$emit('input', value)
+          this.$emit('update:model-value', value)
         }
       },
     },
@@ -74,7 +73,7 @@
     methods: {
       submit () {
         this.close()
-        this.$emit('confirmed')
+        this.$emit('confirmed', true)
       },
       close () {
         this.localValue = false

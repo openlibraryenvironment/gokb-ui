@@ -48,6 +48,7 @@
 
   export default {
     name: 'GokbPriceField',
+    emits: ['update:model-value'],
     props: {
       disabled: {
         type: Boolean,
@@ -58,7 +59,7 @@
         type: Boolean,
         required: false
       },
-      value: {
+      modelValue: {
         type: Object,
         required: true,
         default: () => ({
@@ -77,61 +78,61 @@
       },
       localPrice: {
         get () {
-          return this.value.price
+          return this.modelValue.price
         },
         set (price) {
-          this.$emit('input', {
+          this.$emit('update:model-value', {
             price,
-            currency: this.value.currency,
-            priceType: this.value.priceType,
-            startDate: this.value.startDate,
-            endDate: this.value.endDate,
-            type: this.value.type
+            currency: this.modelValue.currency,
+            priceType: this.modelValue.priceType,
+            startDate: this.modelValue.startDate,
+            endDate: this.modelValue.endDate,
+            type: this.modelValue.type
           })
         }
       },
       localCurrency: {
         get () {
-          return this.value.currency
+          return this.modelValue.currency
         },
         set (currency) {
-          this.$emit('input', {
-            price: this.value.price,
+          this.$emit('update:model-value', {
+            price: this.modelValue.price,
             currency,
-            priceType: this.value.priceType,
-            startDate: this.value.startDate,
-            endDate: this.value.endDate,
-            type: this.value.type
+            priceType: this.modelValue.priceType,
+            startDate: this.modelValue.startDate,
+            endDate: this.modelValue.endDate,
+            type: this.modelValue.type
           })
         }
       },
       localStartDate: {
         get () {
-          return this.value.startDate
+          return this.modelValue.startDate
         },
         set (startDate) {
-          this.$emit('input', {
-            price: this.value.price,
-            currency: this.value.currency,
-            priceType: this.value.priceType,
+          this.$emit('update:model-value', {
+            price: this.modelValue.price,
+            currency: this.modelValue.currency,
+            priceType: this.modelValue.priceType,
             startDate,
-            endDate: this.value.endDate,
-            type: this.value.type,
+            endDate: this.modelValue.endDate,
+            type: this.modelValue.type,
           })
         }
       },
       localEndDate: {
         get () {
-          return this.value.endDate
+          return this.modelValue.endDate
         },
         set (endDate) {
-          this.$emit('input', {
-            price: this.value.price,
-            currency: this.value.currency,
-            priceType: this.value.priceType,
-            startDate: this.value.startDate,
+          this.$emit('update:model-value', {
+            price: this.modelValue.price,
+            currency: this.modelValue.currency,
+            priceType: this.modelValue.priceType,
+            startDate: this.modelValue.startDate,
             endDate,
-            type: this.value.type,
+            type: this.modelValue.type,
           })
         }
       },

@@ -4,21 +4,7 @@
     :class="[(dense ? '' : 'mt-2 pt-4')]"
   >
     <div
-      v-if="localLabel"
-      style="font-size:0.8rem"
-    >
-      <label class="text-caption">
-        {{ label }}
-        <span
-          v-if="required"
-          style="color:red"
-        >
-          *
-        </span>
-      </label>
-    </div>
-    <div
-      v-else
+      v-if="!!label"
       style="font-size:1.1rem"
     >
       <label class="text-caption">
@@ -32,9 +18,10 @@
       </label>
     </div>
     <router-link
-      v-if="componentRoute"
-      :style="{ color: 'primary', fontSize: '1.1rem' }"
-      :to="{ name: componentRoute, params: { 'id': value.id } }"
+      v-if="!!componentRoute && !!selectedVal"
+      class="text-anchor"
+      :style="{ fontSize: '1.1rem' }"
+      :to="{ name: componentRoute, params: { 'id': selectedVal.id } }"
     >
       {{ localLabel }}
     </router-link>
@@ -56,9 +43,9 @@
     :loading="loading"
     :placeholder="placeholder"
     :rules="activeRules"
-    :dense="dense"
-    :search-input.sync="search"
-    :item-text="itemText"
+    :density="dense ? 'compact' : 'default'"
+    min-width="150px"
+    :item-title="itemText"
     :item-value="itemValue"
     :return-object="returnObject"
     :clearable="allowClear"
@@ -75,25 +62,25 @@
         *
       </span>
     </template>
-    <template #item="{ item }">
-      <span>
-        <div :style="{ color: (item.disabled ? '#888888' : 'inherit') }">
-          {{ item[itemText] }}
+    <template #item="{ item, props }">
+      <v-list-item v-bind="props">
+        <div :style="{ color: (item.raw.disabled ? '#888888' : 'inherit') }">
+          {{ item.raw[itemText] }}
           <span
-            v-if="!!item.status"
+            v-if="!!item.raw.status"
           >
-            <v-icon :color="statusColor(item.status)">
-              {{ statusIcon(item.status) }}
+            <v-icon :color="statusColor(item.raw.status)">
+              {{ statusIcon(item.raw.status) }}
             </v-icon>
           </span>
           <v-chip
-            v-if="item.disabled && !!item.disabledMessage"
+            v-if="item.raw.disabled && !!item.raw.disabledMessage"
             color="error"
           >
-            <span> {{ $t(item.disabledMessage) }} </span>
+            <span> {{ $t(item.raw.disabledMessage) }} </span>
           </v-chip>
         </div>
-      </span>
+      </v-list-item>
     </template>
   </v-combobox>
   <v-autocomplete
@@ -105,14 +92,19 @@
     :loading="loading"
     :placeholder="placeholder"
     :rules="activeRules"
-    :dense="dense"
-    :search-input.sync="search"
-    :item-text="itemText"
+    :density="dense ? 'compact' : 'default'"
+    :item-title="itemText"
     :item-value="itemValue"
-    :return-object="returnObject"
+    variant="underlined"
+    min-width="150px"
+    :multiple="false"
     no-filter
+    persistent-clear
     clearable
+    auto-select-first
     hide-no-data
+    return-object
+    @update:search="prepareQuery"
   >
     <template #label>
       {{ label }}
@@ -123,46 +115,52 @@
         *
       </span>
     </template>
-    <template v-slot:selection="data">
-      <router-link
-        v-if="showLink"
-        :style="{ color: 'accent', fontSize: '1.1rem', maxWidth: '75%' }"
-        class="text-truncate"
-        color="accent"
-        :to="{ name: componentRoute, params: { 'id': data.item.id } }"
+    <template #selection="{ item }">
+      <v-list-item
+        :title="undefined"
+        class="px-0"
       >
-        <span
-          :title="data.item[itemText]"
+        <router-link
+          v-if="showLink"
+          :style="{ fontSize: '1.1rem', maxWidth: '75%' }"
+          class="text-anchor"
+          color="accent"
+          :to="{ name: componentRoute, params: { 'id': item.raw.id } }"
         >
-          {{ data.item[itemText] }}
-        </span>
-      </router-link>
-      <span
-        v-else
-        style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:75%;"
-      >
+          <span
+            :title="item.raw[itemText]"
+            style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:75%;"
+          >
+            {{ item.raw[itemText] }}
+          </span>
+        </router-link>
         <span
-          :title="data.item[itemText]"
+          v-else
+          style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:75%;"
         >
-          {{ data.item[itemText] }}
+          <span>
+            {{ item.raw[itemText] }}
+          </span>
         </span>
-      </span>
+      </v-list-item>
     </template>
-    <template #item="{ item }">
-      {{ item[itemText] }}
-      <span
-        v-if="!!item.status"
-      >
-        <v-icon :color="statusColor(item.status)">
-          {{ statusIcon(item.status) }}
-        </v-icon>
-      </span>
-      <v-chip
-        v-if="item.disabled && !!item.disabledMessage"
-        color="error"
-      >
-        <span> {{ $t(item.disabledMessage) }} </span>
-      </v-chip>
+    <template #item="{ props, item }">
+      <v-list-item v-bind="props" :title="undefined">
+        <span> {{ item.raw[itemText] }} </span>
+        <span
+          v-if="!!item.raw.status"
+        >
+          <v-icon :color="statusColor(item.raw.status)">
+            {{ statusIcon(item.raw.status) }}
+          </v-icon>
+        </span>
+        <v-chip
+          v-if="item.raw.disabled && !!item.raw.disabledMessage"
+          color="error"
+        >
+          <span> {{ $t(item.raw.disabledMessage) }} </span>
+        </v-chip>
+      </v-list-item>
     </template>
   </v-autocomplete>
 </template>
@@ -174,10 +172,11 @@
   export default {
     name: 'GokbSearchField',
     extends: BaseComponent,
+    emits: ['update:model-value', 'searched'],
     searchServicesResourceUrl: undefined,
     searchParams: {},
     props: {
-      value: {
+      modelValue: {
         required: true,
         validator: function (value) {
           return value === undefined || typeof value === 'string' || typeof value === 'number' || typeof value === 'object'
@@ -226,7 +225,7 @@
       label: {
         type: String,
         required: false,
-        default: undefined
+        default: ''
       },
       rules: {
         type: Array,
@@ -246,6 +245,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      initItem: {
+        type: Object,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -254,6 +258,7 @@
         loading: false,
         mainParam: 'q',
         items: [],
+        selectedVal: null,
         search: null,
         knownRoutes: {
           Organization: '/provider',
@@ -274,18 +279,19 @@
     },
     computed: {
       localLabel () {
-        return this.value?.[this.itemText]
+        return this.selectedVal?.[this.itemText]
       },
       localValue: {
         get () {
-          return this.returnObject ? this.value : this.value?.[this.itemValue]
+          return this.modelValue
         },
-        set (localValue) {
-          this.$emit('input', localValue)
+        set (val) {
+          this.selectedVal = val
+          this.$emit('update:model-value', this.returnObject ? val : (val?.id || null) )
         }
       },
       componentRoute () {
-        return this.knownRoutes[this.value?.type || this.value?.componentType] || null
+        return this.knownRoutes[this.modelValue?.type || this.modelValue?.componentType] || null
       },
       activeRules () {
         if (this.rules.length > 0 && this.rules[0].length > 0){
@@ -294,29 +300,28 @@
         return [v => !!v || !this.required || this.$i18n.t('validation.missingSelection')]
       }
     },
+    mounted () {
+      this.searchServices = searchServices(this.searchServicesResourceUrl)
+
+      if (!!this.modelValue) {
+        this.selectedVal = this.modelValue
+      }
+    },
     watch: {
-      search (text) {
-        // console.log('search', this.value, this.localValue, this.search, value)
-        text && text !== this.value?.value && text.length > 2 && this.query({ text })
-      },
-      value (val) {
-        if (!!this.value && typeof this.value !== 'object') {
+      modelValue(val) {
+        if (!!val && this.items.length === 0 && typeof val === 'number') {
           this.query({ id: val })
         }
       }
     },
-    mounted () {
-      this.searchServices = searchServices(this.searchServicesResourceUrl)
-
-      if (!!this.value && typeof this.value === 'object') {
-        this.items = [this.value]
-      }
-      else {
-        this.items = []
-      }
-    },
     methods: {
+      prepareQuery (term) {
+        if (term?.length > 2) {
+          this.query({ text: term})
+        }
+      },
       async query ({ id, text }) {
+
         this.loading = true
         var primaryParam = {}
 
@@ -324,7 +329,7 @@
           primaryParam['id'] = id
         }
         else {
-          primaryParam[this.mainParam] = text || this.value?.id
+          primaryParam[this.mainParam] = text || this.modelValue?.id
         }
 
         if (this.queryFields?.length > 0) {
@@ -342,7 +347,7 @@
         this.items = this.transform(result)
 
         if (!!id) {
-          this.$refs.autocomplete.lazyValue = this.items[0]
+          this.selectedVal = this.items[0]
         }
 
         this.$emit('searched', true)
@@ -374,3 +379,8 @@
     }
   }
 </script>
+<style>
+  .v-autocomplete .v-field--dirty .v-autocomplete__selection {
+    margin-inline-end: 0px;
+  }
+</style>

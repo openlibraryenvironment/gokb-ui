@@ -1,40 +1,74 @@
 import '@mdi/font/css/materialdesignicons.css'
-import Vue from 'vue'
-import Vuetify from 'vuetify/lib'
-import de from 'vuetify/es5/locale/de'
-import en from 'vuetify/es5/locale/en'
+import { de, en } from 'vuetify/locale'
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify/dist/vuetify.js'
 
-Vue.use(Vuetify)
-
-export default new Vuetify({
-  lang: {
-    locales: { de, en },
-    current: 'de'
+const vuetify = createVuetify({
+  locale: {
+    locale: import.meta.env.VITE_I18N_LOCALE || navigator.language.split('-')[0],
+    fallback: 'en',
+    messages: { de, en },
   },
   icons: {
     iconfont: 'mdiSvg',
   },
+  styles: {
+    configFile: 'src/styles/settings.scss',
+  },
   theme: {
+    defaultTheme: 'light',
     themes: {
       light: {
-        primary: '#4f4f4f',
-        secondary: '#a0a0a0',
-        invert: '#fdfdfd',
-        accent: '#4f4f4f',
-        error: '#eb5757',
-        // warning: '',
-        info: '#2d9cdb',
+        dark: false,
+        colors: {
+          bg: '#fff',
+          header: '#fff',
+          card: '#f2f2f2',
+          primary: '#4f4f4f',
+          'primary-darken-1': '#2b2b2b',
+          anchor: '#4f4f4f',
+          'anchor-darken-1': '#2b2b2b',
+          secondary: '#a0a0a0',
+          'secondary-darken-1': '#878787',
+          invert: '#fdfdfd',
+          accent: '#4f4f4f',
+          'accent-darken-1': '#2b2b2b',
+          error: '#eb5757',
+          // warning: '',
+          info: '#2d9cdb',
+        },
+        variables: {
+          'disabled-opacity': 0.87,
+          'medium-opacity': 0.87
+        }
       },
       dark: {
-        primary: '#d9d9d9',
-        secondary: '#5b5b5b',
-        invert: '#020202',
-        accent: '#d9d9d9',
-        error: '#eb5757',
-        // warning: '',
-        info: '#2d9cdb',
-        // success: ''
+        dark: true,
+        colors: {
+          bg: '#121212',
+          header: '#212121',
+          card: '#212121',
+          primary: '#d9d9d9',
+          'primary-darken-1': '#bdbdbd',
+          anchor: '#d9d9d9',
+          'anchor-darken-1': '#cdcdcd',
+          secondary: '#5b5b5b',
+          'secondary-darken-1': '#7d7d7d',
+          invert: '#020202',
+          accent: '#d9d9d9',
+          'accent-darken-1': '#bdbdbd',
+          error: '#eb5757',
+          // warning: '',
+          info: '#2d9cdb',
+          // success: ''
+        },
+        variables: {
+          'disabled-opacity': 0.87,
+          'medium-opacity': 0.87
+        }
       }
     }
   }
 })
+
+export default vuetify

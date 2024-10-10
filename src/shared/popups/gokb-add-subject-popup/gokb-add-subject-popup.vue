@@ -23,9 +23,10 @@
           v-model="selectedClass"
           :disabled="!item.scheme"
           :items="$options.ddcList"
-          :item-text="currentLabel"
+          :item-title="currentLabel"
           item-value="notation"
           :label="$tc('component.subject.heading.label')"
+          variant="underlined"
           return-object
           required
           @click:append="$emit('delete', value)"
@@ -42,7 +43,7 @@
       </gokb-button>
       <gokb-button
         :disabled="!isValid"
-        default
+        is-submit
       >
         {{ $t('btn.add') }}
       </gokb-button>
@@ -57,8 +58,13 @@
   export default {
     name: 'GokbAddSubjectPopup',
     extends: BaseComponent,
+    emits: ['update:model-value', 'add', 'delete'],
     ddcList: DDC,
     props: {
+      modelValue: {
+        type: Boolean,
+        required: true
+      },
       namespaceFixed: {
         type: Boolean,
         required: false
@@ -108,14 +114,14 @@
         return !!this.item.scheme && !!this.item.heading
       },
       currentLabel () {
-        return (!!this.item.scheme && this.knownSchemes[this.item.scheme.value]) ? this.knownSchemes[this.item.scheme.value].itemText + '.' + this.$i18n.locale : undefined
+        return (!!this.item.scheme && !!this.knownSchemes[this.item.scheme.value]) ? this.knownSchemes[this.item.scheme.value].itemText + '.' + this.$i18n.locale : undefined
       },
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
     },

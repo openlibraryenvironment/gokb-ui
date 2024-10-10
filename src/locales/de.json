@@ -24,6 +24,7 @@
     "reactivate": "Reaktivieren",
     "refresh": "Aktualisieren",
     "reload": "Neu laden",
+    "remove": "Entfernen",
     "reset": "Änderungen verwerfen",
     "retire": "Archivieren",
     "search": "Suchen",
@@ -35,7 +36,8 @@
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
     "bulkCloseReview": "{0} ausgewählte Prüfanfrage schließen | {0} ausgewählte Prüfanfragen schließen",
     "closeSelectedReviews": "Ausgewählte Prüfanfragen schließen",
-    "moreFilters": "Mehr Filter"
+    "moreFilters": "Mehr Filter",
+    "moreOptions": "Weitere Optionen"
   },
   "main": {
     "docs": {
@@ -57,8 +59,19 @@
     "false": "Nein",
     "all": "Alle",
     "ISOdateHint": "JJJJ-MM-TT",
+    "loading": "Lädt ...",
+    "languages": {
+      "en": "Englisch",
+      "de": "Deutsch"
+    },
     "error": {
       "label": "Fehler | Fehler"
+    },
+    "table": {
+      "noData": {
+        "search": "Keine Ergebnisse",
+        "props": "Keine Einträge"
+      }
     },
     "404": {
       "title": "Unbekannter Pfad",
@@ -121,7 +134,8 @@
     "profile": "Profil",
     "register": "Registrierung",
     "noaccess": "Kein Zugang",
-    "kbartValidator": "KBART-Validator"
+    "kbartValidator": "KBART-Validator",
+    "error": "Fehler"
   },
   "pending": {
     "lists": {
@@ -180,14 +194,21 @@
         "401": "Die eingebebenen Informationen sind nicht korrekt.",
         "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
       },
-      "expired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an."
+      "expired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an.",
+      "forgotPassword": "Passwort vergessen"
     },
     "logout": {
       "label": "Ausloggen"
     },
     "register":  {
       "label": "Registrieren",
-      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, registrieren Sie sich bitte und schicken uns falls nicht anderweitig abgesprochen eine Nachricht mit Ihrem gewählten Benutzernamen sowie Informationen zu Ihrer Einrichtung an {0}. Wir melden uns dann so schnell wie möglich bei Ihnen zurück!"
+      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte nach der Registrierung bei uns unter {0}, damit wir sie aufnehmen können.",
+      "nomail": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte bei uns, damit wir sie freischalten können."
+    },
+    "activateUser": {
+      "label": "Benutzerkonto aktivieren",
+      "info": "Bitte Freischaltung des Accounts bestätigen. Dies entfernt die Sperre und vergibt Bearbeitungsrechte.",
+      "sendAlert": "Benutzer per E-Mail benachrichtigen"
     }
   },
   "validation": {
@@ -206,7 +227,8 @@
     "volumeRange": "Der erste Band muss vor dem letzten Band liegen.",
     "issueRange": "Das erste Heft muss vor dem letzten Heft liegen.",
     "missingStartIssue": "Die Angabe eines letzten Hefts erfordert ein Anfangsheft.",
-    "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband."
+    "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband.",
+    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden."
   },
   "job": {
     "label": "Import | Importe",
@@ -393,6 +415,7 @@
       },
       "error": {
         "label": "Fehler | Fehler",
+        "general": "Bei der Validierung der Datei wurden Fehler festgestellt!",
         "empty": "Fehlender Wert",
         "invalid": "Fehlerhafter Wert",
         "fields": "Spaltenstatistik - Fehler"
@@ -518,13 +541,16 @@
     },
     "welcome": "Willkommen zur Global Open Knowledgebase!",
     "dashboard": "Dashboard",
-    "search": "Suche",
+    "search": "Suchfilter",
     "results": "Ergebnisse"
   },
   "search": {
     "label": "Suche",
     "global": {
       "placeholder": "Titel, Pakete, Verlage"
+    },
+    "generic": {
+      "label": "Name, UUID, Identifikatoren"
     },
     "results": {
       "label": "Ergebnisse",
@@ -652,11 +678,11 @@
       "name": {
         "label": "Titelname | Titelnamen"
       },
-      "volumeNumber": "Bandnr.",
+      "volumeNumber": "Bandnummer",
       "editionNumber": "Ausgabenr.",
-      "editionStatement": "Ausgabe",
-      "firstPublishedInPrint": "Veröffentlichungsdatum (Print)",
-      "firstPublishedOnline": "Veröffentlichungsdatum (Online)",
+      "editionStatement": "Auflage",
+      "firstPublishedInPrint": "Print-Erscheinungsdatum",
+      "firstPublishedOnline": "Online-Erscheinungsdatum",
       "firstAuthor": {
         "label": "Erster Autor"
       },
@@ -709,7 +735,7 @@
         "currentTitles": "Aktueller Bestand",
         "confirm": {
           "kbartLocal": {
-            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}."
+            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}. Beachten Sie, dass zur Freigabe des Pakets nach Abschluss und Prüfung des Imports der Listenstatus 'Geprüft' gesetzt werden sollte."
           },
           "kbartDryRun": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}. Beachten Sie, dass die Datei lediglich als Testdurchlauf verarbeitet wird!"
@@ -718,10 +744,13 @@
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei unter der Adresse {1}."
           },
           "tippBulkUpdate": {
-            "label": "Bitte bestätigen Sie, dass sie die {0} ausgeählten Paket-Titel auf {1} setzen möchten. Falls Sie noch weitere ungespeicherte Änderungen für dieses Paket haben, klicken Sie bitte auf 'Abbrechen' und speichern Sie zunächst die restlichen Änderungen."
+            "label": "Bitte bestätigen Sie, dass sie die {0} ausgewählten Paket-Titel auf {1} setzen möchten. Falls Sie noch weitere ungespeicherte Änderungen für dieses Paket haben, klicken Sie bitte auf 'Abbrechen' und speichern Sie zunächst die restlichen Änderungen."
           },
           "noTipps": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0}."
+          },
+          "noTippsListInProgress": {
+            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0}. Beachten Sie, dass zur Freigabe des Pakets nach Abschluss und Prüfung eines KBART-Imports der Listenstatus 'Geprüft' gesetzt werden sollte."
           }
         }
       },
@@ -992,7 +1021,10 @@
       "validation": {
         "value": "Wert {0} ist ungültig!",
         "generic": "Dieser Wert ist ungültig!",
-        "pattern": "Der eingegebene Wert hat ein ungültiges Format."
+        "pattern": "Der eingegebene Wert hat ein ungültiges Format.",
+        "list": {
+          "duplicate": "Dieser Identifikator ist bereits in der Liste vorhanden!"
+        }
       }
     },
     "user": {
@@ -1000,6 +1032,9 @@
       "username": "Benutzername",
       "register": "Registrierung",
       "password": "Kennwort",
+      "preferredLocaleString": {
+        "label": "Bevorzugte Sprache"
+      },
       "email": "E-Mail",
       "role": {
         "label": "Rolle | Rollen",
@@ -1036,6 +1071,20 @@
         "missing": {
           "username": "Bitte geben Sie einen Benutzernamen an.",
           "password": "Bitte geben Sie ein Passwort an."
+        },
+        "activate": {
+          "invalidMail": "Die Benachrichtigung konnte nicht versendet werden, da die angegebene E-Mail-Adresse ungültig ist!",
+          "missingMail": "Die Benachrichtigung konnte nicht versendet werden, da keine E-Mail-Adresse angegeben wurde!",
+          "missingConfig": "Die Benachrichtigung konnte nicht versendet werden, da nicht alle notwendigen Server-Konfigurationswerte gesetzt wurden!"
+        },
+        "create": {
+          "nameInUse": "Ein Konto mit diesem Benutzernamen existiert bereits!"
+        },
+        "update": {
+          "forbidden": "Sie sind nicht dazu berechtigt, dieses Konto zu bearbeiten!"
+        },
+        "delete": {
+          "forbidden": "Benutzer mit Administrationsrechten können nur von Server-Admins gelöscht werden!"
         }
       }
     },
@@ -1048,7 +1097,7 @@
         "label": "Durchgeführte Aktion"
       },
       "type": {
-        "label": "Kategorie"
+        "label": "Komponententyp"
       },
       "todo": {
         "label": "ToDo"
@@ -1180,6 +1229,12 @@
           "add": {
             "label": "Neuen Referenztitel erzeugen",
             "message": "Bitte bestätigen Sie die Erzeugung eines neuen Referenztitels mit ALLEN verbleibenden Identifikatoren des zu prüfenden Pakettitels."
+          },
+          "tippCleanup": {
+            "confirm": {
+              "label": "Bereinigen",
+              "message": "Bitte bestätigen Sie die Bereinigung der archivierten Pakettitel mit dem gleichen Referenztitel."
+            }
           }
         }
       },

@@ -1,26 +1,33 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import vuetify from './plugins/vuetify'
 import i18n from './plugins/i18n'
-import App from './app.vue'
 import router from './router'
-import './register-service-worker'
 import utils from '@/shared/utils/utils'
-import './plugins/vue-json-pretty.js'
+import VueJsonPretty from 'vue-json-pretty'
+import App from './app.vue'
+
+
+const app = createApp(App)
+
+app.use(router)
+app.use(vuetify)
+app.use(i18n)
 
 // configuration vue itself
-const isNotProduction = !utils.isProduction()
-Vue.config.productionTip = isNotProduction
-Vue.config.devtools = isNotProduction
-Vue.config.performance = isNotProduction
+const isNotProduction = utils.isDevelopment()
+app.config.devtools = isNotProduction
+app.config.performance = isNotProduction
+
+if (isNotProduction) {
+  console.log("DEV MODE ACTIVE")
+}
 
 // make all gokb components global available
-const requireComponent = require.context(
-  '@/shared/components', // the relative path of the components folder
-  true, // look in subfolders
-  /gokb-[\w-]+.vue/ // the regular expression used to match base component filenames
+const gokbComponents = await import.meta.glob(
+  '@/shared/components/**/gokb-*.vue', { import: 'default', eager: true }
 )
-requireComponent.keys().forEach(fileName => {
-  const componentConfig = requireComponent(fileName) // get component config
+
+for (const fileName in gokbComponents) {
   // get PascalCase name of component
   const componentName = utils.pascalCase(
       // gets the file name regardless of folder depth
@@ -28,27 +35,17 @@ requireComponent.keys().forEach(fileName => {
         .split('/')
         .pop()
         .replace(/\.\w+$/, '') // remove extension
-    )
+  )
   // register component globally
-  Vue.component(
+  app.component(
     componentName,
     // look for the component options on `.default`, which will
     // exist if the component was exported with `export default`,
     // otherwise fall back to module's root.
-    componentConfig.default || componentConfig
+    gokbComponents[fileName]
   )
-})
-
-new Vue({
-  router,
-  i18n,
-  vuetify,
-  render: h => h(App)
-}).$mount('#app')
-
-if (module.hot) {
-  module.hot.accept(['./locales/en.json', './locales/de.json'], function () {
-    i18n.setLocaleMessage('en', require('./locales/en.json').default)
-    i18n.setLocaleMessage('de', require('./locales/de.json').default)
-  })
 }
+
+app.component("vue-json-pretty", VueJsonPretty)
+
+app.mount('#app')

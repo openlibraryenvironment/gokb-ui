@@ -2,16 +2,19 @@
   <gokb-section
     expandable
     filters
+    show-actions
     :sub-title="localTitle"
+    :items-total="totalNumberOfResults"
     :errors="!!apiErrors"
   >
     <template #buttons>
       <v-btn
         icon
         :title="$t('btn.refresh')"
+        class="mt-4"
         @click="retrievePackages"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-refresh
         </v-icon>
       </v-btn>
@@ -19,7 +22,7 @@
     <template #search>
       <gokb-text-field
         v-model="searchFilters.q"
-        :label="$t('component.general.name')"
+        :label="$t('search.generic.label')"
       />
       <v-spacer class="ms-4" />
       <gokb-search-platform-field
@@ -83,6 +86,9 @@
       GokbConfirmationPopup
     },
     extends: BaseComponent,
+    emits: [
+      'update'
+    ],
     props: {
       user: {
         type: Boolean,
@@ -147,7 +153,7 @@
         resultOptions: {
           page: 1,
           mustSort: true,
-          sortBy: ['name'],
+          sortBy: [{ key: 'name', order: 'asc' }],
           desc: false,
           itemsPerPage: ROWS_PER_PAGE
         },
@@ -206,34 +212,34 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.general.name'),
+            title: this.$i18n.t('component.general.name'),
             align: 'start',
             sortable: true,
             value: 'link'
           },
           {
-            text: (this.providerId ? this.$i18n.tc('component.platform.label') : this.$i18n.tc('component.provider.label')),
+            title: (this.providerId ? this.$i18n.tc('component.platform.label') : this.$i18n.tc('component.provider.label')),
             align: 'start',
             sortable: true,
             width: '20%',
             value: (this.providerId ? 'nominalPlatform' : 'linkTwo')
           },
           {
-            text: this.$i18n.tc('component.package.contentType.label'),
+            title: this.$i18n.tc('component.package.contentType.label'),
             align: 'start',
             sortable: true,
             width: '15%',
             value: 'contentType'
           },
           {
-            text: this.$i18n.tc('component.package.count'),
+            title: this.$i18n.tc('component.package.count'),
             align: 'start',
             sortable: false,
             width: '150px',
             value: 'count'
           },
           {
-            text: this.$i18n.tc('component.general.lastUpdated'),
+            title: this.$i18n.tc('component.general.lastUpdated'),
             align: 'end',
             sortable: true,
             width: '18%',
@@ -259,12 +265,9 @@
         link: 'name',
         linkTwo: 'provider'
       }
-      if (this.defaultSortOrder === 'desc') {
-        this.resultOptions.desc = true
-      }
 
       if (this.defaultSortField) {
-        this.resultOptions.sortBy[0] = this.defaultSortField
+        this.resultOptions.sortBy = [{ key: this.defaultSortField, order: this.defaultSortOrder || 'asc'}]
       }
     },
     mounted () {
@@ -277,17 +280,14 @@
       },
       resultPaginate (options) {
         if (options.sortBy) {
-          this.resultOptions.sortBy = [options.sortBy]
-        }
-        if (typeof options.desc === 'boolean') {
-          this.resultOptions.desc = options.desc
+          this.resultOptions.sortBy = options.sortBy
         }
 
-        this.retrievePackages(options)
+        this.retrievePackages()
       },
-      async retrievePackages (options) {
-        const sort = this.resultOptions.sortBy.length > 0 ? (this.linkSearchParameterValues[this.resultOptions.sortBy[0]] || this.resultOptions.sortBy[0]) : this.defaultSortField
-        const order = this.resultOptions.desc[0] ? 'desc' : 'asc'
+      async retrievePackages () {
+        const sort = this.resultOptions.sortBy.length > 0 ? (this.linkSearchParameterValues[this.resultOptions.sortBy[0].key] || this.resultOptions.sortBy[0].key) : this.defaultSortField
+        const order = this.resultOptions.sortBy[0].order || 'asc'
         const searchServiceIncludes = 'id,uuid,name,status,provider,nominalPlatform,_links,contentType,lastUpdated'
         const searchParams = {}
 
@@ -310,7 +310,7 @@
             ...(searchParams || {}),
             ...((sort && { _sort: sort }) || {}),
             ...(this.hideLocal ? { global: ['Global', 'Consortium', 'Regional', 'Unknown'] } : {}),
-            _order: (this.resultOptions.desc ? 'desc' : 'asc'),
+            _order: order,
             _include: searchServiceIncludes,
             offset: this.resultOptions.page ? (this.resultOptions.page - 1) * this.resultOptions.itemsPerPage : 0,
             limit: this.resultOptions.itemsPerPage

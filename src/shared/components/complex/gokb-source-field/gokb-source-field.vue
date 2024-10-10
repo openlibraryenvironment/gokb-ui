@@ -8,6 +8,7 @@
       v-model="url"
       :label="$t('component.source.url')"
       :readonly="readonly"
+      replace-date
     />
     <v-row>
       <v-col cols="3">
@@ -22,7 +23,6 @@
       <v-col cols="3">
         <gokb-namespace-field
           v-model="targetNamespace"
-          :items="[targetNamespace]"
           target-type="Title"
           :readonly="readonly"
           :label="$t('kbart.propId.label')"
@@ -41,6 +41,9 @@
         <v-checkbox
           v-model="automaticUpdates"
           class="mr-5"
+          :style="{ opacity: !url ? 0.25 : 0.87 }"
+          color="primary"
+          :disabled="!url"
           :readonly="readonly"
           :label="$t('component.source.enableUpdate')"
         />
@@ -49,6 +52,7 @@
         <v-checkbox
           v-model="update"
           class="mr-5"
+          :style="{ opacity: !url ? 0.25 : 0.87 }"
           :readonly="readonly"
           :disabled="!url"
           :label="$t('component.source.updateNow')"
@@ -65,6 +69,7 @@
   export default {
     name: 'GokbSourceField',
     extends: BaseComponent,
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -81,7 +86,7 @@
         required: false,
         default: true
       },
-      value: {
+      modelValue: {
         type: Object,
         required: false,
         default: undefined
@@ -115,7 +120,7 @@
         },
         set (val) {
           this.item.frequency = val
-          this.$emit('input', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       url: {
@@ -124,7 +129,7 @@
         },
         set (val) {
           this.item.url = val
-          this.$emit('input', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       targetNamespace: {
@@ -133,7 +138,7 @@
         },
         set (val) {
           this.item.targetNamespace = val
-          this.$emit('input', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       automaticUpdates: {
@@ -142,7 +147,7 @@
         },
         set (val) {
           this.item.automaticUpdates = val
-          this.$emit('input', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       update: {
@@ -151,25 +156,25 @@
         },
         set (val) {
           this.item.update = val
-          this.$emit('input', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
     },
     watch: {
       defaultTitleNamespace (val) {
-        if (val && (!this.value?.id || !this.item.targetNamespace)) {
+        if (!!val && (!this.modelValue?.id || !this.item.targetNamespace)) {
           this.targetNamespace = this.defaultTitleNamespace
         }
       }
     },
     async mounted () {
-      if (this.value?.id) {
-        this.fetch(this.value.id)
+      if (!!this.modelValue?.id) {
+        this.fetch(this.modelValue.id)
       }
     },
     methods: {
       async fetch (sid) {
-        if (sid) {
+        if (!!sid) {
           const result = await this.catchError({
             promise: sourceServices.getSource(sid, this.cancelToken.token),
             instance: this

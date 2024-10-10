@@ -28,12 +28,17 @@
       rules: {
         type: Array,
         required: false,
-        default () {
+        default (props) {
           return [
-            value => !!value || this.$i18n.t('component.user.error.missing.username')
+            value => !!value || props.localError
           ]
         }
       }
     },
+    computed: {
+      localError () {
+        return this.$i18n.t('component.user.error.missing.username')
+      }
+    }
   }
 </script>

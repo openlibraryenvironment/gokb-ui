@@ -36,6 +36,7 @@
 <script>
   export default {
     name: 'GokbEmbargoField',
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -47,7 +48,7 @@
         required: false,
         default: false,
       },
-      value: {
+      modelValue: {
         type: String,
         required: false,
         default: undefined
@@ -68,10 +69,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       embargoType: {
@@ -123,7 +124,7 @@
     },
     methods: {
       decodeEmbargo () {
-        const matches = this.value?.match(/^([P,R]?)([0-9]*)([D,M,Y]?)$/)
+        const matches = this.modelValue?.match(/^([P,R]?)([0-9]*)([D,M,Y]?)$/)
         const [, type, duration, unit] = matches || []
         return { type, duration, unit }
       },

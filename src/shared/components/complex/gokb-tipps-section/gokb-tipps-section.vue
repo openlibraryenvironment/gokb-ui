@@ -1,12 +1,17 @@
 <template>
   <div>
+    <gokb-confirmation-popup
+      v-model="confirmationPopUpVisible"
+      :message="messageToConfirm"
+      @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+    />
     <gokb-section
       expandable
       :hide-default="!expanded"
       :filters="filterAlign"
       :expand-filters="expandFilters"
-      :show-actions="isEditable"
-      :sub-title="title"
+      show-actions
+      :sub-title="sectionTitle"
       :items-total="totalNumberOfItems"
       :errors="!!apiErrors"
       :mark-required="required"
@@ -24,7 +29,7 @@
         @kbart="addKbartFile"
       />
       <gokb-add-title-popup
-        v-if="addTitlePopupVisible"
+        v-if="!!addTitlePopupVisible"
         v-model="addTitlePopupVisible"
         :title-type="addTitleType"
         :pkg="pkg"
@@ -32,9 +37,7 @@
         @add="addNewTitle"
         @edit="addTippChangeEvent"
       />
-      <template
-        #buttons
-      >
+      <template #buttons>
         <gokb-package-export-menu
           v-if="pkg"
           :pkg-id="pkg"
@@ -43,20 +46,22 @@
           v-if="isEditable"
           class="mx-4"
           color="primary"
-          @click="showKbartImportPopup"
+          @click.prevent="showKbartImportPopup"
         >
           KBART Import
         </gokb-button>
         <v-menu
           v-if="isEditable"
+          v-model="addTippMenuOpen"
           offset-y
           open-on-hover
         >
-          <template #activator="{ on }">
+          <template #activator="{ props }">
             <v-btn
-              class="mr-4 invert--text"
+              class="mr-4"
+              variant="elevated"
               color="primary"
-              v-on="on"
+              v-bind="props"
             >
               <v-icon>mdi-plus</v-icon>
               {{ $t('btn.add') }}
@@ -64,34 +69,28 @@
             </v-btn>
           </template>
           <v-list>
-            <template v-for="type in packageTypes">
-              <v-list-item
-                :key="type.text"
-                @click="showAddNewTitlePopup(type)"
-              >
-                <v-list-item-title>
-                  {{ type.text }}
-                </v-list-item-title>
-              </v-list-item>
-            </template>
+            <v-list-item
+              v-for="(type, i) in packageTypes"
+              :key="i"
+              @click="showAddNewTitlePopup(type)"
+            >
+              <v-list-item-title>
+                {{ type.text }}
+              </v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-menu>
         <v-btn
           icon
           :title="$t('btn.refresh')"
-          style="margin-top:-4px"
+          :class="[ttl ? 'mt-4' : '']"
           @click="fetchTipps"
         >
-          <v-icon>
+          <v-icon color="primary">
             mdi-refresh
           </v-icon>
         </v-btn>
       </template>
-      <gokb-confirmation-popup
-        v-model="confirmationPopUpVisible"
-        :message="messageToConfirm"
-        @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-      />
       <template #actions>
         <span
           style="min-width:82px"
@@ -105,22 +104,24 @@
             <v-checkbox
               id="bulkCheck"
               v-model="bulkSelect"
-              class="mx-4"
+              class="mx-2 mt-4"
             />
           </div>
         </span>
 
         <v-menu
-          v-if="isEditable"
+          v-if="isEditable && selectedItems.length > 0"
+          v-model="bulkselectMenuOpen"
           offset-y
           open-on-hover
         >
-          <template #activator="{ on }">
+          <template #activator="{ props }">
             <v-btn
               :disabled="selectedItems.length == 0"
-              class="mr-4"
+              class="mr-4 mt-4"
+              variant="elevated"
               color="primary"
-              v-on="on"
+              v-bind="props"
             >
               {{ $t('btn.bulkSelect', [bulkSelect ? totalNumberOfItems : selectedItems.length]) }}
               <v-icon>mdi-chevron-down</v-icon>
@@ -133,12 +134,13 @@
                 :key="status.text"
                 @click="confirmBulkStatusChange(status.id)"
               >
-                <v-list-item-icon>
+                <template v-slot:prepend>
                   <v-icon
                     :color="status.id === 'Deleted' ? 'red' : ''"
-                    v-text="status.icon"
+                    :icon="status.icon"
                   />
-                </v-list-item-icon>
+                </template>
+
                 <v-list-item-title>
                   <span :style="{ color: status.id === 'Deleted' ? 'red' : '' }">{{ status.text }}</span>
                 </v-list-item-title>
@@ -151,7 +153,7 @@
         <gokb-state-field
           v-model="searchFilters.status"
           width="150px"
-          class="ms-4 mt-1"
+          class="ms-4"
           init-item="Current"
           message-path="component.general.status"
           :label="$t('component.general.status.label')"
@@ -161,30 +163,37 @@
           text
           class="ml-3"
           @click="toggleFilters"
-        > {{ $t('btn.moreFilters') }} <v-icon> {{ expandFilters ? 'mdi-chevron-up' : 'mdi-chevron-down' }} </v-icon> </v-btn>
+        >
+          {{ $t('btn.moreFilters') }}
+          <v-icon>
+            {{ expandFilters ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+          </v-icon>
+        </v-btn>
       </template>
       <template #filters>
-        <gokb-text-field
-          v-model="searchFilters.q"
-          class="ms-4 pt-3"
-          :label="$tc('component.title.name.label')"
-        />
-        <gokb-text-field
-          v-model="searchFilters.ids"
-          class="ms-4 pt-3"
-          :label="$tc('component.identifier.label')"
-        />
-        <gokb-subject-filter-field
-          v-model="searchFilters.subjects"
-          class="ms-4"
-          :label="$tc('component.subject.label')"
-        />
-        <gokb-search-package-field
-          v-if="!pkg"
-          v-model="searchFilters.pkg"
-          class="ms-4 pt-3"
-          :label="$tc('component.package.label')"
-        />
+        <v-row>
+          <v-col>
+            <gokb-text-field
+              v-model="searchFilters.q"
+              class="pt-3"
+              :label="$tc('search.generic.label')"
+            />
+          </v-col>
+          <v-col>
+            <gokb-subject-filter-field
+              v-model="searchFilters.subjects"
+              class="mt-2"
+              :label="$tc('component.subject.label')"
+            />
+          </v-col>
+          <v-col v-if="!pkg">
+            <gokb-search-package-field
+              v-model="searchFilters.pkg"
+              class="pt-3"
+              :label="$tc('component.package.label')"
+            />
+          </v-col>
+        </v-row>
       </template>
       <gokb-table
         v-if="ttl || pkg"
@@ -196,7 +205,6 @@
         :total-number-of-items="totalNumberOfItems"
         :show-loading="isLoading"
         :options.sync="searchOptions"
-        :hide-select="!isEditable"
         @selected-items="selectedItems = $event"
         @paginate="resultPaginate"
         @edit="editTitle"
@@ -213,7 +221,6 @@
         :editable="isEditable"
         :total-number-of-items="totalNumberOfNewItems"
         :options.sync="newOptions"
-        :hide-select="!isEditable"
         @paginate="resultNewPaginate"
         @edit="editTitle"
       />
@@ -241,6 +248,7 @@
       GokbKbartImportPopup
     },
     extends: BaseComponent,
+    emits: ['update', 'kbart'],
     props: {
       disabled: {
         type: Boolean,
@@ -299,8 +307,7 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE,
           mustSort: true,
-          sortBy: ['lastUpdated'],
-          desc: true
+          sortBy: [{ key: 'lastUpdated', order: 'desc' }],
         },
         newOptions: {
           page: 1,
@@ -327,6 +334,8 @@
         kbartImportPopupVisible: false,
         confirmationPopUpVisible: false,
         addTitlePopupVisible: undefined,
+        addTippMenuOpen: false,
+        bulkselectMenuOpen: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: undefined,
@@ -352,19 +361,19 @@
       },
       tableHeaders () {
         return [
-          { text: (this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.tipp.label')), align: 'start', value: 'popup', width: '50%', sortable: true },
-          { text: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' },
-          { text: this.$i18n.tc('component.general.lastUpdated'), align: 'end', value: 'lastUpdated', sortable: true }
+          { title: (!!this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.tipp.label')), align: 'start', value: 'popup', width: '50%', sortable: true },
+          { title: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
+          { title: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
+          { title: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' },
+          { title: this.$i18n.tc('component.general.lastUpdated'), align: 'end', value: 'lastUpdated', sortable: true }
         ]
       },
       newTableHeaders () {
         return [
-          { text: this.$i18n.tc('component.tipp.label'), align: 'start', value: 'popup', sortable: false },
-          { text: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
-          { text: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' }
+          { title: this.$i18n.tc('component.tipp.label'), align: 'start', value: 'popup', sortable: false },
+          { title: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
+          { title: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
+          { title: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' }
         ]
       },
       packageTypes () {
@@ -386,7 +395,7 @@
       loggedIn () {
         return accountModel.loggedIn()
       },
-      title () {
+      sectionTitle () {
         return this.showTitle ? this.$i18n.tc('component.tipp.label', 2) : undefined
       },
       isLoading () {
@@ -526,11 +535,9 @@
       },
       resultPaginate (options) {
         this.successMessage = false
+
         if (!!options.sortBy) {
-          this.searchOptions.sortBy = [options.sortBy]
-        }
-        if (typeof options.desc === 'boolean') {
-          this.searchOptions.desc = options.desc
+          this.searchOptions.sortBy = options.sortBy
         }
 
         if (!!options.itemsPerPage) {
@@ -538,7 +545,7 @@
         }
 
         if (!!this.ttl || !!this.pkg) {
-          this.fetchTipps(options)
+          this.fetchTipps()
         }
       },
       resultNewPaginate () {
@@ -573,8 +580,8 @@
           const result = await this.catchError({
             promise: searchService.getTipps(reqId, {
               ...(searchParams || {}),
-              _sort: (this.linkSearchParameterValues[this.searchOptions.sortBy[0]] || this.searchOptions.sortBy[0]),
-              _order: (this.searchOptions.desc ? 'desc' : 'asc'),
+              _sort: (this.linkSearchParameterValues[this.searchOptions.sortBy[0]['key']] || this.searchOptions.sortBy[0]['key']),
+              _order: (this.searchOptions.sortBy[0]['order']),
               offset: ((this.searchOptions?.page || this.searchOptions.page) - 1) * this.searchOptions.itemsPerPage,
               limit: this.searchOptions.itemsPerPage
             }, this.cancelToken.token),
@@ -598,7 +605,7 @@
                   lastUpdated: this.buildDateString(tipp.lastUpdated),
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
-                  titleType: this.title?.type ? this.$i18n.tc('component.title.type.' + tipp.title.type) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
+                  titleType: tipp.title?.type ? (this.$i18n.tc('component.title.type.' + tipp.title.type)) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
                   connectedTitleId: tipp.title?.id,
                   ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({
                     id,

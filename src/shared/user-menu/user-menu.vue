@@ -1,23 +1,21 @@
 <template>
   <span>
-    <login-popup v-model="showLogin" />
-    <register-popup v-model="showRegister" />
-    <v-tooltip
-      bottom
-    >
-      <template #activator="{ on: tooltipOn }">
-        <v-menu
-          offset-y
-        >
-          <template #activator="{ on: menuOn }">
+    <gokb-login-popup v-model="showLogin" />
+    <gokb-register-popup v-model="showRegister" />
+
+    <v-menu>
+      <template #activator="{ props: menu }">
+        <v-tooltip location='left'>
+          <template #activator="{ props: tooltip }">
             <v-btn
               id="user-btn"
               icon
-              v-on="menuOn"
+              v-bind="mergeProps(menu, tooltip)"
             >
               <v-icon
                 v-if="!loggedIn"
-                v-on="tooltipOn"
+                aria-label="Show Login"
+                role="img"
               >
                 mdi-account
               </v-icon>
@@ -25,38 +23,37 @@
                 v-else
                 color="rgba(0,0,0,.26)"
                 :title="username"
+                text="firstLetter"
               >
-                <span class="text-h6">
+                <span class="text-h6 text-bg">
                   {{ firstLetter }}
                 </span>
               </v-avatar>
             </v-btn>
           </template>
-          <v-list>
-            <span
-              v-for="menu in userMenuItems"
-              :key="menu.id"
-            >
-              <v-list-item
-                v-for="item in menu.items"
-                :key="item.title"
-                :id="item.id"
-                @click="execute(item)"
-              >
-                <v-list-item-avatar>
-                  <v-icon>{{ item.icon }}</v-icon>
-                </v-list-item-avatar>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item>
-              <v-divider v-if="!menu.last" />
-            </span>
-          </v-list>
-        </v-menu>
+          <span>
+            {{ username || $tc('component.user.label') }}
+          </span>
+        </v-tooltip>
       </template>
-      <span>
-        {{ username || $tc('component.user.label') }}
-      </span>
-    </v-tooltip>
+      <v-list>
+        <span
+          v-for="menu in userMenuItems"
+          :key="menu.id"
+        >
+          <v-list-item
+            v-for="item in menu.items"
+            :key="item.title"
+            :id="item.id"
+            :prepend-icon="item.icon"
+            @click="execute(item)"
+          >
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+          <v-divider v-if="!menu.last" />
+        </span>
+      </v-list>
+    </v-menu>
   </span>
 </template>
 
@@ -64,16 +61,17 @@
   import { HOME_ROUTE, PROFILE_ROUTE } from '@/router/route-paths'
   import accountModel from '@/shared/models/account-model'
   import showLoginModel from '@/shared/models/show-login-model'
-  import LoginPopup from '@/shared/popups/gokb-login-popup'
-  import RegisterPopup from '@/shared/popups/gokb-register-popup'
+  import GokbLoginPopup from '@/shared/popups/gokb-login-popup'
+  import GokbRegisterPopup from '@/shared/popups/gokb-register-popup'
+  import { mergeProps } from 'vue'
 
   export default {
     name: 'UserMenu',
-    components: { LoginPopup, RegisterPopup },
+    components: { GokbLoginPopup, GokbRegisterPopup },
     data () {
       return {
         showRegister: false,
-        appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
+        appColor: import.meta.env.VITE_COLOR || '#4f4f4f',
       }
     },
     computed: {
@@ -145,6 +143,7 @@
       }
     },
     methods: {
+      mergeProps,
       execute ({ method, path }) {
         if (method) {
           this[method]()

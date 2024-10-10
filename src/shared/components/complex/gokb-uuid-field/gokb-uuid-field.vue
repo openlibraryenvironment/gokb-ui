@@ -1,23 +1,32 @@
 <template>
   <v-text-field
-    :value="value"
+    v-model="localValue"
     :label="label"
-    :messages="messages"
-    :dense="dense"
+    density="compact"
+    :messages="successMessage"
+    variant="underlined"
     disabled
-    readonly
+    persistent-placeholder
   >
+    <template #label>
+      <span class="mt-n4">
+        {{ label }}
+      </span>
+    </template>
     <template
-      v-slot:append-outer
+      v-slot:append
       v-if="!!urlBase"
     >
       <v-btn
+        id="exturl"
         :title="$t('component.general.uuid.copy.label')"
-        class="mt-n2"
+        base-color="card"
+        density="compact"
         icon
+        flat
         @click="copyUrl"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-clipboard-arrow-right
         </v-icon>
       </v-btn>
@@ -28,13 +37,14 @@
 <script>
   export default {
     name: 'GokbUuidField',
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
         required: false,
         default: '',
       },
-      value: {
+      modelValue: {
         type: String,
         required: false,
         default: undefined
@@ -55,19 +65,33 @@
       }
     },
     computed: {
-      messages () {
+      successMessage () {
         return this.copied ? [this.$i18n.t('component.general.uuid.copy.success')] : []
       },
       urlBase () {
-        return process.env.VUE_APP_BASE_URL
+        return import.meta.env.VITE_BASE_URL
+      },
+      localValue: {
+        get () {
+          return this.modelValue
+        },
+        set (localValue) {
+          this.$emit('update:model-value', localValue)
+        },
       }
     },
     methods: {
       copyUrl () {
-        const url = process.env.VUE_APP_BASE_URL + this.path + '/' + this.value
+        const url = import.meta.env.VITE_BASE_URL + this.path + '/' + this.localValue
         navigator.clipboard.writeText(url)
         this.copied = true
       }
     }
   }
 </script>
+
+<style scoped>
+  #exturl {
+    pointer-events: auto !important;
+  }
+</style>
