@@ -738,7 +738,6 @@
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
-  import VSnackbars from 'v-snackbars'
 
   const ROWS_PER_PAGE = 10
 
@@ -771,8 +770,7 @@
       GokbMaintenanceCycleField,
       GokbAlternateNamesSection,
       GokbConfirmationPopup,
-      GokbEditJobPopup,
-      VSnackbars
+      GokbEditJobPopup
     },
     extends: BaseComponent,
     props: {

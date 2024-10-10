@@ -581,11 +581,10 @@
   import tippServices from '@/shared/services/tipp-services'
   import accountModel from '@/shared/models/account-model'
   import loading from '@/shared/models/loading'
-  import VSnackbars from 'v-snackbars'
 
   export default {
     name: 'EditTippView',
-    components: { GokbErrorComponent, VSnackbars },
+    components: { GokbErrorComponent },
     extends: BaseComponent,
     props: {
       id: {

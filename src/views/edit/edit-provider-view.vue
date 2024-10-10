@@ -372,11 +372,10 @@
   import searchServices from '@/shared/services/search-services'
   import accountModel from '@/shared/models/account-model'
   import loading from '@/shared/models/loading'
-  import VSnackbars from 'v-snackbars'
 
   export default {
     name: 'EditProviderView',
-    components: { GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection, VSnackbars },
+    components: { GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection },
     extends: BaseComponent,
     props: {
       id: {

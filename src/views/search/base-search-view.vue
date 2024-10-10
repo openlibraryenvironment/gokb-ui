@@ -126,13 +126,12 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import selection from '@/shared/models/selection'
   import accountModel from '@/shared/models/account-model'
-  import VSnackbars from 'v-snackbars'
 
   const ROWS_PER_PAGE = 10
 
   export default {
     name: 'BaseSearch',
-    components: { GokbErrorComponent, GokbConfirmationPopup, VSnackbars },
+    components: { GokbErrorComponent, GokbConfirmationPopup },
     extends: BaseComponent,
     props: {
       initRefresh: {

@@ -485,11 +485,10 @@
   import accountModel from '@/shared/models/account-model'
   import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
   import loading from '@/shared/models/loading'
-  import VSnackbars from 'v-snackbars'
 
   export default {
     name: 'EditTitleView',
-    components: { GokbErrorComponent, GokbAlternateNamesSection, VSnackbars },
+    components: { GokbErrorComponent, GokbAlternateNamesSection },
     extends: BaseComponent,
     props: {
       id: {
