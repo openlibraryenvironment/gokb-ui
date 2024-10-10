@@ -350,6 +350,14 @@
       "label": "Namensraum für title_id (optional)",
       "tooltip": "Falls die Spalte 'title_id' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden."
     },
+    "propIdSerial": {
+      "label": "Namensraum für 'Serial' title_id (optional)",
+      "tooltip": "Falls die Spalte 'title_id' für Zeilen mit dem Typ 'Serial' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden."
+    },
+    "propIdMonograph": {
+      "label": "Namensraum für 'Monograph' title_id (optional)",
+      "tooltip": "Falls die Spalte 'title_id' für Zeilen mit dem Typ 'Monograph' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden."
+    },
     "addOnly": {
       "label": "Teil-Update",
       "tooltip": "Bestehende Pakettitel, die in dieser Datei nicht enthalten sind, werden nicht als 'Archiviert' markiert."
@@ -457,7 +465,12 @@
     "validator": {
       "label": "KBART-Validator",
       "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKb automatisch interpolierte Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
-      "mode": "Strikter Modus"
+      "mode": {
+        "label": "Strikter Modus"
+      },
+      "mixed": {
+        "label": "Gemischter Inhalt"
+      }
     }
   },
   "profile": {
@@ -983,6 +996,12 @@
       },
       "titleNamespace": {
         "label": "Titel-Namensraum"
+      },
+      "titleNamespaceSerial": {
+        "label": "Titel-Namensraum (Serial)"
+      },
+      "titleNamespaceMongraph": {
+        "label": "Titel-Namensraum (Monograph)"
       },
       "packageNamespace": {
         "label": "Paket-Namensraum"

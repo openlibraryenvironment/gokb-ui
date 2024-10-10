@@ -440,6 +440,7 @@
               :filter-align="isEdit"
               :platform="packageItem.nominalPlatform"
               :provider="packageItem.provider"
+              :content-type="packageItem.contentType"
               :disabled="isReadonly"
               :api-errors="errors?.tipps"
               @kbart="setKbart"

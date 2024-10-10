@@ -22,7 +22,7 @@
           <gokb-checkbox-field
             v-model="useStrict"
             class="pt-4"
-            :label="$t('kbart.validator.mode')"
+            :label="$t('kbart.validator.mode.label')"
             :disabled="importRunning"
           />
         </v-col>
@@ -31,12 +31,34 @@
         v-if="selectedFile"
         class="px-12"
       >
-        <v-col>
+        <v-col v-if="!mixedContent">
           <gokb-namespace-field
             v-model="options.selectedNamespace"
             target-type="Title"
             width="400px"
             :label="$t('kbart.propId.label')"
+          />
+        </v-col>
+        <v-col v-else>
+          <gokb-namespace-field
+            v-model="options.selectedNamespaceSerial"
+            target-type="Title"
+            width="400px"
+            :label="$t('kbart.propIdSerial.label')"
+          />
+          <gokb-namespace-field
+            v-model="options.selectedNamespaceMonograph"
+            target-type="Title"
+            width="400px"
+            :label="$t('kbart.propIdMonograph.label')"
+          />
+        </v-col>
+        <v-col>
+          <gokb-checkbox-field
+            v-model="mixedContent"
+            class="pt-4"
+            :label="$t('kbart.validator.mixed.label')"
+            :disabled="importRunning"
           />
         </v-col>
       </v-row>
@@ -207,6 +229,7 @@
         },
         selectedFile: undefined,
         useStrict: true,
+        mixedContent: false,
         completion: undefined,
         options: {
           selectedNamespace: undefined,
@@ -247,6 +270,13 @@
       },
       useStrict() {
         this.completion = 0
+      },
+      mixedContent(val) {
+        console.log(val)
+        if (!val) {
+          this.selectedNamespaceMonograph = undefined
+          this.selectedNamespaceSerial = undefined
+        }
       }
     },
     methods: {

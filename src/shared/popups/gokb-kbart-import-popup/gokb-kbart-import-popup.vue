@@ -13,11 +13,26 @@
         dense
       />
       <gokb-namespace-field
+        v-if="!contentType || contentType.value !== 'Mixed'"
         v-model="options.selectedNamespace"
-        target-type="Title"
+        :target-type="contentType"
         width="350px"
         :label="$t('kbart.propId.label')"
       />
+      <div v-else>
+        <gokb-namespace-field
+          v-model="options.selectedNamespaceSerial"
+          target-type="Journal"
+          width="350px"
+          :label="$t('kbart.propIdSerial.label')"
+        />
+        <gokb-namespace-field
+          v-model="options.selectedNamespaceMonograph"
+          target-type="Book"
+          width="350px"
+          :label="$t('kbart.propIdMonograph.label')"
+        />
+      </div>
       <gokb-checkbox-field
         v-model="options.dryRun"
         :label="$t('kbart.dryRun.label')"
@@ -177,12 +192,16 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      contentType: {
+        type: Object,
+        required: false,
+        default: undefined
       }
     },
     data () {
       return {
         errors: [],
-        selectedNamespace: undefined,
         cancelValidation: false,
         useProprietaryNamespace: false,
         importRunning: undefined,
@@ -207,6 +226,8 @@
         options: {
           selectedFile: undefined,
           selectedNamespace: undefined,
+          selectedNamespaceSerial: undefined,
+          selectedNamespaceMonograph: undefined,
           lineCount: undefined,
           addOnly: false,
           dryRun: false
@@ -309,9 +330,11 @@
         this.errors = []
         this.importRunning = true
         this.completion = 0
-        var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceNameSerial = this.options.selectedNamespaceSerial ? this.options.selectedNamespaceSerial.value : undefined
+        let namespaceNameMonograph = this.options.selectedNamespaceMonograph ? this.options.selectedNamespaceMonograph.value : undefined
 
-        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, this.cancelToken.token)
+        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 
         if (validationResult.status === 200 && validationResult?.data?.report) {
 

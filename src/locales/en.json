@@ -350,6 +350,14 @@
       "label": "Namespace for title_id values (optional)",
       "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
     },
+    "propIdSerial": {
+      "label": "Namespace for 'Serial' type title_id values (optional)",
+      "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
+    },
+    "propIdMonograph": {
+      "label": "Namespace for 'Monograph' type title_id values (optional)",
+      "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
+    },
     "addOnly": {
       "label": "Partial Update",
       "tooltip": "Don't retire existing titles not matched in this update."
@@ -457,7 +465,12 @@
     "validator": {
       "label": "KBART Validator",
       "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, values automatically interpolated by the GOKb are also accepted (according to the validation during package upload).",
-      "mode": "Strict mode"
+      "mode": {
+        "label": "Strict mode"
+      },
+      "mixed": {
+        "label": "Mixed Content"
+      }
     }
   },
   "profile": {
@@ -983,6 +996,12 @@
       },
       "titleNamespace": {
         "label": "Title Namespace"
+      },
+      "titleNamespaceSerial": {
+        "label": "Title Namespace (Serial)"
+      },
+      "titleNamespaceMonograph": {
+        "label": "Title Namespace (Monograph)"
       },
       "packageNamespace": {
         "label": "Package Namespace"
