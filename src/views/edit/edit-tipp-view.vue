@@ -36,7 +36,7 @@
             <gokb-uuid-field
               v-if="id"
               :label="$t('component.general.uuid.label')"
-              :value="uuid"
+              v-model="uuid"
               path="/package-title"
               dense
             />

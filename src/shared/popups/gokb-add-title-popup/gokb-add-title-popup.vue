@@ -23,7 +23,6 @@
         <v-row dense>
           <v-col>
             <gokb-section
-              expandable
               :sub-title="$t('component.general.general')"
             >
               <v-row dense>
@@ -93,7 +92,7 @@
               expandable
               :mark-required="!isReadonly"
               :sub-title="$t('component.tipp.access.label')"
-              hide-default
+              v-model="showAccessSection"
             >
               <v-row
                 dense
@@ -324,6 +323,7 @@
               :sub-title="$t('component.tipp.other.label')"
               hide-default
               expandable
+              v-model="showOtherSection"
             >
               <v-row>
                 <v-col>
@@ -545,6 +545,8 @@
         urlValid: false,
         coverageExpanded: false,
         titleTypeString: undefined,
+        showAccessSection: true,
+        showOtherSection: false,
         init: false,
         showLoading: true,
         coverageObject: {

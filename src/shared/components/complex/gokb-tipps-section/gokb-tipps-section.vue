@@ -6,6 +6,7 @@
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
     <gokb-section
+      v-model="isExpanded"
       expandable
       :hide-default="!expanded"
       :filters="filterAlign"
@@ -315,6 +316,7 @@
         },
         selectedItems: [],
         selectedNewItems: [],
+        isExpanded: true,
         bulkSelect: false,
         linkSearchParameterValues: {
           popup: 'name'
@@ -427,6 +429,8 @@
       }
     },
     async mounted () {
+      this.isExpanded = !this.expandable || this.expanded
+
       if (this.ttl) {
         this.fetchTipps(this.searchOptions)
       }

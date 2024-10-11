@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :sub-title="title"
@@ -97,6 +98,7 @@
           sortBy: ['popup'],
           desc: [false]
         },
+        isExpanded: true,
         selectedItems: [],
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
@@ -142,6 +144,9 @@
       title () {
         return this.showTitle ? this.$i18n.tc('component.office.label', 2) : undefined
       }
+    },
+    mounted () {
+      this.isExpanded = this.expanded
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

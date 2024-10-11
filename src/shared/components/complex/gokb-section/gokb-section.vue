@@ -25,7 +25,7 @@
         </span>
         <v-spacer />
         <slot
-          v-if="show"
+          v-if="localValue"
           name="buttons"
         />
       </v-toolbar>
@@ -77,12 +77,12 @@
         </v-btn>
         <v-spacer />
         <slot
-          v-if="show"
+          v-if="localValue"
           name="buttons"
         />
       </v-toolbar>
       <v-toolbar
-        v-if="showActions && filters && show"
+        v-if="showActions && filters && localValue"
         height="63"
         color="header"
         class="pt-1 pl-4"
@@ -113,7 +113,7 @@
       >
         <v-spacer />
         <slot
-          v-if="show"
+          v-if="localValue"
           name="buttons"
         />
       </v-toolbar>
@@ -128,7 +128,7 @@
       </v-toolbar>
 
       <v-expand-transition>
-        <div v-show="show">
+        <div v-show="localValue">
           <v-card-text>
             <div
               class="pa-2 bg-card"
@@ -226,14 +226,14 @@
     computed: {
       localValue: {
         get () {
-          return this.modelValue
+          return !this.expandable || this.modelValue
         },
         set (localValue) {
           this.$emit('update:model-value', localValue)
         }
       },
       expansionIcon () {
-        return this.show ? 'mdi-chevron-up' : 'mdi-chevron-down'
+        return this.localValue ? 'mdi-chevron-up' : 'mdi-chevron-down'
       },
       styles () {
         var result = {}
@@ -251,13 +251,19 @@
     },
     mounted () {
       if (this.hideDefault) {
-        this.show = false
+        this.localValue = false
       }
     },
     methods: {
       doExpandCollapse () {
-        this.localValue = !this.localValue
-        this.show = !this.show
+        if (typeof this.localValue === 'boolean') {
+          this.localValue = !this.localValue
+        }
+        else {
+          if (!!this.localValue) {
+            this.localValue = undefined
+          }
+        }
       }
     },
   }

@@ -52,7 +52,7 @@
             <gokb-uuid-field
               v-if="id"
               :label="$t('component.general.uuid.label')"
-              :value="titleItem.uuid"
+              v-model="titleItem.uuid"
               path="/title"
               dense
             />
@@ -328,6 +328,7 @@
                 v-model="subjects"
                 :disabled="isReadonly"
                 :api-errors="errors?.subjects"
+                :expandable="false"
                 @update="addPendingChange"
               />
             </v-window-item>

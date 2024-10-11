@@ -37,7 +37,6 @@
           v-for="(wf, i) in workflow"
           :ref="'wf' + i"
           :key="i"
-          :value="error"
           :reviewed-component="reviewItem.component"
           :reference-components="reviewItem.otherComponents"
           :review-type="reviewItem.stdDesc?.name"
@@ -46,7 +45,7 @@
           :workflow="wf"
           :editable="!isReadonly"
           :additional-vars="reviewItem.additionalVars"
-          :expanded="activeStep === i"
+          :expanded="activeStep == i"
           @expand="activateStep(i)"
           @finished-step="changeActiveStep"
           @added="addNewComponent"
@@ -428,7 +427,7 @@
       changeActiveStep (index) {
         if (this.workflow.length > this.activeStep) {
           this.activeStep++
-          refreshCurrentComponents()
+          this.refreshCurrentComponents()
         }
       },
       refreshCurrentComponents () {

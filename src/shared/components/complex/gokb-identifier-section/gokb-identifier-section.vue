@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :sub-title="title"
@@ -121,6 +122,7 @@
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedItems: [],
+        isExpanded: true,
         identifiers: [],
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
@@ -185,6 +187,7 @@
       }
     },
     mounted () {
+      this.isExpanded = this.expanded
       this.updateItems()
     },
     methods: {

@@ -661,7 +661,7 @@
         this.nameEditActive = false
       },
       confirmMerge () {
-        this.$emit('merge', this.id)
+        this.$emit('merge', { id: this.id, type: this.isTippComponent ? 'tipp' : 'title' })
         this.isChanged = true
       },
 
@@ -780,6 +780,9 @@
           else {
             console.log('Unable to lookup identifier object for ' + namespace + ':' + id + '!')
           }
+        }
+        else {
+          log.debug("NO namespace for " + namespace)
         }
       }
     }
