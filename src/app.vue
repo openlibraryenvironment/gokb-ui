@@ -415,7 +415,7 @@
 
                 this.globalSearchItems.push(res)
               } else {
-                console.log('Not Adding item..')
+                log.debug('Not Adding item..')
               }
             })
           }
@@ -493,7 +493,7 @@
 
           this.groups = result.data.data.curatoryGroups
 
-          console.log("Loading groups!")
+          log.debug("Loading groups!")
 
           if (this.groups.length > 0) {
             this.activeGroup = accountModel.activeGroup() || this.groups[0]

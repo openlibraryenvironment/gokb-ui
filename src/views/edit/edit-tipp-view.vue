@@ -951,8 +951,6 @@
           instance: this
         })
 
-        console.log(result)
-
         if (result?.status === 200) {
           this.mapRecord(result.data)
         } else if (result?.status === 401) {

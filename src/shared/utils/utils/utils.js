@@ -11,7 +11,7 @@ const api = {
   },
 
   isDevelopment () {
-    return import.meta.env.NODE_ENV === 'development'
+    return import.meta.env.DEV
   },
 
   asYesNo (value) {
