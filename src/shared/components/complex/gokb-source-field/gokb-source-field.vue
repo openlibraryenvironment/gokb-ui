@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :sub-title="$tc('component.source.label')"
@@ -110,7 +111,8 @@
           automaticUpdates: undefined,
           update: false
         },
-        errors: []
+        errors: [],
+        isExpanded: true
       }
     },
     computed: {
@@ -168,8 +170,12 @@
       }
     },
     async mounted () {
+      this.isExpanded = this.expanded
+
       if (!!this.modelValue?.id) {
         this.fetch(this.modelValue.id)
+      } else if (!!this.modelValue.url) {
+        this.isExpanded = true
       }
     },
     methods: {
@@ -188,6 +194,10 @@
             this.item.name = result.data.name
             this.item.url = result.data.url
             this.item.automaticUpdates = result.data.automaticUpdates
+
+            if (!!this.item.url) {
+              this.isExpanded = true
+            }
           }
         }
       }
