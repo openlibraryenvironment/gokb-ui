@@ -374,7 +374,7 @@
         } else {
           let mergeParams = { mergeTipps: true }
 
-          if (val === this.reviewedComponent.id) {
+          if (mergedId === this.reviewedComponent.id) {
             mergeData.ids = this.selectedReviewItemIds
           } else {
             mergeParams.mergeIds = true
