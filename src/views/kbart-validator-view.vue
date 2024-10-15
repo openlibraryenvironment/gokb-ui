@@ -209,157 +209,157 @@
 </template>
 
 <script>
-import baseComponent from '@/shared/components/base-component'
-import kbartServices from '@/shared/services/kbart-services'
+  import baseComponent from '@/shared/components/base-component'
+  import kbartServices from '@/shared/services/kbart-services'
 
-export default {
-  name: 'KbartValidatorView',
-  extends: baseComponent,
-  data () {
-    return {
-      errors: [],
-      selectedNamespace: undefined,
-      importRunning: undefined,
-      executedOnce: false,
-      loadedFile: {
-        errors: {
-          missingColumns: [],
-          single: [],
-          type: {}
+  export default {
+    name: 'KbartValidatorView',
+    extends: baseComponent,
+    data () {
+      return {
+        errors: [],
+        selectedNamespace: undefined,
+        importRunning: undefined,
+        executedOnce: false,
+        loadedFile: {
+          errors: {
+            missingColumns: [],
+            single: [],
+            type: {}
+          },
+          warnings: {
+            missingColumns: [],
+            single: [],
+            type: {}
+          },
+          rows: {
+            total: 0,
+            warning: 0,
+            error: 0
+          }
         },
-        warnings: {
-          missingColumns: [],
-          single: [],
-          type: {}
-        },
-        rows: {
-          total: 0,
-          warning: 0,
-          error: 0
+        selectedFile: undefined,
+        useStrict: true,
+        completion: undefined,
+        options: {
+          selectedFile: undefined,
+          selectedNamespace: undefined,
+          lineCount: undefined,
+          addOnly: false,
+          dryRun: false
+        }
+      }
+    },
+    computed: {
+      errorHeaders () {
+        return [
+          { text: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
+          { text: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
+          { text: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
+        ]
+      },
+      expandWidth () {
+        return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 400
+      },
+      showResults () {
+        return (this.completion === 100 || (this.completion === 0 && this.executedOnce))
+      },
+      showRowResults () {
+        return (this.loadedFile.errors.missingColumns.length === 0 && this.errors.length === 0)
+      }
+    },
+    watch: {
+      selectedFile (file) {
+        this.options.lineCount = undefined
+        this.completion = 0
+        this.loadedFile.rows = { total: 0, warning: 0, error: 0 }
+        this.loadedFile.errors.missingColumns = []
+        this.loadedFile.errors.single = []
+        this.loadedFile.errors.type = {}
+        this.loadedFile.warnings.missingColumns = []
+        this.loadedFile.warnings.single = []
+        this.loadedFile.warnings.type = {}
+        this.options.selectedFile = file
+        this.executedOnce = false
+      },
+      '$i18n.locale' (l) {
+        if (this.selectedFile) {
+          this.doImport()
         }
       },
-      selectedFile: undefined,
-      useStrict: true,
-      completion: undefined,
-      options: {
-        selectedFile: undefined,
-        selectedNamespace: undefined,
-        lineCount: undefined,
-        addOnly: false,
-        dryRun: false
-      }
-    }
-  },
-  computed: {
-    errorHeaders () {
-      return [
-        { text: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
-        { text: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
-        { text: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
-      ]
-    },
-    expandWidth () {
-      return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 400
-    },
-    showResults () {
-      return (this.completion === 100 || (this.completion === 0 && this.executedOnce))
-    },
-    showRowResults () {
-      return (this.loadedFile.errors.missingColumns.length === 0 && this.errors.length === 0)
-    }
-  },
-  watch: {
-    selectedFile (file) {
-      this.options.lineCount = undefined
-      this.completion = 0
-      this.loadedFile.rows = { total: 0, warning: 0, error: 0 }
-      this.loadedFile.errors.missingColumns = []
-      this.loadedFile.errors.single = []
-      this.loadedFile.errors.type = {}
-      this.loadedFile.warnings.missingColumns = []
-      this.loadedFile.warnings.single = []
-      this.loadedFile.warnings.type = {}
-      this.options.selectedFile = file
-      this.executedOnce = false
-    },
-    '$i18n.locale' (l) {
-      if (this.selectedFile) {
-        this.doImport()
+      useStrict () {
+        this.completion = 0
+      },
+      'options.selectedNamespace': function () {
+        this.completion = 0
       }
     },
-    useStrict () {
-      this.completion = 0
-    },
-    'options.selectedNamespace': function () {
-      this.completion = 0
-    }
-  },
-  methods: {
-    reset() {
-      this.selectedFile = null
-    },
-    async doImport () {
-      this.errors = []
-      this.importRunning = true
-      this.completion = 0
-      var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+    methods: {
+      reset() {
+        this.selectedFile = null
+      },
+      async doImport () {
+        this.errors = []
+        this.importRunning = true
+        this.completion = 0
+        var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
 
-      const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, this.useStrict, this.cancelToken.token)
+        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, this.useStrict, this.cancelToken.token)
 
-      if (validationResult.status === 200 && validationResult?.data?.report) {
-        /*if (validationResult.data.errors.missingColumns?.length > 0) {
-          validationResult.data.errors.missingColumns.forEach(error => {
-            this.errors.push(this.$i18n.t('kbart.errors.missingCols', [error] ))
-          })
-        } */
-
-        this.loadedFile = validationResult.data.report
-
-        let typedReport = !!this.loadedFile.errors.type
-
-        this.loadedFile.errors.single = []
-        Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) => {
-          Object.entries(colobj).forEach(([colname, eo]) => {
-            this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
-
-            if (!this.loadedFile.errors.type[colname]) {
-              this.loadedFile.errors.type[colname] = 1
-            } else if (!typedReport) {
-              this.loadedFile.errors.type[colname]++
-            }
-          })
-        })
-
-        typedReport = !!this.loadedFile.warnings.type
-
-        this.loadedFile.warnings.single = []
-        Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) => {
-          Object.entries(colobj).forEach(([colname, wo]) => {
-            this.loadedFile.warnings.single.push({
-              row: rownum,
-              column: colname,
-              reason: this.$i18n.t(wo.messageCode, wo.args)
+        if (validationResult.status === 200 && validationResult?.data?.report) {
+          /*if (validationResult.data.errors.missingColumns?.length > 0) {
+            validationResult.data.errors.missingColumns.forEach(error => {
+              this.errors.push(this.$i18n.t('kbart.errors.missingCols', [error] ))
             })
+          } */
 
-            if (!this.loadedFile.warnings.type[colname]) {
-              this.loadedFile.warnings.type[colname] = 1
-            } else if (!typedReport) {
-              this.loadedFile.warnings.type[colname]++
-            }
+          this.loadedFile = validationResult.data.report
+
+          let typedReport = !!this.loadedFile.errors.type
+
+          this.loadedFile.errors.single = []
+          Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) => {
+            Object.entries(colobj).forEach(([colname, eo]) => {
+              this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+
+              if (!this.loadedFile.errors.type[colname]) {
+                this.loadedFile.errors.type[colname] = 1
+              } else if (!typedReport) {
+                this.loadedFile.errors.type[colname]++
+              }
+            })
           })
-        })
 
-        this.options.lineCount = validationResult.data.report.rows.total
-        this.completion = 100
-        this.executedOnce = true
-      } else {
-        this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))
-        this.completion = 100
-        this.executedOnce = true
+          typedReport = !!this.loadedFile.warnings.type
+
+          this.loadedFile.warnings.single = []
+          Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) => {
+            Object.entries(colobj).forEach(([colname, wo]) => {
+              this.loadedFile.warnings.single.push({
+                row: rownum,
+                column: colname,
+                reason: this.$i18n.t(wo.messageCode, wo.args)
+              })
+
+              if (!this.loadedFile.warnings.type[colname]) {
+                this.loadedFile.warnings.type[colname] = 1
+              } else if (!typedReport) {
+                this.loadedFile.warnings.type[colname]++
+              }
+            })
+          })
+
+          this.options.lineCount = validationResult.data.report.rows.total
+          this.completion = 100
+          this.executedOnce = true
+        } else {
+          this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))
+          this.completion = 100
+          this.executedOnce = true
+        }
+
+        this.importRunning = false
       }
-
-      this.importRunning = false
     }
   }
-}
 </script>
