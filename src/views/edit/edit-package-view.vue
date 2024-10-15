@@ -779,7 +779,6 @@
   export default {
     name: 'EditPackageView',
     components: {
-      GokbSection,
       GokbDateField,
       GokbIdentifierSection,
       GokbSearchOrganisationField,
@@ -952,7 +951,6 @@
       },*/
       providerName: {
         get() {
-          this.test
           return this.packageItem?.provider?.name
         },
         set(newName) {

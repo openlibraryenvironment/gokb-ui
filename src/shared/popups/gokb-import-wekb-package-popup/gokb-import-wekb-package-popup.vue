@@ -35,31 +35,30 @@
           </v-col>
         </v-row>
 
-        <v-row>
-          <v-spacer />
-          <gokb-button
-            v-if="!wekbDataLoaded"
-            :disabled="wekbDataLoaded || !wekb_package_uuid || wekbDataIsLoading"
-            @click="fetchWekbPackageData"
-          >
-            Abschicken
-          </gokb-button>
+        <v-row justify="end">
+          <v-col cols="2">
+            <gokb-button
+              v-if="!wekbDataLoaded"
+              :disabled="wekbDataLoaded || !wekb_package_uuid || wekbDataIsLoading"
+              @click="fetchWekbPackageData"
+            >
+              Abschicken
+            </gokb-button>
+          </v-col>
         </v-row>
       <div v-if="wekbDataIsLoading">
-      <v-row >
-        <v-col cols="4"></v-col>
-        <v-col cols="6">
-          <v-progress-circular
-            color="primary"
-            size="100"
-            width="8"
-            indeterminate
-          />
-        </v-col>
-        <v-col cols="2"></v-col>
-      </v-row>
-        <v-row>
-          <v-col cols="4"></v-col>
+        <v-row justify="end">
+          <v-col cols="6">
+            <v-progress-circular
+              color="primary"
+              size="100"
+              width="8"
+              indeterminate
+            />
+          </v-col>
+          <v-col cols="2"></v-col>
+        </v-row>
+        <v-row justify="end">
           <v-col cols="6">
             <span>Die Daten werden geladen - je nach Größe des angeforderten Pakets kann das einige Zeit dauern. </span>
           </v-col>
@@ -72,12 +71,12 @@
       <v-row>
         <v-col cols="5"><h3> Paket aus der externen Quelle </h3></v-col>
         <v-col cols="5"><h3>Paket in der GOKB</h3></v-col>
-
       </v-row>
 
       <v-row>
         <v-col><h4>Name: </h4></v-col>
       </v-row>
+
       <v-row>
         <v-col cols="5"><span>{{ externalPackageName }}</span></v-col>
         <v-col cols="5">
@@ -99,6 +98,7 @@
       <v-row>
         <v-col><h4>Plattform: </h4></v-col>
       </v-row>
+
       <v-row>
         <v-col cols="5"><span>{{ externalPlatformName }}</span><br/><span>{{ externalPlatformURL }}</span></v-col>
         <v-col cols="5">
@@ -183,13 +183,13 @@
               <h4> {{ pubtype.publicationType }} </h4>
             </v-col>
           </v-row>
-            <v-row v-for="id in pubtype.identifiers"
-              :data="id"
-              :key="id.namespace"
-            >
-              <v-col cols="3">{{ id.namespace }}: </v-col>
-              <v-col cols="9">{{ id.value }}</v-col>
-            </v-row>
+          <v-row v-for="id in pubtype.identifiers"
+            :data="id"
+            :key="id.namespace"
+          >
+            <v-col cols="3">{{ id.namespace }}: </v-col>
+            <v-col cols="9">{{ id.value }}</v-col>
+          </v-row>
 
           <!-- <v-col cols="4">{{ id.value }}</v-col> -->
         </v-col>
@@ -197,7 +197,6 @@
       </v-row>
       <br/><br/>
       <v-row>
-
         <v-col cols="4">
           <span>Im Paket befinden sich Medien vom Inhaltstyp <strong>{{ contentTypeOfTipps }}</strong>. <br/>
             Welcher Identifikatoren-Namensraum soll für das Feld "title_id" verwendet werden (Angabe optional)?
@@ -224,7 +223,6 @@
         </v-col>
       </v-row>
 
-
       <v-row>
         <v-spacer />
         <gokb-button
@@ -234,8 +232,6 @@
           Abschicken
         </gokb-button>
       </v-row>
-
-
     </div>
   </gokb-dialog>
 </template>

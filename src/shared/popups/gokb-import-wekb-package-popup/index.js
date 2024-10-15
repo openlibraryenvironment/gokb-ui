@@ -1,1 +1,1 @@
-export default from './gokb-import-wekb-package-popup'
+export {default} from './gokb-import-wekb-package-popup'
