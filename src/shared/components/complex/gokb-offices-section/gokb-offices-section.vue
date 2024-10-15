@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :sub-title="title"
@@ -17,7 +18,7 @@
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddItem"
+        @click.prevent="showAddItem"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
@@ -27,7 +28,7 @@
         icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
-        @click="confirmDeleteSelectedItems"
+        @click.prevent="confirmDeleteSelectedItems"
       >
         {{ $i18n.t('btn.delete') }}
       </gokb-button>
@@ -61,8 +62,9 @@
   export default {
     name: 'GokbOfficesSection',
     components: { GokbAddItemPopup, GokbConfirmationPopup },
+    emits: ['update:model-value', 'update'],
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -96,6 +98,7 @@
           sortBy: ['popup'],
           desc: [false]
         },
+        isExpanded: true,
         selectedItems: [],
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
@@ -115,14 +118,14 @@
       },
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       offices () {
-        return [...this.value]
+        return [...this.modelValue]
           .map(item => ({
             ...item,
             lang: languageServices.getLanguage(item.language.name ? item.language.name : item.language, this.$i18n.locale).name
@@ -141,6 +144,9 @@
       title () {
         return this.showTitle ? this.$i18n.tc('component.office.label', 2) : undefined
       }
+    },
+    mounted () {
+      this.isExpanded = this.expanded
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

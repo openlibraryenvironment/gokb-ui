@@ -1,1 +1,1 @@
-export default from './gokb-money-field'
+export {default} from './gokb-money-field'

@@ -1,10 +1,11 @@
-const api = (vue, accountServices) => {
-  const state = vue.observable({
+const api = (reactive, accountServices, browserStorage) => {
+  const ACTIVE_GROUP = 'activeGroup'
+  const localStorage = browserStorage(window.localStorage)
+  const state = reactive({
     initialized: false,
     loggedIn: false,
     username: undefined,
     userLocale: undefined,
-    activeGroup: undefined,
     tabbedView: true,
     darkMode: undefined,
     id: undefined,
@@ -37,7 +38,7 @@ const api = (vue, accountServices) => {
     },
 
     activeGroup () {
-      return state.activeGroup
+      return localStorage.get(ACTIVE_GROUP, true)
     },
 
     userLocale () {
@@ -56,7 +57,9 @@ const api = (vue, accountServices) => {
     },
 
     setActiveGroup (group) {
-      state.activeGroup = group
+      if (!!group) {
+        localStorage.set(ACTIVE_GROUP, group, true)
+      }
     },
 
     setLocale (lcl) {
@@ -93,7 +96,6 @@ const api = (vue, accountServices) => {
       state.loggedIn = false
       state.username = ''
       state.roles = []
-      state.activeGroup = undefined
       state.darkMode = false
       state.id = undefined
       state.tabbedView = true
@@ -102,6 +104,7 @@ const api = (vue, accountServices) => {
 
     logout () {
       accountServices.logout()
+      localStorage.remove(ACTIVE_GROUP)
       this.clear()
     },
 

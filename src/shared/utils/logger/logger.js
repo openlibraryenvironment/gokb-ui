@@ -1,6 +1,6 @@
 const api = (console, utils) => {
-  const isProduction = utils.isProduction()
-  const loggerFunction = level => (...optionalParams) => !isProduction && console[level](...optionalParams)
+  const isProduction = !utils.isDevelopment()
+  const loggerFunction = level => (...optionalParams) => !isProduction ? console[level](...optionalParams) : console.info(...optionalParams)
 
   const api = {
     LOG_LEVEL: ['log', 'info', 'debug', 'trace', 'warn', 'error', 'assert'],

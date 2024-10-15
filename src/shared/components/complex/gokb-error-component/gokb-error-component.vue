@@ -1,5 +1,5 @@
 <template>
-  <span v-if="value && showDetails">
+  <span v-if="modelValue && showDetails">
     <v-btn
       absolute
       color="error"
@@ -21,29 +21,29 @@
           </div>
           <v-expansion-panels>
             <v-expansion-panel>
-              <v-expansion-panel-header>
+              <v-expansion-panel-title>
                 <div class="text-h6">Details</div>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
                 <v-expansion-panels>
                   <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-title>
                       <div class="text-h6">Request</div>
-                    </v-expansion-panel-header>
-                    <v-expansion-panel-content>
+                    </v-expansion-panel-title>
+                    <v-expansion-panel-text>
                       <vue-json-pretty :data="request" />
-                    </v-expansion-panel-content>
+                    </v-expansion-panel-text>
                   </v-expansion-panel>
                   <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-title>
                       <div class="text-h6">Response</div>
-                    </v-expansion-panel-header>
-                    <v-expansion-panel-content>
+                    </v-expansion-panel-title>
+                    <v-expansion-panel-text>
                       <vue-json-pretty :data="response" />
-                    </v-expansion-panel-content>
+                    </v-expansion-panel-text>
                   </v-expansion-panel>
                 </v-expansion-panels>
-              </v-expansion-panel-content>
+              </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
         </v-card-text>
@@ -71,7 +71,7 @@
     name: 'GokbErrorComponent',
     components: { VueJsonPretty },
     props: {
-      value: {
+      modelValue: {
         type: Error,
         required: false,
         default: undefined,
@@ -84,19 +84,19 @@
     },
     computed: {
       config () {
-        return this.value?.config
+        return this.modelValue?.config
       },
       request () {
-        return this.value?.toJSON()
+        return this.modelValue?.toJSON()
       },
       response () {
-        return this.value?.response
+        return this.modelValue?.response
       },
       message () {
-        return this.value?.response?.data?.ExceptionMessage || this.value?.stack
+        return this.modelValue?.response?.data?.ExceptionMessage || this.modelValue?.stack
       },
       stack () {
-        return this.value?.response?.data?.StackTrace || this.value?.stack
+        return this.modelValue?.response?.data?.StackTrace || this.modelValue?.stack
       },
       showDetails() {
         return accountModel.loggedIn() && accountModel.hasRole('ROLE_SUPERUSER')

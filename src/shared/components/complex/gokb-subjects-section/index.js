@@ -1,1 +1,1 @@
-export default from './gokb-subjects-section'
+export {default} from './gokb-subjects-section'

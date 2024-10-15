@@ -63,9 +63,10 @@
           <h4>{{ $tc('kbart.processing.error.structure') }}</h4>
           <ul>
             <li
-              v-for="er in loadedFile.errors.missingColumns"
-              :key="er">
-              {{ $tc('kbart.errors.missingCols' ) + ' ' + er }}
+              v-for="er in errors"
+              :key="er"
+              class="ml-4">
+              {{ er }}
             </li>
           </ul>
         </v-col>
@@ -124,6 +125,7 @@
           <ul
             v-for="(val, col) in loadedFile.errors.type"
             :key="col"
+            class="ml-4"
           >
             <li>
               <b>{{ col }}</b> - {{ val }}
@@ -142,6 +144,7 @@
           <ul
             v-for="(val, col) in loadedFile.warnings.type"
             :key="col"
+            class="ml-4"
           >
             <li>
               <b>{{ col }}</b> - {{ val }}
@@ -155,36 +158,31 @@
       >
         <v-col>
           <v-expansion-panels>
-            <v-expansion-panel
-              v-if="loadedFile.errors.single.length > 0"
-            >
-              <v-expansion-panel-header>
+            <v-expansion-panel>
+              <v-expansion-panel-title>
                 {{ $tc('kbart.processing.error.label', 2) }}
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
                 <v-data-table
                   :items="loadedFile.errors.single"
                   :headers="errorHeaders"
                   width="1000px"
-                  sort-by="row"
-                  group-by="row"
+                  :sort-by="[{key: 'row', order: 'asc'}]"
                 />
-              </v-expansion-panel-content>
+              </v-expansion-panel-text>
             </v-expansion-panel>
-            <v-expansion-panel
-              v-if="loadedFile.warnings.single.length > 0"
-            >
-              <v-expansion-panel-header>
+            <v-expansion-panel>
+              <v-expansion-panel-title>
                 {{ $tc('kbart.processing.warning.label', 2) }}
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
                 <v-data-table
                   :items="loadedFile.warnings.single"
                   :headers="errorHeaders"
-                  sort-by="row"
-                  group-by="row"
-                />
-              </v-expansion-panel-content>
+                  :sort-by="[{key: 'row', order: 'asc'}]"
+                >
+                </v-data-table>
+              </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
         </v-col>
@@ -194,13 +192,14 @@
       <v-spacer />
       <gokb-button
         text
-        @click="reset"
+        @click.prevent="reset"
       >
         {{ $t('btn.reset') }}
       </gokb-button>
       <gokb-button
-        default
-        :disabled="!options.selectedFile || importRunning || completion === 100"
+        color="primary"
+        is-submit
+        :disabled="!selectedFile || importRunning || completion === 100"
       >
         {{ $t('btn.validate') }}
       </gokb-button>
@@ -219,7 +218,7 @@
       return {
         errors: [],
         selectedNamespace: undefined,
-        importRunning: undefined,
+        importRunning: false,
         executedOnce: false,
         loadedFile: {
           errors: {
@@ -242,7 +241,6 @@
         useStrict: true,
         completion: undefined,
         options: {
-          selectedFile: undefined,
           selectedNamespace: undefined,
           lineCount: undefined,
           addOnly: false,
@@ -253,9 +251,9 @@
     computed: {
       errorHeaders () {
         return [
-          { text: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
-          { text: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
-          { text: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
+          { title: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
+          { title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
+          { title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
         ]
       },
       expandWidth () {
@@ -269,7 +267,7 @@
       }
     },
     watch: {
-      selectedFile (file) {
+      selectedFile () {
         this.options.lineCount = undefined
         this.completion = 0
         this.loadedFile.rows = { total: 0, warning: 0, error: 0 }
@@ -279,24 +277,25 @@
         this.loadedFile.warnings.missingColumns = []
         this.loadedFile.warnings.single = []
         this.loadedFile.warnings.type = {}
-        this.options.selectedFile = file
         this.executedOnce = false
       },
-      '$i18n.locale' (l) {
-        if (this.selectedFile) {
+      '$i18n.locale' () {
+        if (!!this.selectedFile) {
           this.doImport()
         }
       },
       useStrict () {
         this.completion = 0
       },
-      'options.selectedNamespace': function () {
+      'options.selectedNamespace' () {
         this.completion = 0
       }
     },
     methods: {
       reset() {
+        this.errors = []
         this.selectedFile = null
+        this.completion = 0
       },
       async doImport () {
         this.errors = []
@@ -304,7 +303,7 @@
         this.completion = 0
         var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
 
-        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, this.useStrict, this.cancelToken.token)
+        const validationResult = await kbartServices.validate(this.selectedFile, namespaceName, this.useStrict, this.cancelToken.token)
 
         if (validationResult.status === 200 && validationResult?.data?.report) {
           /*if (validationResult.data.errors.missingColumns?.length > 0) {

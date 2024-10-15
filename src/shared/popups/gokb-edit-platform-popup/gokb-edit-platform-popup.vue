@@ -19,24 +19,22 @@
       v-model="tab"
     >
       <v-tab
-        key="search"
+        value="search"
         @click="resetFields()"
       >
         {{ $tc('btn.select') }}
       </v-tab>
       <v-tab
         v-if="!isEdit"
-        key="new"
+        value="new"
         :disabled="!searched"
         @click="resetFields()"
       >
         {{ $tc('btn.new') }}
       </v-tab>
     </v-tabs>
-    <v-tabs-items v-model="tab">
-      <v-tab-item
-        key="search"
-      >
+    <v-window v-model="tab" v-if="!isEdit" >
+      <v-window-item value="search">
         <v-row
           v-if="isEdit"
           class="text-h6 mt-4 ml-0"
@@ -56,12 +54,12 @@
           <v-col>
             <gokb-search-platform-field
               v-model="platformName"
-              :items="items"
               :label="$tc('component.general.name')"
               :query-fields="['name', 'primaryUrl']"
               return-object
               disable-if-linked
-              @searched="hasSearched()"
+              only-current
+              @searched="hasSearched"
             />
           </v-col>
         </v-row>
@@ -96,10 +94,8 @@
             </router-link>
           </v-col>
         </v-row>
-      </v-tab-item>
-      <v-tab-item
-        key="new"
-      >
+      </v-window-item>
+      <v-window-item value="new">
         <v-row
           class="text-h6 mt-4 ml-0"
         >
@@ -149,8 +145,8 @@
             </router-link>
           </v-col>
         </v-row>
-      </v-tab-item>
-    </v-tabs-items>
+      </v-window-item>
+    </v-window>
     <div v-if="isEdit">
       <v-row
         dense
@@ -179,7 +175,6 @@
       </v-row>
     </div>
     <template #buttons>
-      <v-spacer />
       <gokb-button
         @click="close"
       >
@@ -187,7 +182,7 @@
       </gokb-button>
       <gokb-button
         v-if="!isReadonly"
-        default
+        is-submit
         :disabled="!isValid"
       >
         {{ submitButtonLabel }}
@@ -209,7 +204,12 @@
       GokbSearchPlatformField
     },
     extends: BaseComponent,
+    emits: ['update:model-value', 'edit'],
     props: {
+      modelValue: {
+        type: [Boolean, Number],
+        required: true
+      },
       selected: {
         type: Object,
         required: false,
@@ -239,7 +239,6 @@
         conflictLinks: [],
         platformUrl: undefined,
         platformName: undefined,
-        items: [],
         validUrl: false,
         updateUrl: undefined,
         platform: {
@@ -255,10 +254,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       isReadonly () {
@@ -293,7 +292,6 @@
         this.platformName = this.selected
 
         this.updateUrl = this.selected.updateUrl
-        this.items = [this.platform]
       }
     },
     watch: {
@@ -445,7 +443,6 @@
         if (this.searched) {
           this.platformUrl = undefined
           this.platformName = undefined
-          this.items = []
           this.updateUrl = undefined
           this.platform = {
             id: undefined,

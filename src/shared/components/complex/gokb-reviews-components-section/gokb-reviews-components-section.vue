@@ -10,7 +10,8 @@
       :message="submitConfirmationMessage"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
-    <v-alert v-if="editable && isStatusOpen" type="info"> {{ workflow.toDo }} </v-alert>
+    <v-overlay  v-model="initializing" />
+    <v-alert v-if="editable && isStatusOpen" type="info"> <span class="font-weight-bold">{{ workflow.toDo }}</span> </v-alert>
     <v-container fluid>
       <v-row>
         <v-col
@@ -22,12 +23,12 @@
         >
           <v-row>
             <v-col>
-              <h3 class="mb-1">
-                <v-icon class="mr-1 mt-n1">
+              <div class="font-weight-bold mb-1">
+                <v-icon class="mr-1 mt-n1" color="primary">
                   {{ reviewedComponent.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
                 {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
-              </h3>
+              </div>
               <gokb-reviews-title-card
                 :id="reviewedComponent.id"
                 :ref="reviewedComponent.id.toString()"
@@ -42,12 +43,13 @@
                 @merge="mergeCards"
                 @feedback-response="feedbackResponse"
                 @reviewed-card-selected-ids="setSelectedReviewItemIds"
+                @loaded="toggleLoaded"
               />
             </v-col>
             <v-col v-if="reviewType === 'Ambiguous Title Matches'" cols="1">
               <v-container fill-height fluid>
                 <v-row align="center" justify="space-around">
-                  <v-icon> mdi-chevron-right </v-icon>
+                  <v-icon color="primary"> mdi-chevron-right </v-icon>
                 </v-row>
               </v-container>
             </v-col>
@@ -63,18 +65,17 @@
         >
           <v-row>
             <v-col>
-              <h3 class="mb-1">
-                <v-icon class="mr-1 mt-n1">
+              <div class="font-weight-bold mb-1">
+                <v-icon class="mr-1 mt-n1" color="primary">
                   {{ i.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
                 {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) : $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
                 <b>#{{ idx + 1 }}</b>
-              </h3>
+              </div>
               <gokb-reviews-title-card
                 :id="i.id"
                 :ref="i.id.toString()"
                 role="candidateComponent"
-                height="100%"
                 :route="i.route"
                 :candidate-index="idx + 1"
                 :reviewed-component-name="reviewedComponent.name"
@@ -125,6 +126,7 @@
                             class="mt-4"
                             style="cursor:pointer"
                             :title="$t('btn.add')"
+                            color="primary"
                             @click="confirmAddComponent"
                           >
                             mdi-check-bold
@@ -169,6 +171,7 @@
       GokbConfirmationPopup
     },
     extends: BaseComponent,
+    emits: ['expand', 'close', 'added', 'finished-step', 'initialized', 'feedback-response'],
     props: {
       reviewedComponent: {
         type: Object,
@@ -222,7 +225,7 @@
     },
     data () {
       return {
-        finishedLoading: false,
+        initializing: true,
         selectedCard: undefined,
         selectedCardIds: undefined,
         selectedReviewItemIds: [],
@@ -280,6 +283,7 @@
     created() {
       if (this.workflow.showReviewed) {
         this.linkedComponents[this.reviewedComponent.id.toString()] = {
+          initialized: false,
           loaded: false,
           active: true,
           role: 'reviewedComponent',
@@ -288,6 +292,7 @@
       }
       this.referenceComponents.forEach(rc => {
         this.linkedComponents[rc.id.toString()] = {
+          initialized: false,
           loaded: false,
           active: true,
           role: 'referenceComponent',
@@ -309,44 +314,67 @@
         this.selectedReviewItemIds = ids
       },
       async mergeCards (val) {
-        let mergedId = val
+        let mergedId = val.id
         let targetId = this.selectedCard
         let mergeData = {
             id: mergedId,
             target: targetId
         }
 
-        let isTippMerge = this.referenceComponents.filter(comp => (comp.id === this.selectedCard))[0].route === '/package-title'
-
-        if (isTippMerge) {
+        if (val.type === 'tipp') {
           let mergeParams = {}
 
-          const mergeResponse = await this.catchError({
-            promise: tippServices.merge(mergeData, mergeParams, this.cancelToken.token),
-            instance: this
-          })
+          if (!!targetId) {
+            const mergeResponse = await this.catchError({
+              promise: tippServices.cleanup(mergeData, mergeParams, this.cancelToken.token),
+              instance: this
+            })
 
-          if (typeof mergeResponse == 'undefined') {
-            this.feedbackResponse({ type: 'error', message: 'error.general.500' })
-          }
-          else {
-            if (mergeResponse.status < 400) {
-              this.linkedComponents[mergedId.toString()].active = false
+            if (typeof mergeResponse == 'undefined') {
+              this.feedbackResponse({ type: 'error', message: 'error.general.500' })
+            }
+            else {
+              if (mergeResponse.status < 400) {
+                this.linkedComponents[mergedId.toString()].active = false
 
-              if (mergedId === this.reviewedComponent.id) {
-                this.$emit('close', true)
+                if (mergedId === this.reviewedComponent.id) {
+                  this.$emit('close', true)
+                } else {
+                  this.refreshAll()
+                  this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)]) })
+                }
               } else {
-                this.refreshAll()
-                this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)]) })
+                this.feedbackResponse({ type: 'error', resp: mergeResponse })
               }
-            } else {
-              this.feedbackResponse({ type: 'error', resp: mergeResponse })
+            }
+          } else {
+            const mergeResponse = await this.catchError({
+              promise: tippServices.cleanup(mergedId, this.cancelToken.token),
+              instance: this
+            })
+
+            if (typeof mergeResponse == 'undefined') {
+              this.feedbackResponse({ type: 'error', message: 'error.general.500' })
+            }
+            else {
+              if (mergeResponse.status < 400) {
+                this.linkedComponents[mergedId.toString()].active = false
+
+                if (mergedId === this.reviewedComponent.id) {
+                  this.$emit('close', true)
+                } else {
+                  this.refreshAll()
+                  this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)]) })
+                }
+              } else {
+                this.feedbackResponse({ type: 'error', resp: mergeResponse })
+              }
             }
           }
         } else {
           let mergeParams = { mergeTipps: true }
 
-          if (val === this.reviewedComponent.id) {
+          if (mergedId === this.reviewedComponent.id) {
             mergeData.ids = this.selectedReviewItemIds
           } else {
             mergeParams.mergeIds = true
@@ -476,11 +504,15 @@
       toggleLoaded (info) {
         if (!this.linkedComponents[info.id.toString()]) {
           this.linkedComponents[info.id.toString()] = {
+            initialized: info.initialized,
             loaded: false,
             active: true,
             role: 'referenceComponent',
             route: rc.route
           }
+        }
+        else {
+          this.linkedComponents[info.id.toString()].initialized = info.initialized
         }
 
         if (!info.status) {
@@ -495,6 +527,10 @@
           }
 
           this.activeComponents = Object.values(this.linkedComponents).filter(lc => (lc.active === true)).length
+        }
+
+        if (Object.values(this.linkedComponents).filter(lc => (lc.initialized === false)).length === 0) {
+          this.initializing = false
         }
       },
       nextStep () {

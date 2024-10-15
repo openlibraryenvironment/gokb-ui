@@ -6,13 +6,16 @@
         class="pr-0"
       >
         <v-text-field
-          v-model="localDate"
+          v-model="displayDate"
           :clearable="clearable"
           :label="label"
           :hint="$t('default.ISOdateHint')"
           :rules="combinedRules"
+          :error="hasApiErrors"
+          :error-messages="localErrorMessages"
           :required="required"
-          :dense="dense"
+          :density="dense ? 'compact' : 'default'"
+          variant="underlined"
         />
       </v-col>
       <v-col
@@ -24,18 +27,18 @@
           :close-on-content-click="false"
           transition="scale-transition"
         >
-          <template v-slot:activator="{ on }">
+          <template v-slot:activator="{ props }">
             <v-icon
-              v-bind="$props"
               :class="dense ? 'pb-5' : 'pb-1'"
-              v-on="on"
+              v-bind="props"
+              color="primary"
             >
               mdi-calendar
             </v-icon>
           </template>
           <v-date-picker
             v-if="!readonly"
-            v-model="localDate"
+            v-model="pickerDateValue"
             @input="menu = false"
           />
         </v-menu>
@@ -43,18 +46,23 @@
     </v-row>
     <v-text-field
       v-else
-      v-model="localDate"
+      :model-value="displayDate"
       class="gokb-date-field-disabled"
       v-bind="$props"
-      :dense="dense"
+      :density="dense ? 'compact' : 'default'"
+      variant="underlined"
       disabled
     />
   </div>
 </template>
 
 <script>
+  import BaseComponent from '@/shared/components/base-component'
+
   export default {
     name: 'GokbDateField',
+    extends: BaseComponent,
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -71,7 +79,7 @@
         required: false,
         default: true,
       },
-      value: {
+      modelValue: {
         type: String,
         required: false,
         default: undefined
@@ -90,28 +98,71 @@
         type: Boolean,
         required: false,
         default: false
-      }
+      },
+      apiErrors: {
+        type: [Object, Array],
+        required: false,
+        default: undefined
+      },
     },
     data () {
       return {
         menu: false,
+        displayDate: undefined,
+        pickerDateValue: undefined,
+        localErrorMessages: [],
+        hasApiErrors: false,
+        badApiValue: undefined
       }
     },
     computed: {
-      localDate: {
-        get () {
-          return this.value
-        },
-        set (localDate) {
-          this.$emit('input', localDate)
-        }
-      },
       combinedRules () {
         return this.rules || [
           value => !this.required || !!value || this.$i18n.t('validation.missingValue'),
           value => !value || (/^([12][0-9]{3})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])$/.test(value) && !isNaN(new Date(value))) || this.$i18n.t('validation.dateFormat')
         ]
       }
+    },
+    watch: {
+      pickerDateValue (date) {
+        this.displayDate = date.toLocaleString('sv').substring(0, 10) || undefined
+      },
+      displayDate (date) {
+        if (!!this.badApiValue && date != this.badApiValue) {
+          this.badApiValue = undefined
+          this.localErrorMessages = []
+          this.hasApiErrors = false
+        }
+
+        this.$emit('update:model-value', date)
+      },
+      apiErrors (items) {
+        if (items.length > 0) {
+          this.hasApiErrors = true
+
+          if (!!items[0].baddata) {
+            this.badApiValue = items[0].baddata
+          }
+
+          this.localErrorMessages = items.map(e => (!!e.messageCode ? this.$i18n.t(e.messageCode) : (e.matches ? this.$i18n.t('validation.valueNotUnique') : e.message)))
+        } else if (!!items) {
+          this.hasApiErrors = true
+
+          if (!!items.baddata) {
+            this.badApiValue = items.baddata
+          }
+
+          this.localErrorMessages = !!items.messageCode ? this.$i18n.t(items.messageCode) : (items.matches ? this.$i18n.t('validation.valueNotUnique') : items.message)
+        } else {
+          this.badApiValue = undefined
+          this.localErrorMessages = []
+          this.hasApiErrors = false
+        }
+      }
+    },
+    mounted () {
+      this.displayDate = this.modelValue
+      this.pickerDateValue = this.modelValue ? new Date(this.modelValue) : undefined
     }
   }
 </script>

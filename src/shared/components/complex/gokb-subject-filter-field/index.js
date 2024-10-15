@@ -1,1 +1,1 @@
-export default from './gokb-subject-filter-field'
+export {default} from './gokb-subject-filter-field'

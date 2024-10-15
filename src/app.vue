@@ -1,159 +1,9 @@
 <template>
   <v-app>
     <progress-overlay />
-    <v-navigation-drawer
-      v-model="drawer"
-      :clipped="$vuetify.breakpoint.mdAndUp"
-      app
-      fixed
-      overflow
-    >
-      <v-list
-        dense
-        expand
-        nav
-      >
-        <template v-for="(item, index) in visibleItems">
-          <v-list-item
-            v-if="item.text"
-            :key="item.text"
-            :to="item.route"
-          >
-            <v-list-item-action>
-              <v-icon color="accent">
-                {{ item.icon }}
-              </v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.text }}
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider
-            v-else
-            :key="index"
-          />
-        </template>
-      </v-list>
-      <template v-slot:append>
-        <v-row v-if="loginExpiredMsg">
-          <v-col>
-            <v-alert
-              type="warn"
-              dismissible
-            >
-              {{ $t('popup.login.expired') }}
-            </v-alert>
-          </v-col>
-        </v-row>
-        <v-row v-if="updateExists">
-          <v-col>
-            <v-btn
-              text
-              @click="refreshApp"
-            >
-              - Update -
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-row class="pl-6 mb-1">
-          <v-col
-            class="text-caption"
-          >
-            <span
-              :style="{ cursor: 'pointer', padding: '3px', borderRadius: '3px', backgroundColor: (showCommit ? '#eee' : '') }"
-              @click="showCommit = !showCommit"
-            >
-              {{ appVersion }}
-            </span>
-            <span
-              v-if="showCommit"
-              class="ml-4"
-            >
-              UI Commit #{{ gitCommit }}
-            </span>
-          </v-col>
-        </v-row>
-        <v-row
-          class="text-caption pl-6"
-          dense
-        >
-          <v-col>
-            <a
-              :href="docsLink || $t('main.docs.target')"
-              target="_blank"
-              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
-            >
-              {{ $t('main.docs.label') }}
-            </a>
-          </v-col>
-        </v-row>
-        <v-row
-          class="text-caption pl-6"
-          dense
-        >
-          <v-col>
-            <a
-              href="https://github.com/openlibraryenvironment/gokb/wiki/API"
-              target="_blank"
-              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
-            >
-              API
-            </a>
-          </v-col>
-        </v-row>
-        <v-row
-          v-if="!!imprintLink"
-          class="text-caption pl-6"
-          dense
-        >
-          <v-col>
-            <a
-              :href="imprintLink"
-              target="_blank"
-              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
-            >
-              {{ $t('main.legal.label') }}
-            </a>
-          </v-col>
-        </v-row>
-        <v-row
-          v-if="!!privacyLink"
-          class="text-caption pl-6"
-          dense
-        >
-          <v-col>
-            <a
-              :href="privacyLink"
-              target="_blank"
-              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
-            >
-              {{ $t('main.privacy.label') }}
-            </a>
-          </v-col>
-        </v-row>
-        <v-row
-          v-if="!!accessibilityLink"
-          class="text-caption pl-6 pb-6"
-          dense
-        >
-          <v-col>
-            <a
-              :href="accessibilityLink"
-              target="_blank"
-              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
-            >
-              {{ $t('main.accessibility.label') }}
-            </a>
-          </v-col>
-        </v-row>
-      </template>
-    </v-navigation-drawer>
     <v-app-bar
-      :clipped-left="$vuetify.breakpoint.mdAndUp"
-      app
       :color="appColor"
+      class="pr-3"
       dark
     >
       <v-toolbar-title class="toolbar-title">
@@ -161,7 +11,7 @@
         <v-btn
           text
           :color="appColor"
-          :to="{ name: HOME_ROUTE }"
+          :to="{ name: homeRoute }"
         >
           <v-icon
             color="white"
@@ -177,37 +27,6 @@
           </span>
         </v-btn>
       </v-toolbar-title>
-      <!-- <v-autocomplete
-        v-model="globalSearchSelected"
-        :items="globalSearchItems"
-        :loading="globalSearchIsLoading"
-        :search-input.sync="globalSearchField"
-        class="hidden-sm-and-down pt-7 mx-7"
-        background-color="rgba(0,0,0,.26)"
-        clearable
-        hide-no-data
-        hide-selected
-        item-text="name"
-        item-value="id"
-        full-width
-        no-filter
-        :placeholder="globalSearchPlaceholder"
-        prepend-inner-icon="mdi-magnify"
-        return-object
-        solo
-      >
-        <template v-slot:item="{ item }">
-          <v-icon
-            :title="item.iconTitle"
-            class="mr-2"
-          >
-            {{ item.icon }}
-          </v-icon>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.name" />
-          </v-list-item-content>
-        </template>
-      </v-autocomplete> -->
       <v-spacer/>
       <v-btn
         class="mr-2"
@@ -222,7 +41,7 @@
       </v-btn>
       <a
         icon
-        class="mb-1 mr-2"
+        :class="['mr-2', ($vuetify.theme.dark ? 'text-primary' : 'text-invert')]"
         target="_blank"
         :href="docsLink || $t('main.docs.target')"
         :title="$t('main.docs.label')"
@@ -233,68 +52,210 @@
       </a>
       <v-select
         v-model="currentLocale"
-        offset-y
         :items="locales"
         :title="$t('component.general.language.label')"
         class="pt-2 ma-2"
         style="max-width:80px"
+        variant="underlined"
         dense
       />
       <v-select
         v-if="loggedIn"
         v-model="activeGroup"
-        offset-y
         :items="groups"
-        item-text="name"
+        item-title="name"
         item-value="id"
         :title="$tc('component.curatoryGroup.label')"
         class="pt-2 ma-2"
         style="max-width:150px"
+        variant="underlined"
         return-object
         dense
       />
-      <!-- <v-menu
-        ref="actions-menu"
-        :disabled="canCreate"
-        offset-y
-        open-on-hover
-      >
-        <template #activator="{ on }">
-          <v-btn
-            text
-            v-on="on"
-          >
-            <v-icon>add</v-icon>
-            Paket anlegen
-            <v-icon>keyboard_arrow_down</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <template v-for="item in visibleItems">
-            <v-list-item
-              v-if="item.text && item.toolbar"
-              :key="item.text"
-              :to="item.route"
-            >
-              <v-list-item-avatar>
-                <v-icon color="#F2994A">
-                  {{ item.icon }}
-                </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-title>
-                {{ item.text }}
-              </v-list-item-title>
-            </v-list-item>
-          </template>
-        </v-list>
-      </v-menu> -->
       <user-menu />
     </v-app-bar>
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      overflow
+    >
+      <v-list
+        dense
+        expand
+        nav
+      >
+        <v-list-item
+          v-for="item in searchMenuItems"
+          :key="item.text"
+          :to="item.route"
+        >
+          <template #prepend>
+            <v-icon>
+              {{ item.icon }}
+            </v-icon>
+          </template>
+          <v-list-item-title class="font-weight-bold" v-text="item.text" />
+        </v-list-item>
+
+        <div v-if="canCreate">
+          <v-divider />
+
+          <v-list-item
+            v-for="item in createMenuItems"
+            :key="item.text"
+            :to="item.route"
+          >
+            <template #prepend>
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
+            </template>
+            <v-list-item-title class="font-weight-bold" v-text="item.text" />
+          </v-list-item>
+        </div>
+
+        <v-divider />
+
+        <v-list-item
+          key="validator"
+          :to="validatorRoute"
+        >
+          <template #prepend>
+            <v-icon>
+              mdi-file-table
+            </v-icon>
+          </template>
+
+          <v-list-item-title class="font-weight-bold" v-text="$t('route.kbartValidator')" />
+        </v-list-item>
+      </v-list>
+      <template v-slot:append>
+        <v-row v-if="loginExpiredMsg">
+          <v-col>
+            <v-alert
+              type="warn"
+              dismissible
+            >
+              {{ $t('popup.login.expired') }}
+            </v-alert>
+          </v-col>
+        </v-row>
+        <v-row v-if="needRefresh" align="center">
+          <v-col>
+            <v-btn
+              variant="text"
+              @click="updateServiceWorker"
+            >
+              - Update -
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row class="pl-6 mb-1">
+          <v-col
+            class="text-caption"
+          >
+            <span
+              class="text-primary"
+              :style="{ cursor: 'pointer', padding: '3px', borderRadius: '3px', backgroundColor: (showCommit ? 'bg' : 'card') }"
+              @click="showCommit = !showCommit"
+            >
+              {{ appVersion }}
+            </span>
+            <span
+              v-if="showCommit"
+              class="ml-4 text-primary"
+            >
+              UI Commit #{{ gitCommit }}
+            </span>
+          </v-col>
+        </v-row>
+        <v-row
+          class="text-caption pl-6"
+          dense
+        >
+          <v-col>
+            <a
+              :href="docsLink || $t('main.docs.target')"
+              target="_blank"
+              class="text-primary"
+              :style="{ textDecoration: 'none'}"
+            >
+              {{ $t('main.docs.label') }}
+            </a>
+          </v-col>
+        </v-row>
+        <v-row
+          class="text-caption pl-6"
+          dense
+        >
+          <v-col>
+            <a
+              href="https://github.com/openlibraryenvironment/gokb/wiki/API"
+              target="_blank"
+              class="text-primary"
+              :style="{ textDecoration: 'none' }"
+            >
+              API
+            </a>
+          </v-col>
+        </v-row>
+        <v-row
+          v-if="!!imprintLink"
+          class="text-caption pl-6"
+          dense
+        >
+          <v-col>
+            <a
+              :href="imprintLink"
+              target="_blank"
+              class="text-primary"
+              :style="{ textDecoration: 'none' }"
+            >
+              {{ $t('main.legal.label') }}
+            </a>
+          </v-col>
+        </v-row>
+        <v-row
+          v-if="!!privacyLink"
+          class="text-caption pl-6"
+          dense
+        >
+          <v-col>
+            <a
+              :href="privacyLink"
+              target="_blank"
+              class="text-primary"
+              :style="{ textDecoration: 'none' }"
+            >
+              {{ $t('main.privacy.label') }}
+            </a>
+          </v-col>
+        </v-row>
+        <v-row
+          v-if="!!accessibilityLink"
+          class="text-caption pl-6"
+          dense
+        >
+          <v-col>
+            <a
+              :href="accessibilityLink"
+              target="_blank"
+              :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
+            >
+              {{ $t('main.accessibility.label') }}
+            </a>
+          </v-col>
+        </v-row>
+        <v-row style="height:20px"></v-row>
+      </template>
+    </v-navigation-drawer>
     <v-main>
-      <v-container>
-        <keep-alive :exclude="/^Edit\w*$/">
-          <router-view :key="$route.fullPath" />
-        </keep-alive>
+      <v-container fluid>
+          <router-view v-slot="{Component}" :key="$route.fullPath">
+            <keep-alive :exclude="/^Edit\w*$/">
+              <component :is="Component" />
+            </keep-alive>
+          </router-view>
       </v-container>
     </v-main>
   </v-app>
@@ -305,19 +266,22 @@
   import { ROLE_ADMIN, ROLE_EDITOR } from '@/shared/models/roles'
   import ProgressOverlay from '@/shared/components/base/gokb-progress-overlay'
   import UserMenu from '@/shared/user-menu'
-  import profileServices from '@/shared/services/profile-services'
-  import update from './mixins/update'
+  import baseServices from '@/shared/services/base-services'
+  import "@fontsource/roboto"
+  import "@fontsource/roboto/500.css"
+  import "@fontsource/roboto/700.css"
+  import "@fontsource/roboto/900.css"
+  import useRegisterSW from '@/mixins/useRegisterSW'
   import pkg from '../package.json'
   import {
-    HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
+    HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE, CREATE_USER_ROUTE,
     SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
-    SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_USER_ROUTE, ADD_PROVIDER_ROUTE,
+    SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, CREATE_PROVIDER_ROUTE,
     VALIDATOR_ROUTE
-    // SEARCH_MAINTENANCE_ROUTE
   } from '@/router/route-paths'
   import { createCancelToken } from '@/shared/services/http'
+  import profileServices from '@/shared/services/profile-services'
   import searchServices from '@/shared/services/search-services'
-  import baseServices from '@/shared/services/base-services'
   import languageServices from '@/shared/services/language-services'
   import namespaceServices from '@/shared/services/namespace-services'
 
@@ -326,17 +290,17 @@
   export default {
     name: 'App',
     components: { UserMenu, ProgressOverlay },
-    mixins: [update],
+    mixins: [useRegisterSW],
     data: () => ({
       drawer: null,
-      privacyLink: process.env.VUE_APP_DP_LINK,
-      imprintLink: process.env.VUE_APP_IMP_LINK,
-      docsLink: process.env.VUE_APP_DOCS_LINK,
-      accessibilityLink: process.env.VUE_APP_ACC_LINK,
-      appName: process.env.VUE_APP_TITLE || 'GOKb Client',
-      appColor: process.env.VUE_APP_COLOR || '#4f4f4f',
-      appVersion: pkg.version || process.env.VUE_APP_VERSION,
-      gitCommit: process.env.VUE_APP_GIT_HASH,
+      privacyLink: import.meta.env.VITE_DP_LINK,
+      imprintLink: import.meta.env.VITE_IMP_LINK,
+      docsLink: import.meta.env.VITE_DOCS_LINK,
+      accessibilityLink: import.meta.VITE_APP_ACC_LINK,
+      appName: import.meta.env.VITE_TITLE || 'GOKb Client',
+      appColor: import.meta.env.VITE_COLOR || '#4f4f4f',
+      appVersion: pkg.version || import.meta.env.VITE_VERSION,
+      gitCommit: import.meta.env.VITE_GIT_HASH,
       loginExpiredMsg: false,
       globalSearchSelected: undefined,
       globalSearchField: undefined,
@@ -345,34 +309,45 @@
       showCommit: false,
       dialog: false,
       locales: ['de', 'en'],
-      groups: []
+      groups: [],
+      activeGroup: undefined
     }),
     computed: {
-      visibleItems () {
+      searchMenuItems () {
         const menuItems = [
-          { icon: 'mdi-folder-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.package.label')]), route: CREATE_PACKAGE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-text-box-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.title.label')]), route: CREATE_TITLE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-domain-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.provider.label')]), route: ADD_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-account-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.user.label')]), route: ADD_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
-          {},
           { icon: 'mdi-folder', text: this.$i18n.tc('component.package.label', 2), route: SEARCH_PACKAGE_ROUTE },
           { icon: 'mdi-text-box-multiple', text: this.$i18n.tc('component.title.label', 2), route: SEARCH_TITLE_ROUTE },
           { icon: 'mdi-domain', text: this.$i18n.tc('component.provider.label', 2), route: SEARCH_PROVIDER_ROUTE },
           { icon: 'mdi-message-draw', text: this.$i18n.tc('component.review.label', 2), route: SEARCH_REVIEW_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
           // { icon: 'keyboard', text: this.$i18n.tc('component.maintenance.label', 2), route: SEARCH_MAINTENANCE_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-account-multiple', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
-          {},
-          { icon: 'mdi-file-table', text: this.$i18n.t('route.kbartValidator'), route: VALIDATOR_ROUTE },
+          { icon: 'mdi-account-multiple', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN }
         ]
 
         return menuItems.filter(item => (!accountModel.loggedIn() && !item.needsLogin) || (accountModel.loggedIn() && (!item.needsRole || accountModel.hasRole(item.needsRole))))
       },
+      createMenuItems() {
+        const menuItems = [
+          { icon: 'mdi-folder-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.package.label')]), route: CREATE_PACKAGE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-text-box-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.title.label')]), route: CREATE_TITLE_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-domain-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.provider.label')]), route: CREATE_PROVIDER_ROUTE, toolbar: true, needsLogin: true, needsRole: ROLE_EDITOR },
+          { icon: 'mdi-account-plus', text: this.$i18n.t('header.create.label', [this.$i18n.tc('component.user.label')]), route: CREATE_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
+        ]
+
+        return menuItems.filter(item => accountModel.hasRole(item.needsRole))
+      },
+      validatorRoute () {
+        return VALIDATOR_ROUTE
+      },
+      homeRoute () {
+        return HOME_ROUTE
+      },
       currentLocale: {
         get () {
-          return this.$i18n.locale
+          return this.$i18n?.locale || undefined
         },
         set (locale) {
           this.$i18n.locale = locale
+          this.$vuetify.locale.current = locale
 
           if (this.$i18n.t('direction') === 'rtl') {
             this.$vuetify.rtl = true
@@ -387,16 +362,8 @@
           baseServices.setLanguage(locale)
         }
       },
-      activeGroup: {
-        get () {
-          return accountModel.activeGroup()
-        },
-        set (group) {
-          accountModel.setActiveGroup(group)
-        }
-      },
       canCreate () {
-        return accountModel.hasRole('ROLE_CONTRIBUTOR')
+        return this.loggedIn && accountModel.hasRole('ROLE_CONTRIBUTOR')
       },
       globalSearchPlaceholder () {
         return this.$i18n.t('search.global.placeholder')
@@ -448,7 +415,7 @@
 
                 this.globalSearchItems.push(res)
               } else {
-                console.log('Not Adding item..')
+                log.debug('Not Adding item..')
               }
             })
           }
@@ -458,6 +425,9 @@
           this.isLoading = false
         }
       },
+      activeGroup (group) {
+        accountModel.setActiveGroup(group)
+      },
       globalSearchSelected () {
         if (this.globalSearchSelected.path) {
           this.globalSearchSelected && this.$router.push({ path: this.globalSearchSelected.path + this.globalSearchSelected.id }).catch(() => {})
@@ -466,10 +436,10 @@
         }
       },
       $route (to, from) {
-        document.title = this.$i18n.t(to.meta.code)
+        document.title = to?.meta?.code ? this.$i18n.t(to.meta.code) : this.$i18n.t('route.home')
       },
       '$i18n.locale' (l) {
-        document.title = this.$i18n.t(this.$route.meta.code)
+        document.title = this.$i18n.t(this.$route?.meta?.code || 'route.home')
       },
       loggedIn (val) {
         if (val) {
@@ -505,13 +475,11 @@
       namespaceServices.fetchNamespacesList(this.cancelToken.token)
       languageServices.fetchLanguagesList(this.cancelToken.token)
     },
-    created () {
-      this.HOME_ROUTE = HOME_ROUTE
-    },
     methods: {
       toggleDarkMode () {
+        this.$vuetify.theme.name = (this.$vuetify.theme.name === 'light' ? 'dark' : 'light')
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark
-        accountModel.toggleDarkMode(this.$vuetify.theme.dark)
+        accountModel.toggleDarkMode(this.$vuetify.theme.current)
         window.localStorage.setItem('darkMode', this.$vuetify.theme.dark)
       },
       async loadGroups () {
@@ -525,8 +493,10 @@
 
           this.groups = result.data.data.curatoryGroups
 
-          if (!this.activeGroup && this.groups.length > 0) {
-            this.activeGroup = this.groups[0]
+          log.debug("Loading groups!")
+
+          if (this.groups.length > 0) {
+            this.activeGroup = accountModel.activeGroup() || this.groups[0]
           }
         }
       }
@@ -541,7 +511,33 @@
   .application-title {
     color: white;
   }
+  .v-data-table__td > a {
+    color: rgb(var(--v-theme-primary));
+  }
 </style>
+
 <style lang="scss">
-  @import '../node_modules/typeface-roboto/index.css'
+  @use '@/styles/settings';
+
+  .v-field__input {
+    pointer-events: initial !important;
+  }
+
+  .v-field__overlay {
+    border-bottom: none !important;
+  }
+
+  .v-progress-linear {
+    opacity: var(--v-high-emphasis-opacity);
+    border-bottom: none !important;
+  }
+
+  .v-text-field .v-field--active.v-field--dirty {
+    opacity: var(--v-high-emphasis-opacity);
+  }
+
+  .v-text-field .v-field--active {
+    opacity: var(--v-medium-emphasis-opacity);
+  }
+
 </style>

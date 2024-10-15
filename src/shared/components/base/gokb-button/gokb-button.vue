@@ -1,11 +1,12 @@
 <template>
   <v-btn
-    :color="colorValue"
-    :text="text"
-    :type="type"
-    :class="text || 'invert--text'"
+    :color="disabled ? 'disabled' : colorValue"
+    :variant="!!text ? 'text' : 'elevated'"
     :disabled="disabled"
+    :type="isSubmit ? 'submit' : 'button'"
     :to="to"
+    :target="newTab ? '_blank' : undefined"
+    class="font-weight-bold"
     @click="$emit('click', $event)"
   >
     <v-progress-circular
@@ -19,15 +20,16 @@
     >
       {{ iconId }}
     </v-icon>
-    <slot />
+    <slot default />
   </v-btn>
 </template>
 
 <script>
   export default {
     name: 'GokbButton',
+    emits: ['click'],
     props: {
-      default: {
+      isSubmit: {
         type: Boolean,
         required: false,
         default: false,
@@ -43,7 +45,7 @@
         default: undefined,
       },
       to: {
-        type: String,
+        type: [String, Object],
         required: false,
         default: undefined,
       },
@@ -66,14 +68,16 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      newTab: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     computed: {
       colorValue () {
-        return this.color || (!this.default && 'secondary') || 'primary'
-      },
-      type () {
-        return (this.default && 'submit') || undefined
+        return this.color || (!this.isSubmit && 'secondary') || 'primary'
       }
     },
   }

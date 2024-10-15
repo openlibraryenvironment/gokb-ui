@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :errors="!!apiErrors"
@@ -18,7 +19,7 @@
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddVariantName"
+        @click.prevent="showAddVariantName"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
@@ -28,7 +29,7 @@
         icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
-        @click="confirmDeleteSelectedItems"
+        @click.prevent="confirmDeleteSelectedItems"
       >
         {{ $i18n.t('btn.delete') }}
       </gokb-button>
@@ -56,6 +57,7 @@
       :options.sync="variantNameOptions"
       :hide-select="!isEditable"
       @selected-items="selectedVariantNames = $event"
+      @paginate="updateItems"
       @delete-item="confirmDeleteItem"
     />
   </gokb-section>
@@ -70,8 +72,9 @@
   export default {
     name: 'GokbAlternateNamesSection',
     components: { GokbAddItemPopup, GokbConfirmationPopup },
+    emits: ['update:model-value', 'update'],
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -101,37 +104,31 @@
         addItemPopupVisible: false,
         variantNameOptions: {
           page: 1,
+          sortBy: [],
           itemsPerPage: ROWS_PER_PAGE
         },
         errorMessage: undefined,
         showErrorMessage: false,
         selectedVariantNames: [],
+        isExpanded: true,
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: { text: undefined, vars: undefined }
+        messageToConfirm: { text: undefined, vars: undefined },
+        variantNames: []
       }
+    },
+    mounted() {
+      this.updateItems()
     },
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
-      },
-      variantNames () {
-        return [...this.value]
-          .map(item => ({
-            ...item,
-            locale: (item.locale?.name || item.locale),
-            markError: this.apiErrors?.find(e => (e.baddata === item.variantName || e.baddata?.variantName === item.variantName))
-              ? this.$i18n.t('component.variantName.error.' + this.apiErrors.find(e => (e.baddata === item.variantName || e.baddata?.variantName === item.variantName)).code)
-              : null
-          }))
-          .sort(({ variantName: first }, { variantName: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-          .slice((this.variantNameOptions.page - 1) * ROWS_PER_PAGE, this.variantNameOptions.page * ROWS_PER_PAGE)
       },
       isDeleteSelectedDisabled () {
         return !this.selectedVariantNames.length
@@ -147,20 +144,34 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.general.name'), align: 'start', value: 'variantName', sortable: false, width: '100%' },
-          { text: this.$i18n.t('component.general.language.label'), align: 'start', value: 'locale', sortable: false },
+          { title: this.$i18n.tc('component.general.name'), align: 'start', value: 'variantName', sortable: false, width: '100%' },
+          { title: this.$i18n.t('component.general.language.label'), align: 'start', value: 'locale', sortable: false },
         ]
       },
       title () {
         return this.showTitle ? this.$i18n.tc('component.variantName.label', 2) : undefined
       }
     },
+    watch: {
+      modelValue: {
+        deep: true,
+        handler () {
+          this.updateItems()
+        }
+      },
+      apiErrors () {
+        this.updateItems()
+      }
+    },
+    mounted (){
+      this.isExpanded = this.expanded
+    },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
       tempId () {
-        return 'tempId' + Math.random().toString(36).substr(2, 5)
+        return 'tempId' + Math.random().toString(36).substring(2, 5)
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
@@ -201,6 +212,29 @@
           this.errorMessage = this.$i18n.t('component.variantName.error.duplicate', [item.variantName])
           this.showErrorMessage = true
         }
+      },
+      updateItems(options) {
+        if (!!options?.itemsPerPage) {
+          this.variantNameOptions.itemsPerPage = options.itemsPerPage
+        }
+
+        if (!!options?.page) {
+          this.variantNameOptions.page = options.page
+        }
+
+        if (!!options?.sortBy) {
+          this.variantNameOptions.sortBy = options.sortBy
+        }
+
+        this.variantNames = this.localValue.map(item => ({
+          ...item,
+          locale: (item.locale?.name || item.locale),
+          markError: this.apiErrors?.find(e => (e.baddata === item.variantName || e.baddata?.variantName === item.variantName))
+            ? this.$i18n.t('component.variantName.error.' + this.apiErrors.find(e => (e.baddata === item.variantName || e.baddata?.variantName === item.variantName)).code)
+            : null
+        }))
+        .sort(({ variantName: first }, { variantName: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+        .slice((this.variantNameOptions.page - 1) * this.variantNameOptions.itemsPerPage, this.variantNameOptions.page * this.variantNameOptions.itemsPerPage)
       }
     }
   }

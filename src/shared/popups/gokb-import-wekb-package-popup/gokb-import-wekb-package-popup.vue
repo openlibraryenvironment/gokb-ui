@@ -3,13 +3,14 @@
     v-model="localValue"
     :title="header"
     :width="1000"
-    @submit=""
+    @submit="submit"
   >
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+        <template #actions>
+          <v-icon @click="showSnackbar = false" color="white">mdi-close</v-icon>
+        </template>
+    </v-snackbar>
 
     <gokb-section>
       <!-- <v-card :loading="wekbDataIsLoading"/> -->
@@ -28,7 +29,7 @@
             <gokb-text-field
               label="UUID des zu importierenden Pakets in der WEKB"
               v-model="wekb_package_uuid"
-              :required="true"
+              required
             />
 
           </v-col>
@@ -38,8 +39,8 @@
           <v-spacer />
           <gokb-button
             v-if="!wekbDataLoaded"
-            v-on:click="fetchWekbPackageData"
-            v-bind:disabled="wekbDataLoaded || !wekb_package_uuid || wekbDataIsLoading"
+            :disabled="wekbDataLoaded || !wekb_package_uuid || wekbDataIsLoading"
+            @click="fetchWekbPackageData"
           >
             Abschicken
           </gokb-button>
@@ -81,8 +82,8 @@
         <v-col cols="5"><span>{{ externalPackageName }}</span></v-col>
         <v-col cols="5">
           <gokb-text-field
-            label="Paketname"
             v-model="packageName"
+            label="Paketname"
           />
           <span v-if="packageAlreadyExists" style="color:red">
             <v-icon class="pb-1" color="error">
@@ -102,10 +103,9 @@
         <v-col cols="5"><span>{{ externalPlatformName }}</span><br/><span>{{ externalPlatformURL }}</span></v-col>
         <v-col cols="5">
           <gokb-text-field
-            label="Plattform"
-            value=""
             v-model="platformName"
-            v-bind:disabled="platformAlreadyExists"
+            label="Plattform"
+            :disabled="platformAlreadyExists"
           />
           <span v-if="platformAlreadyExists">
             <v-icon color="success">
@@ -115,11 +115,10 @@
         </v-col>
         <v-col cols="2">
           <gokb-checkbox-field
+            v-if="!platformAlreadyExists"
             v-model="adaptPlatformData"
             label="Quelle übernehmen"
-            v-if="!platformAlreadyExists"
           />
-
         </v-col>
       </v-row>
 
@@ -130,10 +129,9 @@
         <v-col cols="5"><span>{{ externalProviderName }}</span></v-col>
         <v-col cols="5">
           <gokb-text-field
-            label="Anbieter"
-            value=""
             v-model="providerName"
-            v-bind:disabled="providerAlreadyExists"
+            label="Anbieter"
+            :disabled="providerAlreadyExists"
           />
 
           <span v-if="providerAlreadyExists">
@@ -145,12 +143,10 @@
         </v-col>
         <v-col cols="2">
           <gokb-checkbox-field
-            label="Quelle übernehmen"
-            v-model="adaptProviderData"
             v-if="!providerAlreadyExists"
-          >
-
-          </gokb-checkbox-field>
+            v-model="adaptProviderData"
+            label="Quelle übernehmen"
+          />
         </v-col>
       </v-row>
 
@@ -167,8 +163,8 @@
         <v-col cols="4">Wert: </v-col>
       </v-row> -->
       <!-- <v-row v-for="id in identifierExamples"
-             v-bind:data="id"
-             v-bind:key="id.namespace"
+             :data="id"
+             :key="id.namespace"
       >
         <v-col cols="4">{{ id.namespace }} </v-col>
         <v-col cols="4">{{ id.value }}</v-col>
@@ -179,8 +175,8 @@
         </v-col> -->
 
         <v-col cols="4" v-for="pubtype in identifierExamples"
-          v-bind:data="pubtype"
-          v-bind:key="pubtype.publicationType"
+          :data="pubtype"
+          :key="pubtype.publicationType"
         >
           <v-row>
             <v-col cols="12">
@@ -188,8 +184,8 @@
             </v-col>
           </v-row>
             <v-row v-for="id in pubtype.identifiers"
-              v-bind:data="id"
-              v-bind:key="id.namespace"
+              :data="id"
+              :key="id.namespace"
             >
               <v-col cols="3">{{ id.namespace }}: </v-col>
               <v-col cols="9">{{ id.value }}</v-col>
@@ -209,22 +205,20 @@
         </v-col>
         <v-col cols="4" v-if="showJournalNamespaceSelect">
           <gokb-namespace-field
-
             v-model="namespaceJournal"
             target-type="Journal"
-            :label="'title_id Namensraum für Journals'"
-            v-bind:exclude-isxn="true"
+            label="title_id Namensraum für Journals"
+            :exclude-isxn="true"
           />
           <!-- :label="$t('kbart.propId.label')" -->
 
         </v-col>
         <v-col cols="4" v-if="showMonographNamespaceSelect">
           <gokb-namespace-field
-
             v-model="namespaceMonograph"
             target-type="Book"
-            :label="'title_id Namensraum für Monographien'"
-            v-bind:exclude-isxn="true"
+            label="title_id Namensraum für Monographien"
+            :exclude-isxn="true"
           />
           <!-- :label="$t('kbart.propId.label')" -->
         </v-col>
@@ -234,9 +228,8 @@
       <v-row>
         <v-spacer />
         <gokb-button
-
-          v-on:click="submit"
-          v-bind:disabled="!valid"
+          :disabled="!valid"
+          is-submit
         >
           Abschicken
         </gokb-button>
@@ -248,31 +241,31 @@
 </template>
 
 <script>
-  import BaseComponent from "@/shared/components/base-component";
-  import VSnackbars from "v-snackbars";
-  import GokbSection from "@/shared/components/complex/gokb-section/gokb-section.vue";
-  import GokbStateField from "@/shared/components/simple/gokb-state-field/gokb-state-field.vue";
-  import GokbTextField from "@/shared/components/base/gokb-text-field/gokb-text-field.vue";
-  import GokbButton from "@/shared/components/base/gokb-button/gokb-button.vue";
-  import GokbCheckboxField from "@/shared/components/base/gokb-checkbox-field/gokb-checkbox-field.vue";
-  import GokbTable from "@/shared/components/complex/gokb-table/gokb-table.vue";
-  import wekbImportServices from "@/shared/services/wekb-import-services";
-  import platformServices from "@/shared/services/platform-services";
-  import GokbNamespaceField from "@/shared/components/simple/gokb-namespace-field";
-  import genericServices from "@/shared/services/generic-entity-services";
-  import GokbSearchOrganisationField from "@/shared/components/simple/gokb-search-organisation-field";
-  import providerServices from "@/shared/services/provider-services";
-  import genericEntityServices from "@/shared/services/generic-entity-services";
+  import BaseComponent from "@/shared/components/base-component"
+  import GokbSection from "@/shared/components/complex/gokb-section/gokb-section.vue"
+  import GokbStateField from "@/shared/components/simple/gokb-state-field/gokb-state-field.vue"
+  import GokbTextField from "@/shared/components/base/gokb-text-field/gokb-text-field.vue"
+  import GokbButton from "@/shared/components/base/gokb-button/gokb-button.vue"
+  import GokbCheckboxField from "@/shared/components/base/gokb-checkbox-field/gokb-checkbox-field.vue"
+  import GokbTable from "@/shared/components/complex/gokb-table/gokb-table.vue"
+  import wekbImportServices from "@/shared/services/wekb-import-services"
+  import platformServices from "@/shared/services/platform-services"
+  import GokbNamespaceField from "@/shared/components/simple/gokb-namespace-field"
+  import genericServices from "@/shared/services/generic-entity-services"
+  import GokbSearchOrganisationField from "@/shared/components/simple/gokb-search-organisation-field"
+  import providerServices from "@/shared/services/provider-services"
+  import genericEntityServices from "@/shared/services/generic-entity-services"
 
 
   export default {
     name: 'GokbImportWekbPackagePopup',
     components: {
       GokbSearchOrganisationField,
-      GokbNamespaceField, GokbTable, GokbCheckboxField, GokbButton, GokbTextField, GokbStateField, GokbSection, VSnackbars },
+      GokbNamespaceField, GokbTable, GokbCheckboxField, GokbButton, GokbTextField, GokbStateField, GokbSection },
     extends: BaseComponent,
+    emits: ['update:model-value', 'import'],
     props: {
-      value: {
+      modelValue: {
         type: Boolean,
         required: true
       },
@@ -283,7 +276,10 @@
     },
     data () {
       return {
-        eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         wekb_package_uuid: undefined,
         import_sources: ["WE:KB"],
         wekbDataLoaded: false,
@@ -325,14 +321,14 @@
     computed: {
       localValue: {
         get() {
-          return this.value
+          return this.modelValue
         },
         set(val) {
-          this.$emit('input', val)
+          this.$emit('update:model-value', val)
         }
       },
       header() {
-        return "Ein Paket aus einer externen Quelle importieren";
+        return "Ein Paket aus einer externen Quelle importieren"
       },
       /*tableHeaders() {
         return [
@@ -350,28 +346,32 @@
       }
     },
     watch: {
-        packageName: function(val) {
-            if(val) {
-                this.checkIfPackageExists()
-            }
+      packageName (val) {
+        if(val) {
+          this.checkIfPackageExists()
         }
+      }
     },
     methods: {
       async checkIfPackageExists() {
           let response = await genericServices('rest/entities').checkNewName(
-              encodeURIComponent(this.packageName),
-              'Package',
-              this.cancelToken.token
+            encodeURIComponent(this.packageName),
+            'Package',
+            this.cancelToken.token
           )
 
-          console.log("CHECK PCKAGENAME EXISTS: ", response)
+          log.debug("CHECK PCKAGENAME EXISTS: ", response)
+
           if (response?.status < 400) {
-              if (response.data.result === 'ERROR') {
-                  this.packageAlreadyExists = true
-                  return true
-              }
+            if (response.data.result === 'ERROR') {
+              this.packageAlreadyExists = true
+
+              return true
+            }
           }
+
           this.packageAlreadyExists = false
+
           return false
       },
       async fetchWekbPackageData() {
@@ -408,7 +408,7 @@
               this.platformAlreadyExists = await this.platformExists()
               /*if (!this.platformAlreadyExists) {
 
-                console.log("### Plattform muss zunächst angelegt werden")
+                log.debug("### Plattform muss zunächst angelegt werden")
               } else {
 
               } */
@@ -416,6 +416,7 @@
               const providerResult = await this.providerExists()
               this.externalProviderHomepage = providerResult?.data?.providerHomepage
               this.providerAlreadyExists = providerResult?.data?.providerExists
+
               if(this.providerAlreadyExists) {
                 this.internalProviderId = providerResult?.data?.providerId
                 this.providerName = this.externalProviderName
@@ -430,6 +431,7 @@
                 automaticUpdates: false,
                 update: true
               }
+
               this.externalSource = source
 
               // get Code for packagetype
@@ -441,8 +443,8 @@
                   instance: this
                 })
 
-                console.log("resonseScope: ", responseScope)
-                this.packageScope = responseScope?.data?._embedded.values.filter(a => a.value == result.file)[0].id;
+                log.debug("resonseScope: ", responseScope)
+                this.packageScope = responseScope?.data?._embedded.values.filter(a => a.value == result.file)[0].id
               }
 
 
@@ -455,6 +457,7 @@
 
               for(var offset = 0; offset < this.titleCount; offset = offset + max) {
                 let responseTitleData = await this.getTippsOfPackage(max, offset)
+
                 if (responseTitleData && responseTitleData.length > 0) {
                   titleData.push(responseTitleData)
                   for (var i = 0; i < responseTitleData.length; i++) {
@@ -464,24 +467,25 @@
                   }
                 }
                 if (publicationTypes.size >= 2) {
-                  break;
+                  break
                 }
               }
 
-              console.log("### PUBLICATIONTYPES IN PACKAGE: ", publicationTypes)
+              log.debug("### PUBLICATIONTYPES IN PACKAGE: ", publicationTypes)
               // auch wenn nur Titel mit einem Contenttype im Paket sind, muss zu diesem Type ein Beispiel gefunden werden
               if (publicationTypes.size > 0) {
                 for(var i = 0; i < titleData.length; i++){
                   publicationTypes.forEach(function (pub) {
                     let titleByPubType = titleData[i].find(x => x.publicationType === pub)
-                    console.log("FOUND for pubtype: ", pub, titleByPubType)
+                    log.debug("FOUND for pubtype: ", pub, titleByPubType)
                     if(titleByPubType) {
                       titleExamples.push(titleByPubType)
                       publicationTypes.delete(pub)
                     }
                   })
+
                   if(publicationTypes.size === 0){
-                    break;
+                    break
                   }
                 }
               }
@@ -501,7 +505,7 @@
                   that.identifierExamples.push({publicationType: title.publicationType, identifiers: identifiers})
                 })
 
-                console.log("IDENTIFIERS: ", this.identifierExamples)
+                log.debug("IDENTIFIERS: ", this.identifierExamples)
 
 
               // set contenttype according to containing tipps and get GOKB code for it
@@ -511,13 +515,13 @@
                   switch (titleExamples[0].publicationType) {
                     case 'Monograph':
                       this.contentTypeOfTipps = 'Book'
-                      break;
+                      break
                     case 'Serial':
                       this.contentTypeOfTipps = 'Journal'
-                      break;
+                      break
                     default:
                       this.contentTypeOfTipps = 'Database'
-                      break;
+                      break
                   }
               }
 
@@ -527,69 +531,71 @@
                 promise: entityService.get({}, this.cancelToken.token),
                 instance: this
               })
-              console.log("responseContentType: ", responseContentType)
-              this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id;
-              console.log("responseContentType ", this.contentTypeOfTippsCode)
+
+              log.debug("responseContentType: ", responseContentType)
+              this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id
+              log.debug("responseContentType ", this.contentTypeOfTippsCode)
 
 
 
 
             } else {
-                console.log("UUID der Form nach korrekt, aber existiert anscheinend nicht in der WEKB")
+                log.debug("UUID der Form nach korrekt, aber existiert anscheinend nicht in der WEKB")
                 this.errors.uuid = true
-                this.eventMessages.push({
-                  message: 'Ein Paket mit dieser UUID existiert anscheinend nicht in der we:kb',
-                  color: 'error',
-                  timeout: 3000
-                })
-
+                this.messageColor = 'error'
+                this.snackbarMessage = 'Ein Paket mit dieser UUID existiert anscheinend nicht in der we:kb'
+                this.currentSnackBarTimeout = 3000
+                this.showSnackbar = true
             }
 
           } catch (error) {
             if (error.response) {
               // The request was made and the server responded with a status code > 2xx
-              console.log(error.response.data);
-              console.log(error.response.status);
-              console.log(error.response.headers);
+              log.debug(error.response.data)
+              log.debug(error.response.status)
+              log.debug(error.response.headers)
             } else if (error.request) {
               // The request was made but no response was received
-              console.log(error.request);
+              log.debug(error.request)
             } else {
               // Something happened in setting up the request that triggered an Error
-              console.log('Error', error.message);
+              log.debug('Error', error.message)
             }
 
           }
         }
         if (result) {
-          console.log("result: ", result)
-          this.wekbDataLoaded = true;
+          log.debug("result: ", result)
+          this.wekbDataLoaded = true
         }
 
         this.wekbDataIsLoading = false
 
         //TODO: zu Testzwecken
-        //this.wekbDataLoaded = true;
+        //this.wekbDataLoaded = true
 
       },
-      mapIdentifierNames: function(wekbName){
+      mapIdentifierNames (wekbName) {
         var identifierName
+
         switch (wekbName) {
           case "eISBN":
             identifierName = "ISBN"
-            break;
+            break
           case "ISBN":
             identifierName = "p-ISBN"
-            break;
+            break
           /*case "Title_ID":
-            break;*/
+            break*/
           default:
             identifierName = wekbName
         }
+
         return identifierName
       },
       async fetchWekbPlatformData() {
         let result = null
+
         try {
           const response = await this.catchError({
             promise: wekbImportServices.getPlatformMetadata({'uuid': this.externalPlatformUuidWekb}, this.cancelToken.token),
@@ -599,16 +605,17 @@
           //TODO: handle Response Status
           if (response?.status === 200 && response.data?.length) {
             result = response.data[0]
-            console.log("+++ ", result)
+            log.debug("+++ ", result)
           }
 
         } catch (error) {
-          console.log(error)
+          log.debug(error)
         }
+
         return result
       },
       validatePackageUUID() {
-        return true;
+        return true
       },
       async platformExists() {
         const wekbPlatform = {
@@ -621,12 +628,12 @@
           instance: this
         })
 
-        // console.log("#### ", response)
+        // log.debug("#### ", response)
 
         if (response?.data) {
           if (!response.data.to_create) {
 
-            console.log("Platform already exists - set existing")
+            log.debug("Platform already exists - set existing")
             let platformId = null
             if (response.data.conflicts) {
               if (response.data.conflicts.primaryUrl) {
@@ -639,18 +646,21 @@
               promise: platformServices.get(platformId, this.cancelToken.token),
               instance: this
             })
-            // console.log("PLATTFORM: ", platform)
+            // log.debug("PLATTFORM: ", platform)
             this.internalPlatformId = platformId
             this.platformName = this.externalPlatformName
             this.platformURL = this.externalPlatformURL
             return true
           }
         }
-        console.log("Platform not exists - create it")
+
+        log.debug("Platform not exists - create it")
+
         return false
       },
       async getTippsOfPackage(max, offset) {
         let result = null
+
         try {
           const response = await this.catchError({
             promise: wekbImportServices.getTippsOfPackage({
@@ -664,12 +674,13 @@
           //TODO: handle Response Status
           if (response?.status === 200 && response.data?.length) {
             result = response.data
-            // console.log("+++ ", result)
+            // log.debug("+++ ", result)
           }
 
         } catch (error) {
-          console.log(error)
+          log.debug(error)
         }
+
         return result
       },
       async providerExists() {
@@ -679,18 +690,18 @@
           instance: this
         })
 
-        console.log("+++ check PROVIDER: ", response)
+        log.debug("+++ check PROVIDER: ", response)
 
         return response
       },
       async submit() {
 
-        // console.log("SUBMIT")
+        // log.debug("SUBMIT")
 
         if (this.valid) {
-
           let platformObject = undefined
           let platfResponse = undefined
+
           if (this.platformAlreadyExists) {
             platfResponse = await this.catchError({
               promise: platformServices.get(this.internalPlatformId, this.cancelToken.token),
@@ -749,8 +760,8 @@
             })
 
             providerObject = provResponse?.data
-            console.log("NEW PROVIDEROBJECT: " + providerObject)
-            console.log("NEW PROVIDER: " + provResponse)
+            log.debug("NEW PROVIDEROBJECT: " + providerObject)
+            log.debug("NEW PROVIDER: " + provResponse)
 
           }
 

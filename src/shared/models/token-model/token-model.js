@@ -8,7 +8,7 @@ const api = (browserStorage) => {
 
   return {
     isPersistent () {
-      return localStorage.get(PERSISTENCE_KEY, true) === "true"
+      return localStorage.get(PERSISTENCE_KEY, true) === true
     },
     removeToken () {
       localStorage.remove(TOKEN_KEY)
@@ -17,10 +17,13 @@ const api = (browserStorage) => {
       localStorage.remove(PERSISTENCE_KEY)
     },
     needsRefresh () {
-      return !!localStorage.get(EXPIRATION_KEY, true) && !!this.getToken() && !/^\d+$/.test(localStorage.get(EXPIRATION_KEY, true)) && (Date.now() > (parseInt(localStorage.get(EXPIRATION_KEY, true) - 300000)))
+      return Date.now() > (localStorage.get(EXPIRATION_KEY, true) - 600000)
     },
     isExpired () {
       return !localStorage.get(EXPIRATION_KEY, true) || !/^\d+$/.test(localStorage.get(EXPIRATION_KEY, true)) || (!!this.getToken() && Date.now() > parseInt(localStorage.get(EXPIRATION_KEY, true)))
+    },
+    existsToken () {
+      return !!this.getToken()
     },
     getToken () {
       return localStorage.get(TOKEN_KEY)

@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :sub-title="title"
@@ -13,12 +14,15 @@
       :target-type="targetType"
       @add="addNewIdentifier"
     />
+    <v-snackbar v-model="showError" color="error">
+      {{ errorMessage }}
+    </v-snackbar>
     <template #buttons>
       <gokb-button
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddIdentifierPopup"
+        @click.prevent="showAddIdentifierPopup"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
@@ -28,9 +32,9 @@
         icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
-        @click="confirmDeleteSelectedItems"
+        @click.prevent="confirmDeleteSelectedItems"
       >
-        {{ $i18n.t('btn.delete') }}
+        {{ $i18n.t('btn.remove') }}
       </gokb-button>
     </template>
 
@@ -45,10 +49,11 @@
       :editable="isEditable"
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
-      :options.sync="options"
+      :options.sync="idsOptions"
       :hide-select="!isEditable"
       @selected-items="selectedItems = $event"
       @delete-item="confirmDeleteItem"
+      @paginate="updateItems"
       actions
     />
   </gokb-section>
@@ -63,12 +68,13 @@
 
   export default {
     name: 'GokbIdentifierSection',
+    emits: ['update:model-value', 'update'],
     components: {
       GokbAddIdentifierPopup,
       GokbConfirmationPopup
     },
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -111,25 +117,28 @@
     data () {
       return {
         addIdentifierPopupVisible: false,
-        options: {
+        idsOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedItems: [],
+        isExpanded: true,
         identifiers: [],
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: { text: undefined, vars: undefined },
+        showError: false,
+        errorMessage: undefined
       }
     },
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       isDeleteSelectedDisabled () {
@@ -143,8 +152,20 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'nslabel', sortable: false, width: '15%' },
-          { text: this.$i18n.t('component.identifier.value'), align: 'start', value: 'value', sortable: false, width: '100%' },
+          {
+            title: this.$i18n.tc('component.identifier.namespace'),
+            align: 'start',
+            value: 'nslabel',
+            sortable: false,
+            width: '15%'
+          },
+          {
+            title: this.$i18n.t('component.identifier.value'),
+            align: 'start',
+            value: 'value',
+            sortable: false,
+            width: '100%'
+          }
         ]
       },
       title () {
@@ -152,7 +173,7 @@
       }
     },
     watch: {
-      value: {
+      modelValue: {
         deep: true,
         handler () {
           this.updateItems()
@@ -166,6 +187,7 @@
       }
     },
     mounted () {
+      this.isExpanded = this.expanded
       this.updateItems()
     },
     methods: {
@@ -173,17 +195,23 @@
         this[actionMethodName](actionMethodParameter)
       },
       tempId () {
-        return 'tempId' + Math.random().toString(36).substr(2, 5)
+        return 'tempId' + Math.random().toString(36).substring(2, 5)
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.identifier.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [this.selectedItems.length, this.$i18n.tc('component.identifier.label', this.selectedItems.length)]
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       confirmDeleteItem ({ id, value }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.identifier.label'), value] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [this.$i18n.tc('component.identifier.label'), value]
+        }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -191,32 +219,54 @@
         this.localValue = this.localValue.filter(({ id }) => !this.selectedItems
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedItems = []
+
         this.$emit('update', 'ids')
       },
       _deleteItem (idToDelete) {
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
+
         this.$emit('update', 'ids')
       },
       showAddIdentifierPopup () {
         this.addIdentifierPopupVisible = true
       },
       addNewIdentifier (id) {
-        this.localValue.push({ id: this.tempId(), value: id.value, namespace: id.namespace.value, nslabel: (id.namespace.name || id.namespace.value), isDeletable: undefined, _pending: 'added' })
+
+        if (this.localValue.filter(v => v.value === id.value && v.namespace === id.namespace.value).length > 0) {
+          this.errorMessage = this.$i18n.t('component.identifier.validation.list.duplicate')
+          this.showError = true
+        }
+        else {
+          this.localValue.push({
+            id: this.tempId(),
+            value: id.value,
+            namespace: id.namespace.value,
+            nslabel: (id.namespace.name || id.namespace.value),
+            isDeletable: undefined,
+            _pending: 'added'
+          })
+        }
+
         this.$emit('update', 'ids')
       },
       deleteIdentifier (value) {
         this.localValue = this.localValue.filter(v => v !== value)
       },
-      updateItems () {
+      async updateItems (options) {
+        if (!!options) {
+          this.idsOptions = options
+        }
+
         this.identifiers = this.localValue.map(item => ({
           ...item,
+          nslabel: item.nslabel || item.type,
           extlink: namespaceServices.getBaseurl(item.namespace) ? namespaceServices.getBaseurl(item.namespace)+item.value : undefined,
           markError: this.mapErrorForItem(item),
           isDeletable : undefined
         }))
         .sort(({ nslabel: first }, { nslabel: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-        .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
+        .slice((this.idsOptions.page - 1) * this.idsOptions.itemsPerPage, this.idsOptions.page * this.idsOptions.itemsPerPage)
       },
       mapErrorForItem (item) {
         let result = null

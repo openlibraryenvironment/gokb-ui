@@ -16,7 +16,7 @@
     name: 'RegisterView',
     computed: {
       link () {
-        return `${process.env.VUE_APP_API_BASE_URL}/register/start?embed=true&lang=${this.$i18n.locale}`
+        return `${import.meta.env.VITE_API_BASE_URL}/register/start?embed=true&lang=${this.$i18n.locale}`
       }
     }
   }

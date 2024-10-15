@@ -3,23 +3,22 @@
     v-if="!!originalRecord?.name"
     :loading="loading"
     :color="roleColor"
-    :class="elevationClass"
-    :disabled="isDeleted"
+    :class="[elevationClass, isDeleted ? 'text-disabled' : '']"
     outlined
   >
-    <gokb-confirmation-popup
-      v-model="showSubmitConfirm"
-      :message="submitConfirmationMessage"
-      @confirmed="triggerConfirmedAction"
-    />
     <v-card-subtitle
-      class="text--h4"
+      class="text--h4 mt-4"
     >
+      <gokb-confirmation-popup
+        v-model="showSubmitConfirm"
+        :message="submitConfirmationMessage"
+        @confirmed="triggerConfirmedAction"
+      />
       <v-row dense>
         <v-col>
           <router-link
             v-if="!nameEditActive"
-            :style="{ color: 'primary' }"
+            :class="[darkMode ? 'text-primary' : 'text-black', 'font-weight-bold']"
             :to="{ name: route, params: { 'id': originalRecord.id } }"
             target="_blank"
           >
@@ -50,7 +49,7 @@
         <v-col>
           <span> {{ $tc('component.package.label') }}: </span>
           <router-link
-            :style="{ color: 'primary' }"
+            :class="[darkMode ? 'text-primary' : 'text-black']"
             :to="{ name: '/package', params: { 'id': linkedPackage.id } }"
             target="_blank"
           >
@@ -63,11 +62,11 @@
           <span> {{ $tc('component.title.label') }}: </span>
           <router-link
             v-if="!!linkedTitle"
-            :style="{ color: 'primary' }"
+            :class="[darkMode ? 'text-primary' : 'text-black']"
             :to="{ name: '/title', params: { 'id': linkedTitle.id } }"
             target="_blank"
           >
-            {{ linkedTitle?.name }}
+            {{ linkedTitle?.name + " (" + linkedTitle.id + ")" }}
           </router-link>
           <span v-else> - </span>
         </v-col>
@@ -88,14 +87,15 @@
             </v-icon>
           </span>
         </v-col>
-        <v-col cols="1">
+        <v-col cols="auto">
           <v-btn
             icon
+            flat
             :title="$t('btn.refresh')"
             class="mt-n1"
             @click="fetchTitle"
           >
-            <v-icon>
+            <v-icon color="primary">
               mdi-refresh
             </v-icon>
           </v-btn>
@@ -104,10 +104,11 @@
 
       <v-row v-if="!!ids?.length > 0">
         <v-col>
-          <div v-if="isReviewedCard && isOtherCardSelected && mergeEnabled && isEditable && isTippComponent">
+          <div v-if="isReviewedCard && isOtherCardSelected && mergeEnabled && isEditable && isTitleComponent">
             <v-chip
-              class="mb-1 info font-weight-bold"
-              pill
+              class="mb-1 font-weight-bold"
+              color="info"
+              variant="flat"
             >
               {{ $t('component.review.edit.components.merge.selectIds.label') }}
             </v-chip>
@@ -119,8 +120,9 @@
           </div>
           <v-chip
             v-else-if="isEditable && idsEditable"
-            class="mb-1 info font-weight-bold"
-            pill
+            class="mb-1 font-weight-bold"
+            color="info"
+            variant="flat"
           >
               {{ $t('component.review.edit.components.single.selectIds') }}
           </v-chip>
@@ -134,13 +136,14 @@
             :hide-pagination="true"
             :hide-select="!isEditable"
             actions
+            dense
             @delete-item="deleteId"
-            @selected-items="selectedIdItems = $event"
+            @selected-items="updateSelectedIdItems"
           />
         </v-col>
       </v-row>
 
-      <div v-if="originalRecord.type === 'Journal'">
+      <div v-if="originalRecord.type === 'Journal' && mappedHistory.length > 0">
         <v-row>
           <v-col>
             <span>{{ $t('component.title.publishedPeriod') }}: </span>
@@ -232,7 +235,7 @@
       </div>
       <v-row class="mt-3">
         <v-col>
-          <v-row v-if="isEditable && (!isReviewedCard || !mergeEnabled || !isOtherCardSelected)">
+          <v-row v-if="isEditable && (!isReviewedCard || !mergeEnabled || !isOtherCardSelected || !isTitleComponent)">
             <v-col>
               <gokb-button
                 :disabled="selectedIdItems.length === 0 && !isNamePending"
@@ -263,20 +266,20 @@
           <v-row v-if="isCardSelected && isLinkCandidate">
             <v-col>
               <gokb-button
-                primary
+                color="primary"
                 @click="showConfirmSelectedCard('link')"
               >
                 {{ $i18n.t('component.review.edit.components.link.confirmLink.label') }}
               </gokb-button>
             </v-col>
           </v-row>
-          <v-row v-else-if="isOtherCardSelected && isMergeCandidate">
+          <v-row v-else-if="isMergeCandidate && (isOtherCardSelected || isTippComponent)">
             <v-col>
               <gokb-button
-                primary
+                color="primary"
                 @click="showConfirmSelectedCard('merge')"
               >
-                {{ $i18n.t('component.review.edit.components.link.selectDeprecated.label')  }}
+                {{ isTippComponent ? $i18n.t('component.review.edit.components.tippCleanup.confirm.label') : $i18n.t('component.review.edit.components.link.selectDeprecated.label')  }}
               </gokb-button>
             </v-col>
           </v-row>
@@ -290,7 +293,6 @@
   import BaseComponent from '@/shared/components/base-component'
   import titleServices from '@/shared/services/title-services'
   import tippServices from '@/shared/services/tipp-services'
-  import identifierServices from '@/shared/services/identifier-services'
   import namespaceServices from '@/shared/services/namespace-services'
   import genericEntityServices from '@/shared/services/generic-entity-services'
   import GokbTitleIdsField from '@/shared/components/simple/gokb-title-ids-field/gokb-title-ids-field.vue'
@@ -302,6 +304,15 @@
   export default {
     name: 'GokbReviewsTitleCard',
     components: {GokbTitleIdsField, GokbConfirmationPopup},
+    emits: [
+      'reviewed-card-selected-ids',
+      'loaded',
+      'set-selected',
+      'set-selected-ids',
+      'merge',
+      'link',
+      'feedback-response'
+    ],
     extends: BaseComponent,
     props: {
       id: {
@@ -379,6 +390,7 @@
         isNamePending: false,
         ids: [],
         titleName: undefined,
+        initialized: false,
         status: undefined,
         version: undefined,
         linkedPackage: undefined,
@@ -412,8 +424,8 @@
     computed: {
       idHeaders () {
         return [
-          { text: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'namespace', sortable: false },
-          { text: this.$i18n.tc('component.identifier.label', 1), align: 'start', value: 'value', sortable: false }
+          { title: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'namespace', sortable: false },
+          { title: this.$i18n.tc('component.identifier.label', 1), align: 'start', value: 'value', sortable: false }
         ]
       },
       isEditable () {
@@ -425,15 +437,21 @@
       isTitleComponent () {
         return this.route === '/title'
       },
+      isTippComponent () {
+        return this.route === '/package-title'
+      },
+      darkMode () {
+        return this.$vuetify.theme.dark
+      },
       roleColor () {
         if (this.role == "reviewedComponent") {
           if (this.mergeEnabled && this.originalRecord.type !== 'TIPP' && this.isOtherCardSelected) {
-            return (this.$vuetify.theme.dark ? "#670000" : "#f2d2d2")
+            return (this.darkMode ? "#670000" : "#f2d2d2")
           }
           return null
         }
         if (this.role == "candidateComponent" && this.isCardSelected) {
-          return (this.$vuetify.theme.dark ? "#1D5D0D" : "#d2f2d2")
+          return (this.darkMode ? "#1D5D0D" : "#d2f2d2")
         }
       },
       typeLabel () {
@@ -449,9 +467,9 @@
       },
       historyHeaders () {
         return [
-          { text: this.$i18n.tc('component.title.history.date.label'), align: 'start', value: 'date', sortable: false },
-          { text: this.$i18n.tc('component.title.history.from', 1), align: 'start', value: 'from', sortable: false },
-          { text: this.$i18n.tc('component.title.history.to', 1), align: 'start', value: 'to', sortable: false }
+          { title: this.$i18n.tc('component.title.history.date.label'), align: 'start', value: 'date', sortable: false },
+          { title: this.$i18n.tc('component.title.history.from.label', 1), align: 'start', value: 'from', sortable: false },
+          { title: this.$i18n.tc('component.title.history.to.label', 1), align: 'start', value: 'to', sortable: false }
         ]
       },
       elevationClass () {
@@ -507,7 +525,7 @@
         else return true
       },
       isMergeCandidate () {
-        return !this.isDeleted && this.mergeEnabled && (this.route === '/title' || this.route === '/package-title')
+        return !this.isDeleted && this.mergeEnabled && (this.route === '/title' || (this.route === '/package-title' && this.isReviewedCard))
       },
       isLinkCandidate () {
         return !this.isDeleted && this.role != 'reviewedComponent' && this.linkEnabled && this.route  === '/title' && (!this.selectedCard || this.selectedCard == this.id)
@@ -538,6 +556,10 @@
       selectedIdItems () {
         if (this.isReviewedCard && this.isMergeCandidate) {
           this.$emit('reviewed-card-selected-ids', this.selectedIdItems)
+
+          if (this.isOtherCardSelected) {
+            this.idsVisible = this.updateVisibleIdentifiers()
+          }
         }
       }
     },
@@ -547,6 +569,7 @@
     },
     async mounted () {
       this.fetchTitle()
+
       if (this.editable && this.isReviewedCard) {
         this.fetchReviewMismatchIds()
       }
@@ -582,7 +605,7 @@
             ]
           }
         }
-        this.$emit('loaded', { id: this.id, status: this.status })
+        this.$emit('loaded', { id: this.id, status: this.status, initialized: true })
         this.loading = false
       },
       selectCard () {
@@ -605,7 +628,7 @@
 
         if (type === 'merge') {
           if (this.isReviewedCard) {
-            this.submitConfirmationMessage = { text: 'component.review.edit.components.merge.confirm.message', vars: [cardReference] }
+            this.submitConfirmationMessage = { text: this.isTippComponent ? 'component.review.edit.components.tippCleanup.confirm.message' : 'component.review.edit.components.merge.confirm.message', vars: [cardReference] }
             this.parameterToConfirm = 'merge'
           } else {
             this.submitConfirmationMessage = { text: 'component.review.edit.components.link.confirmMerge.message', vars: [cardReference] }
@@ -638,7 +661,7 @@
         this.nameEditActive = false
       },
       confirmMerge () {
-        this.$emit('merge', this.id)
+        this.$emit('merge', { id: this.id, type: this.isTippComponent ? 'tipp' : 'title' })
         this.isChanged = true
       },
 
@@ -673,7 +696,7 @@
         this.idsVisible = this.updateVisibleIdentifiers()
       },
       getPendingStatus (id) {
-        if ( !this.isReviewedCard || (this.isReviewedCard && !this.isOtherCardSelected) || this.singleCardReview){
+        if ( !this.isReviewedCard || (this.isReviewedCard && !this.isOtherCardSelected) || this.singleCardReview || !this.isTitleComponent){
           return null
         } else {
           return this.getMergeStatus(id)
@@ -697,8 +720,11 @@
 
         return 'unselected'
       },
+      updateSelectedIdItems (items) {
+        this.selectedIdItems = items
+      },
       updateVisibleIdentifiers () {
-        this.ids = this.originalRecord._embedded.ids
+        this.ids = this.originalRecord?._embedded?.ids || []
 
         if (this.isOtherCardSelected) {
           for (const id of this.ids) {
@@ -727,10 +753,10 @@
           })
         }
 
-        return val.sort(({ namespace: first }, { namespace: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+        return val?.length > 0 ? val.sort(({ namespace: first }, { namespace: second }) => (first > second) ? 1 : (second > first) ? -1 : 0) : []
       },
       fetchReviewMismatchIds () {
-        if (!!this.additionalVars) {
+        if (this.additionalVars?.length > 0) {
           for (const [count, idItem] of this.additionalVars[1].entries()) {
             for (const [namespace, id] of Object.entries(idItem)) {
               this.addReviewMismatchId(namespace, id)
@@ -755,7 +781,15 @@
             console.log('Unable to lookup identifier object for ' + namespace + ':' + id + '!')
           }
         }
+        else {
+          log.debug("NO namespace for " + namespace)
+        }
       }
     }
   }
 </script>
+<style scoped>
+  .v-card-subtitle {
+    white-space: normal;
+  }
+</style>

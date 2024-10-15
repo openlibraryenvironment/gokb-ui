@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :errors="!!apiErrors"
@@ -17,7 +18,7 @@
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddSubject"
+        @click.prevent="showAddSubject"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
@@ -27,7 +28,7 @@
         icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
-        @click="confirmDeleteSelectedItems"
+        @click.prevent="confirmDeleteSelectedItems"
       >
         {{ $i18n.t('btn.delete') }}
       </gokb-button>
@@ -70,9 +71,10 @@
   export default {
     name: 'GokbSubjectsSection',
     components: { GokbAddSubjectPopup, GokbConfirmationPopup },
+    emits: ['update:model-value', 'update'],
     ddcList: DDC,
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -102,11 +104,14 @@
         addItemPopupVisible: false,
         options: {
           page: 1,
+          sortBy: [],
           itemsPerPage: ROWS_PER_PAGE
         },
         errorMessage: undefined,
         showErrorMessage: false,
+        subjects: [],
         selectedItems: [],
+        isExpanded: false,
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -126,24 +131,11 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
-      },
-      subjects () {
-        return [...this.value]
-          .map(item => ({
-            ...item,
-            schemeName: item.scheme.name,
-            label: this.knownSchemes[item.scheme.name] ? (this.$options.ddcList.find(cls => (cls.notation === item.heading))?.label[this.$i18n.locale] || item.heading) : item.heading,
-            markError: this.apiErrors?.find(e => (e.baddata.scheme === item.scheme && e.baddata.heading === item.heading))
-              ? this.$i18n.t('component.subject.error.' + this.apiErrors.find(e => (e.baddata.scheme === item.scheme && e.baddata.heading === item.heading)))
-              : null
-          }))
-          .sort(({ scheme: first }, { scheme: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-          .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
@@ -170,13 +162,28 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.subject.scheme.label'), align: 'start', value: 'schemeName', sortable: false },
-          { text: this.$i18n.tc('component.subject.heading.label'), align: 'start', value: 'label', sortable: false },
+          { title: this.$i18n.tc('component.subject.scheme.label'), align: 'start', value: 'schemeName', sortable: false },
+          { title: this.$i18n.tc('component.subject.heading.label'), align: 'start', value: 'label', sortable: false },
         ]
       },
       title () {
         return this.showTitle ? this.$i18n.tc('component.subject.label', 2) : undefined
       }
+    },
+    watch: {
+      modelValue: {
+        deep: true,
+        handler () {
+          this.updateItems()
+        }
+      },
+      apiErrors () {
+        this.updateItems()
+      }
+    },
+    mounted() {
+      this.isExpanded = this.expanded
+      this.updateItems()
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -220,6 +227,30 @@
           this.errorMessage = this.$i18n.t('component.subject.error.duplicate', ['' + item.scheme.name + ':' + item.heading])
           this.showErrorMessage = true
         }
+      },
+      updateItems(options) {
+        if (!!options?.itemsPerPage) {
+          this.options.itemsPerPage = options.itemsPerPage
+        }
+
+        if (!!options?.page) {
+          this.options.page = options.page
+        }
+
+        if (!!options?.sortBy) {
+          this.options.sortBy = options.sortBy
+        }
+
+        this.subjects = this.localValue.map(item => ({
+            ...item,
+            schemeName: item.scheme.name,
+            label: this.knownSchemes[item.scheme.name] ? (this.$options.ddcList.find(cls => (cls.notation === item.heading))?.label[this.$i18n.locale] || item.heading) : item.heading,
+            markError: this.apiErrors?.find(e => (e.baddata.scheme === item.scheme && e.baddata.heading === item.heading))
+              ? this.$i18n.t('component.subject.error.' + this.apiErrors.find(e => (e.baddata.scheme === item.scheme && e.baddata.heading === item.heading)))
+              : null
+          }))
+          .sort(({ scheme: first }, { scheme: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+          .slice((this.options.page - 1) * this.options.itemsPerPage, this.options.page * this.options.itemsPerPage)
       }
     }
   }

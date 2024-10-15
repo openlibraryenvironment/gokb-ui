@@ -1,6 +1,6 @@
 <template>
-  <div style="margin-top:-8px">
-    <div style="font-size:13px;margin-bottom:4px"> {{ $tc('component.identifier.label') }} </div>
+  <div style="margin-top:-5px">
+    <div style="font-size:12px;margin-bottom:-16px" class="text-medium-emphasis"> {{ $tc('component.identifier.label') }} </div>
     <v-row dense>
       <v-col cols="5">
         <gokb-namespace-field
@@ -8,7 +8,7 @@
           :target-type="targetType"
           width="250px"
           :placeholder="$tc('component.identifier.namespace')"
-          dense
+          :density="dense ? 'compact' : 'default'"
         />
       </v-col>
       <v-col cols="7">
@@ -16,7 +16,7 @@
           v-model="val"
           :placeholder="$tc('component.identifier.value')"
           clearable
-          dense
+          :density="dense ? 'compact' : 'default'"
         />
       </v-col>
     </v-row>
@@ -29,15 +29,21 @@
   export default {
     name: 'GokbIdentifierFilterField',
     components: { GokbNamespaceField, GokbTextField },
+    emits: ['update:model-value'],
     props: {
       targetType: {
         type: String,
         required: false,
         default: undefined
       },
-      value: {
+      modelValue: {
         required: true,
         default: '',
+      },
+      dense: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -47,7 +53,7 @@
       }
     },
     watch: {
-      value (val) {
+      modelValue (val) {
         if (!val) {
           this.namespace = undefined
           this.val = undefined
@@ -79,7 +85,7 @@
           result = this.namespace.value + ',' + (result || '*')
         }
 
-        this.$emit('input', result)
+        this.$emit('update:model-value', result)
       }
     }
   }

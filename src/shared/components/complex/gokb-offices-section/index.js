@@ -1,1 +1,1 @@
-export default from './gokb-offices-section'
+export {default} from './gokb-offices-section'

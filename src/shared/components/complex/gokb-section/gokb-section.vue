@@ -7,7 +7,9 @@
     >
       <v-toolbar
         v-if="title && !subTitle"
-        dense
+        color="header"
+        class="pl-4 pr-4"
+        density="compact"
         flat
       >
         <span
@@ -42,7 +44,9 @@
       <v-toolbar
         v-else-if="!title && subTitle"
         height="63"
-        dense
+        color="header"
+        class="pl-4 pr-4"
+        density="compact"
         flat
       >
         <span
@@ -67,7 +71,7 @@
         <v-btn
           v-if="expandable"
           icon
-          @click="doExpandCollapse"
+          @click.prevent="doExpandCollapse"
         >
           <v-icon>{{ expansionIcon }}</v-icon>
         </v-btn>
@@ -78,9 +82,10 @@
         />
       </v-toolbar>
       <v-toolbar
-        v-if="filters && localValue"
+        v-if="showActions && filters && localValue"
         height="63"
-        class="pt-1"
+        color="header"
+        class="pt-1 pl-4"
         flat
       >
         <slot
@@ -93,7 +98,7 @@
           name="buttons"
         />
         <v-toolbar-items
-          class="pa-2"
+          class="pa-2 mr-4"
         >
           <slot name="search" />
         </v-toolbar-items>
@@ -101,7 +106,9 @@
       <v-toolbar
         v-else-if="!subTitle && !title && !noToolBar"
         height="63"
-        dense
+        color="header"
+        class="pl-4 pr-4"
+        density="compact"
         flat
       >
         <v-spacer />
@@ -113,23 +120,24 @@
       <v-toolbar
         v-if="expandFilters"
         height="63"
-        class="pt-1"
+        color="header"
+        class="pt-1 pl-4 pr-4"
         flat
       >
-        <v-toolbar-items
-          class="pa-2"
-        >
-          <slot name="filters" />
-        </v-toolbar-items>
+        <slot name="filters" />
       </v-toolbar>
-      <v-card-text v-show="localValue">
-        <div
-          class="pa-2"
-          :class="[!clearBackground ? (darkMode ? 'controls-dark' : 'controls') : '']"
-        >
-          <slot />
+
+      <v-expand-transition>
+        <div v-show="localValue">
+          <v-card-text>
+            <div
+              class="pa-2 bg-card"
+            >
+              <slot />
+            </div>
+          </v-card-text>
         </div>
-      </v-card-text>
+      </v-expand-transition>
     </v-card>
   </span>
 </template>
@@ -137,9 +145,10 @@
 <script>
   export default {
     name: 'GokbSection',
+    emits: ['update:model-value'],
     props: {
-      value: {
-        type: Boolean,
+      modelValue: {
+        type: [Boolean, Number],
         required: false,
         default: true
       },
@@ -202,22 +211,29 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      hideDefault: {
+        type: Boolean,
+        required:false,
+        default: false
+      }
+    },
+    data () {
+      return {
+        show: true
       }
     },
     computed: {
       localValue: {
         get () {
-          return this.value
+          return !this.expandable || this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       expansionIcon () {
         return this.localValue ? 'mdi-chevron-up' : 'mdi-chevron-down'
-      },
-      darkMode () {
-        return this.$vuetify.theme.dark
       },
       styles () {
         var result = {}
@@ -233,19 +249,22 @@
         return [result]
       }
     },
+    mounted () {
+      if (this.hideDefault) {
+        this.localValue = false
+      }
+    },
     methods: {
       doExpandCollapse () {
-        this.localValue = !this.localValue
+        if (typeof this.localValue === 'boolean') {
+          this.localValue = !this.localValue
+        }
+        else {
+          if (!!this.localValue) {
+            this.localValue = undefined
+          }
+        }
       }
     },
   }
 </script>
-
-<style scoped lang="scss">
-  ::v-deep .controls {
-    background-color: #f2f2f2;
-  }
-  ::v-deep .controls-dark {
-    background-color: #1e1e1e;
-  }
-</style>

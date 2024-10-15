@@ -6,6 +6,7 @@
   export default {
     name: 'GokbUrlField',
     extends: GokbTextField,
+    emits: ['valid'],
     props: {
       type: {
         type: String,
@@ -20,16 +21,26 @@
       rules: {
         type: Array,
         default: undefined
+      },
+      replaceDate: {
+        type: Boolean,
+        required: false,
+        default: false
+      }
+    },
+    computed: {
+      localError () {
+        return this.$i18n.t('component.tipp.url.error')
       }
     },
     watch: {
-      localValue (lv) {
+      localValue () {
         this.validate()
       }
     },
     methods: {
       async validate () {
-        const validResult = await genericServices('rest/entities').checkUrl(this.localValue, createCancelToken.token)
+        const validResult = await genericServices('rest/entities').checkUrl(this.localValue, this.replaceDate, createCancelToken.token)
 
         if (validResult.data?.result === 'ERROR') {
           if (!this.localErrorMessages || this.localErrorMessages.length === 0) {

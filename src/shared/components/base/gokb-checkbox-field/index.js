@@ -1,1 +1,1 @@
-export default from './gokb-checkbox-field'
+export {default} from './gokb-checkbox-field'

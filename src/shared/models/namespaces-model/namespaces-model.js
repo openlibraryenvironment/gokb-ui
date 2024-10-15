@@ -1,5 +1,5 @@
-const api = (vue) => {
-  const namespaces = vue.observable({})
+const api = (reactive) => {
+  const namespaces = reactive({})
 
   return {
     addNamespace (ns) {

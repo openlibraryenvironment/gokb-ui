@@ -1,1 +1,1 @@
-export default from './gokb-add-subject-popup'
+export {default} from './gokb-add-subject-popup'

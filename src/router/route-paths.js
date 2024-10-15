@@ -1,6 +1,6 @@
 export const HOME_ROUTE = '/home'
 
-export const PROFILE_ROUTE = '/profiles'
+export const PROFILE_ROUTE = '/profile'
 export const REGISTER_ROUTE = '/register'
 
 export const SEARCH_MAINTENANCE_ROUTE = '/search-maintenance'
@@ -21,12 +21,10 @@ export const EDIT_DATABASE_ROUTE = '/title'
 export const EDIT_TIPP_ROUTE = '/package-title'
 export const EDIT_REVIEW_ROUTE = '/review'
 
-export const ADD_PROVIDER_ROUTE = '/add-provider'
-export const ADD_USER_ROUTE = '/add-user'
-export const ADD_PACKAGE_ROUTE = '/add-package'
-
 export const CREATE_PACKAGE_ROUTE = '/create-package'
 export const CREATE_TITLE_ROUTE = '/create-title'
+export const CREATE_PROVIDER_ROUTE = '/create-provider'
+export const CREATE_USER_ROUTE = '/create-user'
 
 export const ERROR_ROUTE = '/error'
 export const NO_ACCESS_ROUTE = '/no-access'

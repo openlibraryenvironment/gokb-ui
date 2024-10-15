@@ -6,7 +6,7 @@ const DEFAULT_LANG = 'eng'
 const requestLanguages = (baseServices, cancelToken) => {
   return baseServices.request({
     method: 'GET',
-    url: process.env.VUE_APP_API_BASE_URL + `${PLATFORM_URL}`,
+    url: import.meta.env.VITE_API_BASE_URL + `${PLATFORM_URL}`,
   }, cancelToken);
 }
 

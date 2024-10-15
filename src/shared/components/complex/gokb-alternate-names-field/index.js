@@ -1,1 +1,1 @@
-export default from './gokb-alternate-names-field'
+export {default} from './gokb-alternate-names-field'

@@ -27,6 +27,16 @@
         sortMappings: {
           link: 'name',
           linkTwo: 'provider'
+        },
+        requestOptions: {
+          page: 1,
+          sortBy: [{ key: 'lastUpdated', order: 'desc' }],
+          itemsPerPage: 10
+        },
+        resultOptions: {
+          page: 1,
+          sortBy: [{ key: 'lastUpdated', order: 'desc' }],
+          itemsPerPage: 10
         }
       }
     },
@@ -48,7 +58,6 @@
           {
             component: GokbPackageExportMenu,
             properties: {
-              disabled: this.isExportSelectedDisabled,
               items: this.selectedItems
             }
           },
@@ -98,7 +107,7 @@
               name: 'subject',
               value: 'subjectValue',
               properties: {
-                label: this.$i18n.tc('component.subjects.label')
+                label: this.$i18n.tc('component.subject.label')
               }
             },
           ],
@@ -204,46 +213,46 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.general.name'),
+            title: this.$i18n.t('component.general.name'),
             align: 'start',
             sortable: true,
             value: 'link'
           },
           {
-            text: this.$i18n.tc('component.provider.label'),
+            title: this.$i18n.tc('component.provider.label'),
             align: 'start',
             sortable: true,
             value: 'linkTwo'
           },
           {
-            text: this.$i18n.tc('component.package.contentType.label'),
+            title: this.$i18n.tc('component.package.contentType.label'),
             align: 'start',
             sortable: true,
             width: '150px',
             value: 'contentType'
           },
           {
-            text: this.$i18n.tc('component.package.count'),
+            title: this.$i18n.tc('component.package.count'),
             align: 'start',
             sortable: false,
             width: '80px',
             value: 'count'
           },
           {
-            text: this.$i18n.tc('component.curatoryGroup.label'),
+            title: this.$i18n.tc('component.curatoryGroup.label'),
             align: 'center',
             sortable: false,
             value: 'curatoryGroups'
           },
           {
-            text: this.$i18n.tc('component.general.lastUpdated'),
+            title: this.$i18n.tc('component.general.lastUpdated'),
             align: 'start',
             sortable: true,
             width: '120px',
             value: 'lastUpdated'
           },
           {
-            text: this.$i18n.tc('component.general.dateCreated'),
+            title: this.$i18n.tc('component.general.dateCreated'),
             align: 'start',
             sortable: true,
             width: '120px',
@@ -335,7 +344,7 @@
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
           count: _tippCount || tippCount || 0,
-          curatoryGroups: _embedded.curatoryGroups.map(cg => cg.name),
+          curatoryGroups: _embedded.curatoryGroups.map(cg => cg.name).join(','),
           status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined

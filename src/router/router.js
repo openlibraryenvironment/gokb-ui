@@ -1,13 +1,13 @@
 import {
-  HOME_ROUTE, PROFILE_ROUTE, REGISTER_ROUTE, TITLE_ROUTE, PACKAGE_ROUTE, PROVIDER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE,
+  HOME_ROUTE, PROFILE_ROUTE, REGISTER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE, CREATE_USER_ROUTE,
   SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
-  SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, ADD_USER_ROUTE, EDIT_USER_ROUTE, ERROR_ROUTE, EDIT_PACKAGE_ROUTE,
-  EDIT_PROVIDER_ROUTE, ADD_PROVIDER_ROUTE, EDIT_TITLE_ROUTE, NO_ACCESS_ROUTE, EDIT_TIPP_ROUTE, EDIT_REVIEW_ROUTE, VALIDATOR_ROUTE
+  SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, EDIT_USER_ROUTE, ERROR_ROUTE, EDIT_PACKAGE_ROUTE,
+  EDIT_PROVIDER_ROUTE, CREATE_PROVIDER_ROUTE, EDIT_TITLE_ROUTE, NO_ACCESS_ROUTE, EDIT_TIPP_ROUTE, EDIT_REVIEW_ROUTE, VALIDATOR_ROUTE
 } from './route-paths'
 
-const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
-  const router = new Router({
-    // mode: 'history', https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
+const api = (log, errorModel, accountModel, createRouter, HomeView, loading, createWebHistory) => {
+  const router = createRouter({
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
       {
         path: HOME_ROUTE,
@@ -20,6 +20,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
       },
       {
         path: ERROR_ROUTE,
+        name: ERROR_ROUTE,
         meta: {
           code: 'route.error'
         },
@@ -58,6 +59,14 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         component: () => import('@/views/edit/edit-title-view.vue')
       },
       {
+        path: CREATE_USER_ROUTE,
+        name: CREATE_USER_ROUTE,
+        meta: {
+          code: 'route.user.create'
+        },
+        component: () => import('@/views/edit/edit-user-view.vue')
+      },
+      {
         path: SEARCH_MAINTENANCE_ROUTE,
         name: SEARCH_MAINTENANCE_ROUTE,
         meta: {
@@ -71,6 +80,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         meta: {
           code: 'route.package.search'
         },
+        props: true,
         component: () => import('@/views/search/search-package-view.vue')
       },
       {
@@ -88,6 +98,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         meta: {
           code: 'route.review.search'
         },
+        props: true,
         component: () => import('@/views/search/search-review-view.vue')
       },
 
@@ -97,11 +108,12 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         meta: {
           code: 'route.provider.search'
         },
+        props: true,
         component: () => import('@/views/search/search-provider-view.vue')
       },
       {
-        path: ADD_PROVIDER_ROUTE,
-        name: ADD_PROVIDER_ROUTE,
+        path: CREATE_PROVIDER_ROUTE,
+        name: CREATE_PROVIDER_ROUTE,
         meta: {
           code: 'route.provider.create'
         },
@@ -122,6 +134,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         meta: {
           code: 'route.title.search'
         },
+        props: true,
         component: () => import('@/views/search/search-title-view.vue')
       },
       {
@@ -157,15 +170,8 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         meta: {
           code: 'route.user.search'
         },
+        props: true,
         component: () => import('@/views/search/search-user-view.vue')
-      },
-      {
-        path: ADD_USER_ROUTE,
-        name: ADD_USER_ROUTE,
-        meta: {
-          code: 'route.user.create'
-        },
-        component: () => import('@/views/edit/edit-user-view.vue')
       },
       {
         path: `${EDIT_USER_ROUTE}/:id`,
@@ -190,10 +196,6 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
           code: 'route.kbartValidator'
         },
         component: () => import('@/views/kbart-validator-view.vue')
-      },
-      {
-        path: '*',
-        component: () => import('@/views/not-found-view.vue')
       }
     ]
   })
@@ -206,8 +208,7 @@ const api = (log, errorModel, accountModel, Router, HomeView, loading) => {
         try {
           await accountModel.initialize()
         } catch (exception) {
-          errorModel.set(exception)
-          next(ERROR_ROUTE)
+          log.debug(exception)
         }
       }
     }

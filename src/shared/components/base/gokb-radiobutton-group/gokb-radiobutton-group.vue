@@ -1,8 +1,9 @@
 <template>
   <v-radio-group
     v-model="localValue"
-    row
+    inline
     :label="label"
+    :disabled="disabled"
   >
     <slot />
   </v-radio-group>
@@ -11,27 +12,33 @@
 <script>
   export default {
     name: 'GokbRadiobuttonGroup',
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
         required: false,
         default: undefined,
       },
-      value: {
+      modelValue: {
         required: true,
         default: '',
         validator: function (value) {
           return value === undefined || value === null || typeof value === 'string'
         }
       },
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
     },

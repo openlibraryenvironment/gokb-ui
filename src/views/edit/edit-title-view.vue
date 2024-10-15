@@ -1,15 +1,15 @@
 <template>
   <div>
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+        <template #actions>
+          <v-icon @click="showSnackbar = false" color="white">mdi-close</v-icon>
+        </template>
+    </v-snackbar>
     <gokb-page
       v-if="accessible && !notFound"
       :key="version"
       :title="title"
-      @submit="update"
     >
       <gokb-error-component :value="error" />
       <v-row>
@@ -20,13 +20,14 @@
             :readonly="isReadonly"
             :label="$t('component.title.type.label')"
             class="ml-4"
-            :items="allTypes"
+            :static-items="allTypes"
+            :init-item="currentType"
             required
           />
         </v-col>
         <v-spacer />
       </v-row>
-      <gokb-section :no-tool-bar="true">
+      <gokb-section no-tool-bar>
         <v-row>
           <v-col col="7">
             <gokb-name-field
@@ -51,7 +52,7 @@
             <gokb-uuid-field
               v-if="id"
               :label="$t('component.general.uuid.label')"
-              :value="titleItem.uuid"
+              v-model="titleItem.uuid"
               path="/title"
               dense
             />
@@ -67,6 +68,7 @@
               :label="$t('component.title.OAStatus.label')"
               :readonly="isReadonly"
               :api-errors="errors.OAStatus"
+              :init-item="titleItem.OAStatus"
               dense
             />
           </v-col>
@@ -79,6 +81,7 @@
               :label="$t('component.title.medium.label')"
               :readonly="isReadonly"
               :api-errors="errors.medium"
+              :init-item="titleItem.medium"
               dense
             />
           </v-col>
@@ -167,12 +170,10 @@
             v-model="tab"
             class="mx-4"
           >
-            <v-tabs-slider color="black" />
-
             <v-tab
-              key="identifiers"
+              value="identifiers"
               :style="[!!errors.ids ? { border: '1px solid red', borderRadius: '2px' } : {}]"
-              :active-class="tabClass"
+              class="font-weight-bold"
             >
               {{ $tc('component.identifier.label', 2) }}
               <v-chip class="ma-2">
@@ -187,8 +188,8 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="publisher"
-              :active-class="tabClass"
+              value="publishers"
+              class="font-weight-bold"
             >
               {{ $tc('component.title.publisher.label', 2) }}
               <v-chip class="ma-2">
@@ -203,8 +204,8 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="variants"
-              :active-class="tabClass"
+              value="variants"
+              class="font-weight-bold"
             >
               {{ $tc('component.variantName.label', 2) }}
               <v-chip class="ma-2">
@@ -219,25 +220,9 @@
               </v-icon>
             </v-tab>
             <v-tab
-              key="subjects"
-              :active-class="tabClass"
-            >
-              {{ $tc('component.subject.label', 2) }}
-              <v-chip class="ma-2">
-                {{ subjects.length }}
-              </v-chip>
-              <v-icon
-                v-if="pendingChanges.subjects"
-                :title="$t('pending.lists.changed')"
-                small
-              >
-                mdi-alert-decagram
-              </v-icon>
-            </v-tab>
-            <v-tab
               v-if="id && isContrib"
-              key="reviews"
-              :active-class="tabClass"
+              value="reviews"
+              class="font-weight-bold"
             >
               {{ $tc('component.review.label', 2) }}
               <v-chip class="ma-2">
@@ -253,8 +238,8 @@
             </v-tab>
             <v-tab
               v-if="id"
-              key="tipps"
-              :active-class="tabClass"
+              value="tipps"
+              class="font-weight-bold"
             >
               {{ $tc('component.tipp.label', 2) }}
               <v-chip class="ma-2">
@@ -263,8 +248,8 @@
             </v-tab>
             <v-tab
               v-if="isEdit && history"
-              key="history"
-              :active-class="tabClass"
+              value="history"
+              class="font-weight-bold"
             >
               {{ $t('component.title.history.label') }}
               <v-chip class="ma-2">
@@ -278,12 +263,28 @@
                 mdi-alert-decagram
               </v-icon>
             </v-tab>
+            <v-tab
+              value="subjects"
+              class="font-weight-bold"
+            >
+              {{ $tc('component.subject.label', 2) }}
+              <v-chip class="ma-2">
+                {{ subjects.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.subjects"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+            </v-tab>
           </v-tabs>
-          <v-tabs-items
+          <v-window
             v-model="tab"
           >
-            <v-tab-item
-              key="identifiers"
+            <v-window-item
+              value="identifiers"
               class="mt-4"
             >
               <gokb-identifier-section
@@ -294,9 +295,9 @@
                 :api-errors="errors.ids"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="publishers"
+            </v-window-item>
+            <v-window-item
+              value="publishers"
               class="mt-4"
             >
               <gokb-publisher-section
@@ -306,9 +307,9 @@
                 :api-errors="errors.publisher"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="variants"
+            </v-window-item>
+            <v-window-item
+              value="variants"
               class="mt-4"
             >
               <gokb-alternate-names-section
@@ -318,21 +319,22 @@
                 :api-errors="errors.variantNames"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="subjects"
+            </v-window-item>
+            <v-window-item
+              value="subjects"
               class="mt-4"
             >
               <gokb-subjects-section
                 v-model="subjects"
                 :disabled="isReadonly"
                 :api-errors="errors?.subjects"
+                :expandable="false"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-            <v-tab-item
+            </v-window-item>
+            <v-window-item
               v-if="loggedIn && isContrib"
-              key="reviews"
+              value="reviews"
               class="mt-4"
             >
               <gokb-reviews-section
@@ -342,9 +344,9 @@
                 :expandable="false"
                 @update="refreshReviewsCount"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="tipps"
+            </v-window-item>
+            <v-window-item
+              value="tipps"
               class="mt-4"
             >
               <gokb-tipps-section
@@ -354,9 +356,9 @@
                 :api-errors="errors.tipps"
                 @update="updateTippCount"
               />
-            </v-tab-item>
-            <v-tab-item
-              key="history"
+            </v-window-item>
+            <v-window-item
+              value="history"
               class="mt-4"
             >
               <gokb-title-history-section
@@ -367,8 +369,8 @@
                 :api-errors="errors.history"
                 @update="addPendingChange"
               />
-            </v-tab-item>
-          </v-tabs-items>
+            </v-window-item>
+          </v-window>
         </v-col>
       </v-row>
       <div v-else>
@@ -410,7 +412,7 @@
       <template #buttons>
         <gokb-button
           v-if="!isReadonly"
-          @click="reset"
+          @click.prevent="reset"
         >
           {{ $i18n.t('btn.reset') }}
         </gokb-button>
@@ -452,7 +454,8 @@
         />
         <gokb-button
           v-if="!isReadonly"
-          default
+          is-submit
+          @click="update"
           :disabled="!isValid"
         >
           {{ $i18n.t('btn.submit') }}
@@ -465,7 +468,7 @@
       title=""
     >
       <v-card>
-        <v-card-text>
+        <v-card-text align="center">
           <div class="text-h5 primary--text">
             {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
           </div>
@@ -480,15 +483,13 @@
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import titleServices from '@/shared/services/title-services'
-  import namespaceServices from '@/shared/services/namespace-services'
   import accountModel from '@/shared/models/account-model'
   import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
   import loading from '@/shared/models/loading'
-  import VSnackbars from 'v-snackbars'
 
   export default {
     name: 'EditTitleView',
-    components: { GokbErrorComponent, GokbAlternateNamesSection, VSnackbars },
+    components: { GokbErrorComponent, GokbAlternateNamesSection },
     extends: BaseComponent,
     props: {
       id: {
@@ -561,7 +562,10 @@
         currentType: undefined,
         updateUrl: undefined,
         deleteUrl: undefined,
-        eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         allTypes: [
           { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
           { name: this.$i18n.tc('component.title.type.Book'), id: 'Book' },
@@ -601,9 +605,6 @@
       localLastUpdated () {
         return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
-      tabClass () {
-        return this.$vuetify.theme.dark ? 'tab-dark' : ''
-      },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_EDITOR'))
       },
@@ -640,28 +641,25 @@
 
       if (this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]),
-            color: 'success',
-            timeout: -1
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label')])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name]),
-            color: 'warning',
-            timeout: -1
-          })
+          this.messageColor = 'warning'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 5000
+          this.showSnackbar = true
         }
       }
     },
     mounted () {
-      this.tab = parseInt(this.$route.query.tab) || null
+      this.tab = this.$route.query.tab || 'identifiers'
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
@@ -669,7 +667,8 @@
       },
       async update () {
         this.errors = {}
-        this.eventMessages = []
+        this.showSnackbar = false
+        this.snackbarMessage = undefined
         var isUpdate = !!this.id
 
         const activeGroup = accountModel.activeGroup()
@@ -730,12 +729,12 @@
             this.errors.history = hresp.data.error
           } else {
             if (isUpdate) {
-              this.reload()
-              this.eventMessages.push({
-                message: this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), this.allNames.name]),
-                color: 'success',
-                timeout: 2000
-              })
+              await this.reload()
+
+              this.messageColor = 'success'
+              this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), this.allNames.name])
+              this.currentSnackBarTimeout = 5000
+              this.showSnackbar = true
             } else {
               this.$router.push({
                 name: '/title',
@@ -748,23 +747,20 @@
           }
         } else {
           if (response.status === 409) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.title.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.title.label')])
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else if (response.status === 500) {
-            this.eventMessages.push({
-              message: this.$i18n.t('error.general.500', [this.$i18n.tc('component.title.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.title.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
           } else {
-            this.eventMessages.push({
-              message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.title.label')]),
-              color: 'error',
-              timeout: -1
-            })
+            this.messageColor = 'error'
+            this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.title.label')]),
+            this.currentSnackBarTimeout = -1
+            this.showSnackbar = true
             this.errors = response.data.error
           }
         }
@@ -772,8 +768,8 @@
         window.scrollTo(0, 0)
       },
       reset () {
-        this.tab = null
         this.pendingChanges = {}
+        this.showSnackbar = false
         this.reviewsCount = undefined
         this.tippCount = undefined
         this.shortTitleMap = {
@@ -823,7 +819,6 @@
         this.currentType = undefined
         this.updateUrl = undefined
         this.deleteUrl = undefined
-        this.eventMessages = []
         this.reload()
       },
       async reload () {
@@ -838,9 +833,9 @@
             instance: this
           })
 
-          if (result.status === 200) {
+          if (result?.status === 200) {
             this.mapRecord(result.data)
-          } else if (result.status === 404) {
+          } else {
             this.notFound = true
           }
         }
@@ -908,7 +903,7 @@
         }
         this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
 
-        document.title = this.$i18n.tc('component.title.type.' + this.currentType) + ' – ' + this.allNames.name
+        document.title = this.$i18n.tc('component.title.label') + ' – ' + this.allNames.name
 
         const tippsResult = await this.catchError({
           promise: titleServices.getTipps(this.id, { status: 'Current' }, this.cancelToken.token),
@@ -938,12 +933,11 @@
   }
 </script>
 <style>
-  .v-slide-group__prev {
-    margin-left: -50px;
+  .v-tab.v-btn--size-default {
+    padding-left: 8px;
+    padding-right: 8px;
   }
-</style>
-<style scoped>
-  .tab-dark {
-    color: rgba(255, 255, 255, 0.6);
+  .v-slide-group__prev {
+    margin-left: -20px;
   }
 </style>

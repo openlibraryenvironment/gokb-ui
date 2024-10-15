@@ -5,7 +5,7 @@
     name: 'GokbTitleIdsField',
     extends: GokbSearchField,
     props: {
-      value: {
+      modelValue: {
         required: true,
         validator: function (value) {
           return value === undefined || typeof value === 'string' || typeof value === 'number'

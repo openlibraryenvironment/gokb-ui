@@ -5,14 +5,14 @@
     :filters="showEditActions"
     :sub-title="title"
     :errors="!!apiErrors"
-    :show-actions="showEditActions"
+    :show-actions="showBulkActions"
     :items-total="totalNumberOfItems"
   >
     <template #buttons>
       <v-switch
         v-if="!!reviewComponent"
         v-model="fetchTitleReviews"
-        class="pt-4 pr-6"
+        class="pt-8 pr-6"
         :label="$tc('component.title.label', 2)"
       />
       <gokb-state-field
@@ -20,7 +20,7 @@
         class="mr-4 mt-4"
         message-path="component.review.stdDesc"
         url="refdata/categories/ReviewRequest.StdDesc"
-        :label="$t('component.review.type.label')"
+        :label="$t('component.review.stdDesc.label')"
       />
       <gokb-state-field
         v-model="searchFilters.status"
@@ -35,10 +35,9 @@
       <v-btn
         icon
         :title="$t('btn.refresh')"
-        style="margin-top:-4px"
         @click="retrieveReviews"
       >
-        <v-icon>
+        <v-icon color="primary">
           mdi-refresh
         </v-icon>
       </v-btn>
@@ -53,12 +52,12 @@
         class="mr-4"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddReviewPopup"
+        @click.prevent="showAddReviewPopup"
       >
         {{ $t('btn.add') }}
       </gokb-button>
     </template>
-    <template #actions>
+    <template #actions v-if="showBulkActions">
       <span
         style="min-width:82px"
       >
@@ -111,10 +110,12 @@
       :headers="localizedReviewHeaders"
       :editable="showEditActions"
       :total-number-of-items="totalNumberOfItems"
+      :selected-items="selectedItems"
       :options.sync="reviewsOptions"
       :actions="showEditActions"
       :show-loading="loading"
       :hide-select="!showEditActions"
+      item-selectable="isClosable"
       @selected-items="selectedItems = $event"
       @paginate="resultPaginate"
       @edit="handlePopupChange"
@@ -141,6 +142,9 @@
       GokbReviewPopup
     },
     extends: BaseComponent,
+    emits: [
+      'update'
+    ],
     props: {
       user: {
         type: Boolean,
@@ -200,7 +204,7 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE,
           mustSort: true,
-          sortBy: ['dateCreated'],
+          sortBy: [{ key:'dateCreated', order: 'asc' }],
           desc: false
         },
         reviewsRaisedBy: undefined,
@@ -250,13 +254,16 @@
           const deleteUrl = entry?._links.delete.href
           const popup = { value: this.reviewComponent ? stdDescLabel : (component.name || type + ' ' + component.id), label: 'review', type: 'GokbReviewPopup' }
           const link = { value: component.name, route: componentRoutes[entry?.componentToReview?.type?.toLowerCase()], id: 'componentId' }
-          const groupsList = entry.allocatedGroups.map(ag => ag.name)
+          const groupsList = entry.allocatedGroups.map(ag => ag.name).join(', ')
           const isClosable = !!(status?.name === 'Open' && updateUrl)
           return { id, status, dateCreated, statusLabel, stdDescLabel, groupsList, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
         })
       },
       isContrib () {
         return account.loggedIn() && account.hasRole('ROLE_CONTRIBUTOR')
+      },
+      showBulkActions () {
+        return this.selectedItemsTotal > 0 || this.allPagesSelected
       },
       showEditActions () {
         return this.reviews && (this.reviews?.filter(item => (item.updateUrl)).length > 0)
@@ -273,88 +280,90 @@
       localizedReviewHeaders () {
         const compConfig = [
           {
-            text: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'start',
             sortable: false,
-            value: 'popup'
+            nowrap: true,
+            width: '100%',
+            key: 'popup'
           },
           {
-            text: this.$i18n.t('component.general.status.label'),
+            title: this.$i18n.t('component.general.status.label'),
             align: 'end',
             sortable: false,
             width: '10%',
-            value: 'statusLabel'
+            key: 'statusLabel'
           },
           {
-            text: this.$i18n.t('component.general.dateCreated'),
+            title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             sortable: true,
-            width: '20%',
-            value: 'dateCreated'
+            nowrap: true,
+            key: 'dateCreated'
           }
         ]
         const pkgTitlesConfig = [
           {
-            text: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'start',
             sortable: false,
             width: '100%',
-            value: 'popup'
+            key: 'popup'
           },
           {
-            text: this.$i18n.tc('component.curatoryGroup.label', 2),
+            title: this.$i18n.tc('component.curatoryGroup.label', 2),
             align: 'start',
             sortable: false,
-            value: 'groupsList'
+            key: 'groupsList'
           },
           {
-            text: this.$i18n.t('component.general.status.label'),
+            title: this.$i18n.t('component.general.status.label'),
             align: 'start',
             sortable: false,
             width: '10%',
-            value: 'statusLabel'
+            key: 'statusLabel'
           },
           {
-            text: this.$i18n.t('component.general.dateCreated'),
+            title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             sortable: true,
-            width: '15%',
-            value: 'dateCreated'
+            nowrap: true,
+            key: 'dateCreated'
           }
         ]
         const defaultConfig = [
           {
-            text: this.$i18n.t('component.review.componentToReview.label'),
+            title: this.$i18n.t('component.review.componentToReview.label'),
             align: 'start',
             sortable: false,
-            value: 'popup'
+            width: '100%',
+            key: 'popup'
           },
           {
-            text: this.$i18n.t('component.title.type.label'),
+            title: this.$i18n.t('component.review.type.label'),
             align: 'start',
             sortable: false,
-            width: '10%',
-            value: 'type'
+            key: 'type'
           },
           {
-            text: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.tc('component.review.stdDesc.label'),
             align: 'start',
             sortable: false,
             width: '20%',
-            value: 'stdDescLabel'
+            nowrap: true,
+            key: 'stdDescLabel'
           },
           {
-            text: this.$i18n.t('component.general.status.label'),
+            title: this.$i18n.t('component.general.status.label'),
             align: 'start',
             sortable: false,
-            width: '10%',
-            value: 'statusLabel'
+            key: 'statusLabel'
           },
           {
-            text: this.$i18n.t('component.general.dateCreated'),
+            title: this.$i18n.t('component.general.dateCreated'),
             align: 'end',
             sortable: true,
-            width: '15%',
+            nowrap: true,
             value: 'dateCreated'
           }
         ]
@@ -401,11 +410,9 @@
       },
       resultPaginate (options) {
         this.successMessage = false
-        if (!!options.sortBy) {
-          this.reviewsOptions.sortBy = [options.sortBy]
-        }
-        if (typeof options.desc === 'boolean') {
-          this.reviewsOptions.desc = options.desc
+
+        if (options.sortBy) {
+          this.reviewsOptions.sortBy = options.sortBy
         }
 
         if (!!options.itemsPerPage) {
@@ -448,8 +455,8 @@
 
         const parameters = {
           ...(searchParams || {}),
-          _sort: this.reviewsOptions.sortBy[0],
-          _order: (this.reviewsOptions.desc ? 'desc' : 'asc'),
+          _sort: this.reviewsOptions.sortBy[0].key,
+          _order: this.reviewsOptions.sortBy[0].order || 'asc',
           offset: this.reviewsOptions.page ? (this.reviewsOptions.page - 1) * this.reviewsOptions.itemsPerPage : 0,
           limit: this.reviewsOptions.itemsPerPage
         }
