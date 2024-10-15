@@ -356,7 +356,7 @@
             this.cancelToken.token
           )
 
-          log.debug("CHECK PCKAGENAME EXISTS: ", response)
+          console.log("CHECK PCKAGENAME EXISTS: ", response)
 
           if (response?.status < 400) {
             if (response.data.result === 'ERROR') {
@@ -404,7 +404,7 @@
               this.platformAlreadyExists = await this.platformExists()
               /*if (!this.platformAlreadyExists) {
 
-                log.debug("### Plattform muss zunächst angelegt werden")
+                console.log("### Plattform muss zunächst angelegt werden")
               } else {
 
               } */
@@ -439,7 +439,7 @@
                   instance: this
                 })
 
-                log.debug("resonseScope: ", responseScope)
+                console.log("resonseScope: ", responseScope)
                 this.packageScope = responseScope?.data?._embedded.values.filter(a => a.value == result.file)[0].id
               }
 
@@ -467,13 +467,13 @@
                 }
               }
 
-              log.debug("### PUBLICATIONTYPES IN PACKAGE: ", publicationTypes)
+              console.log("### PUBLICATIONTYPES IN PACKAGE: ", publicationTypes)
               // auch wenn nur Titel mit einem Contenttype im Paket sind, muss zu diesem Type ein Beispiel gefunden werden
               if (publicationTypes.size > 0) {
                 for(var i = 0; i < titleData.length; i++){
                   publicationTypes.forEach(function (pub) {
                     let titleByPubType = titleData[i].find(x => x.publicationType === pub)
-                    log.debug("FOUND for pubtype: ", pub, titleByPubType)
+                    console.log("FOUND for pubtype: ", pub, titleByPubType)
                     if(titleByPubType) {
                       titleExamples.push(titleByPubType)
                       publicationTypes.delete(pub)
@@ -501,7 +501,7 @@
                   that.identifierExamples.push({publicationType: title.publicationType, identifiers: identifiers})
                 })
 
-                log.debug("IDENTIFIERS: ", this.identifierExamples)
+                console.log("IDENTIFIERS: ", this.identifierExamples)
 
 
               // set contenttype according to containing tipps and get GOKB code for it
@@ -528,15 +528,15 @@
                 instance: this
               })
 
-              log.debug("responseContentType: ", responseContentType)
+              console.log("responseContentType: ", responseContentType)
               this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id
-              log.debug("responseContentType ", this.contentTypeOfTippsCode)
+              console.log("responseContentType ", this.contentTypeOfTippsCode)
 
 
 
 
             } else {
-                log.debug("UUID der Form nach korrekt, aber existiert anscheinend nicht in der WEKB")
+                console.log("UUID der Form nach korrekt, aber existiert anscheinend nicht in der WEKB")
                 this.errors.uuid = true
                 this.messageColor = 'error'
                 this.snackbarMessage = 'Ein Paket mit dieser UUID existiert anscheinend nicht in der we:kb'
@@ -547,21 +547,21 @@
           } catch (error) {
             if (error.response) {
               // The request was made and the server responded with a status code > 2xx
-              log.debug(error.response.data)
-              log.debug(error.response.status)
-              log.debug(error.response.headers)
+              console.log(error.response.data)
+              console.log(error.response.status)
+              console.log(error.response.headers)
             } else if (error.request) {
               // The request was made but no response was received
-              log.debug(error.request)
+              console.log(error.request)
             } else {
               // Something happened in setting up the request that triggered an Error
-              log.debug('Error', error.message)
+              console.log('Error', error.message)
             }
 
           }
         }
         if (result) {
-          log.debug("result: ", result)
+          console.log("result: ", result)
           this.wekbDataLoaded = true
         }
 
@@ -601,11 +601,11 @@
           //TODO: handle Response Status
           if (response?.status === 200 && response.data?.length) {
             result = response.data[0]
-            log.debug("+++ ", result)
+            console.log("+++ ", result)
           }
 
         } catch (error) {
-          log.debug(error)
+          console.log(error)
         }
 
         return result
@@ -624,12 +624,12 @@
           instance: this
         })
 
-        // log.debug("#### ", response)
+        // console.log("#### ", response)
 
         if (response?.data) {
           if (!response.data.to_create) {
 
-            log.debug("Platform already exists - set existing")
+            console.log("Platform already exists - set existing")
             let platformId = null
             if (response.data.conflicts) {
               if (response.data.conflicts.primaryUrl) {
@@ -642,7 +642,7 @@
               promise: platformServices.get(platformId, this.cancelToken.token),
               instance: this
             })
-            // log.debug("PLATTFORM: ", platform)
+            // console.log("PLATTFORM: ", platform)
             this.internalPlatformId = platformId
             this.platformName = this.externalPlatformName
             this.platformURL = this.externalPlatformURL
@@ -650,7 +650,7 @@
           }
         }
 
-        log.debug("Platform not exists - create it")
+        console.log("Platform not exists - create it")
 
         return false
       },
@@ -670,11 +670,11 @@
           //TODO: handle Response Status
           if (response?.status === 200 && response.data?.length) {
             result = response.data
-            // log.debug("+++ ", result)
+            // console.log("+++ ", result)
           }
 
         } catch (error) {
-          log.debug(error)
+          console.log(error)
         }
 
         return result
@@ -686,13 +686,13 @@
           instance: this
         })
 
-        log.debug("+++ check PROVIDER: ", response)
+        console.log("+++ check PROVIDER: ", response)
 
         return response
       },
       async submit() {
 
-        // log.debug("SUBMIT")
+        // console.log("SUBMIT")
 
         if (this.valid) {
           let platformObject = undefined
@@ -756,8 +756,8 @@
             })
 
             providerObject = provResponse?.data
-            log.debug("NEW PROVIDEROBJECT: " + providerObject)
-            log.debug("NEW PROVIDER: " + provResponse)
+            console.log("NEW PROVIDEROBJECT: " + providerObject)
+            console.log("NEW PROVIDER: " + provResponse)
 
           }
 
