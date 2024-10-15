@@ -35,6 +35,7 @@ const api = (http, log, utils, tokenModel, accountModel) => ({
           const refresh_resp = await this.refreshAuth()
 
           if (refresh_resp?.status === 200) {
+            log.debug("Successfully refreshed token ..")
           } else {
             log.debug("Unable to refresh token .. logging out")
             accountModel.default.logout()

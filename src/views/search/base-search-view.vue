@@ -126,13 +126,13 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import selection from '@/shared/models/selection'
   import accountModel from '@/shared/models/account-model'
-  import VSnackbars from 'v-snackbars'
+  import { toRaw } from 'vue';
 
   const ROWS_PER_PAGE = 10
 
   export default {
     name: 'BaseSearch',
-    components: { GokbErrorComponent, GokbConfirmationPopup, VSnackbars },
+    components: { GokbErrorComponent, GokbConfirmationPopup },
     extends: BaseComponent,
     props: {
       initRefresh: {
@@ -299,6 +299,7 @@
               order:options.sortBy[0].order
             }
           ]
+          this.resultOptions.sortBy = options.sortBy
         } else if (!!this.sortMappings?.link &&
             options.sortBy?.length === 1 &&
             options.sortBy[0]['key'] == 'link'
@@ -309,9 +310,11 @@
               order: options.sortBy[0].order
             }
           ]
+          this.resultOptions.sortBy = options.sortBy
         }
-        else if(!!options.sortBy) {
+        else if(options.sortBy?.length === 1) {
           this.requestOptions.sortBy = options.sortBy
+          this.resultOptions.sortBy = options.sortBy
         }
 
         this.requestOptions.page = page
@@ -413,9 +416,12 @@
         let sort = undefined
         let order = undefined
 
-        if (this.requestOptions.sortBy?.length > 0) {
-          sort = this.linkSearchParameterValues[this.requestOptions.sortBy[0]['key']] || this.requestOptions.sortBy[0]['key']
-          order = this.requestOptions.sortBy[0].order
+        let rqOptions = toRaw(this.requestOptions)
+
+
+        if (rqOptions.sortBy.length > 0) {
+          sort = this.linkSearchParameterValues[rqOptions.sortBy[0]['key']] || rqOptions.sortBy[0]['key']
+          order = rqOptions.sortBy[0].order
         }
 
         const componentOptions = this.staticParams
@@ -424,13 +430,13 @@
           es: true,
           sort,
           order,
-          max: this.resultOptions.itemsPerPage
+          max: rqOptions.itemsPerPage
         }
 
         const dbTypedParams = {
           ...((sort && { _sort: sort }) || {}),
           ...((sort && { _order: order }) || {}),
-          limit: this.resultOptions.itemsPerPage
+          limit: rqOptions.itemsPerPage
         }
 
         this.loading = true
@@ -442,7 +448,7 @@
             ...(this.searchByEs ? esTypedParams : dbTypedParams),
             ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
             ...((this.searchServiceEmbeds && { _embed: this.searchServiceEmbeds }) || {}),
-            offset: page ? (page - 1) * this.requestOptions.itemsPerPage : 0,
+            offset: page ? (page - 1) * rqOptions.itemsPerPage : 0,
           }, this.cancelToken.token),
           instance: this
         })
@@ -524,8 +530,10 @@
         return new Promise(resolve => setTimeout(resolve, ms))
       },
       updateUrlParams () {
-        var urlBase = window.location.toString().split('?')[0] + '?'
-        var paramString = baseServices.createQueryParameters(this.searchFilters)
+        let urlBase = window.location.toString().split('?')[0] + '?'
+        let combinedFilters = this.searchFilters
+
+        let paramString = baseServices.createQueryParameters(combinedFilters)
 
         history.pushState({}, "", urlBase + paramString)
       }

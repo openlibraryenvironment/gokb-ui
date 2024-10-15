@@ -314,14 +314,14 @@
         this.selectedReviewItemIds = ids
       },
       async mergeCards (val) {
-        let mergedId = val
+        let mergedId = val.id
         let targetId = this.selectedCard
         let mergeData = {
             id: mergedId,
             target: targetId
         }
 
-        if (this.isTippReview) {
+        if (val.type === 'tipp') {
           let mergeParams = {}
 
           if (!!targetId) {
@@ -374,7 +374,7 @@
         } else {
           let mergeParams = { mergeTipps: true }
 
-          if (val === this.reviewedComponent.id) {
+          if (mergedId === this.reviewedComponent.id) {
             mergeData.ids = this.selectedReviewItemIds
           } else {
             mergeParams.mergeIds = true

@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :errors="!!apiErrors"
@@ -110,6 +111,7 @@
         showErrorMessage: false,
         subjects: [],
         selectedItems: [],
+        isExpanded: false,
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -180,6 +182,7 @@
       }
     },
     mounted() {
+      this.isExpanded = this.expanded
       this.updateItems()
     },
     methods: {

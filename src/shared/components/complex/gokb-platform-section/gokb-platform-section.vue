@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :sub-title="localTitle"
@@ -106,7 +107,8 @@
       },
       providerId: {
         type: [String, Number],
-        required: true
+        required: false,
+        default: undefined
       },
     },
     data () {
@@ -115,6 +117,7 @@
           page: 1,
           itemsPerPage: ROWS_PER_PAGE
         },
+        isExpanded: true,
         selectedItems: [],
         confirmationPopUpVisible: false,
         editPlatformPopupVisible: false,
@@ -156,6 +159,7 @@
     },
     created () {
       this.tableHeaders = TABLE_HEADERS
+      this.isExpanded = this.expanded
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

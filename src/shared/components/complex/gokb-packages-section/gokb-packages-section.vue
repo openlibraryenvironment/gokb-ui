@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     filters
     show-actions
@@ -146,6 +147,7 @@
         rawPackages: undefined,
         confirmationPopUpVisible: false,
         selectedItems: [],
+        isExpanded: true,
         loading: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,

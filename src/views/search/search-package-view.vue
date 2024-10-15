@@ -27,6 +27,16 @@
         sortMappings: {
           link: 'name',
           linkTwo: 'provider'
+        },
+        requestOptions: {
+          page: 1,
+          sortBy: [{ key: 'lastUpdated', order: 'desc' }],
+          itemsPerPage: 10
+        },
+        resultOptions: {
+          page: 1,
+          sortBy: [{ key: 'lastUpdated', order: 'desc' }],
+          itemsPerPage: 10
         }
       }
     },

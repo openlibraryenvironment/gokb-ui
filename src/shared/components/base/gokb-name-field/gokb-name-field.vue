@@ -1,5 +1,47 @@
 <template>
   <div>
+    <gokb-dialog
+      v-if="editNamePopupVisible"
+      v-model="editNamePopupVisible"
+      :title="editNamePopupLabel"
+      :width="dialogWidth"
+      @submit="selectNewName"
+    >
+      <gokb-text-field
+        ref="nameTextField"
+        v-model="editedVal"
+        :rules="rules"
+        :api-errors="activeApiError"
+      />
+      <v-checkbox
+        v-if="currentName"
+        v-model="keepCurrent"
+        class="ml-2 mt-4"
+        :label="keepCurrentLabel"
+        dense
+      />
+
+      <template #buttons>
+        <gokb-button
+          text
+          @click="close"
+        >
+          {{ $i18n.t('btn.cancel') }}
+        </gokb-button>
+        <gokb-button
+          class="ml-4"
+          :disabled="!editedVal || editedVal === currentName || !!activeApiError"
+          is-submit
+        >
+          {{ $i18n.t('btn.confirm') }}
+        </gokb-button>
+      </template>
+    </gokb-dialog>
+    <gokb-confirmation-popup
+      v-model="confirmationPopUpVisible"
+      :message="messageToConfirm"
+      @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+    />
     <span class="text-primary">
       {{ label }}
       <span
@@ -9,61 +51,24 @@
         *
       </span>
     </span>
-    <v-banner class="bg-card">
-      <div class="font-weight-bold" style="font-size: 1.1rem;">
+    <v-banner
+      class="bg-card"
+      lines="two"
+    >
+      <v-banner-text class="font-weight-bold" style="font-size: 1.1rem;width:100%">
         {{ currentName || modelValue.name }}
-      </div>
-      <template v-slot:actions>
-        <gokb-dialog
-          v-if="editNamePopupVisible"
-          v-model="editNamePopupVisible"
-          :title="editNamePopupLabel"
-          :width="dialogWidth"
-          @submit="selectNewName"
-        >
-          <gokb-text-field
-            ref="nameTextField"
-            v-model="editedVal"
-            :rules="rules"
-            :api-errors="activeApiError"
-          />
-          <v-checkbox
-            v-if="currentName"
-            v-model="keepCurrent"
-            class="ml-2 mt-4"
-            :label="keepCurrentLabel"
-            dense
-          />
-
-          <template #buttons>
-            <gokb-button
-              text
-              @click="close"
-            >
-              {{ $i18n.t('btn.cancel') }}
-            </gokb-button>
-            <gokb-button
-              class="ml-4"
-              :disabled="!editedVal || editedVal === currentName || !!activeApiError"
-              is-submit
-            >
-              {{ $i18n.t('btn.confirm') }}
-            </gokb-button>
-          </template>
-        </gokb-dialog>
-        <gokb-confirmation-popup
-          v-model="confirmationPopUpVisible"
-          :message="messageToConfirm"
-          @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-        />
+      </v-banner-text>
+      <v-banner-actions
+        v-if="!disabled"
+        class="mt-0"
+      >
         <gokb-button
-          v-if="!disabled"
           color="primary"
           @click.prevent="showEditName"
         >
           {{ $i18n.t('header.edit.label', [$i18n.t('component.general.name')]) }}
         </gokb-button>
-      </template>
+      </v-banner-actions>
     </v-banner>
   </div>
 </template>

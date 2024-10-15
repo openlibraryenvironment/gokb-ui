@@ -36,7 +36,7 @@
             <gokb-uuid-field
               v-if="id"
               :label="$t('component.general.uuid.label')"
-              :value="uuid"
+              v-model="uuid"
               path="/package-title"
               dense
             />
@@ -581,11 +581,10 @@
   import tippServices from '@/shared/services/tipp-services'
   import accountModel from '@/shared/models/account-model'
   import loading from '@/shared/models/loading'
-  import VSnackbars from 'v-snackbars'
 
   export default {
     name: 'EditTippView',
-    components: { GokbErrorComponent, VSnackbars },
+    components: { GokbErrorComponent },
     extends: BaseComponent,
     props: {
       id: {
@@ -951,8 +950,6 @@
           promise: tippServices.get(this.id, this.cancelToken.token),
           instance: this
         })
-
-        console.log(result)
 
         if (result?.status === 200) {
           this.mapRecord(result.data)

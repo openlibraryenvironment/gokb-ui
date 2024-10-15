@@ -38,7 +38,7 @@
             <gokb-uuid-field
               v-if="id"
               :label="$t('component.general.uuid.label')"
-              :value="uuid"
+              v-model="uuid"
               path="/provider"
               dense
             />
@@ -380,11 +380,10 @@
   import searchServices from '@/shared/services/search-services'
   import accountModel from '@/shared/models/account-model'
   import loading from '@/shared/models/loading'
-  import VSnackbars from 'v-snackbars'
 
   export default {
     name: 'EditProviderView',
-    components: { GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection, VSnackbars },
+    components: { GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection },
     extends: BaseComponent,
     props: {
       id: {

@@ -17,7 +17,7 @@
       },
     },
     created () {
-      this.items = [
+      this.rawItems = [
         {
           id: 'R',
           name: this.$i18n.t('component.tipp.embargo.type.rolling')

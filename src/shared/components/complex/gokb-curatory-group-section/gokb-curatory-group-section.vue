@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     :expandable="expandable"
     :title="title"
     :sub-title="subTitle"
@@ -110,7 +111,7 @@
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedCuratoryGroups: [],
-
+        isExpanded: true,
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -146,6 +147,9 @@
           { title: this.$i18n.t('component.general.name'), align: 'start', width: '100%', value: 'popup', sortable: false }
         ]
       }
+    },
+    mounted () {
+      this.isExpanded = this.expanded
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
