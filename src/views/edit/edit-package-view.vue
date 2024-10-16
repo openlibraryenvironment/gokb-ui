@@ -259,6 +259,7 @@
                     url="refdata/categories/Package.ContentType"
                     :label="$t('component.package.contentType.label')"
                     :readonly="isReadonly"
+                    return-object
                     dense
                   />
                 </v-col>
@@ -1418,6 +1419,7 @@
           this.packageItem.nominalPlatform = undefined
           this.allNames = { name: undefined, alts: [] }
         }
+        this.step = 1
         this.kbart = undefined
         this.showSnackbar = false
         this.reload(true)

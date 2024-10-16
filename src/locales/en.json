@@ -387,6 +387,7 @@
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "unusualChars": "This line contains unusual characters, which may point to a corrupted file conversion.",
       "unusualCharsVal": "Value '{0}' contains unusual characters. This may point to a corrupted file conversion.",
+      "namespaceNotFound": "Unable to reference namespace for value '{0}'.",
       "illegalVal": "Value '{0}' is not valid!",
       "illegalValForNamespace": "Value '{0}' is not valid for namespace '{1}'.",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",

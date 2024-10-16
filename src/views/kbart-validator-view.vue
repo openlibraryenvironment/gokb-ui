@@ -272,7 +272,6 @@
         this.completion = 0
       },
       mixedContent(val) {
-        console.log(val)
         if (!val) {
           this.selectedNamespaceMonograph = undefined
           this.selectedNamespaceSerial = undefined
@@ -289,9 +288,11 @@
         this.errors = []
         this.importRunning = true
         this.completion = 0
-        var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceName = !!this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceNameSerial = !!this.selectedNamespaceSerial ? this.selectedNamespaceSerial.value : undefined
+        let namespaceNameMonograph = !!this.selectedNamespaceMonograph ? this.selectedNamespaceMonograph.value : undefined
 
-        const validationResult = await kbartServices.validate(this.selectedFile, namespaceName, this.useStrict, this.cancelToken.token)
+        const validationResult = await kbartServices.validate(this.selectedFile, namespaceName, this.useStrict, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 
         if (validationResult.status === 200 && validationResult?.data?.report) {
           if (validationResult.data.errors.missingColumns?.length > 0) {

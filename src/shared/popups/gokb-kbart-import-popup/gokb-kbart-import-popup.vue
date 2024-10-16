@@ -15,7 +15,7 @@
       <gokb-namespace-field
         v-if="!contentType || contentType.value !== 'Mixed'"
         v-model="options.selectedNamespace"
-        :target-type="contentType"
+        :target-type="contentType?.value || undefined"
         width="350px"
         :label="$t('kbart.propId.label')"
       />
@@ -315,6 +315,11 @@
 
           if (fullProvider.titleNamespace) {
             this.options.selectedNamespace = fullProvider.titleNamespace
+          }
+
+          if (this.contentType?.value === 'Mixed') {
+            this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
+            this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
           }
         }
       },
