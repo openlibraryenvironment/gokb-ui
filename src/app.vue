@@ -284,6 +284,7 @@
   import searchServices from '@/shared/services/search-services'
   import languageServices from '@/shared/services/language-services'
   import namespaceServices from '@/shared/services/namespace-services'
+  import log from '@/shared/utils/logger'
 
   // const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
 
