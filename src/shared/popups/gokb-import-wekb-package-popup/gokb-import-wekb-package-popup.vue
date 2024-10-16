@@ -187,8 +187,8 @@
             :data="id"
             :key="id.namespace"
           >
-            <v-col cols="3">{{ id.namespace }}: </v-col>
-            <v-col cols="9">{{ id.value }}</v-col>
+            <v-col cols="4">{{ id.namespace }}: </v-col>
+            <v-col cols="8">{{ id.value }}</v-col>
           </v-row>
 
           <!-- <v-col cols="4">{{ id.value }}</v-col> -->
