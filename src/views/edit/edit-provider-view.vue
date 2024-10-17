@@ -61,10 +61,18 @@
           </v-col>
           <v-col cols="3" xl="2">
             <gokb-namespace-field
-              v-model="providerObject.titleNamespace"
+              v-model="providerObject.titleNamespaceSerial"
               target-type="Title"
               :readonly="isReadonly"
-              :label="$t('component.provider.titleNamespace.label')"
+              :label="$t('component.provider.titleNamespaceSerial.label')"
+            />
+          </v-col>
+          <v-col cols="3" xl="2">
+            <gokb-namespace-field
+              v-model="providerObject.titleNamespaceMonograph"
+              target-type="Title"
+              :readonly="isReadonly"
+              :label="$t('component.provider.titleNamespaceMonograph.label')"
             />
           </v-col>
           <v-col cols="3" xl="2">
