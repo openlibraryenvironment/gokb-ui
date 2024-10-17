@@ -16,6 +16,11 @@
         type: String,
         required: false,
         default: undefined
+      },
+      excludeIsxn: {
+        type: Boolean,
+        required: false,
+        default: undefined
       }
     },
     computed: {
@@ -27,6 +32,9 @@
       this.entityName = 'identifier-namespaces'
       if (!!this.targetType) {
         this.searchParams = { targetType: this.targetType }
+      }
+      if (this.excludeIsxn) {
+        this.searchParams.no_isxn = true
       }
     },
     methods: {

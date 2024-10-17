@@ -110,6 +110,14 @@
         v-model="editJobPopupVisible"
         :selected="selectedJob"
       />
+
+      <gokb-import-wekb-package-popup
+        v-if="wekbImportPopupVisible"
+        v-model="wekbImportPopupVisible"
+        @import="mapImportData"
+      />
+
+
       <v-stepper
         v-model="step"
         alt-labels
@@ -680,6 +688,17 @@
           </v-chip>
         </div>
         <v-spacer />
+
+        <gokb-button
+          color="primary"
+          :disabled="false"
+          @click="showWekbImportPopup"
+          v-show="!isEdit && step == 1"
+        >
+          <!-- TODO: Text aus Properties-Datei {{ $t('btn.next') }} -->
+          Aus externer Datenquelle importieren
+        </gokb-button>
+
         <gokb-button
           v-if="!isInLastStep"
           color="primary"
@@ -738,6 +757,7 @@
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
+  import GokbImportWekbPackagePopup from '@/shared/popups/gokb-import-wekb-package-popup'
 
   const ROWS_PER_PAGE = 10
 
@@ -770,7 +790,8 @@
       GokbMaintenanceCycleField,
       GokbAlternateNamesSection,
       GokbConfirmationPopup,
-      GokbEditJobPopup
+      GokbEditJobPopup,
+      GokbImportWekbPackagePopup
     },
     extends: BaseComponent,
     props: {
@@ -815,6 +836,7 @@
         showGroupInfoPopup: false,
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
+        wekbImportPopupVisible: false,
         urlUpdate: false,
         currentName: undefined,
         lastUpdated: undefined,
@@ -889,7 +911,8 @@
         step2Error: false,
         updateUrl: undefined,
         deleteUrl: undefined,
-        kbart: undefined
+        kbart: undefined,
+        importData: undefined
       }
     },
     computed: {
@@ -923,8 +946,16 @@
       platformSelection () {
         return this.platformSelect
       },
-      providerName () {
+      /*providerName () {
         return this.packageItem?.provider?.name
+      },*/
+      providerName: {
+        get() {
+          return this.packageItem?.provider?.name
+        },
+        set(newName) {
+          return newName
+        }
       },
       platformName () {
         return this.packageItem?.nominalPlatform?.name
@@ -1035,6 +1066,19 @@
       document.removeEventListener("keydown", this.handleKeyboardNav)
     },
     methods: {
+      showWekbImportPopup () {
+        this.wekbImportPopupVisible = true
+      },
+      async mapImportData (importData) {
+        this.allNames.name = importData.package.name
+
+        this.packageItem = importData.package
+        this.packageItem.provider = importData.provider
+        this.packageItem.nominalPlatform = importData.platform
+        this.sourceItem = importData.source
+
+        this.wekbImportPopupVisible = false
+      },
       go2NextStep () {
         if (this.step < 4) {
           this.step = this.step + 1
@@ -1059,8 +1103,8 @@
       },
       handleKeyboardNav (e) {
         if (this.step > 1 && e.key === "ArrowLeft" && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault()
-            this.go2PreviousStep()
+          e.preventDefault()
+          this.go2PreviousStep()
         } else if (this.step < 4 && e.key === "ArrowRight" && (e.ctrlKey || e.metaKey)) {
           e.preventDefault()
           this.go2NextStep()
@@ -1086,9 +1130,9 @@
             unit: undefined,
           }
         } else if (!!this.sourceItem.targetNamespace &&
-                    !!this.sourceItem.update &&
-                    !!options.selectedNamespace &&
-                    options.selectedNamespace.id != this.sourceItem.targetNamespace.id
+          !!this.sourceItem.update &&
+          !!options.selectedNamespace &&
+          options.selectedNamespace.id != this.sourceItem.targetNamespace.id
         ) {
           this.messageColor = 'warn'
           this.snackbarMessage = this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict')
