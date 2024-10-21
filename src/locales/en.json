@@ -348,6 +348,17 @@
     },
     "propId": {
       "label": "Namespace for title_id values (optional)",
+      "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list.",
+      "typed": {
+        "label": "Multiple namespaces"
+      }
+    },
+    "propIdSerial": {
+      "label": "Namespace for 'Serial' type title_id values (optional)",
+      "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
+    },
+    "propIdMonograph": {
+      "label": "Namespace for 'Monograph' type title_id values (optional)",
       "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
     },
     "addOnly": {
@@ -379,6 +390,7 @@
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "unusualChars": "This line contains unusual characters, which may point to a corrupted file conversion.",
       "unusualCharsVal": "Value '{0}' contains unusual characters. This may point to a corrupted file conversion.",
+      "namespaceNotFound": "Unable to reference namespace for value '{0}'.",
       "illegalVal": "Value '{0}' is not valid!",
       "illegalValForNamespace": "Value '{0}' is not valid for namespace '{1}'.",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
@@ -457,7 +469,12 @@
     "validator": {
       "label": "KBART Validator",
       "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, values automatically interpolated by the GOKb are also accepted (according to the validation during package upload).",
-      "mode": "Strict mode"
+      "mode": {
+        "label": "Strict mode"
+      },
+      "mixed": {
+        "label": "Mixed Content"
+      }
     }
   },
   "profile": {
@@ -983,6 +1000,12 @@
       },
       "titleNamespace": {
         "label": "Title Namespace"
+      },
+      "titleNamespaceSerial": {
+        "label": "Title Namespace (Serial)"
+      },
+      "titleNamespaceMonograph": {
+        "label": "Title Namespace (Monograph)"
       },
       "packageNamespace": {
         "label": "Package Namespace"
@@ -1568,6 +1591,9 @@
         "Yearly": {
           "label": "Yearly"
         }
+      },
+      "error": {
+        "activatedNoInfo": "Missing update info (URL/Cycle)!"
       }
     },
     "subject": {

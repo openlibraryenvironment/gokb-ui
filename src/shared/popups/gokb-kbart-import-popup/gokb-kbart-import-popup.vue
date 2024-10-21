@@ -13,10 +13,32 @@
         dense
       />
       <gokb-namespace-field
+        v-if="!mixedContent"
         v-model="options.selectedNamespace"
-        target-type="Title"
+        :target-type="targetType"
         width="350px"
         :label="$t('kbart.propId.label')"
+      />
+      <div v-else>
+        <gokb-namespace-field
+          v-model="options.selectedNamespaceSerial"
+          target-type="Journal"
+          width="350px"
+          :label="$t('kbart.propIdSerial.label')"
+        />
+        <gokb-namespace-field
+          v-model="options.selectedNamespaceMonograph"
+          target-type="Book"
+          width="350px"
+          :label="$t('kbart.propIdMonograph.label')"
+        />
+      </div>
+      <gokb-checkbox-field
+          v-model="mixedContent"
+          class="pt-4"
+          :label="$t('kbart.propId.typed.label')"
+          :disabled="importRunning"
+          dense
       />
       <gokb-checkbox-field
         v-model="options.dryRun"
@@ -177,15 +199,20 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      contentType: {
+        type: Object,
+        required: false,
+        default: undefined
       }
     },
     data () {
       return {
         errors: [],
-        selectedNamespace: undefined,
         cancelValidation: false,
         useProprietaryNamespace: false,
         importRunning: undefined,
+        mixedContent: false,
         loadedFile: {
           errors: {
             missingColumns: [],
@@ -207,6 +234,8 @@
         options: {
           selectedFile: undefined,
           selectedNamespace: undefined,
+          selectedNamespaceSerial: undefined,
+          selectedNamespaceMonograph: undefined,
           lineCount: undefined,
           addOnly: false,
           dryRun: false
@@ -253,6 +282,9 @@
       },
       hasErrors () {
         return this.errors.length > 0
+      },
+      targetType () {
+        return (this.contentType?.value == 'Journal' || this.contentType?.value == 'Book') ? this.contentType?.value : 'Title'
       }
     },
     watch: {
@@ -295,6 +327,11 @@
           if (fullProvider.titleNamespace) {
             this.options.selectedNamespace = fullProvider.titleNamespace
           }
+
+          if (this.contentType?.value === 'Mixed') {
+            this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
+            this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
+          }
         }
       },
       importKbart () {
@@ -309,9 +346,11 @@
         this.errors = []
         this.importRunning = true
         this.completion = 0
-        var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceNameSerial = this.options.selectedNamespaceSerial ? this.options.selectedNamespaceSerial.value : undefined
+        let namespaceNameMonograph = this.options.selectedNamespaceMonograph ? this.options.selectedNamespaceMonograph.value : undefined
 
-        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, this.cancelToken.token)
+        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 
         if (validationResult.status === 200 && validationResult?.data?.report) {
 

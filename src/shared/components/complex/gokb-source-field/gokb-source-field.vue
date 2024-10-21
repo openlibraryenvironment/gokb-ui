@@ -6,7 +6,7 @@
     :sub-title="$tc('component.source.label')"
   >
     <gokb-url-field
-      v-model="url"
+      v-model="item.url"
       :label="$t('component.source.url')"
       :readonly="readonly"
       replace-date
@@ -14,7 +14,7 @@
     <v-row>
       <v-col cols="3">
         <gokb-state-field
-          v-model="frequency"
+          v-model="item.frequency"
           message-path="component.source.frequency"
           url="refdata/categories/Source.Frequency"
           :label="$t('component.source.frequency.label')"
@@ -22,41 +22,85 @@
         />
       </v-col>
       <v-col cols="3">
-        <gokb-namespace-field
-          v-model="targetNamespace"
-          target-type="Title"
-          :readonly="readonly"
-          :label="$t('kbart.propId.label')"
-        />
-      </v-col>
-      <v-col cols="3">
         <gokb-date-field
-          v-model="lastRun"
+          v-model="item.lastRun"
           readonly
           :label="$t('component.source.lastRun')"
         />
       </v-col>
     </v-row>
     <v-row>
+      <v-col v-if="!mixedContent">
+        <v-row>
+          <v-col cols="3">
+            <gokb-namespace-field
+              v-model="item.targetNamespace"
+              target-type="Title"
+              width="350px"
+              :readonly="readonly"
+              :label="$t('kbart.propId.label')"
+            />
+          </v-col>
+          <v-col>
+            <gokb-checkbox-field
+              v-model="mixedContent"
+              class="pt-4"
+              width="350px"
+              :label="$t('kbart.propId.typed.label')"
+              dense
+            />
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col v-else>
+        <v-row>
+          <v-col cols="3">
+            <gokb-namespace-field
+              v-model="item.titleIdSerial"
+              target-type="Journal"
+              width="100%"
+              :label="$t('kbart.propIdSerial.label')"
+            />
+          </v-col>
+          <v-col cols="3">
+            <gokb-namespace-field
+              v-model="item.titleIdMonograph"
+              target-type="Book"
+              width="100%"
+              :label="$t('kbart.propIdMonograph.label')"
+            />
+          </v-col>
+          <v-col>
+            <gokb-checkbox-field
+              v-model="mixedContent"
+              class="pt-4"
+              :label="$t('kbart.propId.typed.label')"
+              dense
+            />
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col>
-        <v-checkbox
-          v-model="automaticUpdates"
-          class="mr-5"
-          :style="{ opacity: !url ? 0.25 : 0.87 }"
-          color="primary"
-          :disabled="!url"
+        <gokb-checkbox-field
+          v-model="item.automaticUpdates"
+          :disabled="activatedDisabled"
           :readonly="readonly"
           :label="$t('component.source.enableUpdate')"
+          :opacity="activatedDisabled ? 0.33 : undefined"
+          :error-messages="activatedErrorMessage"
+          dense
         />
       </v-col>
-      <v-col>
-        <v-checkbox
-          v-model="update"
-          class="mr-5"
-          :style="{ opacity: !url ? 0.25 : 0.87 }"
+      <v-col v-if="!readonly">
+        <gokb-checkbox-field
+          v-model="item.update"
           :readonly="readonly"
-          :disabled="!url"
+          :disabled="importNowDisabled"
           :label="$t('component.source.updateNow')"
+          :opacity="importNowDisabled ? 0.33 : undefined"
+          dense
         />
       </v-col>
     </v-row>
@@ -96,6 +140,16 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      defaultTitleNamespaceSerial: {
+        type: Object,
+        required: false,
+        default: undefined
+      },
+      defaultTitleNamespaceMonograph: {
+        type: Object,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -108,74 +162,71 @@
           frequency: undefined,
           url: undefined,
           targetNamespace: undefined,
+          titleIdSerial: undefined,
+          titleIdMonograph: undefined,
           automaticUpdates: undefined,
           update: false
         },
         errors: [],
-        isExpanded: true
+        mixedContent: false,
+        isExpanded: true,
       }
     },
     computed: {
-      frequency: {
-        get () {
-          return this.item.frequency
-        },
-        set (val) {
-          this.item.frequency = val
-          this.$emit('update:model-value', this.item)
-        }
+      importNowDisabled () {
+        return !this.readonly && !this.item.url
       },
-      url: {
-        get () {
-          return this.item.url
-        },
-        set (val) {
-          this.item.url = val
-          this.$emit('update:model-value', this.item)
-        }
+      activatedDisabled () {
+        return !this.readonly && (!this.item.url || !this.item.frequency) && !this.item.automaticUpdates
       },
-      targetNamespace: {
-        get () {
-          return this.item.targetNamespace
-        },
-        set (val) {
-          this.item.targetNamespace = val
-          this.$emit('update:model-value', this.item)
-        }
-      },
-      automaticUpdates: {
-        get () {
-          return this.item.automaticUpdates
-        },
-        set (val) {
-          this.item.automaticUpdates = val
-          this.$emit('update:model-value', this.item)
-        }
-      },
-      update: {
-        get () {
-          return this.item.update
-        },
-        set (val) {
-          this.item.update = val
-          this.$emit('update:model-value', this.item)
-        }
-      },
+      activatedErrorMessage () {
+        return !this.readonly && (!this.item.url || !this.item.frequency) && this.item.automaticUpdates ? this.$i18n.t("component.source.error.activatedNoInfo") : undefined
+      }
     },
     watch: {
       defaultTitleNamespace (val) {
         if (!!val && (!this.modelValue?.id || !this.item.targetNamespace)) {
           this.targetNamespace = this.defaultTitleNamespace
         }
-      }
+      },
+      item: {
+        handler (val) {
+          this.$emit('update:model-value', val)
+        },
+        deep: true
+      },
+      modelValue: {
+        handler(val) {
+          if (!!val && !val.id) {
+            this.item.type = val.type
+            this.item.url = val.url
+            this.item.frequency = val.frequency
+            this.item.targetNamespace = val.targetNamespace
+            this.item.automaticUpdates = val.automaticUpdates
+            this.item.titleIdSerial = val.titleIdSerial
+            this.item.titleIdMonograph = val.titleIdMonograph
+            this.item.update = val.update
+          }
+        },
+        deep: true
+      },
     },
     async mounted () {
       this.isExpanded = this.expanded
 
       if (!!this.modelValue?.id) {
         this.fetch(this.modelValue.id)
-      } else if (!!this.modelValue.url) {
+      } else if (!!this.modelValue?.url) {
         this.isExpanded = true
+        this.item = this.modelValue
+      } else if (!!this.defaultTitleNamespace || !!this.defaultTitleNamespaceSerial || !!this.defaultTitleNamespaceMonograph){
+        this.targetNamespace = this.defaultTitleNamespace
+        this.titleIdSerial = this.defaultTitleNamespaceSerial
+        this.titleIdMonograph = this.defaultTitleNamespaceMonograph
+
+        if (!!this.defaultTitleNamespaceSerial || !!this.defaultTitleNamespaceMonograph) {
+          this.mixedContent = true
+        }
       }
     },
     methods: {
