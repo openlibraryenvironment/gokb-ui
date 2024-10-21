@@ -348,7 +348,10 @@
     },
     "propId": {
       "label": "Namespace for title_id values (optional)",
-      "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
+      "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list.",
+      "typed": {
+        "label": "Multiple namespaces"
+      }
     },
     "propIdSerial": {
       "label": "Namespace for 'Serial' type title_id values (optional)",
@@ -1588,6 +1591,9 @@
         "Yearly": {
           "label": "Yearly"
         }
+      },
+      "error": {
+        "activatedNoInfo": "Missing update info (URL/Cycle)!"
       }
     },
     "subject": {

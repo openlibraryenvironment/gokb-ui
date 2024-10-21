@@ -29,36 +29,43 @@
       </v-row>
       <v-row
         v-if="selectedFile"
-        class="px-12"
+        class="px-14"
       >
-        <v-col v-if="!mixedContent">
+        <v-col v-if="!mixedContent" cols="3">
           <gokb-namespace-field
             v-model="options.selectedNamespace"
             target-type="Title"
-            width="400px"
+            width="100%"
             :label="$t('kbart.propId.label')"
           />
         </v-col>
-        <v-col v-else>
-          <gokb-namespace-field
-            v-model="options.selectedNamespaceSerial"
-            target-type="Title"
-            width="400px"
-            :label="$t('kbart.propIdSerial.label')"
-          />
-          <gokb-namespace-field
-            v-model="options.selectedNamespaceMonograph"
-            target-type="Title"
-            width="400px"
-            :label="$t('kbart.propIdMonograph.label')"
-          />
+        <v-col v-else cols="6">
+          <v-row>
+            <v-col cols="6">
+              <gokb-namespace-field
+                v-model="options.selectedNamespaceSerial"
+                target-type="Title"
+                width="100%"
+                :label="$t('kbart.propIdSerial.label')"
+              />
+            </v-col>
+            <v-col cols="6">
+              <gokb-namespace-field
+                v-model="options.selectedNamespaceMonograph"
+                target-type="Title"
+                width="100%"
+                :label="$t('kbart.propIdMonograph.label')"
+              />
+            </v-col>
+          </v-row>
         </v-col>
         <v-col>
           <gokb-checkbox-field
             v-model="mixedContent"
             class="pt-4"
-            :label="$t('kbart.validator.mixed.label')"
+            :label="$t('kbart.propId.typed.label')"
             :disabled="importRunning"
+            dense
           />
         </v-col>
       </v-row>

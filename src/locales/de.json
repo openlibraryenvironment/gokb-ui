@@ -348,7 +348,10 @@
     },
     "propId": {
       "label": "Namensraum für title_id (optional)",
-      "tooltip": "Falls die Spalte 'title_id' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden."
+      "tooltip": "Falls die Spalte 'title_id' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden.",
+      "typed": {
+        "label": "Mehrere Namensräume"
+      }
     },
     "propIdSerial": {
       "label": "Namensraum für 'Serial' title_id (optional)",
@@ -1598,6 +1601,9 @@
         "Yearly": {
           "label": "Jährlich"
         }
+      },
+      "error": {
+        "activatedNoInfo": "Fehlende Update-Infos (URL/Zyklus)!"
       }
     },
     "subject": {

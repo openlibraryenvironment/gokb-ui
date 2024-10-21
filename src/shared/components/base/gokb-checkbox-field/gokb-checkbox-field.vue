@@ -3,6 +3,7 @@
     v-model="localValue"
     :label="label"
     :disabled="disabled || readonly"
+    :style="{ opacity: opacity }"
     :readonly="readonly"
     :density="dense ? 'compact' : 'default'"
   />
@@ -37,6 +38,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      opacity: {
+        type: Number,
+        required: false,
+        default: 0.87
       }
     },
     computed: {

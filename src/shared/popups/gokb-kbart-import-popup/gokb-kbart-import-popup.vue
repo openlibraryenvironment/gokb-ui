@@ -13,9 +13,9 @@
         dense
       />
       <gokb-namespace-field
-        v-if="!contentType || contentType.value !== 'Mixed'"
+        v-if="!mixedContent"
         v-model="options.selectedNamespace"
-        :target-type="contentType?.value || undefined"
+        :target-type="targetType"
         width="350px"
         :label="$t('kbart.propId.label')"
       />
@@ -33,6 +33,13 @@
           :label="$t('kbart.propIdMonograph.label')"
         />
       </div>
+      <gokb-checkbox-field
+          v-model="mixedContent"
+          class="pt-4"
+          :label="$t('kbart.propId.typed.label')"
+          :disabled="importRunning"
+          dense
+      />
       <gokb-checkbox-field
         v-model="options.dryRun"
         :label="$t('kbart.dryRun.label')"
@@ -205,6 +212,7 @@
         cancelValidation: false,
         useProprietaryNamespace: false,
         importRunning: undefined,
+        mixedContent: false,
         loadedFile: {
           errors: {
             missingColumns: [],
@@ -274,6 +282,9 @@
       },
       hasErrors () {
         return this.errors.length > 0
+      },
+      targetType () {
+        return (this.contentType?.value == 'Journal' || this.contentType?.value == 'Book') ? this.contentType?.value : 'Title'
       }
     },
     watch: {
