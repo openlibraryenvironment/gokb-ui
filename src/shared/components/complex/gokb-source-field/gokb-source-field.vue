@@ -167,6 +167,19 @@
         if (!!val && (!this.modelValue?.id || !this.item.targetNamespace)) {
           this.targetNamespace = this.defaultTitleNamespace
         }
+      },
+      modelValue: {
+        handler(val) {
+          if (!!val && !val.id) {
+            this.item.type = val.type
+            this.item.url = val.url
+            this.item.frequency = val.frequency
+            this.item.targetNamespace = val.targetNamespace
+            this.item.automaticUpdates = val.automaticUpdates
+            this.item.update = val.update
+          }
+        },
+        deep: true
       }
     },
     async mounted () {
@@ -174,8 +187,9 @@
 
       if (!!this.modelValue?.id) {
         this.fetch(this.modelValue.id)
-      } else if (!!this.modelValue.url) {
+      } else if (!!this.modelValue?.url) {
         this.isExpanded = true
+        this.item = this.modelValue
       }
     },
     methods: {
