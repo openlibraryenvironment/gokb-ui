@@ -101,17 +101,26 @@
 
       <v-row>
         <v-col cols="5"><span>{{ externalPlatformName }}</span><br/><span>{{ externalPlatformURL }}</span></v-col>
-        <v-col cols="5">
+        <v-col cols="5" v-if="platformAlreadyExists">
           <gokb-text-field
             v-model="platformName"
             label="Plattform"
-            :disabled="platformAlreadyExists"
+            :disabled="true"
           />
-          <span v-if="platformAlreadyExists">
+          <span>
             <v-icon color="success">
               mdi-check-circle
             </v-icon>
           </span>
+        </v-col>
+
+        <v-col cols="5" v-else>
+          <gokb-search-platform-field
+            v-model="platformObject"
+            :readonly="false"
+            return-object
+            only-current
+          />
         </v-col>
         <v-col cols="2">
           <gokb-checkbox-field
@@ -120,6 +129,7 @@
             label="Quelle übernehmen"
           />
         </v-col>
+        <span v-if="!platformAlreadyExists">Wählen Sie entweder eine schon existierende Plattform oder übernehmen Sie die Plattform der Importquelle.</span>
       </v-row>
 
       <v-row>
@@ -127,27 +137,36 @@
       </v-row>
       <v-row>
         <v-col cols="5"><span>{{ externalProviderName }}</span></v-col>
-        <v-col cols="5">
+        <v-col cols="5" v-if="providerAlreadyExists">
           <gokb-text-field
             v-model="providerName"
             label="Anbieter"
             :disabled="providerAlreadyExists"
           />
-
-          <span v-if="providerAlreadyExists">
+          <span>
             <v-icon color="success">
               mdi-check-circle
             </v-icon>
           </span>
+        </v-col>
 
-        </v-col>
-        <v-col cols="2">
-          <gokb-checkbox-field
-            v-if="!providerAlreadyExists"
-            v-model="adaptProviderData"
-            label="Quelle übernehmen"
-          />
-        </v-col>
+          <v-col cols="5" v-else>
+            <gokb-search-organisation-field
+              v-model="providerObject"
+              :show-link="true"
+              :readonly="false"
+              return-object
+            />
+          </v-col>
+
+          <v-col cols="2">
+            <gokb-checkbox-field
+              v-if="!providerAlreadyExists"
+              v-model="adaptProviderData"
+              label="Quelle übernehmen"
+            />
+          </v-col>
+        <span v-if="!providerAlreadyExists">Wählen Sie entweder einen schon existierenden Anbieter oder übernehmen Sie den Anbieter der Importquelle.</span>
       </v-row>
 
       <v-row>
@@ -251,11 +270,13 @@
   import GokbSearchOrganisationField from "@/shared/components/simple/gokb-search-organisation-field"
   import providerServices from "@/shared/services/provider-services"
   import genericEntityServices from "@/shared/services/generic-entity-services"
+  import GokbSearchPlatformField from "../../components/simple/gokb-search-platform-field/index.js";
 
 
   export default {
     name: 'GokbImportWekbPackagePopup',
     components: {
+      GokbSearchPlatformField,
       GokbSearchOrganisationField,
       GokbNamespaceField, GokbTable, GokbCheckboxField, GokbButton, GokbTextField, GokbStateField, GokbSection },
     extends: BaseComponent,
@@ -272,6 +293,8 @@
     },
     data () {
       return {
+        providerObject: undefined,
+        platformObject: undefined,
         showSnackbar: false,
         snackbarMessage: undefined,
         messageColor: undefined,
@@ -300,6 +323,7 @@
         packageScope: undefined,
         packageDescription: undefined,
         packageDescriptionURL: undefined,
+        packageGlobal: undefined,
         namespaceMonograph: undefined,
         namespaceJournal: undefined,
         titleCount: undefined,
@@ -338,7 +362,9 @@
         return (this.contentTypeOfTipps === "Journal" || this.contentTypeOfTipps === "Mixed")
       },
       valid() {
-        return ( (this.providerAlreadyExists || this.adaptProviderData) && (this.platformAlreadyExists || this.adaptPlatformData) && this.wekbDataLoaded && !this.packageAlreadyExists)
+        return ( (this.providerAlreadyExists || (this.adaptProviderData || this.providerObject))
+          && (this.platformAlreadyExists || (this.adaptPlatformData || this.platformObject))
+          && this.wekbDataLoaded && !this.packageAlreadyExists)
       }
     },
     watch: {
@@ -386,6 +412,7 @@
               this.packageName = this.externalPackageName
               this.packageDescription = result?.description
               this.packageDescriptionURL = result?.descriptionURL
+              this.packageGlobal = result?.scope
               this.externalPlatformName = result?.nominalPlatformName
               this.platformName = this.externalPlatformName
               this.externalProviderName = result?.providerName
@@ -418,20 +445,31 @@
                 this.providerName = this.externalProviderName
               }
 
+              // get Code for updateFrequency
+              let entityService = genericEntityServices('refdata/categories/Source.Frequency')
+              const responseSourceFrequency = await this.catchError({
+                promise: entityService.get({}, this.cancelToken.token),
+                instance: this
+              })
+
+              console.log("Source Frequency: ", responseSourceFrequency)
+              let frequencyCode = responseSourceFrequency?.data?._embedded.values.filter(a => a.value === "Daily")[0].id
+              console.log("Frequency Code: ", frequencyCode)
+
               // SOURCE
               let source = {
                 type: 'WEKB',
-                url: 'https://wekb.hbz-nrw.de/api2/searchApi?componentType=package&uuid='.concat(this.wekb_package_uuid),
-                frequency: "",
+                url: 'https://wekb.hbz-nrw.de/api2/searchApi?componentType=package&uuid='.concat(this.wekb_package_uuid.replaceAll(" ", "")),
+                frequency: frequencyCode,
                 targetNamespace: {},
-                automaticUpdates: false,
+                automaticUpdates: true,
                 update: true
               }
 
               this.externalSource = source
 
               // get Code for packagetype
-              let entityService = genericEntityServices('refdata/categories/Package.Scope')
+              entityService = genericEntityServices('refdata/categories/Package.Scope')
 
               if (result?.file) {
                 const responseScope = await this.catchError({
@@ -706,18 +744,21 @@
 
             platformObject = platfResponse?.data
           } else {
-            // create new Plattform and retrieve object
-            const newPlatform = {
-              name: this.externalPlatformName,
-              primaryUrl: this.externalPlatformURL,
+            if(this.adaptPlatformData) {
+              // create new Plattform and retrieve object
+              const newPlatform = {
+                name: this.externalPlatformName,
+                primaryUrl: this.externalPlatformURL,
+              }
+              platfResponse = await this.catchError({
+                promise: platformServices.createOrUpdate(newPlatform, this.cancelToken.token),
+                instance: this
+              })
+
+              platformObject = platfResponse?.data
+            } else {
+              platformObject = this.platformObject
             }
-            platfResponse = await this.catchError({
-              promise: platformServices.createOrUpdate(newPlatform, this.cancelToken.token),
-              instance: this
-            })
-
-            platformObject = platfResponse?.data
-
 
           }
 
@@ -731,34 +772,37 @@
 
             providerObject = provResponse?.data
           } else {
-            // create new Provider and retrieve the Object
-            const newProvider = {
-              id: undefined,
-              ids: [],
-              status: undefined,
-              source: undefined,
-              titleNamespace: undefined,
-              packageNamespace: undefined,
-              homepage: this.externalProviderHomepage[0], //TODO: ARRAY!!!????
-              name: this.externalProviderName,
-              providedPlatforms: [
-                {
-                  name: this.platformName,
-                  primaryUrl: this.platformURL,
-                  id: this.internalPlatformId
-                }
-              ]
+            if(this.adaptProviderData) {
+              // create new Provider and retrieve the Object
+              const newProvider = {
+                id: undefined,
+                ids: [],
+                status: undefined,
+                source: undefined,
+                titleNamespace: undefined,
+                packageNamespace: undefined,
+                homepage: this.externalProviderHomepage[0], //TODO: ARRAY!!!????
+                name: this.externalProviderName,
+                providedPlatforms: [
+                  {
+                    name: this.platformName,
+                    primaryUrl: this.platformURL,
+                    id: this.internalPlatformId
+                  }
+                ]
+              }
+
+              const provResponse = await this.catchError({
+                promise: providerServices.createOrUpdate(newProvider, this.cancelToken.token),
+                instance: this
+              })
+
+              providerObject = provResponse?.data
+              console.log("NEW PROVIDEROBJECT: " + providerObject)
+              console.log("NEW PROVIDER: " + provResponse)
+            } else {
+              providerObject = this.providerObject
             }
-
-            const provResponse = await this.catchError({
-              promise: providerServices.createOrUpdate(newProvider, this.cancelToken.token),
-              instance: this
-            })
-
-            providerObject = provResponse?.data
-            console.log("NEW PROVIDEROBJECT: " + providerObject)
-            console.log("NEW PROVIDER: " + provResponse)
-
           }
 
           const pckg = {
@@ -770,7 +814,7 @@
             descriptionURL: this.packageDescriptionURL,
             description: this.packageDescription,
             scope: this.packageScope,
-            global: undefined,
+            global: this.packageGlobal,
             globalNote: undefined,
             contentType: this.contentTypeOfTippsCode,
             consistent: undefined,
