@@ -17,11 +17,6 @@
 
         <v-row >
           <v-col>
-            <!-- <gokb-state-field
-              label="Quelle"
-              v-model="import_sources"
-              init-item="WEKB"
-            /> -->
             <span><b>Import-Quelle</b></span><br/>
             <span>WE:KB</span>
           </v-col>
@@ -105,7 +100,7 @@
           <gokb-text-field
             v-model="platformName"
             label="Plattform"
-            :disabled="true"
+            disabled
           />
           <span>
             <v-icon color="success">
@@ -129,7 +124,7 @@
             label="Quelle übernehmen"
           />
         </v-col>
-        <span v-if="!platformAlreadyExists">Wählen Sie entweder eine schon existierende Plattform oder übernehmen Sie die Plattform der Importquelle.</span>
+        <v-alert v-if="!platformAlreadyExists" type="info" style="font-size:small">Die Plattform ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder eine schon existierende Plattform oder übernehmen Sie die Plattform von der Importquelle.</v-alert>
       </v-row>
 
       <v-row>
@@ -166,7 +161,7 @@
               label="Quelle übernehmen"
             />
           </v-col>
-        <span v-if="!providerAlreadyExists">Wählen Sie entweder einen schon existierenden Anbieter oder übernehmen Sie den Anbieter der Importquelle.</span>
+        <v-alert v-if="!providerAlreadyExists" type="info" style="font-size:small">Der Anbieter des Pakets ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder einen schon existierenden Anbieter oder übernehmen Sie den Anbieter von der Importquelle.</v-alert>
       </v-row>
 
       <v-row>
