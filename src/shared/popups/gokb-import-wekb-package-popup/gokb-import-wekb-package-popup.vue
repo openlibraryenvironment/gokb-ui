@@ -111,6 +111,7 @@
 
         <v-col cols="5" v-else>
           <gokb-search-platform-field
+            label="Plattform suchen"
             v-model="platformObject"
             :readonly="false"
             return-object
@@ -147,6 +148,7 @@
 
           <v-col cols="5" v-else>
             <gokb-search-organisation-field
+              label="Anbieter suchen"
               v-model="providerObject"
               :show-link="true"
               :readonly="false"
