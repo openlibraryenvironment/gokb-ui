@@ -446,6 +446,7 @@
               ref="tipps"
               :pkg="id"
               :filter-align="isEdit"
+              :isImportFromExternalSource="isImportFromExternalSource"
               :platform="packageItem.nominalPlatform"
               :provider="packageItem.provider"
               :disabled="isReadonly"
@@ -461,6 +462,7 @@
               :expanded="false"
               :api-errors="errors?.source"
               :readonly="isReadonly"
+              :isImportFromExternalSource="isImportFromExternalSource"
               @enable="triggerUpdate"
             />
           </v-stepper-window-item>
@@ -837,6 +839,7 @@
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
         wekbImportPopupVisible: false,
+        isImportFromExternalSource: false,
         urlUpdate: false,
         currentName: undefined,
         lastUpdated: undefined,
@@ -1077,6 +1080,7 @@
         this.packageItem.nominalPlatform = importData.platform
         this.sourceItem = importData.source
 
+        this.isImportFromExternalSource = true
         this.wekbImportPopupVisible = false
       },
       go2NextStep () {
