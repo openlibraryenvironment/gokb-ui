@@ -453,9 +453,19 @@
               let frequencyCode = responseSourceFrequency?.data?._embedded.values.filter(a => a.value === "Daily")[0].id
               console.log("Frequency Code: ", frequencyCode)
 
+              // get Code for importSource
+              entityService = genericEntityServices('refdata/categories/Source.ImportConfig')
+              const responseSourceImportConfig = await this.catchError({
+                promise: entityService.get({}, this.cancelToken.token),
+                instance: this
+              })
+
+              let importConfigCode = responseSourceImportConfig?.data?._embedded.values.filter(a => a.value === "WEKB")[0].id
+
               // SOURCE
               let source = {
-                type: 'WEKB',
+                //type: 'WEKB',
+                importConfig: importConfigCode,
                 url: 'https://wekb.hbz-nrw.de/api2/searchApi?componentType=package&uuid='.concat(this.wekb_package_uuid.replaceAll(" ", "")),
                 frequency: frequencyCode,
                 targetNamespace: {},
