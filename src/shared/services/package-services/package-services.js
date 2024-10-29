@@ -4,7 +4,7 @@ const api = (baseServices) => ({
   get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: import.meta.env.VITE_API_BASE_URL + `${PACKAGE_URL}/${id}`,
+      url: import.meta.env.VITE_API_BASE_URL + `${PACKAGE_URL}/${id}?_embed=source,ids,variantNames,curatoryGroups,subjects`,
     }, cancelToken)
   },
   getTipps (id, parameter, cancelToken) {

@@ -493,15 +493,38 @@
                     @delete="markDeleted"
                   />
                 </v-col>
-                <v-col cols="6" xl="3">
-                  <gokb-uuid-field
-                    v-if="uuid"
-                    label="UUID"
-                    class="mt-2"
-                    v-model="uuid"
-                    path="/package"
-                  />
+                <v-col cols="6" >
+                  <v-row>
+                    <v-col cols="9" lg="8">
+                      <gokb-uuid-field
+                        v-if="uuid"
+                        label="UUID"
+                        class="mt-2"
+                        v-model="uuid"
+                        path="/package"
+                      />
+                    </v-col>
+                    <v-spacer/>
+                    <v-col cols="3" v-if="externalSource" >
+                      <v-row justify="end">
+                        <v-col cols="11">
+                          <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
+                            Importquelle
+                          </div>
+                          <v-chip
+                            :text="externalSource"
+                            class="text-button"
+                            rounded="lg"
+                            :color="externalSource === 'EZB' ? 'green' : 'orange'"
+                            density="compact"
+
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                  </v-row>
                 </v-col>
+
               </v-row>
               <v-row dense>
                 <v-col>
@@ -840,6 +863,7 @@
         editJobPopupVisible: false,
         wekbImportPopupVisible: false,
         isImportFromExternalSource: false,
+        externalSource: undefined,
         urlUpdate: false,
         currentName: undefined,
         lastUpdated: undefined,
@@ -1503,6 +1527,24 @@
                 }
               }
             }
+
+            if (result?.data?._embedded?.source?.importConfig) {
+              this.externalSource = result.data._embedded.source.importConfig.name
+            }
+
+            /*if (result?.data?.source?.id) {
+              const sourceResult = await this.catchError({
+                promise: sourceServices.getSource(result?.data?.source?.id, this.cancelToken.token),
+                instance: this
+              })
+
+              if (sourceResult?.status === 200) {
+                if (sourceResult?.data?.importConfig) {
+                  this.externalSource = sourceResult.data.importConfig.name
+                }
+              }
+            } */
+
           } else if (result.status === 404) {
             this.notFound = true
           } else {
