@@ -167,6 +167,34 @@
       </v-row>
 
       <v-row>
+        <v-col><h3>Paketidentifikatoren: </h3></v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <span v-if="packageIdentifierExists">Mit dem Paket ist ein Identifikator mit dem Wert <strong>{{ packageIdentifierValue }}</strong> verknüpft.</span>
+          <span v-else>In der Importquelle ist kein Identifikator mit dem Paket verknüpft.</span>
+        </v-col>
+      </v-row>
+
+      <v-row v-if="packageIdentifierExists">
+        <v-col cols="6">
+          <span>
+            Welchem Identifikatoren-Namensraum soll dieser Identifikator zugeordnet werden (Angabe optional)?
+          </span>
+        </v-col>
+        <v-col cols="6" >
+          <gokb-namespace-field
+            v-model="packageIdentifier"
+            target-type="Package"
+            label="Paket-Identifikator"
+          />
+          <!-- :label="$t('kbart.propId.label')" -->
+
+        </v-col>
+      </v-row>
+
+
+      <v-row>
         <v-col><h3>Titelidentifikatoren: </h3></v-col>
       </v-row>
       <v-row>
@@ -174,22 +202,7 @@
           <span>Folgende exemplarische Identifikatoren pro unterschiedlichem Inhaltstyp befinden sich innerhalb des Pakets:</span>
         </v-col>
       </v-row>
-      <!-- <v-row>
-         <v-col cols="4">Name: </v-col>
-        <v-col cols="4">Wert: </v-col>
-      </v-row> -->
-      <!-- <v-row v-for="id in identifierExamples"
-             :data="id"
-             :key="id.namespace"
-      >
-        <v-col cols="4">{{ id.namespace }} </v-col>
-        <v-col cols="4">{{ id.value }}</v-col>
-      </v-row> -->
       <v-row>
-       <!-- <v-col cols="4">
-          <span>Beispielhafte Identifikatoren des Pakets: </span>
-        </v-col> -->
-
         <v-col cols="4" v-for="pubtype in identifierExamples"
           :data="pubtype"
           :key="pubtype.publicationType"
@@ -206,8 +219,6 @@
             <v-col cols="4">{{ id.namespace }}: </v-col>
             <v-col cols="8">{{ id.value }}</v-col>
           </v-row>
-
-          <!-- <v-col cols="4">{{ id.value }}</v-col> -->
         </v-col>
 
       </v-row>
@@ -332,7 +343,10 @@
         packageAlreadyExists: false,
         identifierExamples: [],
         errors: {},
-        errorMessages: []
+        errorMessages: [],
+        packageIdentifierExists: false,
+        packageIdentifier: undefined,
+        packageIdentifierValue: undefined
       }
     },
     computed: {
@@ -419,6 +433,15 @@
               this.titleCount = result?.titleCount
               this.externalProviderUuid = result?.providerUuid
 
+              // Package Identifier
+              if(result?.identifiers?.length > 0){
+                let idNs = result.identifiers.filter(a => a.value !== "Unknown")[0]
+                if(idNs){
+                  this.packageIdentifierValue = idNs.value
+                  this.packageIdentifierExists = true
+                }
+              }
+
               // check if Package already exists --> executed by implicitly changed packagename variable
 
               // Plattform
@@ -440,6 +463,17 @@
               if(this.providerAlreadyExists) {
                 this.internalProviderId = providerResult?.data?.providerId
                 this.providerName = this.externalProviderName
+
+                const provRes = await this.catchError({
+                  promise: providerServices.get(this.internalProviderId, this.cancelToken.token),
+                  instance: this
+                })
+
+                // Default Package Identifier of specified Provider
+                if (provRes?.data?.packageNamespace) {
+                  this.packageIdentifier = provRes.data.packageNamespace
+                }
+
               }
 
               // get Code for updateFrequency
@@ -832,6 +866,15 @@
             editStatus: undefined,
             ids: [],
 
+          }
+
+          if(this.packageIdentifierExists && this.packageIdentifier){
+            let id = {
+              value: this.packageIdentifierValue,
+              namespace: this.packageIdentifier.value,
+              nslabel: this.packageIdentifier.name
+            }
+            pckg.ids.push(id)
           }
 
           // TODO: Übergangslösung bis wir 2 Felder für Title-Namespaces haben

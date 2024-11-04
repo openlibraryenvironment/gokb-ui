@@ -517,7 +517,7 @@
                             rounded="lg"
                             :color="externalSource === 'EZB' ? 'green' : 'orange'"
                             density="compact"
-
+                            title="Dieses Paket wurde aus der angegbenen Quelle importiert"
                           />
                         </v-col>
                       </v-row>
