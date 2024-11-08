@@ -174,7 +174,7 @@
 
       if (!!this.modelValue?.id) {
         this.fetch(this.modelValue.id)
-      } else if (!!this.modelValue.url) {
+      } else if (!!this.modelValue?.url) {
         this.isExpanded = true
       }
     },
