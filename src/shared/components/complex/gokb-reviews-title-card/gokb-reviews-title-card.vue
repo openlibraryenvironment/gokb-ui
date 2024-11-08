@@ -282,6 +282,14 @@
                 {{ isTippComponent ? $i18n.t('component.review.edit.components.tippCleanup.confirm.label') : $i18n.t('component.review.edit.components.link.selectDeprecated.label')  }}
               </gokb-button>
             </v-col>
+            <v-col v-if="!isTippComponent">
+              <gokb-checkbox-field
+                v-model="transferNameActive"
+                class="mt-0"
+                :label="$t('component.review.edit.components.merge.transferName.label')"
+                dense
+              />
+            </v-col>
           </v-row>
         </v-col>
       </v-row>
@@ -418,7 +426,8 @@
         isChanged: false,
         mismatchIdentifiers: [],
         showSubmitConfirm: false,
-        submitConfirmationMessage: undefined
+        submitConfirmationMessage: undefined,
+        transferNameActive: false
       }
     },
     computed: {
@@ -605,7 +614,12 @@
             ]
           }
         }
-        this.$emit('loaded', { id: this.id, status: this.status, initialized: true })
+        this.$emit('loaded', {
+          id: this.id,
+          status: this.status,
+          initialized: true
+        })
+
         this.loading = false
       },
       selectCard () {
@@ -628,17 +642,63 @@
 
         if (type === 'merge') {
           if (this.isReviewedCard) {
-            this.submitConfirmationMessage = { text: this.isTippComponent ? 'component.review.edit.components.tippCleanup.confirm.message' : 'component.review.edit.components.merge.confirm.message', vars: [cardReference] }
+            this.submitConfirmationMessage = {
+              text: 'component.review.edit.components.' + (this.isTippComponent ? 'tippCleanup.confirm.message' : 'merge.confirm.message'),
+              bullets: [],
+              vars: [cardReference]
+            }
+
+            if (!this.isTippComponent) {
+              this.submitConfirmationMessage.bullets.push({
+                text: 'component.review.edit.components.merge.confirm.transferCombos.message',
+                vars: [cardReference]
+              })
+
+              if (this.transferNameActive) {
+                this.submitConfirmationMessage.bullets.push({
+                  text: 'component.review.edit.components.merge.confirm.transferName.message'
+                })
+              }
+
+              this.submitConfirmationMessage.bullets.push({
+                text: 'component.review.edit.components.merge.confirm.closeReview.message'
+              })
+            }
+
             this.parameterToConfirm = 'merge'
           } else {
-            this.submitConfirmationMessage = { text: 'component.review.edit.components.link.confirmMerge.message', vars: [cardReference] }
+            this.submitConfirmationMessage = {
+              text: 'component.review.edit.components.link.confirmMerge.message',
+              bullets: [],
+              vars: [cardReference]
+            }
+
+            if (!this.isTippComponent) {
+              this.submitConfirmationMessage.bullets.push({
+                text: 'component.review.edit.components.link.confirmMerge.transferCombos.message',
+                vars: [cardReference]
+              })
+
+              if (this.transferNameActive) {
+                this.submitConfirmationMessage.bullets.push({
+                  text: 'component.review.edit.components.link.confirmMerge.transferName.message'
+                })
+              }
+            }
+
             this.parameterToConfirm = 'merge'
           }
         } else if (type === 'link') {
-          this.submitConfirmationMessage = { text: 'component.review.edit.components.link.confirmLink.message', vars: [cardReference] }
+          this.submitConfirmationMessage = {
+            text: 'component.review.edit.components.link.confirmLink.message',
+            vars: [cardReference]
+          }
           this.parameterToConfirm = 'link'
         } else if (type === 'single') {
-          this.submitConfirmationMessage = { text: 'component.review.edit.components.single.confirm.message', vars: [cardReference] }
+          this.submitConfirmationMessage = {
+            text: 'component.review.edit.components.single.confirm.message',
+            vars: [cardReference]
+          }
           this.parameterToConfirm = 'single'
         }
 
@@ -661,7 +721,11 @@
         this.nameEditActive = false
       },
       confirmMerge () {
-        this.$emit('merge', { id: this.id, type: this.isTippComponent ? 'tipp' : 'title' })
+        this.$emit('merge', {
+          id: this.id,
+          type: this.isTippComponent ? 'tipp' : 'title',
+          transferName: this.transferNameActive
+        })
         this.isChanged = true
       },
 
@@ -685,10 +749,16 @@
         this.fetchTitle()
 
         if (putResponse.status === 200) {
-          this.$emit('feedback-response', { type: 'success', message: this.$i18n.t('success.update', [this.typeLabel, this.titleName]) })
+          this.$emit('feedback-response', {
+            type: 'success',
+            message: this.$i18n.t('success.update', [this.typeLabel, this.titleName])
+          })
         }
         else {
-          this.$emit('feedback-response', { type: 'error', code: putResponse.status, resp: putResponse })
+          this.$emit('feedback-response', {
+            type: 'error',
+            code: putResponse.status, resp: putResponse
+          })
         }
       },
       deleteId (id) {

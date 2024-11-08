@@ -1172,7 +1172,16 @@
             },
             "confirm": {
               "label": "Zusammenführung Bestätigen",
-              "message": "Bitte bestätigen Sie die Zusammenführung. Der zu prüfende Titel {0} wird gelöscht, und seine verknüpften Pakettitel werden an den selektierten Titel {1} übertragen."
+              "message": "Bitte bestätigen Sie die Zusammenführung.",
+              "transferCombos": {
+                "message": "Der zu prüfende Titel {0} wird gelöscht, und seine verknüpften Pakettitel werden an den selektierten Titel {1} übertragen."
+              },
+              "transferName": {
+                "message": "Der Name des gelöschten Titels wird an den selektierten übertragen, und dessen bisheriger Name als Namensvariante eingetragen."
+              },
+              "closeReview": {
+                "message": "Die Prüfanfrage wird anschließend automatisch geschlossen."
+              }
             },
             "selectIds": {
               "label": "Zu übertragende Identifikatoren auswählen",
@@ -1191,6 +1200,9 @@
             },
             "unselected": {
               "label": "{0}"
+            },
+            "transferName": {
+              "label": "Namen übertragen"
             }
           },
           "single": {
@@ -1210,7 +1222,13 @@
             },
             "confirmMerge": {
               "label": "Zusammenführung Bestätigen",
-              "message": "Bitte bestätigen Sie die Zusammenführung. Der Referenztitel {0} wird dabei gelöscht, und alle mit ihm verknüpften Pakettitel werden an die Zielkomponente übertragen."
+              "message": "Bitte bestätigen Sie die Zusammenführung.",
+              "transferCombos": {
+                "message": "Der Referenztitel {0} wird gelöscht, und alle mit ihm verknüpften Pakettitel werden an die Zielkomponente {1} übertragen."
+              },
+              "transferName": {
+                "message": "Der Name des gelöschten Titels wird an den selektierten übertragen, und dessen bisheriger Name als Namensvariante eingetragen."
+              }
             },
             "confirmLink": {
               "label": "Verknüpfung bestätigen",
@@ -1233,7 +1251,7 @@
           "tippCleanup": {
             "confirm": {
               "label": "Bereinigen",
-              "message": "Bitte bestätigen Sie die Bereinigung der archivierten Pakettitel mit dem gleichen Referenztitel."
+              "message": "Bitte bestätigen Sie die Bereinigung der archivierten Pakettitel mit dem gleichen Referenztitel. Der älteste Pakettitel wird wieder als aktuell markiert, alle anderen werden gelöscht."
             }
           }
         }
