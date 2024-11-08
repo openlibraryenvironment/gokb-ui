@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 import vuetify from 'vite-plugin-vuetify'
 import { execSync } from 'child_process'
+import * as sass from 'sass'
 import path from 'path'
 
 process.env.VITE_GIT_HASH = execSync('git rev-parse --short HEAD').toString().trim()
@@ -29,6 +30,22 @@ export default defineConfig({
       }
     })
   ],
+  css :{
+    preprocessorOptions : {
+      scss: {
+        api: "modern",
+        importers: [
+          new sass.NodePackageImporter()
+        ]
+      },
+      sass: {
+        api: "modern",
+        importers: [
+          new sass.NodePackageImporter()
+        ]
+      },
+    }
+  },
   esbuild: {
     supported: {
       'top-level-await': true //browsers can handle top-level-await features
