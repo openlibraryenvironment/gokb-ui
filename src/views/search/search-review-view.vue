@@ -13,7 +13,7 @@
           identifierValue: undefined,
           componentToReview: undefined,
           stdDesc: undefined,
-          status: undefined,
+          status: 'Open',
           name: undefined,
           linkedComponentType: undefined
         },
@@ -34,17 +34,21 @@
         return this.isReadonly || !this.selectedItems.length || this.selectedItems.some(item => (item.updateUrl === false))
       },
       resultActionButtons () {
-        return [
-          {
-            icon: 'mdi-close',
-            label: this.$i18n.t('btn.closeSelectedReviews'),
-            disabled: 'isCloseSelectedDisabled',
-            action: '_confirmCloseSelectedItems',
-          }
-        ]
+        if (this.isUserAdmin) {
+          return [
+            {
+              icon: 'mdi-close',
+              label: this.$i18n.t('btn.closeSelectedReviews'),
+              disabled: 'isCloseSelectedDisabled',
+              action: '_confirmCloseSelectedItems',
+            }
+          ]
+        } else {
+          return []
+        }
       },
       showSelect () {
-        return true
+        return this.isUserAdmin
       },
       title () {
         return this.$i18n.tc('component.review.label', 2)

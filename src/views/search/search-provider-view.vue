@@ -13,7 +13,8 @@
           label: undefined,
           identifierValue: undefined,
           titleNamespace: undefined,
-          curatoryGroupIds: undefined
+          curatoryGroupIds: undefined,
+          status: 'Current'
         }
       }
     },
@@ -27,28 +28,43 @@
       isRetiredSelectedDisabled () {
         return this.isReadonly || !this.selectedItems.length || this.selectedItems.some(item => (!item.updateUrl))
       },
+      showSelect () {
+        return this.isUserAdmin
+      },
       resultActionButtons () {
-        return [
-          {
-            label: this.$i18n.t('btn.export'),
-            disabled: 'isSearchExportDisabled',
-            public: true,
-            action: 'exportSearchResults',
-            loading: this.exportLoading
-          },
-          {
-            icon: 'mdi-close',
-            label: this.$i18n.t('btn.retire'),
-            disabled: 'isRetiredSelectedDisabled',
-            action: '_confirmArchiveSelectedItems',
-          },
-          {
-            icon: 'mdi-delete',
-            label: this.$i18n.t('btn.delete'),
-            disabled: 'isDeleteSelectedDisabled',
-            action: '_confirmDeleteSelectedItems',
-          },
-        ]
+        if (this.isUserAdmin) {
+          return [
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            },
+            {
+              icon: 'mdi-close',
+              label: this.$i18n.t('btn.retire'),
+              disabled: 'isRetiredSelectedDisabled',
+              action: '_confirmArchiveSelectedItems',
+            },
+            {
+              icon: 'mdi-delete',
+              label: this.$i18n.t('btn.delete'),
+              disabled: 'isDeleteSelectedDisabled',
+              action: '_confirmDeleteSelectedItems',
+            },
+          ]
+        } else {
+          return [
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            },
+          ]
+        }
       },
       searchInputFields () {
         return [

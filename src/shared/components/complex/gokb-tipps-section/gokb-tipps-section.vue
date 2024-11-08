@@ -322,7 +322,7 @@
           popup: 'name'
         },
         searchFilters: {
-          status: undefined,
+          status: 'Current',
           q: undefined,
           ids: undefined,
           pkg: undefined,
