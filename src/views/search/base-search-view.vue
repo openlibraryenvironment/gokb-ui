@@ -527,7 +527,7 @@
         return this[attributeName]
       },
       editItem () {
-        this.search()
+        this.search({ page: this.requestOptions.page })
       },
       timeout(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))

@@ -69,7 +69,10 @@
                 <v-icon class="mr-1 mt-n1" color="primary">
                   {{ i.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
-                {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) : $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
+                {{ selectedCard === i.id ?
+                    $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) :
+                    $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')])
+                }}
                 <b>#{{ idx + 1 }}</b>
               </div>
               <gokb-reviews-title-card
@@ -162,7 +165,6 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import titleServices from '@/shared/services/title-services'
   import tippServices from '@/shared/services/tipp-services'
-  import loading from '@/shared/models/loading'
 
   export default {
     name: 'GokbReviewsComponentsSection',
@@ -396,7 +398,12 @@
           }
 
           if (mergedId === this.reviewedComponent.id) {
-            mergeData.ids = this.selectedReviewItemIds
+            if (!!this.selectedReviewItemIds) {
+              mergeData.ids = this.selectedReviewItemIds
+            } else {
+              mergeParams.mergeIds = false
+            }
+
           } else {
             mergeParams.mergeIds = true
           }
