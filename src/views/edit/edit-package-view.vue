@@ -1226,8 +1226,17 @@
                 titleIdNamespace: this.kbart.selectedNamespace?.id || this.sourceItem?.targetNamespace?.id,
                 dryRun: this.kbart.dryRun,
                 addOnly: this.kbart.addOnly,
-                deleteMissing: this.kbart.deleteMissing
+                deleteMissing: this.kbart.deleteMissing,
               }
+
+              if (!!this.kbart.selectedNamespaceSerial) {
+                kbartPars.titleIdSerial = this.kbart.selectedNamespaceSerial.id
+              }
+
+              if (!!this.kbart.selectedNamespaceMonograph) {
+                kbartPars.titleIdMonograph = this.kbart.selectedNamespaceMonograph.id
+              }
+
               const kbartResult = await this.catchError({
                 promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, kbartPars, this.cancelToken.token),
                 instance: this
