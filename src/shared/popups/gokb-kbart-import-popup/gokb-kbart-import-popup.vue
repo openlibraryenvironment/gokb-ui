@@ -190,11 +190,6 @@
         required: true,
         default: true
       },
-      defaultTitleNamespace: {
-        type: Object,
-        required: false,
-        default: undefined
-      },
       provider: {
         type: Object,
         required: false,
@@ -324,13 +319,14 @@
         if (providerResult?.status === 200) {
           const fullProvider = providerResult.data
 
-          if (fullProvider.titleNamespace) {
-            this.options.selectedNamespace = fullProvider.titleNamespace
-          }
+          this.options.selectedNamespace = fullProvider.titleNamespace
+          this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
+          this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
 
-          if (this.contentType?.value === 'Mixed') {
-            this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
-            this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
+          } else if (this.contentType?.value === 'Book' && fullProvider.titleNamespaceMonograph) {
+            this.options.selectedNamespace = fullProvider.titleNamespaceMonograph
+          } else if (this.contentType?.value === 'Journal' && fullProvider.titleNamespaceSerial) {
+            this.options.selectedNamespace = fullProvider.titleNamespaceSerial
           }
         }
       },
