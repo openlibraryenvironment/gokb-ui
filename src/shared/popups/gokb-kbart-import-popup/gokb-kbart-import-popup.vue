@@ -323,7 +323,7 @@
           this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
           this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
 
-          } else if (this.contentType?.value === 'Book' && fullProvider.titleNamespaceMonograph) {
+          if (this.contentType?.value === 'Book' && fullProvider.titleNamespaceMonograph) {
             this.options.selectedNamespace = fullProvider.titleNamespaceMonograph
           } else if (this.contentType?.value === 'Journal' && fullProvider.titleNamespaceSerial) {
             this.options.selectedNamespace = fullProvider.titleNamespaceSerial
