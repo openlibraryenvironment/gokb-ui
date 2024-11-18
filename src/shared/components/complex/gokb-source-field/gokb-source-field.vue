@@ -60,6 +60,7 @@
               target-type="Journal"
               width="100%"
               :label="$t('kbart.propIdSerial.label')"
+              required
             />
           </v-col>
           <v-col cols="3">
@@ -68,6 +69,7 @@
               target-type="Book"
               width="100%"
               :label="$t('kbart.propIdMonograph.label')"
+              required
             />
           </v-col>
           <v-col>
@@ -136,17 +138,12 @@
         required: false,
         default: undefined
       },
-      defaultTitleNamespace: {
+      provider: {
         type: Object,
         required: false,
         default: undefined
       },
-      defaultTitleNamespaceSerial: {
-        type: Object,
-        required: false,
-        default: undefined
-      },
-      defaultTitleNamespaceMonograph: {
+      contentType: {
         type: Object,
         required: false,
         default: undefined
@@ -184,11 +181,6 @@
       }
     },
     watch: {
-      defaultTitleNamespace (val) {
-        if (!!val && (!this.modelValue?.id || !this.item.targetNamespace)) {
-          this.targetNamespace = this.defaultTitleNamespace
-        }
-      },
       item: {
         handler (val) {
           this.$emit('update:model-value', val)
@@ -210,6 +202,14 @@
         },
         deep: true
       },
+      provider: {
+        handler(val) {
+          if (!!val && !this.modelValue.id) {
+            this.fetchDefaultNamespace()
+          }
+        },
+        deep: true
+      }
     },
     async mounted () {
       this.isExpanded = this.expanded
@@ -219,14 +219,8 @@
       } else if (!!this.modelValue?.url) {
         this.isExpanded = true
         this.item = this.modelValue
-      } else if (!!this.defaultTitleNamespace || !!this.defaultTitleNamespaceSerial || !!this.defaultTitleNamespaceMonograph){
-        this.targetNamespace = this.defaultTitleNamespace
-        this.titleIdSerial = this.defaultTitleNamespaceSerial
-        this.titleIdMonograph = this.defaultTitleNamespaceMonograph
-
-        if (!!this.defaultTitleNamespaceSerial || !!this.defaultTitleNamespaceMonograph) {
-          this.mixedContent = true
-        }
+      } else if (!!this.provider && !!this.contentType){
+        this.fetchDefaultNamespace()
       }
     },
     methods: {
@@ -251,7 +245,33 @@
             }
           }
         }
-      }
+      },
+      async fetchDefaultNamespace () {
+        const providerResult = await this.catchError({
+          promise: providerServices.get(this.provider.id, this.cancelToken.token),
+          instance: this
+        })
+
+        if (providerResult?.status === 200) {
+          const fullProvider = providerResult.data
+
+          if (!!this.contentType) {
+            if (this.contentType.value === 'Book' && fullProvider.titleNamespaceMonograph) {
+              this.targetNamespace = fullProvider.titleNamespaceMonograph
+            } else if (this.contentType.value === 'Journal' && fullProvider.titleNamespaceSerial) {
+              this.targetNamespace = fullProvider.titleNamespaceSerial
+            } else if (this.contentType.value === 'Mixed') {
+              if (!!fullProvider.titleNamespaceSerial && !!fullProvider.titleNamespaceMonograph && fullProvider.titleNamespaceSerial.value !== fullProvider.titleNamespaceMonograph.value) {
+                this.titleIdSerial = fullProvider.titleNamespaceSerial
+                this.titleIdMonograph = fullProvider.titleNamespaceMonograph
+                this.mixedContent = true
+              } else {
+                this.targetNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
+              }
+            }
+          }
+        }
+      },
     }
   }
 </script>

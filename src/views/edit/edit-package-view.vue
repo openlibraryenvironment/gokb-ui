@@ -451,7 +451,8 @@
               v-if="loggedIn"
               ref="source"
               v-model="sourceItem"
-              :default-title-namespace="providerTitleNamespace"
+              :provider="providerSelect"
+              :content-type="packageItem.contentType"
               :expanded="false"
               :api-errors="errors?.source"
               :readonly="isReadonly"
@@ -840,7 +841,6 @@
         matchStatus: undefined,
         selectedJob: undefined,
         kbartProgress: undefined,
-        providerTitleNamespace: undefined,
         newTipps: [],
         packageItem: {
           id: undefined,
@@ -982,11 +982,6 @@
         }
 
         this.showSnackbar = false
-      },
-      'packageItem.provider' (prov) {
-        if (prov) {
-          this.fetchDefaultNamespace(prov.id)
-        }
       },
       step (val) {
         this.$refs?.descInfo?.refreshRows()
@@ -1452,21 +1447,6 @@
           if (result?.status === 200) {
             this.mapRecord(result.data)
             this.updateStepErrors()
-
-            if (this.providerSelect) {
-              const providerResult = await this.catchError({
-                promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
-                instance: this
-              })
-
-              if (providerResult?.status === 200) {
-                const fullProvider = providerResult.data
-
-                if (fullProvider.titleNamespace) {
-                  this.providerTitleNamespace = fullProvider.titleNamespace
-                }
-              }
-            }
           } else if (result.status === 404) {
             this.notFound = true
           } else {
@@ -1481,20 +1461,6 @@
         } else {
           if (this.loggedIn && !!this.activeGroup) {
             this.allCuratoryGroups = [this.activeGroup]
-          }
-        }
-      },
-      async fetchDefaultNamespace (providerId) {
-        const providerResult = await this.catchError({
-          promise: providerServices.get(providerId, this.cancelToken.token),
-          instance: this
-        })
-
-        if (providerResult?.status === 200) {
-          const fullProvider = providerResult.data
-
-          if (fullProvider.titleNamespace) {
-            this.providerTitleNamespace= fullProvider.titleNamespace
           }
         }
       },

@@ -296,10 +296,18 @@
         this.options.addOnly = false
         this.options.deleteMissing = false
         this.options.selectedFile = file
+      },
+      provider: {
+        handler(val) {
+          if (!!val) {
+            this.fetchDefaultNamespace()
+          }
+        },
+        deep: true
       }
     },
     mounted () {
-      if (this.provider) {
+      if (!!this.provider) {
         this.fetchDefaultNamespace()
       }
     },
@@ -319,14 +327,20 @@
         if (providerResult?.status === 200) {
           const fullProvider = providerResult.data
 
-          this.options.selectedNamespace = fullProvider.titleNamespace
-          this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
-          this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
-
-          if (this.contentType?.value === 'Book' && fullProvider.titleNamespaceMonograph) {
-            this.options.selectedNamespace = fullProvider.titleNamespaceMonograph
-          } else if (this.contentType?.value === 'Journal' && fullProvider.titleNamespaceSerial) {
-            this.options.selectedNamespace = fullProvider.titleNamespaceSerial
+          if (!!this.contentType) {
+            if (this.contentType.value === 'Book' && fullProvider.titleNamespaceMonograph) {
+              this.options.selectedNamespace = fullProvider.titleNamespaceMonograph
+            } else if (this.contentType.value === 'Journal' && fullProvider.titleNamespaceSerial) {
+              this.options.selectedNamespace = fullProvider.titleNamespaceSerial
+            } else if (this.contentType.value === 'Mixed') {
+              if (!!fullProvider.titleNamespaceSerial && !!fullProvider.titleNamespaceMonograph && fullProvider.titleNamespaceSerial.value !== fullProvider.titleNamespaceMonograph.value) {
+                this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
+                this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
+                this.mixedContent = true
+              } else {
+                this.options.selectedNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
+              }
+            }
           }
         }
       },
