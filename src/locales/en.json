@@ -539,7 +539,6 @@
     "add": {
       "label": "Add {0}"
     },
-    "welcome": "Welcome to the Global Open Knowledgebase!",
     "dashboard": "Dashboard",
     "search": "Search",
     "results": "Results"
@@ -558,7 +557,7 @@
     }
   },
   "welcome": {
-    "title": "Welcome to the Global Open Knowledgebase!",
+    "title": "Welcome to the Global Open Knowledge Base!",
     "p1": "",
     "p2": "",
     "p3": ""
