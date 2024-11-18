@@ -25,7 +25,7 @@
                 :title="username"
                 text="firstLetter"
               >
-                <span class="text-h6 text-bg">
+                <span class="text-h6 text-white">
                   {{ firstLetter }}
                 </span>
               </v-avatar>
@@ -82,9 +82,6 @@
         set (show) {
           showLoginModel.set(show)
         }
-      },
-      colorAccountIcon () {
-        return this.loggedIn ? 'success' : 'white'
       },
       username () {
         return accountModel.username()

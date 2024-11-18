@@ -438,8 +438,4 @@
     letter-spacing: 0.1px;
     white-space:nowrap;
   }
-
-  .v-data-table__th--sorted.v-data-table__th {
-    color: rgba(0, 0, 0, 0.87);
-  }
 </style>

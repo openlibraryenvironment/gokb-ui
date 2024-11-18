@@ -45,7 +45,7 @@
         :href="docsLink || $t('main.docs.target')"
         :title="$t('main.docs.label')"
       >
-        <v-icon small>
+        <v-icon small :color="$vuetify.theme.dark ? 'primary' : 'invert'">
           mdi-help-circle
         </v-icon>
       </a>
