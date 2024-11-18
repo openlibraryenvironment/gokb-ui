@@ -188,6 +188,9 @@
       isReadonly () {
         return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_CONTRIBUTOR')
       },
+      isUserAdmin () {
+        return accountModel.hasRole('ROLE_ADMIN')
+      },
       showSelect () {
         return false
       },

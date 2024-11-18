@@ -165,6 +165,8 @@
     },
     mounted (){
       this.isExpanded = this.expanded
+
+      this.updateItems()
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

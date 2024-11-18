@@ -18,6 +18,9 @@
       }
     },
     computed: {
+      showSelect () {
+        return this.isUserAdmin
+      },
       searchInputFields () {
         return [
           [

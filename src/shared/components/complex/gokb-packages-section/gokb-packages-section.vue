@@ -160,7 +160,7 @@
           itemsPerPage: ROWS_PER_PAGE
         },
         searchFilters: {
-          status: undefined,
+          status: 'Current',
           provider: undefined,
           contentType: undefined,
           nominalPlatform: undefined,

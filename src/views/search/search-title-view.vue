@@ -12,7 +12,7 @@
           identifierValue: undefined,
           publisherId: undefined,
           type: undefined,
-          status: undefined,
+          status: 'Current',
         },
         sortMappings: {
           link: 'name',
@@ -31,28 +31,43 @@
       title () {
         return this.$i18n.tc('component.title.label', 2)
       },
+      showSelect () {
+        return this.isUserAdmin
+      },
       resultActionButtons () {
-        return [
-          {
-            label: this.$i18n.t('btn.export'),
-            disabled: 'isSearchExportDisabled',
-            public: true,
-            action: 'exportSearchResults',
-            loading: this.exportLoading
-          },
-          {
-            icon: 'mdi-close',
-            label: this.$i18n.t('btn.retire'),
-            disabled: 'isRetiredSelectedDisabled',
-            action: '_confirmRetireSelectedItems'
-          },
-          {
-            icon: 'mdi-delete',
-            label: this.$i18n.t('btn.delete'),
-            disabled: 'isDeleteSelectedDisabled',
-            action: '_confirmDeleteSelectedItems',
-          }
-        ]
+        if (this.isUserAdmin) {
+          return [
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            },
+            {
+              icon: 'mdi-close',
+              label: this.$i18n.t('btn.retire'),
+              disabled: 'isRetiredSelectedDisabled',
+              action: '_confirmArchiveSelectedItems',
+            },
+            {
+              icon: 'mdi-delete',
+              label: this.$i18n.t('btn.delete'),
+              disabled: 'isDeleteSelectedDisabled',
+              action: '_confirmDeleteSelectedItems',
+            },
+          ]
+        } else {
+          return [
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            },
+          ]
+        }
       },
       searchInputFields () {
         return [

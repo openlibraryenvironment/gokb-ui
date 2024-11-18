@@ -209,7 +209,7 @@
         },
         reviewsRaisedBy: undefined,
         searchFilters: {
-          status: undefined,
+          status: 'Open',
           stdDesc: undefined
         }
       }

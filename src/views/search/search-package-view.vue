@@ -54,33 +54,51 @@
         return this.$i18n.tc('component.package.label', 2)
       },
       resultActionButtons () {
-        return [
-          {
-            component: GokbPackageExportMenu,
-            properties: {
-              items: this.selectedItems
+        if (this.isUserAdmin) {
+          return [
+            {
+              component: GokbPackageExportMenu,
+              properties: {
+                items: this.selectedItems
+              }
+            },
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            },
+            {
+              icon: 'mdi-close',
+              label: this.$i18n.t('btn.retire'),
+              disabled: 'isDeleteSelectedDisabled',
+              action: '_confirmRetireSelectedItems',
+            },
+            {
+              icon: 'mdi-delete',
+              label: this.$i18n.t('btn.delete'),
+              disabled: 'isDeleteSelectedDisabled',
+              action: '_confirmDeleteSelectedItems',
             }
-          },
-          {
-            label: this.$i18n.t('btn.export'),
-            disabled: 'isSearchExportDisabled',
-            public: true,
-            action: 'exportSearchResults',
-            loading: this.exportLoading
-          },
-          {
-            icon: 'mdi-close',
-            label: this.$i18n.t('btn.retire'),
-            disabled: 'isDeleteSelectedDisabled',
-            action: '_confirmRetireSelectedItems',
-          },
-          {
-            icon: 'mdi-delete',
-            label: this.$i18n.t('btn.delete'),
-            disabled: 'isDeleteSelectedDisabled',
-            action: '_confirmDeleteSelectedItems',
-          }
-        ]
+          ]
+        } else {
+          return [
+            {
+              component: GokbPackageExportMenu,
+              properties: {
+                items: this.selectedItems
+              }
+            },
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            }
+          ]
+        }
       },
       searchInputFields () {
         return [
