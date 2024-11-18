@@ -354,11 +354,11 @@
       }
     },
     "propIdSerial": {
-      "label": "Namespace for 'Serial' type title_id values (optional)",
+      "label": "Namespace for 'Serial' type title_id values",
       "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
     },
     "propIdMonograph": {
-      "label": "Namespace for 'Monograph' type title_id values (optional)",
+      "label": "Namespace for 'Monograph' type title_id values",
       "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
     },
     "addOnly": {

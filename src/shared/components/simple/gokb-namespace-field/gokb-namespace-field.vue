@@ -16,6 +16,11 @@
         type: String,
         required: false,
         default: undefined
+      },
+      excludeIsxn: {
+        type: Boolean,
+        required: false,
+        default: undefined
       }
     },
     computed: {
@@ -27,19 +32,20 @@
       modelValue: {
         handler (val) {
           if (!!val && !val.name) {
-            this.itemTitle = 'value'
+            this.localValue.name = val.value
           }
-          else {
-            this.itemTitle = 'name'
-          }
-        }
-      },
-      deep: true
+        },
+        deep: true
+      }
     },
     created () {
       this.entityName = 'identifier-namespaces'
       if (!!this.targetType) {
         this.searchParams = { targetType: this.targetType }
+      }
+
+      if (this.excludeIsxn) {
+        this.searchParams.no_isxn = true
       }
     },
     methods: {

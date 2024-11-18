@@ -39,6 +39,7 @@
               width="350px"
               :readonly="readonly"
               :label="$t('kbart.propId.label')"
+              exclude-isxn
             />
           </v-col>
           <v-col>
@@ -60,6 +61,7 @@
               target-type="Journal"
               width="100%"
               :label="$t('kbart.propIdSerial.label')"
+              exclude-isxn
               required
             />
           </v-col>
@@ -69,6 +71,7 @@
               target-type="Book"
               width="100%"
               :label="$t('kbart.propIdMonograph.label')"
+              exclude-isxn
               required
             />
           </v-col>
@@ -209,6 +212,12 @@
           }
         },
         deep: true
+      },
+      mixedContent (val) {
+        if (!val) {
+          this.item.titleIdSerial = undefined
+          this.item.titleIdMonograph = undefined
+        }
       }
     },
     async mounted () {

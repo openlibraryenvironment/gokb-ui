@@ -25,12 +25,16 @@
           target-type="Journal"
           width="350px"
           :label="$t('kbart.propIdSerial.label')"
+          exclude-isxn
+          required
         />
         <gokb-namespace-field
           v-model="options.selectedNamespaceMonograph"
           target-type="Book"
           width="350px"
           :label="$t('kbart.propIdMonograph.label')"
+          exclude-isxn
+          required
         />
       </div>
       <gokb-checkbox-field

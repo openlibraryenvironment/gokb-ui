@@ -65,6 +65,7 @@
               target-type="Title"
               :readonly="isReadonly"
               :label="$t('component.provider.titleNamespaceSerial.label')"
+              exclude-isxn
             />
           </v-col>
           <v-col cols="3" xl="2">
@@ -73,6 +74,7 @@
               target-type="Title"
               :readonly="isReadonly"
               :label="$t('component.provider.titleNamespaceMonograph.label')"
+              exclude-isxn
             />
           </v-col>
           <v-col cols="3" xl="2">

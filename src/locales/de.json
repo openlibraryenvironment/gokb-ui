@@ -354,11 +354,11 @@
       }
     },
     "propIdSerial": {
-      "label": "Namensraum für 'Serial' title_id (optional)",
+      "label": "Namensraum für 'Serial' title_id",
       "tooltip": "Falls die Spalte 'title_id' für Zeilen mit dem Typ 'Serial' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden."
     },
     "propIdMonograph": {
-      "label": "Namensraum für 'Monograph' title_id (optional)",
+      "label": "Namensraum für 'Monograph' title_id",
       "tooltip": "Falls die Spalte 'title_id' für Zeilen mit dem Typ 'Monograph' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden."
     },
     "addOnly": {
