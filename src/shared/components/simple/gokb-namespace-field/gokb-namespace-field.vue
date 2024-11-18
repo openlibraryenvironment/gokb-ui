@@ -23,6 +23,19 @@
         return this.localValue?.name || this.localValue?.value
       },
     },
+    watch: {
+      modelValue: {
+        handler (val) {
+          if (!!val && !val.name) {
+            this.itemTitle = 'value'
+          }
+          else {
+            this.itemTitle = 'name'
+          }
+        }
+      },
+      deep: true
+    },
     created () {
       this.entityName = 'identifier-namespaces'
       if (!!this.targetType) {

@@ -17,8 +17,8 @@
     :items="localizedItems"
     :label="label"
     :placeholder="placeholder"
-    item-title="name"
-    item-value="id"
+    :item-title="itemTitle"
+    :item-value="itemValue"
     :rules="selectRules"
     :no-data-text="$t('search.results.empty')"
     min-width="150px"
@@ -124,7 +124,9 @@
       return {
         rawItems: [],
         localizedItems: [],
-        stateLabel: undefined
+        stateLabel: undefined,
+        itemTitle: 'name',
+        itemValue: 'id'
       }
     },
     computed: {
