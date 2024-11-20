@@ -19,7 +19,42 @@ export default defineConfig({
     vue(),
     VitePWA({
       filename: 'service-worker.js',
-      injectRegister: 'script'
+      includeAssets: ['/img/icons/favicon.ico', '/img/icons/favicon.svg', 'img/icons/apple-touch-icon.png'],
+      injectRegister: 'script',
+      manifest: {
+        name: 'GOKB',
+        short_name: 'GOKB',
+        start_url: process.env.VITE_PUBLIC_PATH || '/gokb-ui/',
+        display: 'browser',
+        description: 'The Global Open Knowledge Base is a database for electronic resource information cooperatively maintained by librarians and content providers.',
+        theme_color: process.env.VITE_COLOR || '#4f4f4f',
+        icons: [
+          {
+            src: "/img/icons/pwa-192x192.png",
+            size: "192x192",
+            type: "image/png",
+            purpose: "any"
+          },
+          {
+            src: "/img/icons/pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any"
+          },
+          {
+            src: "/img/icons/pwa-maskable-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "maskable"
+          },
+          {
+            src: "/img/icons/pwa-maskable-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable"
+          }
+        ],
+      }
     }),
     vuetify({
       autoImport: {
