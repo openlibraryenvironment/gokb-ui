@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 import vuetify from 'vite-plugin-vuetify'
 import { execSync } from 'child_process'
-import * as sass from 'sass'
+import * as sass from 'sass-embedded'
 import path from 'path'
 
 process.env.VITE_GIT_HASH = execSync('git rev-parse --short HEAD').toString().trim()
