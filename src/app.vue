@@ -12,19 +12,18 @@
           text
           :color="appColor"
           :to="{ name: homeRoute }"
+          class="mt-0"
         >
-          <v-icon
-            color="white"
-            class="mr-5"
-            style="vertical-align:text-top"
-          >
-            mdi-home
-          </v-icon>
           <span
-            class="application-title text-h6"
+            class="application-title text-h6 mr-3 ml-8"
           >
             {{ appName }}
           </span>
+          <v-img
+            src="./img/icons/icon_white.svg"
+            min-height="25px"
+            min-width="25px"
+          />
         </v-btn>
       </v-toolbar-title>
       <v-spacer/>
@@ -46,7 +45,7 @@
         :href="docsLink || $t('main.docs.target')"
         :title="$t('main.docs.label')"
       >
-        <v-icon small>
+        <v-icon small :color="$vuetify.theme.dark ? 'primary' : 'invert'">
           mdi-help-circle
         </v-icon>
       </a>
@@ -297,7 +296,7 @@
       privacyLink: import.meta.env.VITE_DP_LINK,
       imprintLink: import.meta.env.VITE_IMP_LINK,
       docsLink: import.meta.env.VITE_DOCS_LINK,
-      accessibilityLink: import.meta.VITE_APP_ACC_LINK,
+      accessibilityLink: import.meta.VITE_ACC_LINK,
       appName: import.meta.env.VITE_TITLE || 'GOKb Client',
       appColor: import.meta.env.VITE_COLOR || '#4f4f4f',
       appVersion: pkg.version || import.meta.env.VITE_VERSION,
@@ -469,6 +468,7 @@
 
       if (window.localStorage.getItem('darkMode') != undefined) {
         this.$vuetify.theme.dark = window.localStorage.getItem('darkMode') === 'true'
+        this.$vuetify.theme.name = (this.$vuetify.theme.dark ? 'dark' : 'light')
       }
 
       this.cancelToken = createCancelToken()

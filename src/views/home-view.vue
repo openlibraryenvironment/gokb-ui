@@ -10,8 +10,9 @@
           {{ $i18n.t('welcome.title') }}
         </div>
         <v-img
-          src="img/logo.png"
-          max-height="150"
+          :src="logoPath"
+          max-height="350"
+          class="my-8"
           contain
         />
         <p class="primary--text">
@@ -78,6 +79,9 @@
       },
       activeGroup () {
         return account.activeGroup()
+      },
+      logoPath () {
+        return this.$vuetify.theme.name === 'dark' ? './img/logo_dark.svg' : './img/logo_light.svg'
       }
     },
     watch: {

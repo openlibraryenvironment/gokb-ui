@@ -678,36 +678,39 @@
       }
     },
     watch: {
-      'packageTitleItem.title'(title) {
-        if (!this.status) {
-          if (!!title) {
-            this.packageTitleItem.ids = title._embedded.ids
-              .filter(({ namespace }) => (
-                ['issn', 'eissn', 'isbn', 'pisbn', 'zdb'].includes(namespace.value))
-              )
-              .map(({ value, namespace }) => ({
-                id: this.tempId(),
-                value,
-                namespace: namespace.value,
-                nslabel: (namespace.name || namespace.value),
-                isDeletable: true
-              }))
-            this.allNames.name = title.name
+      'packageTitleItem.title': {
+        handler(title) {
+          if (!this.status) {
+            if (!!title) {
+              this.packageTitleItem.ids = title._embedded.ids
+                .filter(({ namespace }) => (
+                  ['issn', 'eissn', 'isbn', 'pisbn', 'zdb'].includes(namespace.value))
+                )
+                .map(({ value, namespace }) => ({
+                  id: this.tempId(),
+                  value,
+                  namespace: namespace.value,
+                  nslabel: (namespace.name || namespace.value),
+                  isDeletable: true
+                }))
+              this.allNames.name = title.name
 
-            if (title.type === 'Book') {
-              this.packageTitleItem.firstAuthor = title.firstAuthor
-              this.packageTitleItem.firstEditor = title.firstEditor
-              this.packageTitleItem.dateFirstInPrint = title.dateFirstInPrint
-              this.packageTitleItem.dateFirstOnline = title.dateFirstOnline
-              this.packageTitleItem.editionStatement = title.editionStatement
-              this.packageTitleItem.volumeNumber = title.volumeNumber
+              if (title.type === 'Book') {
+                this.packageTitleItem.firstAuthor = title.firstAuthor
+                this.packageTitleItem.firstEditor = title.firstEditor
+                this.packageTitleItem.dateFirstInPrint = title.dateFirstInPrint
+                this.packageTitleItem.dateFirstOnline = title.dateFirstOnline
+                this.packageTitleItem.editionStatement = title.editionStatement
+                this.packageTitleItem.volumeNumber = title.volumeNumber
+              }
+              this.packageTitleItem.publisherName = title.publisher?.name || undefined
             }
-            this.packageTitleItem.publisherName = title.publisher?.name || undefined
+            else {
+              this.packageTitleItem.ids = []
+            }
           }
-          else {
-            this.packageTitleItem.ids = []
-          }
-        }
+        },
+        deep: true
       }
     },
     async created () {
