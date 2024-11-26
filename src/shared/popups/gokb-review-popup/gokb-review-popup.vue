@@ -64,13 +64,13 @@
         {{ $t('component.tipp.toFullView') }}
     </gokb-button>
       <gokb-button
-        v-if="escalatable"
+        v-if="!isReadonly && escalatable"
         @click="escalate"
       >
         {{ $t('btn.escalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
       </gokb-button>
       <gokb-button
-        v-if="deescalatable"
+        v-if="!isReadonly && deescalatable"
         @click="deescalate"
       >
         {{ $t('btn.deescalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
@@ -364,12 +364,15 @@
           })
         }
       },
-      async closeReview () {
+      async closeReview (closePopup = true) {
         const resp = await reviewServices.close(this.id, this.cancelToken.token)
 
         if (resp.status === 200) {
           this.$emit('edit', 'closed')
-          this.closePopup()
+
+          if (closePopup) {
+            this.closePopup()
+          }
         } else {
           this.errorMsg = this.$i18n.t('error.update.400')
         }
@@ -524,6 +527,7 @@
         if (response.status === 200) {
           this.successMsg = this.$i18n.t('component.review.edit.success.escalated')
           this.showSuccessMsg = true
+          this.escalatable = false
 
           this.fetchReview (this.id)
         }
@@ -541,6 +545,9 @@
         if (response.status === 200) {
           this.successMsg = this.$i18n.t('component.review.edit.success.deescalated')
           this.showSuccessMsg = true
+          this.deescalatable = false
+
+          this.fetchReview (this.id)
         }
         else {
           this.errorMsg = this.$i18n.t('error.general.500')

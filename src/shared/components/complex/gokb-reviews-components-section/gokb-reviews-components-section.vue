@@ -539,6 +539,8 @@
               type: 'success',
               message: this.$i18n.t('component.review.edit.components.link.success.label')
             })
+            this.selectedCard = undefined
+            this.$emit('close', true)
           } else {
             this.feedbackResponse({
               type: 'error',

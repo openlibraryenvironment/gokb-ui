@@ -1491,7 +1491,7 @@
           "label": "Import Identifier Mismatch",
           "info": "A KBART record could be matched to an existing package title based on one or more identifiers, but one or more other identifiers differ.",
           "action": "The GOKb created a new package title.",
-          "toDo": "Review the identifiers of the package titles. If you find any errors, they should ideally be corrected by importing a corrected KBART file. In this case, you can first delete the erroneous package title(s) via their detail view. Alternatively, you can also delete incorrect identifiers manually here."
+          "toDo": "Check the identifiers and reference titles for conflicts that need to be resolved. It's possible that more package titles are displayed than are affected."
         },
         "Import Report": {
           "label": "Report on KBART Import",
