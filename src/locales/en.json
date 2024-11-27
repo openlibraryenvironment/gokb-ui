@@ -37,7 +37,8 @@
     "bulkCloseReview": "Close {0} selected review | Close {0} selected reviews",
     "closeSelectedReviews": "Close selected reviews",
     "moreFilters": "More Filters",
-    "moreOptions": "More Options"
+    "moreOptions": "More Options",
+    "externalSourceImport": "Import from external source"
   },
   "main": {
     "docs": {
@@ -208,6 +209,35 @@
       "label": "Activate User",
       "info": "Please confirm the activation of this account. This will release the default lock and apply basic editing permissions.",
       "sendAlert": "Alert user of the activation via email"
+    },
+    "externalSourceImport": {
+      "label": "Import a Package from an external source",
+      "selectLabel": "Import-Source",
+      "uuidFieldLabel": "UUID of the package in the {0}",
+      "loading": "The Data is loading - according to the package's size this can take some time.",
+      "columnHeaderExternal": "Package from the external Source",
+      "columnHeaderInternal": "Package in the GOKB",
+      "error": {
+        "packageNotExist": "A package with this UUID seems not to exist in the chosen import source",
+        "packageExists": "A package with this name already exists in the GOKB. Please check if this is the package you wanted to import.",
+        "platformExists": "The platform doesn't exist in the GOKB yet. Choose an existing platform in the search field or adapt the platform from the import source.",
+        "providerExists": "The provider doesn't exist in the GOKB yet. Choose an existing provider in the search field or adapt the provider from the import source."
+      },
+      "adaptSource": "Adapt Source",
+      "packageName": "Package name",
+      "packageIdentifier": "Package Identifiers | Package Identifier",
+      "packageIdentifierYes": "There's an identifier associated to the package with this value: ",
+      "packageIdentifierNo": "There's no identifier associated to the package.",
+      "packageIdentifierSelect": "Select the identifier namespace the identifier value belongs to (optional)",
+      "titleIdentifier": "Title identifier",
+      "titleIdentifierInfo": "In the package are these examples of identifiers per different contenttype",
+      "contentTypeInfo": "The titles in the package are of contenttype",
+      "titleIdentifierInfoSelect": "Select the identifier namespace for the field title_id (optional)",
+      "searchPlatform": "search Platform",
+      "searchProvider": "search Provider",
+      "titleIdNamespace": "title_id namespace for {0}",
+      "monographs": "Monographs",
+      "journals": "Journals"
     }
   },
   "validation": {
@@ -1568,6 +1598,15 @@
         },
         "Yearly": {
           "label": "Yearly"
+        }
+      },
+      "importConfig": {
+        "subtitle": "This package was imported from the given source",
+        "WEKB": {
+          "label": "we:kb"
+        },
+        "EZB": {
+          "label": "EZB"
         }
       }
     },

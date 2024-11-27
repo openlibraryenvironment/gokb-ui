@@ -37,7 +37,8 @@
     "bulkCloseReview": "{0} ausgewählte Prüfanfrage schließen | {0} ausgewählte Prüfanfragen schließen",
     "closeSelectedReviews": "Ausgewählte Prüfanfragen schließen",
     "moreFilters": "Mehr Filter",
-    "moreOptions": "Weitere Optionen"
+    "moreOptions": "Weitere Optionen",
+    "externalSourceImport": "Aus externer Datenquelle importieren"
   },
   "main": {
     "docs": {
@@ -209,6 +210,35 @@
       "label": "Benutzerkonto aktivieren",
       "info": "Bitte Freischaltung des Accounts bestätigen. Dies entfernt die Sperre und vergibt Bearbeitungsrechte.",
       "sendAlert": "Benutzer per E-Mail benachrichtigen"
+    },
+    "externalSourceImport": {
+      "label": "Ein Paket aus einer externen Quelle importieren",
+      "selectLabel": "Importquelle",
+      "uuidFieldLabel": "UUID des zu importierenden Pakets in der {0}",
+      "loading": "Die Daten werden geladen - je nach Größe des angeforderten Pakets kann das einige Zeit dauern.",
+      "columnHeaderExternal": "Paket aus der externen Quelle",
+      "columnHeaderInternal": "Paket in der GOKB",
+      "error": {
+        "packageNotExist": "Ein Paket mit dieser UUID existiert anscheinend nicht in der gewählten Importquelle",
+        "packageExists": "Ein Paket mit diesem Namen existiert bereits in der GOKB. Prüfen Sie bitte, ob es sich um das selbe Paket handelt.",
+        "platformExists": "Die Plattform ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder eine schon existierende Plattform oder übernehmen Sie die Plattform von der Importquelle.",
+        "providerExists": "Der Anbieter des Pakets ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder einen schon existierenden Anbieter oder übernehmen Sie den Anbieter von der Importquelle."
+      },
+      "adaptSource": "Quelle übernehmen",
+      "packageName": "Paketname",
+      "packageIdentifier": "Paketidentifikatoren | Paket-Identifikator",
+      "packageIdentifierYes": "Mit dem Paket ist ein Identifikator verknupft mit dem folgenden Wert: ",
+      "packageIdentifierNo": "In der Importquelle ist kein Identifikator mit dem Paket verknüpft.",
+      "packageIdentifierSelect": "Welchem Identifikatoren-Namensraum soll dieser Identifikator zugeordnet werden (Angabe optional)?",
+      "titleIdentifier": "Titelidentifikatoren",
+      "titleIdentifierInfo": "Folgende exemplarische Identifikatoren pro unterschiedlichem Inhaltstyp befinden sich innerhalb des Pakets",
+      "contentTypeInfo": "Im Paket befinden sich Medien vom Inhaltstyp",
+      "titleIdentifierInfoSelect": "Welcher Identifikatoren-Namensraum soll für das Feld title_id verwendet werden (Angabe optional)?",
+      "searchPlatform": "Plattform suchen",
+      "searchProvider": "Anbieter suchen",
+      "titleIdNamespace": "title_id Namensraum für {0}",
+      "monographs": "Monographien",
+      "journals": "Journals"
     }
   },
   "validation": {
@@ -1578,6 +1608,15 @@
         },
         "Yearly": {
           "label": "Jährlich"
+        }
+      },
+      "importConfig": {
+        "subtitle": "Dieses Paket wurde aus der angegebenen Quelle importiert",
+        "WEKB": {
+          "label": "we:kb"
+        },
+        "EZB": {
+          "label": "EZB"
         }
       }
     },

@@ -1,15 +1,15 @@
-const WEKB_IMPORT_URL = '/wekb'
+const EXTERNAL_SOURCE_IMPORT_URL = '/externalSource'
 
 const api = (baseServices) => ({
   get (cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: import.meta.env.VITE_API_BASE_URL + WEKB_IMPORT_URL,
+      url: import.meta.env.VITE_API_BASE_URL + EXTERNAL_SOURCE_IMPORT_URL,
     }, cancelToken)
   },
   getPackageMetaData (parameter, cancelToken) {
     const urlParameter = baseServices.createQueryParameters(parameter)
-    const url = import.meta.env.VITE_API_BASE_URL + WEKB_IMPORT_URL + `/package?${urlParameter}`
+    const url = import.meta.env.VITE_API_BASE_URL + EXTERNAL_SOURCE_IMPORT_URL + `/package?${urlParameter}`
 
     return baseServices.request({
       method: 'GET',
@@ -18,7 +18,7 @@ const api = (baseServices) => ({
   },
   getPlatformMetadata (parameter, cancelToken) {
     const urlParameter = baseServices.createQueryParameters(parameter)
-    const url = import.meta.env.VITE_API_BASE_URL + WEKB_IMPORT_URL + `/platform?${urlParameter}`
+    const url = import.meta.env.VITE_API_BASE_URL + EXTERNAL_SOURCE_IMPORT_URL + `/platform?${urlParameter}`
 
     return baseServices.request({
       method: 'GET',
@@ -27,7 +27,7 @@ const api = (baseServices) => ({
   },
   getTippsOfPackage (parameter, cancelToken) {
     const urlParameter = baseServices.createQueryParameters(parameter)
-    const url = import.meta.env.VITE_API_BASE_URL + WEKB_IMPORT_URL + `/tipps?${urlParameter}`
+    const url = import.meta.env.VITE_API_BASE_URL + EXTERNAL_SOURCE_IMPORT_URL + `/tipps?${urlParameter}`
 
     return baseServices.request({
       method: 'GET',
@@ -36,7 +36,7 @@ const api = (baseServices) => ({
   },
   getProviderData (parameter, cancelToken) {
     const urlParameter = baseServices.createQueryParameters(parameter)
-    const url = import.meta.env.VITE_API_BASE_URL + WEKB_IMPORT_URL + `/provider?${urlParameter}`
+    const url = import.meta.env.VITE_API_BASE_URL + EXTERNAL_SOURCE_IMPORT_URL + `/provider?${urlParameter}`
 
     return baseServices.request({
       method: 'GET',

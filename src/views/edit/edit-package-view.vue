@@ -111,9 +111,9 @@
         :selected="selectedJob"
       />
 
-      <gokb-import-wekb-package-popup
-        v-if="wekbImportPopupVisible"
-        v-model="wekbImportPopupVisible"
+      <gokb-import-external-source-package-popup
+        v-if="externalSourceImportPopupVisible"
+        v-model="externalSourceImportPopupVisible"
         @import="mapImportData"
       />
 
@@ -509,15 +509,15 @@
                       <v-row justify="end">
                         <v-col cols="11">
                           <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
-                            Importquelle
+                            {{ $t('popups.externalSourceImport.selectLabel') }}
                           </div>
                           <v-chip
-                            :text="externalSource"
+                            :text="$t('component.source.importConfig.' + externalSource + '.label')"
                             class="text-button"
                             rounded="lg"
                             :color="externalSource === 'EZB' ? 'green' : 'orange'"
                             density="compact"
-                            title="Dieses Paket wurde aus der angegbenen Quelle importiert"
+                            :title="$t('component.source.importConfig.subtitle')"
                           />
                         </v-col>
                       </v-row>
@@ -717,11 +717,11 @@
         <gokb-button
           color="primary"
           :disabled="false"
-          @click="showWekbImportPopup"
+          @click="showExternalSourceImportPopup"
           v-show="!isEdit && step == 1"
         >
           <!-- TODO: Text aus Properties-Datei {{ $t('btn.next') }} -->
-          Aus externer Datenquelle importieren
+          {{ $t('btn.externalSourceImport') }}
         </gokb-button>
 
         <gokb-button
@@ -782,7 +782,7 @@
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
-  import GokbImportWekbPackagePopup from '@/shared/popups/gokb-import-wekb-package-popup'
+  import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
 
   const ROWS_PER_PAGE = 10
 
@@ -816,7 +816,7 @@
       GokbAlternateNamesSection,
       GokbConfirmationPopup,
       GokbEditJobPopup,
-      GokbImportWekbPackagePopup
+      GokbImportExternalSourcePackagePopup
     },
     extends: BaseComponent,
     props: {
@@ -861,7 +861,7 @@
         showGroupInfoPopup: false,
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
-        wekbImportPopupVisible: false,
+        externalSourceImportPopupVisible: false,
         isImportFromExternalSource: false,
         externalSource: undefined,
         urlUpdate: false,
@@ -1093,8 +1093,8 @@
       document.removeEventListener("keydown", this.handleKeyboardNav)
     },
     methods: {
-      showWekbImportPopup () {
-        this.wekbImportPopupVisible = true
+      showExternalSourceImportPopup () {
+        this.externalSourceImportPopupVisible = true
       },
       async mapImportData (importData) {
         this.allNames.name = importData.package.name
@@ -1105,7 +1105,7 @@
         this.sourceItem = importData.source
 
         this.isImportFromExternalSource = true
-        this.wekbImportPopupVisible = false
+        this.externalSourceImportPopupVisible = false
       },
       go2NextStep () {
         if (this.step < 4) {

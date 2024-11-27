@@ -13,35 +13,32 @@
     </v-snackbar>
 
     <gokb-section>
-      <!-- <v-card :loading="wekbDataIsLoading"/> -->
-
         <v-row >
           <v-col>
-            <span><b>Import-Quelle</b></span><br/>
-            <span>WE:KB</span>
+            <span><b>{{ $t('popups.externalSourceImport.selectLabel') }}</b></span><br/>
+            <span>we:kb</span>
           </v-col>
           <v-col>
             <gokb-text-field
-              label="UUID des zu importierenden Pakets in der WEKB"
-              v-model="wekb_package_uuid"
+              :label="$t('popups.externalSourceImport.uuidFieldLabel', ['we:kb'])"
+              v-model="external_package_uuid"
               required
             />
-
           </v-col>
         </v-row>
 
         <v-row justify="end">
           <v-col cols="2">
             <gokb-button
-              v-if="!wekbDataLoaded"
-              :disabled="wekbDataLoaded || !wekb_package_uuid || wekbDataIsLoading"
-              @click="fetchWekbPackageData"
+              v-if="!externalDataLoaded"
+              :disabled="externalDataLoaded || !external_package_uuid || externalDataIsLoading"
+              @click="fetchExternalSourcePackageData"
             >
-              Abschicken
+              {{ $t('btn.submit') }}
             </gokb-button>
           </v-col>
         </v-row>
-      <div v-if="wekbDataIsLoading">
+      <div v-if="externalDataIsLoading">
         <v-row justify="end">
           <v-col cols="6">
             <v-progress-circular
@@ -55,21 +52,21 @@
         </v-row>
         <v-row justify="end">
           <v-col cols="6">
-            <span>Die Daten werden geladen - je nach Größe des angeforderten Pakets kann das einige Zeit dauern. </span>
+            <span>{{ $t('popups.externalSourceImport.loading') }} </span>
           </v-col>
           <v-col cols="2"></v-col>
         </v-row>
       </div>
     </gokb-section>
 
-    <div v-if="wekbDataLoaded">
+    <div v-if="externalDataLoaded">
       <v-row>
-        <v-col cols="5"><h3> Paket aus der externen Quelle </h3></v-col>
-        <v-col cols="5"><h3>Paket in der GOKB</h3></v-col>
+        <v-col cols="5"><h3>{{ $t('popups.externalSourceImport.columnHeaderExternal') }} </h3></v-col>
+        <v-col cols="5"><h3>{{ $t('popups.externalSourceImport.columnHeaderInternal') }}</h3></v-col>
       </v-row>
 
       <v-row>
-        <v-col><h4>Name: </h4></v-col>
+        <v-col><h4>{{ $t('component.general.name') }}: </h4></v-col>
       </v-row>
 
       <v-row>
@@ -77,13 +74,13 @@
         <v-col cols="5">
           <gokb-text-field
             v-model="packageName"
-            label="Paketname"
+            :label="$t('popups.externalSourceImport.packageName')"
           />
           <span v-if="packageAlreadyExists" style="color:red">
             <v-icon class="pb-1" color="error">
               mdi-close-thick
             </v-icon>
-            Ein Paket mit diesem Namen existiert bereits in der GOKB. Prüfen Sie bitte, ob es sich um das selbe Paket handelt.
+            {{ $t('popups.externalSourceImport.error.packageExists') }}
           </span>
         </v-col>
 
@@ -91,7 +88,7 @@
       </v-row>
 
       <v-row>
-        <v-col><h4>Plattform: </h4></v-col>
+        <v-col><h4>{{ $t('component.types.Platform') }}: </h4></v-col>
       </v-row>
 
       <v-row>
@@ -99,7 +96,7 @@
         <v-col cols="5" v-if="platformAlreadyExists">
           <gokb-text-field
             v-model="platformName"
-            label="Plattform"
+            :label="$t('component.types.Platform')"
             disabled
           />
           <span>
@@ -111,7 +108,7 @@
 
         <v-col cols="5" v-else>
           <gokb-search-platform-field
-            label="Plattform suchen"
+            :label="$t('popups.externalSourceImport.searchPlatform')"
             v-model="platformObject"
             :readonly="false"
             return-object
@@ -122,21 +119,21 @@
           <gokb-checkbox-field
             v-if="!platformAlreadyExists"
             v-model="adaptPlatformData"
-            label="Quelle übernehmen"
+            :label="$t('popups.externalSourceImport.adaptSource')"
           />
         </v-col>
-        <v-alert v-if="!platformAlreadyExists" type="info" style="font-size:small">Die Plattform ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder eine schon existierende Plattform oder übernehmen Sie die Plattform von der Importquelle.</v-alert>
+        <v-alert v-if="!platformAlreadyExists" type="info" style="font-size:small">{{ $t('popups.externalSourceImport.error.platformExists') }}</v-alert>
       </v-row>
 
       <v-row>
-        <v-col><h4>Anbieter: </h4></v-col>
+        <v-col><h4>{{ $t('component.types.Org') }}: </h4></v-col>
       </v-row>
       <v-row>
         <v-col cols="5"><span>{{ externalProviderName }}</span></v-col>
         <v-col cols="5" v-if="providerAlreadyExists">
           <gokb-text-field
             v-model="providerName"
-            label="Anbieter"
+            :label="$t('component.types.Org')"
             :disabled="providerAlreadyExists"
           />
           <span>
@@ -148,7 +145,7 @@
 
           <v-col cols="5" v-else>
             <gokb-search-organisation-field
-              label="Anbieter suchen"
+              label="$t('popups.externalSourceImport.searchProvider')"
               v-model="providerObject"
               :show-link="true"
               :readonly="false"
@@ -160,46 +157,43 @@
             <gokb-checkbox-field
               v-if="!providerAlreadyExists"
               v-model="adaptProviderData"
-              label="Quelle übernehmen"
+              label="$t('popups.externalSourceImport.adaptSource')"
             />
           </v-col>
-        <v-alert v-if="!providerAlreadyExists" type="info" style="font-size:small">Der Anbieter des Pakets ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder einen schon existierenden Anbieter oder übernehmen Sie den Anbieter von der Importquelle.</v-alert>
+        <v-alert v-if="!providerAlreadyExists" type="info" style="font-size:small">{{ $t('popups.externalSourceImport.error.providerExists') }}</v-alert>
       </v-row>
 
       <v-row>
-        <v-col><h3>Paketidentifikatoren: </h3></v-col>
+        <v-col><h3>{{ $t('popups.externalSourceImport.packageIdentifier') }}: </h3></v-col>
       </v-row>
       <v-row>
         <v-col cols="12">
-          <span v-if="packageIdentifierExists">Mit dem Paket ist ein Identifikator mit dem Wert <strong>{{ packageIdentifierValue }}</strong> verknüpft.</span>
-          <span v-else>In der Importquelle ist kein Identifikator mit dem Paket verknüpft.</span>
+          <span v-if="packageIdentifierExists">{{ $t('popups.externalSourceImport.packageIdentifierYes') }} <strong>{{ packageIdentifierValue }}</strong></span>
+          <span v-else>{{ $t('popups.externalSourceImport.packageIdentifierNo') }}</span>
         </v-col>
       </v-row>
 
       <v-row v-if="packageIdentifierExists">
         <v-col cols="6">
           <span>
-            Welchem Identifikatoren-Namensraum soll dieser Identifikator zugeordnet werden (Angabe optional)?
+            {{ $t('popups.externalSourceImport.packageIdentifierSelect') }}
           </span>
         </v-col>
         <v-col cols="6" >
           <gokb-namespace-field
             v-model="packageIdentifier"
             target-type="Package"
-            label="Paket-Identifikator"
+            :label="$t('popups.externalSourceImport.packageIdentifier', 2)"
           />
-          <!-- :label="$t('kbart.propId.label')" -->
-
         </v-col>
       </v-row>
 
-
       <v-row>
-        <v-col><h3>Titelidentifikatoren: </h3></v-col>
+        <v-col><h3>{{ $t('popups.externalSourceImport.titleIdentifier') }}: </h3></v-col>
       </v-row>
       <v-row>
         <v-col cols="12">
-          <span>Folgende exemplarische Identifikatoren pro unterschiedlichem Inhaltstyp befinden sich innerhalb des Pakets:</span>
+          <span>{{ $t('popups.externalSourceImport.titleIdentifierInfo') }}:</span>
         </v-col>
       </v-row>
       <v-row>
@@ -225,28 +219,25 @@
       <br/><br/>
       <v-row>
         <v-col cols="4">
-          <span>Im Paket befinden sich Medien vom Inhaltstyp <strong>{{ contentTypeOfTipps }}</strong>. <br/>
-            Welcher Identifikatoren-Namensraum soll für das Feld "title_id" verwendet werden (Angabe optional)?
+          <span>{{ $t('popups.externalSourceImport.contentTypeInfo') }} <strong>{{ contentTypeOfTipps }}</strong>. <br/>
+            {{ $t('popups.externalSourceImport.titleIdentifierInfoSelect') }}
           </span>
         </v-col>
         <v-col cols="4" v-if="showJournalNamespaceSelect">
           <gokb-namespace-field
             v-model="namespaceJournal"
             target-type="Journal"
-            label="title_id Namensraum für Journals"
+            :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.journals')])"
             :exclude-isxn="true"
           />
-          <!-- :label="$t('kbart.propId.label')" -->
-
         </v-col>
         <v-col cols="4" v-if="showMonographNamespaceSelect">
           <gokb-namespace-field
             v-model="namespaceMonograph"
             target-type="Book"
-            label="title_id Namensraum für Monographien"
+            :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.monographs')])"
             :exclude-isxn="true"
           />
-          <!-- :label="$t('kbart.propId.label')" -->
         </v-col>
       </v-row>
 
@@ -256,7 +247,7 @@
           :disabled="!valid"
           is-submit
         >
-          Abschicken
+          {{ $t('btn.submit') }}
         </gokb-button>
       </v-row>
     </div>
@@ -271,7 +262,7 @@
   import GokbButton from "@/shared/components/base/gokb-button/gokb-button.vue"
   import GokbCheckboxField from "@/shared/components/base/gokb-checkbox-field/gokb-checkbox-field.vue"
   import GokbTable from "@/shared/components/complex/gokb-table/gokb-table.vue"
-  import wekbImportServices from "@/shared/services/wekb-import-services"
+  import externalSourceImportServices from "@/shared/services/external-source-import-services"
   import platformServices from "@/shared/services/platform-services"
   import GokbNamespaceField from "@/shared/components/simple/gokb-namespace-field"
   import genericServices from "@/shared/services/generic-entity-services"
@@ -282,7 +273,7 @@
 
 
   export default {
-    name: 'GokbImportWekbPackagePopup',
+    name: 'GokbImportExternalSourcePackagePopup',
     components: {
       GokbSearchPlatformField,
       GokbSearchOrganisationField,
@@ -307,10 +298,9 @@
         snackbarMessage: undefined,
         messageColor: undefined,
         currentSnackBarTimeout: '-1',
-        wekb_package_uuid: undefined,
-        import_sources: ["WE:KB"],
-        wekbDataLoaded: false,
-        wekbDataIsLoading: false,
+        external_package_uuid: undefined,
+        externalDataLoaded: false,
+        externalDataIsLoading: false,
         adaptPlatformData: false,
         adaptProviderData: false,
         externalPackageName: "",
@@ -325,7 +315,7 @@
         externalProviderUuid: "",
         providerName: "",
         internalProviderId: undefined,
-        externalPlatformUuidWekb: "",
+        externalPlatformUuid: "",
         contentTypeOfTipps: "",
         contentTypeOfTippsCode: undefined,
         packageScope: undefined,
@@ -337,8 +327,6 @@
         titleCount: undefined,
         platformAlreadyExists: undefined,
         providerAlreadyExists: undefined,
-        //valid: false,
-        localPackageItem: {},
         externalSource: {},
         packageAlreadyExists: false,
         identifierExamples: [],
@@ -359,13 +347,8 @@
         }
       },
       header() {
-        return "Ein Paket aus einer externen Quelle importieren"
+        return this.$i18n.t('popups.externalSourceImport.label')
       },
-      /*tableHeaders() {
-        return [
-          {text: "aaa"}, {text: "bbb"}, {text: "ccc"}
-        ]
-      },*/
       showMonographNamespaceSelect() {
         return (this.contentTypeOfTipps === "Book" || this.contentTypeOfTipps === "Mixed")
       },
@@ -375,7 +358,7 @@
       valid() {
         return ( (this.providerAlreadyExists || (this.adaptProviderData || this.providerObject))
           && (this.platformAlreadyExists || (this.adaptPlatformData || this.platformObject))
-          && this.wekbDataLoaded && !this.packageAlreadyExists)
+          && this.externalDataLoaded && !this.packageAlreadyExists)
       }
     },
     watch: {
@@ -393,27 +376,23 @@
             this.cancelToken.token
           )
 
-          console.log("CHECK PCKAGENAME EXISTS: ", response)
-
           if (response?.status < 400) {
             if (response.data.result === 'ERROR') {
               this.packageAlreadyExists = true
-
               return true
             }
           }
 
           this.packageAlreadyExists = false
-
           return false
       },
-      async fetchWekbPackageData() {
-        this.wekbDataIsLoading = true
+      async fetchExternalSourcePackageData() {
+        this.externalDataIsLoading = true
         let result = null
         if (this.validatePackageUUID()) {
           try {
             const response = await this.catchError({
-              promise: wekbImportServices.getPackageMetaData({'uuid': this.wekb_package_uuid}, this.cancelToken.token),
+              promise: externalSourceImportServices.getPackageMetaData({'uuid': this.external_package_uuid}, this.cancelToken.token),
               instance: this
             })
 
@@ -428,7 +407,7 @@
               this.platformName = this.externalPlatformName
               this.externalProviderName = result?.providerName
               this.providerName = this.externalProviderName
-              this.externalPlatformUuidWekb = result?.nominalPlatformUuid
+              this.externalPlatformUuid = result?.nominalPlatformUuid
               this.contentTypeOfTipps = result?.contentType
               this.titleCount = result?.titleCount
               this.externalProviderUuid = result?.providerUuid
@@ -442,19 +421,11 @@
                 }
               }
 
-              // check if Package already exists --> executed by implicitly changed packagename variable
-
               // Plattform
-              let platformResult = await this.fetchWekbPlatformData()
+              let platformResult = await this.fetchExternalPlatformData()
               this.externalPlatformURL = platformResult?.primaryUrl
-
               this.platformAlreadyExists = await this.platformExists()
-              /*if (!this.platformAlreadyExists) {
 
-                console.log("### Plattform muss zunächst angelegt werden")
-              } else {
-
-              } */
               //Provider
               const providerResult = await this.providerExists()
               this.externalProviderHomepage = providerResult?.data?.providerHomepage
@@ -473,7 +444,6 @@
                 if (provRes?.data?.packageNamespace) {
                   this.packageIdentifier = provRes.data.packageNamespace
                 }
-
               }
 
               // get Code for updateFrequency
@@ -483,9 +453,7 @@
                 instance: this
               })
 
-              console.log("Source Frequency: ", responseSourceFrequency)
               let frequencyCode = responseSourceFrequency?.data?._embedded.values.filter(a => a.value === "Daily")[0].id
-              console.log("Frequency Code: ", frequencyCode)
 
               // get Code for importSource
               entityService = genericEntityServices('refdata/categories/Source.ImportConfig')
@@ -498,9 +466,8 @@
 
               // SOURCE
               let source = {
-                //type: 'WEKB',
                 importConfig: importConfigCode,
-                url: 'https://wekb.hbz-nrw.de/api2/searchApi?componentType=package&uuid='.concat(this.wekb_package_uuid.replaceAll(" ", "")),
+                url: 'https://wekb.hbz-nrw.de/api2/searchApi?componentType=package&uuid='.concat(this.external_package_uuid.replaceAll(" ", "")),
                 frequency: frequencyCode,
                 targetNamespace: {},
                 automaticUpdates: true,
@@ -518,10 +485,8 @@
                   instance: this
                 })
 
-                console.log("resonseScope: ", responseScope)
                 this.packageScope = responseScope?.data?._embedded.values.filter(a => a.value == result.file)[0].id
               }
-
 
               // get Title Data to provide identifier examples
               // Batch-Verarbeitung: Titel-Zählung beginnt bei offset := 0
@@ -546,13 +511,12 @@
                 }
               }
 
-              console.log("### PUBLICATIONTYPES IN PACKAGE: ", publicationTypes)
               // auch wenn nur Titel mit einem Contenttype im Paket sind, muss zu diesem Type ein Beispiel gefunden werden
               if (publicationTypes.size > 0) {
                 for(var i = 0; i < titleData.length; i++){
                   publicationTypes.forEach(function (pub) {
                     let titleByPubType = titleData[i].find(x => x.publicationType === pub)
-                    console.log("FOUND for pubtype: ", pub, titleByPubType)
+
                     if(titleByPubType) {
                       titleExamples.push(titleByPubType)
                       publicationTypes.delete(pub)
@@ -580,8 +544,6 @@
                   that.identifierExamples.push({publicationType: title.publicationType, identifiers: identifiers})
                 })
 
-                console.log("IDENTIFIERS: ", this.identifierExamples)
-
 
               // set contenttype according to containing tipps and get GOKB code for it
               if(titleExamples.length > 1) {
@@ -607,18 +569,12 @@
                 instance: this
               })
 
-              console.log("responseContentType: ", responseContentType)
               this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id
-              console.log("responseContentType ", this.contentTypeOfTippsCode)
-
-
-
 
             } else {
-                console.log("UUID der Form nach korrekt, aber existiert anscheinend nicht in der WEKB")
                 this.errors.uuid = true
                 this.messageColor = 'error'
-                this.snackbarMessage = 'Ein Paket mit dieser UUID existiert anscheinend nicht in der we:kb'
+                this.snackbarMessage = this.$i18n.t('popups.externalSourceImport.error.packageNotExist')
                 this.currentSnackBarTimeout = 3000
                 this.showSnackbar = true
             }
@@ -640,14 +596,11 @@
           }
         }
         if (result) {
-          console.log("result: ", result)
-          this.wekbDataLoaded = true
+          //console.log("result: ", result)
+          this.externalDataLoaded = true
         }
 
-        this.wekbDataIsLoading = false
-
-        //TODO: zu Testzwecken
-        //this.wekbDataLoaded = true
+        this.externalDataIsLoading = false
 
       },
       mapIdentifierNames (wekbName) {
@@ -668,47 +621,43 @@
 
         return identifierName
       },
-      async fetchWekbPlatformData() {
+      async fetchExternalPlatformData() {
         let result = null
 
         try {
           const response = await this.catchError({
-            promise: wekbImportServices.getPlatformMetadata({'uuid': this.externalPlatformUuidWekb}, this.cancelToken.token),
+            promise: externalSourceImportServices.getPlatformMetadata({'uuid': this.externalPlatformUuid}, this.cancelToken.token),
             instance: this
           })
 
-          //TODO: handle Response Status
           if (response?.status === 200 && response.data?.length) {
             result = response.data[0]
-            console.log("+++ ", result)
           }
 
         } catch (error) {
           console.log(error)
         }
-
         return result
       },
       validatePackageUUID() {
-        return true
+        //lax validation
+        return /^([a-zA-Z0-9\-]{6,40})$/.test(this.external_package_uuid)
       },
       async platformExists() {
-        const wekbPlatform = {
+        const externalPlatform = {
           name: this.externalPlatformName,
           primaryUrl: this.externalPlatformURL,
         }
 
         const response = await this.catchError({
-          promise: platformServices.check(wekbPlatform, this.cancelToken.token),
+          promise: platformServices.check(externalPlatform, this.cancelToken.token),
           instance: this
         })
-
-        // console.log("#### ", response)
 
         if (response?.data) {
           if (!response.data.to_create) {
 
-            console.log("Platform already exists - set existing")
+            //console.log("Platform already exists - set existing")
             let platformId = null
             if (response.data.conflicts) {
               if (response.data.conflicts.primaryUrl) {
@@ -721,16 +670,14 @@
               promise: platformServices.get(platformId, this.cancelToken.token),
               instance: this
             })
-            // console.log("PLATTFORM: ", platform)
+
             this.internalPlatformId = platformId
             this.platformName = this.externalPlatformName
             this.platformURL = this.externalPlatformURL
             return true
           }
         }
-
-        console.log("Platform not exists - create it")
-
+        //console.log("Platform not exists - create it")
         return false
       },
       async getTippsOfPackage(max, offset) {
@@ -738,18 +685,16 @@
 
         try {
           const response = await this.catchError({
-            promise: wekbImportServices.getTippsOfPackage({
-              'uuid': this.wekb_package_uuid,
+            promise: externalSourceImportServices.getTippsOfPackage({
+              'uuid': this.external_package_uuid,
               'max': max ? max : 10,
               'offset': offset ? offset : 0
             }, this.cancelToken.token),
             instance: this
           })
 
-          //TODO: handle Response Status
           if (response?.status === 200 && response.data?.length) {
             result = response.data
-            // console.log("+++ ", result)
           }
 
         } catch (error) {
@@ -761,17 +706,13 @@
       async providerExists() {
 
         const response = await this.catchError({
-          promise: wekbImportServices.getProviderData({'uuid': this.externalProviderUuid}, this.cancelToken.token),
+          promise: externalSourceImportServices.getProviderData({'uuid': this.externalProviderUuid}, this.cancelToken.token),
           instance: this
         })
-
-        console.log("+++ check PROVIDER: ", response)
 
         return response
       },
       async submit() {
-
-        // console.log("SUBMIT")
 
         if (this.valid) {
           let platformObject = undefined
@@ -822,7 +763,7 @@
                 source: undefined,
                 titleNamespace: undefined,
                 packageNamespace: undefined,
-                homepage: this.externalProviderHomepage[0], //TODO: ARRAY!!!????
+                homepage: this.externalProviderHomepage[0],
                 name: this.externalProviderName,
                 providedPlatforms: [
                   {
@@ -839,8 +780,7 @@
               })
 
               providerObject = provResponse?.data
-              console.log("NEW PROVIDEROBJECT: " + providerObject)
-              console.log("NEW PROVIDER: " + provResponse)
+
             } else {
               providerObject = this.providerObject
             }
