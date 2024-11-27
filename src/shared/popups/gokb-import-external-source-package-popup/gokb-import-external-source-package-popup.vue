@@ -15,12 +15,19 @@
     <gokb-section>
         <v-row >
           <v-col>
-            <span><b>{{ $t('popups.externalSourceImport.selectLabel') }}</b></span><br/>
-            <span>we:kb</span>
+            <gokb-state-field
+              v-model="externalSourceType"
+              :label="$t('popups.externalSourceImport.selectLabel')"
+              message-path="component.source.importConfig"
+              url="refdata/categories/Source.ImportConfig"
+              init-item="WEKB"
+              return-object
+              required
+            />
           </v-col>
           <v-col>
             <gokb-text-field
-              :label="$t('popups.externalSourceImport.uuidFieldLabel', ['we:kb'])"
+              :label="$t('popups.externalSourceImport.uuidFieldLabel', [$t('component.source.importConfig.' + externalSource + '.label')])"
               v-model="external_package_uuid"
               required
             />
@@ -122,11 +129,17 @@
             :label="$t('popups.externalSourceImport.adaptSource')"
           />
         </v-col>
-        <v-alert v-if="!platformAlreadyExists" type="info" style="font-size:small">{{ $t('popups.externalSourceImport.error.platformExists') }}</v-alert>
+        <v-alert
+          v-if="!platformAlreadyExists"
+          type="info"
+          class="text-body-2"
+        >
+          {{ $t('popups.externalSourceImport.error.platformExists') }}
+        </v-alert>
       </v-row>
 
       <v-row>
-        <v-col><h4>{{ $t('component.types.Org') }}: </h4></v-col>
+        <v-col><span class="text-h4">{{ $t('component.types.Org') }}: </span></v-col>
       </v-row>
       <v-row>
         <v-col cols="5"><span>{{ externalProviderName }}</span></v-col>
@@ -160,11 +173,17 @@
               label="$t('popups.externalSourceImport.adaptSource')"
             />
           </v-col>
-        <v-alert v-if="!providerAlreadyExists" type="info" style="font-size:small">{{ $t('popups.externalSourceImport.error.providerExists') }}</v-alert>
+        <v-alert
+          v-if="!providerAlreadyExists"
+          type="info"
+          class="text-body-2"
+        >
+          {{ $t('popups.externalSourceImport.error.providerExists') }}
+        </v-alert>
       </v-row>
 
       <v-row>
-        <v-col><h3>{{ $t('popups.externalSourceImport.packageIdentifier') }}: </h3></v-col>
+        <v-col><span class="text-h4">{{ $t('popups.externalSourceImport.packageIdentifier') }}: </span></v-col>
       </v-row>
       <v-row>
         <v-col cols="12">
@@ -256,20 +275,12 @@
 
 <script>
   import BaseComponent from "@/shared/components/base-component"
-  import GokbSection from "@/shared/components/complex/gokb-section/gokb-section.vue"
-  import GokbStateField from "@/shared/components/simple/gokb-state-field/gokb-state-field.vue"
-  import GokbTextField from "@/shared/components/base/gokb-text-field/gokb-text-field.vue"
-  import GokbButton from "@/shared/components/base/gokb-button/gokb-button.vue"
-  import GokbCheckboxField from "@/shared/components/base/gokb-checkbox-field/gokb-checkbox-field.vue"
-  import GokbTable from "@/shared/components/complex/gokb-table/gokb-table.vue"
   import externalSourceImportServices from "@/shared/services/external-source-import-services"
   import platformServices from "@/shared/services/platform-services"
-  import GokbNamespaceField from "@/shared/components/simple/gokb-namespace-field"
   import genericServices from "@/shared/services/generic-entity-services"
-  import GokbSearchOrganisationField from "@/shared/components/simple/gokb-search-organisation-field"
   import providerServices from "@/shared/services/provider-services"
   import genericEntityServices from "@/shared/services/generic-entity-services"
-  import GokbSearchPlatformField from "../../components/simple/gokb-search-platform-field/index.js";
+  import states from '@/shared/models/states-model'
 
 
   export default {
@@ -301,6 +312,7 @@
         external_package_uuid: undefined,
         externalDataLoaded: false,
         externalDataIsLoading: false,
+        externalSourceType: undefined,
         adaptPlatformData: false,
         adaptProviderData: false,
         externalPackageName: "",
@@ -392,7 +404,10 @@
         if (this.validatePackageUUID()) {
           try {
             const response = await this.catchError({
-              promise: externalSourceImportServices.getPackageMetaData({'uuid': this.external_package_uuid}, this.cancelToken.token),
+              promise: externalSourceImportServices.getPackageMetaData({
+                type: this.externalSourceType.name,
+                uuid: this.external_package_uuid
+              }, this.cancelToken.token),
               instance: this
             })
 
@@ -447,26 +462,27 @@
               }
 
               // get Code for updateFrequency
-              let entityService = genericEntityServices('refdata/categories/Source.Frequency')
-              const responseSourceFrequency = await this.catchError({
-                promise: entityService.get({}, this.cancelToken.token),
-                instance: this
-              })
+              // Check cached categories like in gokb-select-field
 
-              let frequencyCode = responseSourceFrequency?.data?._embedded.values.filter(a => a.value === "Daily")[0].id
+              let frequencyValues = states.getCategory('Source.Frequency')
 
-              // get Code for importSource
-              entityService = genericEntityServices('refdata/categories/Source.ImportConfig')
-              const responseSourceImportConfig = await this.catchError({
-                promise: entityService.get({}, this.cancelToken.token),
-                instance: this
-              })
+              if (!frequencyValues) {
+                let entityService = genericEntityServices('refdata/categories/Source.Frequency')
+                const responseSourceFrequency = await this.catchError({
+                  promise: entityService.get({}, this.cancelToken.token),
+                  instance: this
+                })
 
-              let importConfigCode = responseSourceImportConfig?.data?._embedded.values.filter(a => a.value === "WEKB")[0].id
+                frequencyValues = responseSourceFrequency?.data?._embedded.values
+
+                states.addCategory('Source.Frequency', frequencyValues)
+              }
+
+              let frequencyCode = frequencyValues.filter(a => a.value === "Daily")[0].id
 
               // SOURCE
               let source = {
-                importConfig: importConfigCode,
+                importConfig: this.externalSourceType.id,
                 url: 'https://wekb.hbz-nrw.de/api2/searchApi?componentType=package&uuid='.concat(this.external_package_uuid.replaceAll(" ", "")),
                 frequency: frequencyCode,
                 targetNamespace: {},
@@ -476,17 +492,26 @@
 
               this.externalSource = source
 
+              if (!!result?.file)
               // get Code for packagetype
-              entityService = genericEntityServices('refdata/categories/Package.Scope')
 
-              if (result?.file) {
+              let scopeValues = states.getCategory('Package.Scope')
+
+              if (!scopeValues) {
+
+                let entityService = genericEntityServices('refdata/categories/Package.Scope')
+
                 const responseScope = await this.catchError({
                   promise: entityService.get({}, this.cancelToken.token),
                   instance: this
                 })
 
-                this.packageScope = responseScope?.data?._embedded.values.filter(a => a.value == result.file)[0].id
+                scopeValues = responseScope?.data?._embedded.values
+
+                states.addCategory('Package.Scope', scopeValues)
               }
+
+              this.packageScope = scopeValues.filter(a => a.value == result.file)[0]?.id
 
               // get Title Data to provide identifier examples
               // Batch-Verarbeitung: Titel-Zählung beginnt bei offset := 0
@@ -514,7 +539,7 @@
               // auch wenn nur Titel mit einem Contenttype im Paket sind, muss zu diesem Type ein Beispiel gefunden werden
               if (publicationTypes.size > 0) {
                 for(var i = 0; i < titleData.length; i++){
-                  publicationTypes.forEach(function (pub) {
+                  publicationTypes.forEach(pub => {
                     let titleByPubType = titleData[i].find(x => x.publicationType === pub)
 
                     if(titleByPubType) {
@@ -529,54 +554,65 @@
                 }
               }
 
+              titleExamples.forEach(title => {
+                let identifiers = []
+                /*title.identifiers?.forEach(function(id){
+                  identifiers.push( {namespace: that.mapIdentifierNames(id.namespaceName), value: id.value} )
+                })*/
+                for (var i = 0; i < title.identifiers?.length; i++) {
+                  var tipp_id = title.identifiers[i]
 
-                var that = this
+                  identifiers.push({
+                    namespace: that.mapIdentifierNames(tipp_id.namespaceName),
+                    value: tipp_id.value
+                  })
+                }
 
-                titleExamples.forEach(function (title) {
-                  let identifiers = []
-                  /*title.identifiers?.forEach(function(id){
-                    identifiers.push( {namespace: that.mapIdentifierNames(id.namespaceName), value: id.value} )
-                  })*/
-                  for (var i = 0; i < title.identifiers?.length; i++) {
-                    var id = title.identifiers[i]
-                    identifiers.push({namespace: that.mapIdentifierNames(id.namespaceName), value: id.value})
-                  }
-                  that.identifierExamples.push({publicationType: title.publicationType, identifiers: identifiers})
+                this.identifierExamples.push({
+                  publicationType: title.publicationType,
+                  identifiers: identifiers
                 })
+              })
 
 
               // set contenttype according to containing tipps and get GOKB code for it
-              if(titleExamples.length > 1) {
+              if (titleExamples.length > 1) {
                 this.contentTypeOfTipps = 'Mixed'
               } else {
-                  switch (titleExamples[0].publicationType) {
-                    case 'Monograph':
-                      this.contentTypeOfTipps = 'Book'
-                      break
-                    case 'Serial':
-                      this.contentTypeOfTipps = 'Journal'
-                      break
-                    default:
-                      this.contentTypeOfTipps = 'Database'
-                      break
-                  }
+                switch (titleExamples[0].publicationType) {
+                  case 'Monograph':
+                    this.contentTypeOfTipps = 'Book'
+                    break
+                  case 'Serial':
+                    this.contentTypeOfTipps = 'Journal'
+                    break
+                  default:
+                    this.contentTypeOfTipps = 'Database'
+                    break
+                }
               }
 
-              entityService = genericEntityServices('refdata/categories/Package.ContentType')
+              let contentTypes = states.getCategory('Package.ContentType')
 
-              const responseContentType = await this.catchError({
-                promise: entityService.get({}, this.cancelToken.token),
-                instance: this
-              })
+              if (!contentTypes) {
+                let entityService = genericEntityServices('refdata/categories/Package.ContentType')
 
-              this.contentTypeOfTippsCode = responseContentType?.data?._embedded.values.filter(a => a.value == this.contentTypeOfTipps)[0].id
+                const responseContentType = await this.catchError({
+                  promise: entityService.get({}, this.cancelToken.token),
+                  instance: this
+                })
+
+                contentTypes = responseContentType?.data?._embedded.values
+              }
+
+              this.contentTypeOfTippsCode = contentTypes.filter(a => a.value == this.contentTypeOfTipps)[0].id
 
             } else {
-                this.errors.uuid = true
-                this.messageColor = 'error'
-                this.snackbarMessage = this.$i18n.t('popups.externalSourceImport.error.packageNotExist')
-                this.currentSnackBarTimeout = 3000
-                this.showSnackbar = true
+              this.errors.uuid = true
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('popups.externalSourceImport.error.packageNotExist')
+              this.currentSnackBarTimeout = 3000
+              this.showSnackbar = true
             }
 
           } catch (error) {
@@ -603,20 +639,25 @@
         this.externalDataIsLoading = false
 
       },
-      mapIdentifierNames (wekbName) {
+      mapIdentifierNames (externalName) {
         var identifierName
 
-        switch (wekbName) {
-          case "eISBN":
-            identifierName = "ISBN"
-            break
-          case "ISBN":
-            identifierName = "p-ISBN"
-            break
-          /*case "Title_ID":
-            break*/
-          default:
-            identifierName = wekbName
+        if (this.externalSourceType?.name === 'WEKB') {
+          switch (externalName) {
+            case "eISBN":
+              identifierName = "ISBN"
+              break
+            case "ISBN":
+              identifierName = "p-ISBN"
+              break
+            /*case "Title_ID":
+              break*/
+            default:
+              identifierName = externalName
+          }
+        }
+        else {
+          return externalName
         }
 
         return identifierName
@@ -626,7 +667,10 @@
 
         try {
           const response = await this.catchError({
-            promise: externalSourceImportServices.getPlatformMetadata({'uuid': this.externalPlatformUuid}, this.cancelToken.token),
+            promise: externalSourceImportServices.getPlatformMetadata({
+              'type': this.externalSourceType.name,
+              'uuid': this.externalPlatformUuid
+            }, this.cancelToken.token),
             instance: this
           })
 
@@ -686,6 +730,7 @@
         try {
           const response = await this.catchError({
             promise: externalSourceImportServices.getTippsOfPackage({
+              'type': this.externalSourceType.name,
               'uuid': this.external_package_uuid,
               'max': max ? max : 10,
               'offset': offset ? offset : 0
@@ -706,7 +751,10 @@
       async providerExists() {
 
         const response = await this.catchError({
-          promise: externalSourceImportServices.getProviderData({'uuid': this.externalProviderUuid}, this.cancelToken.token),
+          promise: externalSourceImportServices.getProviderData({
+            'type': this.externalSourceType.name,
+            'uuid': this.externalProviderUuid
+          }, this.cancelToken.token),
           instance: this
         })
 
@@ -808,7 +856,7 @@
 
           }
 
-          if(this.packageIdentifierExists && this.packageIdentifier){
+          if (this.packageIdentifierExists && this.packageIdentifier) {
             let id = {
               value: this.packageIdentifierValue,
               namespace: this.packageIdentifier.value,
