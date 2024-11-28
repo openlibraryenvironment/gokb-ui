@@ -158,7 +158,7 @@
 
           <v-col cols="5" v-else>
             <gokb-search-organisation-field
-              label="$t('popups.externalSourceImport.searchProvider')"
+              :label="$t('popups.externalSourceImport.searchProvider')"
               v-model="providerObject"
               :show-link="true"
               :readonly="false"
@@ -170,7 +170,7 @@
             <gokb-checkbox-field
               v-if="!providerAlreadyExists"
               v-model="adaptProviderData"
-              label="$t('popups.externalSourceImport.adaptSource')"
+              :label="$t('popups.externalSourceImport.adaptSource')"
             />
           </v-col>
         <v-alert
@@ -247,7 +247,7 @@
             v-model="namespaceJournal"
             target-type="Journal"
             :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.journals')])"
-            :exclude-isxn="true"
+            exclude-isxn
           />
         </v-col>
         <v-col cols="4" v-if="showMonographNamespaceSelect">
@@ -255,7 +255,7 @@
             v-model="namespaceMonograph"
             target-type="Book"
             :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.monographs')])"
-            :exclude-isxn="true"
+            exclude-isxn
           />
         </v-col>
       </v-row>
