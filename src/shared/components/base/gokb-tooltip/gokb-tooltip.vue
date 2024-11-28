@@ -11,7 +11,9 @@
       </v-icon>
     </template>
     <i18n-t :keypath="code" scope="global">
-        <b v-for="(v, i) in vars" v-if="typeof v === 'string'">{{ typeof v === 'string' ? v : $t(v.code) }}</b>
+        <b v-for="(v, i) in vars">
+          {{ typeof v === 'string' ? v : $t(v.code) }}
+        </b>
     </i18n-t>
   </v-tooltip>
 </template>

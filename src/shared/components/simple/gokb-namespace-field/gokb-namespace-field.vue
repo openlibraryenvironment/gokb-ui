@@ -32,9 +32,9 @@
           else {
             this.itemTitle = 'name'
           }
-        }
-      },
-      deep: true
+        },
+        deep: true
+      }
     },
     created () {
       this.entityName = 'identifier-namespaces'

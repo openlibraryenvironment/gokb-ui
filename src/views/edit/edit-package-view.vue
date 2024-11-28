@@ -1350,6 +1350,8 @@
                 })
               }
             }
+
+            this.urlUpdate = false
           } else {
             if (response.status === 409) {
               this.messageColor = 'error'
