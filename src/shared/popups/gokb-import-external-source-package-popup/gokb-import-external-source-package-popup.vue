@@ -405,7 +405,7 @@
           try {
             const response = await this.catchError({
               promise: externalSourceImportServices.getPackageMetaData({
-                type: this.externalSourceType.name,
+                type: this.externalsourceType.id,
                 uuid: this.external_package_uuid
               }, this.cancelToken.token),
               instance: this
@@ -669,7 +669,7 @@
         try {
           const response = await this.catchError({
             promise: externalSourceImportServices.getPlatformMetadata({
-              'type': this.externalSourceType.name,
+              'type': this.externalsourceType.id,
               'uuid': this.externalPlatformUuid
             }, this.cancelToken.token),
             instance: this
@@ -731,7 +731,7 @@
         try {
           const response = await this.catchError({
             promise: externalSourceImportServices.getTippsOfPackage({
-              'type': this.externalSourceType.name,
+              'type': this.externalsourceType.id,
               'uuid': this.external_package_uuid,
               'max': max ? max : 10,
               'offset': offset ? offset : 0
@@ -753,7 +753,7 @@
 
         const response = await this.catchError({
           promise: externalSourceImportServices.getProviderData({
-            'type': this.externalSourceType.name,
+            'type': this.externalsourceType.id,
             'uuid': this.externalProviderUuid
           }, this.cancelToken.token),
           instance: this
