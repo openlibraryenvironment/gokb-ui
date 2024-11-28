@@ -110,6 +110,14 @@
         v-model="editJobPopupVisible"
         :selected="selectedJob"
       />
+
+      <gokb-import-external-source-package-popup
+        v-if="externalSourceImportPopupVisible"
+        v-model="externalSourceImportPopupVisible"
+        @import="mapImportData"
+      />
+
+
       <v-stepper
         v-model="step"
         alt-labels
@@ -438,6 +446,7 @@
               ref="tipps"
               :pkg="id"
               :filter-align="isEdit"
+              :isImportFromExternalSource="isImportFromExternalSource"
               :platform="packageItem.nominalPlatform"
               :provider="packageItem.provider"
               :disabled="isReadonly"
@@ -453,6 +462,7 @@
               :expanded="false"
               :api-errors="errors?.source"
               :readonly="isReadonly"
+              :isImportFromExternalSource="isImportFromExternalSource"
               @enable="triggerUpdate"
             />
           </v-stepper-window-item>
@@ -483,15 +493,38 @@
                     @delete="markDeleted"
                   />
                 </v-col>
-                <v-col cols="6" xl="3">
-                  <gokb-uuid-field
-                    v-if="uuid"
-                    label="UUID"
-                    class="mt-2"
-                    v-model="uuid"
-                    path="/package"
-                  />
+                <v-col cols="6" >
+                  <v-row>
+                    <v-col cols="9" lg="8">
+                      <gokb-uuid-field
+                        v-if="uuid"
+                        label="UUID"
+                        class="mt-2"
+                        v-model="uuid"
+                        path="/package"
+                      />
+                    </v-col>
+                    <v-spacer/>
+                    <v-col cols="3" v-if="externalSource" >
+                      <v-row justify="end">
+                        <v-col cols="11">
+                          <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
+                            {{ $t('popups.externalSourceImport.selectLabel') }}
+                          </div>
+                          <v-chip
+                            :text="$t('component.source.importConfig.' + externalSource + '.label')"
+                            class="text-button"
+                            rounded="lg"
+                            :color="externalSource === 'EZB' ? 'green' : 'orange'"
+                            density="compact"
+                            :title="$t('component.source.importConfig.subtitle')"
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                  </v-row>
                 </v-col>
+
               </v-row>
               <v-row dense>
                 <v-col>
@@ -680,6 +713,17 @@
           </v-chip>
         </div>
         <v-spacer />
+
+        <gokb-button
+          color="primary"
+          :disabled="false"
+          @click="showExternalSourceImportPopup"
+          v-show="!isEdit && step == 1"
+        >
+          <!-- TODO: Text aus Properties-Datei {{ $t('btn.next') }} -->
+          {{ $t('btn.externalSourceImport') }}
+        </gokb-button>
+
         <gokb-button
           v-if="!isInLastStep"
           color="primary"
@@ -738,6 +782,7 @@
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
+  import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
 
   const ROWS_PER_PAGE = 10
 
@@ -770,7 +815,8 @@
       GokbMaintenanceCycleField,
       GokbAlternateNamesSection,
       GokbConfirmationPopup,
-      GokbEditJobPopup
+      GokbEditJobPopup,
+      GokbImportExternalSourcePackagePopup
     },
     extends: BaseComponent,
     props: {
@@ -815,6 +861,9 @@
         showGroupInfoPopup: false,
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
+        externalSourceImportPopupVisible: false,
+        isImportFromExternalSource: false,
+        externalSource: undefined,
         urlUpdate: false,
         currentName: undefined,
         lastUpdated: undefined,
@@ -889,7 +938,8 @@
         step2Error: false,
         updateUrl: undefined,
         deleteUrl: undefined,
-        kbart: undefined
+        kbart: undefined,
+        importData: undefined
       }
     },
     computed: {
@@ -923,8 +973,16 @@
       platformSelection () {
         return this.platformSelect
       },
-      providerName () {
+      /*providerName () {
         return this.packageItem?.provider?.name
+      },*/
+      providerName: {
+        get() {
+          return this.packageItem?.provider?.name
+        },
+        set(newName) {
+          return newName
+        }
       },
       platformName () {
         return this.packageItem?.nominalPlatform?.name
@@ -1035,6 +1093,20 @@
       document.removeEventListener("keydown", this.handleKeyboardNav)
     },
     methods: {
+      showExternalSourceImportPopup () {
+        this.externalSourceImportPopupVisible = true
+      },
+      async mapImportData (importData) {
+        this.allNames.name = importData.package.name
+
+        this.packageItem = importData.package
+        this.packageItem.provider = importData.provider
+        this.packageItem.nominalPlatform = importData.platform
+        this.sourceItem = importData.source
+
+        this.isImportFromExternalSource = true
+        this.externalSourceImportPopupVisible = false
+      },
       go2NextStep () {
         if (this.step < 4) {
           this.step = this.step + 1
@@ -1059,8 +1131,8 @@
       },
       handleKeyboardNav (e) {
         if (this.step > 1 && e.key === "ArrowLeft" && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault()
-            this.go2PreviousStep()
+          e.preventDefault()
+          this.go2PreviousStep()
         } else if (this.step < 4 && e.key === "ArrowRight" && (e.ctrlKey || e.metaKey)) {
           e.preventDefault()
           this.go2NextStep()
@@ -1086,9 +1158,9 @@
             unit: undefined,
           }
         } else if (!!this.sourceItem.targetNamespace &&
-                    !!this.sourceItem.update &&
-                    !!options.selectedNamespace &&
-                    options.selectedNamespace.id != this.sourceItem.targetNamespace.id
+          !!this.sourceItem.update &&
+          !!options.selectedNamespace &&
+          options.selectedNamespace.id != this.sourceItem.targetNamespace.id
         ) {
           this.messageColor = 'warn'
           this.snackbarMessage = this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict')
@@ -1457,6 +1529,24 @@
                 }
               }
             }
+
+            if (result?.data?._embedded?.source?.importConfig) {
+              this.externalSource = result.data._embedded.source.importConfig.name
+            }
+
+            /*if (result?.data?.source?.id) {
+              const sourceResult = await this.catchError({
+                promise: sourceServices.getSource(result?.data?.source?.id, this.cancelToken.token),
+                instance: this
+              })
+
+              if (sourceResult?.status === 200) {
+                if (sourceResult?.data?.importConfig) {
+                  this.externalSource = sourceResult.data.importConfig.name
+                }
+              }
+            } */
+
           } else if (result.status === 404) {
             this.notFound = true
           } else {

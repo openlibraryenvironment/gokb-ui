@@ -37,7 +37,8 @@
     "bulkCloseReview": "Close {0} selected review | Close {0} selected reviews",
     "closeSelectedReviews": "Close selected reviews",
     "moreFilters": "More Filters",
-    "moreOptions": "More Options"
+    "moreOptions": "More Options",
+    "externalSourceImport": "Import from external source"
   },
   "main": {
     "docs": {
@@ -208,6 +209,35 @@
       "label": "Activate User",
       "info": "Please confirm the activation of this account. This will release the default lock and apply basic editing permissions.",
       "sendAlert": "Alert user of the activation via email"
+    },
+    "externalSourceImport": {
+      "label": "Import a package from an external repository",
+      "selectLabel": "Import source",
+      "uuidFieldLabel": "UUID of the package in {0}",
+      "loading": "The Data is loading - Depending on the package size this may take some time.",
+      "columnHeaderExternal": "Package in the external repository",
+      "columnHeaderInternal": "Package in GOKB",
+      "error": {
+        "packageNotExist": "A package with this UUID does not seem to exist in the chosen import repository",
+        "packageExists": "A package with this name already exists in the GOKB. Please check if this is a unique package you are trying to import.",
+        "platformExists": "The platform doesn't exist in the GOKB yet. Choose an existing platform in the search field or adopt the platform from the import source.",
+        "providerExists": "The provider doesn't exist in the GOKB yet. Choose an existing provider in the search field or adopt the provider from the import source."
+      },
+      "adaptSource": "Adopt from source",
+      "packageName": "Package name",
+      "packageIdentifier": "Package Identifier | Package Identifiers",
+      "packageIdentifierYes": "There's an identifier associated with the package in this format: ",
+      "packageIdentifierNo": "There is no identifier associated with the package.",
+      "packageIdentifierSelect": "Select the identifier namespace the identifier value belongs to (optional)",
+      "titleIdentifier": "Title identifier",
+      "titleIdentifierInfo": "These are examples of identifiers separated by content type",
+      "contentTypeInfo": "The titles in this package are of content type",
+      "titleIdentifierInfoSelect": "Select the consistent identifier namespace for the field title_id (optional)",
+      "searchPlatform": "Search platform",
+      "searchProvider": "Search provider",
+      "titleIdNamespace": "title_id namespace for {0}",
+      "monographs": "Monographs",
+      "journals": "Journals"
     }
   },
   "validation": {
@@ -373,7 +403,7 @@
       "tabsCountFile": "This file contains rows with a different column count than defined by the provided headings!",
       "tabsCountRow": "This line contains {0} columns instead of {1} columns, as defined by the headings!",
       "missingVal": "Missing value in column '{0}'!",
-      "missingCols": "Missing columns: {0}",
+      "missingCols": "Missing column: {0}",
       "correctedVal": "Value '{0}' will be automatically replaced by '{1}'",
       "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
@@ -411,14 +441,16 @@
       },
       "warning": {
         "label": "Warning | Warnings",
-        "fields": "Column Statistics - Warnings"
+        "fields": "Column Statistics - Warnings",
+        "structure": "File Structure - Warnings"
       },
       "error": {
         "label": "Error | Errors",
         "general": "Validation has identified errors in this file!",
         "empty": "Missing Value",
         "invalid": "Invalid Value",
-        "fields": "Column Statistics - Errors"
+        "fields": "Column Statistics - Errors",
+        "structure": "File Structure - Errors"
       }
     },
     "transmission": {
@@ -1566,6 +1598,15 @@
         },
         "Yearly": {
           "label": "Yearly"
+        }
+      },
+      "importConfig": {
+        "subtitle": "This package was imported from the given source",
+        "WEKB": {
+          "label": "we:kb"
+        },
+        "EZB": {
+          "label": "EZB"
         }
       }
     },

@@ -8,7 +8,7 @@
     <gokb-url-field
       v-model="url"
       :label="$t('component.source.url')"
-      :readonly="readonly"
+      :readonly="readonly || isImportFromExternalSource"
       replace-date
     />
     <v-row>
@@ -96,6 +96,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      isImportFromExternalSource: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -167,6 +172,19 @@
         if (!!val && (!this.modelValue?.id || !this.item.targetNamespace)) {
           this.targetNamespace = this.defaultTitleNamespace
         }
+      },
+      modelValue: {
+        handler(val) {
+          if (!!val && !val.id) {
+            this.item.type = val.type
+            this.item.url = val.url
+            this.item.frequency = val.frequency
+            this.item.targetNamespace = val.targetNamespace
+            this.item.automaticUpdates = val.automaticUpdates
+            this.item.update = val.update
+          }
+        },
+        deep: true
       }
     },
     async mounted () {
@@ -176,6 +194,7 @@
         this.fetch(this.modelValue.id)
       } else if (!!this.modelValue?.url) {
         this.isExpanded = true
+        this.item = this.modelValue
       }
     },
     methods: {
