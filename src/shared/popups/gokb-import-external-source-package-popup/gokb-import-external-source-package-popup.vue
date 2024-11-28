@@ -27,7 +27,7 @@
           </v-col>
           <v-col>
             <gokb-text-field
-              :label="$t('popups.externalSourceImport.uuidFieldLabel', [$t('component.source.importConfig.' + externalSourceType + '.label')])"
+              :label="$t('popups.externalSourceImport.uuidFieldLabel', [sourceLabel])"
               v-model="external_package_uuid"
               required
             />
@@ -259,17 +259,17 @@
           />
         </v-col>
       </v-row>
-
-      <v-row>
-        <v-spacer />
-        <gokb-button
-          :disabled="!valid"
-          is-submit
-        >
-          {{ $t('btn.submit') }}
-        </gokb-button>
-      </v-row>
     </div>
+    <template #buttons>
+      <v-spacer />
+      <gokb-button
+        v-if="externalDataLoaded"
+        :disabled="!valid"
+        is-submit
+      >
+        {{ $t('btn.submit') }}
+      </gokb-button>
+    </template>
   </gokb-dialog>
 </template>
 
@@ -285,10 +285,6 @@
 
   export default {
     name: 'GokbImportExternalSourcePackagePopup',
-    components: {
-      GokbSearchPlatformField,
-      GokbSearchOrganisationField,
-      GokbNamespaceField, GokbTable, GokbCheckboxField, GokbButton, GokbTextField, GokbStateField, GokbSection },
     extends: BaseComponent,
     emits: ['update:model-value', 'import'],
     props: {
@@ -371,6 +367,9 @@
         return ( (this.providerAlreadyExists || (this.adaptProviderData || this.providerObject))
           && (this.platformAlreadyExists || (this.adaptPlatformData || this.platformObject))
           && this.externalDataLoaded && !this.packageAlreadyExists)
+      },
+      sourceLabel() {
+        return this.externalSourceType ? this.$i18n.t('component.source.importConfig.' + this.externalSourceType?.value + '.label') : '...'
       }
     },
     watch: {
@@ -405,7 +404,7 @@
           try {
             const response = await this.catchError({
               promise: externalSourceImportServices.getPackageMetaData({
-                type: this.externalsourceType.id,
+                type: this.externalSourceType.id,
                 uuid: this.external_package_uuid
               }, this.cancelToken.token),
               instance: this
@@ -557,14 +556,12 @@
 
               titleExamples.forEach(title => {
                 let identifiers = []
-                /*title.identifiers?.forEach(function(id){
-                  identifiers.push( {namespace: that.mapIdentifierNames(id.namespaceName), value: id.value} )
-                })*/
+
                 for (var i = 0; i < title.identifiers?.length; i++) {
                   var tipp_id = title.identifiers[i]
 
                   identifiers.push({
-                    namespace: that.mapIdentifierNames(tipp_id.namespaceName),
+                    namespace: this.mapIdentifierNames(tipp_id.namespaceName),
                     value: tipp_id.value
                   })
                 }
@@ -643,7 +640,7 @@
       mapIdentifierNames (externalName) {
         var identifierName
 
-        if (this.externalSourceType?.name === 'WEKB') {
+        if (this.externalSourceType?.value === 'WEKB') {
           switch (externalName) {
             case "eISBN":
               identifierName = "ISBN"
@@ -669,7 +666,7 @@
         try {
           const response = await this.catchError({
             promise: externalSourceImportServices.getPlatformMetadata({
-              'type': this.externalsourceType.id,
+              'type': this.externalSourceType.id,
               'uuid': this.externalPlatformUuid
             }, this.cancelToken.token),
             instance: this
@@ -731,7 +728,7 @@
         try {
           const response = await this.catchError({
             promise: externalSourceImportServices.getTippsOfPackage({
-              'type': this.externalsourceType.id,
+              'type': this.externalSourceType.id,
               'uuid': this.external_package_uuid,
               'max': max ? max : 10,
               'offset': offset ? offset : 0
@@ -753,7 +750,7 @@
 
         const response = await this.catchError({
           promise: externalSourceImportServices.getProviderData({
-            'type': this.externalsourceType.id,
+            'type': this.externalSourceType.id,
             'uuid': this.externalProviderUuid
           }, this.cancelToken.token),
           instance: this
