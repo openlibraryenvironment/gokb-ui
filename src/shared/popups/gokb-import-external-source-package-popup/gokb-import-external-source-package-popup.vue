@@ -27,7 +27,7 @@
           </v-col>
           <v-col>
             <gokb-text-field
-              :label="$t('popups.externalSourceImport.uuidFieldLabel', [$t('component.source.importConfig.' + externalSource + '.label')])"
+              :label="$t('popups.externalSourceImport.uuidFieldLabel', [$t('component.source.importConfig.' + externalSourceType + '.label')])"
               v-model="external_package_uuid"
               required
             />
@@ -492,26 +492,27 @@
 
               this.externalSource = source
 
-              if (!!result?.file)
-              // get Code for packagetype
+              if (!!result?.file) {
+                // get Code for packagetype
 
-              let scopeValues = states.getCategory('Package.Scope')
+                let scopeValues = states.getCategory('Package.Scope')
 
-              if (!scopeValues) {
+                if (!scopeValues) {
 
-                let entityService = genericEntityServices('refdata/categories/Package.Scope')
+                  let entityService = genericEntityServices('refdata/categories/Package.Scope')
 
-                const responseScope = await this.catchError({
-                  promise: entityService.get({}, this.cancelToken.token),
-                  instance: this
-                })
+                  const responseScope = await this.catchError({
+                    promise: entityService.get({}, this.cancelToken.token),
+                    instance: this
+                  })
 
-                scopeValues = responseScope?.data?._embedded.values
+                  scopeValues = responseScope?.data?._embedded.values
 
-                states.addCategory('Package.Scope', scopeValues)
+                  states.addCategory('Package.Scope', scopeValues)
+                }
+
+                this.packageScope = scopeValues.filter(a => a.value == result.file)[0]?.id
               }
-
-              this.packageScope = scopeValues.filter(a => a.value == result.file)[0]?.id
 
               // get Title Data to provide identifier examples
               // Batch-Verarbeitung: Titel-Zählung beginnt bei offset := 0
