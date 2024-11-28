@@ -102,9 +102,12 @@ const api = (reactive, accountServices, browserStorage) => {
       state.userLocale = undefined
     },
 
-    logout () {
+    logout (manual = false) {
       accountServices.logout()
-      localStorage.remove(ACTIVE_GROUP)
+
+      if (manual) {
+        localStorage.remove(ACTIVE_GROUP)
+      }
       this.clear()
     },
 

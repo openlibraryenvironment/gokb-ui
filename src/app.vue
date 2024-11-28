@@ -492,7 +492,7 @@
           this.loginExpiredMsg = true
         } else {
 
-          this.groups = result.data.data.curatoryGroups
+          this.groups = result.data.data.curatoryGroups.sort((a,b) => a.name > b.name)
 
           log.debug("Loading groups!")
 

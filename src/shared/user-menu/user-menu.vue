@@ -157,7 +157,7 @@
         this.showRegister = true
       },
       logout () {
-        accountModel.logout()
+        accountModel.logout(true)
       },
       async navigateTo (path) {
         await this.$router.push(path)
