@@ -335,7 +335,7 @@
         titleCount: undefined,
         platformAlreadyExists: undefined,
         providerAlreadyExists: undefined,
-        externalSource: {},
+        externalSourceInfo: {},
         packageAlreadyExists: false,
         identifierExamples: [],
         errors: {},
@@ -489,7 +489,7 @@
                 update: true
               }
 
-              this.externalSource = source
+              this.externalSourceInfo = source
 
               if (!!result?.file) {
                 // get Code for packagetype
@@ -865,15 +865,16 @@
 
           // TODO: Übergangslösung bis wir 2 Felder für Title-Namespaces haben
           if (this.contentTypeOfTipps === "Book" || this.contentTypeOfTipps === "Mixed") {
-            this.externalSource.targetNamespace = this.namespaceMonograph
+            this.externalSourceInfo.targetNamespace = this.namespaceMonograph
           } else {
-            this.externalSource.targetNamespace = this.namespaceJournal
+            this.externalSourceInfo.targetNamespace = this.namespaceJournal
           }
 
           const allData = {
             platform: platformObject,
             provider: providerObject,
-            source: this.externalSource,
+            source: this.externalSourceInfo,
+            sourceTye: this.externalSourceType,
             package: pckg
 
           }

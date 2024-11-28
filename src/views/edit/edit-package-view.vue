@@ -446,7 +446,7 @@
               ref="tipps"
               :pkg="id"
               :filter-align="isEdit"
-              :isImportFromExternalSource="isImportFromExternalSource"
+              :is-import-from-external-source="!!externalSource"
               :platform="packageItem.nominalPlatform"
               :provider="packageItem.provider"
               :disabled="isReadonly"
@@ -462,7 +462,7 @@
               :expanded="false"
               :api-errors="errors?.source"
               :readonly="isReadonly"
-              :isImportFromExternalSource="isImportFromExternalSource"
+              :is-import-from-external-source="!!externalSource"
               @enable="triggerUpdate"
             />
           </v-stepper-window-item>
@@ -505,7 +505,7 @@
                       />
                     </v-col>
                     <v-spacer/>
-                    <v-col cols="3" v-if="externalSource" >
+                    <v-col cols="3" v-if="!!externalSource" >
                       <v-row justify="end">
                         <v-col cols="11">
                           <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
@@ -515,7 +515,7 @@
                             :text="$t('component.source.importConfig.' + externalSource + '.label')"
                             class="text-button"
                             rounded="lg"
-                            :color="externalSource === 'EZB' ? 'green' : 'orange'"
+                            :color="externalSourceColor"
                             density="compact"
                             :title="$t('component.source.importConfig.subtitle')"
                           />
@@ -939,7 +939,15 @@
         updateUrl: undefined,
         deleteUrl: undefined,
         kbart: undefined,
-        importData: undefined
+        importData: undefined,
+        knownSources: {
+          EZB: {
+            color: 'green'
+          },
+          WEKB: {
+            color: 'orange'
+          }
+        }
       }
     },
     computed: {
@@ -1022,6 +1030,9 @@
       },
       kbartLabel () {
         return 'KBART' + (this.kbart?.dryRun ? ' (' + this.$i18n.t('kbart.dryRun.label') + ')' : '')
+      },
+      externalSourceColor () {
+        return !!this.knownSources[this.externalSource] ? this.knownSources[this.externalSource].color : undefined
       }
     },
     watch: {
@@ -1103,6 +1114,7 @@
         this.packageItem.provider = importData.provider
         this.packageItem.nominalPlatform = importData.platform
         this.sourceItem = importData.source
+        this.externalSource = importData.sourceType.value
 
         this.isImportFromExternalSource = true
         this.externalSourceImportPopupVisible = false
