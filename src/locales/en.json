@@ -1203,7 +1203,16 @@
             },
             "confirm": {
               "label": "Confirm Merge",
-              "message": "Please confirm that you want to merge the reviewed title ({0}) into the selected one. The review will be closed and the reviewed title will be deleted."
+              "message": "Please confirm that you want to merge the reviewed reference title ({0}) into the selected one.",
+              "transferCombos": {
+                "message": "The reviewed title will be deleted, and all package titles as well as the selected identifiers connected to it will be moved to the selected target."
+              },
+              "transferName": {
+                "message": "The name of the selected target title will be changed to that of the deleted title and its current name will be added as a variant."
+              },
+              "closeReview": {
+                "message": "The review will be marked as closed automatically."
+              }
             },
             "selectIds": {
               "label": "Select IDs to add to the merged title.",
@@ -1222,6 +1231,9 @@
             },
             "unselected": {
               "label": "{0}"
+            },
+            "transferName": {
+              "label": "Transfer name"
             }
           },
           "single": {
@@ -1241,7 +1253,13 @@
             },
             "confirmMerge": {
               "label": "Confirm Merge",
-              "message": "Please confirm the title merge. The reference title {0} will be deleted and all of its linked package titles will be transferred to the selected title."
+              "message": "Please confirm the title merge.",
+              "transferCombos": {
+                "message": "The reference title {0} will be deleted and all of its linked package titles and identifiers will be transferred to the selected title."
+              },
+              "transferName": {
+                "message": "The name of the selected target title will be changed to that of the deleted title and its current name will be added as a variant."
+              }
             },
             "confirmLink": {
               "label": "Confirm Linking",
@@ -1504,7 +1522,7 @@
           "label": "Import Identifier Mismatch",
           "info": "A KBART record could be matched to an existing package title based on one or more identifiers, but one or more other identifiers differ.",
           "action": "The GOKb created a new package title.",
-          "toDo": "Review the identifiers of the package titles. If you find any errors, they should ideally be corrected by importing a corrected KBART file. In this case, you can first delete the erroneous package title(s) via their detail view. Alternatively, you can also delete incorrect identifiers manually here."
+          "toDo": "Check the identifiers and reference titles for conflicts that need to be resolved. It's possible that more package titles are displayed than are affected."
         },
         "Import Report": {
           "label": "Report on KBART Import",

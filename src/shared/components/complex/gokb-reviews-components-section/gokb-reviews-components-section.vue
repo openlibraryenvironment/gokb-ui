@@ -69,7 +69,10 @@
                 <v-icon class="mr-1 mt-n1" color="primary">
                   {{ i.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
-                {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) : $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
+                {{ selectedCard === i.id ?
+                    $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) :
+                    $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')])
+                }}
                 <b>#{{ idx + 1 }}</b>
               </div>
               <gokb-reviews-title-card
@@ -162,7 +165,6 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import titleServices from '@/shared/services/title-services'
   import tippServices from '@/shared/services/tipp-services'
-  import loading from '@/shared/models/loading'
 
   export default {
     name: 'GokbReviewsComponentsSection',
@@ -313,15 +315,15 @@
       setSelectedReviewItemIds (ids) {
         this.selectedReviewItemIds = ids
       },
-      async mergeCards (val) {
-        let mergedId = val.id
+      async mergeCards (conf) {
+        let mergedId = conf.id
         let targetId = this.selectedCard
         let mergeData = {
             id: mergedId,
             target: targetId
         }
 
-        if (val.type === 'tipp') {
+        if (conf.type === 'tipp') {
           let mergeParams = {}
 
           if (!!targetId) {
@@ -331,7 +333,10 @@
             })
 
             if (typeof mergeResponse == 'undefined') {
-              this.feedbackResponse({ type: 'error', message: 'error.general.500' })
+              this.feedbackResponse({
+                type: 'error',
+                message: 'error.general.500'
+              })
             }
             else {
               if (mergeResponse.status < 400) {
@@ -341,10 +346,16 @@
                   this.$emit('close', true)
                 } else {
                   this.refreshAll()
-                  this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)]) })
+                  this.feedbackResponse({
+                    type: 'success',
+                    message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)])
+                  })
                 }
               } else {
-                this.feedbackResponse({ type: 'error', resp: mergeResponse })
+                this.feedbackResponse({
+                  type: 'error',
+                  resp: mergeResponse
+                })
               }
             }
           } else {
@@ -354,7 +365,10 @@
             })
 
             if (typeof mergeResponse == 'undefined') {
-              this.feedbackResponse({ type: 'error', message: 'error.general.500' })
+              this.feedbackResponse({
+                type: 'error',
+                message: 'error.general.500'
+              })
             }
             else {
               if (mergeResponse.status < 400) {
@@ -364,18 +378,32 @@
                   this.$emit('close', true)
                 } else {
                   this.refreshAll()
-                  this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)]) })
+                  this.feedbackResponse({
+                    type: 'success',
+                    message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)])
+                  })
                 }
               } else {
-                this.feedbackResponse({ type: 'error', resp: mergeResponse })
+                this.feedbackResponse({
+                  type: 'error',
+                  resp: mergeResponse
+                })
               }
             }
           }
         } else {
-          let mergeParams = { mergeTipps: true }
+          let mergeParams = {
+            mergeTipps: true,
+            transferName: conf.transferName
+          }
 
           if (mergedId === this.reviewedComponent.id) {
-            mergeData.ids = this.selectedReviewItemIds
+            if (!!this.selectedReviewItemIds) {
+              mergeData.ids = this.selectedReviewItemIds
+            } else {
+              mergeParams.mergeIds = false
+            }
+
           } else {
             mergeParams.mergeIds = true
           }
@@ -386,7 +414,10 @@
           })
 
           if (typeof mergeResponse == 'undefined') {
-            this.feedbackResponse({ type: 'error', message: 'error.general.500' })
+            this.feedbackResponse({
+              type: 'error',
+              message: 'error.general.500'
+            })
           }
           else {
             if (mergeResponse.status < 400) {
@@ -396,10 +427,16 @@
                 this.$emit('close', true)
               } else {
                 this.refreshAll()
-                this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.title.label', 2)]) })
+                this.feedbackResponse({
+                  type: 'success',
+                  message: this.$i18n.t('success.merge', [this.$i18n.tc('component.title.label', 2)])
+                })
               }
             } else {
-              this.feedbackResponse({ type: 'error', resp: mergeResponse })
+              this.feedbackResponse({
+                type: 'error',
+                resp: mergeResponse
+              })
             }
           }
         }
@@ -431,7 +468,10 @@
         this.showSubmitConfirm = true
         this.actionToConfirm = "generateTippTitle"
         this.parameterToConfirm = undefined
-        this.submitConfirmationMessage = { text: 'component.review.edit.components.add.message', vars: [] }
+        this.submitConfirmationMessage = {
+          text: 'component.review.edit.components.add.message',
+          vars: []
+        }
       },
       async generateTippTitle () {
         const tippInfo = await this.catchError({
@@ -487,14 +527,25 @@
           instance: this
         })
         if (typeof updateResponse == 'undefined') {
-          this.feedbackResponse({ type: 'error', message: 'error.general.500' })
+          this.feedbackResponse({
+            type: 'error',
+            message: 'error.general.500'
+          })
         }
         else {
           if (updateResponse.status === 200) {
             this.refreshAll()
-            this.feedbackResponse({ type: 'success', message: this.$i18n.t('component.review.edit.components.link.success.label') })
+            this.feedbackResponse({
+              type: 'success',
+              message: this.$i18n.t('component.review.edit.components.link.success.label')
+            })
+            this.selectedCard = undefined
+            this.$emit('close', true)
           } else {
-            this.feedbackResponse({ type: 'error', code: updateResponse.status, resp: updateResponse })
+            this.feedbackResponse({
+              type: 'error',
+              code: updateResponse.status, resp: updateResponse
+            })
           }
         }
       },
