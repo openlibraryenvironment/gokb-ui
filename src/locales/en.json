@@ -218,6 +218,7 @@
       "columnHeaderExternal": "Package in the external repository",
       "columnHeaderInternal": "Package in GOKB",
       "error": {
+        "uuidNotValid": "The UUID contains invalid characters or does not correspond to specified format.",
         "packageNotExist": "A package with this UUID does not seem to exist in the chosen import repository",
         "packageExists": "A package with this name already exists in the GOKB. Please check if this is a unique package you are trying to import.",
         "platformExists": "The platform doesn't exist in the GOKB yet. Choose an existing platform in the search field or adopt the platform from the import source.",
