@@ -640,7 +640,7 @@
         this.errors.uuid = true
         this.messageColor = 'error'
         this.snackbarMessage = msg
-        this.currentSnackBarTimeout = 3000
+        this.currentSnackBarTimeout = 8000
         this.showSnackbar = true
       },
       mapIdentifierNames (externalName) {
