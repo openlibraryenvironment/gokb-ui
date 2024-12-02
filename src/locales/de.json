@@ -1281,7 +1281,7 @@
           },
           "tippCleanup": {
             "confirm": {
-              "label": "Bereinigen",
+              "label": "Titelupdate bereinigen",
               "message": "Bitte bestätigen Sie die Bereinigung der archivierten Pakettitel mit dem gleichen Referenztitel. Der älteste Pakettitel wird wieder als aktuell markiert, alle anderen werden gelöscht."
             }
           }
