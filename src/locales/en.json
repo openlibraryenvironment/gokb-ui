@@ -1281,7 +1281,7 @@
           },
           "tippCleanup": {
             "confirm": {
-              "label": "Cleanup",
+              "label": "Title update cleanup",
               "message": "Please confirm the cleanup of all archived package titles connected to the same reference title."
             }
           }
