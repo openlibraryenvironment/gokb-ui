@@ -381,7 +381,6 @@
     },
     methods: {
       async checkIfPackageExists() {
-        console.log("+++++++++++++++ ", this.externalSourceType)
           let response = await genericServices('rest/entities').checkNewName(
             encodeURIComponent(this.packageName),
             'Package',
