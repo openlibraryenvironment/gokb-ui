@@ -264,6 +264,7 @@
     "label": "Import | Imports",
     "finished": "Finished",
     "cancelled": "Cancelled",
+    "skipped": "Skipped",
     "details": "Import Details",
     "active": {
       "label": "Active Jobs"
@@ -425,7 +426,8 @@
         "unknown": "There were errors saving the KBART file!",
         "notFound": "No KBART file was found for the provided URL!",
         "protocol": "KBART URL has an unsupported protocol!",
-        "fileSize": "The file returned is too big. Automated imports of files bigger than 20 MB need to be authorized by an administrator."
+        "fileSize": "The file returned is too big. Automated imports of files bigger than 20 MB need to be authorized by an administrator.",
+        "invalid": "The provided source URL is invalid!"
       },
       "reason": {
         "label": "Reason | Reasons"
