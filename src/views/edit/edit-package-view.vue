@@ -1114,7 +1114,7 @@
         this.packageItem.provider = importData.provider
         this.packageItem.nominalPlatform = importData.platform
         this.sourceItem = importData.source
-        this.externalSource = importData.sourceType
+        this.externalSource = importData.source.importConfig.value
 
         this.isImportFromExternalSource = true
         this.externalSourceImportPopupVisible = false

@@ -481,7 +481,7 @@
 
               // SOURCE
               let source = {
-                importConfig: this.externalSourceType.id,
+                importConfig: this.externalSourceType,
                 url: 'https://wekb.hbz-nrw.de/api2/searchApi?componentType=package&uuid='.concat(this.external_package_uuid.replaceAll(" ", "")),
                 frequency: frequencyCode,
                 targetNamespace: {},
@@ -879,7 +879,7 @@
             platform: platformObject,
             provider: providerObject,
             source: this.externalSourceInfo,
-            sourceTye: this.externalSourceType.value,
+            sourceType: this.externalSourceType,
             package: pckg
 
           }
