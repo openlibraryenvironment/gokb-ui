@@ -265,6 +265,7 @@
     "label": "Import | Importe",
     "finished": "Fertig",
     "cancelled": "Abgebrochen",
+    "skipped": "Übersprungen",
     "details": "Import-Status",
     "active": {
       "label": "Aktive Jobs"
@@ -426,7 +427,8 @@
         "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
         "notFound": "Unter der angegebenen URL wurde keine KBART-Datei gefunden!",
         "protocol": "Das Protokoll der KBART-URL wird nicht unterstützt!",
-        "fileSize": "Die zurückgelieferte Datei ist zu groß. Der automatisierte Import von Dateien größer als 20 MB muss von einem Administrator autorisiert werden."
+        "fileSize": "Die zurückgelieferte Datei ist zu groß. Der automatisierte Import von Dateien größer als 20 MB muss von einem Administrator autorisiert werden.",
+        "invalid": "In der Paketquelle ist eine ungültige URL eingetragen!"
       },
       "reason": {
         "label": "Ursache | Ursachen"
@@ -1282,7 +1284,7 @@
           },
           "tippCleanup": {
             "confirm": {
-              "label": "Bereinigen",
+              "label": "Titelupdate bereinigen",
               "message": "Bitte bestätigen Sie die Bereinigung der archivierten Pakettitel mit dem gleichen Referenztitel. Der älteste Pakettitel wird wieder als aktuell markiert, alle anderen werden gelöscht."
             }
           }

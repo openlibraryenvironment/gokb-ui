@@ -114,6 +114,7 @@
           url: undefined,
           targetNamespace: undefined,
           automaticUpdates: undefined,
+          importConfig: undefined,
           update: false
         },
         errors: [],
@@ -181,6 +182,7 @@
             this.item.frequency = val.frequency
             this.item.targetNamespace = val.targetNamespace
             this.item.automaticUpdates = val.automaticUpdates
+            this.item.importConfig = val.importConfig
             this.item.update = val.update
           }
         },
@@ -213,6 +215,7 @@
             this.item.name = result.data.name
             this.item.url = result.data.url
             this.item.automaticUpdates = result.data.automaticUpdates
+            this.item.importConfig = result.data.importConfig
 
             if (!!this.item.url) {
               this.isExpanded = true
