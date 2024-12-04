@@ -212,7 +212,7 @@
     },
     "externalSourceImport": {
       "label": "Import a package from an external repository",
-      "selectLabel": "Import source",
+      "selectLabel": "Import Source",
       "uuidFieldLabel": "UUID of the package in {0}",
       "loading": "The Data is loading - Depending on the package size this may take some time.",
       "columnHeaderExternal": "Package in the external repository",
