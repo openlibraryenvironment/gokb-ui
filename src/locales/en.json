@@ -490,8 +490,18 @@
     },
     "validator": {
       "label": "KBART Validator",
-      "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, values automatically interpolated by the GOKb are also accepted (according to the validation during package upload).",
-      "mode": "Strict mode"
+      "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, deviations from the standard, but accepted by the GOKB or not corrupting the data, are marked as warnings (according to the validation during package upload).",
+      "mode": "Strict mode",
+      "advice": "Please upload only tab separated text files (.txt, .tsv, .csv). For performance reasons, please do not validate extensive title lists in quick succession.",
+      "alert": {
+        "strict": {
+          "error": "In strict mode there is no warning, because any deviation from the KBART standard is marked as an error. Title lists with file structure errors cannot be imported into the GOKB. The validation stops after an error has been identified. As a result, no titles are validated and other file structure errors are not recognized. Please correct the file structure errors and then run the validation again to obtain a complete result."
+        },
+        "lax": {
+          "warning": "Title lists that generate warnings can usually be imported into the GOKB, but it is strongly recommended that you remove them before importing.",
+          "error": "An error differs from a warning by the severity of the occurrence. Title lists with file structure errors cannot be imported into the GOKB. The validation stops after an error has been identified. As a result, no titles are validated and other file structure errors are not recognized. Please correct the file structure errors and then run the validation again to obtain a complete result."
+        }
+      }
     }
   },
   "profile": {

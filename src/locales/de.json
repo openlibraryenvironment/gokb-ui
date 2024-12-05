@@ -490,8 +490,18 @@
     },
     "validator": {
       "label": "KBART-Validator",
-      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKb automatisch interpolierte Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
-      "mode": "Strikter Modus"
+      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus sind Abweichungen vom Standard, die allerdings von der GOKB akzeptiert werden oder die Daten nicht korrumpieren, als Warnungen markiert (entsprechend der Validierung während des Paket-Uploads).",
+      "mode": "Strikter Modus",
+      "advice": "Bitte laden Sie nur durch Tabulatoren getrennte Text-Dateien (.txt, .tsv, .csv) hoch. Aus Performanzgründen bitten wir, umfangreiche Titellisten nicht in schneller Folge hintereinander zu validieren.",
+      "alert": {
+        "strict": {
+          "error": "Im strikten Modus gibt es keine Warnung, jede Abweichung vom KBART-Standard wird als Fehler markiert. Titellisten mit Fehlern in der Dateistruktur können nicht in die GOKB importiert werden. Die Validierung bricht ab, nachdem solch ein Fehler identifiziert wurde. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten."
+        },
+        "lax": {
+          "warning": "Titellisten, die Warnungen erzeugen, können zwar in aller Regel in die GOKB importiert werden, es wird aber dringend empfohlen, die Warnungen vor dem Import zu beseitigen.",
+          "error": "Fehler unterscheiden sich von Warnungen in der Schwere der Vorkommnisse. Titellisten mit Fehlern in der Dateistruktur können nicht in die GOKB importiert werden. Die Validierung bricht ab, nachdem solch ein Fehler identifiziert wurde. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten."
+        }
+      }
     }
   },
   "profile": {
