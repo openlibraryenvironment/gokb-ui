@@ -219,6 +219,7 @@
       "columnHeaderExternal": "Paket aus der externen Quelle",
       "columnHeaderInternal": "Paket in der GOKB",
       "error": {
+        "uuidNotValid": "Die eingegebene UUID enthält unerlaubte Zeichen oder entspricht nicht dem vorgegebenen Format",
         "packageNotExist": "Ein Paket mit dieser UUID existiert anscheinend nicht in der gewählten Importquelle",
         "packageExists": "Ein Paket mit diesem Namen existiert bereits in der GOKB. Prüfen Sie bitte, ob es sich um das selbe Paket handelt.",
         "platformExists": "Die Plattform ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder eine schon existierende Plattform oder übernehmen Sie die Plattform von der Importquelle.",
