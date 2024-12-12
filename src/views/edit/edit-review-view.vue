@@ -509,7 +509,52 @@
             this.deescalatable = response.data.isDeescalatable
             this.escalationTarget = response.data.escalationTargetGroup
           })
-      }
+      },
+      async escalate () {
+        const response = await this.catchError({
+          promise: reviewServices.escalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t('component.review.edit.success.escalated')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+
+          this.escalatable = false
+
+          this.fetchReview (this.id)
+        }
+        else {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('error.general.500')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+        }
+      },
+      async deescalate () {
+        const response = await this.catchError({
+          promise: reviewServices.deescalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t('component.review.edit.success.escalated')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+          this.deescalatable = false
+
+          this.fetchReview (this.id)
+        }
+        else {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('error.general.500')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+        }
+      },
     }
   }
 </script>
