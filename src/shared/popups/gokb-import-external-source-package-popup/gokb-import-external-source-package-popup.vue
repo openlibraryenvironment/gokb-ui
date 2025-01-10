@@ -481,7 +481,7 @@
 
               // SOURCE
               let source = {
-                importConfig: this.externalSourceType.id,
+                importConfig: this.externalSourceType,
                 url: 'https://wekb.hbz-nrw.de/api2/searchApi?componentType=package&uuid='.concat(this.external_package_uuid.replaceAll(" ", "")),
                 frequency: frequencyCode,
                 targetNamespace: {},
@@ -606,11 +606,7 @@
               this.contentTypeOfTippsCode = contentTypes.filter(a => a.value == this.contentTypeOfTipps)[0].id
 
             } else {
-              this.errors.uuid = true
-              this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('popups.externalSourceImport.error.packageNotExist')
-              this.currentSnackBarTimeout = 3000
-              this.showSnackbar = true
+              this.showSnackbarError(this.$i18n.t('popups.externalSourceImport.error.packageNotExist'))
             }
 
           } catch (error) {
@@ -628,6 +624,8 @@
             }
 
           }
+        } else {
+          this.showSnackbarError(this.$i18n.t('popups.externalSourceImport.error.uuidNotValid'))
         }
         if (result) {
           //console.log("result: ", result)
@@ -636,6 +634,13 @@
 
         this.externalDataIsLoading = false
 
+      },
+      showSnackbarError(msg) {
+        this.errors.uuid = true
+        this.messageColor = 'error'
+        this.snackbarMessage = msg
+        this.currentSnackBarTimeout = 8000
+        this.showSnackbar = true
       },
       mapIdentifierNames (externalName) {
         var identifierName
@@ -874,7 +879,7 @@
             platform: platformObject,
             provider: providerObject,
             source: this.externalSourceInfo,
-            sourceTye: this.externalSourceType,
+            sourceType: this.externalSourceType,
             package: pckg
 
           }
