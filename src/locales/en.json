@@ -953,6 +953,7 @@
         "issue": "Issue"
       },
       "embargo": {
+        "label": "Embargo",
         "type": {
           "label": "Type",
           "rolling": "Rolling",

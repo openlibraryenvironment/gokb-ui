@@ -342,6 +342,7 @@
                 :show-title="false"
                 :api-errors="errors.reviewRequests"
                 :expandable="false"
+                hide-select
                 @update="refreshReviewsCount"
               />
             </v-window-item>
@@ -352,8 +353,8 @@
               <gokb-tipps-section
                 :ttl="id"
                 :show-title="false"
-                :disabled="true"
                 :api-errors="errors.tipps"
+                disabled
                 @update="updateTippCount"
               />
             </v-window-item>

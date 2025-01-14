@@ -953,6 +953,7 @@
         "issue": "Heft"
       },
       "embargo": {
+        "label": "Embargo",
         "type": {
           "label": "Typ",
           "rolling": "Rolling",
