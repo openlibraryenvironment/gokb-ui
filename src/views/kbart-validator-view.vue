@@ -9,14 +9,16 @@
       </v-alert>
     </v-container>
 
-    <v-row>
-
-    </v-row>
 
     <gokb-section>
-      <br><br>
       <v-row class="px-4">
-      <br><br><span>{{ $t('kbart.validator.advice') }}</span>
+        <v-col xl="6">
+          <v-card >
+            {{ $t('kbart.validator.advice') }}
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row class="px-4">
         <v-col xl="6">
           <gokb-file-input-field
             v-model="selectedFile"
@@ -70,17 +72,16 @@
           <h4>{{ $tc('kbart.processing.error.structure') }}</h4>
           <ul>
             <li
-              v-for="er in errors"
+              v-for="er in loadedFile.errors.missingColumns"
               :key="er"
               class="ml-4">
-              {{ er }}
+              {{ $tc('kbart.errors.missingCols' ) + ' ' + er }}
             </li>
           </ul>
         </v-col>
 
-        <v-alert type="warning">
-          Pakete mit Dateistruktur-Fehlern können nicht in die GOKb importiert werden.
-          Außerdem verhindern die Fehler in der Dateistruktur
+        <v-alert type="error">
+          {{ useStrict ? $tc('kbart.validator.alert.strict.error' ) : $tc('kbart.validator.alert.lax.error' ) }}
         </v-alert>
 
       </v-row>
@@ -94,15 +95,16 @@
           <ul>
             <li
               v-for="w in loadedFile.warnings.missingColumns"
-              :key="w">
+              :key="w"
+              class="ml-4">
               {{ $tc('kbart.errors.missingCols' ) + ' ' + w }}
             </li>
           </ul>
         </v-col>
 
 
-        <v-alert type="info">
-          Dateien mit Warnungen können zwar in aller Regel in die GOKb importiert werden, es wird aber dringend empfohlen, diese vor dem Import zu beseitigen.
+        <v-alert type="warning">
+          {{ $tc('kbart.validator.alert.lax.warning' ) }}
         </v-alert>
 
 

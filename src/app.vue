@@ -297,7 +297,7 @@
       imprintLink: import.meta.env.VITE_IMP_LINK,
       docsLink: import.meta.env.VITE_DOCS_LINK,
       accessibilityLink: import.meta.env.VITE_ACC_LINK,
-      appName: import.meta.env.VITE_TITLE || 'GOKb Client',
+      appName: import.meta.env.VITE_TITLE || 'GOKB Client',
       appColor: import.meta.env.VITE_COLOR || '#4f4f4f',
       appVersion: pkg.version || import.meta.env.VITE_VERSION,
       gitCommit: import.meta.env.VITE_GIT_HASH,
