@@ -200,6 +200,13 @@
     <template #buttons>
       <v-spacer />
       <gokb-button
+        color="green"
+        :disabled="!executedOnce"
+        @click="exportResults"
+      >
+        Ergebnis exportieren
+      </gokb-button>
+      <gokb-button
         text
         @click.prevent="reset"
       >
@@ -219,6 +226,7 @@
 <script>
 import baseComponent from '@/shared/components/base-component'
 import kbartServices from '@/shared/services/kbart-services'
+import exportServices from '@/shared/services/export-services'
 
 export default {
   name: 'KbartValidatorView',
@@ -301,6 +309,38 @@ export default {
     }
   },
   methods: {
+    exportResults() {
+
+      let warnings = this.loadedFile.warnings.single
+      warnings.forEach(function(w) {
+        w.type = 'Warnung'
+      })
+      let errors = this.loadedFile.errors.single
+      errors.forEach(function(e) {
+        e.type = 'Error'
+      })
+
+      let errorsAndWarnings = warnings.concat(errors)
+
+      exportServices.toTsv([{
+        text: 'Zeile',
+        value: 'row'
+      },
+        {
+          text: 'Spalte',
+          value: 'column'
+        },
+        {
+          text: 'Ursache',
+          value: 'reason'
+        },
+        {
+          text: 'Typ',
+          value: 'type'
+        }],
+        errorsAndWarnings
+      )
+    },
     reset() {
       this.errors = []
       this.selectedFile = null
