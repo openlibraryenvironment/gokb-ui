@@ -131,7 +131,7 @@
       "create": "Pflegeauftrag beantragen",
       "search": "Pflegeauftrag"
     },
-    "home": "GOKb",
+    "home": "GOKB",
     "profile": "Profil",
     "register": "Registrierung",
     "noaccess": "Kein Zugang",
@@ -203,8 +203,8 @@
     },
     "register":  {
       "label": "Registrieren",
-      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte nach der Registrierung bei uns unter {0}, damit wir sie aufnehmen können.",
-      "nomail": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte bei uns, damit wir sie freischalten können."
+      "info": "Alle Metadaten zu eRessourcen in der GOKB sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKB mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte nach der Registrierung bei uns unter {0}, damit wir sie aufnehmen können.",
+      "nomail": "Alle Metadaten zu eRessourcen in der GOKB sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKB mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte bei uns, damit wir sie freischalten können."
     },
     "activateUser": {
       "label": "Benutzerkonto aktivieren",
@@ -491,8 +491,18 @@
     },
     "validator": {
       "label": "KBART-Validator",
-      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKb automatisch interpolierte Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
-      "mode": "Strikter Modus"
+      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus sind Abweichungen vom Standard, die allerdings von der GOKB akzeptiert werden oder die Daten nicht korrumpieren, als Warnungen markiert (entsprechend der Validierung während des Paket-Uploads).",
+      "mode": "Strikter Modus",
+      "advice": "Bitte laden Sie nur durch Tabulatoren getrennte Text-Dateien (.txt, .tsv, .csv) hoch. Aus Performanzgründen bitten wir, umfangreiche Titellisten nicht in schneller Folge hintereinander zu validieren.",
+      "alert": {
+        "strict": {
+          "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn ein Fehler in der Dateistruktur identifiziert wurde, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten. Bei Fehlern einzelner Datensätze bricht die Validierung nicht ab. Es wird die Gesamtheit aller Fehler ausgegeben."
+        },
+        "lax": {
+          "warning": "Titellisten, die Warnungen erzeugen, können zwar in aller Regel in die GOKB importiert werden, es wird aber dringend empfohlen, die Warnungen vor dem Import zu beseitigen.",
+          "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn ein Fehler in der Dateistruktur identifiziert wurde, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten. Bei Fehlern einzelner Datensätze bricht die Validierung nicht ab. Es wird die Gesamtheit aller Fehler ausgegeben."
+        }
+      }
     }
   },
   "profile": {
@@ -1407,7 +1417,7 @@
         "Ambiguous Matches": {
           "label": "Uneindeutige Titeltreffer",
           "info": "Mehrere Titel stimmen anhand der vorliegenden Identifikatoren überein.",
-          "action": "Die GOKb konnte keinen Referenztitel verknüpfen.",
+          "action": "Die GOKB konnte keinen Referenztitel verknüpfen.",
           "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt. Falls ja, führen Sie die Titel zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diesen, falls sie falsch sind.",
           "workflow": {
             "step1": {
@@ -1505,20 +1515,20 @@
         "Critical Identifier Conflict": {
           "label": "Referenztitelkonflikt",
           "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Der neue Referenztitel stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein; andere Identifikatoren stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname.",
-          "action": "Die GOKb erstellte einen neuen Referenztitel mit den Identifikatoren des Pakettitels. Der Pakettitel wurde mit dem neuen Referenztitel verknüpft.",
+          "action": "Die GOKB erstellte einen neuen Referenztitel mit den Identifikatoren des Pakettitels. Der Pakettitel wurde mit dem neuen Referenztitel verknüpft.",
           "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Liegen Dubletten vor, wählen Sie den zu verbleibenden Titel über den Button 'Ziel auswählen' aus. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren, um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht). Liegen keine Dubletten vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Fehlende Identifikatoren können Sie nachtragen, indem Sie über den Namen in die Bearbeitungssicht eines Titels springen. Sie können die Anfrage nun als abgeschlossen markieren."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifikatoren-Konflikt (ID ergänzt)",
           "info": "Beim Abgleich mit einem Referenztitel wurde ein Identifikator gefunden, der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
-          "action": "Die GOKb hat im Referenztitel Identifikatoren hinzugefügt.",
+          "action": "Die GOKB hat im Referenztitel Identifikatoren hinzugefügt.",
           "toDo": "Überprüfen Sie die Identifikatoren des Referenztitels, und entfernen sie fehlerhafte Einträge."
         },
         "Generic Matching Conflict": {
           "label": "Generischer Matchingkonflikt",
           "info": "Es trat ein Konflikt beim Abgleich des eigehenden Pakettitels mit bestehenden Referenztiteln auf.",
           "action": "-",
-          "toDo": "Überprüfen Sie die betroffenen Titel und informieren Sie gegebenenfalls die GOKb-Redaktion."
+          "toDo": "Überprüfen Sie die betroffenen Titel und informieren Sie gegebenenfalls die GOKB-Redaktion."
         },
         "Invalid Record": {
           "label": "Ungültiger KBART-Datensatz",
@@ -1547,7 +1557,7 @@
         "Invalid Name": {
           "label": "Fehlerhafter Name",
           "info": "Der Name dieses Titels enthält fehlerhafte Zeichen (dargestellt durch Platzhalter �).",
-          "action": "Die GOKb legte den Namen mit Platzhaltern (�) für fehlerhafte Zeichen an.",
+          "action": "Die GOKB legte den Namen mit Platzhaltern (�) für fehlerhafte Zeichen an.",
           "toDo": "Korrigieren Sie den Namen des Titels, indem sie das Stift-Icon neben dem Titelnamen anklicken. Schließen Sie die Bearbeitung ab, indem Sie den Haken anwählen. Bestätigen Sie Ihre Änderung mit 'Titeländerungen abschicken'. Bitte überprüfen Sie auch die Namen der gegebenenfalls verknüpften Referenztitel/Pakettitel. "
         },
         "Information": {

@@ -8,7 +8,16 @@
         {{ $t('kbart.validator.info') }}
       </v-alert>
     </v-container>
+
+
     <gokb-section>
+      <v-row class="px-4">
+        <v-col xl="6">
+          <v-alert border variant="elevated">
+            {{ $t('kbart.validator.advice') }}
+          </v-alert>
+        </v-col>
+      </v-row>
       <v-row class="px-4">
         <v-col xl="6">
           <gokb-file-input-field
@@ -52,26 +61,60 @@
     </v-row>
     <gokb-section
       :sub-title="$t('header.results')"
-      v-if="completion === 100"
+      v-if="showResults"
     >
+
       <v-row
-        v-if="errors.length > 0"
+        v-if="loadedFile.errors.missingColumns.length > 0"
         class="pa-4"
       >
         <v-col>
-          <h4>{{ $tc('default.error.label', 2) }}</h4>
+          <h4>{{ $tc('kbart.processing.error.structure') }}</h4>
           <ul>
             <li
-              v-for="er in errors"
+              v-for="er in loadedFile.errors.missingColumns"
               :key="er"
               class="ml-4">
-              {{ er }}
+              {{ $tc('kbart.errors.missingCols' ) + ' ' + er }}
             </li>
           </ul>
         </v-col>
+
+        <v-col>
+          <v-alert type="error">
+            {{ useStrict ? $tc('kbart.validator.alert.strict.error' ) : $tc('kbart.validator.alert.lax.error' ) }}
+          </v-alert>
+        </v-col>
+
       </v-row>
+
       <v-row
-        v-else-if="completion === 100"
+        v-if="loadedFile.warnings.missingColumns.length > 0"
+        class="pa-4"
+      >
+        <v-col>
+          <h4>{{ $tc('kbart.processing.warning.structure') }}</h4>
+          <ul>
+            <li
+              v-for="w in loadedFile.warnings.missingColumns"
+              :key="w"
+              class="ml-4">
+              {{ $tc('kbart.errors.missingCols' ) + ' ' + w }}
+            </li>
+          </ul>
+        </v-col>
+
+        <v-col>
+          <v-alert type="warning">
+            {{ $tc('kbart.validator.alert.lax.warning' ) }}
+          </v-alert>
+        </v-col>
+
+
+      </v-row>
+
+      <v-row
+        v-if="showRowResults"
         class="pa-4"
       >
         <v-col>
@@ -188,6 +231,7 @@ export default {
       errors: [],
       selectedNamespace: undefined,
       importRunning: false,
+      executedOnce: false,
       loadedFile: {
         errors: {
           missingColumns: [],
@@ -226,6 +270,12 @@ export default {
     },
     expandWidth () {
       return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 400
+    },
+    showResults () {
+      return (this.completion === 100 || (this.completion === 0 && this.executedOnce))
+    },
+    showRowResults () {
+      return (this.loadedFile.errors.missingColumns.length === 0 && this.errors.length === 0)
     }
   },
   watch: {
@@ -239,13 +289,17 @@ export default {
       this.loadedFile.warnings.missingColumns = []
       this.loadedFile.warnings.single = []
       this.loadedFile.warnings.type = {}
+      this.executedOnce = false
     },
     '$i18n.locale' () {
       if (!!this.selectedFile) {
         this.doImport()
       }
     },
-    useStrict() {
+    useStrict () {
+      this.completion = 0
+    },
+    'options.selectedNamespace' () {
       this.completion = 0
     }
   },
@@ -264,9 +318,11 @@ export default {
       const validationResult = await kbartServices.validate(this.selectedFile, namespaceName, this.useStrict, this.cancelToken.token)
 
       if (validationResult.status === 200 && validationResult?.data?.report) {
-        if (validationResult.data.errors.missingColumns?.length > 0) {
-          this.errors.push(this.$i18n.t('kbart.errors.missingCols', [validationResult.data.errors.missingColumns.join(',')]))
-        }
+        /*if (validationResult.data.errors.missingColumns?.length > 0) {
+          validationResult.data.errors.missingColumns.forEach(error => {
+            this.errors.push(this.$i18n.t('kbart.errors.missingCols', [error] ))
+          })
+        } */
 
         this.loadedFile = validationResult.data.report
 
@@ -306,9 +362,11 @@ export default {
 
         this.options.lineCount = validationResult.data.report.rows.total
         this.completion = 100
+        this.executedOnce = true
       } else {
         this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))
         this.completion = 100
+        this.executedOnce = true
       }
 
       this.importRunning = false
