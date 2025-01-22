@@ -202,13 +202,18 @@
     </gokb-section>
     <template #buttons>
       <v-spacer />
-      <gokb-button
+      <!-- <gokb-button
         color="green"
         :disabled="!executedOnce"
         @click="exportResults"
       >
         Ergebnis exportieren
-      </gokb-button>
+      </gokb-button> -->
+      <gokb-export-validator-results
+        :disabled="!executedOnce"
+        :loaded-file="loadedFile"
+      />
+
       <gokb-button
         text
         @click.prevent="reset"
@@ -230,9 +235,12 @@
 import baseComponent from '@/shared/components/base-component'
 import kbartServices from '@/shared/services/kbart-services'
 import exportServices from '@/shared/services/export-services'
+import GokbExportValidatorResults
+  from "../shared/components/complex/gokb-export-validator-results/gokb-export-validator-results.vue";
 
 export default {
   name: 'KbartValidatorView',
+  components: {GokbExportValidatorResults},
   extends: baseComponent,
   data () {
     return {
