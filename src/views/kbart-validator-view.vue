@@ -13,9 +13,9 @@
     <gokb-section>
       <v-row class="px-4">
         <v-col xl="6">
-          <v-card >
+          <v-alert border variant="elevated">
             {{ $t('kbart.validator.advice') }}
-          </v-card>
+          </v-alert>
         </v-col>
       </v-row>
       <v-row class="px-4">
@@ -80,9 +80,11 @@
           </ul>
         </v-col>
 
-        <v-alert type="error">
-          {{ useStrict ? $tc('kbart.validator.alert.strict.error' ) : $tc('kbart.validator.alert.lax.error' ) }}
-        </v-alert>
+        <v-col>
+          <v-alert type="error">
+            {{ useStrict ? $tc('kbart.validator.alert.strict.error' ) : $tc('kbart.validator.alert.lax.error' ) }}
+          </v-alert>
+        </v-col>
 
       </v-row>
 
@@ -102,10 +104,11 @@
           </ul>
         </v-col>
 
-
-        <v-alert type="warning">
-          {{ $tc('kbart.validator.alert.lax.warning' ) }}
-        </v-alert>
+        <v-col>
+          <v-alert type="warning">
+            {{ $tc('kbart.validator.alert.lax.warning' ) }}
+          </v-alert>
+        </v-col>
 
 
       </v-row>
