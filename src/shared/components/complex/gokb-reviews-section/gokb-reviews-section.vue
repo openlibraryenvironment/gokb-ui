@@ -271,7 +271,7 @@
         return this.selectedItemsTotal > 0 || this.allPagesSelected
       },
       showEditActions () {
-        return !!this.reviews && !hideSelect && (this.reviews?.filter(item => (item.updateUrl)).length > 0)
+        return !!this.reviews && !this.hideSelect && (this.reviews?.filter(item => (item.updateUrl)).length > 0)
       },
       bulkEditDisabled () {
         return !this.reviews || this.selectedItems.length === 0 || this.selectedItems.some(item => (item.updateUrl === null))
