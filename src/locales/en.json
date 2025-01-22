@@ -1146,6 +1146,11 @@
       "additionalInfo": {
         "label": "Structured info"
       },
+      "referenceBase": {
+        "label": "Further information",
+        "message": "Documentation for '{0}'",
+        "urlBase": "https://gokb.org/en-gb/working-with-review-requests/"
+      },
       "otherComponents": {
         "label": "Other Components",
         "add": "Link new component",
