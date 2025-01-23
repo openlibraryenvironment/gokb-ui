@@ -74,11 +74,11 @@
 
         let warnings = this.loadedFile.warnings.single
         warnings.forEach(function(w) {
-          w.type = 'Warnung'
+          w.type = 'Warnung' // this.$i18n.t('kbart.processing.warning.label', 1)
         })
         let errors = this.loadedFile.errors.single
         errors.forEach(function(e) {
-          e.type = 'Error'
+          e.type = 'Fehler'  //this.$i18n.t('kbart.processing.error.label', 1)
         })
 
         let errorsAndWarnings = structureErrors.concat(structureWarnings.concat(errors.concat(warnings)))

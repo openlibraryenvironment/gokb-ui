@@ -135,6 +135,11 @@
     </gokb-section>
 
     <template #buttons>
+      <gokb-export-validator-results
+        :disabled="completion !== 100"
+        :loaded-file="loadedFile"
+      />
+
       <gokb-button
         text
         @click="close"
@@ -156,10 +161,11 @@
   import GokbNamespaceField from '@/shared/components/simple/gokb-namespace-field'
   import providerServices from '@/shared/services/provider-services'
   import kbartServices from '@/shared/services/kbart-services'
+  import GokbExportValidatorResults from "../../components/complex/gokb-export-validator-results/index.js";
 
   export default {
     name: 'GokbKbartImportPopup',
-    components: { GokbNamespaceField },
+    components: {GokbExportValidatorResults, GokbNamespaceField },
     extends: BaseComponent,
     emits: ['update:model-value', 'kbart'],
     props: {

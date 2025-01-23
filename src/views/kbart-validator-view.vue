@@ -202,13 +202,6 @@
     </gokb-section>
     <template #buttons>
       <v-spacer />
-      <!-- <gokb-button
-        color="green"
-        :disabled="!executedOnce"
-        @click="exportResults"
-      >
-        Ergebnis exportieren
-      </gokb-button> -->
       <gokb-export-validator-results
         :disabled="!executedOnce"
         :loaded-file="loadedFile"
@@ -320,58 +313,6 @@ export default {
     }
   },
   methods: {
-    exportResults() {
-      let structureWarnings = []
-      this.loadedFile.warnings.missingColumns.forEach(function(sw) {
-        let mc = {}
-        mc.column = sw
-        mc.row = 'n.a.'
-        mc.reason = 'Fehlende Spalte'
-        mc.type = 'Dateistruktur-Warnung'
-        structureWarnings.push(mc)
-      })
-
-      let structureErrors = []
-      this.loadedFile.errors.missingColumns.forEach(function(se) {
-        let mc = {}
-        mc.column = se
-        mc.row = 'n.a.'
-        mc.reason = 'Fehlende Spalte'
-        mc.type = 'Dateistruktur-Fehler'
-        structureErrors.push(mc)
-      })
-
-      let warnings = this.loadedFile.warnings.single
-      warnings.forEach(function(w) {
-        w.type = 'Warnung'
-      })
-      let errors = this.loadedFile.errors.single
-      errors.forEach(function(e) {
-        e.type = 'Error'
-      })
-
-      let errorsAndWarnings = structureErrors.concat(structureWarnings.concat(errors.concat(warnings)))
-
-      exportServices.toTsv([{
-        text: 'Zeile',
-        value: 'row'
-      },
-        {
-          text: 'Spalte',
-          value: 'column'
-        },
-        {
-          text: 'Ursache',
-          value: 'reason'
-        },
-        {
-          text: 'Typ',
-          value: 'type'
-        }],
-        errorsAndWarnings,
-        {'filename' : 'test.csv'}
-      )
-    },
     reset() {
       this.errors = []
       this.selectedFile = null
