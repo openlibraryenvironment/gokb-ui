@@ -51,6 +51,7 @@
           @added="addNewComponent"
           @close="closeReview"
           @feedback-response="showResponse"
+          @hide="hideOtherComponent"
         />
       </div>
     </v-lazy>
@@ -459,6 +460,9 @@
         if (!!this.$refs[wfname]) {
           this.$refs[wfname][0].refreshAll()
         }
+      },
+      hideOtherComponent (id) {
+        this.reviewItem.otherComponents = this.reviewItem.otherComponents.filter(oc => (oc.id != id))
       },
       showResponse (response) {
         if (typeof response === 'string' || response instanceof String) {
