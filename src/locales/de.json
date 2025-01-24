@@ -445,7 +445,7 @@
       "warning": {
         "label": "Warnung | Warnungen",
         "fields": "Spaltenstatistik - Warnungen",
-        "structure": "Dateistruktur - Warnungen"
+        "structure": "Dateistruktur-Warnung | Dateistruktur - Warnungen"
       },
       "error": {
         "label": "Fehler | Fehler",
@@ -453,7 +453,10 @@
         "empty": "Fehlender Wert",
         "invalid": "Fehlerhafter Wert",
         "fields": "Spaltenstatistik - Fehler",
-        "structure": "Dateistruktur - Fehler"
+        "structure": "Dateistruktur-Fehler | Dateistruktur - Fehler"
+      },
+      "type": {
+        "label": "Typ"
       }
     },
     "transmission": {

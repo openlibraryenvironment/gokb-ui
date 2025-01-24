@@ -138,6 +138,7 @@
       <gokb-export-validator-results
         :disabled="completion !== 100"
         :loaded-file="loadedFile"
+        :selected-file="selectedFile"
       />
 
       <gokb-button

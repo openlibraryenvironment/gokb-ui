@@ -24,6 +24,10 @@
         type: Object,
         required: true,
       },
+      selectedFile: {
+        type: File,
+        required: false
+      },
       label: {
         type: String,
         required: false,
@@ -50,57 +54,63 @@
     },
     methods: {
       exportResults () {
-        console.log("aaaaaaaaaa")
-
+        let that = this
+        let allResults = []
         let structureWarnings = []
         this.loadedFile.warnings.missingColumns.forEach(function(sw) {
           let mc = {}
           mc.column = sw
           mc.row = 'n.a.'
-          mc.reason = 'Fehlende Spalte'
-          mc.type = 'Dateistruktur-Warnung'
+          mc.reason = that.$i18n.t('kbart.errors.missingCols')
+          mc.type = that.$i18n.tc('kbart.processing.warning.structure', 1)
           structureWarnings.push(mc)
         })
+        allResults.push(...structureWarnings)
 
         let structureErrors = []
         this.loadedFile.errors.missingColumns.forEach(function(se) {
           let mc = {}
           mc.column = se
           mc.row = 'n.a.'
-          mc.reason = 'Fehlende Spalte'
-          mc.type = 'Dateistruktur-Fehler'
+          mc.reason = that.$i18n.t('kbart.errors.missingCols')
+          mc.type = that.$i18n.tc('kbart.processing.error.structure', 1)
           structureErrors.push(mc)
         })
+        allResults.push(...structureErrors)
 
         let warnings = this.loadedFile.warnings.single
         warnings.forEach(function(w) {
-          w.type = 'Warnung' // this.$i18n.t('kbart.processing.warning.label', 1)
+          w.type = that.$i18n.tc('kbart.processing.warning.label', 1)
         })
+        allResults.push(...warnings)
         let errors = this.loadedFile.errors.single
         errors.forEach(function(e) {
-          e.type = 'Fehler'  //this.$i18n.t('kbart.processing.error.label', 1)
+          e.type = that.$i18n.tc('kbart.processing.error.label', 1)
         })
+        allResults.push(...errors)
 
-        let errorsAndWarnings = structureErrors.concat(structureWarnings.concat(errors.concat(warnings)))
+        // let errorsAndWarnings = structureErrors.concat(structureWarnings.concat(errors.concat(warnings)))
+
+        let fileName = 'GOKB-Validation_'.concat(this.selectedFile.name.split('.')[0]).concat('.csv')
 
         exportServices.toTsv([{
-            text: 'Zeile',
+            text: this.$i18n.tc('kbart.row.label', 1),
             value: 'row'
           },
             {
-              text: 'Spalte',
+              text: this.$i18n.tc('kbart.column.label', 1),
               value: 'column'
             },
             {
-              text: 'Ursache',
+              text: this.$i18n.tc('kbart.errors.reason.label', 1),
               value: 'reason'
             },
             {
-              text: 'Typ',
+              text: this.$i18n.t('kbart.processing.type.label'),
               value: 'type'
             }],
-          errorsAndWarnings,
-          {'filename' : 'test.csv'}
+          allResults,
+          {'filename' : fileName}
         )
 
       },

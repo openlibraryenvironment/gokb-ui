@@ -69,7 +69,7 @@
         class="pa-4"
       >
         <v-col>
-          <h4>{{ $tc('kbart.processing.error.structure') }}</h4>
+          <h4>{{ $tc('kbart.processing.error.structure', 2) }}</h4>
           <ul>
             <li
               v-for="er in loadedFile.errors.missingColumns"
@@ -93,7 +93,7 @@
         class="pa-4"
       >
         <v-col>
-          <h4>{{ $tc('kbart.processing.warning.structure') }}</h4>
+          <h4>{{ $tc('kbart.processing.warning.structure', 2) }}</h4>
           <ul>
             <li
               v-for="w in loadedFile.warnings.missingColumns"
@@ -205,6 +205,7 @@
       <gokb-export-validator-results
         :disabled="!executedOnce"
         :loaded-file="loadedFile"
+        :selected-file="selectedFile"
       />
 
       <gokb-button

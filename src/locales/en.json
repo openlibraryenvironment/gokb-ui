@@ -445,7 +445,7 @@
       "warning": {
         "label": "Warning | Warnings",
         "fields": "Column Statistics - Warnings",
-        "structure": "File Structure - Warnings"
+        "structure": "File Structure Warning | File Structure - Warnings"
       },
       "error": {
         "label": "Error | Errors",
@@ -453,7 +453,7 @@
         "empty": "Missing Value",
         "invalid": "Invalid Value",
         "fields": "Column Statistics - Errors",
-        "structure": "File Structure - Errors"
+        "structure": "File Structure Error | File Structure - Errors"
       }
     },
     "transmission": {
