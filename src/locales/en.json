@@ -454,6 +454,12 @@
         "invalid": "Invalid Value",
         "fields": "Column Statistics - Errors",
         "structure": "File Structure Error | File Structure - Errors"
+      },
+      "type": {
+        "label": "Type"
+      },
+      "exportResult": {
+        "label": "Export Result"
       }
     },
     "transmission": {

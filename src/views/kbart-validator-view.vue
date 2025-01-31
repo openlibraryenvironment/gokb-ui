@@ -59,6 +59,8 @@
         <span class="pl-4">{{ $t('kbart.processing.started') }}</span>
       </v-col>
     </v-row>
+
+    <!--
     <gokb-section
       :sub-title="$t('header.results')"
       v-if="showResults"
@@ -200,13 +202,23 @@
         </v-col>
       </v-row>
     </gokb-section>
+    -->
+
+    <gokb-export-validator-results
+      v-if="showResults"
+      :disabled="!executedOnce"
+      :loaded-file="loadedFile"
+      :selected-file="selectedFile"
+    />
+
     <template #buttons>
       <v-spacer />
-      <gokb-export-validator-results
+      <!-- <gokb-export-validator-results
         :disabled="!executedOnce"
         :loaded-file="loadedFile"
         :selected-file="selectedFile"
       />
+      -->
 
       <gokb-button
         text
@@ -271,22 +283,22 @@ export default {
     }
   },
   computed: {
-    errorHeaders () {
+    /* errorHeaders () {
       return [
         { title: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
         { title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
         { title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
       ]
-    },
+    }, */
     expandWidth () {
       return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 400
     },
     showResults () {
       return (this.completion === 100 || (this.completion === 0 && this.executedOnce))
     },
-    showRowResults () {
+    /*showRowResults () {
       return (this.loadedFile.errors.missingColumns.length === 0 && this.errors.length === 0)
-    }
+    } */
   },
   watch: {
     selectedFile () {

@@ -71,6 +71,8 @@
         {{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }} –
         {{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}
       </div>
+
+      <!--
       <div
         v-if="loadedFile.rows.error > 0"
         class="ma-2"
@@ -131,15 +133,22 @@
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
-      </div>
-    </gokb-section>
+      </div> -->
 
-    <template #buttons>
       <gokb-export-validator-results
-        :disabled="completion !== 100"
+        v-if="completion === 100"
         :loaded-file="loadedFile"
         :selected-file="selectedFile"
       />
+
+    </gokb-section>
+
+    <template #buttons>
+      <!-- <gokb-export-validator-results
+        :disabled="completion !== 100"
+        :loaded-file="loadedFile"
+        :selected-file="selectedFile"
+      /> -->
 
       <gokb-button
         text

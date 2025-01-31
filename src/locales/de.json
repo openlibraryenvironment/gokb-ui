@@ -457,6 +457,9 @@
       },
       "type": {
         "label": "Typ"
+      },
+      "exportResult": {
+        "label": "Ergebnis exportieren"
       }
     },
     "transmission": {
