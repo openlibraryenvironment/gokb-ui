@@ -224,20 +224,6 @@
           this.item.titleIdSerial = undefined
           this.item.titleIdMonograph = undefined
         }
-      },
-      modelValue: {
-        handler(val) {
-          if (!!val && !val.id) {
-            this.item.type = val.type
-            this.item.url = val.url
-            this.item.frequency = val.frequency
-            this.item.targetNamespace = val.targetNamespace
-            this.item.automaticUpdates = val.automaticUpdates
-            this.item.importConfig = val.importConfig
-            this.item.update = val.update
-          }
-        },
-        deep: true
       }
     },
     async mounted () {
@@ -248,6 +234,10 @@
       } else if (!!this.modelValue?.url) {
         this.isExpanded = true
         this.item = this.modelValue
+
+        if (!!this.item.titleIdSerial && !!this.item.titleIdMonograph) {
+          this.mixedContent = true
+        }
       } else if (!!this.provider && !!this.contentType){
         this.fetchDefaultNamespace()
       }

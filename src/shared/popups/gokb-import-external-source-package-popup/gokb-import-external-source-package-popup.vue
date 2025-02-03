@@ -875,6 +875,9 @@
             this.externalSourceInfo.targetNamespace = this.namespaceJournal
           }
 
+          this.externalSourceInfo.titleIdMonograph = this.namespaceMonograph
+          this.externalSourceInfo.titleIdSerial = this.namespaceJournal
+
           const allData = {
             platform: platformObject,
             provider: providerObject,
