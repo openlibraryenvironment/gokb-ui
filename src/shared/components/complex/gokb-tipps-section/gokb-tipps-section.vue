@@ -49,6 +49,7 @@
           class="mx-4"
           color="primary"
           @click.prevent="showKbartImportPopup"
+          :disabled="isImportFromExternalSource"
         >
           KBART Import
         </gokb-button>
@@ -306,6 +307,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      isImportFromExternalSource: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {

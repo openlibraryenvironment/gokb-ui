@@ -37,7 +37,9 @@
     "bulkCloseReview": "Close {0} selected review | Close {0} selected reviews",
     "closeSelectedReviews": "Close selected reviews",
     "moreFilters": "More Filters",
-    "moreOptions": "More Options"
+    "moreOptions": "More Options",
+    "externalSourceImport": "Import from external source",
+    "hide": "Hide"
   },
   "main": {
     "docs": {
@@ -129,7 +131,7 @@
       "create": "Create Maintenance",
       "search": "Maintenance"
     },
-    "home": "GOKb",
+    "home": "GOKB",
     "profile": "Profile",
     "register": "Registration",
     "noaccess": "No Access",
@@ -201,13 +203,43 @@
     },
     "register": {
       "label": "Register",
-      "info": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and we will contact you after a review. If your institution is not yet registered as a curator, please contact us at {0} and tell us about it.",
-      "nomail": "All resource information in GOKb is freely accessible without login! If you would like to actively work in GOKb, please register here and we will contact you after a review. If your institution is not yet registered as a curator, please contact us and tell us about it."
+      "info": "All resource information in GOKB is freely accessible without login! If you would like to actively work in GOKB, please register here and we will contact you after a review. If your institution is not yet registered as a curator, please contact us at {0} and tell us about it.",
+      "nomail": "All resource information in GOKB is freely accessible without login! If you would like to actively work in GOKB, please register here and we will contact you after a review. If your institution is not yet registered as a curator, please contact us and tell us about it."
     },
     "activateUser": {
       "label": "Activate User",
       "info": "Please confirm the activation of this account. This will release the default lock and apply basic editing permissions.",
       "sendAlert": "Alert user of the activation via email"
+    },
+    "externalSourceImport": {
+      "label": "Import a package from an external repository",
+      "selectLabel": "Import Source",
+      "uuidFieldLabel": "UUID of the package in {0}",
+      "loading": "The Data is loading - Depending on the package size this may take some time.",
+      "columnHeaderExternal": "Package in the external repository",
+      "columnHeaderInternal": "Package in GOKB",
+      "error": {
+        "uuidNotValid": "The UUID contains invalid characters or does not correspond to specified format.",
+        "packageNotExist": "A package with this UUID does not seem to exist in the chosen import repository",
+        "packageExists": "A package with this name already exists in the GOKB. Please check if this is a unique package you are trying to import.",
+        "platformExists": "The platform doesn't exist in the GOKB yet. Choose an existing platform in the search field or adopt the platform from the import source.",
+        "providerExists": "The provider doesn't exist in the GOKB yet. Choose an existing provider in the search field or adopt the provider from the import source."
+      },
+      "adaptSource": "Adopt from source",
+      "packageName": "Package name",
+      "packageIdentifier": "Package Identifier | Package Identifiers",
+      "packageIdentifierYes": "There's an identifier associated with the package in this format: ",
+      "packageIdentifierNo": "There is no identifier associated with the package.",
+      "packageIdentifierSelect": "Select the identifier namespace the identifier value belongs to (optional)",
+      "titleIdentifier": "Title identifier",
+      "titleIdentifierInfo": "These are examples of identifiers separated by content type",
+      "contentTypeInfo": "The titles in this package are of content type",
+      "titleIdentifierInfoSelect": "Select the consistent identifier namespace for the field title_id (optional)",
+      "searchPlatform": "Search platform",
+      "searchProvider": "Search provider",
+      "titleIdNamespace": "title_id namespace for {0}",
+      "monographs": "Monographs",
+      "journals": "Journals"
     }
   },
   "validation": {
@@ -234,6 +266,7 @@
     "label": "Import | Imports",
     "finished": "Finished",
     "cancelled": "Cancelled",
+    "skipped": "Skipped",
     "details": "Import Details",
     "active": {
       "label": "Active Jobs"
@@ -384,7 +417,7 @@
       "tabsCountFile": "This file contains rows with a different column count than defined by the provided headings!",
       "tabsCountRow": "This line contains {0} columns instead of {1} columns, as defined by the headings!",
       "missingVal": "Missing value in column '{0}'!",
-      "missingCols": "Missing columns: {0}",
+      "missingCols": "Missing column: {0}",
       "correctedVal": "Value '{0}' will be automatically replaced by '{1}'",
       "replacementChars": "This file contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
@@ -407,7 +440,8 @@
         "unknown": "There were errors saving the KBART file!",
         "notFound": "No KBART file was found for the provided URL!",
         "protocol": "KBART URL has an unsupported protocol!",
-        "fileSize": "The file returned is too big. Automated imports of files bigger than 20 MB need to be authorized by an administrator."
+        "fileSize": "The file returned is too big. Automated imports of files bigger than 20 MB need to be authorized by an administrator.",
+        "invalid": "The provided source URL is invalid!"
       },
       "reason": {
         "label": "Reason | Reasons"
@@ -423,14 +457,16 @@
       },
       "warning": {
         "label": "Warning | Warnings",
-        "fields": "Column Statistics - Warnings"
+        "fields": "Column Statistics - Warnings",
+        "structure": "File Structure - Warnings"
       },
       "error": {
         "label": "Error | Errors",
         "general": "Validation has identified errors in this file!",
         "empty": "Missing Value",
         "invalid": "Invalid Value",
-        "fields": "Column Statistics - Errors"
+        "fields": "Column Statistics - Errors",
+        "structure": "File Structure - Errors"
       }
     },
     "transmission": {
@@ -474,6 +510,16 @@
       },
       "mixed": {
         "label": "Mixed Content"
+      },
+      "advice": "Please upload only tab separated text files (.txt, .tsv, .csv). For performance reasons, please do not validate extensive title lists in quick succession.",
+      "alert": {
+        "strict": {
+          "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If an error is identified in the file structure, the validation is aborted. As a result, no individual titles are validated and further errors in the file structure are not recognized. Please correct the errors in the file structure and then run the validation again to obtain a complete result. Validation is not aborted if individual data records contain errors. The entirety of all errors is output."
+        },
+        "lax": {
+          "warning": "Title lists that generate warnings can usually be imported into the GOKB, but it is strongly recommended that you remove them before importing.",
+          "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If an error is identified in the file structure, the validation is aborted. As a result, no individual titles are validated and further errors in the file structure are not recognized. Please correct the errors in the file structure and then run the validation again to obtain a complete result. Validation is not aborted if individual data records contain errors. The entirety of all errors is output."
+        }
       }
     }
   },
@@ -935,6 +981,7 @@
         "issue": "Issue"
       },
       "embargo": {
+        "label": "Embargo",
         "type": {
           "label": "Type",
           "rolling": "Rolling",
@@ -1194,7 +1241,16 @@
             },
             "confirm": {
               "label": "Confirm Merge",
-              "message": "Please confirm that you want to merge the reviewed title ({0}) into the selected one. The review will be closed and the reviewed title will be deleted."
+              "message": "Please confirm that you want to merge the reviewed reference title ({0}) into the selected one.",
+              "transferCombos": {
+                "message": "The reviewed title will be deleted, and all package titles as well as the selected identifiers connected to it will be moved to the selected target."
+              },
+              "transferName": {
+                "message": "The name of the selected target title will be changed to that of the deleted title and its current name will be added as a variant."
+              },
+              "closeReview": {
+                "message": "The review will be marked as closed automatically."
+              }
             },
             "selectIds": {
               "label": "Select IDs to add to the merged title.",
@@ -1213,6 +1269,9 @@
             },
             "unselected": {
               "label": "{0}"
+            },
+            "transferName": {
+              "label": "Transfer name"
             }
           },
           "single": {
@@ -1232,7 +1291,13 @@
             },
             "confirmMerge": {
               "label": "Confirm Merge",
-              "message": "Please confirm the title merge. The reference title {0} will be deleted and all of its linked package titles will be transferred to the selected title."
+              "message": "Please confirm the title merge.",
+              "transferCombos": {
+                "message": "The reference title {0} will be deleted and all of its linked package titles and identifiers will be transferred to the selected title."
+              },
+              "transferName": {
+                "message": "The name of the selected target title will be changed to that of the deleted title and its current name will be added as a variant."
+              }
             },
             "confirmLink": {
               "label": "Confirm Linking",
@@ -1254,7 +1319,7 @@
           },
           "tippCleanup": {
             "confirm": {
-              "label": "Cleanup",
+              "label": "Title update cleanup",
               "message": "Please confirm the cleanup of all archived package titles connected to the same reference title."
             }
           }
@@ -1442,7 +1507,7 @@
         "Ambiguous Title Matches": {
           "label": "Ambiguous Title Matches",
           "info": "Based on the available identifiers the package title cannot be uniquely assigned to a reference title.",
-          "action": "The GOKb could not link a reference title.",
+          "action": "The GOKB could not link a reference title.",
           "toDo": "Check if there are duplicates in the reference titles. Select the correct title.",
           "workflow": {
             "step1": {
@@ -1458,26 +1523,26 @@
         "Namespace Conflict": {
           "label": "ISSN Conflict",
           "info": "The package title has an e-ISSN that corresponds to an existing p-ISSN of the reference title, or vice versa.",
-          "action": "The GOKb created p-ISSN and e-ISSN with the same value.",
+          "action": "The GOKB created p-ISSN and e-ISSN with the same value.",
           "toDo": "In the package title, check if a p-ISSN has been marked as an e-ISSN or vice versa and correct it by deleting the incorrect ISSNs. You can add new identifiers by opening the detailed view of the title in a new tab by clicking on the title. Likewise, check the reference title and correct the ISSNs there. If the package title was imported via a KBART file, contact the provider and point out the incorrect ISSN."
         },
         "Critical Identifier Conflict": {
           "label": "Reference Title Conflict",
           "info": "A new reference title was created due to an identifier conflict. The new reference title matches an existing reference title based on at least one identifier while other identifiers do not match. In addition, the reference title name differs significantly.",
-          "action": "The GOKb created a new reference title using the identifiers of the package title. The package title was linked to the new reference title.",
+          "action": "The GOKB created a new reference title using the identifiers of the package title. The package title was linked to the new reference title.",
           "toDo": "Check for duplicates in the reference titles. If this is the case, merge them by first selecting a reference title via 'Select Merge Target' and then clicking on 'Merge Duplicate'. All remaining identifiers of the title to be deleted will be taken over. If there is no duplicate, check the identifiers and delete any that are incorrect."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifier Conflict (ID added)",
           "info": "When matching with a reference title, an identifier was found that does not match the existing identifiers of the reference title. Nevertheless, it seems to be the same title because, for example, the name matches.",
-          "action": "The GOKb has added the identifier in the reference title.",
+          "action": "The GOKB has added the identifier in the reference title.",
           "toDo": "Check identifiers of the reference title and remove the incorrect identifiers if necessary."
         },
         "Generic Matching Conflict": {
           "label": "Generic Matching Conflict",
           "info": "There has been a conflict matching the package title with an existing reference title.",
           "action": "",
-          "toDo": "Check all titles and contact the GOKb team if necessary."
+          "toDo": "Check all titles and contact the GOKB team if necessary."
         },
         "Invalid Record": {
           "label": "Invalid KBART Record",
@@ -1494,8 +1559,8 @@
         "Import Identifier Mismatch": {
           "label": "Import Identifier Mismatch",
           "info": "A KBART record could be matched to an existing package title based on one or more identifiers, but one or more other identifiers differ.",
-          "action": "The GOKb created a new package title.",
-          "toDo": "Review the identifiers of the package titles. If you find any errors, they should ideally be corrected by importing a corrected KBART file. In this case, you can first delete the erroneous package title(s) via their detail view. Alternatively, you can also delete incorrect identifiers manually here."
+          "action": "The GOKB created a new package title.",
+          "toDo": "Check the identifiers and reference titles for conflicts that need to be resolved. It's possible that more package titles are displayed than are affected."
         },
         "Import Report": {
           "label": "Report on KBART Import",
@@ -1506,7 +1571,7 @@
         "Invalid Name": {
           "label": "Invalid Name",
           "info": "The name of this title contains incorrect characters (represented by placeholder �).",
-          "action": "The GOKb created the name with placeholders (�) for incorrect characters.",
+          "action": "The GOKB created the name with placeholders (�) for incorrect characters.",
           "toDo": "Correct the name of the title by clicking on the pencil icon next to the title name. Complete the editing by selecting the check mark. Confirm your changes by clicking on 'Confirm title changes'. Please also check the names of any linked reference titles/package titles."
         },
         "Information": {
@@ -1593,6 +1658,15 @@
       },
       "error": {
         "activatedNoInfo": "Missing update info (URL/Cycle)!"
+      },
+      "importConfig": {
+        "subtitle": "This package was imported from the given source",
+        "WEKB": {
+          "label": "we:kb"
+        },
+        "EZB": {
+          "label": "EZB"
+        }
       }
     },
     "subject": {

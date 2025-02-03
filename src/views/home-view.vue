@@ -39,6 +39,7 @@
         :user="true"
       />
       <gokb-jobs-section
+        ref="jobs"
         v-model="groupId"
         :group="activeGroup"
       />
@@ -52,22 +53,22 @@
 </template>
 
 <script>
-  import baseComponent from '@/shared/components/base-component'
+  import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
   import GokbReviewsSection from '@/shared/components/complex/gokb-reviews-section'
-  import profileServices from '@/shared/services/profile-services'
 
   export default {
     name: 'HomeView',
     components: {
       GokbReviewsSection
     },
-    extends: baseComponent,
+    extends: BaseComponent,
     data () {
       return {
-        groups: [],
         groupId: -1,
-        systemInfo: undefined
+        systemInfo: undefined,
+        activeGroup: undefined,
+        groups: []
       }
     },
     computed: {
@@ -77,43 +78,34 @@
       isContrib () {
         return this.loggedIn && account.hasRole('ROLE_CONTRIBUTOR')
       },
-      activeGroup () {
-        return account.activeGroup()
-      },
       logoPath () {
         return this.$vuetify.theme.name === 'dark' ? './img/logo_dark.svg' : './img/logo_light.svg'
       }
     },
     watch: {
       loggedIn (value) {
-        if (value) {
-          this.loadGroups()
-        } else {
-          this.groups = []
+         if (!value && !!this.$refs.jobs) {
+          this.$refs.jobs.stopAutoUpdate()
         }
+      },
+      account: {
+        handler (val) {
+          if (!!val) {
+            this.activeGroup = account.activeGroup()
+          }
+        },
+        deep: true
       },
       '$i18n.locale' (l) {
         this.checkForSystemUpdate()
       }
     },
-    async created () {
+    created () {
       this.checkForSystemUpdate()
 
-      if (this.loggedIn) {
-        this.loadGroups()
-      }
+      this.activeGroup = account.activeGroup()
     },
     methods: {
-      async loadGroups () {
-        const response = await this.catchError({
-          promise: profileServices.get(this.cancelToken.token),
-          instance: this
-        })
-
-        if (response?.status === 200) {
-          this.groups = response.data.data.curatoryGroups
-        }
-      },
       checkForSystemUpdate() {
         let local_var = 'VITE_SYSTEM_INFO_' + this.$i18n.locale.toUpperCase()
 

@@ -34,12 +34,16 @@
           if (!!val && !val.name) {
             this.localValue.name = val.value
           }
+          else {
+            this.itemTitle = 'name'
+          }
         },
         deep: true
       }
     },
     created () {
       this.entityName = 'identifier-namespaces'
+
       if (!!this.targetType) {
         this.searchParams = { targetType: this.targetType }
       }

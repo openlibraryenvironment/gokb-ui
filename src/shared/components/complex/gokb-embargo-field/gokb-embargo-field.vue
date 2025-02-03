@@ -1,13 +1,14 @@
 <template>
   <div>
     <div class="text-h6">
-      Embargo
+      {{ $t('component.tipp.embargo.label') }}
     </div>
     <v-row>
       <v-col cols="4">
-        <gokb-embargo-type-field
+        <gokb-select-field
           v-model="embargoType"
           :label="$t('component.tipp.embargo.type.label')"
+          :static-items="embargoTypes"
           :rules="[typeRules]"
           :readonly="readonly"
         />
@@ -24,7 +25,7 @@
         <gokb-time-period-field
           v-model="embargoUnit"
           :label="$t('component.tipp.embargo.unit.label')"
-          :items="allUnits"
+          :static-items="embargoPeriods"
           :rules="[unitRules]"
           :readonly="readonly"
         />
@@ -63,7 +64,31 @@
         embargoTypeField: undefined,
         embargoUnitField: undefined,
         embargoDurationField: undefined,
-        errors: []
+        errors: [],
+        embargoTypes:  [
+          {
+            id: 'R',
+            name: this.$i18n.t('component.tipp.embargo.type.rolling')
+          },
+          {
+            id: 'P',
+            name: this.$i18n.t('component.tipp.embargo.type.period')
+          }
+        ],
+        embargoPeriods: [
+          {
+            id: 'D',
+            name: this.$i18n.t('component.tipp.embargo.unit.day')
+          },
+          {
+            id: 'M',
+            name: this.$i18n.t('component.tipp.embargo.unit.month')
+          },
+          {
+            id: 'Y',
+            name: this.$i18n.t('component.tipp.embargo.unit.year')
+          }
+        ]
       }
     },
     computed: {
@@ -104,22 +129,6 @@
           const { type, duration } = this.decodeEmbargo()
           this.localValue = `${type || ''}${duration || ''}${unit || ''}`
         }
-      },
-      allUnits () {
-        return [
-          {
-            id: 'D',
-            name: this.$i18n.t('component.tipp.embargo.unit.day')
-          },
-          {
-            id: 'M',
-            name: this.$i18n.t('component.tipp.embargo.unit.month')
-          },
-          {
-            id: 'Y',
-            name: this.$i18n.t('component.tipp.embargo.unit.year')
-          }
-        ]
       }
     },
     methods: {

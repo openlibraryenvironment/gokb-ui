@@ -16,7 +16,28 @@
       >
         <b v-for="(v, i) in message.vars">{{ v }}</b>
       </i18n-t>
-      <span v-else> {{ message.text }} </span>
+      <span v-else> {{ $t(message.text) }} </span>
+
+      <div
+        v-if="typeof message !== 'string' && !!message.bullets && message.bullets.length > 0"
+        class="ml-4 mt-4"
+      >
+        <ul>
+          <li v-for="b in message.bullets">
+            <span v-if="typeof b === 'string'">
+              {{ $t(b) }}
+            </span>
+            <i18n-t
+              v-else-if="!!b.vars"
+              :keypath="b.text"
+              scope="global"
+            >
+              <b v-for="(v, i) in b.vars">{{ v }}</b>
+            </i18n-t>
+            <span v-else> {{ $t(b.text) }} </span>
+          </li>
+        </ul>
+      </div>
     </v-sheet>
 
     <template #buttons>

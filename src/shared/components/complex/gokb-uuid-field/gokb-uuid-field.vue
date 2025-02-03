@@ -7,6 +7,7 @@
     variant="underlined"
     disabled
     persistent-placeholder
+    min-width="345px"
   >
     <template #label>
       <span class="mt-n4">

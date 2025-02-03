@@ -296,8 +296,8 @@
       privacyLink: import.meta.env.VITE_DP_LINK,
       imprintLink: import.meta.env.VITE_IMP_LINK,
       docsLink: import.meta.env.VITE_DOCS_LINK,
-      accessibilityLink: import.meta.VITE_ACC_LINK,
-      appName: import.meta.env.VITE_TITLE || 'GOKb Client',
+      accessibilityLink: import.meta.env.VITE_ACC_LINK,
+      appName: import.meta.env.VITE_TITLE || 'GOKB Client',
       appColor: import.meta.env.VITE_COLOR || '#4f4f4f',
       appVersion: pkg.version || import.meta.env.VITE_VERSION,
       gitCommit: import.meta.env.VITE_GIT_HASH,
@@ -492,7 +492,7 @@
           this.loginExpiredMsg = true
         } else {
 
-          this.groups = result.data.data.curatoryGroups
+          this.groups = result.data.data.curatoryGroups.sort((a,b) => a.name > b.name)
 
           log.debug("Loading groups!")
 

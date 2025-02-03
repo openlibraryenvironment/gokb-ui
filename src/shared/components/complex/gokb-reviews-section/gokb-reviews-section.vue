@@ -180,6 +180,11 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      hideSelect: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -266,13 +271,13 @@
         return this.selectedItemsTotal > 0 || this.allPagesSelected
       },
       showEditActions () {
-        return this.reviews && (this.reviews?.filter(item => (item.updateUrl)).length > 0)
+        return !!this.reviews && !this.hideSelect && (this.reviews?.filter(item => (item.updateUrl)).length > 0)
       },
       bulkEditDisabled () {
         return !this.reviews || this.selectedItems.length === 0 || this.selectedItems.some(item => (item.updateUrl === null))
       },
       localErrorMessage () {
-        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label', 2)]) : undefined
+        return !!this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label', 2)]) : undefined
       },
       isPackageComponent () {
         return this.reviewComponent?.type === 'package'

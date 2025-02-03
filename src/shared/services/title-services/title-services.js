@@ -46,18 +46,16 @@ const api = (baseServices) => ({
   },
   merge (data, params, cancelToken) {
     const { id, target, ids, tipps } = data
-    let parameterData = { target: target }
+    let parameterData = params
+
+    parameterData.target = target
 
     if (!!ids) {
       parameterData.ids = ids.map(id => id.id)
-    } else if (params.mergeIds) {
-      parameterData.mergeIds = true
     }
 
     if (!!tipps) {
-      parameterData.tipps = tipps.map(id => id.id)
-    } else if (params.mergeTipps) {
-      parameterData.mergeTipps = true
+      parameterData.tipps = tipps.map(tipp => tipp.id)
     }
 
     const queryParameters = baseServices.createQueryParameters(parameterData)

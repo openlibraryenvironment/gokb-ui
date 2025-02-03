@@ -49,6 +49,7 @@
         @added="addNewComponent"
         @close="closeReview"
         @feedback-response="showResponse"
+        @hide="hideOtherComponent"
       />
 
       <template #buttons>
@@ -263,11 +264,11 @@
         this.deleteUrl = record._links?.delete?.href || undefined
         this.version = record.version
 
-        let merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/title')).map(c => (c.id))
+        let title_merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/title')).map(c => (c.id))
         let tipp_merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/package-title')).map(c => (c.id))
 
         if (this.reviewItem.component.route === '/title') {
-          merge_ids.push(this.reviewItem.component.id)
+          title_merge_ids.push(this.reviewItem.component.id)
         }
 
         if (this.reviewItem.component.route === '/package-title') {
@@ -279,30 +280,38 @@
         if (this.isReadonly) {
           this.workflow.push({
             title: "",
-            toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
+            toDo: (!!this.reviewItem.stdDesc &&
+                    this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0
+                  ) ?
+                  this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :
+                  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
-            components: merge_ids,
+            components: title_merge_ids,
             actions: []
           })
-        } else if (this.reviewItem.component.route === '/package-title' && merge_ids.length > 1) {
+        } else if (this.reviewItem.component.route === '/package-title' && title_merge_ids.length > 1) {
           this.workflow.push({
             title: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step1.label'),
             toDo: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step1.toDo'),
             showReviewed: false,
-            components: merge_ids,
+            components: title_merge_ids,
             actions: ['merge', 'ids']
           })
           this.workflow.push({
             title: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step2.label'),
             toDo: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step2.toDo'),
             showReviewed: true,
-            components: merge_ids,
+            components: title_merge_ids,
             actions: ['link', 'add']
           })
         } else if (this.reviewItem.component.route === '/package-title' && tipp_merge_ids.length > 1) {
           this.workflow.push({
             title: "",
-            toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
+            toDo: (!!this.reviewItem.stdDesc &&
+                      this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0
+                  ) ?
+                  this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :
+                  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
             components: tipp_merge_ids,
             actions: (tipp_merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
@@ -310,7 +319,11 @@
         } else {
           this.workflow.push({
             title: "",
-            toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
+            toDo: (!!this.reviewItem.stdDesc &&
+                      this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0
+                  ) ?
+                  this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :
+                  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
             components: title_merge_ids,
             actions: (title_merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
@@ -364,7 +377,9 @@
           this.additionalInfo.otherComponents = []
         }
 
-        if (info.id !== this.reviewItem.component.review && !this.additionalInfo.otherComponents.some(oc => (oc.id === info.id))) {
+        if (info.id !== this.reviewItem.component.review &&
+            !this.additionalInfo.otherComponents.some(oc => (oc.id === info.id))
+        ) {
           this.additionalInfo.otherComponents.push({
             name: info.name,
             id: info.id,
@@ -381,14 +396,20 @@
           const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
 
           if (resp.status < 400) {
-            this.showResponse({ type: 'success', message: this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), info.name]) })
+            this.showResponse({
+              type: 'success',
+              message: this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), info.name])
+            })
           } else {
             this.showResponse({ type: 'error', resp: resp })
           }
           await this.fetchReview()
           this.$refs["wf" + this.activeStep][0].refreshAll()
         } else {
-          this.showResponse({ type: 'error', message: this.$i18n.t('component.review.otherComponents.error.duplicate') })
+          this.showResponse({
+            type: 'error',
+            message: this.$i18n.t('component.review.otherComponents.error.duplicate')
+          })
         }
       },
       activateStep (index) {
@@ -489,6 +510,54 @@
             this.deescalatable = response.data.isDeescalatable
             this.escalationTarget = response.data.escalationTargetGroup
           })
+      },
+      async escalate () {
+        const response = await this.catchError({
+          promise: reviewServices.escalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t('component.review.edit.success.escalated')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+
+          this.escalatable = false
+
+          this.fetchReview (this.id)
+        }
+        else {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('error.general.500')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+        }
+      },
+      async deescalate () {
+        const response = await this.catchError({
+          promise: reviewServices.deescalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t('component.review.edit.success.escalated')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+          this.deescalatable = false
+
+          this.fetchReview (this.id)
+        }
+        else {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('error.general.500')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+        }
+      },
+      hideOtherComponent (id) {
+        this.reviewItem.otherComponents = this.reviewItem.otherComponents.filter(oc => (oc.id != id))
       }
     }
   }

@@ -8,7 +8,7 @@
     <gokb-url-field
       v-model="item.url"
       :label="$t('component.source.url')"
-      :readonly="readonly"
+      :readonly="readonly || isImportFromExternalSource"
       replace-date
     />
     <v-row>
@@ -150,6 +150,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      isImportFromExternalSource: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -165,6 +170,7 @@
           titleIdSerial: undefined,
           titleIdMonograph: undefined,
           automaticUpdates: undefined,
+          importConfig: undefined,
           update: false
         },
         errors: [],
@@ -218,6 +224,20 @@
           this.item.titleIdSerial = undefined
           this.item.titleIdMonograph = undefined
         }
+      },
+      modelValue: {
+        handler(val) {
+          if (!!val && !val.id) {
+            this.item.type = val.type
+            this.item.url = val.url
+            this.item.frequency = val.frequency
+            this.item.targetNamespace = val.targetNamespace
+            this.item.automaticUpdates = val.automaticUpdates
+            this.item.importConfig = val.importConfig
+            this.item.update = val.update
+          }
+        },
+        deep: true
       }
     },
     async mounted () {
@@ -248,6 +268,7 @@
             this.item.name = result.data.name
             this.item.url = result.data.url
             this.item.automaticUpdates = result.data.automaticUpdates
+            this.item.importConfig = result.data.importConfig
 
             if (!!this.item.url) {
               this.isExpanded = true
