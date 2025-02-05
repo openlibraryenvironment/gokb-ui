@@ -15,34 +15,15 @@
       <gokb-namespace-field
         v-model="options.selectedNamespace"
         target-type="Title"
-<<<<<<< HEAD
-        gokb-tool-tip="kbart.propId.tooltip"
-        width="100%"
-        :label="$t('kbart.propId.label')"
-      />
-      <gokb-checkbox-field
-        v-model="options.addOnly"
-        :label="$t('kbart.addOnly.label')"
-        gokbToolTip="kbart.addOnly.tooltip"
-      />
-      <gokb-checkbox-field
-        v-model="options.deleteMissing"
-        :label="$t('kbart.deleteMissing.label')"
-        gokbToolTip="kbart.deleteMissing.tooltip"
-      />
-      <gokb-checkbox-field
-        v-model="options.dryRun"
-        :label="$t('kbart.dryRun.label')"
-        gokbToolTip="job.dryRun.tooltip"
-=======
         width="350px"
         :label="$t('kbart.propId.label')"
+        gokb-tooltip="kbart.propId.tooltip"
       />
       <gokb-checkbox-field
         v-model="options.dryRun"
         :label="$t('kbart.dryRun.label')"
+        gokb-tooltip="job.dryRun.tooltip"
         dense
->>>>>>> develop
       />
       <gokb-button
           text
@@ -59,11 +40,13 @@
         <gokb-checkbox-field
           v-model="options.addOnly"
           :label="$t('kbart.addOnly.label')"
+          gokb-tooltip="kbart.addOnly.tooltip"
           dense
         />
         <gokb-checkbox-field
           v-model="options.deleteMissing"
           :label="$t('kbart.deleteMissing.label')"
+          gokb-tooltip="kbart.deleteMissing.tooltip"
           dense
         />
       </div>

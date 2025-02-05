@@ -1,20 +1,11 @@
 <template>
   <v-tooltip right>
-<<<<<<< HEAD
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        icon
-        :class="classes"
-        v-bind="attrs"
-        v-on="on"
-=======
     <template v-slot:activator="{ props }">
       <v-icon
         :color="color"
         v-bind="props"
-        class="mt-n1 ml-2"
+        :class="classes"
         size="small"
->>>>>>> develop
       >
         {{ iconId }}
       </v-icon>
@@ -46,11 +37,6 @@
         required: false,
         default: true
       },
-      classes: {
-        type: String,
-        required: false,
-        default: ""
-      },
       code: {
         type: String,
         required: true
@@ -59,6 +45,11 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      classes: {
+        type: String,
+        required: false,
+        default: 'mt-n1 ml-2'
       }
     }
   }
