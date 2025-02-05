@@ -20,11 +20,7 @@
       excludeIsxn: {
         type: Boolean,
         required: false,
-<<<<<<< HEAD
-        default: false
-=======
         default: undefined
->>>>>>> develop
       }
     },
     computed: {
@@ -57,16 +53,12 @@
     methods: {
       transform (result) {
         const { data: { data: values } } = result
-<<<<<<< HEAD
-        return values.filter(ns =>(this.excludeIsxn ? ns.family !== 'isxn' : !!ns.value)).map(ns => ({ id: ns.id, pattern: ns.pattern, name: (ns.name || ns.value), value: ns.value })).sort(({ value: first }, { value: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-=======
         return values?.map(ns => ({
           id: ns.id,
           pattern: ns.pattern,
           name: (ns.name || ns.value),
           value: ns.value
         })).sort(({ value: first }, { value: second }) => (first > second) ? 1 : (second > first) ? -1 : 0) || []
->>>>>>> develop
       }
     }
   }
