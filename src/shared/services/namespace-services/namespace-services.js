@@ -5,7 +5,7 @@ const PLATFORM_URL = '/rest/identifier-namespaces'
 const requestNamespaces = (baseServices, cancelToken) => {
   return baseServices.request({
     method: 'GET',
-    url: process.env.VUE_APP_API_BASE_URL + `${PLATFORM_URL}`,
+    url: import.meta.env.VITE_API_BASE_URL + `${PLATFORM_URL}`,
   }, cancelToken);
 }
 

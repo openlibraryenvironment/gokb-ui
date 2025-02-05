@@ -1,1 +1,1 @@
-export default from './gokb-tipps-section'
+export {default} from './gokb-tipps-section'

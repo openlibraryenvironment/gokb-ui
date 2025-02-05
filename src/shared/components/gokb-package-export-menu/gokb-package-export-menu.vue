@@ -1,23 +1,25 @@
 <template>
   <v-menu id="export-menu" offset-y>
-    <template v-slot:activator="{ on }">
+    <template v-slot:activator="{ props }">
       <gokb-button
         icon-id="mdi-swap-vertical"
         color="primary"
         :disabled="disabled"
-        @click="on.click"
+        v-bind="props"
       >
         KBART Download
       </gokb-button>
     </template>
     <v-list>
       <v-list-item
-        v-for="(exportType, name) of exportVariants"
+        v-for="(exportType, name) in exportVariants"
         :key="name"
+        :value="name"
       >
         <v-list-item-title>
           <a
             download
+            class="text-primary"
             :href="exportType.url"
             :type="type"
           >
@@ -78,7 +80,7 @@
         }
       },
       currentTippUrl () {
-        var fullUrl = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`
+        var fullUrl = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart`
 
         if (this.pkgId) {
           fullUrl = fullUrl + `/${this.pkgId}` + `?exportType=tipp`
@@ -95,7 +97,7 @@
         return fullUrl
       },
       currentTitleUrl () {
-        var fullUrl = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart`
+        var fullUrl = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart`
 
         if (this.pkgId) {
           fullUrl = fullUrl + `/${this.pkgId}` + `?exportType=title`

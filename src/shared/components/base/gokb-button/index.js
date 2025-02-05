@@ -1,1 +1,1 @@
-export default from './gokb-button'
+export {default} from './gokb-button'

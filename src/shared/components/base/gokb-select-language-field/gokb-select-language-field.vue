@@ -5,6 +5,7 @@
     item-value="iso3"
     :items="localizedItems"
     :label="label"
+    variant="underlined"
     :no-data-text="$t('search.results.empty')"
   />
 </template>
@@ -14,6 +15,7 @@
 
   export default {
     name: 'GokbSelectLanguageField',
+    emits: ['update:model-value'],
     extends: GokbSelectField,
     props: {
       label: {
@@ -33,25 +35,14 @@
       }
     },
     data () {
-      return {
-        items: undefined
-      }
     },
     computed: {
-      localizedItems () {
-        if (!!this.items && this.items.length > 0) {
-          return this.items.sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-        }
-        else {
-          return []
-        }
-      },
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       }
     },
@@ -66,6 +57,14 @@
           return values
         } else {
           return []
+        }
+      },
+      updateItems() {
+        if (!!this.rawItems && this.rawItems.length > 0) {
+          this.localizedItems = this.rawItems.sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
+        }
+        else {
+          this.localizedItems = []
         }
       }
     }

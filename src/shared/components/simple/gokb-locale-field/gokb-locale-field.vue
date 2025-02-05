@@ -4,11 +4,12 @@
   export default {
     name: 'GokbLocaleField',
     extends: GokbSelectField,
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
         required: false,
-        default: 'Status',
+        default: 'Locale',
       },
       url: {
         type: String,
@@ -43,7 +44,7 @@
       transform (result) {
         if (result?.data?._embedded) {
           const { data: { _embedded: { values } } } = result
-          return values.map(({ id, value, type }) => ({ id, name: value, type: 'Refdata Value' }))
+          return values.map(({ id, value }) => ({ id, name: value, type: 'Refdata Value' }))
         } else {
           return []
         }

@@ -1,1 +1,1 @@
-export default from './gokb-progress-overlay'
+export {default} from './gokb-progress-overlay'

@@ -29,6 +29,9 @@
   export default {
     name: 'GokbIdentifierField',
     components: { GokbNamespaceField, GokbTextField },
+    emits: [
+      'update:model-value', 'delete'
+    ],
     props: {
       namespaceFixed: {
         type: Boolean,
@@ -48,7 +51,7 @@
         type: Boolean,
         required: false
       },
-      value: {
+      modelValue: {
         type: Object,
         required: true,
         default: () => ({ value: undefined, namespace: { id: undefined, name: undefined, value: undefined } })
@@ -60,18 +63,18 @@
       },
       localValue: {
         get () {
-          return this.value.value
+          return this.modelValue.value
         },
         set (value) {
-          this.$emit('input', { value, namespace: this.value.namespace })
+          this.$emit('update:model-value', { value, namespace: this.modelValue.namespace })
         }
       },
       localNamespace: {
         get () {
-          return this.value.namespace
+          return this.modelValue.namespace
         },
         set (namespace) {
-          this.$emit('input', { value: this.value.value, namespace })
+          this.$emit('update:model-value', { value: this.modelValue.value, namespace })
         }
       },
       namespacePattern () {

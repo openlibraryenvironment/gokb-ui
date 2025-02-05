@@ -5,58 +5,73 @@
     width="max-width"
     fullscreen
   >
-    <gokb-error-component :value="error" />
-    <v-snackbar v-model="showSuccessMsg" color="success" :timeout="5000"> {{ successMsg }} </v-snackbar>
-    <v-snackbar v-model="showErrorMsg" color="error" :timeout="5000"> {{ errorMsg }} </v-snackbar>
+    <v-row v-if="!init" align="center" style="height:100vh;">
+      <v-col cols="12" class="text-center">
+        {{ $t('default.loading') }}
+      </v-col>
+    </v-row>
+    <v-lazy v-model="init">
+      <div>
+        <gokb-error-component :value="error" />
+        <v-snackbar v-model="showSuccessMsg" color="success" :timeout="5000"> {{ successMsg }} </v-snackbar>
+        <v-snackbar v-model="showErrorMsg" color="error" :timeout="5000"> {{ errorMsg }} </v-snackbar>
 
-    <gokb-confirmation-popup
-      v-model="showSubmitConfirm"
-      :message="submitConfirmationMessage"
-      @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
-    />
+        <gokb-confirmation-popup
+          v-model="showSubmitConfirm"
+          :message="submitConfirmationMessage"
+          @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
+        />
 
-    <gokb-reviews-header
-      v-if="reviewItem?.component"
-      :value="error"
-      :component="reviewItem.component"
-      :editable="!isReadonly"
-      :review-component="reviewItem"
-      :has-component-cards="showComponentCards"
-      :additional-vars="reviewItem.additionalVars"
-    />
+        <gokb-reviews-header
+          v-if="reviewItem?.component"
+          :value="error"
+          :component="reviewItem.component"
+          :editable="!isReadonly"
+          :review-component="reviewItem"
+          :has-component-cards="showComponentCards"
+          :additional-vars="reviewItem.additionalVars"
+        />
 
-    <gokb-reviews-components-section
-      v-if="finishedLoading && showComponentCards"
-      v-for="(wf, i) in workflow"
-      :ref="'wf' + i"
-      :key="i"
-      :value="error"
-      :reviewed-component="reviewItem.component"
-      :candidates="reviewItem.candidates"
-      :reference-components="reviewItem.otherComponents"
-      :review-type="reviewItem.stdDesc?.name"
-      :review-status="reviewItem.status.value"
-      :more-steps="i+1 < workflow.length"
-      :workflow="wf"
-      :editable="!isReadonly"
-      :additional-vars="reviewItem.additionalVars"
-      :expanded="activeStep === i"
-      @expand="activateStep(i)"
-      @finished-step="changeActiveStep"
-      @added="addNewComponent"
-      @close="closeReview"
-      @feedback-response="showResponse"
-    />
+        <gokb-reviews-components-section
+          v-if="finishedLoading && showComponentCards"
+          v-for="(wf, i) in workflow"
+          :ref="'wf' + i"
+          :key="i"
+          :reviewed-component="reviewItem.component"
+          :reference-components="reviewItem.otherComponents"
+          :review-type="reviewItem.stdDesc?.name"
+          :review-status="reviewItem.status.value"
+          :more-steps="i+1 < workflow.length"
+          :workflow="wf"
+          :editable="!isReadonly"
+          :additional-vars="reviewItem.additionalVars"
+          :expanded="activeStep == i"
+          @expand="activateStep(i)"
+          @finished-step="changeActiveStep"
+          @added="addNewComponent"
+          @close="closeReview"
+          @feedback-response="showResponse"
+          @hide="hideOtherComponent"
+        />
+      </div>
+    </v-lazy>
 
     <template #buttons>
       <gokb-button
-        v-if="escalatable"
+        class="ml-6 btn-default"
+        :to="{ name: '/review', params: { id: id} }"
+        new-tab
+      >
+        {{ $t('component.tipp.toFullView') }}
+    </gokb-button>
+      <gokb-button
+        v-if="!isReadonly && escalatable"
         @click="escalate"
       >
         {{ $t('btn.escalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
       </gokb-button>
       <gokb-button
-        v-if="deescalatable"
+        v-if="!isReadonly && deescalatable"
         @click="deescalate"
       >
         {{ $t('btn.deescalate') }} {{ !!escalationTarget ? '(-> ' + escalationTarget.name + ')' : '' }}
@@ -106,7 +121,13 @@
       GokbConfirmationPopup
     },
     extends: BaseComponent,
+    emits: ['update:model-value', 'edit'],
     props: {
+      modelValue: {
+        type: [Boolean, Number],
+        required: false,
+        default: false
+      },
       selected: {
         type: Object,
         required: false,
@@ -139,6 +160,7 @@
         deletedItems: [],
         workflow: [],
         activeStep: 0,
+        init: true,
         reviewItem: {
           status: undefined,
           stdDesc: undefined,
@@ -173,10 +195,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       cmpType () {
@@ -189,7 +211,7 @@
         return !this.updateUrl
       },
       showComponentCards () {
-        return this.reviewItem.component.route === '/title' || this.reviewItem.component.route === '/package-title'
+        return this.reviewItem?.component?.route === '/title' || this.reviewItem?.component?.route === '/package-title'
       },
       isValid () {
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
@@ -277,10 +299,15 @@
         this.deleteUrl = record._links?.delete?.href || undefined
         this.version = record.version
 
-        let merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/title')).map(c => (c.id))
+        let title_merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/title')).map(c => (c.id))
+        let tipp_merge_ids = this.reviewItem.otherComponents.filter(c => (c.route === '/package-title')).map(c => (c.id))
 
         if (this.reviewItem.component.route === '/title') {
-          merge_ids.push(this.reviewItem.component.id)
+          title_merge_ids.push(this.reviewItem.component.id)
+        }
+
+        if (this.reviewItem.component.route === '/package-title') {
+          tipp_merge_ids.push(this.reviewItem.component.id)
         }
 
         this.workflow = []
@@ -288,42 +315,65 @@
         if (this.isReadonly) {
           this.workflow.push({
             title: "",
-            toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
+            toDo: (!!this.reviewItem.stdDesc &&
+                      this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0
+                  ) ?
+                  this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :
+                  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
-            components: merge_ids,
+            components: title_merge_ids,
             actions: []
           })
-        } else if (this.reviewItem.component.route === '/package-title' && merge_ids.length > 1) {
+        } else if (this.reviewItem.component.route === '/package-title' && title_merge_ids.length > 1) {
           this.workflow.push({
             title: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step1.label'),
             toDo: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step1.toDo'),
             showReviewed: false,
-            components: merge_ids,
+            components: title_merge_ids,
             actions: ['merge', 'ids']
           })
           this.workflow.push({
             title: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step2.label'),
             toDo: this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.workflow.step2.toDo'),
             showReviewed: true,
-            components: merge_ids,
+            components: title_merge_ids,
             actions: ['link', 'add']
+          })
+        } else if (this.reviewItem.component.route === '/package-title' && tipp_merge_ids.length > 1) {
+          this.workflow.push({
+            title: "",
+            toDo: (!!this.reviewItem.stdDesc &&
+                    this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0
+                  ) ?
+                  this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :
+                  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
+            showReviewed: true,
+            components: tipp_merge_ids,
+            actions: (tipp_merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
           })
         } else {
           this.workflow.push({
             title: "",
-            toDo: (!!this.reviewItem.stdDesc && this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0) ? this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
+            toDo: (!!this.reviewItem.stdDesc &&
+                      this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo').length > 0
+                  ) ?
+                  this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc.name + '.toDo') :
+                  this.$i18n.t('component.review.edit.components.workflow.titleReview.toDo'),
             showReviewed: true,
-            components: merge_ids,
-            actions: (merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
+            components: title_merge_ids,
+            actions: (title_merge_ids.length > 1 ? ['merge','ids'] : ['ids'])
           })
         }
       },
-      async closeReview () {
+      async closeReview (closePopup = true) {
         const resp = await reviewServices.close(this.id, this.cancelToken.token)
 
         if (resp.status === 200) {
           this.$emit('edit', 'closed')
-          this.closePopup()
+
+          if (closePopup) {
+            this.closePopup()
+          }
         } else {
           this.errorMsg = this.$i18n.t('error.update.400')
         }
@@ -348,7 +398,9 @@
           this.additionalInfo.otherComponents = []
         }
 
-        if (info.id !== this.reviewItem.component.review && !this.additionalInfo.otherComponents.some(oc => (oc.id === info.id))) {
+        if (info.id !== this.reviewItem.component.review &&
+            !this.additionalInfo.otherComponents.some(oc => (oc.id === info.id))
+        ) {
           this.additionalInfo.otherComponents.push({
             name: info.name,
             id: info.id,
@@ -365,14 +417,20 @@
           const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
 
           if (resp.status < 400) {
-            this.showResponse({ type: 'success', message: this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), info.name]) })
+            this.showResponse({
+              type: 'success',
+              message: this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), info.name])
+            })
           } else {
             this.showResponse({ type: 'error', resp: resp })
           }
           await this.fetchReview(this.id)
           this.$refs["wf" + this.activeStep][0].refreshAll()
         } else {
-          this.showResponse({ type: 'error', message: this.$i18n.t('component.review.otherComponents.error.duplicate') })
+          this.showResponse({
+            type: 'error',
+            message: this.$i18n.t('component.review.otherComponents.error.duplicate')
+          })
         }
       },
       closePopup () {
@@ -393,7 +451,7 @@
       changeActiveStep (index) {
         if (this.workflow.length > this.activeStep) {
           this.activeStep++
-          refreshCurrentComponents()
+          this.refreshCurrentComponents()
         }
       },
       refreshCurrentComponents () {
@@ -402,6 +460,9 @@
         if (!!this.$refs[wfname]) {
           this.$refs[wfname][0].refreshAll()
         }
+      },
+      hideOtherComponent (id) {
+        this.reviewItem.otherComponents = this.reviewItem.otherComponents.filter(oc => (oc.id != id))
       },
       showResponse (response) {
         if (typeof response === 'string' || response instanceof String) {
@@ -460,6 +521,42 @@
             this.deescalatable = response.data.isDeescalatable
             this.escalationTarget = response.data.escalationTargetGroup
           })
+      },
+      async escalate () {
+        const response = await this.catchError({
+          promise: reviewServices.escalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.successMsg = this.$i18n.t('component.review.edit.success.escalated')
+          this.showSuccessMsg = true
+          this.escalatable = false
+
+          this.fetchReview (this.id)
+        }
+        else {
+          this.errorMsg = this.$i18n.t('error.general.500')
+          this.showErrorMsg = true
+        }
+      },
+      async deescalate () {
+        const response = await this.catchError({
+          promise: reviewServices.deescalate(this.id, accountModel.activeGroup().id),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.successMsg = this.$i18n.t('component.review.edit.success.deescalated')
+          this.showSuccessMsg = true
+          this.deescalatable = false
+
+          this.fetchReview (this.id)
+        }
+        else {
+          this.errorMsg = this.$i18n.t('error.general.500')
+          this.showErrorMsg = true
+        }
       },
       save () {
         this.$emit('edit', 'edited')

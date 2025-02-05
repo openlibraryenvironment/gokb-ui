@@ -2,7 +2,7 @@
 const api = (baseServices) => ({
     export (ids, type, cancelToken) {
       if (ids.length > 1) {
-        const url = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart${type === 'title' ? '?exportType=title' : ''}`
+        const url = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart${type === 'title' ? '?exportType=title' : ''}`
         const data = { data: { ids: ids}}
         return baseServices.request({
           method: 'POST',
@@ -11,7 +11,7 @@ const api = (baseServices) => ({
         }, cancelToken)
 
       } else {
-        const url = `${process.env.VUE_APP_API_BASE_URL}/packages/kbart/${ids[0]}${type === 'title' ? '&exportType=title' : ''}`
+        const url = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart/${ids[0]}${type === 'title' ? '&exportType=title' : ''}`
         return baseServices.request({
           method: 'GET',
           url
@@ -28,7 +28,7 @@ const api = (baseServices) => ({
         data.append('strict', 'true')
       }
 
-      const url = process.env.VUE_APP_API_BASE_URL + `/validation/kbart`
+      const url = import.meta.env.VITE_API_BASE_URL + `/validation/kbart`
       const result = baseServices.request({
         method: 'POST',
         url,

@@ -4,12 +4,12 @@ const api = (baseServices) => ({
   get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: process.env.VUE_APP_API_BASE_URL + `${ENDPOINT}/${id}`,
+      url: import.meta.env.VITE_API_BASE_URL + `${ENDPOINT}/${id}`,
     }, cancelToken)
   },
   getJobs (parameter, cancelToken) {
     const urlParameter = baseServices.createQueryParameters(parameter)
-    const url = process.env.VUE_APP_API_BASE_URL + `${ENDPOINT}/${parameter.id}/jobs?${urlParameter}`
+    const url = import.meta.env.VITE_API_BASE_URL + `${ENDPOINT}/${parameter.id}/jobs?${urlParameter}`
 
     return baseServices.request({
       method: 'GET',
@@ -18,7 +18,7 @@ const api = (baseServices) => ({
   },
   createOrUpdate (data, cancelToken) {
     const { id } = data
-    const url = id ? process.env.VUE_APP_API_BASE_URL + `${ENDPOINT}/${id}` : process.env.VUE_APP_API_BASE_URL + ENDPOINT
+    const url = id ? import.meta.env.VITE_API_BASE_URL + `${ENDPOINT}/${id}` : import.meta.env.VITE_API_BASE_URL + ENDPOINT
     return baseServices.request({
       method: id ? 'PUT' : 'POST',
       url,

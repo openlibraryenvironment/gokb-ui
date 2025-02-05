@@ -1,5 +1,6 @@
-import Vue from 'vue'
+import {reactive} from 'vue'
 import accountServices from '@/shared/services/account-services'
+import browserStorage from '@/shared/utils/browser-storage'
 import account from './account-model'
 
-export default account(Vue, accountServices)
+export default account(reactive, accountServices, browserStorage)

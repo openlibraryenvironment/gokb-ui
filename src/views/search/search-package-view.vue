@@ -15,14 +15,28 @@
           platformId: undefined,
           lastUpdated: undefined,
           identifierValue: undefined,
+          subjectValue: undefined,
           contentType: undefined,
+          qsName: undefined,
           status: 'Current',
+          listStatus: undefined,
+          editStatus: undefined,
           global: ['Global', 'Consortium', 'Regional', 'Other'],
           label: undefined,
         },
         sortMappings: {
           link: 'name',
           linkTwo: 'provider'
+        },
+        requestOptions: {
+          page: 1,
+          sortBy: [{ key: 'lastUpdated', order: 'desc' }],
+          itemsPerPage: 10
+        },
+        resultOptions: {
+          page: 1,
+          sortBy: [{ key: 'lastUpdated', order: 'desc' }],
+          itemsPerPage: 10
         }
       }
     },
@@ -40,34 +54,51 @@
         return this.$i18n.tc('component.package.label', 2)
       },
       resultActionButtons () {
-        return [
-          {
-            component: GokbPackageExportMenu,
-            properties: {
-              disabled: this.isExportSelectedDisabled,
-              items: this.selectedItems
+        if (this.isUserAdmin) {
+          return [
+            {
+              component: GokbPackageExportMenu,
+              properties: {
+                items: this.selectedItems
+              }
+            },
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            },
+            {
+              icon: 'mdi-close',
+              label: this.$i18n.t('btn.retire'),
+              disabled: 'isDeleteSelectedDisabled',
+              action: '_confirmRetireSelectedItems',
+            },
+            {
+              icon: 'mdi-delete',
+              label: this.$i18n.t('btn.delete'),
+              disabled: 'isDeleteSelectedDisabled',
+              action: '_confirmDeleteSelectedItems',
             }
-          },
-          {
-            label: this.$i18n.t('btn.export'),
-            disabled: 'isSearchExportDisabled',
-            public: true,
-            action: 'exportSearchResults',
-            loading: this.exportLoading
-          },
-          {
-            icon: 'mdi-close',
-            label: this.$i18n.t('btn.retire'),
-            disabled: 'isDeleteSelectedDisabled',
-            action: '_confirmRetireSelectedItems',
-          },
-          {
-            icon: 'mdi-delete',
-            label: this.$i18n.t('btn.delete'),
-            disabled: 'isDeleteSelectedDisabled',
-            action: '_confirmDeleteSelectedItems',
-          }
-        ]
+          ]
+        } else {
+          return [
+            {
+              component: GokbPackageExportMenu,
+              properties: {
+                items: this.selectedItems
+              }
+            },
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            }
+          ]
+        }
       },
       searchInputFields () {
         return [
@@ -75,6 +106,7 @@
             {
               type: 'GokbTextField',
               name: 'qsName',
+              value: 'qsName',
               properties: {
                 label: this.$i18n.t('component.general.name'),
               }
@@ -89,14 +121,11 @@
               }
             },
             {
-              type: 'GokbStateField',
-              name: 'contentType',
-              value: 'contentType',
+              type: 'GokbSubjectFilterField',
+              name: 'subject',
+              value: 'subjectValue',
               properties: {
-                label: this.$i18n.t('component.package.contentType.label'),
-                width: '100%',
-                url: 'refdata/categories/Package.ContentType',
-                messagePath: 'component.package.contentType'
+                label: this.$i18n.tc('component.subject.label')
               }
             },
           ],
@@ -133,16 +162,31 @@
             {
               type: 'GokbStateField',
               name: 'status',
+              md: 2,
               value: 'status',
               properties: {
                 initItem: 'Current',
                 width: '100%',
-                messagePath: 'component.general.status'
+                messagePath: 'component.general.status',
+                label: this.$i18n.tc('component.general.status.label')
+              }
+            },
+            {
+              type: 'GokbStateField',
+              name: 'contentType',
+              md: 2,
+              value: 'contentType',
+              properties: {
+                label: this.$i18n.t('component.package.contentType.label'),
+                width: '100%',
+                url: 'refdata/categories/Package.ContentType',
+                messagePath: 'component.package.contentType'
               }
             },
             {
               type: 'GokbStateField',
               name: 'listStatus',
+              md: 2,
               value: 'listStatus',
               properties: {
                 label: this.$i18n.t('component.package.listStatus.label'),
@@ -154,6 +198,7 @@
             {
               type: 'GokbStateField',
               name: 'editStatus',
+              md: 2,
               value: 'editStatus',
               properties: {
                 label: this.$i18n.t('component.general.editStatus.label'),
@@ -186,43 +231,50 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.general.name'),
+            title: this.$i18n.t('component.general.name'),
             align: 'start',
             sortable: true,
             value: 'link'
           },
           {
-            text: this.$i18n.tc('component.provider.label'),
+            title: this.$i18n.tc('component.provider.label'),
             align: 'start',
             sortable: true,
             value: 'linkTwo'
           },
           {
-            text: this.$i18n.tc('component.package.contentType.label'),
+            title: this.$i18n.tc('component.package.contentType.label'),
             align: 'start',
             sortable: true,
             width: '150px',
             value: 'contentType'
           },
           {
-            text: this.$i18n.tc('component.package.count'),
+            title: this.$i18n.tc('component.package.count'),
             align: 'start',
             sortable: false,
-            width: '150px',
+            width: '80px',
             value: 'count'
           },
           {
-            text: this.$i18n.tc('component.curatoryGroup.label'),
+            title: this.$i18n.tc('component.curatoryGroup.label'),
             align: 'center',
             sortable: false,
             value: 'curatoryGroups'
           },
           {
-            text: this.$i18n.tc('component.general.lastUpdated'),
+            title: this.$i18n.tc('component.general.lastUpdated'),
             align: 'start',
             sortable: true,
-            width: '150px',
+            width: '120px',
             value: 'lastUpdated'
+          },
+          {
+            title: this.$i18n.tc('component.general.dateCreated'),
+            align: 'start',
+            sortable: true,
+            width: '120px',
+            value: 'dateCreated'
           }
         ]
       },
@@ -263,6 +315,10 @@
           {
             text: this.$i18n.t('component.general.lastUpdated'),
             value: 'lastUpdated'
+          },
+          {
+            text: this.$i18n.t('component.general.dateCreated'),
+            value: 'dateCreated'
           }
         ]
       }
@@ -286,6 +342,7 @@
           name,
           provider,
           lastUpdated,
+          dateCreated,
           uuid,
           status,
           contentType,
@@ -301,10 +358,11 @@
           linkTwo: provider ? { value: provider.name, route: EDIT_PROVIDER_ROUTE, id: 'providerId' } : undefined,
           providerId: provider?.id || undefined,
           lastUpdated: lastUpdated ? new Date(lastUpdated).toLocaleString('sv').substring(0, 10) : undefined,
+          dateCreated: dateCreated ? new Date(dateCreated).toLocaleString('sv').substring(0, 10) : undefined,
           nominalPlatform: nominalPlatform?.name,
           contentType: contentType ? this.$i18n.t('component.package.contentType.' + contentType.name + '.label') : '',
           count: _tippCount || tippCount || 0,
-          curatoryGroups: _embedded.curatoryGroups.map(cg => cg.name),
+          curatoryGroups: _embedded.curatoryGroups.map(cg => cg.name).join(','),
           status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined
@@ -315,6 +373,7 @@
           name,
           providerName,
           lastUpdatedDisplay,
+          dateCreated,
           uuid,
           status,
           contentType,
@@ -326,6 +385,7 @@
           name,
           providerName,
           lastUpdated: lastUpdatedDisplay ? new Date(lastUpdatedDisplay).toLocaleString('sv').substring(0, 10) : undefined,
+          dateCreated: dateCreated ? new Date(dateCreated).toLocaleString('sv').substring(0, 10) : undefined,
           nominalPlatformName,
           contentType,
           tippCount: titleCount.toString(),

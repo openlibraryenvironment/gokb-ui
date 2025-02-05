@@ -5,6 +5,7 @@
     :title="$t('header.add.label', [component.name])"
     :is-valid="isValid"
     :width="width"
+    @update-valid="updateValidStatus"
     @submit="addItem"
   >
     <component
@@ -12,6 +13,7 @@
       v-model="item"
       v-bind="component.properties"
     />
+
     <template #buttons>
       <v-spacer />
       <gokb-button
@@ -22,7 +24,7 @@
       </gokb-button>
       <gokb-button
         :disabled="!isValid"
-        default
+        is-submit
       >
         {{ $t('btn.add') }}
       </gokb-button>
@@ -36,11 +38,11 @@
   export default {
     name: 'GokbAddItemPopup',
     extends: BaseComponent,
+    emits: ['update:model-value', 'add'],
     props: {
-      value: {
+      modelValue: {
         type: Boolean,
-        required: true,
-        default: false
+        required: true
       },
       component: {
         type: Object,
@@ -61,20 +63,12 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue || false
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
-    },
-    watch: {
-      item: {
-        deep: true,
-        handler () {
-          this.isValid = this.$refs.comp.$refs.form.validate()
-        }
-      }
     },
     methods: {
       addItem () {
@@ -83,6 +77,9 @@
       },
       close () {
         this.localValue = false
+      },
+      updateValidStatus(status) {
+        this.isValid = status
       }
     }
   }

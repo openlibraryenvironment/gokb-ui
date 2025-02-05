@@ -1,1 +1,1 @@
-export default from './gokb-login-popup'
+export {default} from './gokb-login-popup'

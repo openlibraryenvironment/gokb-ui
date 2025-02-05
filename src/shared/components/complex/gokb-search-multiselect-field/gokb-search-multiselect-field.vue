@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label>
+    <label class="text-primary">
       {{ label }}
     </label>
     <v-row>
@@ -24,13 +24,14 @@
 <script>
   export default {
     name: 'GokbSearchMultiselectField',
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
         required: false,
         default: 'Status',
       },
-      value: {
+      modelValue: {
         type: Array,
         required: false,
         default: undefined
@@ -53,10 +54,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       }
     }

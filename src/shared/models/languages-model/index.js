@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import {reactive} from 'vue'
 import languages from './languages-model'
 
-export default languages(Vue)
+export default languages(reactive)

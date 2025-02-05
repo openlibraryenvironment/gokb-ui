@@ -4,8 +4,8 @@ const stopTimer = () => {
   timeoutId && clearTimeout(timeoutId)
 }
 
-const api = (vue) => {
-  const state = vue.observable({
+const api = (reactive) => {
+  const state = reactive({
     loading: undefined,
   })
 

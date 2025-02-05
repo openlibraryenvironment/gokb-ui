@@ -1,1 +1,1 @@
-export default from './gokb-scope-field'
+export {default} from './gokb-scope-field'

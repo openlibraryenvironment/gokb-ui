@@ -1,1 +1,1 @@
-export default from './gokb-edit-platform-popup'
+export {default} from './gokb-edit-platform-popup'

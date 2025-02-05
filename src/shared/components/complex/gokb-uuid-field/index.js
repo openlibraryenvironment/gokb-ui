@@ -1,1 +1,1 @@
-export default from './gokb-uuid-field'
+export {default} from './gokb-uuid-field'

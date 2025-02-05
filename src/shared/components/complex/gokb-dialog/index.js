@@ -1,1 +1,1 @@
-export default from './gokb-dialog'
+export {default} from './gokb-dialog'

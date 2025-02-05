@@ -2,26 +2,23 @@
   <v-text-field
     ref="textField"
     v-model="localValue"
-    :disabled="disabled || readonly"
-    :readonly="readonly || disabled"
-    :autocomplete="autocomplete"
-    :full-width="fw"
+    :disabled="!editable"
     :label="label"
     :prepend-icon="hideIcon ? '' : prependIcon"
-    :required="required"
-    :rules="rules"
+    :rules="localRules"
     :type="type"
-    :error="!!apiErrors"
-    :error-messages="apiErrorMessages"
-    maxlength="255"
+    :error="hasApiErrors"
+    :error-messages="errorMessages"
+    min-width="150px"
     :placeholder="placeholder"
     :append-icon="appendIcon"
-    :validate-on-blur="validateOnBlur"
-    :clearable="allowClear"
-    :dense="dense"
+    :validate-on="validateOnBlur ? 'blur' : 'input'"
+    :clearable="allowClear && editable"
+    :density="dense ? 'compact' : 'default'"
+    :persistent-placeholder="!!placeholder"
+    variant="underlined"
     @click:append="$emit('click:append', $event)"
     @click:prepend="iconAction"
-    :class="[ (disabled ? 'v-input--is-disabled' : '') ]"
   >
     <template #label>
       {{ label }}
@@ -38,13 +35,11 @@
 <script>
   export default {
     name: 'GokbTextField',
+    emits: ['update:model-value', 'click:append'],
     props: {
-      value: {
-        required: true,
-        default: '',
-        validator: function (value) {
-          return value === undefined || value === null || typeof value === 'string'
-        }
+      modelValue: {
+        required: false,
+        default: ''
       },
       disabled: {
         type: Boolean,
@@ -79,6 +74,7 @@
       required: {
         type: Boolean,
         required: false,
+        default: false
       },
       hideIcon: {
         type: Boolean,
@@ -113,9 +109,6 @@
       rules: {
         type: Array,
         required: false,
-        default () {
-          return [v => (v?.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
-        }
       },
       apiErrors: {
         type: [Object, Array],
@@ -128,20 +121,74 @@
         default: true
       }
     },
+    data () {
+      return {
+        localErrorMessages: undefined,
+        apiErrorMessages: [],
+        hasApiErrors: false,
+        badApiValue: undefined,
+        localRules: []
+      }
+    },
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          if (!!this.badApiValue && localValue != this.badApiValue) {
+            this.badApiValue = undefined
+            this.apiErrorMessages = []
+            this.hasApiErrors = false
+          }
+
+          this.$emit('update:model-value', localValue)
         },
       },
       isValid () {
-        return this.$refs.textField.valid
+        return !this.localErrorMessages && !this.hasApiErrors
       },
-      apiErrorMessages () {
-        return this.apiErrors?.length > 0 ? this.apiErrors.map(e => (e.messageCode ? this.$i18n.t(e.messageCode) : (e.matches ? this.$i18n.t('validation.valueNotUnique') : e.message))) : undefined
+      errorMessages () {
+        return this.localErrorMessages || this.apiErrorMessages
+      },
+      editable () {
+        return !this.readonly && !this.disabled
+      }
+    },
+    watch: {
+      rules: {
+        handler (r) {
+          if (r?.length > 0) {
+            this.localRules = r
+          }
+          else {
+            this.localRules = [v => (v.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
+          }
+        },
+        deep: true
+      },
+      apiErrors (items) {
+        if (!!items && items.length > 0) {
+          this.hasApiErrors = true
+
+          if (!!items[0].baddata) {
+            this.badApiValue = items[0].baddata
+          }
+
+          this.apiErrorMessages = this.apiErrors.map(e => (!!e.messageCode ? this.$i18n.t(e.messageCode) : (e.matches ? this.$i18n.t('validation.valueNotUnique') : e.message)))
+        } else if (!!items) {
+          this.hasApiErrors = true
+
+          if (!!items.baddata) {
+            this.badApiValue = items.baddata
+          }
+
+          this.apiErrorMessages = !!items.messageCode ? this.$i18n.t(items.messageCode) : (items.matches ? this.$i18n.t('validation.valueNotUnique') : items.message)
+        } else {
+          this.badApiValue = undefined
+          this.apiErrorMessages = []
+          this.hasApiErrors = false
+        }
       }
     },
     methods: {
@@ -149,13 +196,10 @@
         return this.$refs.textField.validate()
       },
       iconAction () {
-        if (this.type == 'email' && this.value && this.validate()) {
-          window.location.href = 'mailto:' + this.value
+        if (this.type == 'email' && this.modelValue && this.validate()) {
+          window.location.href = 'mailto:' + this.modelValue
         }
       }
     }
   }
 </script>
-
-<style scoped>
-</style>

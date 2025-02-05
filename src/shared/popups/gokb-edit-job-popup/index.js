@@ -1,1 +1,1 @@
-export default from './gokb-edit-job-popup'
+export {default} from './gokb-edit-job-popup'

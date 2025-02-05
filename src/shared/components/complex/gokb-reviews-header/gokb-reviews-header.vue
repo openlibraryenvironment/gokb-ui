@@ -80,8 +80,8 @@
                 >
                   {{ $t('component.review.action.label') }}
                 </label>
-                <v-row class="mb-3  ">
-                  <v-col :style="{ fontSize: '1.2em'}">
+                <v-row class="mb-3">
+                  <v-col>
                     {{ localAction }}
                   </v-col>
                 </v-row>
@@ -92,10 +92,10 @@
                 >
                   {{ $t('component.review.cause.label') }}
                 </label>
-                <i18n
+                <i18n-t
                   id="stdDesc"
-                  :style="{ fontSize: '1.2em' }"
-                  :path="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.info'"
+                  scope="global"
+                  :keypath="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.info'"
                 >
                   <template v-slot:0>
                     <router-link
@@ -151,7 +151,7 @@
                   <template v-slot:2>
                     <b v-if="numMessageVars > 2">{{ additionalVars[2] }}</b>
                   </template>
-                </i18n>
+                </i18n-t>
               </div>
               <div
                 v-if="!hasComponentCards && reviewComponent.additionalInfo && reviewComponent.additionalInfo.candidates"
@@ -215,10 +215,10 @@
                 >
                   {{ $t('component.review.todo.label') }}
                 </label>
-                <i18n
+                <i18n-t
                   id="todo"
-                  :style="{ fontSize: '1.2em'}"
-                  :path="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.toDo'"
+                  scope="global"
+                  :keypath="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.toDo'"
                 >
                   <template v-slot:0>
                     <router-link
@@ -237,7 +237,7 @@
                       {{ reviewComponent.component.name }}
                     </router-link>
                   </template>
-                </i18n>
+                </i18n-t>
               </div>
             </v-col>
           </v-row>
@@ -247,13 +247,13 @@
             v-model="reviewComponent.description"
             required
             disabled
-            :label="$i18n.t('component.review.cause.label')"
+            :label="$t('component.review.cause.label')"
           />
           <gokb-textarea-field
             v-model="reviewComponent.request"
             required
             disabled
-            :label="$i18n.t('component.review.request.label')"
+            :label="$t('component.review.request.label')"
           />
         </div>
       </v-col>
@@ -262,10 +262,10 @@
       <v-col md="12">
         <v-expansion-panels accordion>
           <v-expansion-panel>
-            <v-expansion-panel-header>{{ $t('component.review.additionalInfo.label') }}</v-expansion-panel-header>
-            <v-expansion-panel-content>
+            <v-expansion-panel-title>{{ $t('component.review.additionalInfo.label') }}</v-expansion-panel-title>
+            <v-expansion-panel-text>
               <vue-json-pretty :data="reviewComponent.additionalInfo" />
-            </v-expansion-panel-content>
+            </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
       </v-col>

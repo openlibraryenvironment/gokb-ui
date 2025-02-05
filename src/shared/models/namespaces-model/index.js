@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import {reactive} from 'vue'
 import namespaces from './namespaces-model'
 
-export default namespaces(Vue)
+export default namespaces(reactive)

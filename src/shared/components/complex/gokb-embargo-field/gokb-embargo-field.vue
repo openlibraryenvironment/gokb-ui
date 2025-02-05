@@ -1,13 +1,14 @@
 <template>
   <div>
     <div class="text-h6">
-      Embargo
+      {{ $t('component.tipp.embargo.label') }}
     </div>
     <v-row>
       <v-col cols="4">
-        <gokb-embargo-type-field
+        <gokb-select-field
           v-model="embargoType"
-          :label="$t('component.tipp.embargo.type')"
+          :label="$t('component.tipp.embargo.type.label')"
+          :static-items="embargoTypes"
           :rules="[typeRules]"
           :readonly="readonly"
         />
@@ -24,7 +25,7 @@
         <gokb-time-period-field
           v-model="embargoUnit"
           :label="$t('component.tipp.embargo.unit.label')"
-          :items="allUnits"
+          :static-items="embargoPeriods"
           :rules="[unitRules]"
           :readonly="readonly"
         />
@@ -36,6 +37,7 @@
 <script>
   export default {
     name: 'GokbEmbargoField',
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -47,7 +49,7 @@
         required: false,
         default: false,
       },
-      value: {
+      modelValue: {
         type: String,
         required: false,
         default: undefined
@@ -62,16 +64,40 @@
         embargoTypeField: undefined,
         embargoUnitField: undefined,
         embargoDurationField: undefined,
-        errors: []
+        errors: [],
+        embargoTypes:  [
+          {
+            id: 'R',
+            name: this.$i18n.t('component.tipp.embargo.type.rolling')
+          },
+          {
+            id: 'P',
+            name: this.$i18n.t('component.tipp.embargo.type.period')
+          }
+        ],
+        embargoPeriods: [
+          {
+            id: 'D',
+            name: this.$i18n.t('component.tipp.embargo.unit.day')
+          },
+          {
+            id: 'M',
+            name: this.$i18n.t('component.tipp.embargo.unit.month')
+          },
+          {
+            id: 'Y',
+            name: this.$i18n.t('component.tipp.embargo.unit.year')
+          }
+        ]
       }
     },
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       embargoType: {
@@ -103,27 +129,11 @@
           const { type, duration } = this.decodeEmbargo()
           this.localValue = `${type || ''}${duration || ''}${unit || ''}`
         }
-      },
-      allUnits () {
-        return [
-          {
-            id: 'D',
-            name: this.$i18n.t('component.tipp.embargo.unit.day')
-          },
-          {
-            id: 'M',
-            name: this.$i18n.t('component.tipp.embargo.unit.month')
-          },
-          {
-            id: 'Y',
-            name: this.$i18n.t('component.tipp.embargo.unit.year')
-          }
-        ]
       }
     },
     methods: {
       decodeEmbargo () {
-        const matches = this.value?.match(/^([P,R]?)([0-9]*)([D,M,Y]?)$/)
+        const matches = this.modelValue?.match(/^([P,R]?)([0-9]*)([D,M,Y]?)$/)
         const [, type, duration, unit] = matches || []
         return { type, duration, unit }
       },

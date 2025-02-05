@@ -1,1 +1,1 @@
-export default from './gokb-search-user-field'
+export {default} from './gokb-search-user-field'

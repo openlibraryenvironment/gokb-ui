@@ -32,7 +32,7 @@
         required: false,
         default: '',
       },
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -62,7 +62,7 @@
     },
     watch: {
       dates () {
-        this.$emit('input', this.dates)
+        this.$emit('update:modelValue', this.dates)
       }
     },
   }

@@ -1,1 +1,1 @@
-export default from './gokb-kbart-import-popup'
+export {default} from './gokb-kbart-import-popup'

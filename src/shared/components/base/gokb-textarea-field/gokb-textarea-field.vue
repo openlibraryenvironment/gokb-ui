@@ -2,11 +2,11 @@
   <v-textarea
     :key="hasUpdated"
     v-model="localValue"
-    v-bind="$props"
-    :readonly="readonly"
+    :disabled="!editable"
     rows="1"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
     :required="required"
+    variant="underlined"
     validate-on-blur
     auto-grow
     clearable
@@ -26,8 +26,9 @@
 <script>
   export default {
     name: 'GokbTextareaField',
+    emits: ['update:model-value'],
     props: {
-      value: {
+      modelValue: {
         required: true,
         validator: value => {
           return value === null || typeof value === 'string'
@@ -93,12 +94,15 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
+      editable () {
+        return !this.readonly && !this.disabled
+      }
     },
     methods: {
       refreshRows () {

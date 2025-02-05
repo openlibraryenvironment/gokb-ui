@@ -1,1 +1,1 @@
-export default from './gokb-curatory-group-popup'
+export {default} from './gokb-curatory-group-popup'

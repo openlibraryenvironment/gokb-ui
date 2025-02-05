@@ -1,1 +1,1 @@
-export default from './gokb-date-field'
+export {default} from './gokb-date-field'

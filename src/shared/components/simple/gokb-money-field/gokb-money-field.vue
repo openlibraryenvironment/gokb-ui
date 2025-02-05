@@ -26,7 +26,7 @@
 export default {
   model: { prop: "value", event: "input" },
   props: {
-    value: {
+    modelValue: {
       // type: String,
       type: [String, Number],
       default: "0"
@@ -112,12 +112,12 @@ export default {
   computed: {
     cmpValue: {
       get: function() {
-        return this.value !== null && this.value !== ""
-          ? this.humanFormat(this.value.toString())
+        return this.modelValue !== null && this.modelValue !== ""
+          ? this.humanFormat(this.modelValue.toString())
           : this.valueWhenIsEmpty;
       },
       set: function(newValue) {
-        this.$emit("input", this.machineFormat(newValue));
+        this.$emit("update:modelValue", this.machineFormat(newValue));
       }
     }
   },
@@ -200,7 +200,7 @@ export default {
     },
     targetLength() {
       if (
-        Number(this.cleanNumber(this.value).length) >=
+        Number(this.cleanNumber(this.modelValue).length) >=
         Number(this.options.length)
       ) {
         return true;
@@ -210,8 +210,8 @@ export default {
     },
     onBlur() {
       if (
-        this.value.length === 0 ||
-        parseFloat(this.value) <= this.valueOptions.min
+        this.modelValue.length === 0 ||
+        parseFloat(this.modelValue) <= this.valueOptions.min
       )
         this.$emit(
           this.valueOptions.minEvent || "SetValueMin",
@@ -220,7 +220,7 @@ export default {
 
       if (
         this.valueOptions.max &&
-        parseFloat(this.value) >= this.valueOptions.max
+        parseFloat(this.modelValue) >= this.valueOptions.max
       )
         this.$emit(
           this.valueOptions.maxEvent || "SetValueMax",

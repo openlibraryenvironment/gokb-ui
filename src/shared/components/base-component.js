@@ -46,7 +46,6 @@ export default {
         .catch(error => {
           // hide execution canceled error
           if (error.response && error.response.status >= 500 && instance) {
-            log.error(error)
             instance.error = this.isCancelThrown(error) ? undefined : error
           // } else if (error.response.status === 401 && !showLoginModel.get()) {
           //   showLoginModel.set(true)
@@ -62,7 +61,7 @@ export default {
     buildDateString (ts) {
       if (ts && ts.length > 10) {
         var obj = new Date(ts)
-        obj.setHours(obj.getHours() + 2)
+        obj.setHours(obj.getHours() + (import.meta.env.VITE_UTC_OFFSET || 0))
 
         return obj.toISOString().substring(0, 10)
       }

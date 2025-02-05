@@ -1,1 +1,1 @@
-export default from './gokb-confirmation-popup'
+export {default} from './gokb-confirmation-popup';

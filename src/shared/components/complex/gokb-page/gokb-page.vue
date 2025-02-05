@@ -1,17 +1,18 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-form
-      ref="form"
-      @input="$emit('valid', $event)"
+      ref="pageform"
+      @update:model-value="$emit('valid', $event)"
       @submit.prevent="doSubmit"
     >
       <v-card flat>
         <v-toolbar
           flat
-          :color="toolbarBackground"
-          height="70px"
+          height="70"
+          color="header"
+          class="pl-3"
         >
-          <div class="ml-3">
+          <div class="ml-4">
             <v-toolbar-title>
               <div class="text-h4">{{ title }}</div>
               <div v-if="subTitle">{{ subTitle }}</div>
@@ -21,7 +22,7 @@
         <v-card-text>
           <slot />
         </v-card-text>
-        <v-card-actions class="ml-6 mr-6">
+        <v-card-actions v-if="!hideActions" class="ml-6 mr-6">
           <slot name="buttons" />
         </v-card-actions>
       </v-card>
@@ -32,6 +33,7 @@
 <script>
   export default {
     name: 'GokbPage',
+    emits: ['submit', 'valid'],
     props: {
       title: {
         type: String,
@@ -47,16 +49,16 @@
         type: String,
         required: false,
         default: '1400px'
-      }
-    },
-    computed: {
-      toolbarBackground () {
-        return this.$vuetify.theme.dark ? '#121212' : '#ffffff'
+      },
+      hideActions: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     methods: {
       doSubmit () {
-        this.$emit('submit', this.$refs.form)
+        this.$emit('submit', this.$refs.pageform)
       },
       validate () {
         this.$refs.validate()

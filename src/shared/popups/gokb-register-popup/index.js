@@ -1,1 +1,1 @@
-export default from './gokb-register-popup'
+export {default} from './gokb-register-popup'

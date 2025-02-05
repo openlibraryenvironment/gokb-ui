@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import {reactive} from 'vue'
 import states from './states-model'
 
-export default states(Vue)
+export default states(reactive)

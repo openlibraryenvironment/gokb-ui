@@ -1,1 +1,1 @@
-export default from './gokb-alternate-names-section'
+export {default} from './gokb-alternate-names-section'

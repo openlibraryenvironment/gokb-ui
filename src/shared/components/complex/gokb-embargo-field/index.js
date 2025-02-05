@@ -1,1 +1,1 @@
-export default from './gokb-embargo-field'
+export {default} from './gokb-embargo-field'

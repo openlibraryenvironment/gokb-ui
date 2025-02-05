@@ -1,1 +1,1 @@
-export default from './error-model'
+export {default} from './error-model'

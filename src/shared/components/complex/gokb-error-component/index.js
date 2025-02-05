@@ -1,1 +1,1 @@
-export default from './gokb-error-component'
+export {default} from './gokb-error-component'

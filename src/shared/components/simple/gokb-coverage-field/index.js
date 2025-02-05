@@ -1,1 +1,1 @@
-export default from './gokb-coverage-field'
+export {default} from './gokb-coverage-field'

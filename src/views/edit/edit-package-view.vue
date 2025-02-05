@@ -1,649 +1,763 @@
 <template>
-  <gokb-page
-    v-if="accessible && !notFound"
-    :key="version"
-    :title="title"
-    :sub-title="subTitle"
-    @submit="showSubmitPackageConfirm"
-  >
-    <gokb-error-component :value="error" />
-    <v-snackbars :objects.sync="eventMessages">
-      <template #action="{ close }">
-        <v-btn icon @click="close()"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-    </v-snackbars>
-    <span v-if="importJob?.result === 'success'">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
-          {{ $t('kbart.transmission.showResults') }}
-        </gokb-button>
-      </v-alert>
-    </span>
-    <span v-if="importJob?.result === 'error'">
-      <v-alert
-        type="error"
-        dismissible
-      >
-        {{ $t('kbart.transmission.error.processing') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
-          {{ $t('kbart.transmission.showResults') }}
-        </gokb-button>
-      </v-alert>
-    </span>
-    <span v-if="importJob?.result === 'warn'">
-      <v-alert
-        type="warning"
-        dismissible
-      >
-        {{ $t('kbart.transmission.warn.skipped') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id)">
-          {{ $t('kbart.transmission.showResults') }}
-        </gokb-button>
-      </v-alert>
-    </span>
-    <span v-else-if="importJob?.result === 'info'">
-      <v-alert
-        type="info"
-        dismissible
-      >
-        <span>
-          {{ importJob.dryRun ? $t('kbart.dryRun.started') : $t('kbart.transmission.started') }} {{ '(' + importJob.progress + '%)' }}
-          <v-progress-linear
-            v-if="!!importJob.progress"
-            v-model="importJob.progress"
-          />
-          <div v-else>
-            {{ $t('kbart.transmission.preparing') }}
-          </div>
-        </span>
-      </v-alert>
-    </span>
-    <span v-if="matchingJob?.result === 'success'">
-      <v-alert
-        type="success"
-        dismissible
-      >
-        {{ $t('kbart.titleMatch.success') }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">
-          {{ $t('kbart.transmission.showResults') }}
-        </gokb-button>
-      </v-alert>
-    </span>
-    <span v-if="matchingJob?.result === 'error'">
-      <v-alert
-        type="error"
-        dismissible
-      >
-        {{ $t(matchingJob.messageCode) }}
-        <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id)">
-          {{ $t('kbart.transmission.showResults') }}
-        </gokb-button>
-      </v-alert>
-    </span>
-    <span v-else-if="matchingJob?.result === 'info'">
-      <v-alert
-        type="info"
-        dismissible
-      >
-        <span>
-          {{ $t('kbart.titleMatch.started') }} {{ '(' + matchingJob.progress + '%)' }}
-          <v-progress-linear
-            v-if="!!matchingJob.progress"
-            v-model="matchingJob.progress"
-          />
-          <div v-else>
-            {{ $t('kbart.transmission.preparing') }}
-          </div>
-        </span>
-      </v-alert>
-    </span>
-    <gokb-edit-job-popup
-      v-if="editJobPopupVisible"
-      v-model="editJobPopupVisible"
-      :selected="selectedJob"
-    />
-    <v-stepper
-      v-model="step"
-      alt-labels
+  <div>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+        <template #actions>
+          <v-icon @click="showSnackbar = false" color="white">mdi-close</v-icon>
+        </template>
+    </v-snackbar>
+    <gokb-page
+      v-if="accessible && !notFound"
+      :key="version"
+      :title="title"
+      :sub-title="subTitle"
     >
-      <v-stepper-header>
-        <v-stepper-step
-          editable
-          :step="1"
+      <gokb-error-component :value="error" />
+      <span v-if="importStatus === 'success'">
+        <v-alert
+          type="success"
+          closable
         >
-          {{ isEdit ? $t('component.package.navigation.step4') : $t('component.package.navigation.step1') }}
-        </v-stepper-step>
-        <v-divider />
-        <v-stepper-step
-          :editable="currentStepValid"
-          :class="{ error: !!step2Error }"
-          :step="2"
+          {{ importJob.dryRun ? $t('kbart.dryRun.success') : $t('kbart.transmission.success') }}
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id, 'import')">
+            {{ $t('kbart.transmission.showResults') }}
+          </gokb-button>
+        </v-alert>
+      </span>
+      <span v-if="importStatus === 'error'">
+        <v-alert
+          type="error"
+          closable
         >
-          {{ isEdit ? $t('component.package.navigation.step1') : $t('component.package.navigation.step2') }}
-        </v-stepper-step>
-        <v-divider />
-        <v-stepper-step
-          :editable="currentStepValid"
-          :class="{ error: !!step3Error }"
-          :step="3"
+          {{ $t('kbart.transmission.error.processing') }}
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id, 'import')">
+            {{ $t('kbart.transmission.showResults') }}
+          </gokb-button>
+        </v-alert>
+      </span>
+      <span v-if="importStatus === 'warn'">
+        <v-alert
+          type="warning"
+          closable
         >
-          {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
-        </v-stepper-step>
-        <v-divider />
-        <v-stepper-step
-          :editable="currentStepValid"
-          :step="4"
+          {{ $t('kbart.transmission.warn.skipped') }}
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(importJob.id, 'import')">
+            {{ $t('kbart.transmission.showResults') }}
+          </gokb-button>
+        </v-alert>
+      </span>
+      <span v-else-if="importStatus === 'info'">
+        <v-alert
+          type="info"
+          closable
         >
-          {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
-        </v-stepper-step>
-      </v-stepper-header>
-
-      <v-stepper-items>
-        <v-stepper-content :step="isEdit ? 2 : 1">
-          <gokb-section :no-tool-bar="true">
-            <gokb-name-field
-              v-model="allNames"
-              :disabled="isReadonly"
-              :required="!isReadonly"
-              check-dupes="Package"
-              :item-id="packageItem.id"
+          <span>
+            {{ importJob.dryRun ? $t('kbart.dryRun.started') : $t('kbart.transmission.started') }} {{ !!importProgress ? '(' + importProgress + '%)' : '' }}
+            <v-progress-linear
+              v-if="importRunning"
+              v-model="importProgress"
             />
-            <gokb-url-field
-              v-model="packageItem.descriptionURL"
-              :disabled="isReadonly"
-              :label="$t('component.package.descriptionUrl')"
+            <div v-else>
+              {{ $t('kbart.transmission.preparing') }}
+            </div>
+          </span>
+        </v-alert>
+      </span>
+      <span v-if="matchStatus === 'success'">
+        <v-alert
+          type="success"
+          class="mt-2"
+          closable
+        >
+          {{ $t('kbart.titleMatch.success') }}
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id, 'matching')">
+            {{ $t('kbart.transmission.showResults') }}
+          </gokb-button>
+        </v-alert>
+      </span>
+      <span v-if="matchStatus === 'error'">
+        <v-alert
+          type="error"
+          class="mt-2"
+          closable
+        >
+          {{ $t(matchingJob.messageCode) }}
+          <gokb-button class="ml-2" style="margin-top:-2px;" :label="$t('kbart.transmission.showResults')" @click="showJobPopup(matchingJob.id, 'matching')">
+            {{ $t('kbart.transmission.showResults') }}
+          </gokb-button>
+        </v-alert>
+      </span>
+      <span v-else-if="matchStatus === 'info'">
+        <v-alert
+          type="info"
+          class="mt-2"
+          closable
+        >
+          <span>
+            {{ $t('kbart.titleMatch.started') }} {{ !!matchProgress ? '(' + matchProgress + '%)' : '' }}
+            <v-progress-linear
+              v-if="matchRunning"
+              v-model="matchProgress"
             />
-            <gokb-textarea-field
-              ref="descEdit"
-              v-model="packageItem.description"
-              :label="$t('component.package.description')"
-              :disabled="isReadonly"
-            />
-          </gokb-section>
-          <v-row>
-            <v-col
-              cols="12"
-              xl="6"
-            >
-              <gokb-section
-                :sub-title="$t('component.package.provider')"
-                :mark-required="!isReadonly"
-              >
-                <gokb-search-organisation-field
-                  v-model="packageItem.provider"
-                  :items="providerSelection"
-                  :show-link="true"
-                  :readonly="isReadonly"
-                  return-object
-                />
-              </gokb-section>
-            </v-col>
-            <v-col
-              cols="12"
-              xl="6"
-            >
-              <gokb-section
-                :sub-title="$t('component.package.platform')"
-                :mark-required="!isReadonly"
-              >
-                <gokb-search-platform-field
-                  v-model="packageItem.nominalPlatform"
-                  :items="platformSelection"
-                  :readonly="isReadonly"
-                  return-object
-                />
-              </gokb-section>
-            </v-col>
-          </v-row>
-        </v-stepper-content>
-
-        <v-stepper-content :step="isEdit ? 3 : 2">
-          <gokb-section :no-tool-bar="true">
-            <v-row
-              class="pt-4"
-              dense
-            >
-              <v-col>
-                <gokb-state-field
-                  v-model="packageItem.scope"
-                  :init-item="packageItem.scope"
-                  width="100%"
-                  message-path="component.package.scope"
-                  url="refdata/categories/Package.Scope"
-                  :label="$t('component.package.scope.label')"
-                  :readonly="isReadonly"
-                  dense
-                />
-              </v-col>
-              <v-col>
-                <gokb-state-field
-                  v-model="packageItem.contentType"
-                  :init-item="packageItem.contentType"
-                  width="100%"
-                  message-path="component.package.contentType"
-                  url="refdata/categories/Package.ContentType"
-                  :label="$t('component.package.contentType.label')"
-                  :readonly="isReadonly"
-                  dense
-                />
-              </v-col>
-              <v-col>
-                <gokb-state-field
-                  v-if="!!id"
-                  v-model="packageItem.editStatus"
-                  :init-item="packageItem.editStatus"
-                  message-path="component.general.editStatus"
-                  url="refdata/categories/KBComponent.EditStatus"
-                  width="100%"
-                  :label="$t('component.general.editStatus.label')"
-                  :readonly="isReadonly"
-                  dense
-                />
-              </v-col>
-              <v-col>
-                <gokb-state-field
-                  v-if="!!id"
-                  v-model="packageItem.listStatus"
-                  message-path="component.package.listStatus"
-                  url="refdata/categories/Package.ListStatus"
-                  width="100%"
-                  :label="$t('component.package.listStatus.label')"
-                  :readonly="isReadonly"
-                  dense
-                />
-              </v-col>
-            </v-row>
-            <v-row dense>
-              <v-col cols="7">
-                <div>
-                  <label for="validity">{{ $t('component.package.global.label') }}</label>
-                </div>
-                <gokb-radiobutton-group
-                  id="validity"
-                  v-model="packageItem.global"
-                >
-                  <gokb-radiobutton-field
-                    value="Global"
-                    :label="$t('component.package.global.Global.label')"
-                    :readonly="isReadonly"
-                  />
-                  <gokb-radiobutton-field
-                    value="Consortium"
-                    :label="$t('component.package.global.Consortium.label')"
-                    :readonly="isReadonly"
-                  />
-                  <gokb-radiobutton-field
-                    value="Regional"
-                    :label="$t('component.package.global.Regional.label')"
-                    :readonly="isReadonly"
-                  />
-                  <gokb-radiobutton-field
-                    value="Other"
-                    :label="$t('component.package.global.Other.label')"
-                    :readonly="isReadonly"
-                  />
-                  <gokb-radiobutton-field
-                    value="Local"
-                    :label="$t('component.package.global.Local.label')"
-                    :readonly="isReadonly"
-                  />
-                </gokb-radiobutton-group>
-              </v-col>
-              <v-col cols="1">
-                <v-icon
-                  v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other' || packageItem.global === 'Local'"
-                  class="mt-6"
-                >
-                  mdi-chevron-triple-right
-                </v-icon>
-              </v-col>
-              <v-col cols="4">
-                <gokb-text-field
-                  v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other' || packageItem.global === 'Local'"
-                  v-model="packageItem.globalNote"
-                  :label="$t('component.package.globalNote.label')"
-                  :disabled="isReadonly"
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <gokb-checkbox-field
-                v-model="packageItem.consistent"
-                class="ml-3"
-                :label="$t('component.package.consistent')"
-                :readonly="isReadonly"
-              />
-              <gokb-checkbox-field
-                v-model="packageItem.breakable"
-                class="ml-3"
-                :label="$t('component.package.breakable')"
-                :readonly="isReadonly"
-              />
-              <gokb-checkbox-field
-                v-model="packageItem.fixed"
-                class="ml-3"
-                :label="$t('component.package.fixed')"
-                :readonly="isReadonly"
-              />
-            </v-row>
-          </gokb-section>
-          <v-row>
-            <v-col
-              cols="12"
-              xl="6"
-            >
-              <gokb-identifier-section
-                v-model="packageItem.ids"
-                target-type="Package"
-                :disabled="isReadonly"
-                :api-errors="errors?.ids"
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              xl="6"
-            >
-              <gokb-alternate-names-section
-                v-model="allNames.alts"
-                :disabled="isReadonly"
-                :api-errors="errors?.variantNames"
-              />
-            </v-col>
-          </v-row>
-        </v-stepper-content>
-
-        <v-stepper-content :step="isEdit ? 4 : 3">
-          <v-row v-if="kbart && kbart.selectedFile">
-            <v-col>
-              <v-chip
-                class="ml-6"
-                close
-                @click:close="kbart = undefined"
-              >
-                {{ kbart.selectedFile.name }} ({{ kbart.lineCount }} {{ $tc('kbart.row.label', kbart.lineCount) }})
-                <v-icon
-                  v-if="kbart.dryRun"
-                  class="ml-1"
-                  :title="$t('kbart.dryRun.label')"
-                  small
-                >
-                  mdi-content-save-off
-                </v-icon>
-              </v-chip>
-            </v-col>
-          </v-row>
-          <gokb-tipps-section
-            ref="tipps"
-            :pkg="id"
-            :filter-align="isEdit"
-            :platform="packageItem.nominalPlatform"
-            :provider="packageItem.provider"
-            :disabled="isReadonly"
-            :api-errors="errors?.tipps"
-            @kbart="setKbart"
-            @update="updateNewTipps"
-          />
-          <gokb-source-field
-            v-if="loggedIn"
-            ref="source"
-            v-model="sourceItem"
-            :default-title-namespace="providerTitleNamespace"
-            :expanded="false"
-            :api-errors="errors?.source"
-            :readonly="isReadonly"
-            @enable="triggerUpdate"
-          />
-        </v-stepper-content>
-
-        <v-stepper-content :step="isEdit ? 1 : 4">
-          <gokb-section :no-tool-bar="true">
-            <v-row>
-              <v-col>
-                <gokb-name-field
-                  v-model="allNames"
-                  dense
-                  readonly
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="6">
-                <gokb-state-select-field
-                  v-if="packageItem.status"
-                  v-model="packageItem.status"
-                  dense
-                  :deletable="!isReadonly"
-                  :editable="!isReadonly"
-                  @delete="markDeleted"
-                />
-              </v-col>
-              <v-col cols="6" xl="3">
-                <gokb-uuid-field
-                  v-if="uuid"
-                  label="UUID"
-                  :value="uuid"
-                  path="/package"
-                  dense
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <gokb-text-field
-                  v-model="providerName"
-                  :label="$t('component.package.provider')"
-                  dense
-                  disabled
-                />
-              </v-col>
-              <v-col>
-                <gokb-text-field
-                  v-model="platformName"
-                  :label="$t('component.package.platform')"
-                  dense
-                  disabled
-                />
-              </v-col>
-            </v-row>
-            <v-row v-if="packageItem.description">
-              <v-col>
-                <gokb-textarea-field
-                  ref="descInfo"
-                  v-model="packageItem.description"
-                  :label="$t('component.package.description')"
-                  dense
-                  disabled
-                />
-              </v-col>
-            </v-row>
-            <v-row v-if="id">
-              <v-col cols="3">
-                <gokb-state-field
-                  v-model="overviewStates.contentType"
-                  :init-item="overviewStates.contentType"
-                  message-path="component.package.contentType"
-                  url="refdata/categories/Package.ContentType"
-                  :label="$t('component.package.contentType.label')"
-                  dense
-                  readonly
-                />
-              </v-col>
-              <v-col cols="2">
-                <gokb-number-field
-                  :value="totalNumberOfTitles"
-                  :label="$tc('component.tipp.label', 2)"
-                  dense
-                  disabled
-                />
-              </v-col>
-              <v-col cols="3">
-                <gokb-state-field
-                  v-model="overviewStates.listStatus"
-                  :init-item="overviewStates.listStatus"
-                  message-path="component.package.listStatus"
-                  url="refdata/categories/Package.ListStatus"
-                  :label="$t('component.package.listStatus.label')"
-                  :api-errors="errors?.listStatus"
-                  dense
-                  readonly
-                />
-              </v-col>
-              <v-col>
-                <gokb-text-field
-                  v-if="listVerifiedDate"
-                  v-model="localListVerifiedDate"
-                  :label="$t('component.package.listVerifiedDate.label')"
-                  dense
-                  disabled
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col v-if="kbart && kbart.selectedFile">
-                <gokb-text-field
-                  v-model="kbart.selectedFile.name"
-                  :label="kbartLabel"
-                  dense
-                  disabled
-                />
-              </v-col>
-            </v-row>
-          </gokb-section>
-          <gokb-section
-            v-if="maintenance"
-            :sub-title="$tc('component.maintenance.label', 2)"
-          >
-            <gokb-maintenance-cycle-field v-model="maintenanceCycle" />
-            <gokb-date-field
-              v-model="dueTo"
-              label="Fällig am"
-              disabled
-            />
-          </gokb-section>
-          <v-row>
-            <v-col
-              cols="12"
-              xl="5"
-            >
-              <gokb-curatory-group-section
-                v-model="allCuratoryGroups"
-                :disabled="!isAdmin"
-                :filter-align="false"
-                :expandable="false"
-                :sub-title="$tc('component.curatoryGroup.label', 2)"
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              xl="7"
-            >
-              <gokb-reviews-section
-                v-if="id && isContrib"
-                :expandable="false"
-                :review-component="packageItem"
-                :api-errors="errors?.listStatus"
-                @update=reload
-              />
-            </v-col>
-          </v-row>
-          <v-row v-if="id && !isReadonly">
-            <v-col>
-              <gokb-jobs-section
-                :linked-component="id"
-                :hide-default="true"
-                :auto-refresh="false"
-              />
-            </v-col>
-          </v-row>
-        </v-stepper-content>
-      </v-stepper-items>
-    </v-stepper>
-
-    <template #buttons>
-      <gokb-confirmation-popup
-        v-model="showSubmitConfirm"
-        :message="submitConfirmationMessage"
-        @confirmed="submitPackage"
+            <div v-else>
+              {{ $t('kbart.transmission.preparing') }}
+            </div>
+          </span>
+        </v-alert>
+      </span>
+      <gokb-edit-job-popup
+        v-if="editJobPopupVisible"
+        v-model="editJobPopupVisible"
+        :selected="selectedJob"
       />
-      <gokb-button
-        v-if="!isReadonly"
-        @click="reset"
+
+      <gokb-import-external-source-package-popup
+        v-if="externalSourceImportPopupVisible"
+        v-model="externalSourceImportPopupVisible"
+        @import="mapImportData"
+      />
+
+
+      <v-stepper
+        v-model="step"
+        alt-labels
+        :non-linear="isEdit"
       >
-        {{ $t('btn.reset') }}
-      </gokb-button>
-      <gokb-button
-        v-show="step !== 1"
-        @click="go2PreviousStep"
-      >
-        {{ $t('btn.back') }}
-      </gokb-button>
-      <v-spacer />
-      <div v-if="id">
-        <v-chip
-          class="ma-1"
-          label
-        >
-          <v-icon
-            :title="$t('component.general.dateCreated')"
-            class="pb-1"
-            medium
+        <v-stepper-header>
+          <v-stepper-item
+            :value="1"
+            :editable="isEdit"
+            @selected="setActiveStep(1)"
           >
-            mdi-file-plus-outline
-          </v-icon>
-          <span class="ml-1">{{ localDateCreated }}</span>
-        </v-chip>
-        <v-chip
-          class="ma-1"
-          label
+            {{ isEdit ? $t('component.package.navigation.step4') : $t('component.package.navigation.step1') }}
+
+            <template #icon="props">
+              <span>1</span>
+            </template>
+          </v-stepper-item>
+          <v-divider />
+          <v-stepper-item
+            :class="{ error: step2Error }"
+            :error="step2Error"
+            :value="2"
+            :editable="isEdit"
+            @selected="setActiveStep(2)"
+          >
+            {{ isEdit ? $t('component.package.navigation.step1') : $t('component.package.navigation.step2') }}
+            <template #icon="props">
+              <span v-if="!step2Error">2</span>
+              <v-icon v-else icon="mdi-close-thick"/>
+            </template>
+          </v-stepper-item>
+          <v-divider />
+          <v-stepper-item
+            :class="{ error: step3Error }"
+            :error="step3Error"
+            :value="3"
+            :editable="isEdit"
+            @selected="setActiveStep(3)"
+          >
+            {{ isEdit ? $t('component.package.navigation.step2') : $t('component.package.navigation.step3') }}
+            <template #icon="props">
+              <span v-if="!step3Error">3</span>
+              <v-icon v-else icon="mdi-close-thick"/>
+            </template>
+          </v-stepper-item>
+          <v-divider />
+          <v-stepper-item
+            :value="4"
+            :editable="isEdit"
+            @selected="setActiveStep(4)"
+          >
+            {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
+            <template #icon="props">
+              <span>4</span>
+            </template>
+          </v-stepper-item>
+        </v-stepper-header>
+
+        <v-stepper-window>
+          <v-stepper-window-item
+            :key="`${isEdit ? 2 : 1}-content`"
+            :value="isEdit ? 2 : 1"
+          >
+            <gokb-section :no-tool-bar="true">
+              <gokb-name-field
+                v-model="allNames"
+                :disabled="isReadonly"
+                :required="!isReadonly"
+                check-dupes="Package"
+                :item-id="packageItem.id"
+              />
+              <gokb-url-field
+                v-model="packageItem.descriptionURL"
+                :disabled="isReadonly"
+                :label="$t('component.package.descriptionUrl')"
+              />
+              <gokb-textarea-field
+                ref="descEdit"
+                v-model="packageItem.description"
+                :label="$t('component.package.description')"
+                :disabled="isReadonly"
+              />
+            </gokb-section>
+            <v-row>
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <gokb-section
+                  :sub-title="$t('component.package.provider')"
+                  :mark-required="!isReadonly"
+                >
+                  <gokb-search-organisation-field
+                    v-model="packageItem.provider"
+                    :show-link="true"
+                    :readonly="isReadonly"
+                    return-object
+                  />
+                </gokb-section>
+              </v-col>
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <gokb-section
+                  :sub-title="$t('component.package.platform')"
+                  :mark-required="!isReadonly"
+                >
+                  <gokb-search-platform-field
+                    v-model="packageItem.nominalPlatform"
+                    :readonly="isReadonly"
+                    return-object
+                    only-current
+                  />
+                </gokb-section>
+              </v-col>
+            </v-row>
+          </v-stepper-window-item>
+
+          <v-stepper-window-item
+            :key="`${isEdit ? 3 : 2}-content`"
+            :value="isEdit ? 3 : 2"
+          >
+            <gokb-section :no-tool-bar="true">
+              <v-row
+                class="pt-4"
+                dense
+              >
+                <v-col>
+                  <gokb-state-field
+                    v-model="packageItem.scope"
+                    :init-item="packageItem.scope"
+                    width="100%"
+                    message-path="component.package.scope"
+                    url="refdata/categories/Package.Scope"
+                    :label="$t('component.package.scope.label')"
+                    :readonly="isReadonly"
+                    dense
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-state-field
+                    v-model="packageItem.contentType"
+                    :init-item="packageItem.contentType"
+                    width="100%"
+                    message-path="component.package.contentType"
+                    url="refdata/categories/Package.ContentType"
+                    :label="$t('component.package.contentType.label')"
+                    :readonly="isReadonly"
+                    dense
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-state-field
+                    v-if="!!id"
+                    v-model="packageItem.editStatus"
+                    :init-item="packageItem.editStatus"
+                    message-path="component.general.editStatus"
+                    url="refdata/categories/KBComponent.EditStatus"
+                    width="100%"
+                    :label="$t('component.general.editStatus.label')"
+                    :readonly="isReadonly"
+                    dense
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-state-field
+                    v-if="!!id"
+                    v-model="packageItem.listStatus"
+                    :init-item="packageItem.listStatus"
+                    message-path="component.package.listStatus"
+                    url="refdata/categories/Package.ListStatus"
+                    width="100%"
+                    :label="$t('component.package.listStatus.label')"
+                    :readonly="isReadonly"
+                    dense
+                  />
+                </v-col>
+              </v-row>
+              <v-row dense>
+                <v-col cols="7">
+                  <div>
+                    <label class="text-primary text-caption ml-2" for="validity">{{ $t('component.package.global.label') }}</label>
+                  </div>
+                  <gokb-radiobutton-group
+                    id="validity"
+                    :disabled="isReadonly"
+                    v-model="packageItem.global"
+                  >
+                    <gokb-radiobutton-field
+                      value="Global"
+                      :label="$t('component.package.global.Global.label')"
+                      :readonly="isReadonly"
+                    />
+                    <gokb-radiobutton-field
+                      value="Consortium"
+                      :label="$t('component.package.global.Consortium.label')"
+                      :readonly="isReadonly"
+                    />
+                    <gokb-radiobutton-field
+                      value="Regional"
+                      :label="$t('component.package.global.Regional.label')"
+                      :readonly="isReadonly"
+                    />
+                    <gokb-radiobutton-field
+                      value="Other"
+                      :label="$t('component.package.global.Other.label')"
+                      :readonly="isReadonly"
+                    />
+                    <gokb-radiobutton-field
+                      value="Local"
+                      :label="$t('component.package.global.Local.label')"
+                      :readonly="isReadonly"
+                    />
+                  </gokb-radiobutton-group>
+                </v-col>
+                <v-col cols="1">
+                  <v-icon
+                    v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other' || packageItem.global === 'Local'"
+                    class="mt-6"
+                  >
+                    mdi-chevron-triple-right
+                  </v-icon>
+                </v-col>
+                <v-col cols="4">
+                  <gokb-text-field
+                    v-if="packageItem.global === 'Consortium' || packageItem.global === 'Regional' || packageItem.global === 'Other' || packageItem.global === 'Local'"
+                    v-model="packageItem.globalNote"
+                    :label="$t('component.package.globalNote.label')"
+                    :disabled="isReadonly"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <gokb-checkbox-field
+                  v-model="packageItem.consistent"
+                  class="ml-3"
+                  :label="$t('component.package.consistent')"
+                  :readonly="isReadonly"
+                />
+                <gokb-checkbox-field
+                  v-model="packageItem.breakable"
+                  class="ml-3"
+                  :label="$t('component.package.breakable')"
+                  :readonly="isReadonly"
+                />
+                <gokb-checkbox-field
+                  v-model="packageItem.fixed"
+                  class="ml-3"
+                  :label="$t('component.package.fixed')"
+                  :readonly="isReadonly"
+                />
+              </v-row>
+            </gokb-section>
+            <v-row>
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <gokb-identifier-section
+                  v-model="packageItem.ids"
+                  target-type="Package"
+                  :disabled="isReadonly"
+                  :api-errors="errors?.ids"
+                />
+              </v-col>
+              <v-col
+                v-if="isAdmin"
+                cols="12"
+                md="6"
+              >
+                <gokb-curatory-group-section
+                  v-model="allCuratoryGroups"
+                  :filter-align="false"
+                  :expandable="false"
+                  :sub-title="$tc('component.curatoryGroup.label', 2)"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <gokb-alternate-names-section
+                  v-model="allNames.alts"
+                  :disabled="isReadonly"
+                  :api-errors="errors?.variantNames"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <gokb-subjects-section
+                  v-model="packageItem.subjects"
+                  :disabled="isReadonly"
+                  :api-errors="errors?.subjects"
+                />
+              </v-col>
+            </v-row>
+          </v-stepper-window-item>
+
+          <v-stepper-window-item
+            :key="`${isEdit ? 4 : 3}-content`"
+            :value="isEdit ? 4 : 3"
+          >
+            <v-row v-if="kbart && kbart.selectedFile">
+              <v-col>
+                <v-chip
+                  class="ml-6"
+                  closable
+                  @click:close="kbart = undefined"
+                >
+                  {{ kbart.selectedFile.name }} ({{ kbart.lineCount }} {{ $tc('kbart.row.label', kbart.lineCount) }})
+                  <v-icon
+                    v-if="kbart.dryRun"
+                    class="ml-1"
+                    :title="$t('kbart.dryRun.label')"
+                    small
+                  >
+                    mdi-content-save-off
+                  </v-icon>
+                </v-chip>
+              </v-col>
+            </v-row>
+            <gokb-tipps-section
+              ref="tipps"
+              :pkg="id"
+              :filter-align="isEdit"
+              :is-import-from-external-source="!!externalSource"
+              :platform="packageItem.nominalPlatform"
+              :provider="packageItem.provider"
+              :disabled="isReadonly"
+              :api-errors="errors?.tipps"
+              @kbart="setKbart"
+              @update="updateNewTipps"
+            />
+            <gokb-source-field
+              v-if="loggedIn"
+              ref="source"
+              v-model="sourceItem"
+              :default-title-namespace="providerTitleNamespace"
+              :expanded="false"
+              :api-errors="errors?.source"
+              :readonly="isReadonly"
+              :is-import-from-external-source="!!externalSource"
+              @enable="triggerUpdate"
+            />
+          </v-stepper-window-item>
+
+          <v-stepper-window-item
+            :key="`${isEdit ? 1 : 4}-content`"
+            :value="isEdit ? 1 : 4"
+          >
+            <gokb-section :no-tool-bar="true">
+              <v-row>
+                <v-col>
+                  <gokb-name-field
+                    v-model="allNames"
+                    dense
+                    readonly
+                  />
+                </v-col>
+              </v-row>
+              <v-row dense>
+                <v-col cols="6">
+                  <gokb-state-select-field
+                    v-if="packageItem.status"
+                    v-model="packageItem.status"
+                    class="mt-1"
+                    dense
+                    :deletable="!isReadonly"
+                    :editable="!isReadonly"
+                    @delete="markDeleted"
+                  />
+                </v-col>
+                <v-col cols="6" >
+                  <v-row>
+                    <v-col cols="9" lg="8">
+                      <gokb-uuid-field
+                        v-if="uuid"
+                        label="UUID"
+                        class="mt-2"
+                        v-model="uuid"
+                        path="/package"
+                      />
+                    </v-col>
+                    <v-spacer/>
+                    <v-col cols="3" v-if="!!externalSource" >
+                      <v-row justify="end">
+                        <v-col cols="11">
+                          <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
+                            {{ $t('popups.externalSourceImport.selectLabel') }}
+                          </div>
+                          <v-chip
+                            :text="$t('component.source.importConfig.' + externalSource + '.label')"
+                            class="text-button"
+                            rounded="lg"
+                            :color="externalSourceColor"
+                            density="compact"
+                            :title="$t('component.source.importConfig.subtitle')"
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                  </v-row>
+                </v-col>
+
+              </v-row>
+              <v-row dense>
+                <v-col>
+                  <gokb-text-field
+                    v-model="providerName"
+                    :label="$t('component.package.provider')"
+                    disabled
+                  />
+                </v-col>
+                <v-col>
+                  <gokb-text-field
+                    v-model="platformName"
+                    :label="$t('component.package.platform')"
+                    disabled
+                  />
+                </v-col>
+              </v-row>
+              <v-row v-if="packageItem.description">
+                <v-col>
+                  <gokb-textarea-field
+                    ref="descInfo"
+                    v-model="packageItem.description"
+                    :label="$t('component.package.description')"
+                    dense
+                    disabled
+                  />
+                </v-col>
+              </v-row>
+              <v-row dense>
+                <v-col cols="2">
+                  <gokb-curatory-group-popup
+                    v-model="showGroupInfoPopup"
+                    :selected="selectedGroupPopup"
+                  />
+                  <div class="text-caption text-medium-emphasis" style="margin-top:-2px">
+                    {{ $tc('component.curatoryGroup.label', allCuratoryGroups.length || 1) }}
+                  </div>
+                  <v-chip-group
+                    v-model="selectedGroupPopup"
+                    id="cgroups"
+                    variant="elevated"
+                    color="primary"
+                    mandatory
+                    style="margin-top:-7px"
+                  >
+                    <v-chip
+                      v-for="group in allCuratoryGroups"
+                      :key="group.id"
+                      :text="group.name"
+                      :value="group"
+                      class="text-button"
+                      rounded="lg"
+                      density="compact"
+                      @click="showGroupDetails"
+                    />
+                  </v-chip-group>
+                </v-col>
+                <v-col cols="2">
+                  <gokb-state-field
+                    v-model="overviewStates.contentType"
+                    :init-item="overviewStates.contentType"
+                    message-path="component.package.contentType"
+                    url="refdata/categories/Package.ContentType"
+                    :label="$t('component.package.contentType.label')"
+                    readonly
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <gokb-state-field
+                    v-model="overviewStates.global"
+                    :init-item="overviewStates.global"
+                    message-path="component.package.global"
+                    url="refdata/categories/Package.Global"
+                    :label="$t('component.package.global.label')"
+                    readonly
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <gokb-text-field
+                    v-model="totalNumberOfTitles"
+                    :label="$t('component.package.count')"
+                    disabled
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <gokb-state-field
+                    v-model="overviewStates.listStatus"
+                    :init-item="overviewStates.listStatus"
+                    message-path="component.package.listStatus"
+                    url="refdata/categories/Package.ListStatus"
+                    :label="$t('component.package.listStatus.label')"
+                    :api-errors="errors?.listStatus"
+                    readonly
+                  />
+                </v-col>
+                <v-col cols="1">
+                  <gokb-text-field
+                    v-if="listVerifiedDate"
+                    v-model="localListVerifiedDate"
+                    :label="$t('component.package.listVerifiedDate.label')"
+                    disabled
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col v-if="kbart && kbart.selectedFile">
+                  <gokb-text-field
+                    v-model="kbart.selectedFile.name"
+                    :label="kbartLabel"
+                    dense
+                    disabled
+                  />
+                </v-col>
+              </v-row>
+            </gokb-section>
+            <v-row>
+              <v-col>
+                <gokb-reviews-section
+                  v-if="id && isContrib"
+                  :expandable="false"
+                  :review-component="packageItem"
+                  :api-errors="errors?.listStatus"
+                  @update=reload
+                />
+              </v-col>
+            </v-row>
+            <v-row v-if="id && !isReadonly">
+              <v-col>
+                <gokb-jobs-section
+                  :linked-component="id"
+                  :hide-default="true"
+                  :auto-refresh="false"
+                />
+              </v-col>
+            </v-row>
+          </v-stepper-window-item>
+        </v-stepper-window>
+      </v-stepper>
+
+      <template #buttons>
+        <gokb-confirmation-popup
+          v-model="showSubmitConfirm"
+          :message="submitConfirmationMessage"
+          @confirmed="submitPackage"
+        />
+        <gokb-button
+          v-if="!isReadonly"
+          @click="reset"
         >
-          <v-icon
-            :title="$t('component.general.lastUpdated')"
-            class="pb-1"
+          {{ $t('btn.reset') }}
+        </gokb-button>
+        <gokb-button
+          v-show="step !== 1"
+          @click="go2PreviousStep"
+        >
+          {{ $t('btn.back') }}
+        </gokb-button>
+        <v-spacer />
+        <div v-if="id">
+          <v-chip
+            class="ma-1"
             label
-            medium
           >
-            mdi-refresh
-          </v-icon>
-          <span class="ml-1">{{ localLastUpdated }}</span>
-        </v-chip>
-      </div>
-      <v-spacer />
-      <gokb-button
-        v-if="!isInLastStep"
-        color="primary"
-        :disabled="!currentStepValid"
-        @click="go2NextStep"
-      >
-        {{ $t('btn.next') }}
-      </gokb-button>
-      <!-- without key, submit is executed on previous page -->
-      <gokb-button
-        v-else-if="!isReadonly"
-        key="add"
-        :disabled="!isValid"
-        default
-      >
-        {{ $i18n.t('btn.submit') }}
-      </gokb-button>
-    </template>
-  </gokb-page>
-  <gokb-no-access-field v-else-if="!accessible" />
-  <gokb-page
-    v-else
-    title=""
-  >
-    <v-card>
-      <v-card-text>
-        <div class="text-h5 primary--text">
-          {{ $t('component.general.notFound', [$tc('component.package.label')]) }}
+            <v-icon
+              :title="$t('component.general.dateCreated')"
+              class="pb-1"
+              medium
+            >
+              mdi-file-plus-outline
+            </v-icon>
+            <span class="ml-1">{{ localDateCreated }}</span>
+          </v-chip>
+          <v-chip
+            class="ma-1"
+            label
+          >
+            <v-icon
+              :title="$t('component.general.lastUpdated')"
+              class="pb-1"
+              label
+              medium
+            >
+              mdi-refresh
+            </v-icon>
+            <span class="ml-1">{{ localLastUpdated }}</span>
+          </v-chip>
         </div>
-      </v-card-text>
-    </v-card>
-  </gokb-page>
+        <v-spacer />
+
+        <gokb-button
+          color="primary"
+          :disabled="false"
+          @click="showExternalSourceImportPopup"
+          v-show="!isEdit && step == 1"
+        >
+          <!-- TODO: Text aus Properties-Datei {{ $t('btn.next') }} -->
+          {{ $t('btn.externalSourceImport') }}
+        </gokb-button>
+
+        <gokb-button
+          v-if="!isInLastStep"
+          color="primary"
+          :disabled="!currentStepValid"
+          @click="go2NextStep"
+        >
+          {{ $t('btn.next') }}
+        </gokb-button>
+        <!-- without key, submit is executed on previous page -->
+        <gokb-button
+          v-else-if="!isReadonly"
+          key="add"
+          :disabled="!isValid || hasRunningJob"
+          color="primary"
+          @click="showSubmitPackageConfirm"
+        >
+          {{ $i18n.t('btn.submit') }}
+        </gokb-button>
+      </template>
+    </gokb-page>
+    <gokb-no-access-field v-else-if="!accessible" />
+    <gokb-page
+      v-else
+      title=""
+    >
+      <v-card>
+        <v-card-text align="center">
+          <div class="text-h5 primary--text">
+            {{ $t('component.general.notFound', [$tc('component.package.label')]) }}
+          </div>
+        </v-card-text>
+      </v-card>
+    </gokb-page>
+  </div>
 </template>
 
 <script>
@@ -658,6 +772,7 @@
   import GokbIdentifierSection from '@/shared/components/complex/gokb-identifier-section'
   import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
+  import GokbCuratoryGroupPopup from '@/shared/popups/gokb-curatory-group-popup'
   import GokbDateField from '@/shared/components/complex/gokb-date-field'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbEditJobPopup from '@/shared/popups/gokb-edit-job-popup'
@@ -667,7 +782,7 @@
   import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
-  import VSnackbars from 'v-snackbars'
+  import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
 
   const ROWS_PER_PAGE = 10
 
@@ -696,11 +811,12 @@
       GokbUrlField,
       GokbSourceField,
       GokbCuratoryGroupSection,
+      GokbCuratoryGroupPopup,
       GokbMaintenanceCycleField,
       GokbAlternateNamesSection,
       GokbConfirmationPopup,
       GokbEditJobPopup,
-      VSnackbars
+      GokbImportExternalSourcePackagePopup
     },
     extends: BaseComponent,
     props: {
@@ -734,19 +850,41 @@
         version: undefined,
         errors: {},
         toDelete: false,
-        eventMessages: [],
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         uuid: undefined,
         isCurator: false,
         showSubmitConfirm: false,
+        selectedGroupPopup: undefined,
+        showGroupInfoPopup: false,
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
+        externalSourceImportPopupVisible: false,
+        isImportFromExternalSource: false,
+        externalSource: undefined,
         urlUpdate: false,
         currentName: undefined,
         lastUpdated: undefined,
         listVerifiedDate: undefined,
         dateCreated: undefined,
-        importJob: {},
-        matchingJob: {},
+        importRunning: false,
+        importProgress: undefined,
+        importStatus: undefined,
+        importJob: {
+          id: undefined,
+          dryRun: undefined,
+          dismissed: false
+        },
+        matchingJob: {
+          id: undefined,
+          messageCode: undefined,
+          dismissed: false
+        },
+        matchRunning: false,
+        matchProgress: undefined,
+        matchStatus: undefined,
         selectedJob: undefined,
         kbartProgress: undefined,
         providerTitleNamespace: undefined,
@@ -766,6 +904,7 @@
           consistent: undefined,
           breakable: undefined,
           fixed: undefined,
+          subjects: [],
           listStatus: undefined,
           editStatus: undefined,
           ids: [],
@@ -774,7 +913,8 @@
         },
         overviewStates: {
           contentType: undefined,
-          listStatus: undefined
+          listStatus: undefined,
+          global: undefined
         },
         allCuratoryGroups: [],
         sourceItem: undefined,
@@ -798,7 +938,16 @@
         step2Error: false,
         updateUrl: undefined,
         deleteUrl: undefined,
-        kbart: undefined
+        kbart: undefined,
+        importData: undefined,
+        knownSources: {
+          EZB: {
+            color: 'green'
+          },
+          WEKB: {
+            color: 'orange'
+          }
+        }
       }
     },
     computed: {
@@ -832,8 +981,16 @@
       platformSelection () {
         return this.platformSelect
       },
-      providerName () {
+      /*providerName () {
         return this.packageItem?.provider?.name
+      },*/
+      providerName: {
+        get() {
+          return this.packageItem?.provider?.name
+        },
+        set(newName) {
+          return newName
+        }
       },
       platformName () {
         return this.packageItem?.nominalPlatform?.name
@@ -863,13 +1020,19 @@
         return this.isReadonly || (this.isEdit && (this.step !== 2 || this.isValid)) || (!this.isEdit && (this.step !== 1 || this.isValid))
       },
       isValid () {
-        return (!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)
+        return !!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider
+      },
+      hasRunningJob () {
+        return this.importRunning || this.matchRunning
       },
       activeGroup () {
         return this.loggedIn && accountModel.activeGroup()
       },
       kbartLabel () {
         return 'KBART' + (this.kbart?.dryRun ? ' (' + this.$i18n.t('kbart.dryRun.label') + ')' : '')
+      },
+      externalSourceColor () {
+        return !!this.knownSources[this.externalSource] ? this.knownSources[this.externalSource].color : undefined
       }
     },
     watch: {
@@ -878,23 +1041,30 @@
           this.reload()
         }
 
-        this.eventMessages = []
+        this.showSnackbar = false
       },
       '$i18n.locale' (l) {
         if (this.isEdit) {
           document.title = this.$i18n.tc('component.package.label') + ' – ' + this.allNames.name
         }
 
-        this.eventMessages = []
+        this.showSnackbar = false
       },
       'packageItem.provider' (prov) {
         if (prov) {
           this.fetchDefaultNamespace(prov.id)
         }
       },
-      step () {
+      step (val) {
         this.$refs?.descInfo?.refreshRows()
         this.$refs?.descEdit?.refreshRows()
+
+        history.pushState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
+      },
+      isValid (val) {
+        if (!val) {
+          this.updateStepErrors()
+        }
       }
     },
     async created () {
@@ -902,23 +1072,20 @@
 
       if (!!this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name]),
-            color: 'success',
-            timeout: 2000
-          })
-        } else if (this.initMessageCode.includes('failure')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 4000
+          this.showSnackbar = true
+        } else if (this.initMessageCode.includes('error')) {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')])
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         } else if (this.initMessageCode.includes('warning')) {
-          this.eventMessages.push({
-            message: this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')]),
-            color: 'warning',
-            timeout: -1
-          })
+          this.messageColor = 'warning'
+          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         }
       }
 
@@ -930,16 +1097,40 @@
     },
     mounted () {
       document.addEventListener('keydown', this.handleKeyboardNav.bind(this))
+
+      this.step = parseInt(this.$route.query.step) || 1
     },
     beforeDestroy() {
       document.removeEventListener("keydown", this.handleKeyboardNav)
     },
     methods: {
+      showExternalSourceImportPopup () {
+        this.externalSourceImportPopupVisible = true
+      },
+      async mapImportData (importData) {
+        this.allNames.name = importData.package.name
+
+        this.packageItem = importData.package
+        this.packageItem.provider = importData.provider
+        this.packageItem.nominalPlatform = importData.platform
+        this.sourceItem = importData.source
+        this.externalSource = importData.source.importConfig.value
+
+        this.isImportFromExternalSource = true
+        this.externalSourceImportPopupVisible = false
+      },
       go2NextStep () {
-        this.step < 4 && this.step++
+        if (this.step < 4) {
+          this.step = this.step + 1
+        }
       },
       go2PreviousStep () {
-        this.step > 1 && this.step--
+        if (this.step > 1) {
+          this.step = this.step - 1
+        }
+      },
+      setActiveStep (i) {
+        this.step = i
       },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
@@ -952,8 +1143,8 @@
       },
       handleKeyboardNav (e) {
         if (this.step > 1 && e.key === "ArrowLeft" && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault()
-            this.go2PreviousStep()
+          e.preventDefault()
+          this.go2PreviousStep()
         } else if (this.step < 4 && e.key === "ArrowRight" && (e.ctrlKey || e.metaKey)) {
           e.preventDefault()
           this.go2NextStep()
@@ -964,6 +1155,7 @@
       },
       setKbart (options) {
         this.kbart = options
+        this.showSnackbar = false
 
         if (!this.sourceItem) {
           this.sourceItem = {
@@ -978,15 +1170,14 @@
             unit: undefined,
           }
         } else if (!!this.sourceItem.targetNamespace &&
-                    !!this.sourceItem.update &&
-                    !!options.selectedNamespace &&
-                    options.selectedNamespace.id != this.sourceItem.targetNamespace.id
+          !!this.sourceItem.update &&
+          !!options.selectedNamespace &&
+          options.selectedNamespace.id != this.sourceItem.targetNamespace.id
         ) {
-          this.eventMessages.push({
-            message: this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict'),
-            color: 'warn',
-            timeout: -1
-          })
+          this.messageColor = 'warn'
+          this.snackbarMessage = this.$i18n.t('kbart.transmission.warn.sourceNamespaceConflict')
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         }
       },
       showSubmitPackageConfirm (form) {
@@ -1002,6 +1193,11 @@
               text: 'component.package.navigation.confirm.sourceUpdate.label',
               vars: [this.allNames.name, this.sourceItem.url]
               }
+          } else if (this.isEdit && this.packageItem.listStatus.value === 'In Progress') {
+            this.submitConfirmationMessage = {
+              text: 'component.package.navigation.confirm.noTippsListInProgress.label',
+              vars: [this.allNames.name]
+            }
           } else {
             this.submitConfirmationMessage = {
               text: 'component.package.navigation.confirm.noTipps.label',
@@ -1011,23 +1207,29 @@
           this.showSubmitConfirm = true
         }
       },
-      showJobPopup(uuid) {
-        this.selectedJob = { id: uuid, archived: false }
+      showJobPopup(uuid, type) {
+        this.selectedJob = { id: uuid, archived: type === 'import' }
         this.editJobPopupVisible = true
       },
       async submitPackage () {
         loading.startLoading()
         var isUpdate = !!this.id
-        this.eventMessages = []
+        this.showSnackbar = false
         this.errors = {}
         this.updateStepErrors()
 
-        if (this.importJob?.status !== 'info') {
-          this.importJob = {}
+        if (this.importStatus !== 'info') {
+          this.importStatus = undefined
+          this.importJob.id = undefined
+          this.importJob.dryRun = undefined
+          this.importJob.dismissed = false
         }
 
-        if (this.matchingJob?.status !== 'info') {
-          this.matchingJob = {}
+        if (this.matchingStatus !== 'info') {
+          this.matchStatus = undefined
+          this.matchingJob.id = undefined
+          this.matchingJob.messageCode = undefined
+          this.matchingJob.dismissed = false
         }
 
         if (this.isValid) {
@@ -1076,6 +1278,10 @@
               value: id.value,
               type: id.namespace
             })),
+            subjects: this.packageItem.subjects.map(subject => ({
+              heading: subject.heading,
+              scheme: subject.scheme
+            })),
             breakable: utils.asYesNo(this.packageItem.breakable),
             consistent: utils.asYesNo(this.packageItem.consistent),
             fixed: utils.asYesNo(this.packageItem.fixed),
@@ -1110,34 +1316,34 @@
               })
 
               this.kbart = undefined
+              let kbartMessage = undefined
 
               if (kbartResult.status === 403) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.denied'),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.denied'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t(kbartMessage)
+                this.currentSnackBarTimeout = -1
               } else if (kbartResult.status >= 400 && kbartResult.status < 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.processing'),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.processing'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t('kbart.transmission.error.processing')
+                this.currentSnackBarTimeout = -1
               } else if (kbartResult.status >= 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.unknown'),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.unknown'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t('kbart.transmission.error.unknown')
+                this.currentSnackBarTimeout = -1
               }
 
               if (isUpdate) {
                 this.step = 1
-                this.eventMessages.push({
-                  message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
-                  color: 'success',
-                  timeout: 2000
-                })
+
+                if (kbartResult.status === 200) {
+                  this.messageColor = 'success'
+                  this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name])
+                  this.currentSnackBarTimeout = 4000
+                }
+                this.showSnackbar = true
                 this.reload()
 
                 if (kbartResult?.data?.jobId) {
@@ -1149,7 +1355,7 @@
                   params: {
                     id: this.packageItem.id,
                     kbartJob: kbartResult?.data?.jobId,
-                    initMessageCode: 'success.create'
+                    initMessageCode: kbartResult.status === 200 ? 'success.create' : kbartMessage
                   }
                 })
               }
@@ -1163,38 +1369,37 @@
               })
 
               if (sourceUpdateResult.status === 403) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.denied', [this.$i18n.tc('component.package.label')]),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.denied'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t(kbartMessage)
+                this.currentSnackBarTimeout = -1
               } else if (sourceUpdateResult.status >= 400 && sourceUpdateResult.status < 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.processing', [this.$i18n.tc('component.package.label')]),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.processing'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t(kbartMessage)
+                this.currentSnackBarTimeout = -1
               } else if (sourceUpdateResult.status >= 500) {
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.transmission.error.unknown', [this.$i18n.tc('component.package.label')]),
-                  color: 'error',
-                  timeout: -1
-                })
+                kbartMessage = 'kbart.transmission.error.unknown'
+                this.messageColor = 'error'
+                this.snackbarMessage = this.$i18n.t(kbartMessage)
+                this.currentSnackBarTimeout = -1
               } else if (sourceUpdateResult.data?.status === 'SKIPPED' || sourceUpdateResult.data?.result === 'SKIPPED') {
-                this.eventMessages.push({
-                  message: this.$i18n.t(sourceUpdateResult.data.messageCode),
-                  color: 'warn',
-                  timeout: -1
-                })
+                kbartMessage = sourceUpdateResult.data.messageCode
+                this.messageColor = 'warn'
+                this.snackbarMessage = this.$i18n.t(kbartMessage)
+                this.currentSnackBarTimeout = -1
               }
 
               if (isUpdate) {
                 this.step = 1
-                this.eventMessages.push({
-                  message: this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name]),
-                  color: 'success',
-                  timeout: 2000
-                })
+
+                if (sourceUpdateResult.status === 200) {
+                  this.messageColor = 'success'
+                  this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name])
+                  this.currentSnackBarTimeout = 4000
+                }
+                this.showSnackbar = true
+
                 this.reload()
 
                 if (sourceUpdateResult?.data?.jobId) {
@@ -1206,7 +1411,7 @@
                   params: {
                     id: this.packageItem.id,
                     kbartJob: sourceUpdateResult?.data?.jobId,
-                    initMessageCode: 'success.create'
+                    initMessageCode: sourceUpdateResult.status === 200 ? 'success.create' : kbartMessage
                   }
                 })
               }
@@ -1214,11 +1419,11 @@
               if (isUpdate) {
                 this.step = 1
                 this.reload()
-                this.eventMessages.push({
-                  message: this.$i18n.t((this.isEdit ? 'success.update' : 'success.create'), [this.$i18n.tc('component.package.label'), this.allNames.name]),
-                  color: 'success',
-                  timeout: 2000
-                })
+
+                this.messageColor = 'success'
+                this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name])
+                this.currentSnackBarTimeout = 4000
+                this.showSnackbar = true
               } else {
                 this.$router.push({
                   name: '/package',
@@ -1229,37 +1434,35 @@
                 })
               }
             }
+
+            this.urlUpdate = false
           } else {
             if (response.status === 409) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')]),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')])
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
             } else if (response.status === 500) {
-              this.eventMessages.push({
-                message: this.$i18n.t('error.update.500', [this.$i18n.tc('component.package.label')]),
-                color: 'error',
-                timeout: -1
-              })
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.package.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
             } else {
-              this.eventMessages.push({
-                message: this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
-                color: 'error',
-                timeout: -1
-              })
-              this.errors = response.data.error || {}
+              this.messageColor = 'error'
+              this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
+              this.currentSnackBarTimeout = -1
+              this.showSnackbar = true
+              this.errors = response?.data?.error || {}
               this.updateStepErrors()
               this.step = 1
             }
           }
         }
         else {
-          this.eventMessages.push({
-            message: this.$i18n.t('validation.hasErrors'),
-            color: 'error',
-            timeout: -1
-          })
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t('validation.hasErrors'),
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
         }
 
         loading.stopLoading()
@@ -1295,12 +1498,13 @@
           this.packageItem.listStatus = undefined
           this.packageItem.editStatus = undefined
           this.packageItem.ids = []
+          this.packageItem.subjects = []
           this.packageItem.provider = undefined // organisation
           this.packageItem.nominalPlatform = undefined
           this.allNames = { name: undefined, alts: [] }
         }
         this.kbart = undefined
-        this.eventMessages = []
+        this.showSnackbar = false
         this.reload(true)
       },
       async reload () {
@@ -1311,8 +1515,8 @@
 
           this.errors = {}
           this.toDelete = false
+          this.showSnackbar = false
           this.newTipps = []
-          this.updateStepErrors()
 
           const result = await this.catchError({
             promise: packageServices.get(this.id, this.cancelToken.token),
@@ -1321,27 +1525,49 @@
 
           if (result?.status === 200) {
             this.mapRecord(result.data)
-          } else if (result?.status === 404) {
-            this.notFound = true
-          } else {
-            this.$router.push({ name: '/error' })
-          }
+            this.updateStepErrors()
 
-          if (this.providerSelect) {
-            const providerResult = await this.catchError({
-              promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
-              instance: this
-            })
+            if (this.providerSelect) {
+              const providerResult = await this.catchError({
+                promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
+                instance: this
+              })
 
-            if (providerResult?.status === 200) {
-              const fullProvider = providerResult.data
+              if (providerResult?.status === 200) {
+                const fullProvider = providerResult.data
 
-              if (fullProvider.titleNamespace) {
-                this.providerTitleNamespace = fullProvider.titleNamespace
+                if (fullProvider.titleNamespace) {
+                  this.providerTitleNamespace = fullProvider.titleNamespace
+                }
               }
             }
+
+            if (result?.data?._embedded?.source?.importConfig) {
+              this.externalSource = result.data._embedded.source.importConfig.name
+            }
+
+            /*if (result?.data?.source?.id) {
+              const sourceResult = await this.catchError({
+                promise: sourceServices.getSource(result?.data?.source?.id, this.cancelToken.token),
+                instance: this
+              })
+
+              if (sourceResult?.status === 200) {
+                if (sourceResult?.data?.importConfig) {
+                  this.externalSource = sourceResult.data.importConfig.name
+                }
+              }
+            } */
+
+          } else if (result.status === 404) {
+            this.notFound = true
+          } else {
+            this.$router.push({name: '/error'})
           }
-          await this.$refs.tipps.fetchTipps()
+
+          if (!!this.$refs.tipps) {
+            await this.$refs.tipps.fetchTipps()
+          }
 
           loading.stopLoading()
         } else {
@@ -1366,13 +1592,7 @@
       },
       async loadImportJobStatus (jobId) {
         var finished = false
-        var jobInfo = {
-          id: jobId,
-          progress: undefined,
-          result: 'info',
-          dryRun: undefined,
-          dismissed: false
-        }
+        this.importJob.dismissed = false
 
         while (!finished) {
           const jobResult = await this.catchError({
@@ -1380,69 +1600,49 @@
             instance: this
           })
 
+          this.importJob.id = jobId
+
           if (jobResult?.status < 400) {
-            jobInfo.progress = jobResult.data.progress
+            this.importProgress = jobResult.data.progress
 
             if (jobResult.data.finished) {
-              jobInfo.progress = undefined
-              jobInfo.dryRun = jobResult.data.job_result.dryRun
+              this.importRunning = false
+              this.importProgress = undefined
+              this.importJob.dryRun = jobResult.data.job_result.dryRun
 
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
-                jobInfo.result = 'error'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobResult.data.messageCode || 'kbart.transmission.error.processing'),
-                  color: 'error',
-                  importResult: true,
-                  timeout: -1
-                })
+                this.importStatus = 'error'
               } else if (!!jobResult.data.job_result?.badrows || jobResult.data.job_result.result === 'SKIPPED') {
-                jobInfo.result = 'warn'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobResult.data.job_result?.messageCode || 'kbart.transmission.warn.skipped'),
-                  color: 'warn',
-                  importResult: true,
-                  timeout: -1
-                })
+                this.importStatus = 'warn'
 
                 if (jobResult.data.job_result.matchingJob) {
                   this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
                 }
               } else {
-                jobInfo.result = 'success'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobInfo.dryRun ? 'kbart.dryRun.success' : 'kbart.transmission.success'),
-                  color: 'success',
-                  importResult: true,
-                  timeout: -1
-                })
+                this.importStatus = 'success'
 
                 if (jobResult.data.job_result.matchingJob) {
                   this.loadMatchingJobStatus(jobResult.data.job_result.matchingJob)
                 }
               }
+
               this.reload()
 
               finished = true
             } else {
+              this.importRunning = true
+              this.importStatus = 'info'
               await this.wait(500)
             }
           } else {
-            jobInfo.result = 'error'
+            this.importStatus = 'error'
             finished = true
           }
-
-          this.importJob = jobInfo
         }
       },
       async loadMatchingJobStatus (jobId) {
         var finished = false
-        var jobInfo = {
-          id: jobId,
-          progress: undefined,
-          result: 'info',
-          messageCode: undefined,
-          dismissed: false
-        }
+        this.matchingJob.dismissed = false
 
         while (!finished) {
           const jobResult = await this.catchError({
@@ -1450,41 +1650,32 @@
             instance: this
           })
 
+          this.matchingJob.id = jobId
+
           if (jobResult.status < 400) {
-            jobInfo.progress = jobResult.data.progress
+            this.matchProgress = jobResult.data.progress
 
             if (jobResult.data.finished) {
-              jobInfo.progress = undefined
+              this.matchRunning = false
+              this.matchProgress = undefined
 
               if (jobResult.data.status === 'ERROR' || jobResult.data.status === 'CANCELLED') {
-                jobInfo.result = 'error'
-                jobInfo.messageCode = jobResult.data.job_result?.messageCode || 'kbart.titleMatch.failure'
-                this.eventMessages.push({
-                  message: this.$i18n.t(jobResult.data.job_result?.messageCode),
-                  color: 'error',
-                  timeout: -1,
-                  matchingResult: true
-                })
+                this.matchStatus = 'error'
+                this.matchingJob.messageCode = jobResult.data.job_result?.messageCode || 'kbart.titleMatch.failure'
               } else {
-                jobInfo.result = 'success'
-                this.eventMessages.push({
-                  message: this.$i18n.t('kbart.titleMatch.success'),
-                  color: 'success',
-                  timeout: -1,
-                  importResult: true
-                })
+                this.matchStatus = 'success'
               }
 
               finished = true
             } else {
+              this.matchRunning = true
+              this.matchStatus = 'info'
               await this.wait(500)
             }
           } else {
-            jobInfo.result = 'error'
+            this.matchStatus = 'error'
             finished = true
           }
-
-          this.matchingJob = jobInfo
         }
       },
       async getActiveJobs () {
@@ -1555,11 +1746,18 @@
           name: data.name,
           alts: this.allAlternateNames
         }
+        this.packageItem.subjects = data._embedded.subjects.map(subject => ({
+          ...subject,
+          isDeletable: !!this.updateUrl
+        }))
         this.listVerifiedDate = data.listVerifiedDate
 
-        if (data.source && this.$refs.source) {
+        if (!!data.source) {
           this.sourceItem = data.source
-          this.$refs.source.fetch(data.source.id)
+
+          if (!!this.$refs.source) {
+            this.$refs.source.fetch(this.sourceItem.id)
+          }
         }
 
         this.lastUpdated = data.lastUpdated
@@ -1567,6 +1765,7 @@
 
         this.overviewStates.listStatus = data.listStatus
         this.overviewStates.contentType = data.contentType
+        this.overviewStates.global = data.global
 
         document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
       },
@@ -1578,6 +1777,9 @@
       },
       markDeleted (val) {
         this.toDelete = val
+      },
+      showGroupDetails (info) {
+        this.showGroupInfoPopup = true
       }
     }
   }

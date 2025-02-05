@@ -1,1 +1,1 @@
-export default from './crypt'
+export {default} from './crypt'

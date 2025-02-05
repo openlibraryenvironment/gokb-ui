@@ -1,27 +1,29 @@
 <template>
   <v-tooltip right>
+<<<<<<< HEAD
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         icon
         :class="classes"
         v-bind="attrs"
         v-on="on"
+=======
+    <template v-slot:activator="{ props }">
+      <v-icon
+        :color="color"
+        v-bind="props"
+        class="mt-n1 ml-2"
+        size="small"
+>>>>>>> develop
       >
-        <v-icon
-          :color="color"
-          class="mt-n1"
-          :small="small"
-        >
-          {{ iconId }}
-        </v-icon>
-      </v-btn>
+        {{ iconId }}
+      </v-icon>
     </template>
-    <i18n :path="code">
-      <template v-for="(v, i) in vars" v-slot>
-        <b v-if="typeof v === 'string'">{{ v }}</b>
-        <b v-else>{{ $t(v.code) }}</b>
-      </template>
-    </i18n>
+    <i18n-t :keypath="code" scope="global">
+        <b v-for="(v, i) in vars">
+          {{ typeof v === 'string' ? v : $t(v.code) }}
+        </b>
+    </i18n-t>
   </v-tooltip>
 </template>
 

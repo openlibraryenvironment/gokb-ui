@@ -1,1 +1,1 @@
-export default from './gokb-locale-field'
+export {default} from './gokb-locale-field'

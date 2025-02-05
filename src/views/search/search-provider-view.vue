@@ -13,7 +13,8 @@
           label: undefined,
           identifierValue: undefined,
           titleNamespace: undefined,
-          curatoryGroupIds: undefined
+          curatoryGroupIds: undefined,
+          status: 'Current'
         }
       }
     },
@@ -27,28 +28,43 @@
       isRetiredSelectedDisabled () {
         return this.isReadonly || !this.selectedItems.length || this.selectedItems.some(item => (!item.updateUrl))
       },
+      showSelect () {
+        return this.isUserAdmin
+      },
       resultActionButtons () {
-        return [
-          {
-            label: this.$i18n.t('btn.export'),
-            disabled: 'isSearchExportDisabled',
-            public: true,
-            action: 'exportSearchResults',
-            loading: this.exportLoading
-          },
-          {
-            icon: 'mdi-close',
-            label: this.$i18n.t('btn.retire'),
-            disabled: 'isRetiredSelectedDisabled',
-            action: '_confirmArchiveSelectedItems',
-          },
-          {
-            icon: 'mdi-delete',
-            label: this.$i18n.t('btn.delete'),
-            disabled: 'isDeleteSelectedDisabled',
-            action: '_confirmDeleteSelectedItems',
-          },
-        ]
+        if (this.isUserAdmin) {
+          return [
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            },
+            {
+              icon: 'mdi-close',
+              label: this.$i18n.t('btn.retire'),
+              disabled: 'isRetiredSelectedDisabled',
+              action: '_confirmArchiveSelectedItems',
+            },
+            {
+              icon: 'mdi-delete',
+              label: this.$i18n.t('btn.delete'),
+              disabled: 'isDeleteSelectedDisabled',
+              action: '_confirmDeleteSelectedItems',
+            },
+          ]
+        } else {
+          return [
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            },
+          ]
+        }
       },
       searchInputFields () {
         return [
@@ -56,8 +72,9 @@
             {
               type: 'GokbTextField',
               name: 'qsName',
+              value: 'qsName',
               properties: {
-                label: this.$i18n.t('component.general.name')
+                label: this.$i18n.t('component.general.name'),
               }
             },
             {
@@ -88,29 +105,35 @@
               properties: {
                 initItem: 'Current',
                 width: '100%',
-                messagePath: 'component.general.status'
+                messagePath: 'component.general.status',
+                label: this.$i18n.tc('component.general.status.label')
               }
             },
-            // {
-            //   type: 'GokbNamespaceField',
-            //   name: 'titleNamespace',
-            //   value: 'titleNamespaceId',
-            //   properties: {
-            //     label: this.$i18n.t('component.provider.titleNamespace.label'),
-            //     returnObject: false
-            //   }
-            // },
+            {
+              type: 'GokbNamespaceField',
+              name: 'titleNamespace',
+              value: 'titleNamespaceId',
+              properties: {
+                label: this.$i18n.t('component.provider.titleNamespace.label'),
+                returnObject: false
+              }
+            },
           ],
         ]
       },
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.general.name'),
+            title: this.$i18n.t('component.general.name'),
             align: 'start',
-            width: '100%',
             sortable: true,
             value: 'link'
+          },
+          {
+            title: this.$i18n.tc('component.platform.label', 2),
+            align: 'end',
+            sortable: false,
+            value: 'platforms'
           },
         ]
       }
@@ -131,6 +154,7 @@
           id,
           name,
           status,
+          platforms,
           _links
         }) => ({
           id,
@@ -139,6 +163,7 @@
             route: EDIT_PROVIDER_ROUTE,
             id: 'id'
           },
+          platforms: platforms ? platforms.map(plt => ( plt.name )).join(', ') : undefined,
           status: status.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined

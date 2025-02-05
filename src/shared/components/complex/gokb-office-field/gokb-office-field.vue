@@ -51,6 +51,7 @@
   export default {
     name: 'GokbOfficeField',
     components: { GokbTextField },
+    emits: ['update:model-value', 'delete'],
     props: {
       disabled: {
         type: Boolean,
@@ -61,7 +62,7 @@
         type: Boolean,
         required: false
       },
-      value: {
+      modelValue: {
         type: Object,
         required: true,
         default: () => ({ name: undefined, type: undefined, email: undefined, language: undefined })
@@ -85,15 +86,15 @@
       },
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (value) {
-          this.$emit('input', value)
+          this.$emit('update:model-value', value)
         }
       },
       officeType: {
         get () {
-          return this.value.function
+          return this.modelValue.function
         },
         set (type) {
           this.localObj.function = type
@@ -106,7 +107,7 @@
       },
       language: {
         get () {
-          return this.value.language
+          return this.modelValue.language
         },
         set (language) {
           this.localObj.language = language
@@ -118,7 +119,7 @@
       },
       name: {
         get () {
-          return this.value.name
+          return this.modelValue.name
         },
         set (name) {
           this.localObj.name = name
@@ -127,7 +128,7 @@
       },
       email: {
         get () {
-          return this.value.email
+          return this.modelValue.email
         },
         set (email) {
           this.localObj.email = email

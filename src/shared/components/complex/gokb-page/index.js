@@ -1,1 +1,1 @@
-export default from './gokb-page'
+export {default} from './gokb-page'

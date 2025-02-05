@@ -1,1 +1,1 @@
-export default from './gokb-price-field'
+export {default} from './gokb-price-field'

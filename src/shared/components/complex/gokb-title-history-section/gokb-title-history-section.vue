@@ -16,7 +16,7 @@
         v-if="isEditable"
         color="primary"
         icon-id="mdi-plus"
-        @click="showAddHistoryEvent"
+        @click.prevent="showAddHistoryEvent"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
@@ -26,18 +26,18 @@
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
-    <v-simple-table>
+    <v-table>
       <template v-slot:default>
         <thead>
           <tr>
             <th class="text-left">
-              Date
+              {{ $t('component.title.history.date.label') }}
             </th>
             <th class="text-left">
-              From
+              {{ $t('component.title.history.from.label') }}
             </th>
             <th class="text-left">
-              To
+              {{ $t('component.title.history.to.label') }}
             </th>
             <th class="text-center" />
           </tr>
@@ -115,7 +115,7 @@
           </tr>
         </tbody>
       </template>
-    </v-simple-table>
+    </v-table>
   </gokb-section>
 </template>
 
@@ -128,8 +128,9 @@
     name: 'GokbTitleHistorySection',
     components: { GokbAddItemPopup, GokbConfirmationPopup },
     extends: BaseComponent,
+    emits: ['update:model-value'],
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -168,10 +169,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       isDeleteSelectedDisabled () {

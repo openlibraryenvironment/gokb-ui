@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :sub-title="$tc('component.source.label')"
@@ -7,7 +8,8 @@
     <gokb-url-field
       v-model="url"
       :label="$t('component.source.url')"
-      :readonly="readonly"
+      :readonly="readonly || isImportFromExternalSource"
+      replace-date
     />
     <v-row>
       <v-col cols="3">
@@ -22,7 +24,6 @@
       <v-col cols="3">
         <gokb-namespace-field
           v-model="targetNamespace"
-          :items="[targetNamespace]"
           target-type="Title"
           :readonly="readonly"
           :label="$t('kbart.propId.label')"
@@ -41,6 +42,9 @@
         <v-checkbox
           v-model="automaticUpdates"
           class="mr-5"
+          :style="{ opacity: !url ? 0.25 : 0.87 }"
+          color="primary"
+          :disabled="!url"
           :readonly="readonly"
           :label="$t('component.source.enableUpdate')"
         />
@@ -49,6 +53,7 @@
         <v-checkbox
           v-model="update"
           class="mr-5"
+          :style="{ opacity: !url ? 0.25 : 0.87 }"
           :readonly="readonly"
           :disabled="!url"
           :label="$t('component.source.updateNow')"
@@ -65,6 +70,7 @@
   export default {
     name: 'GokbSourceField',
     extends: BaseComponent,
+    emits: ['update:model-value'],
     props: {
       label: {
         type: String,
@@ -81,7 +87,7 @@
         required: false,
         default: true
       },
-      value: {
+      modelValue: {
         type: Object,
         required: false,
         default: undefined
@@ -90,6 +96,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      isImportFromExternalSource: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -103,9 +114,11 @@
           url: undefined,
           targetNamespace: undefined,
           automaticUpdates: undefined,
+          importConfig: undefined,
           update: false
         },
-        errors: []
+        errors: [],
+        isExpanded: true
       }
     },
     computed: {
@@ -115,7 +128,7 @@
         },
         set (val) {
           this.item.frequency = val
-          this.$emit('input', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       url: {
@@ -124,7 +137,7 @@
         },
         set (val) {
           this.item.url = val
-          this.$emit('input', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       targetNamespace: {
@@ -133,7 +146,7 @@
         },
         set (val) {
           this.item.targetNamespace = val
-          this.$emit('input', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       automaticUpdates: {
@@ -142,7 +155,7 @@
         },
         set (val) {
           this.item.automaticUpdates = val
-          this.$emit('input', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
       update: {
@@ -151,25 +164,44 @@
         },
         set (val) {
           this.item.update = val
-          this.$emit('input', this.item)
+          this.$emit('update:model-value', this.item)
         }
       },
     },
     watch: {
       defaultTitleNamespace (val) {
-        if (val && (!this.value?.id || !this.item.targetNamespace)) {
+        if (!!val && (!this.modelValue?.id || !this.item.targetNamespace)) {
           this.targetNamespace = this.defaultTitleNamespace
         }
+      },
+      modelValue: {
+        handler(val) {
+          if (!!val && !val.id) {
+            this.item.type = val.type
+            this.item.url = val.url
+            this.item.frequency = val.frequency
+            this.item.targetNamespace = val.targetNamespace
+            this.item.automaticUpdates = val.automaticUpdates
+            this.item.importConfig = val.importConfig
+            this.item.update = val.update
+          }
+        },
+        deep: true
       }
     },
     async mounted () {
-      if (this.value?.id) {
-        this.fetch(this.value.id)
+      this.isExpanded = this.expanded
+
+      if (!!this.modelValue?.id) {
+        this.fetch(this.modelValue.id)
+      } else if (!!this.modelValue?.url) {
+        this.isExpanded = true
+        this.item = this.modelValue
       }
     },
     methods: {
       async fetch (sid) {
-        if (sid) {
+        if (!!sid) {
           const result = await this.catchError({
             promise: sourceServices.getSource(sid, this.cancelToken.token),
             instance: this
@@ -183,6 +215,11 @@
             this.item.name = result.data.name
             this.item.url = result.data.url
             this.item.automaticUpdates = result.data.automaticUpdates
+            this.item.importConfig = result.data.importConfig
+
+            if (!!this.item.url) {
+              this.isExpanded = true
+            }
           }
         }
       }

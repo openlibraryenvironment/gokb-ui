@@ -1,1 +1,1 @@
-export default from './gokb-radiobutton-field'
+export {default} from './gokb-radiobutton-field'

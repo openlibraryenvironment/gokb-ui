@@ -1,1 +1,1 @@
-export default from './gokb-tooltip'
+export {default} from './gokb-tooltip'

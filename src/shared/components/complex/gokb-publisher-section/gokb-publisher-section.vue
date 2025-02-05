@@ -1,5 +1,6 @@
 <template>
   <gokb-section
+    v-model="isExpanded"
     expandable
     :hide-default="!expanded"
     :sub-title="title"
@@ -17,7 +18,7 @@
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click="showAddPublisherPopup"
+        @click.prevent="showAddPublisherPopup"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
@@ -27,7 +28,7 @@
         icon-id="mdi-delete"
         color="primary"
         :disabled="isDeleteSelectedDisabled"
-        @click="confirmDeleteSelectedItems"
+        @click.prevent="confirmDeleteSelectedItems"
       >
         {{ $i18n.t('btn.delete') }}
       </gokb-button>
@@ -61,12 +62,13 @@
 
   export default {
     name: 'GokbPublisherSection',
+    emits: ['update:model-value', 'update'],
     components: {
       GokbAddItemPopup,
       GokbConfirmationPopup
     },
     props: {
-      value: {
+      modelValue: {
         type: Array,
         required: true
       },
@@ -99,7 +101,7 @@
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedItems: [],
-
+        isExpanded: true,
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
@@ -109,14 +111,14 @@
     computed: {
       localValue: {
         get () {
-          return this.value
+          return this.modelValue
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       publishers () {
-        return [...this.value]
+        return [...this.modelValue]
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
@@ -131,12 +133,21 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.general.name'), align: 'start', value: 'link', sortable: false, width: '100%' }
+          {
+            title: this.$i18n.tc('component.general.name'),
+            align: 'start',
+            value: 'link',
+            sortable: false,
+            width: '100%'
+          }
         ]
       },
       title () {
         return this.showTitle ? this.$i18n.tc('component.title.publisher.label', 2) : undefined
       }
+    },
+    mounted () {
+      this.isExpanded = this.expanded
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {

@@ -21,13 +21,13 @@
         <gokb-text-field
           ref="valueTextField"
           v-model="item.value"
-          :disabled="disabled"
+          :disabled="disabled || !item.namespace"
           :label="namespaceFixed ? item.namespace.name : $tc('component.identifier.label')"
           :rules="rules"
           :validate-on-blur="false"
           :append-icon="deleteIcon"
           required
-          @click:append="$emit('delete', value)"
+          @click:append="clearVal"
         />
       </v-col>
     </v-row>
@@ -41,7 +41,7 @@
       </gokb-button>
       <gokb-button
         :disabled="!isValid"
-        default
+        is-submit
       >
         {{ $t('btn.add') }}
       </gokb-button>
@@ -56,10 +56,16 @@
   export default {
     name: 'GokbAddIdentifierPopup',
     extends: BaseComponent,
+    emits: ['update:model-value', 'add'],
     props: {
+      modelValue: {
+        type: Boolean,
+        required: true
+      },
       namespaceFixed: {
         type: Boolean,
-        required: false
+        required: false,
+        default: false
       },
       targetType: {
         type: String,
@@ -96,10 +102,10 @@
       },
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       isValid () {
@@ -108,15 +114,14 @@
       rules () {
         return [
           val => val?.length > 0 || this.$i18n.t('validation.missingValue'),
-          val => !this.failedValidation || this.$i18n.t('component.identifier.validation.generic')
+          (this.failedValidation === false) || this.$i18n.t('component.identifier.validation.generic')
         ]
       },
     },
     watch: {
-      'item': {
-        deep: true,
-        handler () {
-          this.failedValidation = false
+      'item.value' (val) {
+        if (val?.length > 0) {
+          this.checkValue()
         }
       }
     },
@@ -130,7 +135,6 @@
         var valid = await this.checkValue()
 
         if (!valid) {
-          this.failedValidation = true
           this.validate(false)
         } else {
           this.$emit('add', this.item)
@@ -139,6 +143,9 @@
       },
       close () {
         this.localValue = false
+      },
+      clearVal () {
+        this.item.value = undefined
       },
       async checkValue() {
         var response = await genericServices('rest/entities').checkIdentifier(
@@ -149,11 +156,14 @@
 
         if (response?.status < 400) {
           if (response.data.result === 'ERROR') {
+            this.failedValidation = true
             return false
           } else {
+            this.failedValidation = false
             return true
           }
         } else {
+          this.failedValidation = false
           return true
         }
       }

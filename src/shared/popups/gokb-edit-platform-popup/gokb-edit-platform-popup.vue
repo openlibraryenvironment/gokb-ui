@@ -2,6 +2,7 @@
   <gokb-dialog
     v-model="localValue"
     :title="localTitle"
+    :is-valid="isValid"
     @submit="save"
   >
     <gokb-error-component :value="error" />
@@ -18,24 +19,22 @@
       v-model="tab"
     >
       <v-tab
-        key="search"
+        value="search"
         @click="resetFields()"
       >
         {{ $tc('btn.select') }}
       </v-tab>
       <v-tab
         v-if="!isEdit"
-        key="new"
+        value="new"
         :disabled="!searched"
         @click="resetFields()"
       >
         {{ $tc('btn.new') }}
       </v-tab>
     </v-tabs>
-    <v-tabs-items v-model="tab">
-      <v-tab-item
-        key="search"
-      >
+    <v-window v-model="tab" v-if="!isEdit" >
+      <v-window-item value="search">
         <v-row
           v-if="isEdit"
           class="text-h6 mt-4 ml-0"
@@ -55,21 +54,24 @@
           <v-col>
             <gokb-search-platform-field
               v-model="platformName"
-              :items="items"
               :label="$tc('component.general.name')"
               :query-fields="['name', 'primaryUrl']"
               return-object
               disable-if-linked
-              @searched="hasSearched()"
+              only-current
+              @searched="hasSearched"
             />
           </v-col>
         </v-row>
         <v-row>
           <v-col>
             <gokb-url-field
+              ref="urlinput"
               v-if="!!platformUrl"
               v-model="platformUrl"
+              :api-errors="errors.primaryUrl"
               readonly
+              @valid="updateUrlValidationState"
             />
           </v-col>
         </v-row>
@@ -92,10 +94,8 @@
             </router-link>
           </v-col>
         </v-row>
-      </v-tab-item>
-      <v-tab-item
-        key="new"
-      >
+      </v-window-item>
+      <v-window-item value="new">
         <v-row
           class="text-h6 mt-4 ml-0"
         >
@@ -117,9 +117,12 @@
         <v-row>
           <v-col>
             <gokb-url-field
+              ref="urlinput"
               v-model="platform.primaryUrl"
+              :api-errors="errors.primaryUrl"
               :readonly="isReadonly"
               :required="!isReadonly"
+              @valid="updateUrlValidationState"
             />
           </v-col>
         </v-row>
@@ -142,8 +145,8 @@
             </router-link>
           </v-col>
         </v-row>
-      </v-tab-item>
-    </v-tabs-items>
+      </v-window-item>
+    </v-window>
     <div v-if="isEdit">
       <v-row
         dense
@@ -161,15 +164,17 @@
       <v-row>
         <v-col>
           <gokb-url-field
+            ref="urlinput"
             v-model="platformUrl"
             :readonly="isReadonly"
+            :api-errors="errors.primaryUrl"
             required
+            @valid="updateUrlValidationState"
           />
         </v-col>
       </v-row>
     </div>
     <template #buttons>
-      <v-spacer />
       <gokb-button
         @click="close"
       >
@@ -177,7 +182,7 @@
       </gokb-button>
       <gokb-button
         v-if="!isReadonly"
-        default
+        is-submit
         :disabled="!isValid"
       >
         {{ submitButtonLabel }}
@@ -199,7 +204,12 @@
       GokbSearchPlatformField
     },
     extends: BaseComponent,
+    emits: ['update:model-value', 'edit'],
     props: {
+      modelValue: {
+        type: [Boolean, Number],
+        required: true
+      },
       selected: {
         type: Object,
         required: false,
@@ -229,15 +239,13 @@
         conflictLinks: [],
         platformUrl: undefined,
         platformName: undefined,
-        items: [],
+        validUrl: false,
         updateUrl: undefined,
         platform: {
           id: undefined,
           name: undefined,
           primaryUrl: undefined
         },
-        urlRules:
-          [v => (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(v)) || this.$i18n.t('component.tipp.url.error')],
         queryFields: ['primaryUrl'],
         disableIfLinked: true,
         searched: false
@@ -246,10 +254,10 @@
     computed: {
       localValue: {
         get () {
-          return this.value || true
+          return this.modelValue || true
         },
         set (localValue) {
-          this.$emit('input', localValue)
+          this.$emit('update:model-value', localValue)
         }
       },
       isReadonly () {
@@ -259,7 +267,7 @@
         return !!this.selected
       },
       isValid () {
-        return !!this.platform?.name && !!this.platform?.primaryUrl
+        return !!this.platform?.name && !!this.platform?.primaryUrl && this.validUrl
       },
       localSuccessMessage () {
         return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.platform.label')]) : undefined
@@ -284,7 +292,6 @@
         this.platformName = this.selected
 
         this.updateUrl = this.selected.updateUrl
-        this.items = [this.platform]
       }
     },
     watch: {
@@ -429,11 +436,13 @@
       hasSearched () {
         this.searched = true
       },
+      updateUrlValidationState (valid) {
+        this.validUrl = valid
+      },
       resetFields () {
         if (this.searched) {
           this.platformUrl = undefined
           this.platformName = undefined
-          this.items = []
           this.updateUrl = undefined
           this.platform = {
             id: undefined,

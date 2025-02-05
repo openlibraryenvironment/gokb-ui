@@ -1,1 +1,1 @@
-export default from './gokb-publisher-section'
+export {default} from './gokb-publisher-section'

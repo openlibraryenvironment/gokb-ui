@@ -24,6 +24,7 @@
     "reactivate": "Reaktivieren",
     "refresh": "Aktualisieren",
     "reload": "Neu laden",
+    "remove": "Entfernen",
     "reset": "Änderungen verwerfen",
     "retire": "Archivieren",
     "search": "Suchen",
@@ -33,7 +34,12 @@
     "update": "Aktualisieren",
     "validate": "Validieren",
     "bulkSelect": "Status für {0} Einträge setzen auf ...",
-    "bulkCloseReview": "{0} als erledigt markieren"
+    "bulkCloseReview": "{0} ausgewählte Prüfanfrage schließen | {0} ausgewählte Prüfanfragen schließen",
+    "closeSelectedReviews": "Ausgewählte Prüfanfragen schließen",
+    "moreFilters": "Mehr Filter",
+    "moreOptions": "Weitere Optionen",
+    "externalSourceImport": "Aus externer Datenquelle importieren",
+    "hide": "Ausblenden"
   },
   "main": {
     "docs": {
@@ -45,6 +51,9 @@
     },
     "privacy": {
       "label": "Datenschutz"
+    },
+    "accessibility": {
+      "label": "Barrierefreiheit"
     }
   },
   "default": {
@@ -52,8 +61,19 @@
     "false": "Nein",
     "all": "Alle",
     "ISOdateHint": "JJJJ-MM-TT",
+    "loading": "Lädt ...",
+    "languages": {
+      "en": "Englisch",
+      "de": "Deutsch"
+    },
     "error": {
       "label": "Fehler | Fehler"
+    },
+    "table": {
+      "noData": {
+        "search": "Keine Ergebnisse",
+        "props": "Keine Einträge"
+      }
     },
     "404": {
       "title": "Unbekannter Pfad",
@@ -76,9 +96,9 @@
       "search": "Pakete"
     },
     "title": {
-      "edit": "Einzeltitel bearbeiten",
-      "create": "Einzeltitel anlegen",
-      "search": "Einzeltitel"
+      "edit": "Referenztitel bearbeiten",
+      "create": "Referenztitel anlegen",
+      "search": "Referenztitel"
     },
     "tipp": {
       "edit": "Pakettitel bearbeiten",
@@ -112,11 +132,12 @@
       "create": "Pflegeauftrag beantragen",
       "search": "Pflegeauftrag"
     },
-    "home": "GOKb",
+    "home": "GOKB",
     "profile": "Profil",
     "register": "Registrierung",
     "noaccess": "Kein Zugang",
-    "kbartValidator": "KBART-Validator"
+    "kbartValidator": "KBART-Validator",
+    "error": "Fehler"
   },
   "pending": {
     "lists": {
@@ -175,14 +196,51 @@
         "401": "Die eingebebenen Informationen sind nicht korrekt.",
         "500": "Der Login-Versuch ist fehlgeschlagen. Bitte versuchen Sie es später noch einmal."
       },
-      "expired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an."
+      "expired": "Ihr Login ist abgelaufen, bitte melden Sie sich erneut an.",
+      "forgotPassword": "Passwort vergessen"
     },
     "logout": {
       "label": "Ausloggen"
     },
     "register":  {
       "label": "Registrieren",
-      "info": "Alle Metadaten zu eRessourcen in der GOKb sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKb mitarbeiten möchten, registrieren Sie sich bitte und schicken uns falls nicht anderweitig abgesprochen eine Nachricht mit Ihrem gewählten Benutzernamen sowie Informationen zu Ihrer Einrichtung an {0}. Wir melden uns dann so schnell wie möglich bei Ihnen zurück!"
+      "info": "Alle Metadaten zu eRessourcen in der GOKB sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKB mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte nach der Registrierung bei uns unter {0}, damit wir sie aufnehmen können.",
+      "nomail": "Alle Metadaten zu eRessourcen in der GOKB sind frei und ohne Anmeldung zugänglich! Falls Sie aktiv in der GOKB mitarbeiten möchten, können Sie sich hier registrieren. Falls Ihre Einrichtung noch nicht als Kurator eingetragen ist, melden Sie sich bitte bei uns, damit wir sie freischalten können."
+    },
+    "activateUser": {
+      "label": "Benutzerkonto aktivieren",
+      "info": "Bitte Freischaltung des Accounts bestätigen. Dies entfernt die Sperre und vergibt Bearbeitungsrechte.",
+      "sendAlert": "Benutzer per E-Mail benachrichtigen"
+    },
+    "externalSourceImport": {
+      "label": "Ein Paket aus einer externen Quelle importieren",
+      "selectLabel": "Importquelle",
+      "uuidFieldLabel": "UUID des zu importierenden Pakets in der {0}",
+      "loading": "Die Daten werden geladen - je nach Größe des angeforderten Pakets kann das einige Zeit dauern.",
+      "columnHeaderExternal": "Paket aus der externen Quelle",
+      "columnHeaderInternal": "Paket in der GOKB",
+      "error": {
+        "uuidNotValid": "Die eingegebene UUID enthält unerlaubte Zeichen oder entspricht nicht dem vorgegebenen Format",
+        "packageNotExist": "Ein Paket mit dieser UUID existiert anscheinend nicht in der gewählten Importquelle",
+        "packageExists": "Ein Paket mit diesem Namen existiert bereits in der GOKB. Prüfen Sie bitte, ob es sich um das selbe Paket handelt.",
+        "platformExists": "Die Plattform ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder eine schon existierende Plattform oder übernehmen Sie die Plattform von der Importquelle.",
+        "providerExists": "Der Anbieter des Pakets ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder einen schon existierenden Anbieter oder übernehmen Sie den Anbieter von der Importquelle."
+      },
+      "adaptSource": "Quelle übernehmen",
+      "packageName": "Paketname",
+      "packageIdentifier": "Paketidentifikator | Paket-Identifikatoren",
+      "packageIdentifierYes": "Mit dem Paket ist ein Identifikator mit dem folgenden Wert verknüpft: ",
+      "packageIdentifierNo": "In der Importquelle ist kein Identifikator mit dem Paket verknüpft.",
+      "packageIdentifierSelect": "Welchem Identifikatoren-Namensraum soll dieser Identifikator zugeordnet werden (Angabe optional)?",
+      "titleIdentifier": "Titel-Identifikatoren",
+      "titleIdentifierInfo": "Folgende exemplarische Identifikatoren pro unterschiedlichem Inhaltstyp befinden sich innerhalb des Pakets",
+      "contentTypeInfo": "Im Paket befinden sich Medien vom Inhaltstyp",
+      "titleIdentifierInfoSelect": "Welcher Identifikatoren-Namensraum soll für das Feld title_id verwendet werden (Angabe optional)?",
+      "searchPlatform": "Plattform suchen",
+      "searchProvider": "Anbieter suchen",
+      "titleIdNamespace": "title_id Namensraum für {0}",
+      "monographs": "Monographien",
+      "journals": "Journals"
     }
   },
   "validation": {
@@ -201,12 +259,14 @@
     "volumeRange": "Der erste Band muss vor dem letzten Band liegen.",
     "issueRange": "Das erste Heft muss vor dem letzten Heft liegen.",
     "missingStartIssue": "Die Angabe eines letzten Hefts erfordert ein Anfangsheft.",
-    "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband."
+    "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband.",
+    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden."
   },
   "job": {
     "label": "Import | Importe",
     "finished": "Fertig",
     "cancelled": "Abgebrochen",
+    "skipped": "Übersprungen",
     "details": "Import-Status",
     "active": {
       "label": "Aktive Jobs"
@@ -346,13 +406,14 @@
       "tabsCountFile": "Diese Datei enthält Datenzeilen mit einer vom Datei-Header abweichenden Anzahl von Spalten!",
       "tabsCountRow": "Diese Zeile enthält {0} Spalten anstatt dem Datei-Header entsprechend {1} Spalten!",
       "missingVal": "Fehlender Wert in Spalte '{0}'!",
-      "missingCols": "Fehlende Spalten: {0}",
+      "missingCols": "Fehlende Spalte: {0}",
       "correctedVal": "Wert '{0}' wird automatisch durch '{1}' ersetzt werden.",
       "replacementChars": "Die Datei enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
       "replacementCharsRow": "Diese Zeile enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
       "unusualChars": "Diese Zeile enthält unübliche Zeichen, die auf eine fehlgeschlagene Dateikonvertierung hinweisen.",
       "unusualCharsVal": "Wert '{0}' enthält unübliche Zeichen. Dies könnte auf ein fehlgeschlagene Dateikonvertierung hinweisen.",
       "illegalVal": "Wert '{0}' ist fehlerhaft!",
+      "illegalValForNamespace": "Wert '{0}' ist nicht zulässig für den Namensraum '{1}'.",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
       "illegalOnlineId": "Wert für Online-Identifier '{0}' hat ein ungültiges Format.",
       "illegalPrintId": "Wert für Print-Identifier '{0}' hat ein ungültiges Format.",
@@ -366,7 +427,9 @@
         "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
         "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
         "notFound": "Unter der angegebenen URL wurde keine KBART-Datei gefunden!",
-        "protocol": "Das Protokoll der KBART-URL wird nicht unterstützt!"
+        "protocol": "Das Protokoll der KBART-URL wird nicht unterstützt!",
+        "fileSize": "Die zurückgelieferte Datei ist zu groß. Der automatisierte Import von Dateien größer als 20 MB muss von einem Administrator autorisiert werden.",
+        "invalid": "In der Paketquelle ist eine ungültige URL eingetragen!"
       },
       "reason": {
         "label": "Ursache | Ursachen"
@@ -382,13 +445,16 @@
       },
       "warning": {
         "label": "Warnung | Warnungen",
-        "fields": "Spaltenstatistik - Warnungen"
+        "fields": "Spaltenstatistik - Warnungen",
+        "structure": "Dateistruktur - Warnungen"
       },
       "error": {
         "label": "Fehler | Fehler",
+        "general": "Bei der Validierung der Datei wurden Fehler festgestellt!",
         "empty": "Fehlender Wert",
         "invalid": "Fehlerhafter Wert",
-        "fields": "Spaltenstatistik - Fehler"
+        "fields": "Spaltenstatistik - Fehler",
+        "structure": "Dateistruktur - Fehler"
       }
     },
     "transmission": {
@@ -426,8 +492,18 @@
     },
     "validator": {
       "label": "KBART-Validator",
-      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKb automatisch interpolierte Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
-      "mode": "Strikter Modus"
+      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus sind Abweichungen vom Standard, die allerdings von der GOKB akzeptiert werden oder die Daten nicht korrumpieren, als Warnungen markiert (entsprechend der Validierung während des Paket-Uploads).",
+      "mode": "Strikter Modus",
+      "advice": "Bitte laden Sie nur durch Tabulatoren getrennte Text-Dateien (.txt, .tsv, .csv) hoch. Aus Performanzgründen bitten wir, umfangreiche Titellisten nicht in schneller Folge hintereinander zu validieren.",
+      "alert": {
+        "strict": {
+          "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn ein Fehler in der Dateistruktur identifiziert wurde, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten. Bei Fehlern einzelner Datensätze bricht die Validierung nicht ab. Es wird die Gesamtheit aller Fehler ausgegeben."
+        },
+        "lax": {
+          "warning": "Titellisten, die Warnungen erzeugen, können zwar in aller Regel in die GOKB importiert werden, es wird aber dringend empfohlen, die Warnungen vor dem Import zu beseitigen.",
+          "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn ein Fehler in der Dateistruktur identifiziert wurde, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten. Bei Fehlern einzelner Datensätze bricht die Validierung nicht ab. Es wird die Gesamtheit aller Fehler ausgegeben."
+        }
+      }
     }
   },
   "profile": {
@@ -509,9 +585,8 @@
     "add": {
       "label": "{0} hinzufügen"
     },
-    "welcome": "Willkommen zur Global Open Knowledgebase!",
     "dashboard": "Dashboard",
-    "search": "Suche",
+    "search": "Suchfilter",
     "results": "Ergebnisse"
   },
   "search": {
@@ -519,13 +594,16 @@
     "global": {
       "placeholder": "Titel, Pakete, Verlage"
     },
+    "generic": {
+      "label": "Name, UUID, Identifikatoren"
+    },
     "results": {
       "label": "Ergebnisse",
       "empty": "Keine Ergebnisse"
     }
   },
   "welcome": {
-    "title": "Willkommen zur Global Open Knowledgebase!",
+    "title": "Willkommen zur Global Open Knowledge Base!",
     "p1": "",
     "p2": "",
     "p3": ""
@@ -645,11 +723,11 @@
       "name": {
         "label": "Titelname | Titelnamen"
       },
-      "volumeNumber": "Bandnr.",
+      "volumeNumber": "Bandnummer",
       "editionNumber": "Ausgabenr.",
-      "editionStatement": "Ausgabe",
-      "firstPublishedInPrint": "Veröffentlichungsdatum (Print)",
-      "firstPublishedOnline": "Veröffentlichungsdatum (Online)",
+      "editionStatement": "Auflage",
+      "firstPublishedInPrint": "Print-Erscheinungsdatum",
+      "firstPublishedOnline": "Online-Erscheinungsdatum",
       "firstAuthor": {
         "label": "Erster Autor"
       },
@@ -667,11 +745,18 @@
             "noDate": "Das hinzugefügte Ereignis hat kein Datum!"
           },
           "changedTo": {
-            "label": "wurde zu"
+            "label": "wurde zu",
+            "on": "am"
           }
         },
-        "from": "von",
-        "to": "nach"
+        "from": {
+          "label": "Titel Vorher",
+          "inline": "von"
+        },
+        "to": {
+          "label": "Titel Nachher",
+          "inline": "nach"
+        }
       }
     },
     "journal": {
@@ -695,7 +780,7 @@
         "currentTitles": "Aktueller Bestand",
         "confirm": {
           "kbartLocal": {
-            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}."
+            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}. Beachten Sie, dass zur Freigabe des Pakets nach Abschluss und Prüfung des Imports der Listenstatus 'Geprüft' gesetzt werden sollte."
           },
           "kbartDryRun": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei {1}. Beachten Sie, dass die Datei lediglich als Testdurchlauf verarbeitet wird!"
@@ -704,10 +789,13 @@
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0} und die Prozessierung der KBART-Datei unter der Adresse {1}."
           },
           "tippBulkUpdate": {
-            "label": "Bitte bestätigen Sie, dass sie die {0} ausgeählten Paket-Titel auf {1} setzen möchten. Falls Sie noch weitere ungespeicherte Änderungen für dieses Paket haben, klicken Sie bitte auf 'Abbrechen' und speichern Sie zunächst die restlichen Änderungen."
+            "label": "Bitte bestätigen Sie, dass sie die {0} ausgewählten Paket-Titel auf {1} setzen möchten. Falls Sie noch weitere ungespeicherte Änderungen für dieses Paket haben, klicken Sie bitte auf 'Abbrechen' und speichern Sie zunächst die restlichen Änderungen."
           },
           "noTipps": {
             "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0}."
+          },
+          "noTippsListInProgress": {
+            "label": "Bitte bestätigen Sie die eingegeben Daten für das Paket {0}. Beachten Sie, dass zur Freigabe des Pakets nach Abschluss und Prüfung eines KBART-Imports der Listenstatus 'Geprüft' gesetzt werden sollte."
           }
         }
       },
@@ -747,7 +835,7 @@
           "label": "Gemischt"
         }
       },
-      "count": "Anzahl Titel",
+      "count": "Aktuelle Pakettitel",
       "listStatus": {
         "label": "Listenstatus",
         "Checked": {
@@ -876,7 +964,12 @@
         "issue": "Heft"
       },
       "embargo": {
-        "type": "Typ",
+        "label": "Embargo",
+        "type": {
+          "label": "Typ",
+          "rolling": "Rolling",
+          "period": "Period"
+        },
         "duration": "Dauer",
         "unit": {
           "label": "Einheit",
@@ -974,7 +1067,10 @@
       "validation": {
         "value": "Wert {0} ist ungültig!",
         "generic": "Dieser Wert ist ungültig!",
-        "pattern": "Der eingegebene Wert hat ein ungültiges Format."
+        "pattern": "Der eingegebene Wert hat ein ungültiges Format.",
+        "list": {
+          "duplicate": "Dieser Identifikator ist bereits in der Liste vorhanden!"
+        }
       }
     },
     "user": {
@@ -982,6 +1078,9 @@
       "username": "Benutzername",
       "register": "Registrierung",
       "password": "Kennwort",
+      "preferredLocaleString": {
+        "label": "Bevorzugte Sprache"
+      },
       "email": "E-Mail",
       "role": {
         "label": "Rolle | Rollen",
@@ -1018,6 +1117,20 @@
         "missing": {
           "username": "Bitte geben Sie einen Benutzernamen an.",
           "password": "Bitte geben Sie ein Passwort an."
+        },
+        "activate": {
+          "invalidMail": "Die Benachrichtigung konnte nicht versendet werden, da die angegebene E-Mail-Adresse ungültig ist!",
+          "missingMail": "Die Benachrichtigung konnte nicht versendet werden, da keine E-Mail-Adresse angegeben wurde!",
+          "missingConfig": "Die Benachrichtigung konnte nicht versendet werden, da nicht alle notwendigen Server-Konfigurationswerte gesetzt wurden!"
+        },
+        "create": {
+          "nameInUse": "Ein Konto mit diesem Benutzernamen existiert bereits!"
+        },
+        "update": {
+          "forbidden": "Sie sind nicht dazu berechtigt, dieses Konto zu bearbeiten!"
+        },
+        "delete": {
+          "forbidden": "Benutzer mit Administrationsrechten können nur von Server-Admins gelöscht werden!"
         }
       }
     },
@@ -1030,7 +1143,7 @@
         "label": "Durchgeführte Aktion"
       },
       "type": {
-        "label": "Typ"
+        "label": "Komponententyp"
       },
       "todo": {
         "label": "ToDo"
@@ -1061,12 +1174,12 @@
           "edited": "Prüfanfrage erfolgreich bearbeitet.",
           "escalated" : "Die Prüfanfrage wurde erfolgreich eskaliert.",
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
-          "closed": "Prüfanfrage als erledigt markiert",
-          "closedBulk": "Prüfanfrage als erledigt markiert | {0} Prüfanfragen als erledigt markiert",
+          "closed": "Prüfanfrage geschlossen",
+          "closedBulk": "Prüfanfrage wurde geschlossen | {0} Prüfanfragen wurden geschlossen",
           "reopened": "Die Prüfanfrage wurde erneut geöffnet."
         },
         "confirm": {
-          "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage als erledigt markieren wollen.",
+          "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage schließen möchten.",
           "reopen": "Bitte bestätigen Sie, dass Sie diese abgeschlossene Prüfanfrage erneut öffnen möchten."
         },
         "componentToReview": {
@@ -1105,7 +1218,16 @@
             },
             "confirm": {
               "label": "Zusammenführung Bestätigen",
-              "message": "Bitte bestätigen Sie die Zusammenführung. Der zu prüfende Titel {0} wird gelöscht, und seine verknüpften Pakettitel werden an den selektierten Titel {1} übertragen."
+              "message": "Bitte bestätigen Sie die Zusammenführung.",
+              "transferCombos": {
+                "message": "Der zu prüfende Titel {0} wird gelöscht, und seine verknüpften Pakettitel werden an den selektierten Titel {1} übertragen."
+              },
+              "transferName": {
+                "message": "Der Name des gelöschten Titels wird an den selektierten übertragen, und dessen bisheriger Name als Namensvariante eingetragen."
+              },
+              "closeReview": {
+                "message": "Die Prüfanfrage wird anschließend automatisch geschlossen."
+              }
             },
             "selectIds": {
               "label": "Zu übertragende Identifikatoren auswählen",
@@ -1124,6 +1246,9 @@
             },
             "unselected": {
               "label": "{0}"
+            },
+            "transferName": {
+              "label": "Namen übertragen"
             }
           },
           "single": {
@@ -1143,7 +1268,13 @@
             },
             "confirmMerge": {
               "label": "Zusammenführung Bestätigen",
-              "message": "Bitte bestätigen Sie die Zusammenführung. Der Referenztitel {0} wird dabei gelöscht, und alle mit ihm verknüpften Pakettitel werden an die Zielkomponente übertragen."
+              "message": "Bitte bestätigen Sie die Zusammenführung.",
+              "transferCombos": {
+                "message": "Der Referenztitel {0} wird gelöscht, und alle mit ihm verknüpften Pakettitel werden an die Zielkomponente {1} übertragen."
+              },
+              "transferName": {
+                "message": "Der Name des gelöschten Titels wird an den selektierten übertragen, und dessen bisheriger Name als Namensvariante eingetragen."
+              }
             },
             "confirmLink": {
               "label": "Verknüpfung bestätigen",
@@ -1162,6 +1293,12 @@
           "add": {
             "label": "Neuen Referenztitel erzeugen",
             "message": "Bitte bestätigen Sie die Erzeugung eines neuen Referenztitels mit ALLEN verbleibenden Identifikatoren des zu prüfenden Pakettitels."
+          },
+          "tippCleanup": {
+            "confirm": {
+              "label": "Titelupdate bereinigen",
+              "message": "Bitte bestätigen Sie die Bereinigung der archivierten Pakettitel mit dem gleichen Referenztitel. Der älteste Pakettitel wird wieder als aktuell markiert, alle anderen werden gelöscht."
+            }
           }
         }
       },
@@ -1281,7 +1418,7 @@
         "Ambiguous Matches": {
           "label": "Uneindeutige Titeltreffer",
           "info": "Mehrere Titel stimmen anhand der vorliegenden Identifikatoren überein.",
-          "action": "Die GOKb konnte keinen Referenztitel verknüpfen.",
+          "action": "Die GOKB konnte keinen Referenztitel verknüpfen.",
           "toDo": "Überprüfen Sie, ob hier eine Dublette vorliegt. Falls ja, führen Sie die Titel zusammen. Überprüfen Sie die Identifikatoren und löschen Sie diesen, falls sie falsch sind.",
           "workflow": {
             "step1": {
@@ -1379,20 +1516,20 @@
         "Critical Identifier Conflict": {
           "label": "Referenztitelkonflikt",
           "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Der neue Referenztitel stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein; andere Identifikatoren stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname.",
-          "action": "Die GOKb erstellte einen neuen Referenztitel mit den Identifikatoren des Pakettitels. Der Pakettitel wurde mit dem neuen Referenztitel verknüpft.",
+          "action": "Die GOKB erstellte einen neuen Referenztitel mit den Identifikatoren des Pakettitels. Der Pakettitel wurde mit dem neuen Referenztitel verknüpft.",
           "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Liegen Dubletten vor, wählen Sie den zu verbleibenden Titel über den Button 'Ziel auswählen' aus. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren, um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht). Liegen keine Dubletten vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Fehlende Identifikatoren können Sie nachtragen, indem Sie über den Namen in die Bearbeitungssicht eines Titels springen. Sie können die Anfrage nun als abgeschlossen markieren."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifikatoren-Konflikt (ID ergänzt)",
           "info": "Beim Abgleich mit einem Referenztitel wurde ein Identifikator gefunden, der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
-          "action": "Die GOKb hat im Referenztitel Identifikatoren hinzugefügt.",
+          "action": "Die GOKB hat im Referenztitel Identifikatoren hinzugefügt.",
           "toDo": "Überprüfen Sie die Identifikatoren des Referenztitels, und entfernen sie fehlerhafte Einträge."
         },
         "Generic Matching Conflict": {
           "label": "Generischer Matchingkonflikt",
           "info": "Es trat ein Konflikt beim Abgleich des eigehenden Pakettitels mit bestehenden Referenztiteln auf.",
           "action": "-",
-          "toDo": "Überprüfen Sie die betroffenen Titel und informieren Sie gegebenenfalls die GOKb-Redaktion."
+          "toDo": "Überprüfen Sie die betroffenen Titel und informieren Sie gegebenenfalls die GOKB-Redaktion."
         },
         "Invalid Record": {
           "label": "Ungültiger KBART-Datensatz",
@@ -1410,7 +1547,7 @@
           "label": "Identifikatoren-Konflikt beim KBART-Import",
           "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren einem bestehenden Pakettitel zugordnet werden, allerdings unterscheiden sich ein oder mehrere andere Identifikatoren.",
           "action": "Ein neuer Pakettitel wurde erstellt.",
-          "toDo": "Überprüfen Sie die Identifikatoren der Pakettitel. Falls Sie Fehler feststellen, sollten diese optimalerweise durch die Einspielung einer korrigierten KBART-Datei behoben werden. In diesem Fall können Sie den/die fehlerhafte(n) Pakettitel zunächst über ihre Detailansicht als gelöscht markieren. Alternativ können Sie fehlerhafte Identifikatoren hier auch manuell löschen."
+          "toDo": "Überprüfen Sie die Identifikatoren und Referenztitel, ob es Konflikte gibt, die gelöst werden müssen. Es kann sein, dass mehr Pakettitel angezeigt werden als betroffen sind."
         },
         "Import Report": {
           "label": "Ergebnisbericht einer KBART-Einspielung",
@@ -1421,7 +1558,7 @@
         "Invalid Name": {
           "label": "Fehlerhafter Name",
           "info": "Der Name dieses Titels enthält fehlerhafte Zeichen (dargestellt durch Platzhalter �).",
-          "action": "Die GOKb legte den Namen mit Platzhaltern (�) für fehlerhafte Zeichen an.",
+          "action": "Die GOKB legte den Namen mit Platzhaltern (�) für fehlerhafte Zeichen an.",
           "toDo": "Korrigieren Sie den Namen des Titels, indem sie das Stift-Icon neben dem Titelnamen anklicken. Schließen Sie die Bearbeitung ab, indem Sie den Haken anwählen. Bestätigen Sie Ihre Änderung mit 'Titeländerungen abschicken'. Bitte überprüfen Sie auch die Namen der gegebenenfalls verknüpften Referenztitel/Pakettitel. "
         },
         "Information": {
@@ -1441,6 +1578,18 @@
           "info": "Unter den verknüpften Identifikatoren wurden ungültige Werte entdeckt!",
           "action": "-",
           "toDo": "Bitte überprüfen Sie die Validität der Identifikatoren und korrigieren Sie eventuelle Fehler."
+        },
+        "Existing Identifiers": {
+          "label": "Identifikatorendublette",
+          "info": "Die Angaben des manuell angelegten Referenztitels überlappen sich mit denen eines bestehenden Referenztitels!",
+          "action": "-",
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, wählen Sie den bestehenden Titel über den Button 'Ziel auswählen' aus. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht)."
+        },
+        "Duplicate Title Info": {
+          "label": "Duplizierte Titelinformationen",
+          "info": "Die Angaben des manuell angelegten Referenztitels überlappen sich mit denen eines bestehenden Referenztitels!",
+          "action": "-",
+          "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, wählen Sie den bestehenden Titel über den Button 'Ziel auswählen' aus. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht)."
         }
       }
     },
@@ -1493,6 +1642,31 @@
         "Yearly": {
           "label": "Jährlich"
         }
+      },
+      "importConfig": {
+        "subtitle": "Dieses Paket wurde aus der angegebenen Quelle importiert",
+        "WEKB": {
+          "label": "we:kb"
+        },
+        "EZB": {
+          "label": "EZB"
+        }
+      }
+    },
+    "subject": {
+      "label": "Sacherschließung | Sacherschließung",
+      "scheme": {
+        "label": "System | Systeme",
+        "DDC": {
+          "label" : "DDC",
+          "error": {
+            "notationFormat": "Der Wert {0} ist keine valide DDC-Notation.",
+            "longNotation": "Tiefe DDC-Notationen werden nicht unterstützt!"
+          }
+        }
+      },
+      "heading": {
+        "label": "Wert | Werte"
       }
     },
     "general": {

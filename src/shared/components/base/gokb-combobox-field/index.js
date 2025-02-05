@@ -1,1 +1,1 @@
-export default from './gokb-combobox-field'
+export {default} from './gokb-combobox-field'

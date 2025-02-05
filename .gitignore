@@ -5,9 +5,6 @@ node_modules
 
 # local env files
 .env.*
-!.env.qa
-!.env.prod
-!.env.lampetiaqa
 
 # Log files
 npm-debug.log*

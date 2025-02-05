@@ -1,1 +1,1 @@
-export default from './gokb-tipp-field'
+export {default} from './gokb-tipp-field'

@@ -2,6 +2,7 @@
   <gokb-section
     v-model="innerExpanded"
     :sub-title="workflowTitle"
+    :no-tool-bar="noToolBar"
     expandable
   >
     <gokb-confirmation-popup
@@ -9,7 +10,8 @@
       :message="submitConfirmationMessage"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
-    <v-alert v-if="editable && isStatusOpen" type="info"> {{ workflow.toDo }} </v-alert>
+    <v-overlay  v-model="initializing" />
+    <v-alert v-if="editable && isStatusOpen" type="info"> <span class="font-weight-bold">{{ workflow.toDo }}</span> </v-alert>
     <v-container fluid>
       <v-row>
         <v-col
@@ -21,12 +23,12 @@
         >
           <v-row>
             <v-col>
-              <h3 class="mb-1">
-                <v-icon class="mr-1 mt-n1">
+              <div class="font-weight-bold mb-1">
+                <v-icon class="mr-1 mt-n1" color="primary">
                   {{ reviewedComponent.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
                 {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
-              </h3>
+              </div>
               <gokb-reviews-title-card
                 :id="reviewedComponent.id"
                 :ref="reviewedComponent.id.toString()"
@@ -41,12 +43,13 @@
                 @merge="mergeCards"
                 @feedback-response="feedbackResponse"
                 @reviewed-card-selected-ids="setSelectedReviewItemIds"
+                @loaded="toggleLoaded"
               />
             </v-col>
             <v-col v-if="reviewType === 'Ambiguous Title Matches'" cols="1">
               <v-container fill-height fluid>
                 <v-row align="center" justify="space-around">
-                  <v-icon> mdi-chevron-right </v-icon>
+                  <v-icon color="primary"> mdi-chevron-right </v-icon>
                 </v-row>
               </v-container>
             </v-col>
@@ -62,18 +65,29 @@
         >
           <v-row>
             <v-col>
-              <h3 class="mb-1">
-                <v-icon class="mr-1 mt-n1">
+              <div class="font-weight-bold mb-1">
+                <v-icon class="mr-1 mt-n1" color="primary">
                   {{ i.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
-                {{ selectedCard === i.id ? $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) : $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
+                {{ selectedCard === i.id ?
+                    $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) :
+                    $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')])
+                }}
                 <b>#{{ idx + 1 }}</b>
-              </h3>
+                <v-icon
+                  class="ml-1"
+                  size="x-small"
+                  @click="hideComponent(i.id)"
+                  :title="$t('btn.hide')"
+                  color="primary"
+                >
+                  mdi-eye-off
+                </v-icon>
+              </div>
               <gokb-reviews-title-card
                 :id="i.id"
                 :ref="i.id.toString()"
                 role="candidateComponent"
-                height="100%"
                 :route="i.route"
                 :candidate-index="idx + 1"
                 :reviewed-component-name="reviewedComponent.name"
@@ -124,6 +138,7 @@
                             class="mt-4"
                             style="cursor:pointer"
                             :title="$t('btn.add')"
+                            color="primary"
                             @click="confirmAddComponent"
                           >
                             mdi-check-bold
@@ -159,7 +174,6 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import titleServices from '@/shared/services/title-services'
   import tippServices from '@/shared/services/tipp-services'
-  import loading from '@/shared/models/loading'
 
   export default {
     name: 'GokbReviewsComponentsSection',
@@ -168,17 +182,13 @@
       GokbConfirmationPopup
     },
     extends: BaseComponent,
+    emits: ['expand', 'close', 'added', 'finished-step', 'initialized', 'feedback-response', 'hide'],
     props: {
       reviewedComponent: {
         type: Object,
         required: true
       },
       referenceComponents: {
-        type: Array,
-        required: false,
-        default: undefined
-      },
-      candidates: {
         type: Array,
         required: false,
         default: undefined
@@ -217,11 +227,16 @@
         type: Boolean,
         required: false,
         default: true,
+      },
+      noToolBar: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
       return {
-        finishedLoading: false,
+        initializing: true,
         selectedCard: undefined,
         selectedCardIds: undefined,
         selectedReviewItemIds: [],
@@ -279,6 +294,7 @@
     created() {
       if (this.workflow.showReviewed) {
         this.linkedComponents[this.reviewedComponent.id.toString()] = {
+          initialized: false,
           loaded: false,
           active: true,
           role: 'reviewedComponent',
@@ -287,6 +303,7 @@
       }
       this.referenceComponents.forEach(rc => {
         this.linkedComponents[rc.id.toString()] = {
+          initialized: false,
           loaded: false,
           active: true,
           role: 'referenceComponent',
@@ -307,43 +324,131 @@
       setSelectedReviewItemIds (ids) {
         this.selectedReviewItemIds = ids
       },
-      async mergeCards (val) {
-        let mergedId = val
-        let mergeParams = { mergeTipps: true }
+      async mergeCards (conf) {
+        let mergedId = conf.id
         let targetId = this.selectedCard
         let mergeData = {
-          id: mergedId,
-          target: targetId
+            id: mergedId,
+            target: targetId
         }
 
-        if (val === this.reviewedComponent.id) {
-          mergeData.ids = this.selectedReviewItemIds
-        } else {
-          mergeParams.mergeIds = true
-        }
+        if (conf.type === 'tipp') {
+          let mergeParams = {}
 
-        const mergeResponse = await this.catchError({
-          promise: titleServices.merge(mergeData, mergeParams, this.cancelToken.token),
-          instance: this
-        })
-        if (typeof mergeResponse == 'undefined') {
-          this.feedbackResponse({ type: 'error', message: 'error.general.500' })
-        }
-        else {
-          if (mergeResponse.status < 400) {
-            this.linkedComponents[mergedId.toString()].active = false
+          if (!!targetId) {
+            const mergeResponse = await this.catchError({
+              promise: tippServices.cleanup(mergeData, mergeParams, this.cancelToken.token),
+              instance: this
+            })
 
-            if (mergedId === this.reviewedComponent.id) {
-              this.$emit('close', true)
-            } else {
-              this.refreshAll()
-              this.feedbackResponse({ type: 'success', message: this.$i18n.t('success.merge', [this.$i18n.tc('component.title.label', 2)]) })
+            if (typeof mergeResponse == 'undefined') {
+              this.feedbackResponse({
+                type: 'error',
+                message: 'error.general.500'
+              })
+            }
+            else {
+              if (mergeResponse.status < 400) {
+                this.linkedComponents[mergedId.toString()].active = false
+
+                if (mergedId === this.reviewedComponent.id) {
+                  this.$emit('close', true)
+                } else {
+                  this.refreshAll()
+                  this.feedbackResponse({
+                    type: 'success',
+                    message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)])
+                  })
+                }
+              } else {
+                this.feedbackResponse({
+                  type: 'error',
+                  resp: mergeResponse
+                })
+              }
             }
           } else {
-            this.feedbackResponse({ type: 'error', resp: mergeResponse })
+            const mergeResponse = await this.catchError({
+              promise: tippServices.cleanup(mergedId, this.cancelToken.token),
+              instance: this
+            })
+
+            if (typeof mergeResponse == 'undefined') {
+              this.feedbackResponse({
+                type: 'error',
+                message: 'error.general.500'
+              })
+            }
+            else {
+              if (mergeResponse.status < 400) {
+                this.linkedComponents[mergedId.toString()].active = false
+
+                if (mergedId === this.reviewedComponent.id) {
+                  this.$emit('close', true)
+                } else {
+                  this.refreshAll()
+                  this.feedbackResponse({
+                    type: 'success',
+                    message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)])
+                  })
+                }
+              } else {
+                this.feedbackResponse({
+                  type: 'error',
+                  resp: mergeResponse
+                })
+              }
+            }
+          }
+        } else {
+          let mergeParams = {
+            mergeTipps: true,
+            transferName: conf.transferName
+          }
+
+          if (mergedId === this.reviewedComponent.id) {
+            if (!!this.selectedReviewItemIds) {
+              mergeData.ids = this.selectedReviewItemIds
+            } else {
+              mergeParams.mergeIds = false
+            }
+
+          } else {
+            mergeParams.mergeIds = true
+          }
+
+          const mergeResponse = await this.catchError({
+            promise: titleServices.merge(mergeData, mergeParams, this.cancelToken.token),
+            instance: this
+          })
+
+          if (typeof mergeResponse == 'undefined') {
+            this.feedbackResponse({
+              type: 'error',
+              message: 'error.general.500'
+            })
+          }
+          else {
+            if (mergeResponse.status < 400) {
+              this.linkedComponents[mergedId.toString()].active = false
+
+              if (mergedId === this.reviewedComponent.id) {
+                this.$emit('close', true)
+              } else {
+                this.refreshAll()
+                this.feedbackResponse({
+                  type: 'success',
+                  message: this.$i18n.t('success.merge', [this.$i18n.tc('component.title.label', 2)])
+                })
+              }
+            } else {
+              this.feedbackResponse({
+                type: 'error',
+                resp: mergeResponse
+              })
+            }
           }
         }
-
       },
       refreshItem (id) {
         this.$refs[id.toString()].fetchTitle()
@@ -372,7 +477,10 @@
         this.showSubmitConfirm = true
         this.actionToConfirm = "generateTippTitle"
         this.parameterToConfirm = undefined
-        this.submitConfirmationMessage = { text: 'component.review.edit.components.add.message', vars: [] }
+        this.submitConfirmationMessage = {
+          text: 'component.review.edit.components.add.message',
+          vars: []
+        }
       },
       async generateTippTitle () {
         const tippInfo = await this.catchError({
@@ -428,14 +536,25 @@
           instance: this
         })
         if (typeof updateResponse == 'undefined') {
-          this.feedbackResponse({ type: 'error', message: 'error.general.500' })
+          this.feedbackResponse({
+            type: 'error',
+            message: 'error.general.500'
+          })
         }
         else {
           if (updateResponse.status === 200) {
             this.refreshAll()
-            this.feedbackResponse({ type: 'success', message: this.$i18n.t('component.review.edit.components.link.success.label') })
+            this.feedbackResponse({
+              type: 'success',
+              message: this.$i18n.t('component.review.edit.components.link.success.label')
+            })
+            this.selectedCard = undefined
+            this.$emit('close', true)
           } else {
-            this.feedbackResponse({ type: 'error', code: updateResponse.status, resp: updateResponse })
+            this.feedbackResponse({
+              type: 'error',
+              code: updateResponse.status, resp: updateResponse
+            })
           }
         }
       },
@@ -445,11 +564,15 @@
       toggleLoaded (info) {
         if (!this.linkedComponents[info.id.toString()]) {
           this.linkedComponents[info.id.toString()] = {
+            initialized: info.initialized,
             loaded: false,
             active: true,
             role: 'referenceComponent',
             route: rc.route
           }
+        }
+        else {
+          this.linkedComponents[info.id.toString()].initialized = info.initialized
         }
 
         if (!info.status) {
@@ -465,9 +588,16 @@
 
           this.activeComponents = Object.values(this.linkedComponents).filter(lc => (lc.active === true)).length
         }
+
+        if (Object.values(this.linkedComponents).filter(lc => (lc.initialized === false)).length === 0) {
+          this.initializing = false
+        }
       },
       nextStep () {
         this.$emit('finished-step', true)
+      },
+      hideComponent (cid) {
+        this.$emit('hide', cid)
       }
     }
   }

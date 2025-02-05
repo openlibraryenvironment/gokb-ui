@@ -1,1 +1,1 @@
-export default from './gokb-table'
+export {default} from './gokb-table'

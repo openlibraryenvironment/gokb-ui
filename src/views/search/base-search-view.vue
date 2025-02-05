@@ -2,14 +2,19 @@
   <gokb-page
     v-if="accessible"
     :title="title"
+    hide-actions
     @submit="search"
   >
     <gokb-error-component :value="error" />
-    <v-snackbars ref="snackbars" :objects.sync="eventMessages"></v-snackbars>
+    <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+        {{ snackbarMessage }}
+        <template #actions>
+          <v-icon @click="showSnackbar = false" color="white">mdi-close</v-icon>
+        </template>
+    </v-snackbar>
     <gokb-section :sub-title="searchHeader">
-      <template v-for="(row, rowIndex) of searchInputFields">
+      <template v-for="(row, rowIndex) of searchInputFields" :key="`${title}_${rowIndex}`">
         <v-row
-          :key="`${title}_${rowIndex}`"
           dense
         >
           <v-col
@@ -22,7 +27,6 @@
               :key="`${title}_${rowIndex}_${columnIndex}`"
               :ref="column.value"
               v-model="searchFilters[column.value]"
-              :items="column.items"
               clearable
               v-bind="column.properties"
             />
@@ -51,7 +55,7 @@
             {{ $i18n.t('btn.reset') }}
           </gokb-button>
           <gokb-button
-            default
+            is-submit
             color="accent"
             class="mr-4 mb-4"
           >
@@ -97,7 +101,7 @@
         :headers="resultHeaders"
         :items="resultItems"
         :editable="!isReadonly"
-        :hide-select="!showSelect"
+        :force-show-select="showSelect"
         :options.sync="resultOptions"
         :total-number-of-items="totalNumberOfItems"
         :show-loading="isLoading"
@@ -116,34 +120,41 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
+  import baseServices from '@/shared/services/base-services'
   import searchServices from '@/shared/services/search-services'
   import exportServices from '@/shared/services/export-services'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import selection from '@/shared/models/selection'
   import accountModel from '@/shared/models/account-model'
-  import VSnackbars from 'v-snackbars'
+  import { toRaw } from 'vue';
 
   const ROWS_PER_PAGE = 10
 
   export default {
     name: 'BaseSearch',
-    components: { GokbErrorComponent, GokbConfirmationPopup, VSnackbars },
+    components: { GokbErrorComponent, GokbConfirmationPopup },
     extends: BaseComponent,
+    props: {
+      initRefresh: {
+        type: Boolean,
+        required: false,
+        default: false
+      }
+    },
     data () {
       return {
         resultItems: [],
         selectedItems: [],
         staticParams: {},
+        searchFilters: {},
         resultOptions: {
           page: 1,
           sortBy: [],
-          desc: false,
           itemsPerPage: ROWS_PER_PAGE
         },
         requestOptions: {
           page: 1,
           sortBy: [],
-          desc: false,
           itemsPerPage: ROWS_PER_PAGE
         },
         totalNumberOfItems: -1,
@@ -155,7 +166,10 @@
         accessible: true,
         loading: false,
         exportLoading: false,
-        eventMessages: []
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: -1
       }
     },
     computed: {
@@ -173,6 +187,9 @@
       },
       isReadonly () {
         return !accountModel.loggedIn() || !accountModel.hasRole('ROLE_CONTRIBUTOR')
+      },
+      isUserAdmin () {
+        return accountModel.hasRole('ROLE_ADMIN')
       },
       showSelect () {
         return false
@@ -207,10 +224,35 @@
       },
       '$i18n.locale' (loc) {
         this.search()
+      },
+      searchFilters: {
+        handler() {
+          this.updateUrlParams()
+        },
+        deep: true
       }
     },
     mounted () {
       this.searchServices = searchServices(this.searchServicesUrl)
+
+      Object.keys(this.searchFilters).forEach(filter => {
+        var filter_val = this.$route.query[filter]
+
+        if (typeof filter_val === 'string') {
+          this.searchFilters[filter] = /^[1-9]\d+$/.test(filter_val) ? parseInt(filter_val) : filter_val
+        } else if (typeof filter_val === 'array') {
+          this.searchFilters[filter] = filter_val
+        }
+      })
+
+      this.search()
+    },
+    activated () {
+      this.updateUrlParams()
+
+      if (this.initRefresh) {
+        this.search()
+      }
     },
     methods: {
       resetSearch () {
@@ -227,7 +269,11 @@
             } else if (this.initVals[filter]) {
               this.searchFilters[filter] = this.initVals[filter]
             } else {
-              if (this.$refs[filter] && this.$refs[filter].length > 0 && typeof this.$refs[filter][0].clear !== 'undefined' && typeof this.$refs[filter][0].clear === 'function') {
+              if (this.$refs[filter] &&
+                  this.$refs[filter].length > 0 &&
+                  typeof this.$refs[filter][0].clear !== 'undefined' &&
+                  typeof this.$refs[filter][0].clear === 'function'
+              ) {
                 this.$refs[filter][0].clear()
               } else {
                 this.searchFilters[filter] = undefined
@@ -241,31 +287,41 @@
       resultPaginate (options) {
         const page = options.page
 
-        if (typeof options.sortBy === 'Array' && options.sortBy.length > 0 && options.sortBy !== this.requestOptions.sortBy) {
-          this.requestOptions.sortBy = options.sortBy
-          this.resultOptions.sortBy = options.sortBy
-        } else if (typeof options.sortBy === 'string') {
-          this.requestOptions.sortBy = [options.sortBy]
-          this.resultOptions.sortBy = [options.sortBy]
-        }
-
         if (options.itemsPerPage) {
           this.requestOptions.itemsPerPage = options.itemsPerPage
           this.resultOptions.itemsPerPage = options.itemsPerPage
         }
 
-        if (options.sortBy && this.sortMappings?.link && this.requestOptions.sortBy.includes('link')) {
-          this.requestOptions.sortBy = [this.sortMappings.link]
-        } else if (options.sortBy && this.sortMappings?.linkTwo && this.requestOptions.sortBy.includes('linkTwo')) {
-          this.requestOptions.sortBy = [this.sortMappings.linkTwo]
+        if (!!this.sortMappings?.linkTwo &&
+            options.sortBy?.length === 1 &&
+            options.sortBy[0]['key'] == 'linkTwo'
+        ) {
+          this.requestOptions.sortBy = [
+            {
+              key: this.sortMappings.linkTwo,
+              order:options.sortBy[0].order
+            }
+          ]
+          this.resultOptions.sortBy = options.sortBy
+        } else if (!!this.sortMappings?.link &&
+            options.sortBy?.length === 1 &&
+            options.sortBy[0]['key'] == 'link'
+        ) {
+          this.requestOptions.sortBy = [
+            {
+              key: this.sortMappings.link,
+              order: options.sortBy[0].order
+            }
+          ]
+          this.resultOptions.sortBy = options.sortBy
+        }
+        else if(options.sortBy?.length === 1) {
+          this.requestOptions.sortBy = options.sortBy
+          this.resultOptions.sortBy = options.sortBy
         }
 
         this.requestOptions.page = page
 
-        if (typeof options.desc === 'boolean' && options.desc != this.requestOptions.desc) {
-          this.requestOptions.desc = options.desc
-          this.resultOptions.desc = options.desc
-        }
         this.search({ page })
       },
       confirmDeleteItem ({ deleteUrl }) {
@@ -357,23 +413,33 @@
         }))
       },
       async search ({ page } = { page: undefined }) {
+        this.showSnackbar = false
         const searchParameters = this._searchParameters(this.searchInputFields)
-        const sort = this.requestOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.requestOptions.sortBy[0]] || this.requestOptions.sortBy[0]) : undefined
-        const desc = typeof this.requestOptions.desc === 'Array' ? this.requestOptions.desc[0] : this.requestOptions.desc
+
+        let sort = undefined
+        let order = undefined
+
+        let rqOptions = toRaw(this.requestOptions)
+
+
+        if (rqOptions.sortBy.length > 0) {
+          sort = this.linkSearchParameterValues[rqOptions.sortBy[0]['key']] || rqOptions.sortBy[0]['key']
+          order = rqOptions.sortBy[0].order
+        }
 
         const componentOptions = this.staticParams
 
         const esTypedParams = {
           es: true,
-          ...((sort && { sort: sort }) || {}),
-          ...((sort && { order: (desc ? 'desc' : 'asc') }) || {}),
-          max: this.resultOptions.itemsPerPage
+          sort,
+          order,
+          max: rqOptions.itemsPerPage
         }
 
         const dbTypedParams = {
           ...((sort && { _sort: sort }) || {}),
-          ...((sort && { _order: (desc ? 'desc' : 'asc') }) || {}),
-          limit: this.resultOptions.itemsPerPage
+          ...((sort && { _order: order }) || {}),
+          limit: rqOptions.itemsPerPage
         }
 
         this.loading = true
@@ -385,7 +451,7 @@
             ...(this.searchByEs ? esTypedParams : dbTypedParams),
             ...((this.searchServiceIncludes && { _include: this.searchServiceIncludes }) || {}),
             ...((this.searchServiceEmbeds && { _embed: this.searchServiceEmbeds }) || {}),
-            offset: page ? (page - 1) * this.requestOptions.itemsPerPage : 0,
+            offset: page ? (page - 1) * rqOptions.itemsPerPage : 0,
           }, this.cancelToken.token),
           instance: this
         })
@@ -402,10 +468,9 @@
         }
         else {
           this.totalNumberOfItems = 0
-          this.eventMessages.push({
-            message: this.$i18n.t(result?.data?.messageCode || 'error.search.unknown'),
-            color: 'error'
-          })
+          this.snackbarMessage = this.$i18n.t(result?.data?.messageCode || 'error.search.unknown')
+          this.messageColor = 'error'
+          this.showSnackbar = true
         }
 
         this.selectedItems = []
@@ -417,17 +482,24 @@
         this.exportLoading = true
         const searchParameters = this._searchParameters(this.searchInputFields)
         searchParameters.skipDomainMapping = 'true'
-        const sort = this.requestOptions.sortBy?.length > 0 ? (this.linkSearchParameterValues[this.requestOptions.sortBy[0]] || this.requestOptions.sortBy[0]) : undefined
-        const desc = typeof this.requestOptions.desc === 'Array' ? this.requestOptions.desc[0] : this.requestOptions.desc
+
+        let sort = undefined
+        let order = undefined
+
+        if (this.requestOptions.sortBy?.length > 0) {
+          sort = this.linkSearchParameterValues[this.requestOptions.sortBy[0]['key']] || this.requestOptions.sortBy[0]['key']
+          order = this.requestOptions.sortBy[0].order
+        }
+
         const esTypedParams = {
           es: true,
           max: 10000,
-          ...((sort && { sort: sort }) || {}),
-          ...((sort && { order: (desc ? 'desc' : 'asc') }) || {})
+          sort,
+          order
         }
         const dbTypedParams = {
           ...((sort && { _sort: sort }) || {}),
-          ...((sort && { _order: (desc ? 'desc' : 'asc') }) || {})
+          ...((sort && { _order: order }) || {})
         }
         const result = await this.catchError({
           promise: this.searchServices.search({
@@ -454,11 +526,19 @@
       isButtonDisabled (attributeName) {
         return this[attributeName]
       },
-      editItem (value) {
-        this.search()
+      editItem () {
+        this.search({ page: this.requestOptions.page })
       },
       timeout(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        return new Promise(resolve => setTimeout(resolve, ms))
+      },
+      updateUrlParams () {
+        let urlBase = window.location.toString().split('?')[0] + '?'
+        let combinedFilters = this.searchFilters
+
+        let paramString = baseServices.createQueryParameters(combinedFilters)
+
+        history.pushState({}, "", urlBase + paramString)
       }
     }
   }

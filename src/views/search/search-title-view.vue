@@ -12,7 +12,7 @@
           identifierValue: undefined,
           publisherId: undefined,
           type: undefined,
-          status: undefined,
+          status: 'Current',
         },
         sortMappings: {
           link: 'name',
@@ -31,28 +31,43 @@
       title () {
         return this.$i18n.tc('component.title.label', 2)
       },
+      showSelect () {
+        return this.isUserAdmin
+      },
       resultActionButtons () {
-        return [
-          {
-            label: this.$i18n.t('btn.export'),
-            disabled: 'isSearchExportDisabled',
-            public: true,
-            action: 'exportSearchResults',
-            loading: this.exportLoading
-          },
-          {
-            icon: 'mdi-close',
-            label: this.$i18n.t('btn.retire'),
-            disabled: 'isRetiredSelectedDisabled',
-            action: '_confirmRetireSelectedItems'
-          },
-          {
-            icon: 'mdi-delete',
-            label: this.$i18n.t('btn.delete'),
-            disabled: 'isDeleteSelectedDisabled',
-            action: '_confirmDeleteSelectedItems',
-          }
-        ]
+        if (this.isUserAdmin) {
+          return [
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            },
+            {
+              icon: 'mdi-close',
+              label: this.$i18n.t('btn.retire'),
+              disabled: 'isRetiredSelectedDisabled',
+              action: '_confirmArchiveSelectedItems',
+            },
+            {
+              icon: 'mdi-delete',
+              label: this.$i18n.t('btn.delete'),
+              disabled: 'isDeleteSelectedDisabled',
+              action: '_confirmDeleteSelectedItems',
+            },
+          ]
+        } else {
+          return [
+            {
+              label: this.$i18n.t('btn.export'),
+              disabled: 'isSearchExportDisabled',
+              public: true,
+              action: 'exportSearchResults',
+              loading: this.exportLoading
+            },
+          ]
+        }
       },
       searchInputFields () {
         return [
@@ -60,10 +75,36 @@
             {
               type: 'GokbTextField',
               name: 'qsName',
+              value: 'qsName',
               properties: {
-                label: this.$i18n.t('component.general.name')
+                label: this.$i18n.t('component.general.name'),
               }
             },
+            {
+              type: 'GokbSelectField',
+              name: 'type',
+              value: 'type',
+              properties: {
+                label: this.$i18n.t('component.title.type.label'),
+                width: '100%',
+                staticItems: [
+                  { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
+                  { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
+                  { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
+                  { name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
+                ]
+              }
+            },
+            {
+              type: 'GokbSearchPublisherField',
+              name: 'publisher',
+              value: 'publisherId',
+              properties: {
+                label: this.$i18n.tc('component.title.publisher.label')
+              }
+            }
+          ],
+          [
             {
               type: 'GokbIdentifierFilterField',
               name: 'ids',
@@ -74,26 +115,12 @@
               }
             },
             {
-              type: 'GokbSelectField',
-              name: 'type',
-              value: 'type',
+              type: 'GokbSubjectFilterField',
+              name: 'subject',
+              value: 'subjectValue',
               properties: {
-                label: this.$i18n.t('component.title.type.label'),
-                width: '100%'
-              },
-              items: [
-                { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
-                { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
-                { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
-                { name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
-              ]
-            }
-          ],
-          [
-            {
-              type: 'GokbSearchPublisherField',
-              name: 'publisher',
-              value: 'publisherId'
+                label: this.$i18n.tc('component.subject.label')
+              }
             },
             {
               type: 'GokbStateField',
@@ -102,7 +129,8 @@
               properties: {
                 initItem: 'Current',
                 width: '100%',
-                messagePath: 'component.general.status'
+                messagePath: 'component.general.status',
+                label: this.$i18n.tc('component.general.status.label')
               }
             }
           ]
@@ -111,27 +139,27 @@
       resultHeaders () {
         return [
           {
-            text: this.$i18n.t('component.general.name'),
+            title: this.$i18n.t('component.general.name'),
             align: 'start',
             sortable: true,
             value: 'link'
           },
           {
-            text: this.$i18n.tc('component.title.publisher.label'),
+            title: this.$i18n.tc('component.title.publisher.label'),
             align: 'start',
             width: '25%',
             sortable: true,
             value: 'publisher'
           },
           {
-            text: this.$i18n.t('component.title.type.label'),
+            title: this.$i18n.t('component.title.type.label'),
             align: 'start',
             width: '150px',
             sortable: false,
             value: 'type'
           },
           {
-            text: this.$i18n.t('component.title.publishStart'),
+            title: this.$i18n.t('component.title.publishStart'),
             align: 'end',
             width: '150px',
             sortable: false,
@@ -193,7 +221,7 @@
           startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
           link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
           linkTwo: publisher ? { value: publisher.name, route: EDIT_PROVIDER_ROUTE, id: 'publisherId' } : undefined,
-          publisher: _embedded.publisher.map(pub => pub.name),
+          publisher: _embedded.publisher.map(pub => pub.name).join(', '),
           status: status?.value,
           deleteUrl: _links?.delete?.href || undefined,
           updateUrl: _links?.update?.href || undefined

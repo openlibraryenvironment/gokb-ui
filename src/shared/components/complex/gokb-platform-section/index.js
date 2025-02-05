@@ -1,1 +1,1 @@
-export default from './gokb-platform-section'
+export {default} from './gokb-platform-section'

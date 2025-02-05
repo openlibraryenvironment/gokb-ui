@@ -1,1 +1,1 @@
-export default from './gokb-entity-field'
+export {default} from './gokb-entity-field'

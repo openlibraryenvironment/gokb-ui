@@ -28,9 +28,14 @@
       rules: {
         type: Array,
         required: false,
-        default () {
-          return [v => (v?.length > 0 || !this.required) || this.$i18n.t('component.user.error.missing.password')]
+        default (props) {
+          return [v => (v?.length > 0 || !props.required) || props.localError]
         }
+      }
+    },
+    computed: {
+      localError () {
+        return this.$i18n.t('component.user.error.missing.password')
       }
     }
   }

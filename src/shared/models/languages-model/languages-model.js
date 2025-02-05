@@ -1,6 +1,6 @@
-const api = (vue) => {
+const api = (reactive) => {
 
-  var languages = vue.observable({})
+  var languages = reactive({})
   var iso2iso3 = {
     "de" : "ger",
     "en" : "eng"
