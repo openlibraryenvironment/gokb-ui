@@ -239,6 +239,7 @@
             <a
               :href="accessibilityLink"
               target="_blank"
+              class="text-primary"
               :style="{ textDecoration: 'none', color: ($vuetify.theme.dark ? 'white' : 'black') }"
             >
               {{ $t('main.accessibility.label') }}
