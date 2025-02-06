@@ -102,6 +102,7 @@
         </ul>
       </v-col>
     </v-row>
+    <!--
     <v-row v-if="rowErrors.length > 0">
       <v-col md="12">
         <v-expansion-panels accordion>
@@ -138,6 +139,15 @@
         </v-expansion-panels>
       </v-col>
     </v-row>
+    -->
+
+
+    <gokb-export-validator-results
+      :loaded-file="kbartValidation"
+      :hide-alerts="true"
+    />
+
+    <br/><br/>
     <v-row v-if="selectedItem.results">
       <v-col md="12">
         <v-expansion-panels accordion>
@@ -166,10 +176,11 @@
   import jobServices from '@/shared/services/job-services'
   import VueJsonPretty from 'vue-json-pretty'
   import 'vue-json-pretty/lib/styles.css'
+  import GokbExportValidatorResults from "../../components/complex/gokb-export-validator-results/index.js";
 
   export default {
     name: 'GokbEditJobPopup',
-    components: { VueJsonPretty },
+    components: {GokbExportValidatorResults, VueJsonPretty },
     extends: BaseComponent,
     emits: ['update:model-value'],
     props: {
@@ -201,7 +212,24 @@
         },
         items: [],
         rowErrors: [],
-        rowWarnings: []
+        rowWarnings: [],
+        kbartValidation: {
+          errors: {
+            missingColumns: [],
+            single: [],
+            type: {}
+          },
+          warnings: {
+            missingColumns: [],
+            single: [],
+            type: {}
+          },
+          rows: {
+            total: 0,
+            warning: 0,
+            error: 0
+          }
+        }
       }
     },
     computed: {
@@ -278,17 +306,38 @@
             })
           })
         } else if (!!record.job_result?.validation) {
-          Object.entries(record.job_result.validation.errors.rows).forEach(([rownum, colobj]) =>
+
+          this.kbartValidation = record.job_result.validation
+
+          /* Object.entries(record.job_result.validation.errors.rows).forEach(([rownum, colobj]) =>
             Object.entries(colobj).forEach(([colname, eo]) =>
               this.rowErrors.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
             )
+          ) */
+
+          this.kbartValidation.errors.single = []
+          Object.entries(this.kbartValidation.errors.rows).forEach(([rownum, colobj]) =>
+            Object.entries(colobj).forEach(([colname, eo]) =>
+              this.kbartValidation.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+            )
           )
 
-          Object.entries(record.job_result.validation.warnings.rows).forEach(([rownum, colobj]) =>
+
+          /*Object.entries(record.job_result.validation.warnings.rows).forEach(([rownum, colobj]) =>
             Object.entries(colobj).forEach(([colname, wo]) =>
               this.rowWarnings.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
             )
+          )*/
+
+          this.kbartValidation.warnings.single = []
+          Object.entries(this.kbartValidation.warnings.rows).forEach(([rownum, colobj]) =>
+            Object.entries(colobj).forEach(([colname, wo]) =>
+              this.kbartValidation.warnings.single.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
+            )
           )
+
+
+
         }
       }
     },

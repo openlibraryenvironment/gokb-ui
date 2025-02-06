@@ -24,7 +24,7 @@
       </v-col>
 
       <v-col>
-        <v-alert type="error">
+        <v-alert type="error" v-if="!hideAlerts">
           {{ useStrict ? $tc('kbart.validator.alert.strict.error' ) : $tc('kbart.validator.alert.lax.error' ) }}
         </v-alert>
       </v-col>
@@ -48,7 +48,7 @@
       </v-col>
 
       <v-col>
-        <v-alert type="warning">
+        <v-alert type="warning" v-if="!hideAlerts">
           {{ $tc('kbart.validator.alert.lax.warning' ) }}
         </v-alert>
       </v-col>
@@ -149,7 +149,7 @@
     :disabled=disabled
     @click="exportResults"
   >
-    Ergebnis exportieren
+    {{ $t('kbart.processing.exportResult.label') }}
   </gokb-button>
 
 
@@ -184,6 +184,11 @@
         type: String,
         required: false,
         default: 'green'
+      },
+      hideAlerts: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -242,7 +247,7 @@
 
         // let errorsAndWarnings = structureErrors.concat(structureWarnings.concat(errors.concat(warnings)))
 
-        let fileName = 'GOKB-Validation_'.concat(this.selectedFile.name.split('.')[0]).concat('.csv')
+        let fileName = this.selectedFile ? 'GOKB-Validation_'.concat(this.selectedFile.name.split('.')[0]).concat('.csv') : 'KBART-Import-Validation.csv'
 
         exportServices.toTsv([{
             text: this.$i18n.tc('kbart.row.label', 1),
