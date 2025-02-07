@@ -141,6 +141,7 @@
             type: {}
           },
           warnings: {
+            missingColumns: [],
             single: [],
             type: {}
           },
@@ -198,7 +199,7 @@
       },
       expandWidth () {
         return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0
-          || this.loadedFile.errors.missingColumns.length > 0) ? 1000 : 450
+          || this.loadedFile.errors.missingColumns.length > 0 || this.loadedFile.warnings.missingColumns.length > 0) ? 1000 : 450
       },
       hasErrors () {
         return this.errors.length > 0
@@ -213,6 +214,7 @@
         this.loadedFile.errors.missingColumns = []
         this.loadedFile.errors.single = []
         this.loadedFile.errors.type = {}
+        this.loadedFile.warnings.missingColumns = []
         this.loadedFile.warnings.single = []
         this.loadedFile.warnings.type = {}
         this.options.addOnly = false

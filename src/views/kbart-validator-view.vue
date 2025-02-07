@@ -59,7 +59,7 @@
         <span class="pl-4">{{ $t('kbart.processing.started') }}</span>
       </v-col>
     </v-row>
-    
+
     <gokb-export-validator-results
       v-if="showResults"
       :disabled="!executedOnce"

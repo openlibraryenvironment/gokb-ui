@@ -501,13 +501,8 @@
       "mode": "Strict mode",
       "advice": "Please upload only tab separated text files (.txt, .tsv, .csv). For performance reasons, please do not validate extensive title lists in quick succession.",
       "alert": {
-        "strict": {
-          "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If errors are identified in the file structure, the validation is aborted. This means that no individual titles are validated. Please correct the errors in the file structure and then run the validation again to obtain a complete result."
-        },
-        "lax": {
-          "warning": "Title lists that generate warnings can usually be imported into the GOKB, but it is strongly recommended that you remove them before importing.",
-          "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If errors are identified in the file structure, the validation is aborted. This means that no individual titles are validated. Please correct the errors in the file structure and then run the validation again to obtain a complete result."
-        },
+        "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If errors are identified in the file structure, the validation is aborted. This means that no individual titles are validated. Please correct the errors in the file structure and then run the validation again to obtain a complete result.",
+        "warning": "Title lists that generate warnings can usually be imported into the GOKB, but it is strongly recommended that you remove them before importing.",
         "rowError": "Errors have been detected in title data rows. The file cannot be imported until these errors have been corrected."
       }
     }

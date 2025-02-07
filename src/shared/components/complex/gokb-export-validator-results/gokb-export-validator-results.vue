@@ -3,7 +3,6 @@
   <gokb-section
     :sub-title="$t('header.results')"
   >
-
     <v-row
       v-if="validatorResult.errors.missingColumns.length > 0"
       class="pa-4"
@@ -22,7 +21,7 @@
 
       <v-col>
         <v-alert type="error" v-if="!hideAlerts">
-          {{ useStrict ? $tc('kbart.validator.alert.strict.error' ) : $tc('kbart.validator.alert.lax.error' ) }}
+          {{ $tc('kbart.validator.alert.error' ) }}
         </v-alert>
       </v-col>
     </v-row>
@@ -44,7 +43,7 @@
       </v-col>
       <v-col>
         <v-alert type="warning" v-if="!hideAlerts">
-          {{ $tc('kbart.validator.alert.lax.warning' ) }}
+          {{ $tc('kbart.validator.alert.warning' ) }}
         </v-alert>
       </v-col>
     </v-row>
@@ -156,7 +155,6 @@
 
   export default {
     name: 'GokbExportValidatorResults',
-    //emits: ['update:model-value'],
     props: {
       validatorResult: {
         type: Object,
@@ -240,8 +238,6 @@
           e.type = that.$i18n.tc('kbart.processing.error.label', 1)
         })
         allResults.push(...errors)
-
-        // let errorsAndWarnings = structureErrors.concat(structureWarnings.concat(errors.concat(warnings)))
 
         let fileName = this.selectedFile ? 'GOKB-Validation_'.concat(this.selectedFile.name.split('.')[0]).concat('.csv') : 'GOKB-KBART-Import-Validation.csv'
 
