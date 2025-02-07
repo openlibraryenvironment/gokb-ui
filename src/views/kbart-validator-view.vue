@@ -59,166 +59,16 @@
         <span class="pl-4">{{ $t('kbart.processing.started') }}</span>
       </v-col>
     </v-row>
-
-    <!--
-    <gokb-section
-      :sub-title="$t('header.results')"
-      v-if="showResults"
-    >
-
-      <v-row
-        v-if="loadedFile.errors.missingColumns.length > 0"
-        class="pa-4"
-      >
-        <v-col>
-          <h4>{{ $tc('kbart.processing.error.structure', 2) }}</h4>
-          <ul>
-            <li
-              v-for="er in loadedFile.errors.missingColumns"
-              :key="er"
-              class="ml-4">
-              {{ $tc('kbart.errors.missingCols' ) + ' ' + er }}
-            </li>
-          </ul>
-        </v-col>
-
-        <v-col>
-          <v-alert type="error">
-            {{ useStrict ? $tc('kbart.validator.alert.strict.error' ) : $tc('kbart.validator.alert.lax.error' ) }}
-          </v-alert>
-        </v-col>
-
-      </v-row>
-
-      <v-row
-        v-if="loadedFile.warnings.missingColumns.length > 0"
-        class="pa-4"
-      >
-        <v-col>
-          <h4>{{ $tc('kbart.processing.warning.structure', 2) }}</h4>
-          <ul>
-            <li
-              v-for="w in loadedFile.warnings.missingColumns"
-              :key="w"
-              class="ml-4">
-              {{ $tc('kbart.errors.missingCols' ) + ' ' + w }}
-            </li>
-          </ul>
-        </v-col>
-
-        <v-col>
-          <v-alert type="warning">
-            {{ $tc('kbart.validator.alert.lax.warning' ) }}
-          </v-alert>
-        </v-col>
-
-
-      </v-row>
-
-      <v-row
-        v-if="showRowResults"
-        class="pa-4"
-      >
-        <v-col>
-          <h4>
-            {{ $t('kbart.processing.rowStats') }}
-          </h4>
-          <span class="mr-4">{{ $t('kbart.processing.total.label') }}: {{ loadedFile.rows.total || '0' }}</span>
-          <span class="mr-4">{{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }}</span>
-          <span class="mr-4">{{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}</span>
-        </v-col>
-      </v-row>
-      <v-row
-        v-if="loadedFile.rows.error > 0"
-        class="px-4"
-      >
-        <v-col>
-          <h4>
-            {{ $t('kbart.processing.error.fields') }}
-          </h4>
-          <ul
-            v-for="(val, col) in loadedFile.errors.type"
-            :key="col"
-            class="ml-4"
-          >
-            <li>
-              <b>{{ col }}</b> - {{ val }}
-            </li>
-          </ul>
-        </v-col>
-      </v-row>
-      <v-row
-        v-if="loadedFile.rows.warning > 0"
-        class="px-4"
-      >
-        <v-col>
-          <h4>
-            {{ $t('kbart.processing.warning.fields') }}
-          </h4>
-          <ul
-            v-for="(val, col) in loadedFile.warnings.type"
-            :key="col"
-            class="ml-4"
-          >
-            <li>
-              <b>{{ col }}</b> - {{ val }}
-            </li>
-          </ul>
-        </v-col>
-      </v-row>
-      <v-row
-        v-if="loadedFile.rows.error > 0 || loadedFile.rows.warning > 0"
-        class="pa-4"
-      >
-        <v-col>
-          <v-expansion-panels>
-            <v-expansion-panel>
-              <v-expansion-panel-title>
-                {{ $tc('kbart.processing.error.label', 2) }}
-              </v-expansion-panel-title>
-              <v-expansion-panel-text>
-                <v-data-table
-                  :items="loadedFile.errors.single"
-                  :headers="errorHeaders"
-                  width="1000px"
-                  :sort-by="[{key: 'row', order: 'asc'}]"
-                />
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-            <v-expansion-panel>
-              <v-expansion-panel-title>
-                {{ $tc('kbart.processing.warning.label', 2) }}
-              </v-expansion-panel-title>
-              <v-expansion-panel-text>
-                <v-data-table
-                  :items="loadedFile.warnings.single"
-                  :headers="errorHeaders"
-                  :sort-by="[{key: 'row', order: 'asc'}]"
-                >
-                </v-data-table>
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-col>
-      </v-row>
-    </gokb-section>
-    -->
-
+    
     <gokb-export-validator-results
       v-if="showResults"
       :disabled="!executedOnce"
-      :loaded-file="loadedFile"
+      :validator-result="loadedFile"
       :selected-file="selectedFile"
     />
 
     <template #buttons>
       <v-spacer />
-      <!-- <gokb-export-validator-results
-        :disabled="!executedOnce"
-        :loaded-file="loadedFile"
-        :selected-file="selectedFile"
-      />
-      -->
 
       <gokb-button
         text

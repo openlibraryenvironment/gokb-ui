@@ -502,12 +502,13 @@
       "advice": "Bitte laden Sie nur durch Tabulatoren getrennte Text-Dateien (.txt, .tsv, .csv) hoch. Aus Performanzgründen bitten wir, umfangreiche Titellisten nicht in schneller Folge hintereinander zu validieren.",
       "alert": {
         "strict": {
-          "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn ein Fehler in der Dateistruktur identifiziert wurde, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten. Bei Fehlern einzelner Datensätze bricht die Validierung nicht ab. Es wird die Gesamtheit aller Fehler ausgegeben."
+          "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn Fehler in der Dateistruktur identifiziert wurden, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten."
         },
         "lax": {
           "warning": "Titellisten, die Warnungen erzeugen, können zwar in aller Regel in die GOKB importiert werden, es wird aber dringend empfohlen, die Warnungen vor dem Import zu beseitigen.",
-          "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn ein Fehler in der Dateistruktur identifiziert wurde, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten. Bei Fehlern einzelner Datensätze bricht die Validierung nicht ab. Es wird die Gesamtheit aller Fehler ausgegeben."
-        }
+          "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn Fehler in der Dateistruktur identifiziert wurden, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten."
+        },
+        "rowError": "Es wurden Fehler in einzelnen Titeldaten festgestellt. Die Datei kann erst importiert werden, wenn diese Fehler behoben wurden."
       }
     }
   },

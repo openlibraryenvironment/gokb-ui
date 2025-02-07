@@ -102,49 +102,12 @@
         </ul>
       </v-col>
     </v-row>
-    <!--
-    <v-row v-if="rowErrors.length > 0">
-      <v-col md="12">
-        <v-expansion-panels accordion>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              {{ $tc('kbart.processing.error.label', 2) }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <v-data-table
-                :items="rowErrors"
-                :headers="errorHeaders"
-                :sort-by="[{key: 'row', order: 'asc'}]"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-col>
-    </v-row>
-    <v-row v-if="rowWarnings.length > 0">
-      <v-col md="12">
-        <v-expansion-panels accordion>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              {{ $tc('kbart.processing.warning.label', 2) }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <v-data-table
-                :items="rowWarnings"
-                :headers="errorHeaders"
-                :sort-by="[{key: 'row', order: 'asc'}]"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-col>
-    </v-row>
-    -->
-
 
     <gokb-export-validator-results
-      :loaded-file="kbartValidation"
+      :validator-result="kbartValidation"
       :hide-alerts="true"
+      v-if="showKbartValidation"
+      :button-color="'primary'"
     />
 
     <br/><br/>
@@ -250,6 +213,10 @@
           { title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
           { title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
         ]
+      },
+      showKbartValidation () {
+        return (this.kbartValidation.errors.single.length > 0 || this.kbartValidation.errors.missingColumns.length > 0
+                || this.kbartValidation.warnings.missingColumns.length > 0 || this.kbartValidation.warnings.single.length > 0)
       }
     },
     async created () {
@@ -309,12 +276,6 @@
 
           this.kbartValidation = record.job_result.validation
 
-          /* Object.entries(record.job_result.validation.errors.rows).forEach(([rownum, colobj]) =>
-            Object.entries(colobj).forEach(([colname, eo]) =>
-              this.rowErrors.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
-            )
-          ) */
-
           this.kbartValidation.errors.single = []
           Object.entries(this.kbartValidation.errors.rows).forEach(([rownum, colobj]) =>
             Object.entries(colobj).forEach(([colname, eo]) =>
@@ -322,22 +283,12 @@
             )
           )
 
-
-          /*Object.entries(record.job_result.validation.warnings.rows).forEach(([rownum, colobj]) =>
-            Object.entries(colobj).forEach(([colname, wo]) =>
-              this.rowWarnings.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
-            )
-          )*/
-
           this.kbartValidation.warnings.single = []
           Object.entries(this.kbartValidation.warnings.rows).forEach(([rownum, colobj]) =>
             Object.entries(colobj).forEach(([colname, wo]) =>
               this.kbartValidation.warnings.single.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
             )
           )
-
-
-
         }
       }
     },

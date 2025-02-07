@@ -1,21 +1,18 @@
-
-
 <template>
 
   <gokb-section
     :sub-title="$t('header.results')"
-
   >
 
     <v-row
-      v-if="loadedFile.errors.missingColumns.length > 0"
+      v-if="validatorResult.errors.missingColumns.length > 0"
       class="pa-4"
     >
       <v-col>
         <h4>{{ $tc('kbart.processing.error.structure', 2) }}</h4>
         <ul>
           <li
-            v-for="er in loadedFile.errors.missingColumns"
+            v-for="er in validatorResult.errors.missingColumns"
             :key="er"
             class="ml-4">
             {{ $tc('kbart.errors.missingCols' ) + ' ' + er }}
@@ -28,34 +25,29 @@
           {{ useStrict ? $tc('kbart.validator.alert.strict.error' ) : $tc('kbart.validator.alert.lax.error' ) }}
         </v-alert>
       </v-col>
-
     </v-row>
 
     <v-row
-      v-if="loadedFile.warnings.missingColumns.length > 0"
+      v-if="validatorResult.warnings.missingColumns.length > 0"
       class="pa-4"
     >
       <v-col>
         <h4>{{ $tc('kbart.processing.warning.structure', 2) }}</h4>
         <ul>
           <li
-            v-for="w in loadedFile.warnings.missingColumns"
+            v-for="w in validatorResult.warnings.missingColumns"
             :key="w"
             class="ml-4">
             {{ $tc('kbart.errors.missingCols' ) + ' ' + w }}
           </li>
         </ul>
       </v-col>
-
       <v-col>
         <v-alert type="warning" v-if="!hideAlerts">
           {{ $tc('kbart.validator.alert.lax.warning' ) }}
         </v-alert>
       </v-col>
-
-
     </v-row>
-
     <v-row
       v-if="showRowResults"
       class="pa-4"
@@ -64,13 +56,13 @@
         <h4>
           {{ $t('kbart.processing.rowStats') }}
         </h4>
-        <span class="mr-4">{{ $t('kbart.processing.total.label') }}: {{ loadedFile.rows.total || '0' }}</span>
-        <span class="mr-4">{{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }}</span>
-        <span class="mr-4">{{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}</span>
+        <span class="mr-4">{{ $t('kbart.processing.total.label') }}: {{ validatorResult.rows.total || '0' }}</span>
+        <span class="mr-4">{{ $tc('kbart.processing.warning.label', 2) }}: {{ validatorResult.rows.warning || '0' }}</span>
+        <span class="mr-4">{{ $tc('kbart.processing.error.label', 2) }}: {{ validatorResult.rows.error || '0' }}</span>
       </v-col>
     </v-row>
     <v-row
-      v-if="loadedFile.rows.error > 0"
+      v-if="validatorResult.rows.error > 0"
       class="px-4"
     >
       <v-col>
@@ -78,7 +70,7 @@
           {{ $t('kbart.processing.error.fields') }}
         </h4>
         <ul
-          v-for="(val, col) in loadedFile.errors.type"
+          v-for="(val, col) in validatorResult.errors.type"
           :key="col"
           class="ml-4"
         >
@@ -87,9 +79,14 @@
           </li>
         </ul>
       </v-col>
+      <v-col>
+        <v-alert type="error" v-if="!hideAlerts">
+          {{ $tc('kbart.validator.alert.rowError' )  }}
+        </v-alert>
+      </v-col>
     </v-row>
     <v-row
-      v-if="loadedFile.rows.warning > 0"
+      v-if="validatorResult.rows.warning > 0"
       class="px-4"
     >
       <v-col>
@@ -97,7 +94,7 @@
           {{ $t('kbart.processing.warning.fields') }}
         </h4>
         <ul
-          v-for="(val, col) in loadedFile.warnings.type"
+          v-for="(val, col) in validatorResult.warnings.type"
           :key="col"
           class="ml-4"
         >
@@ -108,7 +105,7 @@
       </v-col>
     </v-row>
     <v-row
-      v-if="loadedFile.rows.error > 0 || loadedFile.rows.warning > 0"
+      v-if="validatorResult.rows.error > 0 || validatorResult.rows.warning > 0"
       class="pa-4"
     >
       <v-col>
@@ -119,7 +116,7 @@
             </v-expansion-panel-title>
             <v-expansion-panel-text>
               <v-data-table
-                :items="loadedFile.errors.single"
+                :items="validatorResult.errors.single"
                 :headers="errorHeaders"
                 width="1000px"
                 :sort-by="[{key: 'row', order: 'asc'}]"
@@ -132,7 +129,7 @@
             </v-expansion-panel-title>
             <v-expansion-panel-text>
               <v-data-table
-                :items="loadedFile.warnings.single"
+                :items="validatorResult.warnings.single"
                 :headers="errorHeaders"
                 :sort-by="[{key: 'row', order: 'asc'}]"
               >
@@ -145,13 +142,12 @@
   </gokb-section>
 
   <gokb-button
-    :color=color
+    :color=buttonColor
     :disabled=disabled
     @click="exportResults"
   >
     {{ $t('kbart.processing.exportResult.label') }}
   </gokb-button>
-
 
 </template>
 
@@ -162,7 +158,7 @@
     name: 'GokbExportValidatorResults',
     //emits: ['update:model-value'],
     props: {
-      loadedFile: {
+      validatorResult: {
         type: Object,
         required: true,
       },
@@ -180,7 +176,7 @@
         required: false,
         default: false,
       },
-      color: {
+      buttonColor: {
         type: String,
         required: false,
         default: 'green'
@@ -205,7 +201,7 @@
         ]
       },
       showRowResults () {
-        return (this.loadedFile.errors.missingColumns.length === 0 )
+        return (this.validatorResult.errors.missingColumns.length === 0 )
       }
     },
     methods: {
@@ -213,7 +209,7 @@
         let that = this
         let allResults = []
         let structureWarnings = []
-        this.loadedFile.warnings.missingColumns.forEach(function(sw) {
+        this.validatorResult.warnings.missingColumns.forEach(function(sw) {
           let mc = {}
           mc.column = sw
           mc.row = 'n.a.'
@@ -224,7 +220,7 @@
         allResults.push(...structureWarnings)
 
         let structureErrors = []
-        this.loadedFile.errors.missingColumns.forEach(function(se) {
+        this.validatorResult.errors.missingColumns.forEach(function(se) {
           let mc = {}
           mc.column = se
           mc.row = 'n.a.'
@@ -234,12 +230,12 @@
         })
         allResults.push(...structureErrors)
 
-        let warnings = this.loadedFile.warnings.single
+        let warnings = this.validatorResult.warnings.single
         warnings.forEach(function(w) {
           w.type = that.$i18n.tc('kbart.processing.warning.label', 1)
         })
         allResults.push(...warnings)
-        let errors = this.loadedFile.errors.single
+        let errors = this.validatorResult.errors.single
         errors.forEach(function(e) {
           e.type = that.$i18n.tc('kbart.processing.error.label', 1)
         })
@@ -247,7 +243,7 @@
 
         // let errorsAndWarnings = structureErrors.concat(structureWarnings.concat(errors.concat(warnings)))
 
-        let fileName = this.selectedFile ? 'GOKB-Validation_'.concat(this.selectedFile.name.split('.')[0]).concat('.csv') : 'KBART-Import-Validation.csv'
+        let fileName = this.selectedFile ? 'GOKB-Validation_'.concat(this.selectedFile.name.split('.')[0]).concat('.csv') : 'GOKB-KBART-Import-Validation.csv'
 
         exportServices.toTsv([{
             text: this.$i18n.tc('kbart.row.label', 1),

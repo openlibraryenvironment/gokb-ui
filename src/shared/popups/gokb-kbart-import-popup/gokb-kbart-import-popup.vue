@@ -72,84 +72,16 @@
         {{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}
       </div>
 
-      <!--
-      <div
-        v-if="loadedFile.rows.error > 0"
-        class="ma-2"
-      >
-        <h4>
-          {{ $t('kbart.processing.error.fields') }}
-        </h4>
-        <ul
-          v-for="(val, col) in loadedFile.errors.type"
-          :key="col"
-        >
-          <li class="ml-4">
-            <b>{{ col }}</b> - {{ val }}
-          </li>
-        </ul>
-      </div>
-      <div
-        v-if="loadedFile.rows.warning > 0"
-        class="ma-2"
-      >
-        <h4>
-          {{ $t('kbart.processing.warning.fields') }}
-        </h4>
-        <ul
-          v-for="(val, col) in loadedFile.warnings.type"
-          :key="col"
-        >
-          <li>
-            <b>{{ col }}</b> - {{ val }}
-          </li>
-        </ul>
-      </div>
-      <div v-if="loadedFile.rows.error > 0 || loadedFile.rows.warning > 0">
-        <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              {{ $tc('kbart.processing.error.label', 2) }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <v-data-table
-                :items="loadedFile.errors.single"
-                :headers="errorHeaders"
-                width="1000px"
-                :sort-by="[{key: 'row', order: 'asc'}]"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              {{ $tc('kbart.processing.warning.label', 2) }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <v-data-table
-                :items="loadedFile.warnings.single"
-                :headers="errorHeaders"
-                :sort-by="[{key: 'row', order: 'asc'}]"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </div> -->
 
       <gokb-export-validator-results
         v-if="completion === 100"
-        :loaded-file="loadedFile"
+        :validator-result="loadedFile"
         :selected-file="selectedFile"
       />
 
     </gokb-section>
 
     <template #buttons>
-      <!-- <gokb-export-validator-results
-        :disabled="completion !== 100"
-        :loaded-file="loadedFile"
-        :selected-file="selectedFile"
-      /> -->
-
       <gokb-button
         text
         @click="close"
@@ -265,7 +197,8 @@
         ]
       },
       expandWidth () {
-        return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 450
+        return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0
+          || this.loadedFile.errors.missingColumns.length > 0) ? 1000 : 450
       },
       hasErrors () {
         return this.errors.length > 0
