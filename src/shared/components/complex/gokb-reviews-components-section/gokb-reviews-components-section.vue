@@ -74,6 +74,15 @@
                     $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')])
                 }}
                 <b>#{{ idx + 1 }}</b>
+                <v-icon
+                  class="ml-1"
+                  size="x-small"
+                  @click="hideComponent(i.id)"
+                  :title="$t('btn.hide')"
+                  color="primary"
+                >
+                  mdi-eye-off
+                </v-icon>
               </div>
               <gokb-reviews-title-card
                 :id="i.id"
@@ -173,7 +182,7 @@
       GokbConfirmationPopup
     },
     extends: BaseComponent,
-    emits: ['expand', 'close', 'added', 'finished-step', 'initialized', 'feedback-response'],
+    emits: ['expand', 'close', 'added', 'finished-step', 'initialized', 'feedback-response', 'hide'],
     props: {
       reviewedComponent: {
         type: Object,
@@ -586,6 +595,9 @@
       },
       nextStep () {
         this.$emit('finished-step', true)
+      },
+      hideComponent (cid) {
+        this.$emit('hide', cid)
       }
     }
   }

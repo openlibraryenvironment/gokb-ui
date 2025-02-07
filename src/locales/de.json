@@ -38,7 +38,8 @@
     "closeSelectedReviews": "Ausgewählte Prüfanfragen schließen",
     "moreFilters": "Mehr Filter",
     "moreOptions": "Weitere Optionen",
-    "externalSourceImport": "Aus externer Datenquelle importieren"
+    "externalSourceImport": "Aus externer Datenquelle importieren",
+    "hide": "Ausblenden"
   },
   "main": {
     "docs": {

@@ -49,6 +49,7 @@
         @added="addNewComponent"
         @close="closeReview"
         @feedback-response="showResponse"
+        @hide="hideOtherComponent"
       />
 
       <template #buttons>
@@ -555,6 +556,9 @@
           this.showSnackbar = true
         }
       },
+      hideOtherComponent (id) {
+        this.reviewItem.otherComponents = this.reviewItem.otherComponents.filter(oc => (oc.id != id))
+      }
     }
   }
 </script>

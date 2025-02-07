@@ -1,5 +1,6 @@
 <template>
   <v-radio-group
+    :id="id"
     v-model="localValue"
     inline
     :label="label"
@@ -14,6 +15,11 @@
     name: 'GokbRadiobuttonGroup',
     emits: ['update:model-value'],
     props: {
+      id: {
+        type: String,
+        required: false,
+        default: undefined
+      },
       label: {
         type: String,
         required: false,

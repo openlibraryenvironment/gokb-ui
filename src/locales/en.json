@@ -38,7 +38,8 @@
     "closeSelectedReviews": "Close selected reviews",
     "moreFilters": "More Filters",
     "moreOptions": "More Options",
-    "externalSourceImport": "Import from external source"
+    "externalSourceImport": "Import from external source",
+    "hide": "Hide"
   },
   "main": {
     "docs": {
