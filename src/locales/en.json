@@ -34,8 +34,8 @@
     "update": "Update",
     "validate": "Validate",
     "bulkSelect": "Set Status of {0} entries to ...",
-    "bulkCloseReview": "Close {0} selected review | Close {0} selected reviews",
-    "closeSelectedReviews": "Close selected reviews",
+    "bulkCloseReview": "Close {0} selected review request | Close {0} selected review requests",
+    "closeSelectedReviews": "Close selected review requests",
     "moreFilters": "More Filters",
     "moreOptions": "More Options",
     "externalSourceImport": "Import from external source",
@@ -117,9 +117,9 @@
       "search": "Providers"
     },
     "review": {
-      "edit": "Edit Review",
-      "create": "Create Review",
-      "search": "Reviews"
+      "edit": "Edit Review Request",
+      "create": "Create Review Request",
+      "search": "Review Requests"
     },
     "user": {
       "edit": "Edit User",
@@ -845,7 +845,7 @@
           "label": "In Progress"
         },
         "error": {
-          "openReviews": "All connected requests for review must be closed before the package can be marked as checked."
+          "openReviews": "All connected review requests must be closed before the package can be marked as checked."
         }
       },
       "breakable": "Content may be split",
@@ -1135,7 +1135,7 @@
       }
     },
     "review": {
-      "label": "Review | Reviews",
+      "label": "Review Request | Review Requests",
       "request": {
         "label": "Request"
       },
@@ -1161,7 +1161,7 @@
         "label": "Other Components",
         "add": "Link new component",
         "error": {
-          "duplicate": "This component is already linked to this review!"
+          "duplicate": "This component is already linked to this review request!"
         }
       },
       "candidates": {
@@ -1179,8 +1179,8 @@
           "reopened": "Request has been reopened."
         },
         "confirm": {
-          "close": "Please confirm closing this review.",
-          "reopen": "Please confirm the reopening of this review."
+          "close": "Please confirm closing this review request.",
+          "reopen": "Please confirm the reopening of this review request."
         },
         "componentToReview": {
           "label": "{0} to review"
@@ -1188,17 +1188,17 @@
         "close": {
           "label": "Close",
           "error": {
-            "moreSteps": "Please check all workflow steps before closing this review."
+            "moreSteps": "Please check all workflow steps before closing this review request."
           }
         },
         "cancel": {
-          "label": "Cancel review"
+          "label": "Cancel review request"
         },
         "next": {
           "label": "Next Step"
         },
         "open": {
-          "label": "Re-open review"
+          "label": "Re-open review request"
         },
         "components": {
           "workflow": {
@@ -1226,7 +1226,7 @@
                 "message": "The name of the selected target title will be changed to that of the deleted title and its current name will be added as a variant."
               },
               "closeReview": {
-                "message": "The review will be marked as closed automatically."
+                "message": "The review request will be marked as closed automatically."
               }
             },
             "selectIds": {
