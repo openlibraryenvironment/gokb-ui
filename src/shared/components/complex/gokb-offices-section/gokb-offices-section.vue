@@ -128,7 +128,7 @@
         return [...this.modelValue]
           .map(item => ({
             ...item,
-            lang: languageServices.getLanguage(item.language.name ? item.language.name : item.language, this.$i18n.locale).name
+            lang: !!item.language && languageServices.getLanguage(item.language.name ? item.language.name : item.language, this.$i18n.locale).name
           }))
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
