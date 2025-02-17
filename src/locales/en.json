@@ -500,7 +500,7 @@
           "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If an error is identified in the file structure, the validation is aborted. As a result, no individual titles are validated and further errors in the file structure are not recognized. Please correct the errors in the file structure and then run the validation again to obtain a complete result. Validation is not aborted if individual data records contain errors. The entirety of all errors is output."
         },
         "lax": {
-          "warning": "Title lists that generate warnings can usually be imported into the GOKB, but it is strongly recommended that you remove them before importing.",
+          "warning": "Title lists that generate warnings can be imported into the GOKB even if they contain anomalies. It is strongly recommended that you check the anomalies first to make sure they are harmless.",
           "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If an error is identified in the file structure, the validation is aborted. As a result, no individual titles are validated and further errors in the file structure are not recognized. Please correct the errors in the file structure and then run the validation again to obtain a complete result. Validation is not aborted if individual data records contain errors. The entirety of all errors is output."
         }
       }
