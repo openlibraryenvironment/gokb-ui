@@ -60,6 +60,17 @@
       </v-col>
     </v-row>
 
+    <v-row v-if="errors.length > 0">
+      <v-col>
+        <v-alert type="error" >
+          {{ $tc('kbart.validator.alert.encoding' ) }}
+        </v-alert>
+      </v-col>
+      <v-col>
+
+      </v-col>
+    </v-row>
+
     <gokb-export-validator-results
       v-if="showResults"
       :disabled="!executedOnce"
@@ -79,7 +90,7 @@
       <gokb-button
         color="primary"
         is-submit
-        :disabled="!selectedFile || importRunning || completion === 100"
+        :disabled="!selectedFile || importRunning || completion === 100 || errors.length > 0"
       >
         {{ $t('btn.validate') }}
       </gokb-button>
@@ -189,13 +200,10 @@ export default {
 
       const validationResult = await kbartServices.validate(this.selectedFile, namespaceName, this.useStrict, this.cancelToken.token)
 
-      if (validationResult.status === 200 && validationResult?.data?.report) {
-        /*if (validationResult.data.errors.missingColumns?.length > 0) {
-          validationResult.data.errors.missingColumns.forEach(error => {
-            this.errors.push(this.$i18n.t('kbart.errors.missingCols', [error] ))
-          })
-        } */
-
+      if (validationResult.status === 200 && validationResult?.data?.errors.hasOwnProperty("encoding")) {
+        this.errors.push(this.$i18n.t('kbart.errors.encoding'))
+      }
+      else if (validationResult.status === 200 && validationResult?.data?.report) {
         this.loadedFile = validationResult.data.report
 
         let typedReport = !!this.loadedFile.errors.type
