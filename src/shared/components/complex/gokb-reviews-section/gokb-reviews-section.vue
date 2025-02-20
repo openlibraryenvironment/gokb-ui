@@ -10,7 +10,7 @@
   >
     <template #buttons>
       <v-switch
-        v-if="!!reviewComponent"
+        v-if="isPackageComponent"
         v-model="fetchTitleReviews"
         class="pt-8 pr-6"
         :label="$tc('component.title.label', 2)"
@@ -56,6 +56,16 @@
       >
         {{ $t('btn.add') }}
       </gokb-button>
+
+      <gokb-button
+        v-if="isPackageComponent"
+        class="mr-4"
+        color="blue"
+
+      >
+        Exportieren
+      </gokb-button>
+
     </template>
     <template #actions v-if="showBulkActions">
       <span
