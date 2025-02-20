@@ -206,40 +206,6 @@ export default {
       else if (validationResult.status === 200 && validationResult?.data?.report) {
         this.loadedFile = validationResult.data.report
 
-        let typedReport = !!this.loadedFile.errors.type
-
-        this.loadedFile.errors.single = []
-        Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) => {
-          Object.entries(colobj).forEach(([colname, eo]) => {
-            this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
-
-            if (!this.loadedFile.errors.type[colname]) {
-              this.loadedFile.errors.type[colname] = 1
-            } else if (!typedReport) {
-              this.loadedFile.errors.type[colname]++
-            }
-          })
-        })
-
-        typedReport = !!this.loadedFile.warnings.type
-
-        this.loadedFile.warnings.single = []
-        Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) => {
-          Object.entries(colobj).forEach(([colname, wo]) => {
-            this.loadedFile.warnings.single.push({
-              row: rownum,
-              column: colname,
-              reason: this.$i18n.t(wo.messageCode, wo.args)
-            })
-
-            if (!this.loadedFile.warnings.type[colname]) {
-              this.loadedFile.warnings.type[colname] = 1
-            } else if (!typedReport) {
-              this.loadedFile.warnings.type[colname]++
-            }
-          })
-        })
-
         this.options.lineCount = validationResult.data.report.rows.total
         this.completion = 100
         this.executedOnce = true

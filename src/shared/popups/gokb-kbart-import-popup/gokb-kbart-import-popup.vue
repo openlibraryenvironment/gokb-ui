@@ -60,7 +60,7 @@
           {{ er }}
         </div>
       </div>
-      <div
+      <!-- <div
         v-else-if="completion === 100"
         class="ma-2"
       >
@@ -71,7 +71,7 @@
         {{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }} –
         {{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}
       </div>
-
+      -->
 
       <gokb-export-validator-results
         v-if="completion === 100"
@@ -202,7 +202,7 @@
           || this.loadedFile.errors.missingColumns.length > 0 || this.loadedFile.warnings.missingColumns.length > 0) ? 1000 : 450
       },
       hasErrors () {
-        return this.errors.length > 0 || this.loadedFile.errors.missingColumns.length > 0 || this.loadedFile.errors.single.length > 0
+        return this.errors.length > 0 || this.loadedFile.valid === false
       }
     },
     watch: {
@@ -269,20 +269,6 @@
         }
         else if (validationResult.status === 200 && validationResult?.data?.report) {
           this.loadedFile = validationResult.data.report
-
-          this.loadedFile.errors.single = []
-          Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) =>
-            Object.entries(colobj).forEach(([colname, eo]) =>
-              this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
-            )
-          )
-
-          this.loadedFile.warnings.single = []
-          Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) =>
-            Object.entries(colobj).forEach(([colname, wo]) =>
-              this.loadedFile.warnings.single.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
-            )
-          )
 
           this.options.lineCount = validationResult.data.report.rows.total
           this.completion = 100

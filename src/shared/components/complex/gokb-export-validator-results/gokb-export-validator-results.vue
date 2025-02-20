@@ -191,20 +191,55 @@
 
       }
     },
+    created () {
+      let typedReport = !!this.validatorResult.errors.type
+
+      this.validatorResult.errors.single = []
+      Object.entries(this.validatorResult.errors.rows).forEach(([rownum, colobj]) => {
+        Object.entries(colobj).forEach(([colname, eo]) => {
+          this.validatorResult.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+
+          if (!this.validatorResult.errors.type[colname]) {
+            this.validatorResult.errors.type[colname] = 1
+          } else if (!typedReport) {
+            this.validatorResult.errors.type[colname]++
+          }
+        })
+      })
+
+      typedReport = !!this.validatorResult.warnings.type
+
+      this.validatorResult.warnings.single = []
+      Object.entries(this.validatorResult.warnings.rows).forEach(([rownum, colobj]) => {
+        Object.entries(colobj).forEach(([colname, wo]) => {
+          this.validatorResult.warnings.single.push({
+            row: rownum,
+            column: colname,
+            reason: this.$i18n.t(wo.messageCode, wo.args)
+          })
+
+          if (!this.validatorResult.warnings.type[colname]) {
+            this.validatorResult.warnings.type[colname] = 1
+          } else if (!typedReport) {
+            this.validatorResult.warnings.type[colname]++
+          }
+        })
+      })
+    },
     computed: {
-      errorHeaders () {
+      errorHeaders() {
         return [
-          { title: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
-          { title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
-          { title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
+          {title: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false},
+          {title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column'},
+          {title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason'},
         ]
       },
-      showRowResults () {
-        return (this.validatorResult.errors.missingColumns.length === 0 )
+      showRowResults() {
+        return (this.validatorResult.errors.missingColumns.length === 0)
       },
-      exportableDataExists () {
-          return (this.validatorResult.errors.missingColumns.length > 0 || this.validatorResult.warnings.missingColumns.length > 0
-            || this.validatorResult.warnings.single.length > 0 || this.validatorResult.errors.single.length > 0)
+      exportableDataExists() {
+        return (this.validatorResult.errors.missingColumns.length > 0 || this.validatorResult.warnings.missingColumns.length > 0
+          || this.validatorResult.warnings.single.length > 0 || this.validatorResult.errors.single.length > 0)
       }
     },
     methods: {
