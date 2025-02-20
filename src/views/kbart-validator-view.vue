@@ -163,6 +163,7 @@ export default {
   },
   watch: {
     selectedFile () {
+      this.errors = []
       this.options.lineCount = undefined
       this.completion = 0
       this.loadedFile.rows = { total: 0, warning: 0, error: 0 }
