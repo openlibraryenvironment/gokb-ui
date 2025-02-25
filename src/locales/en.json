@@ -43,7 +43,7 @@
   },
   "main": {
     "docs": {
-      "target": "https://github.com/openlibraryenvironment/gokb/wiki",
+      "target": "https://gokb.org/en/documentation/",
       "label": "Documentation"
     },
     "legal": {
