@@ -58,10 +58,10 @@
       </gokb-button>
 
       <gokb-button
-        v-if="isPackageComponent"
+        v-if="isPackageComponent && totalNumberOfItems > 0"
         class="mr-4"
         color="blue"
-
+        @click="exportReviewRequests"
       >
         Exportieren
       </gokb-button>
@@ -141,6 +141,7 @@
   import reviewServices from '@/shared/services/review-services'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
+  import exportServices from "@/shared/services/export-services";
 
   const ROWS_PER_PAGE = 10
 
@@ -420,6 +421,105 @@
       }
     },
     methods: {
+      async exportReviewRequests () {
+        console.log("Export start")
+
+        const parameters = {
+          _sort: this.reviewsOptions.sortBy[0].key,
+          _order: this.reviewsOptions.sortBy[0].order || 'asc',
+          offset: 0,
+          limit: 150,
+          componentToReview: this.reviewComponent.id,
+          _embed: 'componentToReview',
+          // status: 'Open'
+        }
+
+        let result = await this.catchError({
+          promise: reviewServices.search({ parameters }, this.cancelToken.token),
+          instance: this
+        })
+
+        console.log("+++++ ", result.data)
+
+        let csvContent = {}
+        if (result?.data?.data?.length > 0) {
+            csvContent = this.prepareCSVExport(result.data.data)
+        }
+
+        const csvHeader = [{
+          text: 'Komponente',
+          value: 'component'
+        },
+          {
+            text: 'Title ID',
+            value: 'title_id'
+          },
+          {
+            text: 'Print-ISSN',
+            value: 'pissn'
+          },
+          {
+            text: 'ISBN',
+            value: 'eissn'
+          },
+          {
+            text: 'Kategorie',
+            value: 'category'
+          },
+          {
+            text: 'Bezeichnung',
+            value: 'type'
+          },
+          {
+            text: 'Link',
+            value: 'link'
+          },
+          {
+            text: 'Kuratorengruppe',
+            value: 'curator'
+          },
+          {
+            text: 'Datum',
+            value: 'date'
+          },
+        ]
+
+        let fileName = 'GOKB-RRs_'.concat(this.reviewComponent.name).concat('_' + new Date().toLocaleString('sv')).concat('.csv')
+
+        exportServices.toTsv(
+          csvHeader,
+          csvContent,
+          {'filename' : fileName}
+        )
+
+      },
+      prepareCSVExport (rrs) {
+
+        let csvData = []
+
+        for (let i = 0; i < rrs.length; i++) {
+          let rr = rrs[i]
+          let csvRow = {}
+
+          console.log("a ", i, rr.descriptionOfCause)
+          console.log("b ", i, rr.stdDesc.name)
+          console.log("c ", i, rr.reviewRequest)
+
+          csvRow.component = rr.componentToReview.name
+          csvRow.title_id = rr._embedded.componentToReview.importId
+          csvRow.pissn = rr._embedded.componentToReview._embedded.ids.filter(a => a.namespace.value === 'issn')[0]?.value
+          csvRow.eissn = rr._embedded.componentToReview._embedded.ids.filter(a => a.namespace.value === 'eissn')[0]?.value
+          csvRow.type = rr.reviewRequest
+          csvRow.category = rr.stdDesc.name
+          csvRow.link = rr._links.self.href
+          csvRow.curator = rr.allocatedTo
+          csvRow.date = new Date(rr.dateCreated).toLocaleString('sv')
+
+          csvData.push(csvRow)
+        }
+
+        return csvData
+      },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
