@@ -63,7 +63,7 @@
         color="blue"
         @click="exportReviewRequests"
       >
-        Exportieren
+        {{ $t('btn.export') }}
       </gokb-button>
 
     </template>
