@@ -427,7 +427,7 @@
           _sort: this.reviewsOptions.sortBy[0].key,
           _order: this.reviewsOptions.sortBy[0].order || 'asc',
           offset: 0,
-          limit: 150,
+          limit: 500,
           componentToReview: this.reviewComponent.id,
           _embed: 'componentToReview,allocatedGroups',
           status: this.searchFilters.status
