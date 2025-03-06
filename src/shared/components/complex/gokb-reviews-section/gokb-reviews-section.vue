@@ -422,7 +422,6 @@
     },
     methods: {
       async exportReviewRequests () {
-        console.log("Export start")
 
         const parameters = {
           _sort: this.reviewsOptions.sortBy[0].key,
@@ -430,8 +429,8 @@
           offset: 0,
           limit: 150,
           componentToReview: this.reviewComponent.id,
-          _embed: 'componentToReview',
-          // status: 'Open'
+          _embed: 'componentToReview,allocatedGroups',
+          status: this.searchFilters.status
         }
 
         let result = await this.catchError({
@@ -447,41 +446,45 @@
         }
 
         const csvHeader = [{
-          text: 'Komponente',
+          text: this.$i18n.t('component.label', 1),
           value: 'component'
         },
           {
-            text: 'Title ID',
+            text: this.$i18n.t('component.title.ids.label', 1),
             value: 'title_id'
           },
           {
-            text: 'Print-ISSN',
+            text: 'Print-ISXN',
             value: 'pissn'
           },
           {
-            text: 'ISBN',
+            text: 'E-ISXN',
             value: 'eissn'
           },
           {
-            text: 'Kategorie',
+            text: this.$i18n.t('component.review.stdDesc.label'),
             value: 'category'
           },
-          {
+          /*{
             text: 'Bezeichnung',
             value: 'type'
-          },
+          },*/
           {
             text: 'Link',
             value: 'link'
           },
           {
-            text: 'Kuratorengruppe',
+            text: this.$i18n.t('component.curatoryGroup.label'),
             value: 'curator'
           },
           {
-            text: 'Datum',
+            text: this.$i18n.t('default.date'),
             value: 'date'
           },
+          {
+            text: this.$i18n.t('component.review.status.label'),
+            value: 'state'
+          }
         ]
 
         let fileName = 'GOKB-RRs_'.concat(this.reviewComponent.name).concat('_' + new Date().toLocaleString('sv')).concat('.csv')
@@ -501,19 +504,16 @@
           let rr = rrs[i]
           let csvRow = {}
 
-          console.log("a ", i, rr.descriptionOfCause)
-          console.log("b ", i, rr.stdDesc.name)
-          console.log("c ", i, rr.reviewRequest)
-
           csvRow.component = rr.componentToReview.name
           csvRow.title_id = rr._embedded.componentToReview.importId
-          csvRow.pissn = rr._embedded.componentToReview._embedded.ids.filter(a => a.namespace.value === 'issn')[0]?.value
-          csvRow.eissn = rr._embedded.componentToReview._embedded.ids.filter(a => a.namespace.value === 'eissn')[0]?.value
-          csvRow.type = rr.reviewRequest
-          csvRow.category = rr.stdDesc.name
+          csvRow.pissn = rr._embedded.componentToReview._embedded.ids.filter(a => (a.namespace.value === 'issn' || a.namespace.value === 'pisbn'))[0]?.value
+          csvRow.eissn = rr._embedded.componentToReview._embedded.ids.filter(a => (a.namespace.value === 'eissn' || a.namespace.value === 'isbn'))[0]?.value
+          //csvRow.type = this.$i18n.t('component.review.stdDesc.' + rr.stdDesc.name + '.info')
+          csvRow.category = this.$i18n.t('component.review.stdDesc.' + rr.stdDesc.name + '.label')
           csvRow.link = rr._links.self.href
-          csvRow.curator = rr.allocatedTo
+          csvRow.curator = rr.allocatedGroups[0]?.name
           csvRow.date = new Date(rr.dateCreated).toLocaleString('sv')
+          csvRow.state = this.$i18n.t('component.review.status.' + rr.status.name + '.label')
 
           csvData.push(csvRow)
         }
