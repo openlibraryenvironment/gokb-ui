@@ -505,9 +505,9 @@
                       />
                     </v-col>
                     <v-spacer/>
-                    <v-col cols="3" v-if="!!externalSource" >
+                    <v-col cols="3" v-if="!!externalSource || autoUpdate" >
                       <v-row justify="end">
-                        <v-col cols="11">
+                        <v-col cols="11" v-if="!!externalSource">
                           <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
                             {{ $t('popups.externalSourceImport.selectLabel') }}
                           </div>
@@ -518,6 +518,18 @@
                             :color="externalSourceColor"
                             density="compact"
                             :title="$t('component.source.importConfig.subtitle')"
+                          />
+                        </v-col>
+                        <v-col cols="11" v-else>
+                          <!-- <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
+                            {{ $t('popups.externalSourceImport.selectLabel') }}
+                          </div> -->
+                          <v-chip
+                            text="AUTOUPDATE"
+                            class="text-button"
+                            rounded="lg"
+                            color="blue"
+                            density="compact"
                           />
                         </v-col>
                       </v-row>
@@ -946,8 +958,12 @@
           },
           WEKB: {
             color: 'orange'
+          },
+          AUTOUPDATE: {
+            color: 'blue'
           }
-        }
+        },
+        autoUpdate: false
       }
     },
     computed: {
@@ -1544,7 +1560,11 @@
 
             if (result?.data?._embedded?.source?.importConfig) {
               this.externalSource = result.data._embedded.source.importConfig.name
+            } else if (result?.data?._embedded?.source?.automaticUpdates) {
+              this.autoUpdate = true
             }
+
+            console.log("##### ", result)
 
             /*if (result?.data?.source?.id) {
               const sourceResult = await this.catchError({
