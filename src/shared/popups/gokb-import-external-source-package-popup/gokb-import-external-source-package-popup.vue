@@ -486,7 +486,9 @@
                 frequency: frequencyCode,
                 targetNamespace: {},
                 automaticUpdates: true,
-                update: true
+                update: true,
+                /*titleIdSerial: undefined,
+                titleIdMonograph: undefined */
               }
 
               this.externalSourceInfo = source
@@ -868,7 +870,7 @@
             pckg.ids.push(id)
           }
 
-          // TODO: Übergangslösung bis wir 2 Felder für Title-Namespaces haben
+
           if (this.contentTypeOfTipps === "Book" || this.contentTypeOfTipps === "Mixed") {
             this.externalSourceInfo.targetNamespace = this.namespaceMonograph
           } else {
