@@ -136,7 +136,8 @@
     "register": "Registration",
     "noaccess": "No Access",
     "kbartValidator": "KBART Validator",
-    "error": "Error"
+    "error": "Error",
+    "notFound": "Not Found"
   },
   "pending": {
     "lists": {
@@ -185,6 +186,9 @@
         "generic": "Are you sure you want to update the status of the selected items?",
         "specific": "Are you sure you want to set the status of {0} to {1}?",
         "list": "Are you sure you want to set the status of {0} item(s) to {1}?"
+      },
+      "pendingChanges": {
+        "label": "You have unsaved changes! Are you sure you want to leave this site?"
       }
     },
     "login": {
@@ -1580,6 +1584,12 @@
           "info": "Title {0} was manually created with overlapping information from another title!",
           "action": "-",
           "toDo": "If this has generated duplicated reference titles, please merge them by first selecting a reference title via 'Select Merge Target' and then clicking on 'Merge Duplicate'."
+        },
+        "Coverage Matching Conflict": {
+          "label": "Coverage Matching Conflict",
+          "info": "The coverage date range ({0}) is in conflict with the publication dates of the matched reference title ({1}).",
+          "action": "-",
+          "toDo": "Check if the correct reference title has been linked and if its publishing dates are correct."
         }
       }
     },

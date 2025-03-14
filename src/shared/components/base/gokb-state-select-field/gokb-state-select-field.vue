@@ -17,7 +17,7 @@
         true-icon="mdi-check-circle"
         false-icon="mdi-check-circle-outline"
         :class="['status-icon', (localValue == 'Current' ? 'status-icon-current' : '')]"
-        :color="current"
+        color="current"
         :label="$t('component.general.status.Current.label')"
         :disabled="!editable"
       />
@@ -27,7 +27,7 @@
         true-icon="mdi-close-circle"
         false-icon="mdi-close"
         :class="['status-icon', (localValue == 'Retired' ? 'status-icon-retired' : '')]"
-        :color="retired"
+        color="retired"
         :label="$t('component.general.status.Retired.label')"
         :readonly="!editable"
       />
@@ -37,7 +37,7 @@
         true-icon="mdi-clock"
         false-icon="mdi-clock-outline"
         :class="['status-icon', (localValue == 'Expected' ? 'status-icon-expected' : '')]"
-        :color="expected"
+        color="expected"
         :label="$t('component.general.status.Expected.label')"
         :readonly="!editable"
       />
@@ -48,7 +48,7 @@
         true-icon="mdi-delete"
         false-icon="mdi-delete-outline"
         :class="['status-icon', (localValue == 'Deleted' ? 'status-icon-deleted' : '')]"
-        :color="deleted"
+        color="deleted"
         :label="activeDeletedLabel"
         readonly
         :style="{'marginLeft': '4px', 'paddingRight': '10px', 'border': ((editable || modelValue === 'Deleted') ? '1px solid red' : 'none'), 'borderRadius':'2px'}"
@@ -66,7 +66,7 @@
     components: {
       GokbConfirmationPopup
     },
-    emits: ['update:model-value'],
+    emits: ['update:model-value', 'delete'],
     props: {
       label: {
         type: String,
@@ -95,11 +95,7 @@
         submitConfirmationMessage: {
           text: 'component.general.status.edit.delete.confirm',
           vars: []
-        },
-        current: '#4CAF50',
-        retired: '#FFC107',
-        expected: '#2196F3',
-        deleted: '#FF5252'
+        }
       }
     },
     computed: {

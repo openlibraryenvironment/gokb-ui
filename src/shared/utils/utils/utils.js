@@ -1,4 +1,5 @@
 import native from '@/shared/utils/native'
+import { toRaw } from 'vue'
 
 const api = {
   pascalCase (string, separator = '-') {
@@ -37,6 +38,46 @@ const api = {
       })
 
     return pars.join('&')
+  },
+
+  toRawDeep(observed) {
+    const val = toRaw(observed)
+
+    if (Array.isArray(val)) {
+      return val.map(item => this.toRawDeep(item))
+    }
+
+    if (val === null) return null
+
+    if (typeof val === 'object') {
+      const entries = Object.entries(val).map(([key, val]) => [key, this.toRawDeep(val)])
+
+      return Object.fromEntries(entries)
+    }
+
+    return val
+  },
+
+  hasLinkedFieldChanged(old_val, new_val) {
+    if (!old_val && !!new_val) {
+      return true
+    }
+    else if (!!old_val) {
+      if (!new_val) {
+        return true
+      }
+      else if (typeof new_val === 'number' && old_val.id !== new_val) {
+        return true
+      }
+      else if (typeof new_val === 'string' && old_val.name !== new_val) {
+        return true
+      }
+      else if (typeof new_val === 'object' && old_val.id !== new_val.id) {
+        return true
+      }
+    }
+
+    return false
   },
 
   isString: native.isString,

@@ -177,7 +177,7 @@
             >
               {{ $tc('component.identifier.label', 2) }}
               <v-chip class="ma-2">
-                {{ ids.length }}
+                {{ titleItem.ids.length }}
               </v-chip>
               <v-icon
                 v-if="pendingChanges.ids"
@@ -538,7 +538,9 @@
           volumeNumber: undefined,
           OAStatus: undefined,
           medium: undefined,
-          type: undefined
+          type: undefined,
+          subjects: [],
+          ids: []
         },
         dateCreated: undefined,
         lastUpdated: undefined,
@@ -551,15 +553,11 @@
           name: undefined,
           alts: []
         },
-        subjects: [],
+        lastLoad: undefined,
         reviewRequests: [],
         version: undefined,
         reference: undefined,
         errors: {},
-        ids: [],
-        tipps: [],
-        allAlternateNames: [],
-        allCuratoryGroups: [],
         currentType: undefined,
         updateUrl: undefined,
         deleteUrl: undefined,
@@ -661,10 +659,67 @@
     },
     mounted () {
       this.tab = this.$route.query.tab || 'identifiers'
+      window.addEventListener('beforeunload', this.checkForChanges)
+    },
+    unmounted() {
+      window.removeEventListener('beforeunload', this.checkForChanges)
+    },
+    beforeRouteLeave (to, from) {
+      if (this.hasUnsavedChanges()) {
+        const answer = window.confirm(this.$i18n.t('popups.confirm.pendingChanges.label'))
+
+        return answer
+      }
+      else {
+        log.debug('No Changes ..')
+      }
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
+      },
+      checkForChanges (e) {
+        if (this.hasUnsavedChanges()) {
+          e.preventDefault()
+          e.returnValue = this.$i18n.t('popups.confirm.pendingChanges.label')
+        }
+      },
+      hasUnsavedChanges () {
+        log.debug("Check for unsaved changes ..")
+        if (this.pendingChanges?.keys?.length > 0) {
+          log.debug('hasUnsavedChanges :: pendingChanges: ' + this.pendingChanges)
+          return true
+        }
+
+        if (!!this.lastLoad) {
+          for (var [key, val] of Object.entries(this.lastLoad)) {
+            if (key === 'allNames') {
+              if (val.name !== this.allNames.name) {
+                log.debug('hasUnsavedChanges :: changed name')
+                return true
+              }
+            }
+            else if (typeof val === 'array') {
+              // Array fields should be handled by check for entries in this.pendingChanges above
+            }
+            else if (typeof val === 'object') {
+              if (this.titleItem.hasOwnProperty(key) && utils.hasLinkedFieldChanged(val, this.titleItem[key])) {
+                log.debug('hasUnsavedChanges :: changed linked field ' + key + '!')
+                return true
+              }
+            }
+            else if (this.titleItem.hasOwnProperty(key) && val !== this.titleItem[key]) {
+              log.debug('hasUnsavedChanges :: changed field ' + key + ': ' + val + '<>' + this.titleItem[key])
+              return true
+            }
+          }
+        }
+        else if (!!this.allNames.name) {
+          log.debug('hasUnsavedChanges :: no lastload, pending name!')
+          return true
+        }
+
+        return false
       },
       async update () {
         this.errors = {}
@@ -675,9 +730,9 @@
         const activeGroup = accountModel.activeGroup()
 
         const data = {
-          id: this.titleItem.id,
+          ...this.titleItem,
           name: this.allNames.name,
-          ids: this.ids.map(id => ({
+          ids: this.titleItem.ids.map(id => ({
             value: id.value,
             type: id.namespace
           })),
@@ -687,24 +742,13 @@
             variantType,
             id: typeof id === 'number' ? id : null
           })),
-          subjects: this.subjects.map(subject => ({
+          subjects: this.titleItem.subjects.map(subject => ({
             heading: subject.heading,
             scheme: subject.scheme
           })),
-          publishedFrom: this.titleItem.publishedFrom,
-          publishedTo: this.titleItem.publishedTo,
-          dateFirstInPrint: this.titleItem.firstPublishedInPrint,
-          dateFirstOnline: this.titleItem.firstPublishedOnline,
-          firstAuthor: this.titleItem.firstAuthor,
-          firstEditor: this.titleItem.firstEditor,
           type: this.currentType,
           version: this.version,
-          volumeNumber: this.titleItem.volumeNumber,
-          editionNumber: this.titleItem.editionNumber,
-          editionStatement: this.titleItem.editionStatement,
-          medium: this.titleItem.medium,
           OAStatus: (!this.titleItem.OAStatus || typeof this.titleItem.OAStatus === 'number') ? this.titleItem.OAStatus : this.titleItem.OAStatus.id,
-          status: this.titleItem.status,
           publisher: this.publishers.map(pub => pub.id),
           activeGroup: activeGroup
         }
@@ -783,10 +827,12 @@
           id: undefined,
           uuid: undefined,
           name: undefined,
+          status: undefined,
+          ids: [],
+          subjects = [],
           source: undefined,
           publishedFrom: undefined,
           publishedTo: undefined,
-          status: undefined,
           firstPublishedOnline: undefined,
           firstPublishedInPrint: undefined,
           firstAuthor: undefined,
@@ -808,15 +854,10 @@
           name: undefined,
           alts: []
         }
-        this.subjects = []
         this.reviewRequests = []
         this.version = undefined
         this.reference = undefined
         this.errors = {}
-        this.ids = []
-        this.tipps = []
-        this.allAlternateNames = []
-        this.allCuratoryGroups = []
         this.currentType = undefined
         this.updateUrl = undefined
         this.deleteUrl = undefined
@@ -835,6 +876,7 @@
           })
 
           if (result?.status === 200) {
+            this.lastLoad = {}
             this.mapRecord(result.data)
           } else {
             this.notFound = true
@@ -845,13 +887,62 @@
       async mapRecord (data) {
         this.updateUrl = data._links?.update?.href || null
         this.deleteUrl = data._links?.delete?.href || null
-        this.titleItem.name = data.name
-        this.titleItem.source = data.source
         this.version = data.version
         this.currentType = data.type
-        this.titleItem.type = data.type
-        this.titleItem.publishedFrom = this.buildDateString(data.publishedFrom)
-        this.titleItem.publishedTo = this.buildDateString(data.publishedTo)
+        this.dateCreated = data.dateCreated
+        this.lastUpdated = data.lastUpdated
+
+        this.history = data.history
+
+        const new_item_info = {
+          id: data.id,
+          uuid: data.uuid,
+          name: data.name,
+          source: data.source,
+          type: data.type,
+          publishedFrom: this.buildDateString(data.publishedFrom),
+          publishedTo: this.buildDateString(data.publishedTo),
+          editionStatement: data.editionStatement,
+          firstAuthor: data.firstAuthor,
+          firstEditor: data.firstEditor,
+          medium: data.medium,
+          OAStatus: data.OAStatus,
+          editionNumber: data.editionNumber,
+          firstPublishedInPrint: this.buildDateString(data.dateFirstInPrint),
+          firstPublishedOnline: this.buildDateString(data.dateFirstOnline),
+          volumeNumber: data.volumeNumber,
+          status: data.status,
+        }
+
+        this.lastLoad = structuredClone(new_item_info)
+
+        new_item_info.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
+          id,
+          value,
+          namespace: namespace.value,
+          nslabel: (namespace.name || namespace.value),
+          isDeletable: !!this.updateUrl
+        }))
+        new_item_info.subjects = data._embedded.subjects.map(subject => ({
+          ...subject,
+          isDeletable: !!this.updateUrl
+        }))
+
+        this.titleItem = new_item_info
+
+        const new_variants = data._embedded.variantNames.map(variantName => ({
+          ...variantName,
+          isDeletable: !!this.updateUrl
+        }))
+
+        const new_names = {
+          name: data.name,
+          alts: new_variants
+        }
+
+        this.allNames = new_names
+        this.lastLoad.allNames = structuredClone(new_names)
+
         this.publishers = data._embedded.publisher.map(pub => ({
           id: pub.id,
           name: pub.name,
@@ -862,39 +953,6 @@
           },
           isDeletable: !!this.updateUrl
         }))
-        this.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
-          id,
-          value,
-          namespace: namespace.value,
-          nslabel: (namespace.name || namespace.value),
-          isDeletable: !!this.updateUrl
-        }))
-        this.tipps = data._embedded.tipps || []
-        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({
-          ...variantName,
-          isDeletable: !!this.updateUrl
-        }))
-        this.subjects = data._embedded.subjects.map(subject => ({
-          ...subject,
-          isDeletable: !!this.updateUrl
-        }))
-        this.allNames = { name: data.name, alts: this.allAlternateNames }
-        this.reviewRequests = data._embedded.reviewRequests
-        this.titleItem.editionStatement = data.editionStatement
-        this.dateCreated = data.dateCreated
-        this.lastUpdated = data.lastUpdated
-        this.titleItem.id = data.id
-        this.titleItem.uuid = data.uuid
-        this.titleItem.firstAuthor = data.firstAuthor
-        this.titleItem.firstEditor = data.firstEditor
-        this.titleItem.medium = data.medium
-        this.titleItem.OAStatus = data.OAStatus
-        this.titleItem.editionNumber = data.editionNumber
-        this.titleItem.firstPublishedInPrint = this.buildDateString(data.dateFirstInPrint)
-        this.titleItem.firstPublishedOnline = this.buildDateString(data.dateFirstOnline)
-        this.titleItem.volumeNumber = data.volumeNumber
-        this.titleItem.status = data.status
-        this.history = data.history
 
         this.shortTitleMap = {
           name: data.name,
@@ -902,6 +960,7 @@
           uuid: data.uuid,
           type: data.type
         }
+
         this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
 
         document.title = this.$i18n.tc('component.title.label') + ' – ' + this.allNames.name

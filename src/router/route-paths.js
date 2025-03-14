@@ -28,6 +28,6 @@ export const CREATE_USER_ROUTE = '/create-user'
 
 export const ERROR_ROUTE = '/error'
 export const NO_ACCESS_ROUTE = '/no-access'
-
+export const NOT_FOUND_ROUTE = '/not-found'
 export const VALIDATOR_ROUTE = '/kbart-validator'
 //export const IMPORT_EXTERNAL_SOURCE_ROUTE = '/import-external-source'

@@ -34,8 +34,11 @@ const vuetify = createVuetify({
           accent: '#4f4f4f',
           'accent-darken-1': '#2b2b2b',
           error: '#eb5757',
-          // warning: '',
           info: '#2d9cdb',
+          current: '#4CAF50',
+          retired: '#FFC107',
+          expected: '#2196F3',
+          deleted: '#FF5252'
         },
         variables: {
           'disabled-opacity': 0.87,
@@ -58,9 +61,11 @@ const vuetify = createVuetify({
           accent: '#d9d9d9',
           'accent-darken-1': '#bdbdbd',
           error: '#eb5757',
-          // warning: '',
           info: '#2d9cdb',
-          // success: ''
+          current: '#4CAF50',
+          retired: '#FFC107',
+          expected: '#2196F3',
+          deleted: '#FF5252'
         },
         variables: {
           'disabled-opacity': 0.87,
