@@ -1131,21 +1131,18 @@
       },
       hasUnsavedChanges () {
         log.debug("Check for unsaved changes ..")
-        if (this.pendingChanges?.keys?.length > 0) {
+        if (Object.keys(this.pendingChanges).length > 0) {
           log.debug('hasUnsavedChanges :: pendingChanges: ' + this.pendingChanges)
           return true
         }
 
         if (!!this.lastLoad) {
           for (var [key, val] of Object.entries(this.lastLoad)) {
-            if (key === 'allNames') {
-              if (val.name !== this.allNames.name) {
-                log.debug('hasUnsavedChanges :: changed name')
-                return true
-              }
+            if (key === 'name' && this.allNames.name !== val) {
+              return true
             }
             else if (typeof val === 'array') {
-              // Array fields should be handled by check for entries in this.pendingChanges above
+              // Array fields will have already been handled by check for entries in this.pendingChanges
             }
             else if (typeof val === 'object') {
               if (key !== 'source' && this.packageItem.hasOwnProperty(key) && utils.hasLinkedFieldChanged(val, this.packageItem[key])) {
@@ -1839,18 +1836,13 @@
 
         this.packageItem = new_item_info
 
-        const new_variants = data._embedded.variantNames.map(variantName => ({
-          ...variantName,
-          isDeletable: !!this.updateUrl
-        }))
-
-        const new_names = {
+        this.allNames = {
           name: data.name,
-          alts: new_variants
+          alts: data._embedded.variantNames.map(variantName => ({
+            ...variantName,
+            isDeletable: !!this.updateUrl
+          }))
         }
-
-        this.allNames = new_names
-        this.lastLoad.allNames = structuredClone(new_names)
 
         const new_curators = data._embedded.curatoryGroups.map(({ name, id }) => ({
           id,

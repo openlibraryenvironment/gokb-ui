@@ -269,7 +269,7 @@
             >
               {{ $tc('component.subject.label', 2) }}
               <v-chip class="ma-2">
-                {{ subjects.length }}
+                {{ titleItem.subjects.length }}
               </v-chip>
               <v-icon
                 v-if="pendingChanges.subjects"
@@ -288,7 +288,7 @@
               class="mt-4"
             >
               <gokb-identifier-section
-                v-model="ids"
+                v-model="titleItem.ids"
                 :show-title="false"
                 :target-type="currentType"
                 :disabled="isReadonly || !currentType"
@@ -325,7 +325,7 @@
               class="mt-4"
             >
               <gokb-subjects-section
-                v-model="subjects"
+                v-model="titleItem.subjects"
                 :disabled="isReadonly"
                 :api-errors="errors?.subjects"
                 :expandable="false"
@@ -376,7 +376,7 @@
       </v-row>
       <div v-else>
         <gokb-identifier-section
-          v-model="ids"
+          v-model="titleItem.ids"
           :disabled="isReadonly"
           :target-type="currentType"
           :api-errors="errors.ids"
@@ -487,6 +487,8 @@
   import accountModel from '@/shared/models/account-model'
   import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
   import loading from '@/shared/models/loading'
+  import log from '@/shared/utils/logger'
+  import utils from '@/shared/utils/utils'
 
   export default {
     name: 'EditTitleView',
@@ -686,21 +688,18 @@
       },
       hasUnsavedChanges () {
         log.debug("Check for unsaved changes ..")
-        if (this.pendingChanges?.keys?.length > 0) {
-          log.debug('hasUnsavedChanges :: pendingChanges: ' + this.pendingChanges)
+        if (Object.keys(this.pendingChanges).length > 0) {
+          log.debug('hasUnsavedChanges :: pendingChanges!')
           return true
         }
 
         if (!!this.lastLoad) {
           for (var [key, val] of Object.entries(this.lastLoad)) {
-            if (key === 'allNames') {
-              if (val.name !== this.allNames.name) {
-                log.debug('hasUnsavedChanges :: changed name')
-                return true
-              }
+            if (key === 'name' && this.allNames.name !== val) {
+              return true
             }
             else if (typeof val === 'array') {
-              // Array fields should be handled by check for entries in this.pendingChanges above
+              // Array fields will have already been handled by check for entries in this.pendingChanges
             }
             else if (typeof val === 'object') {
               if (this.titleItem.hasOwnProperty(key) && utils.hasLinkedFieldChanged(val, this.titleItem[key])) {
@@ -829,7 +828,7 @@
           name: undefined,
           status: undefined,
           ids: [],
-          subjects = [],
+          subjects: [],
           source: undefined,
           publishedFrom: undefined,
           publishedTo: undefined,
@@ -930,18 +929,13 @@
 
         this.titleItem = new_item_info
 
-        const new_variants = data._embedded.variantNames.map(variantName => ({
-          ...variantName,
-          isDeletable: !!this.updateUrl
-        }))
-
-        const new_names = {
+        this.allNames = {
           name: data.name,
-          alts: new_variants
+          alts: data._embedded.variantNames.map(variantName => ({
+            ...variantName,
+            isDeletable: !!this.updateUrl
+          }))
         }
-
-        this.allNames = new_names
-        this.lastLoad.allNames = structuredClone(new_names)
 
         this.publishers = data._embedded.publisher.map(pub => ({
           id: pub.id,
@@ -961,6 +955,8 @@
           type: data.type
         }
 
+
+        this.reviewRequests = data._embedded.reviewRequests
         this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
 
         document.title = this.$i18n.tc('component.title.label') + ' – ' + this.allNames.name
