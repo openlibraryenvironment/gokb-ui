@@ -59,6 +59,7 @@
 
       <gokb-button
         v-if="isPackageComponent && totalNumberOfItems > 0"
+        :loading="exportIsLoading"
         class="mr-4"
         color="blue"
         @click="exportReviewRequests"
@@ -227,7 +228,8 @@
         searchFilters: {
           status: 'Open',
           stdDesc: undefined
-        }
+        },
+        exportIsLoading: false
       }
     },
     computed: {
@@ -422,6 +424,7 @@
     },
     methods: {
       async exportReviewRequests () {
+        this.exportIsLoading = true
 
         const parameters = {
           _sort: this.reviewsOptions.sortBy[0].key,
@@ -429,8 +432,13 @@
           offset: 0,
           limit: 500,
           componentToReview: this.reviewComponent.id,
+          status: this.searchFilters.status,
+          stdDesc: this.searchFilters.stdDesc,
           _embed: 'componentToReview,allocatedGroups',
-          status: this.searchFilters.status
+        }
+
+        if (this.fetchTitleReviews) {
+          parameters.titlereviews = true
         }
 
         let result = await this.catchError({
@@ -495,6 +503,7 @@
           {'filename' : fileName}
         )
 
+        this.exportIsLoading = false
       },
       prepareCSVExport (rrs) {
 
@@ -509,7 +518,7 @@
           csvRow.pissn = rr._embedded.componentToReview._embedded.ids.filter(a => (a.namespace.value === 'issn' || a.namespace.value === 'pisbn'))[0]?.value
           csvRow.eissn = rr._embedded.componentToReview._embedded.ids.filter(a => (a.namespace.value === 'eissn' || a.namespace.value === 'isbn'))[0]?.value
           //csvRow.type = this.$i18n.t('component.review.stdDesc.' + rr.stdDesc.name + '.info')
-          csvRow.category = this.$i18n.t('component.review.stdDesc.' + rr.stdDesc.name + '.label')
+          csvRow.category = rr.stdDesc?.name ? this.$i18n.t('component.review.stdDesc.' + rr.stdDesc.name + '.label') : this.$i18n.t('component.review.stdDesc.none.label')
           csvRow.link = rr._links.self.href
           csvRow.curator = rr.allocatedGroups[0]?.name
           csvRow.date = new Date(rr.dateCreated).toLocaleString('sv')
