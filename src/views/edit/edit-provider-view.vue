@@ -433,6 +433,8 @@
           status: undefined,
           source: undefined,
           titleNamespace: undefined,
+          titleNamespaceSerial: undefined,
+          titleNamespaceMonograph: undefined,
           packageNamespace: undefined,
           homepage: undefined,
         }
@@ -628,6 +630,8 @@
           status: undefined,
           source: undefined,
           titleNamespace: undefined,
+          titleNamespaceMonograph: undefined,
+          titleNamespaceSerial: undefined,
           packageNamespac: undefined,
           homepage: undefined,
           preferredShortname: undefined
@@ -689,6 +693,8 @@
           isDeletable: !!this.updateUrl
         }))
         this.providerObject.titleNamespace = data.titleNamespace
+        this.providerObject.titleNamespaceSerial = data.titleNamespaceSerial
+        this.providerObject.titleNamespaceMonograph = data.titleNamespaceMonograph
         this.providerObject.packageNamespace = data.packageNamespace
         this.allNames = {
           name: data.name,

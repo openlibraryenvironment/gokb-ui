@@ -26,7 +26,6 @@
           width="350px"
           :label="$t('kbart.propIdSerial.label')"
           exclude-isxn
-          required
         />
         <gokb-namespace-field
           v-model="options.selectedNamespaceMonograph"
@@ -34,7 +33,6 @@
           width="350px"
           :label="$t('kbart.propIdMonograph.label')"
           exclude-isxn
-          required
         />
       </div>
       <gokb-checkbox-field
@@ -301,6 +299,14 @@
         this.options.deleteMissing = false
         this.options.selectedFile = file
       },
+      mixedContent (val) {
+        if (!val) {
+          this.options.selectedNamespaceSerial = undefined
+          this.options.selectedNamespaceMonograph = undefined
+        } else {
+          this.options.selectedNamespace = undefined
+        }
+      },
       provider: {
         handler(val) {
           if (!!val) {
@@ -332,7 +338,21 @@
           const fullProvider = providerResult.data
 
           if (!!this.contentType) {
-            if (this.contentType.value === 'Book' && fullProvider.titleNamespaceMonograph) {
+
+            if ( (this.contentType.value === 'Book' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceMonograph) {
+              this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
+            }
+            if ( (this.contentType.value === 'Journal' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceSerial) {
+              this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
+            }
+            this.mixedContent = true
+            //Rückfallwert
+            if (!this.options.selectedNamespaceMonograph && !this.options.selectedNamespaceSerial) {
+              this.mixedContent = false
+              this.options.selectedNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
+            }
+
+            /* if (this.contentType.value === 'Book' && fullProvider.titleNamespaceMonograph) {
               this.options.selectedNamespace = fullProvider.titleNamespaceMonograph
             } else if (this.contentType.value === 'Journal' && fullProvider.titleNamespaceSerial) {
               this.options.selectedNamespace = fullProvider.titleNamespaceSerial
@@ -344,7 +364,7 @@
               } else {
                 this.options.selectedNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
               }
-            }
+            } */
           }
         }
       },

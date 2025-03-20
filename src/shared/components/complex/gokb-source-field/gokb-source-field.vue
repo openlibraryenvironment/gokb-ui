@@ -288,11 +288,19 @@
           const fullProvider = providerResult.data
 
           if (!!this.contentType) {
-            if (this.contentType.value === 'Book' && fullProvider.titleNamespaceMonograph) {
-              this.targetNamespace = fullProvider.titleNamespaceMonograph
-            } else if (this.contentType.value === 'Journal' && fullProvider.titleNamespaceSerial) {
-              this.targetNamespace = fullProvider.titleNamespaceSerial
-            } else if (this.contentType.value === 'Mixed') {
+            if ( (this.contentType.value === 'Book' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceMonograph) {
+              this.titleIdMonograph = fullProvider.titleNamespaceMonograph
+            }
+            if ( (this.contentType.value === 'Journal' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceSerial) {
+              this.titleIdSerial = fullProvider.titleNamespaceSerial
+            }
+            this.mixedContent = true
+            //Rückfallwert
+            if (!this.titleIdMonograph && !this.titleIdSerial) {
+              this.mixedContent = false
+              this.targetNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
+            }
+            /* if (this.contentType.value === 'Mixed') {
               if (!!fullProvider.titleNamespaceSerial && !!fullProvider.titleNamespaceMonograph && fullProvider.titleNamespaceSerial.value !== fullProvider.titleNamespaceMonograph.value) {
                 this.titleIdSerial = fullProvider.titleNamespaceSerial
                 this.titleIdMonograph = fullProvider.titleNamespaceMonograph
@@ -300,7 +308,7 @@
               } else {
                 this.targetNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
               }
-            }
+            } */
           }
         }
       },
