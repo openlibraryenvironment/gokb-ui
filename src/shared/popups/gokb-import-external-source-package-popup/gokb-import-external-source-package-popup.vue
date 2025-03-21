@@ -486,9 +486,7 @@
                 frequency: frequencyCode,
                 targetNamespace: {},
                 automaticUpdates: true,
-                update: true,
-                /*titleIdSerial: undefined,
-                titleIdMonograph: undefined */
+                update: true
               }
 
               this.externalSourceInfo = source
@@ -869,13 +867,6 @@
             }
             pckg.ids.push(id)
           }
-
-
-          /*if (this.contentTypeOfTipps === "Book" || this.contentTypeOfTipps === "Mixed") {
-            this.externalSourceInfo.targetNamespace = this.namespaceMonograph
-          } else {
-            this.externalSourceInfo.targetNamespace = this.namespaceJournal
-          } */
 
           this.externalSourceInfo.titleIdMonograph = this.namespaceMonograph
           this.externalSourceInfo.titleIdSerial = this.namespaceJournal

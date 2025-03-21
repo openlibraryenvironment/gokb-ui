@@ -351,20 +351,6 @@
               this.mixedContent = false
               this.options.selectedNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
             }
-
-            /* if (this.contentType.value === 'Book' && fullProvider.titleNamespaceMonograph) {
-              this.options.selectedNamespace = fullProvider.titleNamespaceMonograph
-            } else if (this.contentType.value === 'Journal' && fullProvider.titleNamespaceSerial) {
-              this.options.selectedNamespace = fullProvider.titleNamespaceSerial
-            } else if (this.contentType.value === 'Mixed') {
-              if (!!fullProvider.titleNamespaceSerial && !!fullProvider.titleNamespaceMonograph && fullProvider.titleNamespaceSerial.value !== fullProvider.titleNamespaceMonograph.value) {
-                this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
-                this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
-                this.mixedContent = true
-              } else {
-                this.options.selectedNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
-              }
-            } */
           }
         }
       },

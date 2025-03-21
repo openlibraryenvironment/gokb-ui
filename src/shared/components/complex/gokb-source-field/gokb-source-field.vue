@@ -300,15 +300,6 @@
               this.mixedContent = false
               this.targetNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
             }
-            /* if (this.contentType.value === 'Mixed') {
-              if (!!fullProvider.titleNamespaceSerial && !!fullProvider.titleNamespaceMonograph && fullProvider.titleNamespaceSerial.value !== fullProvider.titleNamespaceMonograph.value) {
-                this.titleIdSerial = fullProvider.titleNamespaceSerial
-                this.titleIdMonograph = fullProvider.titleNamespaceMonograph
-                this.mixedContent = true
-              } else {
-                this.targetNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
-              }
-            } */
           }
         }
       },
