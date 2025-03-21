@@ -239,7 +239,7 @@
       "searchProvider": "Search provider",
       "titleIdNamespace": "title_id namespace for {0}",
       "monographs": "Monographs",
-      "journals": "Journals"
+      "serials": "Serials"
     }
   },
   "validation": {

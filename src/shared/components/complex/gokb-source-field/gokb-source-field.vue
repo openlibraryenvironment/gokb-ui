@@ -207,6 +207,10 @@
             this.item.titleIdSerial = val.titleIdSerial
             this.item.titleIdMonograph = val.titleIdMonograph
             this.item.update = val.update
+            if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
+              this.item.targetNamespace = undefined
+              this.mixedContent = true
+            }
           }
         },
         deep: true
@@ -223,6 +227,8 @@
         if (!val) {
           this.item.titleIdSerial = undefined
           this.item.titleIdMonograph = undefined
+        } else {
+          this.item.targetNamespace = undefined
         }
       }
     },
@@ -235,8 +241,9 @@
         this.isExpanded = true
         this.item = this.modelValue
 
-        if (!!this.item.titleIdSerial && !!this.item.titleIdMonograph) {
+        if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
           this.mixedContent = true
+          this.item.targetNamespace = undefined
         }
       } else if (!!this.provider && !!this.contentType){
         this.fetchDefaultNamespace()
@@ -259,7 +266,12 @@
             this.item.url = result.data.url
             this.item.automaticUpdates = result.data.automaticUpdates
             this.item.importConfig = result.data.importConfig
-
+            this.item.titleIdSerial = result.data.titleIdSerial
+            this.item.titleIdMonograph = result.data.titleIdMonograph
+            if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
+              this.item.targetNamespace = undefined
+              this.mixedContent = true
+            }
             if (!!this.item.url) {
               this.isExpanded = true
             }
@@ -276,18 +288,17 @@
           const fullProvider = providerResult.data
 
           if (!!this.contentType) {
-            if (this.contentType.value === 'Book' && fullProvider.titleNamespaceMonograph) {
-              this.targetNamespace = fullProvider.titleNamespaceMonograph
-            } else if (this.contentType.value === 'Journal' && fullProvider.titleNamespaceSerial) {
-              this.targetNamespace = fullProvider.titleNamespaceSerial
-            } else if (this.contentType.value === 'Mixed') {
-              if (!!fullProvider.titleNamespaceSerial && !!fullProvider.titleNamespaceMonograph && fullProvider.titleNamespaceSerial.value !== fullProvider.titleNamespaceMonograph.value) {
-                this.titleIdSerial = fullProvider.titleNamespaceSerial
-                this.titleIdMonograph = fullProvider.titleNamespaceMonograph
-                this.mixedContent = true
-              } else {
-                this.targetNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
-              }
+            if ( (this.contentType.value === 'Book' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceMonograph) {
+              this.titleIdMonograph = fullProvider.titleNamespaceMonograph
+            }
+            if ( (this.contentType.value === 'Journal' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceSerial) {
+              this.titleIdSerial = fullProvider.titleNamespaceSerial
+            }
+            this.mixedContent = true
+            //Rückfallwert
+            if (!this.titleIdMonograph && !this.titleIdSerial) {
+              this.mixedContent = false
+              this.targetNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
             }
           }
         }
