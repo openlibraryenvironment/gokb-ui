@@ -43,7 +43,7 @@
   },
   "main": {
     "docs": {
-      "target": "https://service-wiki.hbz-nrw.de/display/GOKB/GOKb+-+Deutsche+Sektion",
+      "target": "https://gokb.org/de/dokumentation/",
       "label": "Dokumentation"
     },
     "legal": {
@@ -517,7 +517,7 @@
           "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn ein Fehler in der Dateistruktur identifiziert wurde, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten. Bei Fehlern einzelner Datensätze bricht die Validierung nicht ab. Es wird die Gesamtheit aller Fehler ausgegeben."
         },
         "lax": {
-          "warning": "Titellisten, die Warnungen erzeugen, können zwar in aller Regel in die GOKB importiert werden, es wird aber dringend empfohlen, die Warnungen vor dem Import zu beseitigen.",
+          "warning": "Titellisten, die Warnungen erzeugen, können in die GOKB importiert werden, auch wenn es Auffälligkeiten gibt. Es wird dringend empfohlen, vorab die Auffälligkeiten auf ihre Unbedenklichkeit zu prüfen.",
           "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn ein Fehler in der Dateistruktur identifiziert wurde, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten. Bei Fehlern einzelner Datensätze bricht die Validierung nicht ab. Es wird die Gesamtheit aller Fehler ausgegeben."
         }
       }
