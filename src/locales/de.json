@@ -1157,6 +1157,11 @@
       "additionalInfo": {
         "label": "Strukturierte Detailansicht"
       },
+      "referenceBase": {
+        "label": "Weitere Informationen",
+        "message": "Dokumentation für '{0}'",
+        "urlBase": "https://gokb.org/prufanfragen/"
+      },
       "otherComponents": {
         "label": "Weitere Komponenten",
         "add": "Weitere Komponente verknüpfen",
