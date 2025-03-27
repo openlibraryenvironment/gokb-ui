@@ -217,6 +217,7 @@
         fetchTitleReviews: false,
         totalNumberOfItems: 0,
         messageToConfirm: undefined,
+        reviewBaseUrl: `${window.location.origin}${import.meta.env.VITE_PUBLIC_PATH}review/`,
         reviewsOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE,
@@ -446,8 +447,6 @@
           instance: this
         })
 
-        console.log("+++++ ", result.data)
-
         let csvContent = {}
         if (result?.data?.data?.length > 0) {
             csvContent = this.prepareCSVExport(result.data.data)
@@ -519,7 +518,7 @@
           csvRow.eissn = rr._embedded.componentToReview._embedded.ids.filter(a => (a.namespace.value === 'eissn' || a.namespace.value === 'isbn'))[0]?.value
           //csvRow.type = this.$i18n.t('component.review.stdDesc.' + rr.stdDesc.name + '.info')
           csvRow.category = rr.stdDesc?.name ? this.$i18n.t('component.review.stdDesc.' + rr.stdDesc.name + '.label') : this.$i18n.t('component.review.stdDesc.none.label')
-          csvRow.link = rr._links.self.href
+          csvRow.link = `${this.reviewBaseUrl}${rr.id}`
           csvRow.curator = rr.allocatedGroups[0]?.name
           csvRow.date = new Date(rr.dateCreated).toLocaleString('sv')
           csvRow.state = this.$i18n.t('component.review.status.' + rr.status.name + '.label')
