@@ -5,6 +5,7 @@
         v-model="localValue"
         :label="label"
         :disabled="disabled || readonly"
+        :style="{ opacity: opacity }"
         :readonly="readonly"
         :density="dense ? 'compact' : 'default'"
       />
@@ -49,6 +50,10 @@
         type: String,
         required: false,
         default: undefined
+      opacity: {
+        type: Number,
+        required: false,
+        default: 0.87
       }
     },
     computed: {

@@ -34,8 +34,8 @@
     "update": "Update",
     "validate": "Validate",
     "bulkSelect": "Set Status of {0} entries to ...",
-    "bulkCloseReview": "Close {0} selected review | Close {0} selected reviews",
-    "closeSelectedReviews": "Close selected reviews",
+    "bulkCloseReview": "Close {0} selected review request | Close {0} selected review requests",
+    "closeSelectedReviews": "Close selected review requests",
     "moreFilters": "More Filters",
     "moreOptions": "More Options",
     "externalSourceImport": "Import from external source",
@@ -43,7 +43,7 @@
   },
   "main": {
     "docs": {
-      "target": "https://github.com/openlibraryenvironment/gokb/wiki",
+      "target": "https://gokb.org/en/documentation/",
       "label": "Documentation"
     },
     "legal": {
@@ -117,9 +117,9 @@
       "search": "Providers"
     },
     "review": {
-      "edit": "Edit Review",
-      "create": "Create Review",
-      "search": "Reviews"
+      "edit": "Edit Review Request",
+      "create": "Create Review Request",
+      "search": "Review Requests"
     },
     "user": {
       "edit": "Edit User",
@@ -239,7 +239,7 @@
       "searchProvider": "Search provider",
       "titleIdNamespace": "title_id namespace for {0}",
       "monographs": "Monographs",
-      "journals": "Journals"
+      "serials": "Serials"
     }
   },
   "validation": {
@@ -377,10 +377,24 @@
           "label": "Processed",
           "description": "Fields are preferably taken from enriched reference title data"
         }
+      },
+      "error": {
+        "notFound": "This file is not (yet) available. Please notice that KBART files will only be created for packages with the list status 'Checked' and that the processing after an update might take a while."
       }
     },
     "propId": {
       "label": "Namespace for title_id values (optional)",
+      "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list.",
+      "typed": {
+        "label": "Multiple namespaces"
+      }
+    },
+    "propIdSerial": {
+      "label": "Namespace for 'Serial' type title_id values",
+      "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
+    },
+    "propIdMonograph": {
+      "label": "Namespace for 'Monograph' type title_id values",
       "tooltip": "If the KBART column 'title_id' consistently contains additional identifiers (eg DOIs), they may be added to the package title automatically by selecting the correct type from the list."
     },
     "addOnly": {
@@ -412,6 +426,7 @@
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "unusualChars": "This line contains unusual characters, which may point to a corrupted file conversion.",
       "unusualCharsVal": "Value '{0}' contains unusual characters. This may point to a corrupted file conversion.",
+      "namespaceNotFound": "Unable to reference namespace for value '{0}'.",
       "illegalVal": "Value '{0}' is not valid!",
       "illegalValForNamespace": "Value '{0}' is not valid for namespace '{1}'.",
       "illegalType": "Value in column 'publication_type' must be 'Serial' or 'Monograph'!",
@@ -492,15 +507,20 @@
     },
     "validator": {
       "label": "KBART Validator",
-      "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, deviations from the standard, but accepted by the GOKB or not corrupting the data, are marked as warnings (according to the validation during package upload).",
-      "mode": "Strict mode",
+      "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, values automatically interpolated by the GOKb are also accepted (according to the validation during package upload).",
+      "mode": {
+        "label": "Strict mode"
+      },
+      "mixed": {
+        "label": "Mixed Content"
+      },
       "advice": "Please upload only tab separated text files (.txt, .tsv, .csv). For performance reasons, please do not validate extensive title lists in quick succession.",
       "alert": {
         "strict": {
           "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If an error is identified in the file structure, the validation is aborted. As a result, no individual titles are validated and further errors in the file structure are not recognized. Please correct the errors in the file structure and then run the validation again to obtain a complete result. Validation is not aborted if individual data records contain errors. The entirety of all errors is output."
         },
         "lax": {
-          "warning": "Title lists that generate warnings can usually be imported into the GOKB, but it is strongly recommended that you remove them before importing.",
+          "warning": "Title lists that generate warnings can be imported into the GOKB even if they contain anomalies. It is strongly recommended that you check the anomalies first to make sure they are harmless.",
           "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If an error is identified in the file structure, the validation is aborted. As a result, no individual titles are validated and further errors in the file structure are not recognized. Please correct the errors in the file structure and then run the validation again to obtain a complete result. Validation is not aborted if individual data records contain errors. The entirety of all errors is output."
         }
       }
@@ -845,7 +865,7 @@
           "label": "In Progress"
         },
         "error": {
-          "openReviews": "All connected requests for review must be closed before the package can be marked as checked."
+          "openReviews": "All connected review requests must be closed before the package can be marked as checked."
         }
       },
       "breakable": "Content may be split",
@@ -1030,6 +1050,12 @@
       "titleNamespace": {
         "label": "Title Namespace"
       },
+      "titleNamespaceSerial": {
+        "label": "Title Namespace (Serial)"
+      },
+      "titleNamespaceMonograph": {
+        "label": "Title Namespace (Monograph)"
+      },
       "packageNamespace": {
         "label": "Package Namespace"
       },
@@ -1135,7 +1161,7 @@
       }
     },
     "review": {
-      "label": "Review | Reviews",
+      "label": "Review Request | Review Requests",
       "request": {
         "label": "Request"
       },
@@ -1157,11 +1183,16 @@
       "additionalInfo": {
         "label": "Structured info"
       },
+      "referenceBase": {
+        "label": "Further information",
+        "message": "Documentation for '{0}'",
+        "urlBase": "https://gokb.org/en-gb/working-with-review-requests/"
+      },
       "otherComponents": {
         "label": "Other Components",
         "add": "Link new component",
         "error": {
-          "duplicate": "This component is already linked to this review!"
+          "duplicate": "This component is already linked to this review request!"
         }
       },
       "candidates": {
@@ -1179,8 +1210,8 @@
           "reopened": "Request has been reopened."
         },
         "confirm": {
-          "close": "Please confirm closing this review.",
-          "reopen": "Please confirm the reopening of this review."
+          "close": "Please confirm closing this review request.",
+          "reopen": "Please confirm the reopening of this review request."
         },
         "componentToReview": {
           "label": "{0} to review"
@@ -1188,17 +1219,17 @@
         "close": {
           "label": "Close",
           "error": {
-            "moreSteps": "Please check all workflow steps before closing this review."
+            "moreSteps": "Please check all workflow steps before closing this review request."
           }
         },
         "cancel": {
-          "label": "Cancel review"
+          "label": "Cancel review request"
         },
         "next": {
           "label": "Next Step"
         },
         "open": {
-          "label": "Re-open review"
+          "label": "Re-open review request"
         },
         "components": {
           "workflow": {
@@ -1226,7 +1257,7 @@
                 "message": "The name of the selected target title will be changed to that of the deleted title and its current name will be added as a variant."
               },
               "closeReview": {
-                "message": "The review will be marked as closed automatically."
+                "message": "The review request will be marked as closed automatically."
               }
             },
             "selectIds": {
@@ -1632,6 +1663,9 @@
         "Yearly": {
           "label": "Yearly"
         }
+      },
+      "error": {
+        "activatedNoInfo": "Missing update info (URL/Cycle)!"
       },
       "importConfig": {
         "subtitle": "This package was imported from the given source",
