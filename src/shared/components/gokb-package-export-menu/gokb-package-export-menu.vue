@@ -17,17 +17,40 @@
         :value="name"
       >
         <v-list-item-title>
-          <a
-            download
-            class="text-primary"
-            :href="exportType.url"
-            :type="type"
+          <div v-if="!!exportType.url">
+            <a
+              download
+              class="text-primary"
+              :href="exportType.url"
+              :type="type"
+            >
+              {{ exportType.label }}
+            </a>
+            <gokb-tooltip
+              :code="exportType.description"
+            />
+          </div>
+          <div
+            v-else
+            style="cursor:default;"
           >
-            {{ exportType.label }}
-          </a>
-          <gokb-tooltip
-            :code="exportType.description"
-          />
+            <span class="text-grey"> {{ exportType.label }} </span>
+            <gokb-tooltip
+              icon-id="mdi-close-octagon"
+              color="error"
+              code="kbart.export.error.notFound"
+            />
+            <v-icon
+              icon
+              right
+              class="mt-n1"
+              size="small"
+              :title="$t('btn.refresh')"
+              @click="refreshUrls"
+            >
+              mdi-refresh
+            </v-icon>
+          </div>
         </v-list-item-title>
       </v-list-item>
     </v-list>
@@ -37,9 +60,12 @@
 <script>
   import selection from '@/shared/models/selection'
   import GokbButton from '@/shared/components/base/gokb-button'
+  import kbartServices from '@/shared/services/kbart-services'
+    import BaseComponent from '@/shared/components/base-component'
 
   export default {
     name: 'GokbPackageExportMenu',
+    extends: BaseComponent,
     components: { GokbButton },
     props: {
       pkgId: {
@@ -52,6 +78,11 @@
       return {
         dataUrl: undefined,
         type: undefined,
+        unavailable: false,
+        kbartUrls: {
+          tipp: undefined,
+          title: undefined
+        }
       }
     },
     computed: {
@@ -64,14 +95,14 @@
       exportVariants () {
         return {
           KBART: {
-            url: this.currentTippUrl,
+            url: this.kbartUrls.tipp,
             flavour: 'tipp',
             label: this.$i18n.t('kbart.export.type.tipp.label'),
             description: 'kbart.export.type.tipp.description',
             type: 'text/tab-separated-values'
           },
           KBART_TITLE: {
-            url: this.currentTitleUrl,
+            url: this.kbartUrls.title,
             flavour: 'title',
             label: this.$i18n.t('kbart.export.type.title.label'),
             description: 'kbart.export.type.title.description',
@@ -99,11 +130,7 @@
       currentTitleUrl () {
         var fullUrl = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart`
 
-        if (this.pkgId) {
-          fullUrl = fullUrl + `/${this.pkgId}` + `?exportType=title`
-        } else if (this.selectedItems?.length === 1) {
-          fullUrl = fullUrl + `/${this.selectedItems[0].uuid}` + `?exportType=title`
-        } else if (this.selectedItems) {
+        if (this.selectedItems?.length > 1) {
           fullUrl = fullUrl + `?exportType=title`
 
           this.selectedItems.forEach(pkg => {
@@ -112,6 +139,30 @@
         }
 
         return fullUrl
+      },
+    },
+    mounted () {
+      if (!!this.pkgId) {
+        this.refreshUrls()
+      }
+    },
+    methods: {
+      refreshUrls () {
+        this.buildKbartUrl(this.pkgId, 'tipp')
+        this.buildKbartUrl(this.pkgId, 'title')
+      },
+      async buildKbartUrl(id, type) {
+        const fileLookupResp = await this.catchError({
+            promise: kbartServices.lookup(id, type, this.cancelToken.token),
+            instance: this
+        })
+
+        if (fileLookupResp.status === 404 ) {
+          this.unavailable = true
+        }
+        else {
+          this.kbartUrls[type] = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart/${id}?exportType=${type}`
+        }
       }
     }
   }

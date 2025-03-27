@@ -10,7 +10,7 @@
   >
     <template #buttons>
       <v-switch
-        v-if="!!reviewComponent"
+        v-if="isPackageComponent"
         v-model="fetchTitleReviews"
         class="pt-8 pr-6"
         :label="$tc('component.title.label', 2)"
@@ -56,6 +56,17 @@
       >
         {{ $t('btn.add') }}
       </gokb-button>
+
+      <gokb-button
+        v-if="isPackageComponent && totalNumberOfItems > 0"
+        :loading="exportIsLoading"
+        class="mr-4"
+        color="blue"
+        @click="exportReviewRequests"
+      >
+        {{ $t('btn.export') }}
+      </gokb-button>
+
     </template>
     <template #actions v-if="showBulkActions">
       <span
@@ -131,6 +142,7 @@
   import reviewServices from '@/shared/services/review-services'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
+  import exportServices from "@/shared/services/export-services";
 
   const ROWS_PER_PAGE = 10
 
@@ -205,6 +217,7 @@
         fetchTitleReviews: false,
         totalNumberOfItems: 0,
         messageToConfirm: undefined,
+        reviewBaseUrl: `${window.location.origin}${import.meta.env.VITE_PUBLIC_PATH}review/`,
         reviewsOptions: {
           page: 1,
           itemsPerPage: ROWS_PER_PAGE,
@@ -216,7 +229,8 @@
         searchFilters: {
           status: 'Open',
           stdDesc: undefined
-        }
+        },
+        exportIsLoading: false
       }
     },
     computed: {
@@ -410,6 +424,110 @@
       }
     },
     methods: {
+      async exportReviewRequests () {
+        this.exportIsLoading = true
+
+        const parameters = {
+          _sort: this.reviewsOptions.sortBy[0].key,
+          _order: this.reviewsOptions.sortBy[0].order || 'asc',
+          offset: 0,
+          limit: 500,
+          componentToReview: this.reviewComponent.id,
+          status: this.searchFilters.status,
+          stdDesc: this.searchFilters.stdDesc,
+          _embed: 'componentToReview,allocatedGroups',
+        }
+
+        if (this.fetchTitleReviews) {
+          parameters.titlereviews = true
+        }
+
+        let result = await this.catchError({
+          promise: reviewServices.search({ parameters }, this.cancelToken.token),
+          instance: this
+        })
+
+        let csvContent = {}
+        if (result?.data?.data?.length > 0) {
+            csvContent = this.prepareCSVExport(result.data.data)
+        }
+
+        const csvHeader = [{
+          text: this.$i18n.t('component.label', 1),
+          value: 'component'
+        },
+          {
+            text: this.$i18n.t('component.title.ids.label', 1),
+            value: 'title_id'
+          },
+          {
+            text: 'Print-ISXN',
+            value: 'pissn'
+          },
+          {
+            text: 'E-ISXN',
+            value: 'eissn'
+          },
+          {
+            text: this.$i18n.t('component.review.stdDesc.label'),
+            value: 'category'
+          },
+          /*{
+            text: 'Bezeichnung',
+            value: 'type'
+          },*/
+          {
+            text: 'Link',
+            value: 'link'
+          },
+          {
+            text: this.$i18n.t('component.curatoryGroup.label'),
+            value: 'curator'
+          },
+          {
+            text: this.$i18n.t('default.date'),
+            value: 'date'
+          },
+          {
+            text: this.$i18n.t('component.review.status.label'),
+            value: 'state'
+          }
+        ]
+
+        let fileName = 'GOKB-RRs_'.concat(this.reviewComponent.name).concat('_' + new Date().toLocaleString('sv')).concat('.csv')
+
+        exportServices.toTsv(
+          csvHeader,
+          csvContent,
+          {'filename' : fileName}
+        )
+
+        this.exportIsLoading = false
+      },
+      prepareCSVExport (rrs) {
+
+        let csvData = []
+
+        for (let i = 0; i < rrs.length; i++) {
+          let rr = rrs[i]
+          let csvRow = {}
+
+          csvRow.component = rr.componentToReview.name
+          csvRow.title_id = rr._embedded.componentToReview.importId
+          csvRow.pissn = rr._embedded.componentToReview._embedded.ids.filter(a => (a.namespace.value === 'issn' || a.namespace.value === 'pisbn'))[0]?.value
+          csvRow.eissn = rr._embedded.componentToReview._embedded.ids.filter(a => (a.namespace.value === 'eissn' || a.namespace.value === 'isbn'))[0]?.value
+          //csvRow.type = this.$i18n.t('component.review.stdDesc.' + rr.stdDesc.name + '.info')
+          csvRow.category = rr.stdDesc?.name ? this.$i18n.t('component.review.stdDesc.' + rr.stdDesc.name + '.label') : this.$i18n.t('component.review.stdDesc.none.label')
+          csvRow.link = `${this.reviewBaseUrl}${rr.id}`
+          csvRow.curator = rr.allocatedGroups[0]?.name
+          csvRow.date = new Date(rr.dateCreated).toLocaleString('sv')
+          csvRow.state = this.$i18n.t('component.review.status.' + rr.status.name + '.label')
+
+          csvData.push(csvRow)
+        }
+
+        return csvData
+      },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },

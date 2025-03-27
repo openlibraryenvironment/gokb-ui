@@ -13,10 +13,34 @@
         dense
       />
       <gokb-namespace-field
+        v-if="!mixedContent"
         v-model="options.selectedNamespace"
-        target-type="Title"
+        :target-type="targetType"
         width="350px"
         :label="$t('kbart.propId.label')"
+      />
+      <div v-else>
+        <gokb-namespace-field
+          v-model="options.selectedNamespaceSerial"
+          target-type="Journal"
+          width="350px"
+          :label="$t('kbart.propIdSerial.label')"
+          exclude-isxn
+        />
+        <gokb-namespace-field
+          v-model="options.selectedNamespaceMonograph"
+          target-type="Book"
+          width="350px"
+          :label="$t('kbart.propIdMonograph.label')"
+          exclude-isxn
+        />
+      </div>
+      <gokb-checkbox-field
+          v-model="mixedContent"
+          class="pt-4"
+          :label="$t('kbart.propId.typed.label')"
+          :disabled="importRunning"
+          dense
       />
       <gokb-checkbox-field
         v-model="options.dryRun"
@@ -60,7 +84,7 @@
           {{ er }}
         </div>
       </div>
-      <div
+      <!-- <div
         v-else-if="completion === 100"
         class="ma-2"
       >
@@ -71,67 +95,14 @@
         {{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }} –
         {{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}
       </div>
-      <div
-        v-if="loadedFile.rows.error > 0"
-        class="ma-2"
-      >
-        <h4>
-          {{ $t('kbart.processing.error.fields') }}
-        </h4>
-        <ul
-          v-for="(val, col) in loadedFile.errors.type"
-          :key="col"
-        >
-          <li class="ml-4">
-            <b>{{ col }}</b> - {{ val }}
-          </li>
-        </ul>
-      </div>
-      <div
-        v-if="loadedFile.rows.warning > 0"
-        class="ma-2"
-      >
-        <h4>
-          {{ $t('kbart.processing.warning.fields') }}
-        </h4>
-        <ul
-          v-for="(val, col) in loadedFile.warnings.type"
-          :key="col"
-        >
-          <li>
-            <b>{{ col }}</b> - {{ val }}
-          </li>
-        </ul>
-      </div>
-      <div v-if="loadedFile.rows.error > 0 || loadedFile.rows.warning > 0">
-        <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              {{ $tc('kbart.processing.error.label', 2) }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <v-data-table
-                :items="loadedFile.errors.single"
-                :headers="errorHeaders"
-                width="1000px"
-                :sort-by="[{key: 'row', order: 'asc'}]"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              {{ $tc('kbart.processing.warning.label', 2) }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <v-data-table
-                :items="loadedFile.warnings.single"
-                :headers="errorHeaders"
-                :sort-by="[{key: 'row', order: 'asc'}]"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </div>
+      -->
+
+      <gokb-export-validator-results
+        v-if="completion === 100"
+        :validator-result="loadedFile"
+        :selected-file="selectedFile"
+      />
+
     </gokb-section>
 
     <template #buttons>
@@ -156,10 +127,11 @@
   import GokbNamespaceField from '@/shared/components/simple/gokb-namespace-field'
   import providerServices from '@/shared/services/provider-services'
   import kbartServices from '@/shared/services/kbart-services'
+  import GokbExportValidatorResults from "../../components/complex/gokb-export-validator-results/index.js";
 
   export default {
     name: 'GokbKbartImportPopup',
-    components: { GokbNamespaceField },
+    components: {GokbExportValidatorResults, GokbNamespaceField },
     extends: BaseComponent,
     emits: ['update:model-value', 'kbart'],
     props: {
@@ -168,12 +140,12 @@
         required: true,
         default: true
       },
-      defaultTitleNamespace: {
+      provider: {
         type: Object,
         required: false,
         default: undefined
       },
-      provider: {
+      contentType: {
         type: Object,
         required: false,
         default: undefined
@@ -182,10 +154,10 @@
     data () {
       return {
         errors: [],
-        selectedNamespace: undefined,
         cancelValidation: false,
         useProprietaryNamespace: false,
         importRunning: undefined,
+        mixedContent: false,
         loadedFile: {
           errors: {
             missingColumns: [],
@@ -193,6 +165,7 @@
             type: {}
           },
           warnings: {
+            missingColumns: [],
             single: [],
             type: {}
           },
@@ -207,6 +180,8 @@
         options: {
           selectedFile: undefined,
           selectedNamespace: undefined,
+          selectedNamespaceSerial: undefined,
+          selectedNamespaceMonograph: undefined,
           lineCount: undefined,
           addOnly: false,
           dryRun: false
@@ -249,10 +224,14 @@
         ]
       },
       expandWidth () {
-        return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 450
+        return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0
+          || this.loadedFile.errors.missingColumns.length > 0 || this.loadedFile.warnings.missingColumns.length > 0) ? 1000 : 450
       },
       hasErrors () {
-        return this.errors.length > 0
+        return this.errors.length > 0 || this.loadedFile.valid === false
+      },
+      targetType () {
+        return (this.contentType?.value == 'Journal' || this.contentType?.value == 'Book') ? this.contentType?.value : 'Title'
       }
     },
     watch: {
@@ -264,15 +243,32 @@
         this.loadedFile.errors.missingColumns = []
         this.loadedFile.errors.single = []
         this.loadedFile.errors.type = {}
+        this.loadedFile.warnings.missingColumns = []
         this.loadedFile.warnings.single = []
         this.loadedFile.warnings.type = {}
         this.options.addOnly = false
         this.options.deleteMissing = false
         this.options.selectedFile = file
+      },
+      mixedContent (val) {
+        if (!val) {
+          this.options.selectedNamespaceSerial = undefined
+          this.options.selectedNamespaceMonograph = undefined
+        } else {
+          this.options.selectedNamespace = undefined
+        }
+      },
+      provider: {
+        handler(val) {
+          if (!!val) {
+            this.fetchDefaultNamespace()
+          }
+        },
+        deep: true
       }
     },
     mounted () {
-      if (this.provider) {
+      if (!!this.provider) {
         this.fetchDefaultNamespace()
       }
     },
@@ -292,8 +288,20 @@
         if (providerResult?.status === 200) {
           const fullProvider = providerResult.data
 
-          if (fullProvider.titleNamespace) {
-            this.options.selectedNamespace = fullProvider.titleNamespace
+          if (!!this.contentType) {
+
+            if ( (this.contentType.value === 'Book' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceMonograph) {
+              this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
+            }
+            if ( (this.contentType.value === 'Journal' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceSerial) {
+              this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
+            }
+            this.mixedContent = true
+            //Rückfallwert
+            if (!this.options.selectedNamespaceMonograph && !this.options.selectedNamespaceSerial) {
+              this.mixedContent = false
+              this.options.selectedNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
+            }
           }
         }
       },
@@ -309,38 +317,19 @@
         this.errors = []
         this.importRunning = true
         this.completion = 0
-        var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceNameSerial = this.options.selectedNamespaceSerial ? this.options.selectedNamespaceSerial.value : undefined
+        let namespaceNameMonograph = this.options.selectedNamespaceMonograph ? this.options.selectedNamespaceMonograph.value : undefined
 
-        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, this.cancelToken.token)
+        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 
-        if (validationResult.status === 200 && validationResult?.data?.report) {
+        if (validationResult.status === 200 && validationResult?.data?.errors.hasOwnProperty("encoding")) {
+          this.errors.push(this.$i18n.t('kbart.validator.alert.encoding'))
+        }
+        else if (validationResult.status === 200 && validationResult?.data?.report) {
+          this.loadedFile = validationResult.data.report
 
-          if (!!validationResult.data.errors?.missingColumns) {
-            this.errors.push(this.$i18n.t('kbart.errors.missingCols', [validationResult.data.errors.missingColumns.join(', ')]))
-            this.loadedFile = validationResult.data.report
-          } else {
-            this.loadedFile = validationResult.data.report
-
-            this.loadedFile.errors.single = []
-            Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) =>
-              Object.entries(colobj).forEach(([colname, eo]) =>
-                this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
-              )
-            )
-
-            if (this.loadedFile.errors.single.length > 0) {
-              this.errors.push(this.$i18n.t('kbart.processing.error.general'))
-            }
-
-            this.loadedFile.warnings.single = []
-            Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) =>
-              Object.entries(colobj).forEach(([colname, wo]) =>
-                this.loadedFile.warnings.single.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
-              )
-            )
-
-            this.options.lineCount = validationResult.data.report.rows.total
-          }
+          this.options.lineCount = validationResult.data.report.rows.total
           this.completion = 100
         } else {
           this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))
