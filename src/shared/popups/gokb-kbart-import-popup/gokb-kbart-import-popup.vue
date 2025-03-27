@@ -13,10 +13,34 @@
         dense
       />
       <gokb-namespace-field
+        v-if="!mixedContent"
         v-model="options.selectedNamespace"
-        target-type="Title"
+        :target-type="targetType"
         width="350px"
         :label="$t('kbart.propId.label')"
+      />
+      <div v-else>
+        <gokb-namespace-field
+          v-model="options.selectedNamespaceSerial"
+          target-type="Journal"
+          width="350px"
+          :label="$t('kbart.propIdSerial.label')"
+          exclude-isxn
+        />
+        <gokb-namespace-field
+          v-model="options.selectedNamespaceMonograph"
+          target-type="Book"
+          width="350px"
+          :label="$t('kbart.propIdMonograph.label')"
+          exclude-isxn
+        />
+      </div>
+      <gokb-checkbox-field
+          v-model="mixedContent"
+          class="pt-4"
+          :label="$t('kbart.propId.typed.label')"
+          :disabled="importRunning"
+          dense
       />
       <gokb-checkbox-field
         v-model="options.dryRun"
@@ -168,12 +192,12 @@
         required: true,
         default: true
       },
-      defaultTitleNamespace: {
+      provider: {
         type: Object,
         required: false,
         default: undefined
       },
-      provider: {
+      contentType: {
         type: Object,
         required: false,
         default: undefined
@@ -182,10 +206,10 @@
     data () {
       return {
         errors: [],
-        selectedNamespace: undefined,
         cancelValidation: false,
         useProprietaryNamespace: false,
         importRunning: undefined,
+        mixedContent: false,
         loadedFile: {
           errors: {
             missingColumns: [],
@@ -207,6 +231,8 @@
         options: {
           selectedFile: undefined,
           selectedNamespace: undefined,
+          selectedNamespaceSerial: undefined,
+          selectedNamespaceMonograph: undefined,
           lineCount: undefined,
           addOnly: false,
           dryRun: false
@@ -253,6 +279,9 @@
       },
       hasErrors () {
         return this.errors.length > 0
+      },
+      targetType () {
+        return (this.contentType?.value == 'Journal' || this.contentType?.value == 'Book') ? this.contentType?.value : 'Title'
       }
     },
     watch: {
@@ -269,10 +298,26 @@
         this.options.addOnly = false
         this.options.deleteMissing = false
         this.options.selectedFile = file
+      },
+      mixedContent (val) {
+        if (!val) {
+          this.options.selectedNamespaceSerial = undefined
+          this.options.selectedNamespaceMonograph = undefined
+        } else {
+          this.options.selectedNamespace = undefined
+        }
+      },
+      provider: {
+        handler(val) {
+          if (!!val) {
+            this.fetchDefaultNamespace()
+          }
+        },
+        deep: true
       }
     },
     mounted () {
-      if (this.provider) {
+      if (!!this.provider) {
         this.fetchDefaultNamespace()
       }
     },
@@ -292,8 +337,20 @@
         if (providerResult?.status === 200) {
           const fullProvider = providerResult.data
 
-          if (fullProvider.titleNamespace) {
-            this.options.selectedNamespace = fullProvider.titleNamespace
+          if (!!this.contentType) {
+
+            if ( (this.contentType.value === 'Book' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceMonograph) {
+              this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
+            }
+            if ( (this.contentType.value === 'Journal' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceSerial) {
+              this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
+            }
+            this.mixedContent = true
+            //Rückfallwert
+            if (!this.options.selectedNamespaceMonograph && !this.options.selectedNamespaceSerial) {
+              this.mixedContent = false
+              this.options.selectedNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
+            }
           }
         }
       },
@@ -309,9 +366,11 @@
         this.errors = []
         this.importRunning = true
         this.completion = 0
-        var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceNameSerial = this.options.selectedNamespaceSerial ? this.options.selectedNamespaceSerial.value : undefined
+        let namespaceNameMonograph = this.options.selectedNamespaceMonograph ? this.options.selectedNamespaceMonograph.value : undefined
 
-        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, this.cancelToken.token)
+        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 
         if (validationResult.status === 200 && validationResult?.data?.report) {
 

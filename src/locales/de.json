@@ -240,7 +240,7 @@
       "searchProvider": "Anbieter suchen",
       "titleIdNamespace": "title_id Namensraum für {0}",
       "monographs": "Monographien",
-      "journals": "Journals"
+      "serials": "Serials"
     }
   },
   "validation": {
@@ -381,7 +381,18 @@
     },
     "propId": {
       "label": "Namensraum für title_id (optional)",
-      "tooltip": "Falls die Spalte 'title_id' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden."
+      "tooltip": "Falls die Spalte 'title_id' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden.",
+      "typed": {
+        "label": "Mehrere Namensräume"
+      }
+    },
+    "propIdSerial": {
+      "label": "Namensraum für 'Serial' title_id",
+      "tooltip": "Falls die Spalte 'title_id' für Zeilen mit dem Typ 'Serial' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden."
+    },
+    "propIdMonograph": {
+      "label": "Namensraum für 'Monograph' title_id",
+      "tooltip": "Falls die Spalte 'title_id' für Zeilen mit dem Typ 'Monograph' einheitlich zusätzliche Identifikatoren (bspw. DOIs) enthält, können diese durch die Auswahl ihres Typs automatisch aufgenommen werden."
     },
     "addOnly": {
       "label": "Teil-Update",
@@ -412,6 +423,7 @@
       "replacementCharsRow": "Diese Zeile enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
       "unusualChars": "Diese Zeile enthält unübliche Zeichen, die auf eine fehlgeschlagene Dateikonvertierung hinweisen.",
       "unusualCharsVal": "Wert '{0}' enthält unübliche Zeichen. Dies könnte auf ein fehlgeschlagene Dateikonvertierung hinweisen.",
+      "namespaceNotFound": "Namensraum für Wert '{0}' konnte nicht identifiziert werden!",
       "illegalVal": "Wert '{0}' ist fehlerhaft!",
       "illegalValForNamespace": "Wert '{0}' ist nicht zulässig für den Namensraum '{1}'.",
       "illegalType": "Wert in Spalte 'publication_type' muss 'Serial' oder 'Monograph' sein!",
@@ -492,8 +504,13 @@
     },
     "validator": {
       "label": "KBART-Validator",
-      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus sind Abweichungen vom Standard, die allerdings von der GOKB akzeptiert werden oder die Daten nicht korrumpieren, als Warnungen markiert (entsprechend der Validierung während des Paket-Uploads).",
-      "mode": "Strikter Modus",
+      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKb automatisch interpolierte Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
+      "mode": {
+        "label": "Strikter Modus"
+      },
+      "mixed": {
+        "label": "Gemischter Inhalt"
+      },
       "advice": "Bitte laden Sie nur durch Tabulatoren getrennte Text-Dateien (.txt, .tsv, .csv) hoch. Aus Performanzgründen bitten wir, umfangreiche Titellisten nicht in schneller Folge hintereinander zu validieren.",
       "alert": {
         "strict": {
@@ -1029,6 +1046,12 @@
       },
       "titleNamespace": {
         "label": "Titel-Namensraum"
+      },
+      "titleNamespaceSerial": {
+        "label": "Titel-Namensraum (Serial)"
+      },
+      "titleNamespaceMongraph": {
+        "label": "Titel-Namensraum (Monograph)"
       },
       "packageNamespace": {
         "label": "Paket-Namensraum"
@@ -1647,6 +1670,9 @@
         "Yearly": {
           "label": "Jährlich"
         }
+      },
+      "error": {
+        "activatedNoInfo": "Fehlende Update-Infos (URL/Zyklus)!"
       },
       "importConfig": {
         "subtitle": "Dieses Paket wurde aus der angegebenen Quelle importiert",
