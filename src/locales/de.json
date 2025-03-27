@@ -377,6 +377,9 @@
           "label":"Angereichert",
           "description": "Informationen werden bevorzugt aus den angereicherten Referenztiteln entnommen"
         }
+      },
+      "error": {
+        "notFound": "Diese Datei steht momentan (noch) nicht zur Verfügung. Bitte beachten Sie, dass KBART-Dateien nur für Pakete mit dem Listenstatus 'Geprüft' erstellt werden, und die Erstellung einige Minuten dauern kann."
       }
     },
     "propId": {

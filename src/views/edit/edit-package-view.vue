@@ -1576,6 +1576,34 @@
           }
         }
       },
+      async verifyTitleList () {
+        const response = await this.catchError({
+          promise: packageServices.createOrUpdate({
+            id: this.packageItem.id,
+            listStatus: this.packageItem.listStatus,
+            updateVerifyDate: true
+          },
+          this.cancelToken.token),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 4000
+          this.showSnackbar = true
+          this.reload()
+        }
+        else {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+          this.errors = response?.data?.error || {}
+          this.updateStepErrors()
+          this.step = 1
+        }
+      },
       async fetchDefaultNamespace (providerId) {
         const providerResult = await this.catchError({
           promise: providerServices.get(providerId, this.cancelToken.token),

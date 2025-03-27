@@ -1,5 +1,7 @@
 <template>
-  <v-tooltip right>
+  <v-tooltip
+    right
+    max-width="300px">
     <template v-slot:activator="{ props }">
       <v-icon
         :color="color"

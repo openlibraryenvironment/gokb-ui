@@ -377,6 +377,9 @@
           "label": "Processed",
           "description": "Fields are preferably taken from enriched reference title data"
         }
+      },
+      "error": {
+        "notFound": "This file is not (yet) available. Please notice that KBART files will only be created for packages with the list status 'Checked' and that the processing after an update might take a while."
       }
     },
     "propId": {

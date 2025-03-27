@@ -35,6 +35,13 @@ const api = (baseServices) => ({
         data
       }, cancelToken)
       return result
+    },
+    lookup (id, type, cancelToken) {
+      const url = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart/${id}?exportType=${type}`
+      return baseServices.request({
+        method: 'HEAD',
+        url
+      }, cancelToken)
     }
 })
 
