@@ -627,6 +627,7 @@ import { isReadonly } from 'vue'
             value: id.value,
             type: id.namespace
           })),
+          roles: this.allRoles.map (({ id }) => id),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
           providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({
             name,
