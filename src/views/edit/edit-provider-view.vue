@@ -62,7 +62,7 @@
           <v-col cols="3" xl="2">
             <gokb-namespace-field
               v-model="providerObject.titleNamespaceSerial"
-              target-type="Title"
+              target-type="Journal"
               :readonly="isReadonly"
               :label="$t('component.provider.titleNamespaceSerial.label')"
               exclude-isxn
@@ -71,7 +71,7 @@
           <v-col cols="3" xl="2">
             <gokb-namespace-field
               v-model="providerObject.titleNamespaceMonograph"
-              target-type="Title"
+              target-type="Book"
               :readonly="isReadonly"
               :label="$t('component.provider.titleNamespaceMonograph.label')"
               exclude-isxn
@@ -429,6 +429,7 @@
         messageColor: undefined,
         currentSnackBarTimeout: '-1',
         version: undefined,
+        lastLoad: undefined,
         providerObject: {
           id: undefined,
           ids: [],
@@ -619,7 +620,7 @@
           promise: providerServices.createOrUpdate(data, this.cancelToken.token),
           instance: this
         })
-        // todo: check error code
+
         if (response?.status < 400) {
           if (isUpdate) {
             this.messageColor = 'success'
@@ -677,7 +678,7 @@
         this.allPlatforms = []
         this.offices = []
         this.errors = {}
-        this.lastLoad = {}
+        this.lastLoad = undefined
         this.updateUrl = undefined
         this.showSnackbar = false
         this.version = undefined
@@ -739,9 +740,13 @@
           source: data.source,
           homepage: data.homepage,
           titleNamespace: data.titleNamespace,
+          titleNamespaceSerial: data.titleNamespaceSerial,
+          titleNamespaceMonograph: data.titleNamespaceMonograph,
           packageNamespace: data.packageNamespace,
           preferredShortname: data.preferredShortname
         }
+
+        this.lastLoad = structuredClone(new_item_info)
 
         new_item_info.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
           id,
@@ -771,11 +776,6 @@
           updateUrl: platform._links.update.href,
           isDeletable: !!this.updateUrl
         }))
-
-        this.providerObject.titleNamespace = data.titleNamespace
-        this.providerObject.titleNamespaceSerial = data.titleNamespaceSerial
-        this.providerObject.titleNamespaceMonograph = data.titleNamespaceMonograph
-        this.providerObject.packageNamespace = data.packageNamespace
 
         this.offices = data._embedded.offices?.map(office => ({
           ...office,
