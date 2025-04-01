@@ -31,21 +31,50 @@
           <gokb-checkbox-field
             v-model="useStrict"
             class="pt-4"
-            :label="$t('kbart.validator.mode')"
+            :label="$t('kbart.validator.mode.label')"
             :disabled="importRunning"
           />
         </v-col>
       </v-row>
       <v-row
         v-if="selectedFile"
-        class="px-12"
+        class="px-14"
       >
-        <v-col>
+        <v-col v-if="!mixedContent" cols="3">
           <gokb-namespace-field
             v-model="options.selectedNamespace"
             target-type="Title"
-            width="400px"
+            width="100%"
             :label="$t('kbart.propId.label')"
+          />
+        </v-col>
+        <v-col v-else cols="6">
+          <v-row>
+            <v-col cols="6">
+              <gokb-namespace-field
+                v-model="options.selectedNamespaceSerial"
+                target-type="Title"
+                width="100%"
+                :label="$t('kbart.propIdSerial.label')"
+              />
+            </v-col>
+            <v-col cols="6">
+              <gokb-namespace-field
+                v-model="options.selectedNamespaceMonograph"
+                target-type="Title"
+                width="100%"
+                :label="$t('kbart.propIdMonograph.label')"
+              />
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col>
+          <gokb-checkbox-field
+            v-model="mixedContent"
+            class="pt-4"
+            :label="$t('kbart.propId.typed.label')"
+            :disabled="importRunning"
+            dense
           />
         </v-col>
       </v-row>
@@ -59,149 +88,28 @@
         <span class="pl-4">{{ $t('kbart.processing.started') }}</span>
       </v-col>
     </v-row>
-    <gokb-section
-      :sub-title="$t('header.results')"
+
+    <v-row v-if="errors.length > 0">
+      <v-col>
+        <v-alert type="error" >
+          {{ $tc('kbart.validator.alert.encoding' ) }}
+        </v-alert>
+      </v-col>
+      <v-col>
+
+      </v-col>
+    </v-row>
+
+    <gokb-export-validator-results
       v-if="showResults"
-    >
+      :disabled="!executedOnce"
+      :validator-result="loadedFile"
+      :selected-file="selectedFile"
+    />
 
-      <v-row
-        v-if="loadedFile.errors.missingColumns.length > 0"
-        class="pa-4"
-      >
-        <v-col>
-          <h4>{{ $tc('kbart.processing.error.structure') }}</h4>
-          <ul>
-            <li
-              v-for="er in loadedFile.errors.missingColumns"
-              :key="er"
-              class="ml-4">
-              {{ $tc('kbart.errors.missingCols' ) + ' ' + er }}
-            </li>
-          </ul>
-        </v-col>
-
-        <v-col>
-          <v-alert type="error">
-            {{ useStrict ? $tc('kbart.validator.alert.strict.error' ) : $tc('kbart.validator.alert.lax.error' ) }}
-          </v-alert>
-        </v-col>
-
-      </v-row>
-
-      <v-row
-        v-if="loadedFile.warnings.missingColumns.length > 0"
-        class="pa-4"
-      >
-        <v-col>
-          <h4>{{ $tc('kbart.processing.warning.structure') }}</h4>
-          <ul>
-            <li
-              v-for="w in loadedFile.warnings.missingColumns"
-              :key="w"
-              class="ml-4">
-              {{ $tc('kbart.errors.missingCols' ) + ' ' + w }}
-            </li>
-          </ul>
-        </v-col>
-
-        <v-col>
-          <v-alert type="warning">
-            {{ $tc('kbart.validator.alert.lax.warning' ) }}
-          </v-alert>
-        </v-col>
-
-
-      </v-row>
-
-      <v-row
-        v-if="showRowResults"
-        class="pa-4"
-      >
-        <v-col>
-          <h4>
-            {{ $t('kbart.processing.rowStats') }}
-          </h4>
-          <span class="mr-4">{{ $t('kbart.processing.total.label') }}: {{ loadedFile.rows.total || '0' }}</span>
-          <span class="mr-4">{{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }}</span>
-          <span class="mr-4">{{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}</span>
-        </v-col>
-      </v-row>
-      <v-row
-        v-if="loadedFile.rows.error > 0"
-        class="px-4"
-      >
-        <v-col>
-          <h4>
-            {{ $t('kbart.processing.error.fields') }}
-          </h4>
-          <ul
-            v-for="(val, col) in loadedFile.errors.type"
-            :key="col"
-            class="ml-4"
-          >
-            <li>
-              <b>{{ col }}</b> - {{ val }}
-            </li>
-          </ul>
-        </v-col>
-      </v-row>
-      <v-row
-        v-if="loadedFile.rows.warning > 0"
-        class="px-4"
-      >
-        <v-col>
-          <h4>
-            {{ $t('kbart.processing.warning.fields') }}
-          </h4>
-          <ul
-            v-for="(val, col) in loadedFile.warnings.type"
-            :key="col"
-            class="ml-4"
-          >
-            <li>
-              <b>{{ col }}</b> - {{ val }}
-            </li>
-          </ul>
-        </v-col>
-      </v-row>
-      <v-row
-        v-if="loadedFile.rows.error > 0 || loadedFile.rows.warning > 0"
-        class="pa-4"
-      >
-        <v-col>
-          <v-expansion-panels>
-            <v-expansion-panel>
-              <v-expansion-panel-title>
-                {{ $tc('kbart.processing.error.label', 2) }}
-              </v-expansion-panel-title>
-              <v-expansion-panel-text>
-                <v-data-table
-                  :items="loadedFile.errors.single"
-                  :headers="errorHeaders"
-                  width="1000px"
-                  :sort-by="[{key: 'row', order: 'asc'}]"
-                />
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-            <v-expansion-panel>
-              <v-expansion-panel-title>
-                {{ $tc('kbart.processing.warning.label', 2) }}
-              </v-expansion-panel-title>
-              <v-expansion-panel-text>
-                <v-data-table
-                  :items="loadedFile.warnings.single"
-                  :headers="errorHeaders"
-                  :sort-by="[{key: 'row', order: 'asc'}]"
-                >
-                </v-data-table>
-              </v-expansion-panel-text>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-col>
-      </v-row>
-    </gokb-section>
     <template #buttons>
       <v-spacer />
+
       <gokb-button
         text
         @click.prevent="reset"
@@ -211,7 +119,7 @@
       <gokb-button
         color="primary"
         is-submit
-        :disabled="!selectedFile || importRunning || completion === 100"
+        :disabled="!selectedFile || importRunning || completion === 100 || errors.length > 0"
       >
         {{ $t('btn.validate') }}
       </gokb-button>
@@ -222,9 +130,13 @@
 <script>
 import baseComponent from '@/shared/components/base-component'
 import kbartServices from '@/shared/services/kbart-services'
+import exportServices from '@/shared/services/export-services'
+import GokbExportValidatorResults
+  from "../shared/components/complex/gokb-export-validator-results/gokb-export-validator-results.vue";
 
 export default {
   name: 'KbartValidatorView',
+  components: {GokbExportValidatorResults},
   extends: baseComponent,
   data () {
     return {
@@ -261,25 +173,26 @@ export default {
     }
   },
   computed: {
-    errorHeaders () {
+    /* errorHeaders () {
       return [
         { title: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
         { title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
         { title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
       ]
-    },
+    }, */
     expandWidth () {
       return (this.loadedFile.rows.error > 0 || this.loadedFile.rows.warning > 0) ? 1000 : 400
     },
     showResults () {
       return (this.completion === 100 || (this.completion === 0 && this.executedOnce))
     },
-    showRowResults () {
+    /*showRowResults () {
       return (this.loadedFile.errors.missingColumns.length === 0 && this.errors.length === 0)
-    }
+    } */
   },
   watch: {
     selectedFile () {
+      this.errors = []
       this.options.lineCount = undefined
       this.completion = 0
       this.loadedFile.rows = { total: 0, warning: 0, error: 0 }
@@ -313,52 +226,17 @@ export default {
       this.errors = []
       this.importRunning = true
       this.completion = 0
-      var namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+      let namespaceName = !!this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
+        let namespaceNameSerial = !!this.selectedNamespaceSerial ? this.selectedNamespaceSerial.value : undefined
+        let namespaceNameMonograph = !!this.selectedNamespaceMonograph ? this.selectedNamespaceMonograph.value : undefined
 
-      const validationResult = await kbartServices.validate(this.selectedFile, namespaceName, this.useStrict, this.cancelToken.token)
+      const validationResult = await kbartServices.validate(this.selectedFile, namespaceName, this.useStrict, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 
-      if (validationResult.status === 200 && validationResult?.data?.report) {
-        /*if (validationResult.data.errors.missingColumns?.length > 0) {
-          validationResult.data.errors.missingColumns.forEach(error => {
-            this.errors.push(this.$i18n.t('kbart.errors.missingCols', [error] ))
-          })
-        } */
-
+      if (validationResult.status === 200 && validationResult?.data?.errors.hasOwnProperty("encoding")) {
+        this.errors.push(this.$i18n.t('kbart.errors.encoding'))
+      }
+      else if (validationResult.status === 200 && validationResult?.data?.report) {
         this.loadedFile = validationResult.data.report
-
-        let typedReport = !!this.loadedFile.errors.type
-
-        this.loadedFile.errors.single = []
-        Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) => {
-          Object.entries(colobj).forEach(([colname, eo]) => {
-            this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
-
-            if (!this.loadedFile.errors.type[colname]) {
-              this.loadedFile.errors.type[colname] = 1
-            } else if (!typedReport) {
-              this.loadedFile.errors.type[colname]++
-            }
-          })
-        })
-
-        typedReport = !!this.loadedFile.warnings.type
-
-        this.loadedFile.warnings.single = []
-        Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) => {
-          Object.entries(colobj).forEach(([colname, wo]) => {
-            this.loadedFile.warnings.single.push({
-              row: rownum,
-              column: colname,
-              reason: this.$i18n.t(wo.messageCode, wo.args)
-            })
-
-            if (!this.loadedFile.warnings.type[colname]) {
-              this.loadedFile.warnings.type[colname] = 1
-            } else if (!typedReport) {
-              this.loadedFile.warnings.type[colname]++
-            }
-          })
-        })
 
         this.options.lineCount = validationResult.data.report.rows.total
         this.completion = 100

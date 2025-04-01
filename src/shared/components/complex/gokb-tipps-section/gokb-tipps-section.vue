@@ -26,6 +26,7 @@
       <gokb-kbart-import-popup
         v-if="kbartImportPopupVisible"
         v-model="kbartImportPopupVisible"
+        :content-type="contentType"
         :provider="provider"
         @kbart="addKbartFile"
       />
@@ -301,6 +302,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      contentType: {
+        type: Object,
+        required: false,
+        default: undefined
       },
       isImportFromExternalSource: {
         type: Boolean,

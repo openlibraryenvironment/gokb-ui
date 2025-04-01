@@ -267,6 +267,7 @@
                     url="refdata/categories/Package.ContentType"
                     :label="$t('component.package.contentType.label')"
                     :readonly="isReadonly"
+                    return-object
                     dense
                   />
                 </v-col>
@@ -453,6 +454,7 @@
               :is-import-from-external-source="!!externalSource"
               :platform="packageItem.nominalPlatform"
               :provider="packageItem.provider"
+              :content-type="packageItem.contentType"
               :disabled="isReadonly"
               :api-errors="errors?.tipps"
               @kbart="setKbart"
@@ -462,7 +464,8 @@
               v-if="loggedIn"
               ref="source"
               v-model="sourceItem"
-              :default-title-namespace="providerTitleNamespace"
+              :provider="providerSelect"
+              :content-type="packageItem.contentType"
               :expanded="false"
               :api-errors="errors?.source"
               :readonly="isReadonly"
@@ -891,7 +894,6 @@
         matchStatus: undefined,
         selectedJob: undefined,
         kbartProgress: undefined,
-        providerTitleNamespace: undefined,
         newTipps: [],
         packageItem: {
           id: undefined,
@@ -1054,11 +1056,6 @@
         }
 
         this.showSnackbar = false
-      },
-      'packageItem.provider' (prov) {
-        if (prov) {
-          this.fetchDefaultNamespace(prov.id)
-        }
       },
       step (val) {
         this.$refs?.descInfo?.refreshRows()
@@ -1397,8 +1394,17 @@
                 titleIdNamespace: this.kbart.selectedNamespace?.id || this.sourceItem?.targetNamespace?.id,
                 dryRun: this.kbart.dryRun,
                 addOnly: this.kbart.addOnly,
-                deleteMissing: this.kbart.deleteMissing
+                deleteMissing: this.kbart.deleteMissing,
               }
+
+              if (!!this.kbart.selectedNamespaceSerial) {
+                kbartPars.titleIdSerial = this.kbart.selectedNamespaceSerial.id
+              }
+
+              if (!!this.kbart.selectedNamespaceMonograph) {
+                kbartPars.titleIdMonograph = this.kbart.selectedNamespaceMonograph.id
+              }
+
               const kbartResult = await this.catchError({
                 promise: packageServices.ingestKbart(response.data.id, this.kbart.selectedFile, kbartPars, this.cancelToken.token),
                 instance: this
@@ -1591,6 +1597,7 @@
           this.packageItem.nominalPlatform = undefined
           this.allNames = { name: undefined, alts: [] }
         }
+        this.step = 1
         this.kbart = undefined
         this.showSnackbar = false
         this.reload(true)
@@ -1615,39 +1622,6 @@
           if (result?.status === 200) {
             this.mapRecord(result.data)
             this.updateStepErrors()
-
-            if (this.providerSelect) {
-              const providerResult = await this.catchError({
-                promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
-                instance: this
-              })
-
-              if (providerResult?.status === 200) {
-                const fullProvider = providerResult.data
-
-                if (fullProvider.titleNamespace) {
-                  this.providerTitleNamespace = fullProvider.titleNamespace
-                }
-              }
-            }
-
-            if (result?.data?._embedded?.source?.importConfig) {
-              this.externalSource = result.data._embedded.source.importConfig.name
-            }
-
-            /*if (result?.data?.source?.id) {
-              const sourceResult = await this.catchError({
-                promise: sourceServices.getSource(result?.data?.source?.id, this.cancelToken.token),
-                instance: this
-              })
-
-              if (sourceResult?.status === 200) {
-                if (sourceResult?.data?.importConfig) {
-                  this.externalSource = sourceResult.data.importConfig.name
-                }
-              }
-            } */
-
           } else if (result.status === 404) {
             this.notFound = true
           } else {
@@ -1665,18 +1639,32 @@
           }
         }
       },
-      async fetchDefaultNamespace (providerId) {
-        const providerResult = await this.catchError({
-          promise: providerServices.get(providerId, this.cancelToken.token),
+      async verifyTitleList () {
+        const response = await this.catchError({
+          promise: packageServices.createOrUpdate({
+            id: this.packageItem.id,
+            listStatus: this.packageItem.listStatus,
+            updateVerifyDate: true
+          },
+          this.cancelToken.token),
           instance: this
         })
 
-        if (providerResult?.status === 200) {
-          const fullProvider = providerResult.data
-
-          if (fullProvider.titleNamespace) {
-            this.providerTitleNamespace= fullProvider.titleNamespace
-          }
+        if (response.status === 200) {
+          this.messageColor = 'success'
+          this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.currentSnackBarTimeout = 4000
+          this.showSnackbar = true
+          this.reload()
+        }
+        else {
+          this.messageColor = 'error'
+          this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
+          this.currentSnackBarTimeout = -1
+          this.showSnackbar = true
+          this.errors = response?.data?.error || {}
+          this.updateStepErrors()
+          this.step = 1
         }
       },
       async loadImportJobStatus (jobId) {

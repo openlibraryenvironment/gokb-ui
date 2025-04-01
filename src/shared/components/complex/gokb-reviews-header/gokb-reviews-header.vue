@@ -69,7 +69,7 @@
       dense
     >
       <v-col md="12">
-        <div v-if="reviewComponent.stdDesc && reviewComponent.stdDesc.name != 'Manual Request'">
+        <div v-if="!!reviewComponent.stdDesc && reviewComponent.stdDesc.name != 'Manual Request'">
           <v-row>
             <v-col md="12">
               <div>
@@ -107,7 +107,7 @@
                     </router-link>
                     <b v-else-if="numMessageVars > 0">{{ additionalVars[0] }}</b>
                     <router-link
-                      v-else-if="reviewComponent.otherComponents && reviewComponent.otherComponents.length > 0"
+                      v-else-if="!!reviewComponent.otherComponents && reviewComponent.otherComponents.length > 0"
                       :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
                       :style="{ color: 'primary' }"
                     >
@@ -154,7 +154,7 @@
                 </i18n-t>
               </div>
               <div
-                v-if="!hasComponentCards && reviewComponent.additionalInfo && reviewComponent.additionalInfo.candidates"
+                v-if="!hasComponentCards && !!reviewComponent.additionalInfo && !!reviewComponent.additionalInfo.candidates"
                 class="pt-3"
               >
                 <label
@@ -205,7 +205,7 @@
               </div>
             </v-col>
           </v-row>
-          <v-row v-if="editable && reviewComponent.stdDesc && !hasComponentCards">
+          <v-row v-if="editable && !!reviewComponent.stdDesc && !hasComponentCards">
             <v-col>
               <div>
                 <label
@@ -239,6 +239,21 @@
                   </template>
                 </i18n-t>
               </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <label
+                class="v-label"
+                style="display:block;font-size:0.9em;"
+                for="more-info"
+              >
+                {{ $t('component.review.referenceBase.label') }}
+              </label>
+              <a id="more-info" :href="moreInfoLink" class="text-primary" target="_blank">
+                {{ $t('component.review.referenceBase.message', [typeLabel]) }}
+                <v-icon size="small" class="ml-1 mt-n1"> mdi-open-in-new </v-icon>
+              </a>
             </v-col>
           </v-row>
         </div>
@@ -339,6 +354,12 @@
       },
       localAction () {
         return this.reviewComponent?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewComponent.stdDesc.value || this.reviewComponent.stdDesc.name) + '.action') : undefined
+      },
+      typeLabel () {
+        return this.reviewComponent?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewComponent.stdDesc.value || this.reviewComponent.stdDesc.name) + '.label') : undefined
+      },
+      moreInfoLink () {
+        return !!this.reviewComponent.stdDesc ? this.$i18n.t('component.review.referenceBase.urlBase') + '#' + this.reviewComponent.stdDesc.name.replace(/\s/g, '_').toLowerCase() : undefined
       }
     }
   }

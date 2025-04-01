@@ -61,10 +61,20 @@
           </v-col>
           <v-col cols="3" xl="2">
             <gokb-namespace-field
-              v-model="providerObject.titleNamespace"
+              v-model="providerObject.titleNamespaceSerial"
               target-type="Title"
               :readonly="isReadonly"
-              :label="$t('component.provider.titleNamespace.label')"
+              :label="$t('component.provider.titleNamespaceSerial.label')"
+              exclude-isxn
+            />
+          </v-col>
+          <v-col cols="3" xl="2">
+            <gokb-namespace-field
+              v-model="providerObject.titleNamespaceMonograph"
+              target-type="Title"
+              :readonly="isReadonly"
+              :label="$t('component.provider.titleNamespaceMonograph.label')"
+              exclude-isxn
             />
           </v-col>
           <v-col cols="3" xl="2">
@@ -425,6 +435,8 @@
           status: undefined,
           source: undefined,
           titleNamespace: undefined,
+          titleNamespaceSerial: undefined,
+          titleNamespaceMonograph: undefined,
           packageNamespace: undefined,
           homepage: undefined,
         }
@@ -676,6 +688,8 @@
           status: undefined,
           source: undefined,
           titleNamespace: undefined,
+          titleNamespaceMonograph: undefined,
+          titleNamespaceSerial: undefined,
           packageNamespac: undefined,
           homepage: undefined,
           preferredShortname: undefined
@@ -757,6 +771,11 @@
           updateUrl: platform._links.update.href,
           isDeletable: !!this.updateUrl
         }))
+
+        this.providerObject.titleNamespace = data.titleNamespace
+        this.providerObject.titleNamespaceSerial = data.titleNamespaceSerial
+        this.providerObject.titleNamespaceMonograph = data.titleNamespaceMonograph
+        this.providerObject.packageNamespace = data.packageNamespace
 
         this.offices = data._embedded.offices?.map(office => ({
           ...office,
