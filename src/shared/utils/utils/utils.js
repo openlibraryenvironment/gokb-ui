@@ -40,6 +40,29 @@ const api = {
     return pars.join('&')
   },
 
+  createQueryParameterMap (parameters) {
+    const pars = {}
+
+    Object.entries(parameters)
+      .forEach(([name, value]) => {
+        if (Array.isArray(value)) {
+          pars[name] = []
+
+          value.forEach(val =>
+            pars[name].push(`${typeof val === 'string' ? encodeURIComponent(val.trim()) : val}`)
+          )
+        } else if (value !== undefined && value !== null) {
+          if (typeof value === 'object') {
+            pars[name] = `${value.id || value.name }`
+          } else {
+            pars[name] = `${typeof value === 'string' ? encodeURIComponent(value.trim()) : value}`
+          }
+        }
+      })
+
+    return pars
+  },
+
   toRawDeep(observed) {
     const val = toRaw(observed)
 

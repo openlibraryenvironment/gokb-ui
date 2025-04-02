@@ -192,7 +192,7 @@ const api = (log, errorModel, accountModel, createRouter, HomeView, loading, cre
       {
         path: NOT_FOUND_ROUTE,
         meta: {
-          code: 'route.noaccess'
+          code: 'route.notFound'
         },
         component: () => import('@/views/not-found-view.vue')
       },
@@ -210,6 +210,7 @@ const api = (log, errorModel, accountModel, createRouter, HomeView, loading, cre
   router.beforeEach(async ({ path: toPath }, { path: fromPath }, next) => {
     loading.startLoading()
     log.debug(`navigation from ${fromPath} to path ${toPath}`)
+
     if (toPath !== ERROR_ROUTE) {
       if (!accountModel.isInitialized()) {
         try {

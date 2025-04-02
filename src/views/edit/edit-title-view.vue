@@ -630,7 +630,7 @@
         }
       },
       tab (val) {
-        history.pushState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
+        history.replaceState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
       }
     },
     async created () {

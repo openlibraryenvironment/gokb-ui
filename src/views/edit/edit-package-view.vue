@@ -1061,7 +1061,7 @@
         this.$refs?.descInfo?.refreshRows()
         this.$refs?.descEdit?.refreshRows()
 
-        history.pushState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
+        history.replaceState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
       },
       isValid (val) {
         if (!val) {
