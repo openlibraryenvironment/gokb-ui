@@ -1164,14 +1164,16 @@
             return true
           }
           else if (this.lastLoad.source.hasOwnProperty('url')) {
+            let trackedFields = ['url', 'automaticUpdates', 'targetNamespace', 'frequency', 'titleIdMonograph', 'titleIdSerial']
+
             for (var [key, val] of Object.entries(this.lastLoad.source)) {
-              if (typeof val === 'object') {
+              if (trackedFields.includes(key) && typeof val === 'object') {
                 if (utils.hasLinkedFieldChanged(val, this.sourceItem[key])) {
                   log.debug('hasUnsavedChanges :: source object field changed: ' + key)
                   return true
                 }
               }
-              else if (val !== this.sourceItem[key]) {
+              else if (trackedFields.includes(key) && val !== this.sourceItem[key]) {
                 log.debug('hasUnsavedChanges :: source simple field changed: ' + key + ' (' + this.sourceItem[key] + '->' + val + ')')
                 return true
               }
@@ -1791,6 +1793,7 @@
 
         const new_item_info = {
           id: data.id,
+          type: 'package',
           name: data.name,
           status: data.status,
           descriptionURL: data.descriptionURL,
@@ -1847,10 +1850,10 @@
         }
         else if (!!data.source) {
           this.sourceItem = data.source
-          this.lastLoad.source = structuredClone(data.source)
 
           if (!!this.$refs.source) {
             this.$refs.source.fetch(this.sourceItem.id)
+            this.lastLoad.source = structuredClone(this.sourceItem)
           }
         }
 
