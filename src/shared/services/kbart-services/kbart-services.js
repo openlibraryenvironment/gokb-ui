@@ -18,11 +18,17 @@ const api = (baseServices) => ({
         }, cancelToken)
       }
     },
-    validate (file, namespace, strict, cancelToken) {
+    validate (file, namespace, strict, namespaceSerial, namespaceMonograph, cancelToken) {
       const data = new FormData()
       data.append('submissionFile', file)
       if (namespace) {
         data.append('namespace', namespace)
+      }
+      if (namespaceSerial) {
+        data.append('namespaceSerial', namespaceSerial)
+      }
+      if (namespaceMonograph) {
+        data.append('namespaceMonograph', namespaceMonograph)
       }
       if (strict) {
         data.append('strict', 'true')
@@ -35,6 +41,13 @@ const api = (baseServices) => ({
         data
       }, cancelToken)
       return result
+    },
+    lookup (id, type, cancelToken) {
+      const url = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart/${id}?exportType=${type}`
+      return baseServices.request({
+        method: 'HEAD',
+        url
+      }, cancelToken)
     }
 })
 

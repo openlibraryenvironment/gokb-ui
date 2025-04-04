@@ -1,13 +1,17 @@
 const api = () => ({
-  downloadUri (uri) {
+  downloadUri (uri, opts) {
     var link = document.createElement("a")
-    link.setAttribute('download', 'searchresult.csv')
+    let filename = 'searchresult.csv'
+    if (opts.filename) {
+      filename = opts.filename
+    }
+    link.setAttribute('download', filename)
     link.href = uri
     document.body.appendChild(link)
     link.click()
     link.remove()
   },
-  toTsv (headers, itemsList) {
+  toTsv (headers, itemsList, opts) {
     if (!itemsList.length) {
       return 'ERROR'
     }
@@ -22,7 +26,7 @@ const api = () => ({
       }
       result += row + '\r\n'
     }
-    this.downloadUri(URL.createObjectURL(new Blob([result], { type: 'data:text/csv;charset=utf-8,'})))
+    this.downloadUri(URL.createObjectURL(new Blob([result], { type: 'data:text/csv;charset=utf-8,'})), opts)
 
     return 'OK'
   }

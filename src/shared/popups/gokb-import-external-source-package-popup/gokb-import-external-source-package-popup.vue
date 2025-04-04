@@ -246,7 +246,7 @@
           <gokb-namespace-field
             v-model="namespaceJournal"
             target-type="Journal"
-            :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.journals')])"
+            :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.serials')])"
             exclude-isxn
           />
         </v-col>
@@ -868,12 +868,8 @@
             pckg.ids.push(id)
           }
 
-          // TODO: Übergangslösung bis wir 2 Felder für Title-Namespaces haben
-          if (this.contentTypeOfTipps === "Book" || this.contentTypeOfTipps === "Mixed") {
-            this.externalSourceInfo.targetNamespace = this.namespaceMonograph
-          } else {
-            this.externalSourceInfo.targetNamespace = this.namespaceJournal
-          }
+          this.externalSourceInfo.titleIdMonograph = this.namespaceMonograph
+          this.externalSourceInfo.titleIdSerial = this.namespaceJournal
 
           const allData = {
             platform: platformObject,
