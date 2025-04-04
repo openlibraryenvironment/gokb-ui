@@ -524,11 +524,11 @@
                           />
                         </v-col>
                         <v-col cols="11" v-else>
-                          <!-- <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
-                            {{ $t('popups.externalSourceImport.selectLabel') }}
-                          </div> -->
+                          <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
+                            Import
+                          </div>
                           <v-chip
-                            text="AUTOUPDATE"
+                            text="AUTO"
                             class="text-button"
                             rounded="lg"
                             color="blue"
@@ -1567,7 +1567,7 @@
 
             if (result?.data?._embedded?.source?.importConfig) {
               this.externalSource = result.data._embedded.source.importConfig.name
-            } else if (result?.data?._embedded?.source?.automaticUpdates) {
+            } else if (result?.data?._embedded?.source?.automaticUpdates && result?.data?._embedded?.source?.frequency) {
               this.autoUpdate = true
             }
 
