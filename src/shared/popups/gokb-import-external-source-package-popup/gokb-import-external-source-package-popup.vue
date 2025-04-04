@@ -484,7 +484,7 @@
                 importConfig: this.externalSourceType,
                 url: 'https://wekb.hbz-nrw.de/api2/searchApi?componentType=package&uuid='.concat(this.external_package_uuid.replaceAll(" ", "")),
                 frequency: frequencyCode,
-                targetNamespace: {},
+                targetNamespace: undefined,
                 automaticUpdates: true,
                 update: true
               }
