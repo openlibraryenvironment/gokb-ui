@@ -40,7 +40,7 @@
               <v-row>
                 <v-col cols="6">
                   <gokb-state-select-field
-                    v-if="!!status"
+                    v-if="!!packageTitleItem.status"
                     v-model="packageTitleItem.status"
                     :deletable="!!deleteUrl"
                     :editable="!!updateUrl"
@@ -48,7 +48,7 @@
                 </v-col>
                 <v-col cols="6">
                   <gokb-uuid-field
-                    v-if="!!status"
+                    v-if="!!packageTitleItem.status"
                     :label="$t('component.general.uuid.label')"
                     v-model="uuid"
                     path="/package-title"
@@ -481,7 +481,7 @@
         {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
       </gokb-button>
       <gokb-button
-        v-if="updateUrl || !status"
+        v-if="updateUrl || !packageTitleItem.status"
         :disabled="!isValid"
         class="mr-6"
         is-submit
@@ -574,7 +574,6 @@
         snackbarMessage: undefined,
         messageColor: undefined,
         currentSnackBarTimeout: '-1',
-        status: undefined,
         version: undefined,
         items: [],
         id: undefined,
@@ -985,6 +984,11 @@
 
         new_item_info.ids = data.ids
 
+        this.version = data.version
+        this.lastUpdated = data.lastUpdated
+        this.dateCreated = data.dateCreated
+        this.updateUrl = data.updateUrl
+        this.deleteUrl = data.deleteUrl
         this.id = data.id
         this.uuid = data.uuid
         this.packageTitleItem.id = this.id
