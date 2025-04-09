@@ -4,7 +4,9 @@
     :title="header"
     :width="1000"
     :min-height="800"
+    needs-close-confirm
     @submit="submitTipp"
+    @confirm-close="checkForChanges"
   >
     <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
         {{ snackbarMessage }}
@@ -160,6 +162,7 @@
               :mark-required="!isEdit"
               :disabled="isReadonly"
               :expanded="false"
+              @update="addPendingChange"
             />
           </v-col>
         </v-row>
@@ -170,6 +173,7 @@
                 :disabled="isReadonly"
                 :api-errors="errors?.subjects"
                 :expanded="false"
+                @update="addPendingChange"
               />
           </v-col>
         </v-row>
@@ -472,7 +476,7 @@
       <gokb-button
         class="mr-6"
         color="secondary"
-        @click.prevent="close"
+        @click.prevent="checkForChanges"
       >
         {{ updateUrl ? $t('btn.cancel') : $t('btn.close') }}
       </gokb-button>
@@ -493,6 +497,8 @@
   import accountModel from '@/shared/models/account-model'
   import tippServices from '@/shared/services/tipp-services'
   import { EDIT_TITLE_ROUTE, EDIT_TIPP_ROUTE } from '@/router/route-paths'
+  import utils from '@/shared/utils/utils'
+  import log from '@/shared/utils/logger'
 
   const URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/
 
@@ -579,6 +585,7 @@
         },
         lastUpdated: undefined,
         dateCreated: undefined,
+        lastLoad: undefined,
         packageTitleItem: {
           title: undefined,
           pkg: undefined,
@@ -616,7 +623,8 @@
           volumeNumber: undefined,
           editionStatement: undefined,
           medium: undefined,
-          lastChangedExternal: undefined
+          lastChangedExternal: undefined,
+          pendingChanges: {}
         }
       }
     },
@@ -680,8 +688,8 @@
     watch: {
       'packageTitleItem.title': {
         handler(title) {
-          if (!this.status) {
-            if (!!title) {
+          if (!this.packageTitleItem.status) {
+            if (!!title && !!title._embedded) {
               this.packageTitleItem.ids = title._embedded.ids
                 .filter(({ namespace }) => (
                   ['issn', 'eissn', 'isbn', 'pisbn', 'zdb'].includes(namespace.value))
@@ -727,6 +735,68 @@
       this.showLoading = false
     },
     methods: {
+      checkForChanges () {
+        if (this.isReadonly || !this.hasUnsavedChanges()) {
+          this.close()
+        }
+        else {
+          const confirmed = window.confirm(this.$i18n.t('popups.confirm.pendingChanges.label'))
+
+          if (confirmed) {
+            this.close()
+          }
+        }
+      },
+      addPendingChange (prop) {
+        if (!this.pendingChanges[prop]) {
+          this.pendingChanges[prop] = true
+        }
+      },
+      hasUnsavedChanges () {
+        log.debug("Check for unsaved changes ..")
+        if (!!this.pendingChanges && Object.keys(this.pendingChanges).length > 0) {
+          log.debug('hasUnsavedChanges :: pendingChanges: ' + this.pendingChanges)
+          return true
+        }
+
+        if (!!this.lastLoad) {
+          for (var [key, val] of Object.entries(this.lastLoad)) {
+            if (key === 'name' && this.allNames.name !== val) {
+              return true
+            }
+            else if (key === 'coverageStatements') {
+              if (val.length !== this.packageTitleItem.coverageStatements.length) {
+                return true
+              }
+              else if (JSON.stringify(val) !== JSON.stringify(this.packageTitleItem.coverageStatements)) {
+                return true
+              }
+            }
+            else if (typeof val === 'array') {
+              // Array fields will have already been handled by check for entries in this.pendingChanges
+            }
+            else if (typeof val === 'object') {
+              if (this.packageTitleItem.hasOwnProperty(key) && utils.hasLinkedFieldChanged(val, this.packageTitleItem[key])) {
+                log.debug('hasUnsavedChanges :: changed linked field ' + key + '!')
+                return true
+              }
+            }
+            else if (this.packageTitleItem.hasOwnProperty(key) && val !== this.packageTitleItem[key]) {
+              log.debug('hasUnsavedChanges :: changed field ' + key + ': ' + val + '<>' + this.packageTitleItem[key])
+              return true
+            }
+          }
+        }
+        else if (!!this.allNames.name || !!this.packageTitleItem.url) {
+          log.debug('hasUnsavedChanges :: no lastload, pending name!')
+          return true
+        }
+
+        return false
+      },
+      close () {
+        this.localValue = false
+      },
       async submitTipp () {
         this.errors = {}
         this.showSnackbar = false
@@ -753,7 +823,6 @@
               scheme: subject.scheme
             })),
             status: typeof this.packageTitleItem.status === 'string' ? { name: this.packageTitleItem.status } : this.packageTitleItem.status,
-            id: this.id,
             activeGroup: activeGroup
           }
 
@@ -844,9 +913,6 @@
       tempId () {
         return 'tempTippId' + Math.random().toString(36).substring(2, 5)
       },
-      close () {
-        this.localValue = false
-      },
       decodeEmbargo () {
         const matches = this.packageTitleItem.coverageStatement.embargo?.match(/^([P,R]?)([0-9]*)([D,M,Y]?)$/)
         const [, type, duration, unit] = matches || []
@@ -859,9 +925,11 @@
         this.$router.push({ name: EDIT_TIPP_ROUTE, params: { id: this.id } })
       },
       addNewCoverage () {
+        this.pendingChanges.coverage = true
         this.packageTitleItem.coverageStatements.push(this.coverageObject)
       },
       removeCoverage (idx) {
+        this.pendingChanges.coverage = true
         this.packageTitleItem.coverageStatements.splice(idx, 1)
 
         if (this.packageTitleItem.coverageStatements.length === 0) {
@@ -869,51 +937,59 @@
         }
       },
       mapRecord (data) {
-        this.packageTitleItem.hostPlatform = data.hostPlatform
-        this.packageTitleItem.name = data.name
-        this.packageTitleItem.pkg = data.pkg
-        this.packageTitleItem.title = data.title
-        this.packageTitleItem.url = data.url
-        this.packageTitleItem.uuid = data.uuid
-        this.packageTitleItem.paymentType = data.paymentType
-        this.packageTitleItem.accessStartDate = data.accessStartDate
-        this.packageTitleItem.accessEndDate = data.accessEndDate
-        this.packageTitleItem.ids = data.ids
-        this.packageTitleItem.series = data.series
-        this.packageTitleItem.subjects = data.subjects
-        this.packageTitleItem.subjectArea = data.subjectArea
-        this.packageTitleItem.publisherName = data.publisherName
-        this.packageTitleItem.dateFirstInPrint = data.dateFirstInPrint
-        this.packageTitleItem.dateFirstOnline = data.dateFirstOnline
-        this.packageTitleItem.firstAuthor = data.firstAuthor
-        this.packageTitleItem.firstEditor = data.firstEditor
-        this.packageTitleItem.publicationType = data.publicationType
-        this.packageTitleItem.volumeNumber = data.volumeNumber
-        this.packageTitleItem.editionStatement = data.editionStatement
-        this.packageTitleItem.medium = data.medium
-        this.packageTitleItem.lastChangedExternal = data.lastChangedExternal
-        this.packageTitleItem.status = data.status
-        this.packageTitleItem.importId = data.importId
-        this.updateUrl = data.updateUrl
-        this.deleteUrl = data.deleteUrl
-        this.status = data.status
-        this.version = data.version
-        this.lastUpdated = data.lastUpdated
-        this.dateCreated = data.dateCreated
-        this.allNames.name = data.name
-        this.allNames.alts = data.variantNames
+        const new_item_info = {
+          hostPlatform: data.hostPlatform,
+          name: data.name,
+          pkg: data.pkg,
+          title: data.title,
+          url: data.url,
+          uuid: data.uuid,
+          paymentType: data.paymentType,
+          accessStartDate: data.accessStartDate,
+          accessEndDate: data.accessEndDate,
+          series: data.series,
+          subjectArea: data.subjectArea,
+          publisherName: data.publisherName,
+          dateFirstInPrint: data.dateFirstInPrint,
+          dateFirstOnline: data.dateFirstOnline,
+          firstAuthor: data.firstAuthor,
+          firstEditor: data.firstEditor,
+          publicationType: data.publicationType,
+          volumeNumber: data.volumeNumber,
+          editionStatement: data.editionStatement,
+          medium: data.medium,
+          lastChangedExternal: data.lastChangedExternal,
+          status: data.status,
+          importId: data.importId,
+        }
 
         if (data?.coverageStatements?.length) {
-          this.packageTitleItem.coverageStatements = data.coverageStatements.map(statement => ({
+          new_item_info.coverageStatements = data.coverageStatements.map(statement => ({
             ...statement,
             startDate: statement.startDate && this.buildDateString(statement.startDate),
             endDate: statement.endDate && this.buildDateString(statement.endDate)
           }))
         }
 
+        this.lastLoad = structuredClone(utils.toRawDeep(new_item_info))
+
+        new_item_info.subjects = data._embedded.subjects.map(subject => ({
+          ...subject,
+          isDeletable: !!this.updateUrl
+        }))
+
+        this.allNames = {
+          name: data.name,
+          alts: data.variantNames
+        }
+
+        new_item_info.ids = data.ids
+
         this.id = data.id
         this.uuid = data.uuid
         this.packageTitleItem.id = this.id
+
+        this.packageTitleItem = new_item_info
 
         if (data.title?.type) {
           this.titleTypeString = data.title.type

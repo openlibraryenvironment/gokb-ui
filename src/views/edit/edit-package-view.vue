@@ -1044,7 +1044,8 @@
     },
     watch: {
       loggedIn (value) {
-        if (value) {
+        if (!!value) {
+          log.debug("package-view :: loggedIn")
           this.reload()
         }
 
@@ -1070,7 +1071,7 @@
       }
     },
     async created () {
-      await this.reload()
+      await this.reload(false)
 
       if (!!this.initMessageCode) {
         if (this.initMessageCode.includes('success')) {
@@ -1604,7 +1605,7 @@
         this.showSnackbar = false
         this.reload(true)
       },
-      async reload () {
+      async reload (loadTipps = true) {
         if (this.isEdit) {
           if(!loading.isLoading()) {
             loading.startLoading()
@@ -1630,7 +1631,8 @@
             this.$router.push({name: '/error'})
           }
 
-          if (!!this.$refs.tipps) {
+          if (!!this.$refs.tipps && loadTipps) {
+            log.debug("reload :: fetchTipps")
             await this.$refs.tipps.fetchTipps()
           }
 

@@ -240,6 +240,7 @@
   import titleServices from '@/shared/services/title-services'
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
+  import log from '@/shared/utils/logger'
 
   const ROWS_PER_PAGE = 10
 
@@ -421,14 +422,18 @@
     },
     watch: {
       loggedIn (value) {
-        if (value) {
+        if (!!value) {
+          log.debug("tipp-section :: logged in")
           this.fetchTipps(this.searchOptions)
         }
       },
       searchFilters: {
         handler (val) {
-          this.searchOptions.page = 1
-          this.fetchTipps(this.searchOptions)
+          if (!!val) {
+            log.debug("tipp-section :: changed filters")
+            this.searchOptions.page = 1
+            this.fetchTipps(this.searchOptions)
+          }
         },
         deep: true
       },
@@ -443,7 +448,7 @@
     async mounted () {
       this.isExpanded = !this.expandable || this.expanded
 
-      if (this.ttl) {
+      if (!!this.ttl) {
         this.fetchTipps(this.searchOptions)
       }
     },
@@ -572,6 +577,8 @@
       },
       async fetchTipps () {
         if (this.pkg || this.ttl) {
+          log.debug("fetchTipps :: ", this.searchFilters)
+
           this.selectedItems = []
           const reqId = this.pkg || this.ttl
           const searchService = this.pkg ? packageServices : titleServices
@@ -609,7 +616,7 @@
                 {
                   ...tipp,
                   coverageStatements: tipp._embedded.coverageStatements,
-                  statusLocal: this.$i18n.t('component.general.status.' + tipp.status.name + '.label'),
+                  statusLocal: (this.$i18n && this.$i18n.t('component.general.status.' + tipp.status.name + '.label')),
                   dateFirstInPrint: tipp.dateFirstInPrint && this.buildDateString(tipp.dateFirstInPrint),
                   dateFirstOnline: tipp.dateFirstOnline && this.buildDateString(tipp.dateFirstOnline),
                   accessStartDate: tipp.accessStartDate && this.buildDateString(tipp.accessStartDate),
@@ -621,7 +628,7 @@
                   lastUpdated: this.buildDateString(tipp.lastUpdated),
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
-                  titleType: tipp.title?.type ? (this.$i18n.tc('component.title.type.' + tipp.title.type)) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
+                  titleType: !!tipp.title?.type ? (!!this.$i18n && this.$i18n.tc('component.title.type.' + tipp.title.type)) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
                   connectedTitleId: tipp.title?.id,
                   ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({
                     id,

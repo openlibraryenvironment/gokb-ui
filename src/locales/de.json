@@ -189,7 +189,7 @@
         "list": "Möchten Sie den Status von {0} Elementen wirklich auf {1} setzen?"
       },
       "pendingChanges": {
-        "label": "Es gibt ungespeicherte Änderungen! Sind Sie sicher, dass Sie die Seite verlassen möchten?"
+        "label": "Es gibt ungespeicherte Änderungen! Bitte bestätigen Sie, dass diese verworfen werden sollen."
       }
     },
     "login": {

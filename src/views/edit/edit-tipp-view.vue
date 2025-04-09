@@ -633,6 +633,7 @@
         deleteUrl: undefined,
         status: undefined,
         allNames: {},
+        lastLoad: undefined,
         titleType: undefined,
         importId: undefined,
         lastUpdated: undefined,

@@ -188,7 +188,7 @@
         "list": "Are you sure you want to set the status of {0} item(s) to {1}?"
       },
       "pendingChanges": {
-        "label": "You have unsaved changes! Are you sure you want to leave this site?"
+        "label": "You have unsaved changes! Are you sure you want to discard them?"
       }
     },
     "login": {
