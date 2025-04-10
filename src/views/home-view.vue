@@ -32,7 +32,7 @@
     title="Dashboard"
   >
     <v-alert type="info" v-if="!!systemInfo"> {{ systemInfo }}</v-alert>
-    <div v-if="isContrib && activeGroup">
+    <div v-if="isContrib && !!activeGroup">
       <gokb-reviews-section
         :group="activeGroup"
         :editable="true"
@@ -67,7 +67,6 @@
       return {
         groupId: -1,
         systemInfo: undefined,
-        activeGroup: undefined,
         groups: []
       }
     },
@@ -80,6 +79,9 @@
       },
       logoPath () {
         return this.$vuetify.theme.name === 'dark' ? './img/logo_dark.svg' : './img/logo_light.svg'
+      },
+      activeGroup () {
+        return account.activeGroup()
       }
     },
     watch: {
@@ -88,22 +90,12 @@
           this.$refs.jobs.stopAutoUpdate()
         }
       },
-      account: {
-        handler (val) {
-          if (!!val) {
-            this.activeGroup = account.activeGroup()
-          }
-        },
-        deep: true
-      },
       '$i18n.locale' (l) {
         this.checkForSystemUpdate()
       }
     },
     created () {
       this.checkForSystemUpdate()
-
-      this.activeGroup = account.activeGroup()
     },
     methods: {
       checkForSystemUpdate() {

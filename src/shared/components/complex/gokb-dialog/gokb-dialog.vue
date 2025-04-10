@@ -109,9 +109,9 @@
         get () {
           return this.isValid
         },
-        set (localValue) {
-          this.formIsValid = localValue
-          this.$emit('update-valid', localValue)
+        set (val) {
+          this.formIsValid = val
+          this.$emit('update-valid', val)
         }
       },
 
@@ -145,7 +145,7 @@
           this.$emit('confirm-close', true)
         }
         else {
-          this.modelValue = false
+          this.localValue = false
         }
       }
     }
