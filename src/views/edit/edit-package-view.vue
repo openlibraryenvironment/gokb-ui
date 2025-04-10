@@ -960,9 +960,6 @@
           },
           WEKB: {
             color: 'orange'
-          },
-          AUTOUPDATE: {
-            color: 'blue'
           }
         },
         autoUpdate: false
@@ -1312,6 +1309,8 @@
             instance: this
           })
 
+          let kbartMessage = undefined
+
           if (response?.status < 400) {
             this.packageItem.id = response.data.id
 
@@ -1338,7 +1337,6 @@
               })
 
               this.kbart = undefined
-              let kbartMessage = undefined
 
               if (kbartResult.status === 403) {
                 kbartMessage = 'kbart.transmission.error.denied'
@@ -1482,7 +1480,7 @@
         }
         else {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t('validation.hasErrors'),
+          this.snackbarMessage = this.$i18n.t('validation.hasErrors')
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         }
@@ -1550,41 +1548,11 @@
             this.mapRecord(result.data)
             this.updateStepErrors()
 
-            if (this.providerSelect) {
-              const providerResult = await this.catchError({
-                promise: providerServices.get(this.providerSelect.id, this.cancelToken.token),
-                instance: this
-              })
-
-              if (providerResult?.status === 200) {
-                const fullProvider = providerResult.data
-
-                if (fullProvider.titleNamespace) {
-                  this.providerTitleNamespace = fullProvider.titleNamespace
-                }
-              }
-            }
-
             if (result?.data?._embedded?.source?.importConfig) {
               this.externalSource = result.data._embedded.source.importConfig.name
-            } else if (result?.data?._embedded?.source?.automaticUpdates && result?.data?._embedded?.source?.frequency) {
+            } else if (result?.data?._embedded?.source?.automaticUpdates && result?.data?._embedded?.source?.frequency && result?.data?._embedded?.source?.url) {
               this.autoUpdate = true
             }
-
-            console.log("##### ", result)
-
-            /*if (result?.data?.source?.id) {
-              const sourceResult = await this.catchError({
-                promise: sourceServices.getSource(result?.data?.source?.id, this.cancelToken.token),
-                instance: this
-              })
-
-              if (sourceResult?.status === 200) {
-                if (sourceResult?.data?.importConfig) {
-                  this.externalSource = sourceResult.data.importConfig.name
-                }
-              }
-            } */
 
           } else if (result.status === 404) {
             this.notFound = true
