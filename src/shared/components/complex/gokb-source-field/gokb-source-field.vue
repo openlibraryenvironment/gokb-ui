@@ -262,7 +262,7 @@
             this.item.id = result.data.id
             this.lastRun = (result.data.lastRun ? new Date(result.data.lastRun).toLocaleString('sv') : undefined)
             this.item.targetNamespace = result.data.targetNamespace
-            this.item.frequency = result.data.frequency ? { value: result.data.frequency.name, name: this.$i18n.t('component.source.frequency.' + result.data.frequency.name + '.label'), id: result.data.frequency.id } : undefined
+            this.item.frequency = !!result.data.frequency ? { value: result.data.frequency.name, name: this.$i18n.t('component.source.frequency.' + result.data.frequency.name + '.label'), id: result.data.frequency.id } : undefined
             this.item.name = result.data.name
             this.item.url = result.data.url
             this.item.automaticUpdates = result.data.automaticUpdates
