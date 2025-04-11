@@ -10,6 +10,7 @@
       :label="$t('component.source.url')"
       :readonly="readonly || isImportFromExternalSource"
       replace-date
+      @valid="setUrlValid"
     />
     <v-row>
       <v-col cols="3">
@@ -119,7 +120,7 @@
   export default {
     name: 'GokbSourceField',
     extends: BaseComponent,
-    emits: ['update:model-value'],
+    emits: ['update:model-value', 'autoUpdateValid'],
     props: {
       label: {
         type: String,
@@ -176,6 +177,7 @@
         errors: [],
         mixedContent: false,
         isExpanded: true,
+        urlValid: true
       }
     },
     computed: {
@@ -187,12 +189,16 @@
       },
       activatedErrorMessage () {
         return !this.readonly && (!this.item.url || !this.item.frequency) && this.item.automaticUpdates ? this.$i18n.t("component.source.error.activatedNoInfo") : undefined
+      },
+      autoUpdateValid () {
+        return !(this.item.automaticUpdates && (!this.item.frequency || !this.item.url || !this.urlValid))
       }
     },
     watch: {
       item: {
         handler (val) {
           this.$emit('update:model-value', val)
+          this.$emit('autoUpdateValid', this.autoUpdateValid)
         },
         deep: true
       },
@@ -303,6 +309,9 @@
           }
         }
       },
+      setUrlValid (val) {
+        this.urlValid = val
+      }
     }
   }
 </script>

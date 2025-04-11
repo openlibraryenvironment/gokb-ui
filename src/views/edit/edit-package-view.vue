@@ -165,13 +165,19 @@
           </v-stepper-item>
           <v-divider />
           <v-stepper-item
+            :class="{ error: step4Error }"
+            :error="step4Error"
             :value="4"
             :editable="isEdit"
             @selected="setActiveStep(4)"
           >
             {{ isEdit ? $t('component.package.navigation.step3') : $t('component.package.navigation.step4') }}
-            <template #icon="props">
+            <!-- <template #icon="props">
               <span>4</span>
+            </template> -->
+            <template #icon="props">
+              <span v-if="!step4Error">4</span>
+              <v-icon v-else icon="mdi-close-thick"/>
             </template>
           </v-stepper-item>
         </v-stepper-header>
@@ -467,6 +473,7 @@
               :readonly="isReadonly"
               :is-import-from-external-source="!!externalSource"
               @enable="triggerUpdate"
+              @autoUpdateValid="autoUpdateValid"
             />
           </v-stepper-window-item>
 
@@ -846,6 +853,7 @@
     },
     data () {
       return {
+        autoUpdateVal: true,
         valid: false,
         step: 1,
         waiting: false,
@@ -938,6 +946,7 @@
         maintenanceCycle: undefined,
         step3Error: false,
         step2Error: false,
+        step4Error: false,
         updateUrl: undefined,
         deleteUrl: undefined,
         kbart: undefined,
@@ -1022,7 +1031,7 @@
         return this.isReadonly || (this.isEdit && (this.step !== 2 || this.isValid)) || (!this.isEdit && (this.step !== 1 || this.isValid))
       },
       isValid () {
-        return !!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider
+        return !!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider && !!this.autoUpdateVal
       },
       hasRunningJob () {
         return this.importRunning || this.matchRunning
@@ -1101,6 +1110,12 @@
       document.removeEventListener("keydown", this.handleKeyboardNav)
     },
     methods: {
+      autoUpdateValid (valid) {
+        console.log("+++++++++++++++ ", valid)
+        this.autoUpdateVal = valid
+        this.updateStepErrors()
+        return valid
+      },
       showExternalSourceImportPopup () {
         this.externalSourceImportPopupVisible = true
       },
@@ -1480,11 +1495,12 @@
           this.step3Error = false
         }
 
-        if ((this.isEdit && !this.isReadonly && !this.isValid) || (!this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids))) {
+        if ((this.isEdit && !this.isReadonly && !(!!this.allNames.name && !!this.packageItem.nominalPlatform && !!this.packageItem.provider)) || (!this.isEdit && (!!this.errors?.variantNames || !!this.errors?.ids))) {
           this.step2Error = true
         } else {
           this.step2Error = false
         }
+        this.step4Error = !this.autoUpdateVal
       },
       reset () {
         if (!this.isEdit) {
