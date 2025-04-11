@@ -127,20 +127,16 @@
 <style>
   @use '@/styles/settings';
 
-  .status-icon {
-    opacity: var(--v-high-emphasis-opacity);
-  }
-
   .status-icon-current > div > div > i {
-    color: v-bind(current) !important;
+    color: rgb(var(--v-theme-current)) !important;
   }
   .status-icon-retired > div > div > i {
-    color: v-bind(retired) !important;
+    color: rgb(var(--v-theme-retired)) !important;
   }
   .status-icon-expected > div > div > i {
-    color: v-bind(expected) !important;
+    color: rgb(var(--v-theme-expected)) !important;
   }
   .status-icon-deleted > div > div > i {
-    color: v-bind(deleted) !important;
+    color: rgb(var(--v-theme-deleted)) !important;
   }
 </style>
