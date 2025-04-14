@@ -693,7 +693,7 @@
           return true
         }
 
-        if (!!this.lastLoad) {
+        if (!!this.lastLoad.id) {
           for (var [key, val] of Object.entries(this.lastLoad)) {
             if (key === 'name' && this.allNames.name !== val) {
               return true

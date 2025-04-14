@@ -818,7 +818,7 @@
           return true
         }
 
-        if (!!this.lastLoad) {
+        if (!!this.lastLoad.id) {
           for (var [key, val] of Object.entries(this.lastLoad)) {
             if (key === 'name' && this.allNames.name !== val) {
               return true
@@ -827,8 +827,25 @@
               if (val.length !== this.packageTitleItem.coverageStatements.length) {
                 return true
               }
-              else if (JSON.stringify(val) !== JSON.stringify(this.packageTitleItem.coverageStatements)) {
-                return true
+              else {
+                for (const [idx, cs] of val.entries()) {
+                  let current_cs = this.packageTitleItem.coverageStatements[idx]
+
+                  for (var [cs_field, cs_val] of Object.entries(cs)) {
+                    if (cs_field !== 'owner') {
+                      if (cs_field === 'coverageDepth') {
+                        if (utils.hasLinkedFieldChanged(cs_val, current_cs.coverageDepth)) {
+                          log.debug('hasUnsavedChanges :: coverageStatement ' + idx + ' - ' + cs_field)
+                          return true
+                        }
+                      }
+                      else if (cs_val !== current_cs[cs_field]) {
+                        log.debug('hasUnsavedChanges :: coverageStatement ' + idx + ' - ' + cs_field)
+                        return true
+                      }
+                    }
+                  }
+                }
               }
             }
             else if (typeof val === 'array') {

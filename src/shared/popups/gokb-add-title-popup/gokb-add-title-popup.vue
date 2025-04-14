@@ -50,7 +50,7 @@
                   <gokb-uuid-field
                     v-if="!!packageTitleItem.status"
                     :label="$t('component.general.uuid.label')"
-                    v-model="uuid"
+                    v-model="packageTitleItem.uuid"
                     path="/package-title"
                     dense
                   />
@@ -84,7 +84,7 @@
                   />
                 </v-col>
               </v-row>
-              <v-row class="pt-4" />
+              <v-row class="pt-4"/>
             </gokb-section>
           </v-col>
         </v-row>
@@ -466,12 +466,41 @@
         v-if="isEdit"
         class="ml-6"
         variant="elevated"
-        :to="{ name: '/package-title', params: { id: id} }"
+        :to="{ name: '/package-title', params: { id: this.packageTitleItem.id} }"
         target="_blank"
       >
         {{ $t('component.tipp.toFullView') }}
       </v-btn>
       <v-spacer />
+        <div v-if="isEdit">
+          <v-chip
+            class="ma-1"
+            label
+          >
+            <v-icon
+              :title="$t('component.general.dateCreated')"
+              class="pb-1"
+              medium
+            >
+              mdi-file-plus-outline
+            </v-icon>
+            <span class="ml-1">{{ dateCreated }}</span>
+          </v-chip>
+          <v-chip
+            class="ma-1"
+            label
+          >
+            <v-icon
+              :title="$t('component.general.lastUpdated')"
+              class="pb-1"
+              label
+              medium
+            >
+              mdi-refresh
+            </v-icon>
+            <span class="ml-1">{{ lastUpdated }}</span>
+          </v-chip>
+        </div>
       <v-spacer />
       <gokb-button
         class="mr-6"
@@ -576,8 +605,6 @@
         currentSnackBarTimeout: '-1',
         version: undefined,
         items: [],
-        id: undefined,
-        uuid: undefined,
         allNames: {
           name: undefined,
           alts: []
@@ -586,6 +613,7 @@
         dateCreated: undefined,
         lastLoad: undefined,
         packageTitleItem: {
+          id: undefined,
           title: undefined,
           pkg: undefined,
           hostPlatform: undefined,
@@ -630,7 +658,7 @@
     computed: {
       header () {
         return !this.isReadonly ?
-                (this.id ?
+                (this.packageTitleItem.id ?
                     (this.$i18n.t('header.edit.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel) :
                     (this.$i18n.t('header.add.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel)
                 ) :
@@ -640,7 +668,7 @@
         return this.titleTypeString ? this.$i18n.tc('component.title.type.' + this.titleTypeString) : this.$i18n.tc('component.title.label')
       },
       isEdit () {
-        return !!this.id && !!this.version
+        return !!this.packageTitleItem?.id && !!this.version
       },
       isReadonly () {
         return !accountModel.loggedIn || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && !this.updateUrl)
@@ -670,8 +698,8 @@
         get () {
           return !!this.modelValue
         },
-        set () {
-          this.$emit('update:model-value', false)
+        set (val) {
+          this.$emit('update:model-value', val)
         }
       },
       accessInterval: {
@@ -758,7 +786,7 @@
           return true
         }
 
-        if (!!this.lastLoad) {
+        if (!!this.lastLoad.id) {
           for (var [key, val] of Object.entries(this.lastLoad)) {
             if (key === 'name' && this.allNames.name !== val) {
               return true
@@ -767,8 +795,25 @@
               if (val.length !== this.packageTitleItem.coverageStatements.length) {
                 return true
               }
-              else if (JSON.stringify(val) !== JSON.stringify(this.packageTitleItem.coverageStatements)) {
-                return true
+              else {
+                for (const [idx, cs] of val.entries()) {
+                  let current_cs = this.packageTitleItem.coverageStatements[idx]
+
+                  for (var [cs_field, cs_val] of Object.entries(cs)) {
+                    if (cs_field !== 'owner') {
+                      if (cs_field === 'coverageDepth') {
+                        if (utils.hasLinkedFieldChanged(cs_val, current_cs.coverageDepth)) {
+                          log.debug('hasUnsavedChanges :: coverageStatement ' + idx + ' - ' + cs_field)
+                          return true
+                        }
+                      }
+                      else if (cs_val !== current_cs[cs_field]) {
+                        log.debug('hasUnsavedChanges :: coverageStatement ' + idx + ' - ' + cs_field)
+                        return true
+                      }
+                    }
+                  }
+                }
               }
             }
             else if (typeof val === 'array') {
@@ -921,7 +966,7 @@
         this.coverageExpanded = !this.coverageExpanded
       },
       openDetails () {
-        this.$router.push({ name: EDIT_TIPP_ROUTE, params: { id: this.id } })
+        this.$router.push({ name: EDIT_TIPP_ROUTE, params: { id: this.packageTitleItem.id } })
       },
       addNewCoverage () {
         this.pendingChanges.coverage = true
@@ -937,6 +982,7 @@
       },
       mapRecord (data) {
         const new_item_info = {
+          id: data.id,
           hostPlatform: data.hostPlatform,
           name: data.name,
           pkg: data.pkg,
@@ -985,13 +1031,10 @@
         new_item_info.ids = data.ids
 
         this.version = data.version
-        this.lastUpdated = data.lastUpdated
-        this.dateCreated = data.dateCreated
+        this.lastUpdated = !!data.lastUpdated ? new Date(data.lastUpdated).toLocaleString('sv') : undefined
+        this.dateCreated = !!data.dateCreated ? new Date(data.dateCreated).toLocaleString('sv') : undefined
         this.updateUrl = data.updateUrl
         this.deleteUrl = data.deleteUrl
-        this.id = data.id
-        this.uuid = data.uuid
-        this.packageTitleItem.id = this.id
 
         this.packageTitleItem = new_item_info
 

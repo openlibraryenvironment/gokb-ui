@@ -380,7 +380,7 @@
           { title: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
           { title: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
           { title: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' },
-          { title: this.$i18n.tc('component.general.lastUpdated'), align: 'end', value: 'lastUpdated', sortable: true }
+          { title: this.$i18n.tc('component.general.lastUpdated'), align: 'end', value: 'lastUpdatedDate', sortable: true }
         ]
       },
       newTableHeaders () {
@@ -625,7 +625,7 @@
                     ...variantName,
                     isDeletable: !!this.updateUrl
                   })),
-                  lastUpdated: this.buildDateString(tipp.lastUpdated),
+                  lastUpdatedDate: this.buildDateString(tipp.lastUpdated),
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
                   titleType: !!tipp.title?.type ? (!!this.$i18n && this.$i18n.tc('component.title.type.' + tipp.title.type)) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),

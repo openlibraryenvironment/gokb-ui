@@ -690,7 +690,7 @@
           {{ $t('btn.back') }}
         </gokb-button>
         <v-spacer />
-        <div v-if="id">
+        <div v-if="isEdit">
           <v-chip
             class="ma-1"
             label
@@ -1134,7 +1134,7 @@
           return true
         }
 
-        if (!!this.lastLoad) {
+        if (!!this.lastLoad.id) {
           for (var [key, val] of Object.entries(this.lastLoad)) {
             if (key === 'name' && this.allNames.name !== val) {
               return true
