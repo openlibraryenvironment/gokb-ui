@@ -1230,7 +1230,7 @@
         }
 
         if (this.isValid) {
-          if (this.sourceItem) {
+          if (!!this.sourceItem) {
             var sourceItem = this.sourceItem
 
             if (sourceItem.name !== this.allNames.name) {
@@ -1287,7 +1287,7 @@
             activeGroup: this.activeGroup
           }
 
-          if (!this.isUpdate || this.kbart || this.urlUpdate) {
+          if (!this.isUpdate || !!this.kbart || this.urlUpdate) {
             newPackage.generateToken = true
           }
 
@@ -1299,7 +1299,7 @@
           if (response?.status < 400) {
             this.packageItem.id = response.data.id
 
-            if (this.kbart) {
+            if (!!this.kbart) {
               const kbartPars = {
                 activeGroup: this.activeGroup?.id,
                 titleIdNamespace: this.kbart.selectedNamespace?.id || this.sourceItem?.targetNamespace?.id,
