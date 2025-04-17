@@ -612,6 +612,7 @@
         lastUpdated: undefined,
         dateCreated: undefined,
         lastLoad: undefined,
+        pendingChanges: {},
         packageTitleItem: {
           id: undefined,
           title: undefined,
@@ -650,8 +651,7 @@
           volumeNumber: undefined,
           editionStatement: undefined,
           medium: undefined,
-          lastChangedExternal: undefined,
-          pendingChanges: {}
+          lastChangedExternal: undefined
         }
       }
     },
