@@ -40,7 +40,6 @@
     },
     async mounted () {
       if (!!this.localValue) {
-        console.log("### mount url field ###")
         this.validate()
       }
     },
@@ -60,7 +59,6 @@
           valid = true
 
         }
-        console.log("### emit url field valid ###", valid)
         this.$emit('valid', valid)
       }
     }

@@ -532,7 +532,8 @@
                         </v-col>
                         <v-col cols="11" v-else>
                           <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
-                            Import
+                            Update <span style="color:red;" v-if="!autoUpdateVal"><v-icon icon="mdi-alert-circle" /></span>
+
                           </div>
                           <v-chip
                             text="AUTO"
@@ -541,6 +542,7 @@
                             color="blue"
                             density="compact"
                           />
+
                         </v-col>
                       </v-row>
                     </v-col>
@@ -805,6 +807,7 @@
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
   import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
+  import genericServices from '@/shared/services/generic-entity-services'
 
   const ROWS_PER_PAGE = 10
 
@@ -1124,7 +1127,6 @@
     },
     methods: {
       autoUpdateValid (valid) {
-        console.log("++++ Emit from Source +++++++++++ ", valid)
         this.autoUpdateVal = valid
         this.updateStepErrors()
         return valid
@@ -1545,7 +1547,6 @@
         this.reload(true)
       },
       async reload () {
-        console.log("********* edit package view reload ******* ")
         if (this.isEdit) {
           if(!loading.isLoading()) {
             loading.startLoading()
@@ -1563,13 +1564,25 @@
 
           if (result?.status === 200) {
             this.mapRecord(result.data)
-            this.updateStepErrors()
 
             if (result?.data?._embedded?.source?.importConfig) {
               this.externalSource = result.data._embedded.source.importConfig.name
             } else if (result?.data?._embedded?.source?.automaticUpdates && result?.data?._embedded?.source?.frequency && result?.data?._embedded?.source?.url) {
               this.autoUpdate = true
             }
+
+            if (result?.data?._embedded?.source?.automaticUpdates){
+              this.autoUpdateVal = false
+              if (result?.data?._embedded?.source?.frequency && result?.data?._embedded?.source?.url) {
+                const urlResult = await genericServices('rest/entities').checkUrl(result?.data?._embedded?.source?.url, true, this.cancelToken.token)
+                if (urlResult.data?.result !== 'ERROR') {
+                  this.autoUpdateVal = true
+                }
+              }
+            }
+
+
+            this.updateStepErrors()
 
           } else if (result.status === 404) {
             this.notFound = true
