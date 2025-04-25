@@ -515,9 +515,9 @@
                       />
                     </v-col>
                     <v-spacer/>
-                    <v-col cols="3" v-if="!!externalSource" >
+                    <v-col cols="3" v-if="!!externalSource || autoUpdate" >
                       <v-row justify="end">
-                        <v-col cols="11">
+                        <v-col cols="11" v-if="!!externalSource">
                           <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
                             {{ $t('popups.externalSourceImport.selectLabel') }}
                           </div>
@@ -528,6 +528,18 @@
                             :color="externalSourceColor"
                             density="compact"
                             :title="$t('component.source.importConfig.subtitle')"
+                          />
+                        </v-col>
+                        <v-col cols="11" v-else>
+                          <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
+                            Import
+                          </div>
+                          <v-chip
+                            text="AUTO"
+                            class="text-button"
+                            rounded="lg"
+                            color="blue"
+                            density="compact"
                           />
                         </v-col>
                       </v-row>
@@ -958,7 +970,8 @@
           WEKB: {
             color: 'orange'
           }
-        }
+        },
+        autoUpdate: false
       }
     },
     computed: {
@@ -1311,6 +1324,8 @@
             instance: this
           })
 
+          let kbartMessage = undefined
+
           if (response?.status < 400) {
             this.packageItem.id = response.data.id
 
@@ -1337,7 +1352,6 @@
               })
 
               this.kbart = undefined
-              let kbartMessage = undefined
 
               if (kbartResult.status === 403) {
                 kbartMessage = 'kbart.transmission.error.denied'
@@ -1481,7 +1495,7 @@
         }
         else {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t('validation.hasErrors'),
+          this.snackbarMessage = this.$i18n.t('validation.hasErrors')
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         }
@@ -1550,6 +1564,13 @@
           if (result?.status === 200) {
             this.mapRecord(result.data)
             this.updateStepErrors()
+
+            if (result?.data?._embedded?.source?.importConfig) {
+              this.externalSource = result.data._embedded.source.importConfig.name
+            } else if (result?.data?._embedded?.source?.automaticUpdates && result?.data?._embedded?.source?.frequency && result?.data?._embedded?.source?.url) {
+              this.autoUpdate = true
+            }
+
           } else if (result.status === 404) {
             this.notFound = true
           } else {
