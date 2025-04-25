@@ -1111,7 +1111,7 @@
     },
     methods: {
       autoUpdateValid (valid) {
-        console.log("+++++++++++++++ ", valid)
+        console.log("++++ Emit from Source +++++++++++ ", valid)
         this.autoUpdateVal = valid
         this.updateStepErrors()
         return valid
@@ -1531,6 +1531,7 @@
         this.reload(true)
       },
       async reload () {
+        console.log("********* edit package view reload ******* ")
         if (this.isEdit) {
           if(!loading.isLoading()) {
             loading.startLoading()

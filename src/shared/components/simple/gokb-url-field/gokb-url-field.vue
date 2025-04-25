@@ -38,23 +38,30 @@
         this.validate()
       }
     },
+    async mounted () {
+      if (!!this.localValue) {
+        console.log("### mount url field ###")
+        this.validate()
+      }
+    },
     methods: {
       async validate () {
         const validResult = await genericServices('rest/entities').checkUrl(this.localValue, this.replaceDate, createCancelToken.token)
-
+        let valid = false
         if (validResult.data?.result === 'ERROR') {
           if (!this.localErrorMessages || this.localErrorMessages.length === 0) {
             this.localErrorMessages = [this.$i18n.t('validation.urlForm')]
-            this.$emit('valid', false)
           }
         }
         else {
           if (!!this.localErrorMessages) {
            this.localErrorMessages = undefined
           }
+          valid = true
 
-          this.$emit('valid', true)
         }
+        console.log("### emit url field valid ###", valid)
+        this.$emit('valid', valid)
       }
     }
   }

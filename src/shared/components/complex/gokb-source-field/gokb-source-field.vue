@@ -191,6 +191,7 @@
         return !this.readonly && (!this.item.url || !this.item.frequency) && this.item.automaticUpdates ? this.$i18n.t("component.source.error.activatedNoInfo") : undefined
       },
       autoUpdateValid () {
+        console.log("####################################################")
         return !(this.item.automaticUpdates && (!this.item.frequency || !this.item.url || !this.urlValid))
       }
     },
@@ -201,6 +202,9 @@
           this.$emit('autoUpdateValid', this.autoUpdateValid)
         },
         deep: true
+      },
+      autoUpdateValid() {
+        this.$emit('autoUpdateValid', this.autoUpdateValid)
       },
       modelValue: {
         handler(val) {
@@ -254,6 +258,7 @@
       } else if (!!this.provider && !!this.contentType){
         this.fetchDefaultNamespace()
       }
+      console.log("++ mount source field ++ ", this.autoUpdateValid, this.urlValid)
     },
     methods: {
       async fetch (sid) {
@@ -310,6 +315,7 @@
         }
       },
       setUrlValid (val) {
+        console.log("+++ Source get value from url field +++ ", val)
         this.urlValid = val
       }
     }
