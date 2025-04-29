@@ -117,6 +117,10 @@
         @import="mapImportData"
       />
 
+      <gokb-create-package-with-presets-popup
+        v-if="createWithPresetsPopupVisible"
+        v-model="createWithPresetsPopupVisible"
+      />
 
       <v-stepper
         v-model="step"
@@ -720,10 +724,18 @@
         <gokb-button
           color="primary"
           :disabled="false"
+          @click="showCreateWithPresetsPopup"
+          v-show="isEdit && step == 1"
+        >
+          Paket mit Presets erstellen
+        </gokb-button>
+
+        <gokb-button
+          color="primary"
+          :disabled="false"
           @click="showExternalSourceImportPopup"
           v-show="!isEdit && step == 1"
         >
-          <!-- TODO: Text aus Properties-Datei {{ $t('btn.next') }} -->
           {{ $t('btn.externalSourceImport') }}
         </gokb-button>
 
@@ -786,6 +798,8 @@
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
   import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
+  //import GokbCreatePackageWithPresetsPopup from '@/shared/popups/gokb-create-package-with-presets-popup'
+  import GokbCreatePackageWithPresetsPopup from "../../shared/popups/gokb-create-package-with-presets-popup/index.js";
 
   const ROWS_PER_PAGE = 10
 
@@ -807,6 +821,7 @@
   export default {
     name: 'EditPackageView',
     components: {
+      GokbCreatePackageWithPresetsPopup,
       GokbDateField,
       GokbIdentifierSection,
       GokbSearchOrganisationField,
@@ -819,7 +834,8 @@
       GokbAlternateNamesSection,
       GokbConfirmationPopup,
       GokbEditJobPopup,
-      GokbImportExternalSourcePackagePopup
+      GokbImportExternalSourcePackagePopup,
+      GokbCreatePackageWithPresetsPopup
     },
     extends: BaseComponent,
     props: {
@@ -865,6 +881,7 @@
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
         externalSourceImportPopupVisible: false,
+        createWithPresetsPopupVisible: false,
         isImportFromExternalSource: false,
         externalSource: undefined,
         urlUpdate: false,
@@ -1101,6 +1118,9 @@
       document.removeEventListener("keydown", this.handleKeyboardNav)
     },
     methods: {
+      showCreateWithPresetsPopup () {
+        this.createWithPresetsPopupVisible = true
+      },
       showExternalSourceImportPopup () {
         this.externalSourceImportPopupVisible = true
       },
