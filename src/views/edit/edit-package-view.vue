@@ -120,6 +120,7 @@
       <gokb-create-package-with-presets-popup
         v-if="createWithPresetsPopupVisible"
         v-model="createWithPresetsPopupVisible"
+        :packageTemplate="packageItem"
       />
 
       <v-stepper
@@ -798,8 +799,8 @@
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
   import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
-  //import GokbCreatePackageWithPresetsPopup from '@/shared/popups/gokb-create-package-with-presets-popup'
-  import GokbCreatePackageWithPresetsPopup from "../../shared/popups/gokb-create-package-with-presets-popup/index.js";
+  import GokbCreatePackageWithPresetsPopup from '@/shared/popups/gokb-create-package-with-presets-popup'
+  //import GokbCreatePackageWithPresetsPopup from "../../shared/popups/gokb-create-package-with-presets-popup/index.js";
 
   const ROWS_PER_PAGE = 10
 
@@ -821,7 +822,6 @@
   export default {
     name: 'EditPackageView',
     components: {
-      GokbCreatePackageWithPresetsPopup,
       GokbDateField,
       GokbIdentifierSection,
       GokbSearchOrganisationField,
@@ -856,6 +856,11 @@
       },
       initMessageCode: {
         type: String,
+        required: false,
+        default: undefined
+      },
+      packagePresets: {
+        type: Object,
         required: false,
         default: undefined
       }
@@ -1108,11 +1113,20 @@
       } else if (this.isEdit && !this.isReadonly) {
         this.getActiveJobs()
       }
+
+
     },
     mounted () {
       document.addEventListener('keydown', this.handleKeyboardNav.bind(this))
 
       this.step = parseInt(this.$route.query.step) || 1
+
+      if (!!this.packagePresets) {
+        console.log("++++ PRESETS: ", this.packagePresets)
+      }
+      if (!!this.$route.params.packagePresets) {
+        console.log("++++ ROUTER PRESETS: ", this.packagePresets)
+      }
     },
     beforeDestroy() {
       document.removeEventListener("keydown", this.handleKeyboardNav)
