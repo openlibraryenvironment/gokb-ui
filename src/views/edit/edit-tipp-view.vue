@@ -591,11 +591,6 @@
         type: [Number, String],
         required: false,
         default: undefined
-      },
-      initMessageCode: {
-        type: String,
-        required: false,
-        default: undefined
       }
     },
     data () {

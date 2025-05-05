@@ -392,11 +392,6 @@
         type: [String, Number],
         required: false,
         default: undefined
-      },
-      initMessageCode: {
-        type: String,
-        required: false,
-        default: undefined
       }
     },
     data () {
