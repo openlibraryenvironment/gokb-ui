@@ -34,8 +34,8 @@
     "update": "Update",
     "validate": "Validate",
     "bulkSelect": "Set Status of {0} entries to ...",
-    "bulkCloseReview": "Close {0} selected review request | Close {0} selected review requests",
-    "closeSelectedReviews": "Close selected review requests",
+    "bulkCloseReview": "Close {0} selected review | Close {0} selected reviews",
+    "closeSelectedReviews": "Close selected reviews",
     "moreFilters": "More Filters",
     "moreOptions": "More Options",
     "externalSourceImport": "Import from external source",
@@ -117,9 +117,9 @@
       "search": "Providers"
     },
     "review": {
-      "edit": "Edit Review Request",
-      "create": "Create Review Request",
-      "search": "Review Requests"
+      "edit": "Edit Review",
+      "create": "Create Review",
+      "search": "Reviews"
     },
     "user": {
       "edit": "Edit User",
@@ -461,7 +461,7 @@
       "warning": {
         "label": "Warning | Warnings",
         "fields": "Column Statistics - Warnings",
-        "structure": "File Structure - Warnings"
+        "structure": "File Structure Warning | File Structure - Warnings"
       },
       "error": {
         "label": "Error | Errors",
@@ -469,7 +469,13 @@
         "empty": "Missing Value",
         "invalid": "Invalid Value",
         "fields": "Column Statistics - Errors",
-        "structure": "File Structure - Errors"
+        "structure": "File Structure Error | File Structure - Errors"
+      },
+      "type": {
+        "label": "Type"
+      },
+      "exportResult": {
+        "label": "Export Result"
       }
     },
     "transmission": {
@@ -516,13 +522,10 @@
       },
       "advice": "Please upload only tab separated text files (.txt, .tsv, .csv). For performance reasons, please do not validate extensive title lists in quick succession.",
       "alert": {
-        "strict": {
-          "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If an error is identified in the file structure, the validation is aborted. As a result, no individual titles are validated and further errors in the file structure are not recognized. Please correct the errors in the file structure and then run the validation again to obtain a complete result. Validation is not aborted if individual data records contain errors. The entirety of all errors is output."
-        },
-        "lax": {
-          "warning": "Title lists that generate warnings can be imported into the GOKB even if they contain anomalies. It is strongly recommended that you check the anomalies first to make sure they are harmless.",
-          "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If an error is identified in the file structure, the validation is aborted. As a result, no individual titles are validated and further errors in the file structure are not recognized. Please correct the errors in the file structure and then run the validation again to obtain a complete result. Validation is not aborted if individual data records contain errors. The entirety of all errors is output."
-        }
+        "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If errors are identified in the file structure, the validation is aborted. This means that no individual titles are validated. Please correct the errors in the file structure and then run the validation again to obtain a complete result.",
+        "warning": "Title lists that generate warnings can be imported into the GOKB even if they contain anomalies. It is strongly recommended that you check the anomalies first to make sure they are harmless.",
+        "rowError": "Errors have been detected in title data rows. The file cannot be imported until these errors have been corrected.",
+        "encoding": "The encoding of this file is not UTF-8 and therefore cannot be processed. Please refer to the documentation on the GOKB website to find out how to solve this problem."
       }
     }
   },
@@ -865,7 +868,7 @@
           "label": "In Progress"
         },
         "error": {
-          "openReviews": "All connected review requests must be closed before the package can be marked as checked."
+          "openReviews": "All connected requests for review must be closed before the package can be marked as checked."
         }
       },
       "breakable": "Content may be split",
@@ -1161,7 +1164,7 @@
       }
     },
     "review": {
-      "label": "Review Request | Review Requests",
+      "label": "Review | Reviews",
       "request": {
         "label": "Request"
       },
@@ -1192,7 +1195,7 @@
         "label": "Other Components",
         "add": "Link new component",
         "error": {
-          "duplicate": "This component is already linked to this review request!"
+          "duplicate": "This component is already linked to this review!"
         }
       },
       "candidates": {
@@ -1210,8 +1213,8 @@
           "reopened": "Request has been reopened."
         },
         "confirm": {
-          "close": "Please confirm closing this review request.",
-          "reopen": "Please confirm the reopening of this review request."
+          "close": "Please confirm closing this review.",
+          "reopen": "Please confirm the reopening of this review."
         },
         "componentToReview": {
           "label": "{0} to review"
@@ -1219,17 +1222,17 @@
         "close": {
           "label": "Close",
           "error": {
-            "moreSteps": "Please check all workflow steps before closing this review request."
+            "moreSteps": "Please check all workflow steps before closing this review."
           }
         },
         "cancel": {
-          "label": "Cancel review request"
+          "label": "Cancel review"
         },
         "next": {
           "label": "Next Step"
         },
         "open": {
-          "label": "Re-open review request"
+          "label": "Re-open review"
         },
         "components": {
           "workflow": {
@@ -1257,7 +1260,7 @@
                 "message": "The name of the selected target title will be changed to that of the deleted title and its current name will be added as a variant."
               },
               "closeReview": {
-                "message": "The review request will be marked as closed automatically."
+                "message": "The review will be marked as closed automatically."
               }
             },
             "selectIds": {

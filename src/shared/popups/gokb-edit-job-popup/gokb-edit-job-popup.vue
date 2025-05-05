@@ -102,42 +102,15 @@
         </ul>
       </v-col>
     </v-row>
-    <v-row v-if="rowErrors.length > 0">
-      <v-col md="12">
-        <v-expansion-panels accordion>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              {{ $tc('kbart.processing.error.label', 2) }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <v-data-table
-                :items="rowErrors"
-                :headers="errorHeaders"
-                :sort-by="[{key: 'row', order: 'asc'}]"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-col>
-    </v-row>
-    <v-row v-if="rowWarnings.length > 0">
-      <v-col md="12">
-        <v-expansion-panels accordion>
-          <v-expansion-panel>
-            <v-expansion-panel-title>
-              {{ $tc('kbart.processing.warning.label', 2) }}
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <v-data-table
-                :items="rowWarnings"
-                :headers="errorHeaders"
-                :sort-by="[{key: 'row', order: 'asc'}]"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-col>
-    </v-row>
+
+    <gokb-export-validator-results
+      :validator-result="kbartValidation"
+      :hide-alerts="true"
+      v-if="showKbartValidation"
+      :button-color="'primary'"
+    />
+
+    <br/><br/>
     <v-row v-if="selectedItem.results">
       <v-col md="12">
         <v-expansion-panels accordion>
@@ -166,10 +139,11 @@
   import jobServices from '@/shared/services/job-services'
   import VueJsonPretty from 'vue-json-pretty'
   import 'vue-json-pretty/lib/styles.css'
+  import GokbExportValidatorResults from "../../components/complex/gokb-export-validator-results/index.js";
 
   export default {
     name: 'GokbEditJobPopup',
-    components: { VueJsonPretty },
+    components: {GokbExportValidatorResults, VueJsonPretty },
     extends: BaseComponent,
     emits: ['update:model-value'],
     props: {
@@ -201,7 +175,24 @@
         },
         items: [],
         rowErrors: [],
-        rowWarnings: []
+        rowWarnings: [],
+        kbartValidation: {
+          errors: {
+            missingColumns: [],
+            single: [],
+            type: {}
+          },
+          warnings: {
+            missingColumns: [],
+            single: [],
+            type: {}
+          },
+          rows: {
+            total: 0,
+            warning: 0,
+            error: 0
+          }
+        }
       }
     },
     computed: {
@@ -222,6 +213,10 @@
           { title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
           { title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
         ]
+      },
+      showKbartValidation () {
+        return (this.kbartValidation.errors.single.length > 0 || this.kbartValidation.errors.missingColumns.length > 0
+                || this.kbartValidation.warnings.missingColumns.length > 0 || this.kbartValidation.warnings.single.length > 0)
       }
     },
     async created () {
@@ -278,15 +273,20 @@
             })
           })
         } else if (!!record.job_result?.validation) {
-          Object.entries(record.job_result.validation.errors.rows).forEach(([rownum, colobj]) =>
+
+          this.kbartValidation = record.job_result.validation
+
+          this.kbartValidation.errors.single = []
+          Object.entries(this.kbartValidation.errors.rows).forEach(([rownum, colobj]) =>
             Object.entries(colobj).forEach(([colname, eo]) =>
-              this.rowErrors.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+              this.kbartValidation.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
             )
           )
 
-          Object.entries(record.job_result.validation.warnings.rows).forEach(([rownum, colobj]) =>
+          this.kbartValidation.warnings.single = []
+          Object.entries(this.kbartValidation.warnings.rows).forEach(([rownum, colobj]) =>
             Object.entries(colobj).forEach(([colname, wo]) =>
-              this.rowWarnings.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
+              this.kbartValidation.warnings.single.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
             )
           )
         }

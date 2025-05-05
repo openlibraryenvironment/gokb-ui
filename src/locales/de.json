@@ -461,7 +461,7 @@
       "warning": {
         "label": "Warnung | Warnungen",
         "fields": "Spaltenstatistik - Warnungen",
-        "structure": "Dateistruktur - Warnungen"
+        "structure": "Dateistruktur-Warnung | Dateistruktur - Warnungen"
       },
       "error": {
         "label": "Fehler | Fehler",
@@ -469,7 +469,13 @@
         "empty": "Fehlender Wert",
         "invalid": "Fehlerhafter Wert",
         "fields": "Spaltenstatistik - Fehler",
-        "structure": "Dateistruktur - Fehler"
+        "structure": "Dateistruktur-Fehler | Dateistruktur - Fehler"
+      },
+      "type": {
+        "label": "Typ"
+      },
+      "exportResult": {
+        "label": "Ergebnis exportieren"
       }
     },
     "transmission": {
@@ -516,13 +522,10 @@
       },
       "advice": "Bitte laden Sie nur durch Tabulatoren getrennte Text-Dateien (.txt, .tsv, .csv) hoch. Aus Performanzgründen bitten wir, umfangreiche Titellisten nicht in schneller Folge hintereinander zu validieren.",
       "alert": {
-        "strict": {
-          "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn ein Fehler in der Dateistruktur identifiziert wurde, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten. Bei Fehlern einzelner Datensätze bricht die Validierung nicht ab. Es wird die Gesamtheit aller Fehler ausgegeben."
-        },
-        "lax": {
-          "warning": "Titellisten, die Warnungen erzeugen, können in die GOKB importiert werden, auch wenn es Auffälligkeiten gibt. Es wird dringend empfohlen, vorab die Auffälligkeiten auf ihre Unbedenklichkeit zu prüfen.",
-          "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn ein Fehler in der Dateistruktur identifiziert wurde, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert und auch weitere Fehler in der Dateistruktur nicht erkannt. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten. Bei Fehlern einzelner Datensätze bricht die Validierung nicht ab. Es wird die Gesamtheit aller Fehler ausgegeben."
-        }
+        "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn Fehler in der Dateistruktur identifiziert wurden, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten.",
+        "warning": "Titellisten, die Warnungen erzeugen, können in die GOKB importiert werden, auch wenn es Auffälligkeiten gibt. Es wird dringend empfohlen, vorab die Auffälligkeiten auf ihre Unbedenklichkeit zu prüfen.",
+        "rowError": "Es wurden Fehler in einzelnen Titeldaten festgestellt. Die Datei kann erst importiert werden, wenn diese Fehler behoben wurden.",
+        "encoding": "Diese Datei ist nicht in UTF-8 codiert und kann daher nicht verarbeitet werden. Lesen Sie in der Dokumentation auf der GOKB-Webseite nach, wie Sie dieses Problem beheben können."
       }
     }
   },

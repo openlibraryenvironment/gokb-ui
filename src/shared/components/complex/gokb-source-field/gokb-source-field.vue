@@ -15,6 +15,7 @@
       <v-col cols="3">
         <gokb-state-field
           v-model="item.frequency"
+          :init-item="item.frequency"
           message-path="component.source.frequency"
           url="refdata/categories/Source.Frequency"
           :label="$t('component.source.frequency.label')"
@@ -261,7 +262,7 @@
             this.item.id = result.data.id
             this.lastRun = (result.data.lastRun ? new Date(result.data.lastRun).toLocaleString('sv') : undefined)
             this.item.targetNamespace = result.data.targetNamespace
-            this.item.frequency = result.data.frequency
+            this.item.frequency = !!result.data.frequency ? { value: result.data.frequency.name, name: this.$i18n.t('component.source.frequency.' + result.data.frequency.name + '.label'), id: result.data.frequency.id } : undefined
             this.item.name = result.data.name
             this.item.url = result.data.url
             this.item.automaticUpdates = result.data.automaticUpdates
