@@ -50,6 +50,7 @@
         type: String,
         required: false,
         default: undefined
+      },
       opacity: {
         type: Number,
         required: false,
