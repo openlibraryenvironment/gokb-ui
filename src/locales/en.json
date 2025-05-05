@@ -1614,6 +1614,12 @@
           "info": "Title {0} was manually created with overlapping information from another title!",
           "action": "-",
           "toDo": "If this has generated duplicated reference titles, please merge them by first selecting a reference title via 'Select Merge Target' and then clicking on 'Merge Duplicate'."
+        },
+        "Coverage Matching Conflict": {
+          "label": "Coverage Matching Conflict",
+          "info": "The coverage date range ({0}) is in conflict with the publication dates of the matched reference title ({1}).",
+          "action": "-",
+          "toDo": "Check if the correct reference title has been linked and if its publishing dates are correct."
         }
       }
     },
