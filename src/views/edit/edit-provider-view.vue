@@ -392,11 +392,6 @@
         type: [String, Number],
         required: false,
         default: undefined
-      },
-      initMessageCode: {
-        type: String,
-        required: false,
-        default: undefined
       }
     },
     data () {
@@ -498,23 +493,27 @@
     async created () {
       this.reload()
 
-      if (this.initMessageCode) {
-        if (this.initMessageCode.includes('success')) {
+      let pars = history.state
+
+      if (!!pars.initMessageCode) {
+        if (pars.initMessageCode.includes('success')) {
           this.messageColor = 'success'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
-        } else if (this.initMessageCode.includes('failure')) {
+        } else if (pars.initMessageCode.includes('failure')) {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label')])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.provider.label')])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
-        } else if (this.initMessageCode.includes('warning')) {
+        } else if (pars.initMessageCode.includes('warning')) {
           this.messageColor = 'warning'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
         }
+
+        history.replaceState({}, "")
       }
 
       if (this.loggedIn) {
@@ -575,9 +574,11 @@
           } else {
             this.$router.push({
               name: '/provider',
-              params: {
-                id: response.data?.id,
+              state: {
                 initMessageCode: 'success.create'
+              },
+              params: {
+                id: response.data?.id
               }
             })
           }

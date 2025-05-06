@@ -827,21 +827,6 @@
         type: [Number, String],
         required: false,
         default: undefined
-      },
-      maintenance: {
-        type: Boolean,
-        required: false,
-        default: false
-      },
-      kbartJob: {
-        type: String,
-        required: false,
-        default: undefined
-      },
-      initMessageCode: {
-        type: String,
-        required: false,
-        default: undefined
       }
     },
     data () {
@@ -1067,27 +1052,34 @@
     async created () {
       await this.reload()
 
-      if (!!this.initMessageCode) {
-        if (this.initMessageCode.includes('success')) {
+      let pars = history?.state
+
+      if (!!pars?.initMessageCode) {
+        if (pars.initMessageCode.includes('success')) {
           this.messageColor = 'success'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
           this.currentSnackBarTimeout = 4000
           this.showSnackbar = true
-        } else if (this.initMessageCode.includes('error')) {
+        } else if (pars.initMessageCode.includes('error')) {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.package.label')])
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
-        } else if (this.initMessageCode.includes('warning')) {
+        } else if (pars.initMessageCode.includes('warning')) {
           this.messageColor = 'warning'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         }
+
+        history.replaceState({}, "")
       }
 
-      if (!!this.kbartJob) {
-        this.loadImportJobStatus(this.kbartJob)
+      if (!!pars?.kbartJob) {
+        this.loadImportJobStatus(pars.kbartJob)
+
+        history.replaceState({}, "")
+
       } else if (this.isEdit && !this.isReadonly) {
         this.getActiveJobs()
       }
@@ -1358,10 +1350,12 @@
               } else {
                 this.$router.push({
                   name: '/package',
-                  params: {
-                    id: this.packageItem.id,
+                  state: {
                     kbartJob: kbartResult?.data?.jobId,
                     initMessageCode: kbartResult.status === 200 ? 'success.create' : kbartMessage
+                  },
+                  params: {
+                    id: this.packageItem.id,
                   }
                 })
               }
@@ -1414,10 +1408,12 @@
               } else {
                 this.$router.push({
                   name: '/package',
-                  params: {
-                    id: this.packageItem.id,
+                  state: {
                     kbartJob: sourceUpdateResult?.data?.jobId,
                     initMessageCode: sourceUpdateResult.status === 200 ? 'success.create' : kbartMessage
+                  },
+                  params: {
+                    id: this.packageItem.id
                   }
                 })
               }
@@ -1433,9 +1429,11 @@
               } else {
                 this.$router.push({
                   name: '/package',
-                  params: {
-                    id: this.packageItem.id,
+                  state: {
                     initMessageCode: 'success.create'
+                  },
+                  params: {
+                    id: this.packageItem.id
                   }
                 })
               }
