@@ -18,6 +18,7 @@
         :target-type="targetType"
         width="350px"
         :label="$t('kbart.propId.label')"
+        gokb-tooltip="kbart.propId.tooltip"
       />
       <div v-else>
         <gokb-namespace-field
@@ -45,6 +46,7 @@
       <gokb-checkbox-field
         v-model="options.dryRun"
         :label="$t('kbart.dryRun.label')"
+        gokb-tooltip="job.dryRun.tooltip"
         dense
       />
       <gokb-button
@@ -62,11 +64,13 @@
         <gokb-checkbox-field
           v-model="options.addOnly"
           :label="$t('kbart.addOnly.label')"
+          gokb-tooltip="kbart.addOnly.tooltip"
           dense
         />
         <gokb-checkbox-field
           v-model="options.deleteMissing"
           :label="$t('kbart.deleteMissing.label')"
+          gokb-tooltip="kbart.deleteMissing.tooltip"
           dense
         />
       </div>
