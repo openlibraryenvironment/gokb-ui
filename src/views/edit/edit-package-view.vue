@@ -121,6 +121,7 @@
         v-if="createWithPresetsPopupVisible"
         v-model="createWithPresetsPopupVisible"
         :packageTemplate="packageItem"
+        @loadPresets="mapPresetData"
       />
 
       <v-stepper
@@ -723,12 +724,12 @@
         <v-spacer />
 
         <gokb-button
-          color="primary"
+          color="blue"
           :disabled="false"
           @click="showCreateWithPresetsPopup"
-          v-show="isEdit && step == 1"
+          v-show="!isEdit && step == 1"
         >
-          Paket mit Presets erstellen
+          Vorgabewerte laden
         </gokb-button>
 
         <gokb-button
@@ -1121,12 +1122,6 @@
 
       this.step = parseInt(this.$route.query.step) || 1
 
-      if (!!this.packagePresets) {
-        console.log("++++ PRESETS: ", this.packagePresets)
-      }
-      if (!!this.$route.params.packagePresets) {
-        console.log("++++ ROUTER PRESETS: ", this.packagePresets)
-      }
     },
     beforeDestroy() {
       document.removeEventListener("keydown", this.handleKeyboardNav)
@@ -1149,6 +1144,20 @@
 
         this.isImportFromExternalSource = true
         this.externalSourceImportPopupVisible = false
+      },
+      async mapPresetData (preset) {
+        console.log("++++ EDIT PACKAGE VIEW +++++ ", preset)
+        this.allNames.name = preset.name
+        this.packageItem.provider = preset.provider
+        this.packageItem.nominalPlatform = preset.platform
+        this.packageItem.scope = preset.scope
+        this.packageItem.contentType = preset.contentType
+        this.packageItem.global = preset.global.name
+        this.packageItem.consistent = preset.consistent
+        this.packageItem.breakable = preset.breakable
+        this.packageItem.fixed = preset.fixed
+        this.createWithPresetsPopupVisible = false
+
       },
       go2NextStep () {
         if (this.step < 4) {

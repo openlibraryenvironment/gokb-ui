@@ -116,6 +116,7 @@
 <script>
   import sourceServices from '@/shared/services/source-services'
   import BaseComponent from '@/shared/components/base-component'
+  import providerServices from '@/shared/services/provider-services'
 
   export default {
     name: 'GokbSourceField',
