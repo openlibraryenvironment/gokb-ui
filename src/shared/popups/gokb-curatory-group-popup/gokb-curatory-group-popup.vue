@@ -49,7 +49,7 @@
     emits: ['update:model-value'],
     props: {
       modelValue: {
-        type: Boolean,
+        type: [Boolean, Number],
         required: true
       },
       selected: {
@@ -79,18 +79,11 @@
         }
       }
     },
-    watch: {
-      selected (val) {
-        this.selectedItem = {
-          name: undefined,
-          email: undefined,
-          users: undefined,
-          organisationType: undefined
-        }
+    created () {
+      this.selectedItem = this.selected
 
-        if (!!val) {
-          this.fetchGroup()
-        }
+      if (!!this.selected) {
+        this.fetchGroup()
       }
     },
     methods: {

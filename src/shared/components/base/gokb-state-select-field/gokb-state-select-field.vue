@@ -66,7 +66,7 @@
     components: {
       GokbConfirmationPopup
     },
-    emits: ['update:model-value'],
+    emits: ['update:model-value', 'delete'],
     props: {
       label: {
         type: String,
@@ -95,11 +95,7 @@
         submitConfirmationMessage: {
           text: 'component.general.status.edit.delete.confirm',
           vars: []
-        },
-        current: '#4CAF50',
-        retired: '#FFC107',
-        expected: '#2196F3',
-        deleted: '#FF5252'
+        }
       }
     },
     computed: {

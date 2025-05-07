@@ -22,7 +22,7 @@
         />
       </v-col>
       <v-col cols="4">
-        <gokb-time-period-field
+        <gokb-select-field
           v-model="embargoUnit"
           :label="$t('component.tipp.embargo.unit.label')"
           :static-items="embargoPeriods"

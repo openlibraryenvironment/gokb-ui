@@ -27,7 +27,7 @@
             <v-btn
               icon
               right
-              @click="localValue = false"
+              @click="close"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -47,7 +47,7 @@
 <script>
   export default {
     name: 'GokbDialog',
-    emits: ['update:model-value', 'submit', 'update-valid'],
+    emits: ['update:model-value', 'submit', 'update-valid', 'confirm-close'],
     props: {
       modelValue: {
         type: [Boolean, Number, String],
@@ -82,12 +82,18 @@
         type: [Number, String],
         required: false,
         default: undefined
+      },
+      needsCloseConfirm: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
       return {
         appColor: import.meta.env.VITE_COLOR || '#4f4f4f',
-        formIsValid: false
+        formIsValid: false,
+        isCloseConfirmed: false
       }
     },
     computed: {
@@ -103,11 +109,12 @@
         get () {
           return this.isValid
         },
-        set (localValue) {
-          this.formIsValid = localValue
-          this.$emit('update-valid', localValue)
+        set (val) {
+          this.formIsValid = val
+          this.$emit('update-valid', val)
         }
-      }
+      },
+
     },
     mounted () {
       if (this.modelValue) {
@@ -130,6 +137,14 @@
       },
       closeWithEscape (event) {
         if (event.key === 'Escape') {
+          this.close()
+        }
+      },
+      close() {
+        if (this.needsCloseConfirm) {
+          this.$emit('confirm-close', true)
+        }
+        else {
           this.localValue = false
         }
       }

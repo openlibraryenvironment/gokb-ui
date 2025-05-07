@@ -2,7 +2,7 @@
   <gokb-section
     v-model="isExpanded"
     :expandable="expandable"
-    :title="title"
+    :main-title="title"
     :sub-title="subTitle"
     :items-total="totalNumberOfItems"
   >

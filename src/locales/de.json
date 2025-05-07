@@ -137,7 +137,8 @@
     "register": "Registrierung",
     "noaccess": "Kein Zugang",
     "kbartValidator": "KBART-Validator",
-    "error": "Fehler"
+    "error": "Fehler",
+    "notFound": "Nicht gefunden"
   },
   "pending": {
     "lists": {
@@ -186,6 +187,9 @@
         "generic": "Möchten Sie den Status der ausgewählten Elemente wirklich ändern?",
         "specific": "Möchten Sie den Status von {0} wirklich zu {1} ändern?",
         "list": "Möchten Sie den Status von {0} Elementen wirklich auf {1} setzen?"
+      },
+      "pendingChanges": {
+        "label": "Es gibt ungespeicherte Änderungen! Bitte bestätigen Sie, dass diese verworfen werden sollen."
       }
     },
     "login": {
