@@ -692,7 +692,7 @@
           return true
         }
 
-        if (!!this.lastLoad.id) {
+        if (!!this.lastLoad?.id) {
           for (var [key, val] of Object.entries(this.lastLoad)) {
             if (key === 'name' && this.allNames.name !== val) {
               return true
@@ -779,6 +779,7 @@
               this.currentSnackBarTimeout = 5000
               this.showSnackbar = true
             } else {
+              this.allNames.name = undefined
               this.$router.push({
                 name: '/title',
                 state: {

@@ -557,7 +557,7 @@
           return true
         }
 
-        if (!!this.lastLoad.id) {
+        if (!!this.lastLoad?.id) {
           for (var [key, val] of Object.entries(this.lastLoad)) {
             if (key === 'name' && this.allNames.name !== val) {
               return true
@@ -629,6 +629,7 @@
 
             this.reload()
           } else {
+            this.allNames.name = undefined
             this.$router.push({
               name: '/provider',
               state: {

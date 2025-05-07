@@ -1126,7 +1126,7 @@
           return true
         }
 
-        if (!!this.lastLoad.id) {
+        if (!!this.lastLoad?.id) {
           for (var [key, val] of Object.entries(this.lastLoad)) {
             if (key === 'name' && this.allNames.name !== val) {
               return true
@@ -1440,6 +1440,8 @@
                   this.loadImportJobStatus(kbartResult?.data?.jobId)
                 }
               } else {
+                this.allNames.name = undefined
+                this.sourceItem = undefined
                 this.$router.push({
                   name: '/package',
                   state: {
@@ -1498,6 +1500,8 @@
                   this.loadImportJobStatus(sourceUpdateResult?.data?.jobId)
                 }
               } else {
+                this.allNames.name = undefined
+                this.sourceItem = undefined
                 this.$router.push({
                   name: '/package',
                   state: {
@@ -1519,6 +1523,8 @@
                 this.currentSnackBarTimeout = 4000
                 this.showSnackbar = true
               } else {
+                this.allNames.name = undefined
+                this.sourceItem = undefined
                 this.$router.push({
                   name: '/package',
                   state: {
