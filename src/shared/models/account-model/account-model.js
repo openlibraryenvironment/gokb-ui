@@ -7,6 +7,7 @@ const api = (reactive, accountServices, browserStorage) => {
     username: undefined,
     userLocale: undefined,
     tabbedView: true,
+    activeGroup: undefined,
     darkMode: undefined,
     id: undefined,
     roles: undefined,
@@ -38,7 +39,7 @@ const api = (reactive, accountServices, browserStorage) => {
     },
 
     activeGroup () {
-      return localStorage.get(ACTIVE_GROUP, true)
+      return state.activeGroup || localStorage.get(ACTIVE_GROUP, true)
     },
 
     userLocale () {
@@ -59,6 +60,7 @@ const api = (reactive, accountServices, browserStorage) => {
     setActiveGroup (group) {
       if (!!group) {
         localStorage.set(ACTIVE_GROUP, group, true)
+        state.activeGroup = group
       }
     },
 

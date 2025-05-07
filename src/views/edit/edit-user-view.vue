@@ -224,11 +224,6 @@
         type: [Number, String],
         required: false,
         default: undefined
-      },
-      isCreated: {
-        type: Boolean,
-        required: false,
-        default: false
       }
     },
     data () {
@@ -349,11 +344,15 @@
           this.fetch()
         }
 
-        if (this.isCreated) {
+        let pars = history.state
+
+        if (pars.isCreated) {
           this.messageColor = 'success'
           this.snackbarMessage = this.$i18n.t('success.create', [this.$i18n.tc('component.user.label'), this.username])
           this.currentSnackBarTimeout = 4000
           this.showSnackbar = true
+
+          history.replaceState({}, "")
         }
       }
     },
@@ -431,12 +430,13 @@
 
             this.fetch()
           } else {
-            console.log("No ID")
             this.$router.push({
               name: '/user',
-              params: {
-                id: response.data.data.id,
+              state: {
                 isCreated: true
+              },
+              params: {
+                id: response.data.data.id
               }
             })
           }

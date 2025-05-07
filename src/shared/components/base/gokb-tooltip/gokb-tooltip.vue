@@ -6,7 +6,7 @@
       <v-icon
         :color="color"
         v-bind="props"
-        class="mt-n1 ml-2"
+        :class="classes"
         size="small"
       >
         {{ iconId }}
@@ -47,6 +47,11 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      classes: {
+        type: String,
+        required: false,
+        default: 'mt-n1 ml-2'
       }
     }
   }
