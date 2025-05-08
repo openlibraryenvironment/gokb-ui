@@ -827,6 +827,9 @@
         "label": "Zuletzt verifiziert am",
         "info": "Zeitpunkt der letzten Verifizierung"
       },
+      "autoUpdate": {
+        "label": "Update"
+      },
       "scope": {
         "label": "Pakettyp",
         "Front File": {

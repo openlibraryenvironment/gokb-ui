@@ -525,7 +525,7 @@
                         </v-col>
                         <v-col cols="11" v-else>
                           <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
-                            Import
+                            {{ $t('component.package.autoUpdate.label') }}
                           </div>
                           <v-chip
                             text="AUTO"

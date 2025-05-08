@@ -827,6 +827,9 @@
         "label": "Last list verification",
         "info": "Timestamp of the last verification"
       },
+      "autoUpdate": {
+        "label": "Update"
+      },
       "scope": {
         "label": "Scope",
         "Front File": {
