@@ -630,6 +630,7 @@
             this.reload()
           } else {
             this.allNames.name = undefined
+            this.pendingChanges = {}
             this.$router.push({
               name: '/provider',
               state: {

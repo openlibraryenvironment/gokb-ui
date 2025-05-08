@@ -1442,6 +1442,7 @@
               } else {
                 this.allNames.name = undefined
                 this.sourceItem = undefined
+                this.pendingChanges = {}
                 this.$router.push({
                   name: '/package',
                   state: {
@@ -1502,6 +1503,7 @@
               } else {
                 this.allNames.name = undefined
                 this.sourceItem = undefined
+                this.pendingChanges = {}
                 this.$router.push({
                   name: '/package',
                   state: {
@@ -1525,6 +1527,7 @@
               } else {
                 this.allNames.name = undefined
                 this.sourceItem = undefined
+                this.pendingChanges = {}
                 this.$router.push({
                   name: '/package',
                   state: {

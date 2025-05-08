@@ -780,6 +780,7 @@
               this.showSnackbar = true
             } else {
               this.allNames.name = undefined
+              this.pendingChanges = {}
               this.$router.push({
                 name: '/title',
                 state: {

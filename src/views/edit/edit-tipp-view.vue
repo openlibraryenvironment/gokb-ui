@@ -911,6 +911,7 @@
             this.reload()
           } else {
             this.allNames.name = undefined
+            this.pendingChanges = {}
             this.$router.push({
               name: '/package-title',
               state: {
