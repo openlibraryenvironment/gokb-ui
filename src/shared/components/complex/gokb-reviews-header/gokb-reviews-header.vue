@@ -25,6 +25,11 @@
       <v-col
         cols="3"
       >
+        <gokb-curatory-group-popup
+          v-if="showGroupInfo"
+          v-model="showGroupInfo"
+          :selected="selectedGroup"
+        />
         <div
           class="v-select__slot mt-n2"
         >
@@ -40,6 +45,7 @@
               :key="group.name"
               class="font-weight-medium"
               pill
+              @click="triggerSelectedGroup(group)"
             >
               {{ group.name }}
             </v-chip>
@@ -291,10 +297,11 @@
 <script>
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
+  import GokbCuratoryGroupPopup from '@/shared/popups/gokb-curatory-group-popup'
 
   export default {
     name: 'GokbReviewsHeader',
-    components: {},
+    components: { GokbCuratoryGroupPopup },
     extends: BaseComponent,
     props: {
       component: {
@@ -324,6 +331,8 @@
     data () {
       return {
         error: undefined,
+        showGroupInfo: false,
+        selectedGroup: undefined,
         componentRoutes: {
           package: '/package',
           org: '/provider',
@@ -360,6 +369,12 @@
       },
       moreInfoLink () {
         return !!this.reviewComponent.stdDesc ? this.$i18n.t('component.review.referenceBase.urlBase') + '#' + this.reviewComponent.stdDesc.name.replace(/\s/g, '_').toLowerCase() : undefined
+      }
+    },
+    methods: {
+      triggerSelectedGroup(groupInfo) {
+        this.selectedGroup = groupInfo
+        this.showGroupInfo = true
       }
     }
   }
