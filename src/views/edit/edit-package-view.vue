@@ -986,16 +986,8 @@
       platformSelection () {
         return this.platformSelect
       },
-      /*providerName () {
+      providerName () {
         return this.packageItem?.provider?.name
-      },*/
-      providerName: {
-        get() {
-          return this.packageItem?.provider?.name
-        },
-        set(newName) {
-          return newName
-        }
       },
       platformName () {
         return this.packageItem?.nominalPlatform?.name
@@ -1372,6 +1364,7 @@
               value: id.value,
               type: id.namespace
             })),
+            ...(!!this.sourceItem ? { source: this.sourceItem.id } : {}),
             subjects: this.packageItem.subjects.map(subject => ({
               heading: subject.heading,
               scheme: subject.scheme
