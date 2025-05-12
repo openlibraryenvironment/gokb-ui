@@ -1156,6 +1156,8 @@
         this.packageItem.consistent = preset.consistent
         this.packageItem.breakable = preset.breakable
         this.packageItem.fixed = preset.fixed
+        this.packageItem.ids = preset.ids
+        this.packageItem.subjects = preset.subjects
         this.createWithPresetsPopupVisible = false
 
       },

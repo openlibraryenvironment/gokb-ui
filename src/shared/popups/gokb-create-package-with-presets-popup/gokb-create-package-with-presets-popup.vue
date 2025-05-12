@@ -201,18 +201,56 @@
               </thead>
               <tbody>
               <tr
-                v-for="id in packageTemplate._embedded.ids"
+                v-for="(id, index) in packageTemplate._embedded.ids"
               >
                 <td>{{ id.namespace.name }}</td>
                 <td>{{ id.value }}</td>
                 <td><gokb-checkbox-field
-                  v-model="acceptProvider"
+                  v-model="acceptIdentifier[index]"
                 /></td>
               </tr>
               </tbody>
             </v-table>
 
           </div>
+
+
+          <br/><br/><br/>
+
+          <div v-if="packageTemplate._embedded.subjects.length > 0">
+            <v-row>
+              <v-col><h4>Möchten Sie die Sacherschließung übernehmen? </h4></v-col>
+              <v-col><gokb-checkbox-field
+                dense
+                v-model="acceptDDC"
+              /></v-col>
+            </v-row>
+            <br/>
+            <v-table density="compact">
+              <thead>
+              <tr>
+                <th class="text-left">
+                  Schema
+                </th>
+                <th class="text-left">
+                  Wert
+                </th>
+
+              </tr>
+              </thead>
+              <tbody>
+              <tr
+                v-for="(subject, index) in packageTemplate._embedded.subjects"
+              >
+                <td>{{ subject.scheme.name }}</td>
+                <td>{{ getLabelForDDC(subject.heading) }}</td>
+                <td></td>
+              </tr>
+              </tbody>
+            </v-table>
+
+          </div>
+
       </gokb-section>
       </div>
 
@@ -237,6 +275,7 @@ import GokbSearchPackageField from "../../components/simple/gokb-search-package-
 import packageServices from "@/shared/services/package-services"
 import genericServices from "@/shared/services/generic-entity-services"
 import GokbSection from "../../components/complex/gokb-section/gokb-section.vue";
+import ddcModel from "../../models/ddc-model/index.js";
 
 export default {
   name: 'GokbCreatePackageWithPresetsPopup',
@@ -272,7 +311,9 @@ export default {
       acceptGlobal: true,
       acceptBreakable: true,
       acceptConsistent: true,
-      acceptFixed: true
+      acceptFixed: true,
+      acceptIdentifier: [],
+      acceptDDC: true
     }
   },
   computed: {
@@ -366,8 +407,13 @@ export default {
   },
   async created () {
     // this.loadPresets()
+    console.log("111: ", this.$i18n.locale)
+    console.log("222: ", ddcModel.getDdcLabel("994", "de"))
   },
   methods: {
+    getLabelForDDC(id) {
+      return ddcModel.getDdcLabel(id, this.$i18n.locale)
+    },
     async checkIfPackageNameIsValid() {
       let response = await genericServices('rest/entities').checkNewName(
         encodeURIComponent(this.packageItem.name),
@@ -414,6 +460,27 @@ export default {
         fixed: this.packageItem.fixed.name !== 'No'
       }
 
+      let ids = []
+      for(var i = 0; i < this.packageItem.ids.length; i++){
+        if(this.acceptIdentifier[i]){
+          let id_tmp = this.packageItem.ids[i]
+          let identifier = {
+            id: id_tmp.id,
+            value: id_tmp.value,
+            namespace: id_tmp.namespace.value,
+            nslabel: id_tmp.namespace.name
+          }
+          ids.push(identifier)
+        }
+      }
+      pckg.ids = ids
+
+      let subjects = []
+      if(this.acceptDDC){
+         subjects = this.packageItem.subjects
+      }
+      pckg.subjects = subjects
+
       this.$emit("loadPresets", pckg)
 
     },
@@ -429,6 +496,12 @@ export default {
       this.packageItem.breakable = this.packageTemplate.breakable
       this.packageItem.fixed = this.packageTemplate.fixed
       this.packageItem.ids = this.packageTemplate._embedded.ids
+      this.packageItem.subjects = this.packageTemplate._embedded.subjects
+
+      // set default to accept all identifiers
+      for (var i = 0; i < this.packageItem.ids.length; i++) {
+        this.acceptIdentifier[i] = true
+      }
 
       console.log("****** ", this.packageItem)
     }
