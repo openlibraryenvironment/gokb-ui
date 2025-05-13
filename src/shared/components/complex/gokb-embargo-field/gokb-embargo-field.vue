@@ -11,6 +11,7 @@
           :static-items="embargoTypes"
           :rules="[typeRules]"
           :readonly="readonly"
+          return-object
         />
       </v-col>
       <v-col cols="4">
@@ -28,6 +29,7 @@
           :static-items="embargoPeriods"
           :rules="[unitRules]"
           :readonly="readonly"
+          return-object
         />
       </v-col>
     </v-row>
@@ -37,7 +39,7 @@
 <script>
   export default {
     name: 'GokbEmbargoField',
-    emits: ['update:model-value'],
+    emits: ['update:model-value', 'valid'],
     props: {
       label: {
         type: String,
@@ -61,9 +63,9 @@
         type: undefined,
         duration: undefined,
         unit: undefined,
-        embargoTypeField: undefined,
-        embargoUnitField: undefined,
-        embargoDurationField: undefined,
+        embargoType: undefined,
+        embargoUnit: undefined,
+        embargoDuration: undefined,
         errors: [],
         embargoTypes:  [
           {
@@ -98,36 +100,35 @@
         },
         set (localValue) {
           this.$emit('update:model-value', localValue)
+          this.$emit('valid', (!localValue || localValue?.length === 0 || !!localValue.match(/^[P,R][0-9]*[D,M,Y]$/)))
         }
+      }
+    },
+    watch: {
+      embargoType(val) {
+        this.localValue = this.buildNewVal()
       },
-      embargoType: {
-        get () {
-          const { type } = this.decodeEmbargo()
-          return type
-        },
-        set (type) {
-          const { duration, unit } = this.decodeEmbargo()
-          this.localValue = `${type || ''}${duration || ''}${unit || ''}`
-        }
+      embargoDuration(val) {
+        this.localValue = this.buildNewVal()
       },
-      embargoDuration: {
-        get () {
-          const { duration } = this.decodeEmbargo()
-          return parseInt(duration, 10) || duration
-        },
-        set (duration) {
-          const { type, unit } = this.decodeEmbargo()
-          this.localValue = `${type || ''}${duration || ''}${unit || ''}`
-        }
-      },
-      embargoUnit: {
-        get () {
-          const { unit } = this.decodeEmbargo()
-          return unit
-        },
-        set (unit) {
-          const { type, duration } = this.decodeEmbargo()
-          this.localValue = `${type || ''}${duration || ''}${unit || ''}`
+      embargoUnit(val) {
+        this.localValue = this.buildNewVal()
+      }
+    },
+    created () {
+      if (!!this.modelValue) {
+        const initParts = this.decodeEmbargo()
+
+        this.embargoType = initParts['type'] === 'R' ? this.embargoTypes[0] : this.embargoTypes[1]
+
+        this.embargoDuration = initParts['duration']
+
+        if (initParts['unit'] === 'D') {
+          this.embargoUnit = this.embargoPeriods[0]
+        } else if (initParts['unit'] === 'M') {
+          this.embargoUnit = this.embargoPeriods[1]
+        } else if (initParts['unit'] === 'Y') {
+          this.embargoUnit = this.embargoPeriods[2]
         }
       }
     },
@@ -136,6 +137,9 @@
         const matches = this.modelValue?.match(/^([P,R]?)([0-9]*)([D,M,Y]?)$/)
         const [, type, duration, unit] = matches || []
         return { type, duration, unit }
+      },
+      buildNewVal () {
+        return `${!!this.embargoType ? this.embargoType.id : ''}${this.embargoDuration}${!!this.embargoUnit ? this.embargoUnit.id : ''}`
       },
       typeRules () {
         return !!this.embargoType || (!this.embargoType && !this.embargoDuration && !this.embargoUnit)

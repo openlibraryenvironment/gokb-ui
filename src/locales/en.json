@@ -991,7 +991,18 @@
         "endIssue": "End Issue",
         "endVolume": "End Volume",
         "volume": "Volume",
-        "issue": "Issue"
+        "issue": "Issue",
+        "error": {
+          "endIssue": {
+            "noStart": "Please provide a starting issue"
+          },
+          "endVolume": {
+            "noStart": "Please provide a starting volume"
+          },
+          "endDate": {
+            "noStart": "Please provide a starting date"
+          }
+        }
       },
       "embargo": {
         "label": "Embargo",
