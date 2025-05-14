@@ -4,7 +4,7 @@
     <v-col>
       <gokb-section
         no-tool-bar
-        :style="{ border: statement.valid ? 'none' : '1 px red'}"
+        :errors="!validStates[idx]"
       >
         <v-row>
           <v-col cols="4">
@@ -193,7 +193,7 @@
       },
 
     },
-    created() {
+    mounted () {
       for (const cs of this.localValue) {
         this.validStates.push(true)
       }
@@ -218,7 +218,7 @@
           valid = false
         } else if (!!statement.endIssue && !statement.startIssue) {
           valid = false
-        } else if (!!statement.embargo && statement.embargo.match(/^[P,R][0-9]*[D,M,Y]$/)) {
+        } else if (!!statement.embargo && !statement.embargo.match(/^[P,R][0-9]*[D,M,Y]$/)) {
           valid = false
         }
 
