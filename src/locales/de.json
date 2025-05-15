@@ -991,7 +991,18 @@
         "endIssue": "Letztes Heft",
         "endVolume": "Letzter Band",
         "volume": "Band",
-        "issue": "Heft"
+        "issue": "Heft",
+        "error": {
+          "endIssue": {
+            "noStart": "Startheft ist nicht gesetzt"
+          },
+          "endVolume": {
+            "noStart": "Startband ist nicht gesetzt"
+          },
+          "endDate": {
+            "noStart": "Startdatum ist nicht gesetzt"
+          }
+        }
       },
       "embargo": {
         "label": "Embargo",

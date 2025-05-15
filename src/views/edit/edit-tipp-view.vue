@@ -222,125 +222,22 @@
                   <gokb-button
                     v-if="!isReadonly"
                     icon-id="mdi-plus"
+                    color="primary"
+                    height="38px"
+                    class="mr-2"
                     @click="addNewCoverage"
                   >
                     {{ $t('btn.add') }}
                   </gokb-button>
                 </v-toolbar-items>
               </v-toolbar>
-              <v-row
-                v-for="(statement, idx) in packageTitleItem.coverageStatements"
-                :key="idx"
-                dense
-              >
-                <v-col>
-                  <gokb-section no-tool-bar>
-                    <v-row>
-                      <v-col cols="4">
-                        <gokb-state-field
-                          v-model="statement.coverageDepth"
-                          :readonly="isReadonly"
-                          :init-item="statement.coverageDepth"
-                          :label="$t('component.tipp.coverage.depth.label')"
-                          message-path="component.tipp.coverage.depth"
-                          url="refdata/categories/TIPPCoverageStatement.CoverageDepth"
-                        />
-                      </v-col>
-                      <v-col>
-                        <gokb-textarea-field
-                          v-model="statement.coverageNote"
-                          :disabled="isReadonly"
-                          :label="$t('component.tipp.coverage.note')"
-                        />
-                      </v-col>
-                      <v-col
-                        v-if="!isReadonly"
-                        cols="1"
-                        class="pt-6"
-                      >
-                        <v-btn
-                          icon
-                          :title="$t('btn.delete')"
-                          @click="removeCoverage(idx)"
-                        >
-                          <v-icon>
-                            mdi-delete
-                          </v-icon>
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                    <v-row
-                      v-if="isJournal"
-                      dense
-                    >
-                      <v-col cols="4">
-                        <gokb-date-field
-                          v-model="statement.startDate"
-                          :readonly="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.startDate')"
-                          :api-errors="statement.errors ? statement.errors.startDate : undefined"
-                        />
-                      </v-col>
-                      <v-col cols="4">
-                        <gokb-text-field
-                          v-model="statement.startVolume"
-                          :disabled="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.startVolume')"
-                        />
-                      </v-col>
-                      <v-col cols="4">
-                        <gokb-text-field
-                          v-model="statement.startIssue"
-                          :disabled="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.startIssue')"
-                        />
-                      </v-col>
-                    </v-row>
-                    <v-row
-                      v-if="isJournal"
-                      dense
-                    >
-                      <v-col cols="4">
-                        <gokb-date-field
-                          v-model="statement.endDate"
-                          :readonly="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.endDate')"
-                          :api-errors="statement.errors ? statement.errors.endDate : undefined"
-                        />
-                      </v-col>
-                      <v-col cols="4">
-                        <gokb-text-field
-                          v-model="statement.endVolume"
-                          :disabled="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.endVolume')"
-                        />
-                      </v-col>
-                      <v-col cols="4">
-                        <gokb-text-field
-                          v-model="statement.endIssue"
-                          :disabled="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.endIssue')"
-                        />
-                      </v-col>
-                    </v-row>
-                    <v-row dense>
-                      <v-col>
-                        <gokb-embargo-field
-                          v-model="statement.embargo"
-                          dense
-                          :readonly="isReadonly"
-                        />
-                      </v-col>
-                    </v-row>
-                  </gokb-section>
-                </v-col>
-              </v-row>
+              <gokb-coverage-statements-field
+                v-model="packageTitleItem.coverageStatements"
+                :readonly="isReadonly"
+                :is-journal="isJournal"
+                @valid="updateCoverageValidState"
+                @remove="registerRemovedCoverage"
+              />
             </v-window-item>
             <v-window-item value="identifiers">
               <gokb-identifier-section
@@ -552,7 +449,7 @@
         <v-spacer />
         <gokb-button
           v-if="updateUrl || !id"
-          :disabled="!packageTitleItem.title"
+          :disabled="!isValid"
           @click="update"
           is-submit
         >
@@ -584,6 +481,8 @@
   import log from '@/shared/utils/logger'
   import utils from '@/shared/utils/utils'
 
+  const URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/
+
   export default {
     name: 'EditTippView',
     components: { GokbErrorComponent },
@@ -607,6 +506,7 @@
         notFound: false,
         reviewRequests: [],
         coverageExpanded: true,
+        coverageValid: true,
         selectedTitle: undefined,
         selectedItem: undefined,
         showSnackbar: false,
@@ -718,6 +618,14 @@
       },
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
+      },
+      isValid () {
+        return (!!this.allNames.name &&
+                !!this.packageTitleItem.hostPlatform &&
+                (this.isEdit || this.packageTitleItem.ids.length > 0) &&
+                !!this.packageTitleItem.url &&
+                URL_REGEX.test(this.packageTitleItem.url) &&
+                this.coverageValid)
       },
       idsTotal () {
         return this.packageTitleItem.ids?.length
@@ -959,6 +867,7 @@
         this.notFound = false
         this.reviewRequests = []
         this.coverageExpanded = true
+        this.coverageValid = true
         this.selectedTitle = undefined
         this.selectedItem = undefined
         this.showSnackbar = false
@@ -1149,13 +1058,11 @@
         this.pendingChanges.coverage = true
         this.packageTitleItem.coverageStatements.push(this.coverageObject)
       },
-      removeCoverage (idx) {
+      registerRemovedCoverage () {
         this.pendingChanges.coverage = true
-        this.packageTitleItem.coverageStatements.splice(idx, 1)
-
-        if (this.packageTitleItem.coverageStatements.length === 0) {
-          this.packageTitleItem.coverageStatements.push(this.coverageObject)
-        }
+      },
+      updateCoverageValidState(val) {
+        this.coverageValid = val
       },
       refreshReviewsCount (count) {
         this.reviewsCount = count
