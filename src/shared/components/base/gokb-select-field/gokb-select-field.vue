@@ -95,6 +95,10 @@
         required: false,
         default: true
       },
+      rules: {
+        type: Array,
+        required: false
+      },
       readonly: {
         type: Boolean,
         required: false,
@@ -154,7 +158,7 @@
         return this.localValue?.name || undefined
       },
       selectRules () {
-        return [value => (!!this.required && !!value) || !this.required || this.$i18n.t('validation.missingSelection')]
+        return this.rules || [value => (!!this.required && !!value) || !this.required || this.$i18n.t('validation.missingSelection')]
       },
       localErrorMessage () {
         return this.apiErrors ? this.$i18n.t(this.apiErrors[0].messageCode) : []

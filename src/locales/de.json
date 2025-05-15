@@ -994,13 +994,13 @@
         "issue": "Heft",
         "error": {
           "endIssue": {
-            "noStart": "Startheft ist nicht gesetzt"
+            "noStart": "Startheft nicht gesetzt"
           },
           "endVolume": {
-            "noStart": "Startband ist nicht gesetzt"
+            "noStart": "Startband nicht gesetzt"
           },
           "endDate": {
-            "noStart": "Startdatum ist nicht gesetzt"
+            "noStart": "Startdatum nicht gesetzt"
           }
         }
       },
@@ -1017,6 +1017,9 @@
           "day": "Tag(e)",
           "month": "Monat(e)",
           "year": "Jahr(e)"
+        },
+        "error": {
+          "missingPart": "Fehlender Embargo-Bestandteil!"
         }
       },
       "paymentType": {

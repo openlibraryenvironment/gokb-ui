@@ -102,6 +102,15 @@
           this.$emit('update:model-value', localValue)
           this.$emit('valid', (!localValue || localValue?.length === 0 || !!localValue.match(/^[P,R][0-9]*[D,M,Y]$/)))
         }
+      },
+      typeRules () {
+        return !!this.embargoType || (!this.embargoType && !this.embargoDuration && !this.embargoUnit) || this.$i18n.t('component.tipp.embargo.error.missingPart')
+      },
+      durationRules () {
+        return !!this.embargoDuration || (!this.embargoDuration && !this.embargoType && !this.embargoUnit) || this.$i18n.t('component.tipp.embargo.error.missingPart')
+      },
+      unitRules () {
+        return !!this.embargoUnit || (!this.embargoUnit && !this.embargoDuration && !this.embargoType) || this.$i18n.t('component.tipp.embargo.error.missingPart')
       }
     },
     watch: {
@@ -140,15 +149,6 @@
       },
       buildNewVal () {
         return `${!!this.embargoType ? this.embargoType.id : ''}${this.embargoDuration}${!!this.embargoUnit ? this.embargoUnit.id : ''}`
-      },
-      typeRules () {
-        return !!this.embargoType || (!this.embargoType && !this.embargoDuration && !this.embargoUnit)
-      },
-      durationRules () {
-        return !!this.embargoDuration || (!this.embargoDuration && !this.embargoType && !this.embargoUnit)
-      },
-      unitRules () {
-        return !!this.embargoUnit || (!this.embargoUnit && !this.embargoDuration && !this.embargoType)
       }
     }
   }
