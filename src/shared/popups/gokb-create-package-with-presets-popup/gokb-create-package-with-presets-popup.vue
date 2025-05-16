@@ -15,19 +15,19 @@
     <gokb-section>
 
       <v-row>
-        <v-col><h4>Wählen Sie das Paket, dessen Werte Sie übernehmen möchten.</h4></v-col>
+        <v-col><h4>{{ $t('popups.preset.choosePackage.label') }}</h4></v-col>
       </v-row>
 
       <v-row v-show="!presetDataIsLoading">
        <v-col cols="8">
         <gokb-search-package-field
-          label="Paket-Vorlage"
+          :label="$t('popups.preset.choosePackage.searchFieldLabel')"
           v-model="packageId"
         />
 
        </v-col>
 
-        <v-col>Sie können nach dem Namen des Pakets, oder nach dem exakten Wert eines Paket-Identifikators suchen.</v-col>
+        <v-col>{{ $t('popups.preset.choosePackage.advice') }}</v-col>
       </v-row>
 
       <div v-if="presetDataIsLoading">
@@ -44,7 +44,7 @@
         </v-row>
         <v-row justify="end">
           <v-col cols="6">
-            <span>{{ $t('popups.externalSourceImport.loading') }} </span>
+            <span>{{ $t('popups.preset.loading') }} </span>
           </v-col>
           <v-col cols="2"></v-col>
         </v-row>
@@ -68,14 +68,14 @@
               <v-icon class="pb-1" color="error">
                 mdi-close-thick
               </v-icon>
-              Ändern Sie bitte den Namen des Pakets.
+              {{ $t('popups.preset.choosePackage.packageExistsMessage') }}
             </span>
             </v-col>
           </v-row>
           <br/>
 
           <v-row>
-            <v-col><h3>Folgende Werte können Sie übernehmen</h3></v-col>
+            <v-col><h3>{{ $t('popups.preset.transferValues.static') }}</h3></v-col>
           </v-row>
 
           <br/>
@@ -84,13 +84,13 @@
             <thead>
             <tr>
               <th class="text-left">
-                Feld
+                {{ $t('popups.preset.tableHead.field') }}
               </th>
               <th class="text-left">
-                Wert
+                {{ $t('popups.preset.tableHead.value') }}
               </th>
               <th class="text-left">
-               Übernehmen?
+                {{ $t('popups.preset.tableHead.accept') }}
               </th>
 
             </tr>
@@ -99,7 +99,7 @@
             <tr
 
             >
-              <td>Anbieter</td>
+              <td>{{ $t('component.types.Org', 1) }}</td>
               <td>{{ packageTemplate.provider?.name }}</td>
               <td><gokb-checkbox-field
                 v-model="acceptProvider"
@@ -107,7 +107,7 @@
             </tr>
 
             <tr>
-              <td>Plattform</td>
+              <td>{{ $t('component.types.Platform', 1) }}</td>
               <td>{{ packageTemplate.nominalPlatform?.name }}</td>
                 <td>
                   <gokb-checkbox-field
@@ -117,8 +117,8 @@
             </tr>
 
             <tr>
-              <td>Pakettyp</td>
-              <td>{{ packageTemplate.scope?.name }}</td>
+              <td>{{ $t('component.package.scope.label') }}</td>
+              <td>{{ $t('component.package.scope.' + packageTemplate.scope?.name + '.label') }}</td>
               <td>
                 <gokb-checkbox-field
                   v-model="acceptScope"
@@ -127,8 +127,8 @@
             </tr>
 
             <tr>
-              <td>Inhaltstyp</td>
-              <td>{{ packageTemplate.contentType?.name }}</td>
+              <td>{{ $t('component.package.contentType.label') }}</td>
+              <td>{{ $t('component.package.contentType.' + packageTemplate.contentType?.name + '.label') }}</td>
               <td>
                 <gokb-checkbox-field
                   v-model="acceptContentType"
@@ -137,8 +137,8 @@
             </tr>
 
             <tr>
-              <td>Gültigkeit</td>
-              <td>{{ packageTemplate.global?.name }}</td>
+              <td>{{ $t('component.package.global.label') }}</td>
+              <td>{{ $t('component.package.global.' + packageTemplate.global?.name + '.label') }}</td>
               <td>
                 <gokb-checkbox-field
                   v-model="acceptGlobal"
@@ -147,8 +147,8 @@
             </tr>
 
             <tr>
-              <td>Paketinhalt einheitlich</td>
-              <td>{{ packageTemplate.consistent?.name }}</td>
+              <td>{{ $t('component.package.consistent') }}</td>
+              <td>{{ packageTemplate.consistent?.name === 'Yes' ? $t('default.true') : $t('default.false') }}</td>
               <td>
                 <gokb-checkbox-field
                   v-model="acceptConsistent"
@@ -157,8 +157,8 @@
             </tr>
 
             <tr>
-              <td>Einzeltitelauswahl möglich</td>
-              <td>{{ packageTemplate.fixed?.name }}</td>
+              <td>{{ $t('component.package.fixed') }}</td>
+              <td>{{ packageTemplate.fixed?.name === 'Yes' ? $t('default.true') : $t('default.false') }}</td>
               <td>
                 <gokb-checkbox-field
                   v-model="acceptFixed"
@@ -167,8 +167,8 @@
             </tr>
 
             <tr>
-              <td>Paket unveränderbar</td>
-              <td>{{ packageTemplate.breakable?.name }}</td>
+              <td>{{ $t('component.package.breakable') }}</td>
+              <td>{{ packageTemplate.breakable?.name === 'Yes' ? $t('default.true') : $t('default.false') }}</td>
               <td>
                 <gokb-checkbox-field
                   v-model="acceptBreakable"
@@ -182,19 +182,19 @@
           <br/><br/><br/>
 
           <div v-if="packageTemplate._embedded.ids.length > 0">
-            <v-row><v-col><h4>Folgende Identifikatoren können Sie übernehmen</h4></v-col></v-row>
+            <v-row><v-col><h4>{{ $t('popups.preset.transferValues.identifiers') }}</h4></v-col></v-row>
             <br/>
             <v-table density="compact">
               <thead>
               <tr>
                 <th class="text-left">
-                  Identifikator
+                  {{ $t('popups.preset.tableHead.identifier') }}
                 </th>
                 <th class="text-left">
-                  Wert
+                  {{ $t('popups.preset.tableHead.value') }}
                 </th>
                 <th class="text-left">
-                  Übernehmen?
+                  {{ $t('popups.preset.tableHead.accept') }}
                 </th>
 
               </tr>
@@ -219,7 +219,7 @@
 
           <div v-if="packageTemplate._embedded.subjects.length > 0">
             <v-row>
-              <v-col><h4>Möchten Sie die Sacherschließung übernehmen? </h4></v-col>
+              <v-col><h4>{{ $t('popups.preset.transferValues.ddc') }} </h4></v-col>
               <v-col><gokb-checkbox-field
                 dense
                 v-model="acceptDDC"
@@ -230,10 +230,10 @@
               <thead>
               <tr>
                 <th class="text-left">
-                  Schema
+                  {{ $t('popups.preset.tableHead.scheme') }}
                 </th>
                 <th class="text-left">
-                  Wert
+                  {{ $t('popups.preset.tableHead.value') }}
                 </th>
 
               </tr>
@@ -327,7 +327,7 @@ export default {
     },
     header() {
       //return this.$i18n.t('popups.externalSourceImport.label')
-      return 'Erstelle Paket mit Vorgabewerten'
+      return this.$i18n.t('popups.preset.label')
     },
     packageName() {
       return this.packageItem.name

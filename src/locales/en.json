@@ -240,6 +240,28 @@
       "titleIdNamespace": "title_id namespace for {0}",
       "monographs": "Monographs",
       "serials": "Serials"
+    },
+    "preset": {
+      "label": "Create a package with default values",
+      "tableHead": {
+        "field": "field",
+        "value": "value",
+        "accept": "Accept?",
+        "identifier": "identifier",
+        "scheme": "scheme"
+      },
+      "choosePackage": {
+        "label": "Select the package whose values you want to transfer.",
+        "searchFieldLabel": "Package template",
+        "advice": "You can search for the name of the package or for the exact value of a package identifier.",
+        "packageExistsMessage": "Please change the name of the package."
+      },
+      "loading": "The package data will be loaded.",
+      "transferValues": {
+        "static": "You can adopt the following values",
+        "identifiers": "You can adopt the following identifiers",
+        "ddc": "Would you like to adopt the cataloging?"
+      }
     }
   },
   "validation": {
