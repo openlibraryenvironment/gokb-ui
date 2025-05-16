@@ -383,6 +383,7 @@
                   target-type="Package"
                   :disabled="isReadonly"
                   :api-errors="errors?.ids"
+                  @update="addPendingChange"
                 />
               </v-col>
               <v-col
@@ -395,6 +396,7 @@
                   :filter-align="false"
                   :expandable="false"
                   :sub-title="$tc('component.curatoryGroup.label', 2)"
+                  @update="addPendingChange"
                 />
               </v-col>
               <v-col
@@ -405,6 +407,7 @@
                   v-model="allNames.alts"
                   :disabled="isReadonly"
                   :api-errors="errors?.variantNames"
+                  @update="addPendingChange"
                 />
               </v-col>
               <v-col
@@ -415,6 +418,7 @@
                   v-model="packageItem.subjects"
                   :disabled="isReadonly"
                   :api-errors="errors?.subjects"
+                  @update="addPendingChange"
                 />
               </v-col>
             </v-row>
@@ -508,9 +512,9 @@
                       />
                     </v-col>
                     <v-spacer/>
-                    <v-col cols="3" v-if="!!externalSource" >
+                    <v-col cols="3" v-if="!!externalSource || autoUpdate" >
                       <v-row justify="end">
-                        <v-col cols="11">
+                        <v-col cols="11" v-if="!!externalSource">
                           <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
                             {{ $t('popups.externalSourceImport.selectLabel') }}
                           </div>
@@ -521,6 +525,18 @@
                             :color="externalSourceColor"
                             density="compact"
                             :title="$t('component.source.importConfig.subtitle')"
+                          />
+                        </v-col>
+                        <v-col cols="11" v-else>
+                          <div class="text-caption text-medium-emphasis" style="margin-top:-2px; white-space: nowrap">
+                            {{ $t('component.package.autoUpdate.label') }}
+                          </div>
+                          <v-chip
+                            text="AUTO"
+                            class="text-button"
+                            rounded="lg"
+                            color="blue"
+                            density="compact"
                           />
                         </v-col>
                       </v-row>
@@ -686,7 +702,7 @@
           {{ $t('btn.back') }}
         </gokb-button>
         <v-spacer />
-        <div v-if="id">
+        <div v-if="isEdit">
           <v-chip
             class="ma-1"
             label
@@ -723,7 +739,6 @@
           @click="showExternalSourceImportPopup"
           v-show="!isEdit && step == 1"
         >
-          <!-- TODO: Text aus Properties-Datei {{ $t('btn.next') }} -->
           {{ $t('btn.externalSourceImport') }}
         </gokb-button>
 
@@ -737,7 +752,7 @@
         </gokb-button>
         <!-- without key, submit is executed on previous page -->
         <gokb-button
-          v-else-if="!isReadonly"
+          v-if="!isReadonly && (isEdit || isInLastStep)"
           key="add"
           :disabled="!isValid || hasRunningJob"
           color="primary"
@@ -786,6 +801,7 @@
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
   import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
+  import log from '@/shared/utils/logger'
 
   const ROWS_PER_PAGE = 10
 
@@ -825,21 +841,6 @@
     props: {
       id: {
         type: [Number, String],
-        required: false,
-        default: undefined
-      },
-      maintenance: {
-        type: Boolean,
-        required: false,
-        default: false
-      },
-      kbartJob: {
-        type: String,
-        required: false,
-        default: undefined
-      },
-      initMessageCode: {
-        type: String,
         required: false,
         default: undefined
       }
@@ -894,9 +895,10 @@
         packageItem: {
           id: undefined,
           name: undefined,
-          source: undefined,
           type: 'package',
           status: undefined,
+          ids: [],
+          subjects: [],
           descriptionURL: undefined,
           description: undefined,
           scope: undefined,
@@ -906,13 +908,13 @@
           consistent: undefined,
           breakable: undefined,
           fixed: undefined,
-          subjects: [],
           listStatus: undefined,
           editStatus: undefined,
-          ids: [],
           provider: undefined, // organisation
           nominalPlatform: undefined,
         },
+        lastLoad: {},
+        pendingChanges: {},
         overviewStates: {
           contentType: undefined,
           listStatus: undefined,
@@ -949,7 +951,8 @@
           WEKB: {
             color: 'orange'
           }
-        }
+        },
+        autoUpdate: false
       }
     },
     computed: {
@@ -983,16 +986,8 @@
       platformSelection () {
         return this.platformSelect
       },
-      /*providerName () {
+      providerName () {
         return this.packageItem?.provider?.name
-      },*/
-      providerName: {
-        get() {
-          return this.packageItem?.provider?.name
-        },
-        set(newName) {
-          return newName
-        }
       },
       platformName () {
         return this.packageItem?.nominalPlatform?.name
@@ -1039,7 +1034,8 @@
     },
     watch: {
       loggedIn (value) {
-        if (value) {
+        if (!!value) {
+          log.debug("package-view :: loggedIn")
           this.reload()
         }
 
@@ -1056,7 +1052,7 @@
         this.$refs?.descInfo?.refreshRows()
         this.$refs?.descEdit?.refreshRows()
 
-        history.pushState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
+        history.replaceState({}, "", window.location.toString().split('?')[0] + '?step=' + val)
       },
       isValid (val) {
         if (!val) {
@@ -1065,42 +1061,128 @@
       }
     },
     async created () {
-      await this.reload()
+      await this.reload(false)
 
-      if (!!this.initMessageCode) {
-        if (this.initMessageCode.includes('success')) {
+      let pars = history?.state
+
+      if (!!pars?.initMessageCode) {
+        if (pars.initMessageCode.includes('success')) {
           this.messageColor = 'success'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
           this.currentSnackBarTimeout = 4000
           this.showSnackbar = true
-        } else if (this.initMessageCode.includes('error')) {
+        } else if (pars.initMessageCode.includes('error')) {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label')])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.package.label')])
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
-        } else if (this.initMessageCode.includes('warning')) {
+        } else if (pars.initMessageCode.includes('warning')) {
           this.messageColor = 'warning'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         }
+
+        history.replaceState({}, "")
       }
 
-      if (!!this.kbartJob) {
-        this.loadImportJobStatus(this.kbartJob)
+      if (!!pars?.kbartJob) {
+        this.loadImportJobStatus(pars.kbartJob)
+
+        history.replaceState({}, "")
+
       } else if (this.isEdit && !this.isReadonly) {
         this.getActiveJobs()
       }
     },
     mounted () {
       document.addEventListener('keydown', this.handleKeyboardNav.bind(this))
+      window.addEventListener('beforeunload', this.checkForChanges)
 
       this.step = parseInt(this.$route.query.step) || 1
     },
     beforeDestroy() {
       document.removeEventListener("keydown", this.handleKeyboardNav)
     },
+    unmounted() {
+      window.removeEventListener('beforeunload', this.checkForChanges)
+    },
+    beforeRouteLeave (to, from) {
+      if (this.hasUnsavedChanges()) {
+        const answer = window.confirm(this.$i18n.t('popups.confirm.pendingChanges.label'))
+
+        return answer
+      }
+      else {
+        log.debug('No Changes ..')
+      }
+    },
     methods: {
+      checkForChanges (e) {
+        if (this.hasUnsavedChanges()) {
+          e.preventDefault()
+          e.returnValue = this.$i18n.t('popups.confirm.pendingChanges.label')
+        }
+      },
+      hasUnsavedChanges () {
+        log.debug("Check for unsaved changes ..")
+        if (Object.keys(this.pendingChanges).length > 0) {
+          log.debug('hasUnsavedChanges :: pendingChanges: ' + this.pendingChanges)
+          return true
+        }
+
+        if (!!this.lastLoad?.id) {
+          for (var [key, val] of Object.entries(this.lastLoad)) {
+            if (key === 'name' && this.allNames.name !== val) {
+              return true
+            }
+            else if (typeof val === 'array') {
+              // Array fields will have already been handled by check for entries in this.pendingChanges
+            }
+            else if (typeof val === 'object') {
+              if (key !== 'source' && this.packageItem.hasOwnProperty(key) && utils.hasLinkedFieldChanged(val, this.packageItem[key])) {
+                log.debug('hasUnsavedChanges :: changed linked field ' + key + '!')
+                return true
+              }
+            }
+            else if (this.packageItem.hasOwnProperty(key) && val !== this.packageItem[key]) {
+              log.debug('hasUnsavedChanges :: changed field ' + key + ': ' + val + '<>' + this.packageItem[key])
+              return true
+            }
+          }
+        }
+        else if (!!this.allNames.name) {
+          log.debug('hasUnsavedChanges :: no lastload, pending name!')
+          return true
+        }
+
+        if (!!this.lastLoad?.source) {
+          if (!this.sourceItem) {
+            log.debug('hasUnsavedChanges :: source removed!')
+            return true
+          }
+          else if (this.lastLoad.source.hasOwnProperty('url')) {
+            let trackedFields = ['url', 'automaticUpdates', 'targetNamespace', 'frequency', 'titleIdMonograph', 'titleIdSerial']
+
+            for (var [key, val] of Object.entries(this.lastLoad.source)) {
+              if (trackedFields.includes(key) && typeof val === 'object') {
+                if (utils.hasLinkedFieldChanged(val, this.sourceItem[key])) {
+                  log.debug('hasUnsavedChanges :: source object field changed: ' + key)
+                  return true
+                }
+              }
+              else if (trackedFields.includes(key) && val !== this.sourceItem[key]) {
+                log.debug('hasUnsavedChanges :: source simple field changed: ' + key + ' (' + this.sourceItem[key] + '->' + val + ')')
+                return true
+              }
+            }
+          }
+        } else if (!!this.sourceItem) {
+          return true
+        }
+
+        return false
+      },
       showExternalSourceImportPopup () {
         this.externalSourceImportPopupVisible = true
       },
@@ -1115,6 +1197,9 @@
 
         this.isImportFromExternalSource = true
         this.externalSourceImportPopupVisible = false
+        this.pendingChanges.provider = true
+        this.pendingChanges.nominalPlatform = true
+        this.pendingChanges.source = true
       },
       go2NextStep () {
         if (this.step < 4) {
@@ -1148,6 +1233,11 @@
         } else if (['1', '2', '3', '4'].includes(e.key) && (e.ctrlKey || e.metaKey)) {
           e.preventDefault()
           this.step = parseInt(e.key)
+        }
+      },
+      addPendingChange (prop) {
+        if (!this.pendingChanges[prop]) {
+          this.pendingChanges[prop] = true
         }
       },
       setKbart (options) {
@@ -1230,7 +1320,7 @@
         }
 
         if (this.isValid) {
-          if (this.sourceItem) {
+          if (!!this.sourceItem) {
             var sourceItem = this.sourceItem
 
             if (sourceItem.name !== this.allNames.name) {
@@ -1247,7 +1337,6 @@
             })
 
             if (sourceResponse.status < 400) {
-              this.packageItem.source = sourceResponse.data
               this.sourceItem = sourceResponse.data
             } else {
               this.errors.source = sourceResponse?.data?.data
@@ -1275,6 +1364,7 @@
               value: id.value,
               type: id.namespace
             })),
+            ...(!!this.sourceItem ? { source: this.sourceItem.id } : {}),
             subjects: this.packageItem.subjects.map(subject => ({
               heading: subject.heading,
               scheme: subject.scheme
@@ -1287,7 +1377,7 @@
             activeGroup: this.activeGroup
           }
 
-          if (!this.isUpdate || this.kbart || this.urlUpdate) {
+          if (!this.isUpdate || !!this.kbart || this.urlUpdate) {
             newPackage.generateToken = true
           }
 
@@ -1296,10 +1386,12 @@
             instance: this
           })
 
+          let kbartMessage = undefined
+
           if (response?.status < 400) {
             this.packageItem.id = response.data.id
 
-            if (this.kbart) {
+            if (!!this.kbart) {
               const kbartPars = {
                 activeGroup: this.activeGroup?.id,
                 titleIdNamespace: this.kbart.selectedNamespace?.id || this.sourceItem?.targetNamespace?.id,
@@ -1322,7 +1414,6 @@
               })
 
               this.kbart = undefined
-              let kbartMessage = undefined
 
               if (kbartResult.status === 403) {
                 kbartMessage = 'kbart.transmission.error.denied'
@@ -1356,12 +1447,17 @@
                   this.loadImportJobStatus(kbartResult?.data?.jobId)
                 }
               } else {
+                this.allNames.name = undefined
+                this.sourceItem = undefined
+                this.pendingChanges = {}
                 this.$router.push({
                   name: '/package',
-                  params: {
-                    id: this.packageItem.id,
+                  state: {
                     kbartJob: kbartResult?.data?.jobId,
                     initMessageCode: kbartResult.status === 200 ? 'success.create' : kbartMessage
+                  },
+                  params: {
+                    id: this.packageItem.id,
                   }
                 })
               }
@@ -1412,12 +1508,17 @@
                   this.loadImportJobStatus(sourceUpdateResult?.data?.jobId)
                 }
               } else {
+                this.allNames.name = undefined
+                this.sourceItem = undefined
+                this.pendingChanges = {}
                 this.$router.push({
                   name: '/package',
-                  params: {
-                    id: this.packageItem.id,
+                  state: {
                     kbartJob: sourceUpdateResult?.data?.jobId,
                     initMessageCode: sourceUpdateResult.status === 200 ? 'success.create' : kbartMessage
+                  },
+                  params: {
+                    id: this.packageItem.id
                   }
                 })
               }
@@ -1431,11 +1532,16 @@
                 this.currentSnackBarTimeout = 4000
                 this.showSnackbar = true
               } else {
+                this.allNames.name = undefined
+                this.sourceItem = undefined
+                this.pendingChanges = {}
                 this.$router.push({
                   name: '/package',
-                  params: {
-                    id: this.packageItem.id,
+                  state: {
                     initMessageCode: 'success.create'
+                  },
+                  params: {
+                    id: this.packageItem.id
                   }
                 })
               }
@@ -1466,7 +1572,7 @@
         }
         else {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t('validation.hasErrors'),
+          this.snackbarMessage = this.$i18n.t('validation.hasErrors')
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         }
@@ -1490,7 +1596,6 @@
         if (!this.isEdit) {
           this.packageItem.id = undefined
           this.packageItem.name = undefined
-          this.packageItem.source = undefined
           this.packageItem.status = undefined
           this.packageItem.descriptionURL = undefined
           this.packageItem.description = undefined
@@ -1514,13 +1619,14 @@
         this.showSnackbar = false
         this.reload(true)
       },
-      async reload () {
+      async reload (loadTipps = true) {
         if (this.isEdit) {
           if(!loading.isLoading()) {
             loading.startLoading()
           }
 
           this.errors = {}
+          this.pendingChanges = {}
           this.toDelete = false
           this.showSnackbar = false
           this.newTipps = []
@@ -1533,13 +1639,21 @@
           if (result?.status === 200) {
             this.mapRecord(result.data)
             this.updateStepErrors()
+
+            if (result?.data?._embedded?.source?.importConfig) {
+              this.externalSource = result.data._embedded.source.importConfig.name
+            } else if (result?.data?._embedded?.source?.automaticUpdates && result?.data?._embedded?.source?.frequency && result?.data?._embedded?.source?.url) {
+              this.autoUpdate = true
+            }
+
           } else if (result.status === 404) {
             this.notFound = true
           } else {
             this.$router.push({name: '/error'})
           }
 
-          if (!!this.$refs.tipps) {
+          if (!!this.$refs.tipps && loadTipps) {
+            log.debug("reload :: fetchTipps")
             await this.$refs.tipps.fetchTipps()
           }
 
@@ -1690,61 +1804,79 @@
       mapRecord (data) {
         this.updateUrl = data._links?.update?.href || null
         this.deleteUrl = data._links?.delete?.href || null
-        this.packageItem.id = data.id
+
         this.uuid = data.uuid
         this.currentName = data.name
-        this.packageItem.name = data.name
-        this.packageItem.source = data.source
-        this.packageItem.status = data.status
-        this.packageItem.descriptionURL = data.descriptionURL
-        this.packageItem.description = data.description
-        this.packageItem.scope = data.scope
-        this.packageItem.global = data.global?.name
-        this.packageItem.globalNote = data.globalNote
-        this.packageItem.consistent = data.consistent?.name === 'Yes'
-        this.packageItem.breakable = data.breakable?.name === 'Yes'
-        this.packageItem.fixed = data.fixed?.name === 'Yes'
-        this.packageItem.provider = data.provider
-        this.packageItem.nominalPlatform = data.nominalPlatform
-        this.packageItem.contentType = data.contentType
-        this.packageItem.listStatus = data.listStatus
-        this.packageItem.editStatus = data.editStatus
         this.version = data.version
-        this.packageItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
+        this.reviewRequests = data._embedded.reviewRequests
+        this.providerSelect = data.provider
+        this.platformSelect = data.nominalPlatform
+        this.titleCount = data._tippCount
+        this.listVerifiedDate = data.listVerifiedDate
+
+        const new_item_info = {
+          id: data.id,
+          type: 'package',
+          name: data.name,
+          status: data.status,
+          descriptionURL: data.descriptionURL,
+          description: data.description,
+          scope: data.scope,
+          global: data.global?.name,
+          globalNote: data.globalNote,
+          consistent: (data.consistent?.name === 'Yes'),
+          breakable: (data.breakable?.name === 'Yes'),
+          fixed: (data.fixed?.name === 'Yes'),
+          provider: data.provider,
+          nominalPlatform: data.nominalPlatform,
+          contentType: data.contentType,
+          listStatus: data.listStatus,
+          editStatus: data.editStatus
+        }
+
+        this.lastLoad = structuredClone(new_item_info)
+
+        new_item_info.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
           id,
           value,
           namespace: namespace.value,
           nslabel: namespace.name || namespace.value,
           isDeletable: !!this.updateUrl
         }))
-        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({
-          ...variantName,
+        new_item_info.subjects = data._embedded.subjects.map(subject => ({
+          ...subject,
           isDeletable: !!this.updateUrl
         }))
-        this.allCuratoryGroups = data._embedded.curatoryGroups.map(({ name, id }) => ({
+
+        this.packageItem = new_item_info
+
+        this.allNames = {
+          name: data.name,
+          alts: data._embedded.variantNames.map(variantName => ({
+            ...variantName,
+            isDeletable: !!this.updateUrl
+          }))
+        }
+
+        const new_curators = data._embedded.curatoryGroups.map(({ name, id }) => ({
           id,
           name,
           isDeletable: !!this.updateUrl
         }))
-        this.reviewRequests = data._embedded.reviewRequests
-        this.providerSelect = data.provider
-        this.platformSelect = data.nominalPlatform
-        this.titleCount = data._tippCount
-        this.allNames = {
-          name: data.name,
-          alts: this.allAlternateNames
-        }
-        this.packageItem.subjects = data._embedded.subjects.map(subject => ({
-          ...subject,
-          isDeletable: !!this.updateUrl
-        }))
-        this.listVerifiedDate = data.listVerifiedDate
 
-        if (!!data.source) {
+        this.allCuratoryGroups = new_curators
+        this.lastLoad.allCuratoryGroups = structuredClone(new_curators)
+
+        if (!!data._embedded.source) {
+          this.sourceItem = data._embedded.source
+          this.lastLoad.source = structuredClone(data._embedded.source)
+        }
+        else if (!!data.source) {
           this.sourceItem = data.source
 
           if (!!this.$refs.source) {
             this.$refs.source.fetch(this.sourceItem.id)
+            this.lastLoad.source = structuredClone(this.sourceItem)
           }
         }
 

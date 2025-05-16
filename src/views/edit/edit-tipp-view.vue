@@ -222,125 +222,22 @@
                   <gokb-button
                     v-if="!isReadonly"
                     icon-id="mdi-plus"
+                    color="primary"
+                    height="38px"
+                    class="mr-2"
                     @click="addNewCoverage"
                   >
                     {{ $t('btn.add') }}
                   </gokb-button>
                 </v-toolbar-items>
               </v-toolbar>
-              <v-row
-                v-for="(statement, idx) in packageTitleItem.coverageStatements"
-                :key="idx"
-                dense
-              >
-                <v-col>
-                  <gokb-section no-tool-bar>
-                    <v-row>
-                      <v-col cols="4">
-                        <gokb-state-field
-                          v-model="statement.coverageDepth"
-                          :readonly="isReadonly"
-                          :init-item="statement.coverageDepth"
-                          :label="$t('component.tipp.coverage.depth.label')"
-                          message-path="component.tipp.coverage.depth"
-                          url="refdata/categories/TIPPCoverageStatement.CoverageDepth"
-                        />
-                      </v-col>
-                      <v-col>
-                        <gokb-textarea-field
-                          v-model="statement.coverageNote"
-                          :disabled="isReadonly"
-                          :label="$t('component.tipp.coverage.note')"
-                        />
-                      </v-col>
-                      <v-col
-                        v-if="!isReadonly"
-                        cols="1"
-                        class="pt-6"
-                      >
-                        <v-btn
-                          icon
-                          :title="$t('btn.delete')"
-                          @click="removeCoverage(idx)"
-                        >
-                          <v-icon>
-                            mdi-delete
-                          </v-icon>
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                    <v-row
-                      v-if="isJournal"
-                      dense
-                    >
-                      <v-col cols="4">
-                        <gokb-date-field
-                          v-model="statement.startDate"
-                          :readonly="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.startDate')"
-                          :api-errors="statement.errors ? statement.errors.startDate : undefined"
-                        />
-                      </v-col>
-                      <v-col cols="4">
-                        <gokb-text-field
-                          v-model="statement.startVolume"
-                          :disabled="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.startVolume')"
-                        />
-                      </v-col>
-                      <v-col cols="4">
-                        <gokb-text-field
-                          v-model="statement.startIssue"
-                          :disabled="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.startIssue')"
-                        />
-                      </v-col>
-                    </v-row>
-                    <v-row
-                      v-if="isJournal"
-                      dense
-                    >
-                      <v-col cols="4">
-                        <gokb-date-field
-                          v-model="statement.endDate"
-                          :readonly="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.endDate')"
-                          :api-errors="statement.errors ? statement.errors.endDate : undefined"
-                        />
-                      </v-col>
-                      <v-col cols="4">
-                        <gokb-text-field
-                          v-model="statement.endVolume"
-                          :disabled="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.endVolume')"
-                        />
-                      </v-col>
-                      <v-col cols="4">
-                        <gokb-text-field
-                          v-model="statement.endIssue"
-                          :disabled="isReadonly"
-                          dense
-                          :label="$t('component.tipp.coverage.endIssue')"
-                        />
-                      </v-col>
-                    </v-row>
-                    <v-row dense>
-                      <v-col>
-                        <gokb-embargo-field
-                          v-model="statement.embargo"
-                          dense
-                          :readonly="isReadonly"
-                        />
-                      </v-col>
-                    </v-row>
-                  </gokb-section>
-                </v-col>
-              </v-row>
+              <gokb-coverage-statements-field
+                v-model="packageTitleItem.coverageStatements"
+                :readonly="isReadonly"
+                :is-journal="isJournal"
+                @valid="updateCoverageValidState"
+                @remove="registerRemovedCoverage"
+              />
             </v-window-item>
             <v-window-item value="identifiers">
               <gokb-identifier-section
@@ -552,7 +449,7 @@
         <v-spacer />
         <gokb-button
           v-if="updateUrl || !id"
-          :disabled="!packageTitleItem.title"
+          :disabled="!isValid"
           @click="update"
           is-submit
         >
@@ -581,6 +478,10 @@
   import tippServices from '@/shared/services/tipp-services'
   import accountModel from '@/shared/models/account-model'
   import loading from '@/shared/models/loading'
+  import log from '@/shared/utils/logger'
+  import utils from '@/shared/utils/utils'
+
+  const URL_REGEX = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/
 
   export default {
     name: 'EditTippView',
@@ -589,11 +490,6 @@
     props: {
       id: {
         type: [Number, String],
-        required: false,
-        default: undefined
-      },
-      initMessageCode: {
-        type: String,
         required: false,
         default: undefined
       }
@@ -610,6 +506,7 @@
         notFound: false,
         reviewRequests: [],
         coverageExpanded: true,
+        coverageValid: true,
         selectedTitle: undefined,
         selectedItem: undefined,
         showSnackbar: false,
@@ -630,8 +527,8 @@
         updateUrl: undefined,
         deleteUrl: undefined,
         status: undefined,
-        items: [],
         allNames: {},
+        lastLoad: undefined,
         titleType: undefined,
         importId: undefined,
         lastUpdated: undefined,
@@ -722,6 +619,14 @@
       tabClass () {
         return this.$vuetify.theme.dark ? 'tab-dark' : ''
       },
+      isValid () {
+        return (!!this.allNames.name &&
+                !!this.packageTitleItem.hostPlatform &&
+                (this.isEdit || this.packageTitleItem.ids.length > 0) &&
+                !!this.packageTitleItem.url &&
+                URL_REGEX.test(this.packageTitleItem.url) &&
+                this.coverageValid)
+      },
       idsTotal () {
         return this.packageTitleItem.ids?.length
       },
@@ -758,36 +663,119 @@
         document.title = this.$i18n.tc('component.tipp.label') + ' – ' + this.packageTitleItem.name
       },
       tab (val) {
-        history.pushState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
+        history.replaceState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
       }
     },
     async mounted () {
+      window.addEventListener('beforeunload', this.checkForChanges)
       this.reload()
 
-      if (this.initMessageCode) {
-        if (this.initMessageCode.includes('success')) {
+      let pars = history?.state
+
+      if (!!pars?.initMessageCode) {
+        if (pars.initMessageCode.includes('success')) {
           this.messageColor = 'success'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.tipp.label')])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
-        } else if (this.initMessageCode.includes('failure')) {
+        } else if (pars.initMessageCode.includes('failure')) {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.tipp.label')])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
-        } else if (this.initMessageCode.includes('warning')) {
+        } else if (pars.initMessageCode.includes('warning')) {
           this.messageColor = 'warning'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.tipp.label')])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.tipp.label')])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
         }
+
+        history.replaceState({}, "")
       }
 
       this.tab = this.$route?.query?.tab || 'access'
     },
+    unmounted() {
+      window.removeEventListener('beforeunload', this.checkForChanges)
+    },
+    beforeRouteLeave (to, from) {
+      if (this.hasUnsavedChanges()) {
+        const answer = window.confirm(this.$i18n.t('popups.confirm.pendingChanges.label'))
+
+        return answer
+      }
+      else {
+        log.debug('No Changes ..')
+      }
+    },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
+      },
+      checkForChanges (e) {
+        if (this.hasUnsavedChanges()) {
+          e.preventDefault()
+          e.returnValue = this.$i18n.t('popups.confirm.pendingChanges.label')
+        }
+      },
+      hasUnsavedChanges () {
+        log.debug("Check for unsaved changes ..")
+        if (Object.keys(this.pendingChanges).length > 0) {
+          log.debug('hasUnsavedChanges :: pendingChanges: ' + this.pendingChanges)
+          return true
+        }
+
+        if (!!this.lastLoad?.id) {
+          for (var [key, val] of Object.entries(this.lastLoad)) {
+            if (key === 'name' && this.allNames.name !== val) {
+              return true
+            }
+            else if (key === 'coverageStatements') {
+              if (val.length !== this.packageTitleItem.coverageStatements.length) {
+                return true
+              }
+              else {
+                for (const [idx, cs] of val.entries()) {
+                  let current_cs = this.packageTitleItem.coverageStatements[idx]
+
+                  for (var [cs_field, cs_val] of Object.entries(cs)) {
+                    if (cs_field !== 'owner') {
+                      if (cs_field === 'coverageDepth') {
+                        if (utils.hasLinkedFieldChanged(cs_val, current_cs.coverageDepth)) {
+                          log.debug('hasUnsavedChanges :: coverageStatement ' + idx + ' - ' + cs_field)
+                          return true
+                        }
+                      }
+                      else if (cs_val !== current_cs[cs_field]) {
+                        log.debug('hasUnsavedChanges :: coverageStatement ' + idx + ' - ' + cs_field)
+                        return true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            else if (typeof val === 'array') {
+              // Array fields will have already been handled by check for entries in this.pendingChanges
+            }
+            else if (typeof val === 'object') {
+              if (this.packageTitleItem.hasOwnProperty(key) && utils.hasLinkedFieldChanged(val, this.packageTitleItem[key])) {
+                log.debug('hasUnsavedChanges :: changed linked field ' + key + '!')
+                return true
+              }
+            }
+            else if (this.packageTitleItem.hasOwnProperty(key) && val !== this.packageTitleItem[key]) {
+              log.debug('hasUnsavedChanges :: changed field ' + key + ': ' + val + '<>' + this.packageTitleItem[key])
+              return true
+            }
+          }
+        }
+        else if (!!this.allNames.name) {
+          log.debug('hasUnsavedChanges :: no lastload, pending name!')
+          return true
+        }
+
+        return false
       },
       async update () {
         const activeGroup = accountModel.activeGroup()
@@ -830,11 +818,15 @@
             this.showSnackbar = true
             this.reload()
           } else {
+            this.allNames.name = undefined
+            this.pendingChanges = {}
             this.$router.push({
               name: '/package-title',
-              params: {
-                id: response.data?.id,
+              state: {
                 initMessageCode: 'success.create'
+              },
+              params: {
+                id: response.data?.id
               }
             })
           }
@@ -875,6 +867,7 @@
         this.notFound = false
         this.reviewRequests = []
         this.coverageExpanded = true
+        this.coverageValid = true
         this.selectedTitle = undefined
         this.selectedItem = undefined
         this.showSnackbar = false
@@ -892,7 +885,6 @@
         this.updateUrl = undefined
         this.deleteUrl = undefined
         this.status = undefined
-        this.items = []
         this.allNames = {}
         this.titleType = undefined
         this.importId = undefined
@@ -971,47 +963,66 @@
         loading.stopLoading()
       },
       mapRecord (data) {
-        this.packageTitleItem.id = data.id
         this.updateUrl = data._links?.update?.href || null
         this.deleteUrl = data._links?.delete?.href || null
-        this.packageTitleItem.name = data.name
-        this.packageTitleItem.pkg = data.pkg
-        this.packageTitleItem.title = data.title
-        this.packageTitleItem.hostPlatform = data.hostPlatform
         this.version = data.version
         this.status = data.status
-        this.packageTitleItem.publisherName = data.publisherName
-        this.packageTitleItem.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
+        this.importId = data.importId
+        this.uuid = data.uuid
+        this.dateCreated = data.dateCreated
+        this.lastUpdated = data.lastUpdated
+
+        const new_item_info = {
+          id: data.id,
+          name: data.name,
+          status: data.status,
+          pkg: data.pkg,
+          title: data.title,
+          hostPlatform: data.hostPlatform,
+          paymentType: data.paymentType,
+          url: data.url,
+          accessStartDate: this.buildDateString(data.accessStartDate),
+          accessEndDate: this.buildDateString(data.accessEndDate),
+          series: data.series,
+          subjectArea: data.subjectArea,
+          publisherName: data.publisherName,
+          dateFirstInPrint: this.buildDateString(data.dateFirstInPrint),
+          dateFirstOnline: this.buildDateString(data.dateFirstOnline),
+          firstAuthor: data.firstAuthor,
+          firstEditor: data.firstEditor,
+          publicationType: data.publicationType,
+          volumeNumber: data.volumeNumber,
+          editionStatement: data.editionStatement,
+          medium: data.medium,
+          lastChangedExternal: data.lastChangedExternal,
+          publisherName: data.publisherName
+        }
+
+        if (data._embedded.coverageStatements?.length) {
+          new_item_info.coverageStatements = data._embedded.coverageStatements.map(statement => ({
+            ...statement,
+            startDate: statement.startDate && this.buildDateString(statement.startDate),
+            endDate: statement.endDate && this.buildDateString(statement.endDate),
+          }))
+        }
+
+        this.lastLoad = structuredClone(new_item_info)
+
+        new_item_info.subjects = data._embedded.subjects.map(subject => ({
+          ...subject,
+          isDeletable: !!this.updateUrl
+        }))
+
+        new_item_info.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
           id,
           value,
           namespace: namespace.value,
           nslabel: (namespace.name || namespace.value),
           isDeletable: !!this.updateUrl
         }))
-        this.reviewRequests = data._embedded.reviewRequests
-        this.editionStatement = data.editionStatement
-        this.importId = data.importId
-        this.uuid = data.uuid
-        this.dateCreated = data.dateCreated
-        this.lastUpdated = data.lastUpdated
-        this.packageTitleItem.paymentType = data.paymentType
-        this.packageTitleItem.url = data.url
-        this.packageTitleItem.accessStartDate = this.buildDateString(data.accessStartDate)
-        this.packageTitleItem.accessEndDate = this.buildDateString(data.accessEndDate)
-        this.packageTitleItem.series = data.series
-        this.packageTitleItem.subjectArea = data.subjectArea
-        this.packageTitleItem.publisherName = data.publisherName
-        this.packageTitleItem.dateFirstInPrint = this.buildDateString(data.dateFirstInPrint)
-        this.packageTitleItem.dateFirstOnline = this.buildDateString(data.dateFirstOnline)
-        this.packageTitleItem.firstAuthor = data.firstAuthor
-        this.packageTitleItem.firstEditor = data.firstEditor
-        this.packageTitleItem.publicationType = data.publicationType
-        this.packageTitleItem.volumeNumber = data.volumeNumber
-        this.packageTitleItem.editionStatement = data.editionStatement
-        this.packageTitleItem.medium = data.medium
-        this.packageTitleItem.lastChangedExternal = data.lastChangedExternal
-        this.packageTitleItem.status = data.status
-        this.history = data.history
+
+        this.packageTitleItem = new_item_info
+
         this.allNames = {
           name: data.name,
           alts: data._embedded.variantNames.map(variantName => ({
@@ -1020,20 +1031,8 @@
           }))
         }
 
-        this.packageTitleItem.subjects = data._embedded.subjects.map(subject => ({
-          ...subject,
-          isDeletable: !!this.updateUrl
-        }))
-
+        this.reviewRequests = data._embedded.reviewRequests
         this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
-
-        if (data._embedded.coverageStatements?.length) {
-          this.packageTitleItem.coverageStatements = data._embedded.coverageStatements.map(statement => ({
-            ...statement,
-            startDate: statement.startDate && this.buildDateString(statement.startDate),
-            endDate: statement.endDate && this.buildDateString(statement.endDate),
-          }))
-        }
 
         this.titleType = data.title?.type || data.publicationType?.name
 
@@ -1059,13 +1058,11 @@
         this.pendingChanges.coverage = true
         this.packageTitleItem.coverageStatements.push(this.coverageObject)
       },
-      removeCoverage (idx) {
+      registerRemovedCoverage () {
         this.pendingChanges.coverage = true
-        this.packageTitleItem.coverageStatements.splice(idx, 1)
-
-        if (this.packageTitleItem.coverageStatements.length === 0) {
-          this.packageTitleItem.coverageStatements.push(this.coverageObject)
-        }
+      },
+      updateCoverageValidState(val) {
+        this.coverageValid = val
       },
       refreshReviewsCount (count) {
         this.reviewsCount = count

@@ -8,7 +8,7 @@
     data () {
       return {
         searchFilters: {
-          name: undefined,
+          qsName: undefined,
           identifierValue: undefined,
           publisherId: undefined,
           type: undefined,

@@ -62,7 +62,7 @@
           <v-col cols="3" xl="2">
             <gokb-namespace-field
               v-model="providerObject.titleNamespaceSerial"
-              target-type="Title"
+              target-type="Journal"
               :readonly="isReadonly"
               :label="$t('component.provider.titleNamespaceSerial.label')"
               exclude-isxn
@@ -71,7 +71,7 @@
           <v-col cols="3" xl="2">
             <gokb-namespace-field
               v-model="providerObject.titleNamespaceMonograph"
-              target-type="Title"
+              target-type="Book"
               :readonly="isReadonly"
               :label="$t('component.provider.titleNamespaceMonograph.label')"
               exclude-isxn
@@ -435,7 +435,8 @@
   import searchServices from '@/shared/services/search-services'
   import accountModel from '@/shared/models/account-model'
   import loading from '@/shared/models/loading'
-import { isReadonly } from 'vue'
+  import log from '@/shared/utils/logger'
+  import utils from '@/shared/utils/utils'
 
   export default {
     name: 'EditProviderView',
@@ -449,11 +450,6 @@ import { isReadonly } from 'vue'
     props: {
       id: {
         type: [String, Number],
-        required: false,
-        default: undefined
-      },
-      initMessageCode: {
-        type: String,
         required: false,
         default: undefined
       }
@@ -488,6 +484,7 @@ import { isReadonly } from 'vue'
         messageColor: undefined,
         currentSnackBarTimeout: '-1',
         version: undefined,
+        lastLoad: undefined,
         providerObject: {
           id: undefined,
           ids: [],
@@ -556,7 +553,7 @@ import { isReadonly } from 'vue'
         }
       },
       tab (val) {
-        history.pushState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
+        history.replaceState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
       },
       allRoles: {
         handler (vals) {
@@ -574,23 +571,27 @@ import { isReadonly } from 'vue'
     async created () {
       this.reload()
 
-      if (this.initMessageCode) {
-        if (this.initMessageCode.includes('success')) {
+      let pars = history.state
+
+      if (!!pars.initMessageCode) {
+        if (pars.initMessageCode.includes('success')) {
           this.messageColor = 'success'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
-        } else if (this.initMessageCode.includes('failure')) {
+        } else if (pars.initMessageCode.includes('failure')) {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label')])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.provider.label')])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
-        } else if (this.initMessageCode.includes('warning')) {
+        } else if (pars.initMessageCode.includes('warning')) {
           this.messageColor = 'warning'
-          this.snackbarMessage = this.$i18n.t(this.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
         }
+
+        history.replaceState({}, "")
       }
 
       if (this.loggedIn) {
@@ -598,11 +599,65 @@ import { isReadonly } from 'vue'
       }
     },
     mounted () {
+      window.addEventListener('beforeunload', this.checkForChanges)
       this.tab = this.$route?.query?.tab || 'variants'
+    },
+    unmounted() {
+      window.removeEventListener('beforeunload', this.checkForChanges)
+    },
+    beforeRouteLeave (to, from) {
+      if (this.hasUnsavedChanges()) {
+        const answer = window.confirm(this.$i18n.t('popups.confirm.pendingChanges.label'))
+
+        return answer
+      }
+      else {
+        log.debug('No Changes ..')
+      }
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
+      },
+      checkForChanges (e) {
+        if (this.hasUnsavedChanges()) {
+          e.preventDefault()
+          e.returnValue = this.$i18n.t('popups.confirm.pendingChanges.label')
+        }
+      },
+      hasUnsavedChanges () {
+        log.debug("Check for unsaved changes ..")
+        if (Object.keys(this.pendingChanges).length > 0) {
+          log.debug('hasUnsavedChanges :: pendingChanges: ' + this.pendingChanges)
+          return true
+        }
+
+        if (!!this.lastLoad?.id) {
+          for (var [key, val] of Object.entries(this.lastLoad)) {
+            if (key === 'name' && this.allNames.name !== val) {
+              return true
+            }
+            else if (typeof val === 'array') {
+              // Array fields will have already been handled by check for entries in this.pendingChanges
+            }
+            else if (typeof val === 'object') {
+              if (this.providerObject.hasOwnProperty(key) && utils.hasLinkedFieldChanged(val, this.providerObject[key])) {
+                log.debug('hasUnsavedChanges :: changed linked field ' + key + '!')
+                return true
+              }
+            }
+            else if (this.providerObject.hasOwnProperty(key) && val !== this.providerObject[key]) {
+              log.debug('hasUnsavedChanges :: changed field ' + key + ': ' + val + '<>' + this.providerObject[key])
+              return true
+            }
+          }
+        }
+        else if (!!this.allNames.name) {
+          log.debug('hasUnsavedChanges :: no lastload, pending name!')
+          return true
+        }
+
+        return false
       },
       async update () {
         var isUpdate = !!this.id
@@ -640,7 +695,7 @@ import { isReadonly } from 'vue'
           promise: providerServices.createOrUpdate(data, this.cancelToken.token),
           instance: this
         })
-        // todo: check error code
+
         if (response?.status < 400) {
           if (isUpdate) {
             this.messageColor = 'success'
@@ -650,11 +705,15 @@ import { isReadonly } from 'vue'
 
             this.reload()
           } else {
+            this.allNames.name = undefined
+            this.pendingChanges = {}
             this.$router.push({
               name: '/provider',
-              params: {
-                id: response.data?.id,
+              state: {
                 initMessageCode: 'success.create'
+              },
+              params: {
+                id: response.data?.id
               }
             })
           }
@@ -698,11 +757,13 @@ import { isReadonly } from 'vue'
         this.allPlatforms = []
         this.offices = []
         this.errors = {}
+        this.lastLoad = undefined
         this.updateUrl = undefined
         this.showSnackbar = false
         this.version = undefined
         this.providerObject = {
           id: undefined,
+          name: undefined,
           ids: [],
           status: undefined,
           source: undefined,
@@ -728,6 +789,7 @@ import { isReadonly } from 'vue'
           })
 
           if (result.status === 200) {
+            this.lastLoad = {}
             this.mapRecord(result.data)
           } else if (result.status === 404) {
             this.notFound = true
@@ -743,54 +805,69 @@ import { isReadonly } from 'vue'
       },
       async mapRecord (data) {
         this.name = data.name
-        this.providerObject.source = data.source
-        this.providerObject.homepage = data.homepage
+
         this.version = data.version
         this.updateUrl = data._links?.update?.href || null
         this.deleteUrl = data._links?.delete?.href || null
-        this.providerObject.id = data.id
-        this.providerObject.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
+        this.dateCreated = data.dateCreated
+        this.lastUpdated = data.lastUpdated
+
+        const new_item_info = {
+          id: data.id,
+          name: data.name,
+          status: data.status,
+          source: data.source,
+          homepage: data.homepage,
+          titleNamespace: data.titleNamespace,
+          titleNamespaceSerial: data.titleNamespaceSerial,
+          titleNamespaceMonograph: data.titleNamespaceMonograph,
+          packageNamespace: data.packageNamespace,
+          preferredShortname: data.preferredShortname
+        }
+
+        this.lastLoad = structuredClone(new_item_info)
+
+        new_item_info.ids = data._embedded.ids.map(({ id, value, namespace }) => ({
           id,
           value,
           namespace: namespace.value,
           nslabel: namespace.name || namespace.value,
           isDeletable: !!this.updateUrl
         }))
-        this.allAlternateNames = data._embedded.variantNames.map(variantName => ({
-          ...variantName,
-          isDeletable: !!this.updateUrl
-        }))
+
+        this.providerObject = new_item_info
+
         this.allRoles = data._embedded.roles.map(role => ({
           ...role,
           isDeletable: !!this.updateUrl
         }))
+
+        this.allNames = {
+          name: data.name,
+          alts: data._embedded.variantNames.map(variantName => ({
+            ...variantName,
+            isDeletable: !!this.updateUrl
+          }))
+        }
+
         this.allCuratoryGroups = data._embedded.curatoryGroups.map(group => ({
           ...group,
           isDeletable: !!this.updateUrl
         }))
+
         this.allPlatforms = data._embedded.providedPlatforms.map(platform => ({
           ...platform,
           updateUrl: platform._links.update.href,
           isDeletable: !!this.updateUrl
         }))
-        this.providerObject.titleNamespace = data.titleNamespace
-        this.providerObject.titleNamespaceSerial = data.titleNamespaceSerial
-        this.providerObject.titleNamespaceMonograph = data.titleNamespaceMonograph
-        this.providerObject.packageNamespace = data.packageNamespace
-        this.allNames = {
-          name: data.name,
-          alts: this.allAlternateNames
-        }
+
         this.offices = data._embedded.offices?.map(office => ({
           ...office,
           typeLocal: (office.function ? this.$i18n.t('component.office.type.label') : undefined),
           localLanguage: (office.language?.value && office.language.value),
           isDeletable: !!this.updateUrl
         })) || []
-        this.dateCreated = data.dateCreated
-        this.lastUpdated = data.lastUpdated
-        this.providerObject.status = data.status
-        this.providerObject.preferredShortname = data.preferredShortname
+
         this.uuid = data.uuid
 
         document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name

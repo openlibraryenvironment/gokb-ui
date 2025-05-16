@@ -6,7 +6,7 @@
       :style="styles"
     >
       <v-toolbar
-        v-if="title && !subTitle"
+        v-if="!!mainTitle && !subTitle"
         color="header"
         class="pl-4 pr-4"
         density="compact"
@@ -15,7 +15,7 @@
         <span
           class="text-h5 text-no-wrap"
         >
-          {{ title }}
+          {{ mainTitle }}
           <span
             v-if="markRequired"
             style="color:red"
@@ -30,7 +30,7 @@
         />
       </v-toolbar>
       <span
-        v-else-if="title && subTitle"
+        v-else-if="!!mainTitle && !!subTitle"
         class="text-h5 ml-4 text-no-wrap"
       >
         {{ subTitle }}
@@ -42,7 +42,7 @@
         </span>
       </span>
       <v-toolbar
-        v-else-if="!title && subTitle"
+        v-else-if="!mainTitle && !!subTitle"
         height="63"
         color="header"
         class="pl-4 pr-4"
@@ -50,7 +50,7 @@
         flat
       >
         <span
-          v-if="subTitle"
+          v-if="!!subTitle"
           class="text-h6 text-no-wrap"
         >
           {{ subTitle }}
@@ -94,7 +94,7 @@
         />
         <v-spacer />
         <slot
-          v-if="!title && !subTitle"
+          v-if="!mainTitle && !subTitle"
           name="buttons"
         />
         <v-toolbar-items
@@ -104,7 +104,7 @@
         </v-toolbar-items>
       </v-toolbar>
       <v-toolbar
-        v-else-if="!subTitle && !title && !noToolBar"
+        v-else-if="!subTitle && !mainTitle && !noToolBar"
         height="63"
         color="header"
         class="pl-4 pr-4"
@@ -157,7 +157,7 @@
         required: false,
         default: false,
       },
-      title: {
+      mainTitle: {
         type: String,
         required: false,
         default: undefined,

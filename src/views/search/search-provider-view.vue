@@ -10,7 +10,7 @@
     data () {
       return {
         searchFilters: {
-          label: undefined,
+          qsName: undefined,
           identifierValue: undefined,
           titleNamespace: undefined,
           curatoryGroupIds: undefined,

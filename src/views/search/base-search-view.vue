@@ -126,6 +126,8 @@
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import selection from '@/shared/models/selection'
   import accountModel from '@/shared/models/account-model'
+  import log from '@/shared/utils/logger'
+  import utils from '@/shared/utils/utils'
   import { toRaw } from 'vue';
 
   const ROWS_PER_PAGE = 10
@@ -233,23 +235,26 @@
       }
     },
     mounted () {
+      log.debug("base-search-view :: mounted ..")
       this.searchServices = searchServices(this.searchServicesUrl)
+      var initFilters = this.searchFilters
 
       Object.keys(this.searchFilters).forEach(filter => {
         var filter_val = this.$route.query[filter]
 
         if (typeof filter_val === 'string') {
-          this.searchFilters[filter] = /^[1-9]\d+$/.test(filter_val) ? parseInt(filter_val) : filter_val
+          initFilters[filter] = /^[1-9]\d+$/.test(filter_val) ? parseInt(filter_val) : filter_val
         } else if (typeof filter_val === 'array') {
-          this.searchFilters[filter] = filter_val
+          initFilters[filter] = filter_val
         }
       })
+
+      this.searchFilters = initFilters
 
       this.search()
     },
     activated () {
-      this.updateUrlParams()
-
+      log.debug("base-search-view :: activated ..")
       if (this.initRefresh) {
         this.search()
       }
@@ -413,6 +418,7 @@
         }))
       },
       async search ({ page } = { page: undefined }) {
+        log.debug("base-search-view :: Search ..")
         this.showSnackbar = false
         const searchParameters = this._searchParameters(this.searchInputFields)
 
@@ -533,12 +539,14 @@
         return new Promise(resolve => setTimeout(resolve, ms))
       },
       updateUrlParams () {
+        log.debug("base-search-view :: updateUrlParams")
+
         let urlBase = window.location.toString().split('?')[0] + '?'
         let combinedFilters = this.searchFilters
 
-        let paramString = baseServices.createQueryParameters(combinedFilters)
+        let paramString = utils.createQueryParameters(combinedFilters)
 
-        history.pushState({}, "", urlBase + paramString)
+        history.replaceState({ current: this.$route.path + '?' + paramString }, "", urlBase + paramString)
       }
     }
   }

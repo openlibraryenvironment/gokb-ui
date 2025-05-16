@@ -137,7 +137,8 @@
     "register": "Registrierung",
     "noaccess": "Kein Zugang",
     "kbartValidator": "KBART-Validator",
-    "error": "Fehler"
+    "error": "Fehler",
+    "notFound": "Nicht gefunden"
   },
   "pending": {
     "lists": {
@@ -186,6 +187,9 @@
         "generic": "Möchten Sie den Status der ausgewählten Elemente wirklich ändern?",
         "specific": "Möchten Sie den Status von {0} wirklich zu {1} ändern?",
         "list": "Möchten Sie den Status von {0} Elementen wirklich auf {1} setzen?"
+      },
+      "pendingChanges": {
+        "label": "Es gibt ungespeicherte Änderungen! Bitte bestätigen Sie, dass diese verworfen werden sollen."
       }
     },
     "login": {
@@ -827,6 +831,9 @@
         "label": "Zuletzt verifiziert am",
         "info": "Zeitpunkt der letzten Verifizierung"
       },
+      "autoUpdate": {
+        "label": "Update"
+      },
       "scope": {
         "label": "Pakettyp",
         "Front File": {
@@ -984,7 +991,18 @@
         "endIssue": "Letztes Heft",
         "endVolume": "Letzter Band",
         "volume": "Band",
-        "issue": "Heft"
+        "issue": "Heft",
+        "error": {
+          "endIssue": {
+            "noStart": "Startheft nicht gesetzt"
+          },
+          "endVolume": {
+            "noStart": "Startband nicht gesetzt"
+          },
+          "endDate": {
+            "noStart": "Startdatum nicht gesetzt"
+          }
+        }
       },
       "embargo": {
         "label": "Embargo",
@@ -999,6 +1017,9 @@
           "day": "Tag(e)",
           "month": "Monat(e)",
           "year": "Jahr(e)"
+        },
+        "error": {
+          "missingPart": "Fehlender Embargo-Bestandteil!"
         }
       },
       "paymentType": {
@@ -1667,6 +1688,12 @@
           "info": "Die Angaben des manuell angelegten Referenztitels überlappen sich mit denen eines bestehenden Referenztitels!",
           "action": "-",
           "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Ist dies der Fall, wählen Sie den bestehenden Titel über den Button 'Ziel auswählen' aus. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht)."
+        },
+        "Coverage Matching Conflict": {
+          "label": "Abdeckungskonflikt",
+          "info": "Der Abdeckungszeitraum ({0}) steht im Konflikt zu dem Erscheinungszeitraum des verknüpften Referenztitel ({1}).",
+          "action": "-",
+          "toDo": "Überprüfen Sie, ob der richtige Referenztitel verknüpft wurde, und korrigieren Sie eventuell fehlerhafte Erscheinungsdaten."
         }
       }
     },

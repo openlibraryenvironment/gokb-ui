@@ -9,8 +9,10 @@
         >
           <router-link to="/">
             <v-img
-              src="img/logo.png"
-              width="300"
+              :src="logoPath"
+              max-height="350"
+              class="my-8"
+              contain
             />
           </router-link>
         </v-row>
@@ -33,6 +35,11 @@
 
 <script>
   export default {
-    name: 'GokbNoAccessField'
+    name: 'GokbNoAccessField',
+    computed: {
+      logoPath () {
+        return this.$vuetify.theme.name === 'dark' ? './img/logo_dark.svg' : './img/logo_light.svg'
+      }
+    }
   }
 </script>
