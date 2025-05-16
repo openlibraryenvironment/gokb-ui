@@ -118,7 +118,7 @@
 
             <tr>
               <td>{{ $t('component.package.scope.label') }}</td>
-              <td>{{ $t('component.package.scope.' + packageTemplate.scope?.name + '.label') }}</td>
+              <td>{{ packageTemplate.scope?.name ? $t('component.package.scope.' + packageTemplate.scope?.name + '.label') : '' }}</td>
               <td>
                 <gokb-checkbox-field
                   v-model="acceptScope"
@@ -128,7 +128,7 @@
 
             <tr>
               <td>{{ $t('component.package.contentType.label') }}</td>
-              <td>{{ $t('component.package.contentType.' + packageTemplate.contentType?.name + '.label') }}</td>
+              <td>{{ packageTemplate.contentType?.name ? $t('component.package.contentType.' + packageTemplate.contentType?.name + '.label') : '' }}</td>
               <td>
                 <gokb-checkbox-field
                   v-model="acceptContentType"
