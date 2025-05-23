@@ -61,7 +61,7 @@
         v-if="isPackageComponent && totalNumberOfItems > 0"
         :loading="exportIsLoading"
         class="mr-4"
-        color="blue"
+        color="primary"
         @click="exportReviewRequests"
       >
         {{ $t('btn.export') }}
