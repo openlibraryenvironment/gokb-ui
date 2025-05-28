@@ -1,12 +1,19 @@
 <template>
-  <v-checkbox
-    v-model="localValue"
-    :label="label"
-    :disabled="disabled || readonly"
-    :style="{ opacity: opacity }"
-    :readonly="readonly"
-    :density="dense ? 'compact' : 'default'"
-  />
+  <v-row no-gutters dense>
+    <v-col>
+      <v-checkbox
+        v-model="localValue"
+        :label="label"
+        :disabled="disabled || readonly"
+        :style="{ opacity: opacity }"
+        :readonly="readonly"
+        :density="dense ? 'compact' : 'default'"
+      />
+    </v-col>
+    <v-col v-if="!!gokbTooltip" cols="1" align-self="baseline">
+      <gokb-tooltip classes="mt-3" :code="gokbTooltip" />
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -38,6 +45,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      gokbTooltip: {
+        type: String,
+        required: false,
+        default: undefined
       },
       opacity: {
         type: Number,

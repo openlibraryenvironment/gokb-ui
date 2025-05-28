@@ -10,35 +10,41 @@
     <div style="color:red;" v-if="localErrorMessage.length > 0"> {{ localErrorMessage }} </div>
   </div>
 
-  <v-select
-    v-else
-    ref="select"
-    v-model="localValue"
-    :items="localizedItems"
-    :label="label"
-    :placeholder="placeholder"
-    :item-title="itemTitle"
-    :item-value="itemValue"
-    :rules="selectRules"
-    :no-data-text="$t('search.results.empty')"
-    min-width="150px"
-    :max-width="width"
-    :clearable="clearable && !required"
-    :return-object="returnObject"
-    :persistent-placeholder="!!placeholder"
-    variant="underlined"
-    :density="dense ? 'compact' : 'default'"
-  >
-    <template #label>
-      {{ label }}
-      <span
-        v-if="required"
-        style="color:red"
+  <v-row v-else-if="!!localizedItems" no-gutters>
+    <v-col>
+      <v-select
+        ref="select"
+        v-model="localValue"
+        :items="localizedItems"
+        :label="label"
+        :placeholder="placeholder"
+        :item-title="itemTitle"
+        :item-value="itemValue"
+        :rules="selectRules"
+        :no-data-text="$t('search.results.empty')"
+        min-width="150px"
+        :max-width="width"
+        :clearable="clearable && !required"
+        :return-object="returnObject"
+        :persistent-placeholder="!!placeholder"
+        variant="underlined"
+        :density="dense ? 'compact' : 'default'"
       >
-        *
-      </span>
-    </template>
-  </v-select>
+        <template #label>
+          {{ label }}
+          <span
+            v-if="required"
+            style="color:red"
+          >
+            *
+          </span>
+        </template>
+      </v-select>
+    </v-col>
+    <v-col v-if="!!gokbTooltip" cols="1" align-self="center">
+      <gokb-tooltip classes="" :code="gokbTooltip" />
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -89,6 +95,10 @@
         required: false,
         default: true
       },
+      rules: {
+        type: Array,
+        required: false
+      },
       readonly: {
         type: Boolean,
         required: false,
@@ -111,6 +121,11 @@
       },
       apiErrors: {
         type: Array,
+        required: false,
+        default: undefined
+      },
+      gokbTooltip: {
+        type: String,
         required: false,
         default: undefined
       },
@@ -143,7 +158,7 @@
         return this.localValue?.name || undefined
       },
       selectRules () {
-        return [value => (!!this.required && !!value) || !this.required || this.$i18n.t('validation.missingSelection')]
+        return this.rules || [value => (!!this.required && !!value) || !this.required || this.$i18n.t('validation.missingSelection')]
       },
       localErrorMessage () {
         return this.apiErrors ? this.$i18n.t(this.apiErrors[0].messageCode) : []
