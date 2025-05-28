@@ -260,7 +260,8 @@
       "transferValues": {
         "static": "You can adopt the following values",
         "identifiers": "You can adopt the following identifiers",
-        "ddc": "Would you like to adopt the cataloging?"
+        "ddc": "Would you like to adopt the cataloging?",
+        "autoUpdate": "Would you like to adopt the update information?"
       }
     }
   },

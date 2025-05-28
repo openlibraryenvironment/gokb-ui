@@ -181,7 +181,8 @@
 
           <br/><br/><br/>
 
-          <div v-if="packageTemplate._embedded.ids.length > 0">
+          <div>
+            <!-- v-if="packageTemplate._embedded.ids.length > 0" -->
             <v-row><v-col><h4>{{ $t('popups.preset.transferValues.identifiers') }}</h4></v-col></v-row>
             <br/>
             <v-table density="compact">
@@ -217,13 +218,15 @@
 
           <br/><br/><br/>
 
-          <div v-if="packageTemplate._embedded.subjects.length > 0">
+          <div>
             <v-row>
               <v-col><h4>{{ $t('popups.preset.transferValues.ddc') }} </h4></v-col>
-              <v-col><gokb-checkbox-field
+              <v-col>
+                <gokb-checkbox-field
                 dense
                 v-model="acceptDDC"
-              /></v-col>
+                :disabled="packageTemplate._embedded.subjects.length === 0"/>
+              </v-col>
             </v-row>
             <br/>
             <v-table density="compact">
@@ -247,6 +250,70 @@
                 <td></td>
               </tr>
               </tbody>
+            </v-table>
+          </div>
+
+              <br/><br/><br/>
+
+              <div>
+                <v-row>
+                  <v-col><h4>{{ $t('popups.preset.transferValues.autoUpdate') }} </h4></v-col>
+                  <v-col>
+                    <gokb-checkbox-field
+                      dense
+                      v-model="acceptAutoUpdate"
+                    />
+                  </v-col>
+                </v-row>
+                <br/>
+                <v-table density="compact">
+                  <thead>
+                  <tr>
+                    <th class="text-left">
+                      <!-- {{ $t('popups.preset.tableHead.scheme') }} -->
+                      Feld
+                    </th>
+                    <th class="text-left">
+                      <!-- {{ $t('popups.preset.tableHead.value') }} -->
+                      Wert
+                    </th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>URL</td>
+                      <td>{{ packageTemplate._embedded.source.url }}</td>
+                      <td>
+                        <gokb-text-field
+                          v-model="sourceUrl"
+                        />
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Update-Zyklus</td>
+                      <td>{{ packageTemplate._embedded.source.frequency.name }}</td>
+                      <td></td>
+                    </tr>
+
+                    <tr>
+                      <td>title_id Monograph</td>
+                      <td>{{ packageTemplate._embedded.source.titleIdMonograph }}</td>
+                      <td></td>
+                    </tr>
+
+                    <tr>
+                      <td>title_id Serial</td>
+                      <td>{{ packageTemplate._embedded.source.titleIdSerial }}</td>
+                      <td></td>
+                    </tr>
+
+
+                  </tbody>
+
+
+
             </v-table>
 
           </div>
@@ -276,10 +343,11 @@ import packageServices from "@/shared/services/package-services"
 import genericServices from "@/shared/services/generic-entity-services"
 import GokbSection from "../../components/complex/gokb-section/gokb-section.vue";
 import ddcModel from "../../models/ddc-model/index.js";
+import GokbTextField from "../../components/base/gokb-text-field/gokb-text-field.vue";
 
 export default {
   name: 'GokbCreatePackageWithPresetsPopup',
-  components: {GokbSection, GokbSearchPackageField},
+  components: {GokbTextField, GokbSection, GokbSearchPackageField},
   extends: BaseComponent,
   emits: ['update:model-value', 'loadPresets'],
   props: {
@@ -313,7 +381,9 @@ export default {
       acceptConsistent: true,
       acceptFixed: true,
       acceptIdentifier: [],
-      acceptDDC: true
+      acceptDDC: true,
+      acceptAutoUpdate: true,
+      sourceUrl: undefined
     }
   },
   computed: {
