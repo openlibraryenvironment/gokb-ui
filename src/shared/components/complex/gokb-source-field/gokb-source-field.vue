@@ -115,7 +115,6 @@
 
 <script>
   import sourceServices from '@/shared/services/source-services'
-  import providerServices from '@/shared/services/provider-services'
   import BaseComponent from '@/shared/components/base-component'
   import providerServices from '@/shared/services/provider-services'
 
