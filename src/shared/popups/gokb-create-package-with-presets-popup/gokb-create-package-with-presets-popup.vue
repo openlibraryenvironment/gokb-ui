@@ -283,11 +283,15 @@
                   <tbody>
                     <tr>
                       <td>URL</td>
-                      <td>{{ packageTemplate._embedded.source.url }}</td>
+                      <!--
+                      <td>{{ packageItem.source.url }}</td>
+                      -->
                       <td>
                         <gokb-text-field
-                          v-model="sourceUrl"
+                          v-model="packageItem.source.url"
+                          :style="!sourceUrlValid ? {'color': '#9c27b0'} : {}"
                         />
+                        <!-- :rules="[rules.validSourceUrl]" -->
                       </td>
                     </tr>
 
@@ -383,7 +387,17 @@ export default {
       acceptIdentifier: [],
       acceptDDC: true,
       acceptAutoUpdate: true,
-      sourceUrl: undefined
+      sourceUrlValid: false,
+      /* rules: {
+        validSourceUrl: [
+          (value) => {
+            if (value.length > 5) {
+              return true
+            }
+            return "Nope"
+          }
+        ]
+      } */
     }
   },
   computed: {
@@ -401,6 +415,9 @@ export default {
     },
     packageName() {
       return this.packageItem.name
+    },
+    sourceUrl() {
+      return this.packageItem.source?.url
     }
   },
   watch: {
@@ -470,17 +487,47 @@ export default {
       }
     },
     packageName (val) {
-      if(val) {
+      if(!!val) {
         this.checkIfPackageNameIsValid()
+      }
+    },
+    sourceUrl (value) {
+      if(!!value) {
+        this.checkIfSourceUrlIsValid()
       }
     }
   },
   async created () {
     // this.loadPresets()
-    console.log("111: ", this.$i18n.locale)
-    console.log("222: ", ddcModel.getDdcLabel("994", "de"))
+
   },
   methods: {
+    async checkIfSourceUrlIsValid() {
+      console.log("check Source URL...")
+      let valid = true
+
+      /* funktioniert nicht, da im Datenmodell offenbar nicht das Source-Objekt selber,
+      * sondern lediglich eine Referenz auf das Source-Obj gespeichert wird */
+      let urlToCheck = this.packageItem.source.url
+      let oldUrl = this.packageTemplate._embedded?.source?.url
+
+      console.log("new: ", urlToCheck, " old: ", oldUrl)
+
+      if (urlToCheck === oldUrl) {
+        console.log("URL not changed")
+        valid = false
+      } else {
+        const validationResult = await genericServices('rest/entities').checkUrl(urlToCheck, true, this.cancelToken.token)
+
+        console.log("URL VALIDATIONSERVICE: ", validationResult)
+        if (validationResult.data?.result === 'ERROR') {
+          valid = false
+        }
+      }
+
+      this.sourceUrlValid = valid
+      console.log("Source URL ", valid)
+    },
     getLabelForDDC(id) {
       return ddcModel.getDdcLabel(id, this.$i18n.locale)
     },
@@ -567,11 +614,16 @@ export default {
       this.packageItem.fixed = this.packageTemplate.fixed
       this.packageItem.ids = this.packageTemplate._embedded.ids
       this.packageItem.subjects = this.packageTemplate._embedded.subjects
+      this.packageItem.source = this.packageTemplate._embedded.source
+
+      console.log("SOURCE: ", this.packageItem.source)
 
       // set default to accept all identifiers
       for (var i = 0; i < this.packageItem.ids.length; i++) {
         this.acceptIdentifier[i] = true
       }
+
+
 
       console.log("****** ", this.packageItem)
     }
