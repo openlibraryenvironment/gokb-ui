@@ -52,8 +52,6 @@
 
     </gokb-section>
 
-<!--      <br/><br/><br/> -->
-
 
       <div v-if="presetDataLoaded">
         <gokb-section>
@@ -289,8 +287,9 @@
                       <td>
                         <gokb-text-field
                           v-model="packageItem.source.url"
-                          :style="!sourceUrlValid ? {'color': '#9c27b0'} : {}"
+                          :rules="[sourceUrlVal || 'Not valid']"
                         />
+                        <!-- :style="!sourceUrlValid ? {'color': 'red'} : {}" -->
                         <!-- :rules="[rules.validSourceUrl]" -->
                       </td>
                     </tr>
@@ -418,6 +417,9 @@ export default {
     },
     sourceUrl() {
       return this.packageItem.source?.url
+    },
+    sourceUrlVal() {
+      return this.sourceUrlValid
     }
   },
   watch: {
@@ -506,8 +508,6 @@ export default {
       console.log("check Source URL...")
       let valid = true
 
-      /* funktioniert nicht, da im Datenmodell offenbar nicht das Source-Objekt selber,
-      * sondern lediglich eine Referenz auf das Source-Obj gespeichert wird */
       let urlToCheck = this.packageItem.source.url
       let oldUrl = this.packageTemplate._embedded?.source?.url
 
@@ -614,7 +614,10 @@ export default {
       this.packageItem.fixed = this.packageTemplate.fixed
       this.packageItem.ids = this.packageTemplate._embedded.ids
       this.packageItem.subjects = this.packageTemplate._embedded.subjects
-      this.packageItem.source = this.packageTemplate._embedded.source
+      //this.packageItem.source = this.packageTemplate._embedded.source
+
+      this.packageItem.source = {}
+      this.packageItem.source.url = this.packageTemplate._embedded.source.url
 
       console.log("SOURCE: ", this.packageItem.source)
 
