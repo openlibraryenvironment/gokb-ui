@@ -88,6 +88,16 @@
           {{ er }}
         </div>
       </div>
+      <div
+        v-if="warnings.length > 0"
+      >
+        <div
+          v-for="wr in warnings"
+          :key="wr"
+          class="ma-2 text-warning font-weight-bold">
+          {{ wr }}
+        </div>
+      </div>
       <!-- <div
         v-else-if="completion === 100"
         class="ma-2"
@@ -131,7 +141,8 @@
   import GokbNamespaceField from '@/shared/components/simple/gokb-namespace-field'
   import providerServices from '@/shared/services/provider-services'
   import kbartServices from '@/shared/services/kbart-services'
-  import GokbExportValidatorResults from "../../components/complex/gokb-export-validator-results/index.js";
+  import GokbExportValidatorResults from "../../components/complex/gokb-export-validator-results/index.js"
+  import namespacesModel from '@/shared/models/namespaces-model'
 
   export default {
     name: 'GokbKbartImportPopup',
@@ -319,6 +330,7 @@
       },
       async doImport () {
         this.errors = []
+        this.warnings = []
         this.importRunning = true
         this.completion = 0
         let namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
@@ -331,10 +343,44 @@
           this.errors.push(this.$i18n.t('kbart.validator.alert.encoding'))
         }
         else if (validationResult.status === 200 && validationResult?.data?.report) {
+          let needsRevalidate = false
           this.loadedFile = validationResult.data.report
 
           this.options.lineCount = validationResult.data.report.rows.total
-          this.completion = 100
+
+          if (validationResult.data.report.doi_ns_detected_serial) {
+            if ((!!namespaceNameSerial && namespaceNameSerial !== 'doi')) {
+              this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Serial']))
+              this.options.selectedNamespaceSerial = namespacesModel.getNamespace('doi')
+              needsRevalidate = true
+            }
+            else if (!!namespaceName && namespaceName !== 'doi') {
+              this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Serial']))
+              this.options.selectedNamespace = namespacesModel.getNamespace('doi')
+              needsRevalidate = true
+            }
+          }
+
+          if (validationResult.data.report.doi_ns_detected_monograph) {
+            if ((!!namespaceNameMonograph && namespaceNameMonograph !== 'doi')) {
+                this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Monograph']))
+                this.options.selectedNamespaceSerial = namespacesModel.getNamespace('doi')
+                needsRevalidate = true
+              }
+              else if (!!namespaceName && namespaceName !== 'doi') {
+                this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Monograph']))
+                this.options.selectedNamespace = namespacesModel.getNamespace('doi')
+                needsRevalidate = true
+              }
+            }
+          }
+
+          if (!needsRevalidate) {
+            this.completion = 100
+          }
+          else {
+            this.completion = 0
+          }
         } else {
           this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))
           this.completion = 100
