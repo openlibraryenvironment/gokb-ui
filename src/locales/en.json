@@ -258,6 +258,7 @@
         "label": "Select the package whose values you want to transfer.",
         "searchFieldLabel": "Package template",
         "advice": "You can search for the name of the package or for the exact value of a package identifier.",
+        "packageName": "Package name",
         "packageExistsMessage": "Please change the name of the package."
       },
       "loading": "The package data will be loaded.",

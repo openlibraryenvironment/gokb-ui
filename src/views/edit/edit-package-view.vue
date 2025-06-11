@@ -120,7 +120,7 @@
       <gokb-create-package-with-presets-popup
         v-if="createWithPresetsPopupVisible"
         v-model="createWithPresetsPopupVisible"
-        :packageTemplate="packageItem"
+        :packagePreset="packageItem"
         @loadPresets="mapPresetData"
       />
 
@@ -695,6 +695,15 @@
           :message="submitConfirmationMessage"
           @confirmed="submitPackage"
         />
+
+        <gokb-button
+          color="orange"
+          @click="showCreateWithPresetsPopup"
+          v-show="isEdit && step == 1"
+        >
+          Paket als Vorlage nutzen
+        </gokb-button>
+
         <gokb-button
           v-if="!isReadonly"
           @click="reset"
@@ -747,6 +756,7 @@
         >
           Vorgabewerte laden
         </gokb-button>
+
 
         <gokb-button
           color="primary"
@@ -1104,6 +1114,10 @@
 
       let pars = history?.state
 
+      if (pars?.loadPresets === "true") {
+        this.mapPresetData(null)
+      }
+
       if (!!pars?.initMessageCode) {
         if (pars.initMessageCode.includes('success')) {
           this.messageColor = 'success'
@@ -1245,6 +1259,12 @@
       },
       async mapPresetData (preset) {
         console.log("++++ EDIT PACKAGE VIEW +++++ ", preset)
+
+        if (!preset) {
+          //try loading from local storage
+          preset = JSON.parse(localStorage.getItem("PackagePreset"))
+        }
+
         this.allNames.name = preset.name
         this.packageItem.provider = preset.provider
         this.packageItem.nominalPlatform = preset.platform
@@ -1256,6 +1276,8 @@
         this.packageItem.fixed = preset.fixed
         this.packageItem.ids = preset.ids
         this.packageItem.subjects = preset.subjects
+        this.sourceItem = preset.source
+
         this.createWithPresetsPopupVisible = false
 
       },

@@ -12,13 +12,13 @@
       </template>
     </v-snackbar>
 
-    <gokb-section>
+    <gokb-section v-show="!isFromEditRoute">
 
       <v-row>
         <v-col><h4>{{ $t('popups.preset.choosePackage.label') }}</h4></v-col>
       </v-row>
 
-      <v-row v-show="!presetDataIsLoading">
+      <v-row v-show="!presetDataIsLoading && !isFromEditRoute">
        <v-col cols="8">
         <gokb-search-package-field
           :label="$t('popups.preset.choosePackage.searchFieldLabel')"
@@ -60,8 +60,10 @@
             <v-col cols="9">
               <gokb-text-field
                 v-model="packageItem.name"
-                :label="$t('popups.externalSourceImport.packageName')"
+                :label="packageNameValid ? $t('popups.preset.choosePackage.packageName') : ''"
+                :style="!packageNameValid ? {'color': 'red'} : {}"
               />
+              <!-- :label="$t('popups.preset.choosePackage.packageName')" -->
               <span v-if="!packageNameValid" style="color:red">
               <v-icon class="pb-1" color="error">
                 mdi-close-thick
@@ -268,12 +270,10 @@
                   <thead>
                   <tr>
                     <th class="text-left">
-                      <!-- {{ $t('popups.preset.tableHead.scheme') }} -->
-                      Feld
+                      {{ $t('popups.preset.tableHead.field') }}
                     </th>
                     <th class="text-left">
-                      <!-- {{ $t('popups.preset.tableHead.value') }} -->
-                      Wert
+                      {{ $t('popups.preset.tableHead.value') }}
                     </th>
 
                   </tr>
@@ -281,34 +281,35 @@
                   <tbody>
                     <tr>
                       <td>URL</td>
-                      <!--
-                      <td>{{ packageItem.source.url }}</td>
-                      -->
                       <td>
                         <gokb-text-field
                           v-model="packageItem.source.url"
-                          :rules="[sourceUrlVal || 'Not valid']"
+                          :style="acceptAutoUpdate && !sourceUrlValid ? {'color': 'red'} : {}"
+
                         />
+                        <!-- validate-on-blur -->
                         <!-- :style="!sourceUrlValid ? {'color': 'red'} : {}" -->
-                        <!-- :rules="[rules.validSourceUrl]" -->
+                        <!-- :rules="[sourceUrlVal || 'Not valid']"
+                            validate-on-generic="eager"
+                        -->
                       </td>
                     </tr>
 
                     <tr>
-                      <td>Update-Zyklus</td>
-                      <td>{{ packageTemplate._embedded.source.frequency.name }}</td>
+                      <td>{{ $t('component.source.frequency.label') }}</td>
+                      <td>{{ packageTemplate._embedded.source.frequency ? $t('component.source.frequency.' + packageTemplate._embedded.source.frequency.name + '.label') : ''}}</td>
                       <td></td>
                     </tr>
 
                     <tr>
-                      <td>title_id Monograph</td>
-                      <td>{{ packageTemplate._embedded.source.titleIdMonograph }}</td>
+                      <td>{{ $t('kbart.propIdMonograph.label') }}</td>
+                      <td>{{  packageTemplate._embedded.source.titleIdMonograph?.name }}</td>
                       <td></td>
                     </tr>
 
                     <tr>
-                      <td>title_id Serial</td>
-                      <td>{{ packageTemplate._embedded.source.titleIdSerial }}</td>
+                      <td>{{ $t('kbart.propIdSerial.label') }}</td>
+                      <td>{{ packageTemplate._embedded.source.titleIdSerial?.name }}</td>
                       <td></td>
                     </tr>
 
@@ -329,7 +330,7 @@
 
       <gokb-button
         v-if="presetDataLoaded"
-        :disabled="!packageNameValid"
+        :disabled="!isValid"
         is-submit
       >
         {{ $t('btn.submit') }}
@@ -347,6 +348,7 @@ import genericServices from "@/shared/services/generic-entity-services"
 import GokbSection from "../../components/complex/gokb-section/gokb-section.vue";
 import ddcModel from "../../models/ddc-model/index.js";
 import GokbTextField from "../../components/base/gokb-text-field/gokb-text-field.vue";
+import {CREATE_PACKAGE_ROUTE} from "../../../router/route-paths.js";
 
 export default {
   name: 'GokbCreatePackageWithPresetsPopup',
@@ -357,6 +359,10 @@ export default {
     modelValue: {
       type: Boolean,
       required: true
+    },
+    packagePreset: {
+      type: Object,
+      required: false
     }
   },
   data () {
@@ -387,16 +393,7 @@ export default {
       acceptDDC: true,
       acceptAutoUpdate: true,
       sourceUrlValid: false,
-      /* rules: {
-        validSourceUrl: [
-          (value) => {
-            if (value.length > 5) {
-              return true
-            }
-            return "Nope"
-          }
-        ]
-      } */
+      isFromEditRoute: false
     }
   },
   computed: {
@@ -409,7 +406,6 @@ export default {
       }
     },
     header() {
-      //return this.$i18n.t('popups.externalSourceImport.label')
       return this.$i18n.t('popups.preset.label')
     },
     packageName() {
@@ -420,10 +416,13 @@ export default {
     },
     sourceUrlVal() {
       return this.sourceUrlValid
+    },
+    isValid() {
+      return this.packageNameValid && (!this.acceptAutoUpdate || this.sourceUrlValid)
     }
   },
   watch: {
-    acceptProvider (acc) {
+    /*acceptProvider (acc) {
       if (acc) {
         this.packageItem.provider = this.packageTemplate.provider
       } else {
@@ -478,6 +477,9 @@ export default {
       } else {
         this.packageItem.fixed = undefined
       }
+    }, */
+    acceptAutoUpdate () {
+      this.checkIfSourceUrlIsValid()
     },
     packageId () {
       console.log("******** ", this.packageId)
@@ -501,7 +503,14 @@ export default {
   },
   async created () {
     // this.loadPresets()
-
+    console.log("CREATED: ", this.packagePreset)
+    if (!!this.packagePreset?.id) {
+      this.packageId = this.packagePreset.id
+      this.isFromEditRoute = true
+    }
+  },
+  mounted () {
+    console.log("MOUNTED: ", this.packagePreset)
   },
   methods: {
     async checkIfSourceUrlIsValid() {
@@ -511,22 +520,19 @@ export default {
       let urlToCheck = this.packageItem.source.url
       let oldUrl = this.packageTemplate._embedded?.source?.url
 
-      console.log("new: ", urlToCheck, " old: ", oldUrl)
-
       if (urlToCheck === oldUrl) {
         console.log("URL not changed")
         valid = false
       } else {
         const validationResult = await genericServices('rest/entities').checkUrl(urlToCheck, true, this.cancelToken.token)
 
-        console.log("URL VALIDATIONSERVICE: ", validationResult)
         if (validationResult.data?.result === 'ERROR') {
           valid = false
         }
       }
 
       this.sourceUrlValid = valid
-      console.log("Source URL ", valid)
+      console.log("Return Source URL valid: ", valid)
     },
     getLabelForDDC(id) {
       return ddcModel.getDdcLabel(id, this.$i18n.locale)
@@ -566,15 +572,15 @@ export default {
       console.log("+++ submit +++")
       const pckg = {
         presetId: this.packageId,
-        provider: this.packageItem.provider,
-        platform: this.packageItem.nominalPlatform,
+        provider: this.acceptProvider ? this.packageItem.provider : undefined,
+        platform: this.acceptPlatform ? this.packageItem.nominalPlatform : undefined,
         name: this.packageItem.name,
-        scope: this.packageItem.scope,
-        contentType: this.packageItem.contentType,
-        global: this.packageItem.global,
-        consistent: this.packageItem.consistent.name !== 'No' ,
-        breakable: this.packageItem.breakable.name !== 'No',
-        fixed: this.packageItem.fixed.name !== 'No'
+        scope: this.acceptScope ? this.packageItem.scope : undefined,
+        contentType: this.acceptContentType ? this.packageItem.contentType : undefined,
+        global: this.acceptGlobal ? this.packageItem.global : undefined,
+        consistent: this.acceptConsistent ? this.packageItem.consistent.name !== 'No' : undefined,
+        breakable: this.acceptBreakable ? this.packageItem.breakable.name !== 'No' : undefined,
+        fixed: this.acceptFixed ? this.packageItem.fixed.name !== 'No' : undefined
       }
 
       let ids = []
@@ -598,8 +604,48 @@ export default {
       }
       pckg.subjects = subjects
 
-      this.$emit("loadPresets", pckg)
+      let source = undefined
+      if(this.acceptAutoUpdate) {
+        source = {
+          url: this.packageItem.source.url,
+          frequency: this.packageItem.source.frequency.id,
+          titleIdMonograph: this.packageItem.source.titleIdMonograph,
+          titleIdSerial: this.packageItem.source.titleIdSerial,
+          automaticUpdates: true
+        }
+      }
+      pckg.source = source
 
+
+      pckg.isFromEditRoute = this.isFromEditRoute
+
+      //this.$emit("loadPresets", pckg)
+
+      if(this.isFromEditRoute) {
+
+        /* this.$router.push({
+          name: CREATE_PACKAGE_ROUTE,
+          state: {
+            presetPackage: {pckg}
+          },
+          params: {
+
+          }
+        }) */
+
+        localStorage.setItem("PackagePreset", JSON.stringify(pckg))
+        this.$router.push(
+          {
+            name: CREATE_PACKAGE_ROUTE,
+            state: {
+              loadPresets: 'true'
+            }
+          }
+        )
+
+      } else {
+        this.$emit("loadPresets", pckg)
+      }
     },
     async loadPresets () {
       console.log("***** CREATED ****** ", this.packageTemplate)
@@ -618,6 +664,11 @@ export default {
 
       this.packageItem.source = {}
       this.packageItem.source.url = this.packageTemplate._embedded.source.url
+      // assigning object reference is ok here, because title_id objects and
+      // frequency object are not going to be manipulated
+      this.packageItem.source.titleIdMonograph = this.packageTemplate._embedded.source.titleIdMonograph
+      this.packageItem.source.titleIdSerial = this.packageTemplate._embedded.source.titleIdSerial
+      this.packageItem.source.frequency = this.packageTemplate._embedded.source.frequency
 
       console.log("SOURCE: ", this.packageItem.source)
 
@@ -626,6 +677,31 @@ export default {
         this.acceptIdentifier[i] = true
       }
 
+      //remove toggles for not existent preset values
+      if (this.packageTemplate._embedded.subjects.length === 0) {
+        this.acceptDDC = false
+      }
+      if (!this.packageItem.source.url) {
+        this.acceptAutoUpdate = false
+      }
+      if (!this.packageTemplate.scope?.id) {
+        this.acceptScope = false
+      }
+      if (!this.packageTemplate.contentType?.id) {
+        this.acceptContentType = false
+      }
+      if (!this.packageTemplate.global?.id) {
+        this.acceptGlobal = false
+      }
+      if (!this.packageTemplate.consistent?.id) {
+        this.acceptConsistent = false
+      }
+      if (!this.packageTemplate.breakable?.id) {
+        this.acceptBreakable = false
+      }
+      if (!this.packageTemplate.fixed?.id) {
+        this.acceptFixed = false
+      }
 
 
       console.log("****** ", this.packageItem)
