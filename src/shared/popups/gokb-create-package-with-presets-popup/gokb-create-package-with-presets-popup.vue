@@ -256,13 +256,26 @@
               <br/><br/><br/>
 
               <div>
-                <v-row>
+                <v-row dense>
                   <v-col><h4>{{ $t('popups.preset.transferValues.autoUpdate') }} </h4></v-col>
                   <v-col>
                     <gokb-checkbox-field
                       dense
                       v-model="acceptAutoUpdate"
+                      :disabled="sourceIsExcluded"
                     />
+                  </v-col>
+
+                </v-row>
+                <v-row v-if="sourceIsExcluded">
+                  <v-col>
+                    <!-- <span>{{ $t('popups.preset.warning.externalSourceExcluded') }}</span> -->
+                    <v-alert
+                      type="info"
+                      class="text-body-2"
+                    >
+                      {{ $t('popups.preset.warning.externalSourceExcluded') }}
+                    </v-alert>
                   </v-col>
                 </v-row>
                 <br/>
@@ -285,7 +298,7 @@
                         <gokb-text-field
                           v-model="packageItem.source.url"
                           :style="acceptAutoUpdate && !sourceUrlValid ? {'color': 'red'} : {}"
-
+                          :disabled="sourceIsExcluded"
                         />
                         <!-- validate-on-blur -->
                         <!-- :style="!sourceUrlValid ? {'color': 'red'} : {}" -->
@@ -393,7 +406,8 @@ export default {
       acceptDDC: true,
       acceptAutoUpdate: true,
       sourceUrlValid: false,
-      isFromEditRoute: false
+      isFromEditRoute: false,
+      sourceIsExcluded: false
     }
   },
   computed: {
@@ -422,62 +436,6 @@ export default {
     }
   },
   watch: {
-    /*acceptProvider (acc) {
-      if (acc) {
-        this.packageItem.provider = this.packageTemplate.provider
-      } else {
-        this.packageItem.provider = undefined
-      }
-    },
-    acceptPlatform (acc) {
-      if (acc) {
-        this.packageItem.nominalPlatform = this.packageTemplate.nominalPlatform
-      } else {
-        this.packageItem.nominalPlatform = undefined
-      }
-    },
-    acceptScope (acc) {
-      if (acc) {
-        this.packageItem.scope = this.packageTemplate.scope
-      } else {
-        this.packageItem.scope = undefined
-      }
-    },
-    acceptContentType (acc) {
-      if (acc) {
-        this.packageItem.contentType = this.packageTemplate.contentType
-      } else {
-        this.packageItem.contentType = undefined
-      }
-    },
-    acceptGlobal (acc) {
-      if (acc) {
-        this.packageItem.global = this.packageTemplate.global
-      } else {
-        this.packageItem.global = undefined
-      }
-    },
-    acceptBreakable (acc) {
-      if (acc) {
-        this.packageItem.breakable = this.packageTemplate.breakable
-      } else {
-        this.packageItem.breakable = undefined
-      }
-    },
-    acceptConsistent (acc) {
-      if (acc) {
-        this.packageItem.consistent = this.packageTemplate.consistent
-      } else {
-        this.packageItem.consistent = undefined
-      }
-    },
-    acceptFixed (acc) {
-      if (acc) {
-        this.packageItem.fixed = this.packageTemplate.fixed
-      } else {
-        this.packageItem.fixed = undefined
-      }
-    }, */
     acceptAutoUpdate () {
       this.checkIfSourceUrlIsValid()
     },
@@ -502,7 +460,6 @@ export default {
     }
   },
   async created () {
-    // this.loadPresets()
     console.log("CREATED: ", this.packagePreset)
     if (!!this.packagePreset?.id) {
       this.packageId = this.packagePreset.id
@@ -510,7 +467,6 @@ export default {
     }
   },
   mounted () {
-    console.log("MOUNTED: ", this.packagePreset)
   },
   methods: {
     async checkIfSourceUrlIsValid() {
@@ -571,7 +527,7 @@ export default {
     submit () {
       console.log("+++ submit +++")
       const pckg = {
-        presetId: this.packageId,
+        //presetId: this.packageId,
         provider: this.acceptProvider ? this.packageItem.provider : undefined,
         platform: this.acceptPlatform ? this.packageItem.nominalPlatform : undefined,
         name: this.packageItem.name,
@@ -617,31 +573,16 @@ export default {
       pckg.source = source
 
 
-      pckg.isFromEditRoute = this.isFromEditRoute
+      //pckg.isFromEditRoute = this.isFromEditRoute
 
-      //this.$emit("loadPresets", pckg)
-
-      if(this.isFromEditRoute) {
-
-        /* this.$router.push({
-          name: CREATE_PACKAGE_ROUTE,
-          state: {
-            presetPackage: {pckg}
-          },
-          params: {
-
-          }
-        }) */
-
+      if ( this.isFromEditRoute ) {
         localStorage.setItem("PackagePreset", JSON.stringify(pckg))
-        this.$router.push(
-          {
+        this.$router.push({
             name: CREATE_PACKAGE_ROUTE,
             state: {
               loadPresets: 'true'
             }
-          }
-        )
+          })
 
       } else {
         this.$emit("loadPresets", pckg)
@@ -660,7 +601,6 @@ export default {
       this.packageItem.fixed = this.packageTemplate.fixed
       this.packageItem.ids = this.packageTemplate._embedded.ids
       this.packageItem.subjects = this.packageTemplate._embedded.subjects
-      //this.packageItem.source = this.packageTemplate._embedded.source
 
       this.packageItem.source = {}
       this.packageItem.source.url = this.packageTemplate._embedded.source.url
@@ -670,18 +610,21 @@ export default {
       this.packageItem.source.titleIdSerial = this.packageTemplate._embedded.source.titleIdSerial
       this.packageItem.source.frequency = this.packageTemplate._embedded.source.frequency
 
-      console.log("SOURCE: ", this.packageItem.source)
-
       // set default to accept all identifiers
       for (var i = 0; i < this.packageItem.ids.length; i++) {
         this.acceptIdentifier[i] = true
       }
 
-      //remove toggles for not existent preset values
+      const excludedSources = ["WEKB", "EZB"]
+      if ( excludedSources.includes(this.packageTemplate._embedded.source.importConfig?.name)) {
+        this.sourceIsExcluded = true
+      }
+
+      //remove toggles for not existent and not allowed preset values
       if (this.packageTemplate._embedded.subjects.length === 0) {
         this.acceptDDC = false
       }
-      if (!this.packageItem.source.url) {
+      if (!this.packageItem.source.url || this.sourceIsExcluded) {
         this.acceptAutoUpdate = false
       }
       if (!this.packageTemplate.scope?.id) {

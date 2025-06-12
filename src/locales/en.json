@@ -267,6 +267,11 @@
         "identifiers": "You can adopt the following identifiers",
         "ddc": "Would you like to adopt the cataloging?",
         "autoUpdate": "Would you like to adopt the update information?"
+      },
+      "btnUsePreset": "Use Package as template",
+      "btnLoadPresets": "Load Presets",
+      "warning": {
+        "externalSourceExcluded": "Update informationen of packages from external sources (EZB, we:kb) can not be transferred."
       }
     }
   },

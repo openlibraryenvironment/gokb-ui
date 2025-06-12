@@ -701,7 +701,7 @@
           @click="showCreateWithPresetsPopup"
           v-show="isEdit && step == 1"
         >
-          Paket als Vorlage nutzen
+          {{ $t('popups.preset.btnUsePreset') }}
         </gokb-button>
 
         <gokb-button
@@ -752,9 +752,9 @@
           color="blue"
           :disabled="false"
           @click="showCreateWithPresetsPopup"
-          v-show="!isEdit && step == 1"
+          v-show="!isEdit && step == 1 && !isPresetsCreateFromEditView"
         >
-          Vorgabewerte laden
+          {{ $t('popups.preset.btnLoadPresets') }}
         </gokb-button>
 
 
@@ -916,6 +916,7 @@
         externalSourceImportPopupVisible: false,
         createWithPresetsPopupVisible: false,
         isImportFromExternalSource: false,
+        isPresetsCreateFromEditView: false,
         externalSource: undefined,
         urlUpdate: false,
         currentName: undefined,
@@ -1263,21 +1264,23 @@
         if (!preset) {
           //try loading from local storage
           preset = JSON.parse(localStorage.getItem("PackagePreset"))
+          this.isPresetsCreateFromEditView = true
         }
 
-        this.allNames.name = preset.name
-        this.packageItem.provider = preset.provider
-        this.packageItem.nominalPlatform = preset.platform
-        this.packageItem.scope = preset.scope
-        this.packageItem.contentType = preset.contentType
-        this.packageItem.global = preset.global.name
-        this.packageItem.consistent = preset.consistent
-        this.packageItem.breakable = preset.breakable
-        this.packageItem.fixed = preset.fixed
-        this.packageItem.ids = preset.ids
-        this.packageItem.subjects = preset.subjects
-        this.sourceItem = preset.source
-
+        if (!!preset) {
+          this.allNames.name = preset.name
+          this.packageItem.provider = preset.provider
+          this.packageItem.nominalPlatform = preset.platform
+          this.packageItem.scope = preset.scope
+          this.packageItem.contentType = preset.contentType
+          this.packageItem.global = preset.global.name
+          this.packageItem.consistent = preset.consistent
+          this.packageItem.breakable = preset.breakable
+          this.packageItem.fixed = preset.fixed
+          this.packageItem.ids = preset.ids
+          this.packageItem.subjects = preset.subjects
+          this.sourceItem = preset.source
+        }
         this.createWithPresetsPopupVisible = false
 
       },
@@ -1384,6 +1387,10 @@
         this.showSnackbar = false
         this.errors = {}
         this.updateStepErrors()
+
+        if (this.isPresetsCreateFromEditView) {
+          localStorage.removeItem("PackagePreset")
+        }
 
         if (this.importStatus !== 'info') {
           this.importStatus = undefined
