@@ -264,10 +264,11 @@
       },
       "loading": "Die Paketdaten werden geladen.",
       "transferValues": {
+        "general": "Allgemeine Informationen",
         "static": "Folgende Werte können Sie übernehmen",
-        "identifiers": "Folgende Identifikatoren können Sie übernehmen",
-        "ddc": "Möchten Sie die Sacherschließung übernehmen?",
-        "autoUpdate": "Möchten Sie Update-Informationen übernehmen?"
+        "identifiers": "Identifikatoren",
+        "ddc": "Sacherschließung",
+        "autoUpdate": "Update-Informationen"
       },
       "btnUsePreset": "Paket als Vorlage nutzen",
       "btnLoadPresets": "Vorgabewerte laden",

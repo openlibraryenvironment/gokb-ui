@@ -75,7 +75,11 @@
           <br/>
 
           <v-row>
-            <v-col><h3>{{ $t('popups.preset.transferValues.static') }}</h3></v-col>
+            <!-- <v-col><h3>{{ $t('popups.preset.transferValues.static') }}</h3></v-col> -->
+            <v-col><span class="text-h5">{{ $t('popups.preset.transferValues.general') }}</span></v-col>
+          </v-row>
+          <v-row>
+            <v-col><span class="text-subtitle-1">{{ $t('popups.preset.transferValues.static') }}</span></v-col>
           </v-row>
 
           <br/>
@@ -183,9 +187,9 @@
 
           <div>
             <!-- v-if="packageTemplate._embedded.ids.length > 0" -->
-            <v-row><v-col><h4>{{ $t('popups.preset.transferValues.identifiers') }}</h4></v-col></v-row>
+            <v-row><v-col><span class="text-h5">{{ $t('popups.preset.transferValues.identifiers') }}</span></v-col></v-row>
             <br/>
-            <v-table density="compact">
+            <v-table density="compact" >
               <thead>
               <tr>
                 <th class="text-left">
@@ -200,7 +204,7 @@
 
               </tr>
               </thead>
-              <tbody>
+              <tbody v-if="packageTemplate._embedded.ids.length > 0">
               <tr
                 v-for="(id, index) in packageTemplate._embedded.ids"
               >
@@ -211,6 +215,11 @@
                 /></td>
               </tr>
               </tbody>
+              <!--<div  v-else>
+               <v-row justify="center"><div>No Data</div></v-row>
+              </div>-->
+              <tbody v-else><tr><td/><td>Keine Einträge</td><td/></tr></tbody>
+
             </v-table>
 
           </div>
@@ -220,13 +229,7 @@
 
           <div>
             <v-row>
-              <v-col><h4>{{ $t('popups.preset.transferValues.ddc') }} </h4></v-col>
-              <v-col>
-                <gokb-checkbox-field
-                dense
-                v-model="acceptDDC"
-                :disabled="packageTemplate._embedded.subjects.length === 0"/>
-              </v-col>
+              <v-col><span class="text-h5">{{ $t('popups.preset.transferValues.ddc') }} </span></v-col>
             </v-row>
             <br/>
             <v-table density="compact">
@@ -241,7 +244,7 @@
 
               </tr>
               </thead>
-              <tbody>
+              <tbody v-if="packageTemplate._embedded.subjects.length > 0">
               <tr
                 v-for="(subject, index) in packageTemplate._embedded.subjects"
               >
@@ -250,35 +253,55 @@
                 <td></td>
               </tr>
               </tbody>
+              <tbody v-else><tr><td/><td>Keine Einträge</td><td/></tr></tbody>
             </v-table>
+            <br/>
+            <v-row v-if="packageTemplate._embedded.subjects.length > 0">
+              <!-- <v-col cols="2"><span >Übernehmen:</span></v-col> -->
+              <v-col>
+                <gokb-checkbox-field
+                  dense
+                  v-model="acceptDDC"
+                  />
+              </v-col>
+            </v-row>
           </div>
 
               <br/><br/><br/>
 
               <div>
-                <v-row dense>
-                  <v-col><h4>{{ $t('popups.preset.transferValues.autoUpdate') }} </h4></v-col>
-                  <v-col>
-                    <gokb-checkbox-field
-                      dense
-                      v-model="acceptAutoUpdate"
-                      :disabled="sourceIsExcluded"
-                    />
-                  </v-col>
-
+                <v-row>
+                  <v-col><span class="text-h5">{{ $t('popups.preset.transferValues.autoUpdate') }} </span></v-col>
                 </v-row>
-                <v-row v-if="sourceIsExcluded">
-                  <v-col>
-                    <!-- <span>{{ $t('popups.preset.warning.externalSourceExcluded') }}</span> -->
-                    <v-alert
-                      type="info"
-                      class="text-body-2"
-                    >
-                      {{ $t('popups.preset.warning.externalSourceExcluded') }}
-                    </v-alert>
+
+                <br/>
+
+                <v-row>
+                  <v-col cols="8">
+                    <gokb-text-field
+                      v-model="packageItem.source.url"
+                      :style="acceptAutoUpdate && !sourceUrlValid ? {'color': 'red'} : {}"
+                      :disabled="sourceIsExcluded"
+                      label="URL"
+                    />
+                  <!-- validate-on-blur -->
+                  <!-- :style="!sourceUrlValid ? {'color': 'red'} : {}" -->
+                  <!-- :rules="[sourceUrlVal || 'Not valid']"
+                      validate-on-generic="eager"
+                  -->
+
+                    <span v-if="acceptAutoUpdate && !sourceUrlValid" style="color:red">
+                      <v-icon class="pb-1" color="error">
+                        mdi-close-thick
+                      </v-icon>
+                      <!-- {{ $t('popups.preset.choosePackage.packageExistsMessage') }} -->
+                      Die URL muss geändert werden
+                    </span>
+
                   </v-col>
                 </v-row>
                 <br/>
+
                 <v-table density="compact">
                   <thead>
                   <tr>
@@ -292,22 +315,6 @@
                   </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>URL</td>
-                      <td>
-                        <gokb-text-field
-                          v-model="packageItem.source.url"
-                          :style="acceptAutoUpdate && !sourceUrlValid ? {'color': 'red'} : {}"
-                          :disabled="sourceIsExcluded"
-                        />
-                        <!-- validate-on-blur -->
-                        <!-- :style="!sourceUrlValid ? {'color': 'red'} : {}" -->
-                        <!-- :rules="[sourceUrlVal || 'Not valid']"
-                            validate-on-generic="eager"
-                        -->
-                      </td>
-                    </tr>
-
                     <tr>
                       <td>{{ $t('component.source.frequency.label') }}</td>
                       <td>{{ packageTemplate._embedded.source.frequency ? $t('component.source.frequency.' + packageTemplate._embedded.source.frequency.name + '.label') : ''}}</td>
@@ -325,13 +332,30 @@
                       <td>{{ packageTemplate._embedded.source.titleIdSerial?.name }}</td>
                       <td></td>
                     </tr>
-
-
                   </tbody>
 
-
-
             </v-table>
+            <br/>
+            <v-row v-if="sourceIsExcluded">
+              <v-col>
+                <!-- <span>{{ $t('popups.preset.warning.externalSourceExcluded') }}</span> -->
+                <v-alert
+                  type="warning"
+                  class="text-body-2"
+                >
+                  {{ $t('popups.preset.warning.externalSourceExcluded') }}
+                </v-alert>
+              </v-col>
+            </v-row>
+            <v-row v-else>
+              <v-col>
+                <gokb-checkbox-field
+                  dense
+                  v-model="acceptAutoUpdate"
+
+                />
+              </v-col>
+            </v-row>
 
           </div>
 

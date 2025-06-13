@@ -263,10 +263,11 @@
       },
       "loading": "The package data will be loaded.",
       "transferValues": {
+        "general": "General Information",
         "static": "You can adopt the following values",
-        "identifiers": "You can adopt the following identifiers",
-        "ddc": "Would you like to adopt the cataloging?",
-        "autoUpdate": "Would you like to adopt the update information?"
+        "identifiers": "Identifiers",
+        "ddc": "Cataloging",
+        "autoUpdate": "Update information"
       },
       "btnUsePreset": "Use Package as template",
       "btnLoadPresets": "Load Presets",
