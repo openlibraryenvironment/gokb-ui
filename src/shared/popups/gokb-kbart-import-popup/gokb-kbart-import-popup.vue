@@ -173,6 +173,7 @@
         useProprietaryNamespace: false,
         importRunning: undefined,
         mixedContent: false,
+        checkedForRevalidate: false,
         loadedFile: {
           errors: {
             missingColumns: [],
@@ -252,6 +253,7 @@
     watch: {
       selectedFile (file) {
         this.errors = []
+        this.checkedForRevalidate = false
         this.options.lineCount = undefined
         this.completion = 0
         this.loadedFile.rows = { total: 0, warning: 0, error: 0 }
@@ -348,7 +350,7 @@
 
           this.options.lineCount = validationResult.data.report.rows.total
 
-          if (validationResult.data.report.doi_ns_detected_serial) {
+          if (validationResult.data.report.doi_ns_detected_serial && !this.checkedForRevalidate) {
             if ((!!namespaceNameSerial && namespaceNameSerial !== 'doi')) {
               this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Serial']))
               this.options.selectedNamespaceSerial = namespacesModel.getNamespace('doi')
@@ -361,7 +363,7 @@
             }
           }
 
-          if (validationResult.data.report.doi_ns_detected_monograph) {
+          if (validationResult.data.report.doi_ns_detected_monograph && !this.checkedForRevalidate) {
             if ((!!namespaceNameMonograph && namespaceNameMonograph !== 'doi')) {
                 this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Monograph']))
                 this.options.selectedNamespaceSerial = namespacesModel.getNamespace('doi')
@@ -375,11 +377,14 @@
             }
           }
 
+          this.checkedForRevalidate = true
+
           if (!needsRevalidate) {
             this.completion = 100
           }
           else {
             this.completion = 0
+            this.revalidated = true
           }
         } else {
           this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))
