@@ -36,6 +36,17 @@
           exclude-isxn
         />
       </div>
+      <div
+        v-if="warnings.length > 0"
+      >
+        <v-alert
+          v-for="wr in warnings"
+          :key="wr"
+          type="warning"
+          class="ma-2 font-weight-bold">
+          {{ wr }}
+        </v-alert>
+      </div>
       <gokb-checkbox-field
           v-model="mixedContent"
           class="pt-4"
@@ -86,16 +97,6 @@
           :key="er"
           class="ma-2 text-error font-weight-bold">
           {{ er }}
-        </div>
-      </div>
-      <div
-        v-if="warnings.length > 0"
-      >
-        <div
-          v-for="wr in warnings"
-          :key="wr"
-          class="ma-2 text-warning font-weight-bold">
-          {{ wr }}
         </div>
       </div>
       <!-- <div
@@ -169,6 +170,7 @@
     data () {
       return {
         errors: [],
+        warnings: [],
         cancelValidation: false,
         useProprietaryNamespace: false,
         importRunning: undefined,
@@ -253,6 +255,7 @@
     watch: {
       selectedFile (file) {
         this.errors = []
+        this.warnings = []
         this.checkedForRevalidate = false
         this.options.lineCount = undefined
         this.completion = 0
@@ -351,29 +354,36 @@
           this.options.lineCount = validationResult.data.report.rows.total
 
           if (validationResult.data.report.doi_ns_detected_serial && !this.checkedForRevalidate) {
-            if ((!!namespaceNameSerial && namespaceNameSerial !== 'doi')) {
+            if ((!!namespaceNameSerial && namespaceNameSerial !== 'doi') ||
+                (!!namespaceName && namespaceName !== 'doi') ||
+                (!namespaceNameSerial && !namespaceName)
+            ) {
               this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Serial']))
-              this.options.selectedNamespaceSerial = namespacesModel.getNamespace('doi')
-              needsRevalidate = true
-            }
-            else if (!!namespaceName && namespaceName !== 'doi') {
-              this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Serial']))
-              this.options.selectedNamespace = namespacesModel.getNamespace('doi')
+
+              if (this.mixedContent) {
+                this.options.selectedNamespaceSerial = namespacesModel.getNamespace('doi')
+              }
+              else {
+                this.options.selectedNamespace = namespacesModel.getNamespace('doi')
+              }
               needsRevalidate = true
             }
           }
 
           if (validationResult.data.report.doi_ns_detected_monograph && !this.checkedForRevalidate) {
-            if ((!!namespaceNameMonograph && namespaceNameMonograph !== 'doi')) {
-                this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Monograph']))
-                this.options.selectedNamespaceSerial = namespacesModel.getNamespace('doi')
-                needsRevalidate = true
+            if ((!!namespaceNameMonograph && namespaceNameMonograph !== 'doi') ||
+                (!!namespaceName && namespaceName !== 'doi' ) ||
+                (!namespaceNameMonograph && !namespaceName)
+            ) {
+              this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Monograph']))
+
+              if (this.mixedContent) {
+                this.options.selectedNamespaceMonograph = namespacesModel.getNamespace('doi')
               }
-              else if (!!namespaceName && namespaceName !== 'doi') {
-                this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Monograph']))
+              else {
                 this.options.selectedNamespace = namespacesModel.getNamespace('doi')
-                needsRevalidate = true
               }
+              needsRevalidate = true
             }
           }
 
@@ -384,7 +394,6 @@
           }
           else {
             this.completion = 0
-            this.revalidated = true
           }
         } else {
           this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))

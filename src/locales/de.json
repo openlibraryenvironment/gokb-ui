@@ -530,7 +530,7 @@
         "warning": "Titellisten, die Warnungen erzeugen, können in die GOKB importiert werden, auch wenn es Auffälligkeiten gibt. Es wird dringend empfohlen, vorab die Auffälligkeiten auf ihre Unbedenklichkeit zu prüfen.",
         "rowError": "Es wurden Fehler in einzelnen Titeldaten festgestellt. Die Datei kann erst importiert werden, wenn diese Fehler behoben wurden.",
         "encoding": "Diese Datei ist nicht in UTF-8 codiert und kann daher nicht verarbeitet werden. Lesen Sie in der Dokumentation auf der GOKB-Webseite nach, wie Sie dieses Problem beheben können.",
-        "doiReplaced": "Der Namensraum für die Spalte 'title_id' wurde als 'DOI' identifiziert und die entsprechende Auswahl angepasst. Falls dies nicht korrekt ist, wählen Sie bitte den korrekten Namensraum manuell aus."
+        "doiReplaced": "Der Namensraum für die Spalte 'title_id' des Typs '{0}' wurde als 'DOI' identifiziert und die entsprechende Auswahl angepasst. Falls dies nicht korrekt ist, wählen Sie bitte den korrekten Namensraum manuell aus."
       }
     }
   },
