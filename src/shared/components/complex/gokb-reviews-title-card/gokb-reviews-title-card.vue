@@ -811,7 +811,12 @@
             extlink: namespaceServices.getBaseurl(item.namespace.value) ? namespaceServices.getBaseurl(item.namespace.value) + item.value : undefined,
             value: item.value,
             isDeletable: this.isItemDeletable,
-            ...(this.info?.matchResults && this.info.matchResults.some(mr => (item.namespace.value === mr.namespace && item.value !== mr.value && mr.match === 'FAIL')) ? { conflictMessage: 'component.review.edit.components.ids.conflict.label' } : {} ),
+            ...(
+                (
+                  this.info?.matchResults &&
+                  this.info.matchResults.some(mr => (item.namespace.value === mr.namespace && item.value !== mr.value && mr.match === 'FAIL')) &&
+                  !this.info.matchResults.some(mr => (item.namespace.value === mr.namespace && item.value === mr.value && mr.match === 'OK'))
+                ) ? { conflictMessage: 'component.review.edit.components.ids.conflict.label' } : {} ),
             _pending: this.pendingStatuses[item.id]
           }))
 
