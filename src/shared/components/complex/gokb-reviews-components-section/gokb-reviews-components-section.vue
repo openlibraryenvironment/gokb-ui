@@ -30,7 +30,7 @@
                 {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
               </div>
               <gokb-reviews-title-card
-                :id="reviewedComponent.id"
+                :info="reviewedComponent"
                 :ref="reviewedComponent.id.toString()"
                 role="reviewedComponent"
                 :route="reviewedComponent.route"
@@ -85,7 +85,7 @@
                 </v-icon>
               </div>
               <gokb-reviews-title-card
-                :id="i.id"
+                :info="i"
                 :ref="i.id.toString()"
                 role="candidateComponent"
                 :route="i.route"

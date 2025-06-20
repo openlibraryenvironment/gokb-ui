@@ -1266,6 +1266,11 @@
               "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler."
             }
           },
+          "ids": {
+            "conflict": {
+              "label": "Dieser Identifikator steht im Konflikt mit dem im gleichen Namensraum verknüpften Wert am zu prüfenden Titel."
+            }
+          },
           "merge": {
             "label": "Dublettenbereinigung",
             "selectTarget": {
@@ -1570,13 +1575,13 @@
         },
         "Critical Identifier Conflict": {
           "label": "Referenztitelkonflikt",
-          "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Der neue Referenztitel stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein; andere Identifikatoren stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname.",
+          "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Der neue Referenztitel stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel '{firstOtherLink}' überein; andere Identifikatoren stimmen nicht überein ({secondArray}). Zudem unterscheidet sich der Referenztitelname.",
           "action": "Die GOKB erstellte einen neuen Referenztitel mit den Identifikatoren des Pakettitels. Der Pakettitel wurde mit dem neuen Referenztitel verknüpft.",
           "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Liegen Dubletten vor, wählen Sie den zu verbleibenden Titel über den Button 'Ziel auswählen' aus. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren, um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht). Liegen keine Dubletten vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Fehlende Identifikatoren können Sie nachtragen, indem Sie über den Namen in die Bearbeitungssicht eines Titels springen. Sie können die Anfrage nun als abgeschlossen markieren."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifikatoren-Konflikt (ID ergänzt)",
-          "info": "Beim Abgleich mit einem Referenztitel wurde ein Identifikator gefunden, der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
+          "info": "Beim Abgleich mit einem Referenztitel '{firstOtherLink}' wurde mindestens ein Identifikator gefunden ({secondArray}), der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
           "action": "Die GOKB hat im Referenztitel Identifikatoren hinzugefügt.",
           "toDo": "Überprüfen Sie die Identifikatoren des Referenztitels, und entfernen sie fehlerhafte Einträge."
         },
@@ -1600,7 +1605,7 @@
         },
         "Import Identifier Mismatch": {
           "label": "Identifikatoren-Konflikt beim KBART-Import",
-          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren einem bestehenden Pakettitel zugordnet werden, allerdings unterscheiden sich ein oder mehrere andere Identifikatoren.",
+          "info": "Ein KBART-Datensatz überschneidet sich zwar anhand dessen Identifikatoren mit einem oder mehreren bestehenden Pakettitel(n), allerdings unterscheidet sich jeweils mindestens ein anderer Identifikator.",
           "action": "Ein neuer Pakettitel wurde erstellt.",
           "toDo": "Überprüfen Sie die Identifikatoren und Referenztitel, ob es Konflikte gibt, die gelöst werden müssen. Es kann sein, dass mehr Pakettitel angezeigt werden als betroffen sind."
         },

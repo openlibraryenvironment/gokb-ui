@@ -1266,6 +1266,11 @@
               "toDo": "Please check the title information (name/identifiers) for errors."
             }
           },
+          "ids": {
+            "conflict": {
+              "label": "This identifier is in conflict with the value of the same namespace linked to the component to review."
+            }
+          },
           "merge": {
             "label": "Title merge",
             "selectTarget": {
@@ -1566,7 +1571,7 @@
         },
         "Secondary Identifier Conflict": {
           "label": "Identifier Conflict (ID added)",
-          "info": "When matching with a reference title, an identifier was found that does not match the existing identifiers of the reference title. Nevertheless, it seems to be the same title because, for example, the name matches.",
+          "info": "When matching with a reference title '{firstOtherLink}', at least one identifier was found that does not match the existing identifiers of the reference title ({secondArray}). Nevertheless, it seems to be the same title because, for example, the name matches.",
           "action": "The GOKB has added the identifier in the reference title.",
           "toDo": "Check identifiers of the reference title and remove the incorrect identifiers if necessary."
         },

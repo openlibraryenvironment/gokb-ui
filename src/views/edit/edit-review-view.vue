@@ -258,6 +258,7 @@
           id: (oc.id || parseInt(oc.oid.split(':')[1])),
           type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
           route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())],
+          ...(!!oc.matchResults ? {matchResults: oc.matchResults} : {})
         })) : []
         this.reviewItem.candidates = record.additionalInfo?.candidates
         this.updateUrl = record._links?.update?.href || undefined
