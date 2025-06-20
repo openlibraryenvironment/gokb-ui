@@ -1670,6 +1670,12 @@
         "Consortium": {
           "label": "Konsortium"
         }
+      },
+      "cancelledImportAlerts": {
+        "label": "Benachrichtigungen für fehlgeschlagene automatische Paket-Importe aktiviert"
+      },
+      "newReviewsAlerts": {
+        "label": "Benachrichtigungen für neue Prüfanfragen aktiviert"
       }
     },
     "variantName": {

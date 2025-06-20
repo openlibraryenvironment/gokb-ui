@@ -1660,6 +1660,12 @@
         "Consortium": {
           "label": "Consortium"
         }
+      },
+      "cancelledImportAlerts": {
+        "label": "Enable daily alerts for failed automated package imports"
+      },
+      "newReviewsAlerts": {
+        "label": "Enable daily alerts for newly created review requests"
       }
     },
     "variantName": {

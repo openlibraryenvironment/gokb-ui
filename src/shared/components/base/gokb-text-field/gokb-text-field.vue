@@ -16,6 +16,7 @@
     :clearable="allowClear && editable"
     :density="dense ? 'compact' : 'default'"
     :persistent-placeholder="!!placeholder"
+    :autocomplete="autocomplete"
     variant="underlined"
     @click:append="$emit('click:append', $event)"
     @click:prepend="iconAction"
