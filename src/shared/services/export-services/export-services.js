@@ -2,7 +2,7 @@ const api = () => ({
   downloadUri (uri, opts) {
     var link = document.createElement("a")
     let filename = 'searchresult.csv'
-    if (opts.filename) {
+    if (!!opts?.filename) {
       filename = opts.filename
     }
     link.setAttribute('download', filename)
