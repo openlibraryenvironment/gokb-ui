@@ -827,7 +827,6 @@
   import loading from '@/shared/models/loading'
   import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
   import GokbCreatePackageWithPresetsPopup from '@/shared/popups/gokb-create-package-with-presets-popup'
-  //import GokbCreatePackageWithPresetsPopup from "../../shared/popups/gokb-create-package-with-presets-popup/index.js";
   import log from '@/shared/utils/logger'
 
   const ROWS_PER_PAGE = 10

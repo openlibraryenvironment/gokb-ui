@@ -93,16 +93,14 @@
               <th class="text-left">
                 {{ $t('popups.preset.tableHead.value') }}
               </th>
-              <th class="text-left">
+              <th class="text-left" style="width:15px;">
                 {{ $t('popups.preset.tableHead.accept') }}
               </th>
 
             </tr>
             </thead>
             <tbody>
-            <tr
-
-            >
+            <tr>
               <td>{{ $t('component.types.Org', 1) }}</td>
               <td>{{ packageTemplate.provider?.name }}</td>
               <td><gokb-checkbox-field
@@ -198,7 +196,7 @@
                 <th class="text-left">
                   {{ $t('popups.preset.tableHead.value') }}
                 </th>
-                <th class="text-left">
+                <th class="text-left" style="width:15px;">
                   {{ $t('popups.preset.tableHead.accept') }}
                 </th>
 
@@ -215,9 +213,6 @@
                 /></td>
               </tr>
               </tbody>
-              <!--<div  v-else>
-               <v-row justify="center"><div>No Data</div></v-row>
-              </div>-->
               <tbody v-else><tr><td/><td>Keine Einträge</td><td/></tr></tbody>
 
             </v-table>
@@ -241,7 +236,8 @@
                 <th class="text-left">
                   {{ $t('popups.preset.tableHead.value') }}
                 </th>
-
+                <th class="text-left" style="width:15px;">
+                </th>
               </tr>
               </thead>
               <tbody v-if="packageTemplate._embedded.subjects.length > 0">
@@ -256,14 +252,15 @@
               <tbody v-else><tr><td/><td>Keine Einträge</td><td/></tr></tbody>
             </v-table>
             <br/>
-            <v-row v-if="packageTemplate._embedded.subjects.length > 0">
-              <!-- <v-col cols="2"><span >Übernehmen:</span></v-col> -->
+            <v-row v-if="packageTemplate._embedded.subjects?.length > 0">
+              <v-col cols="2"><span >Sacherschließung übernehmen:</span></v-col>
               <v-col>
                 <gokb-checkbox-field
                   dense
                   v-model="acceptDDC"
                   />
               </v-col>
+              <!-- <v-col cols="2"><span >Übernehmen:</span></v-col> -->
             </v-row>
           </div>
 
@@ -311,7 +308,8 @@
                     <th class="text-left">
                       {{ $t('popups.preset.tableHead.value') }}
                     </th>
-
+                    <th class="text-left" style="width:15px;">
+                    </th>
                   </tr>
                   </thead>
                   <tbody>
@@ -348,6 +346,7 @@
               </v-col>
             </v-row>
             <v-row v-else>
+              <v-col cols="2"><span >Update-Infos übernehmen:</span></v-col>
               <v-col>
                 <gokb-checkbox-field
                   dense
@@ -678,3 +677,21 @@ export default {
 
 }
 </script>
+<style>
+/* .table-action-icons {
+  white-space: nowrap;
+  text-align: right;
+}
+
+td > a {
+  color: rgba(var(--v-theme-primary));
+}
+
+.v-data-table-header__content > span {
+  color: rgba(var(--v-theme-primary));
+  font-weight: 700;
+  font-size: 12px !important;
+  letter-spacing: 0.1px;
+  white-space:nowrap;
+} */
+</style>
