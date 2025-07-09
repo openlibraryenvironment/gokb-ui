@@ -40,6 +40,7 @@
               width="350px"
               :readonly="readonly"
               :label="$t('kbart.propId.label')"
+              gokb-tooltip="kbart.propId.tooltip"
               exclude-isxn
             />
           </v-col>
@@ -63,6 +64,7 @@
               width="100%"
               :label="$t('kbart.propIdSerial.label')"
               exclude-isxn
+              gokb-tooltip="kbart.propIdSerial.tooltip"
               required
             />
           </v-col>
@@ -73,6 +75,7 @@
               width="100%"
               :label="$t('kbart.propIdMonograph.label')"
               exclude-isxn
+              gokb-tooltip="kbart.propIdMonograph.tooltip"
               required
             />
           </v-col>
