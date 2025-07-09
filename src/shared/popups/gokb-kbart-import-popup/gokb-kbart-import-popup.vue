@@ -19,6 +19,7 @@
         width="350px"
         :label="$t('kbart.propId.label')"
         gokb-tooltip="kbart.propId.tooltip"
+        exclude-isxn
       />
       <div v-else>
         <gokb-namespace-field
