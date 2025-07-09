@@ -169,7 +169,8 @@ export default {
         lineCount: undefined,
         addOnly: false,
         dryRun: false
-      }
+      },
+      mixedContent: false
     }
   },
   computed: {
@@ -204,6 +205,14 @@ export default {
       this.loadedFile.warnings.type = {}
       this.executedOnce = false
     },
+    mixedContent (val) {
+      if (!val) {
+        this.options.selectedNamespaceSerial = undefined
+        this.options.selectedNamespaceMonograph = undefined
+      } else {
+        this.options.selectedNamespace = undefined
+      }
+    },
     '$i18n.locale' () {
       if (!!this.selectedFile) {
         this.doImport()
@@ -227,8 +236,8 @@ export default {
       this.importRunning = true
       this.completion = 0
       let namespaceName = !!this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
-        let namespaceNameSerial = !!this.selectedNamespaceSerial ? this.selectedNamespaceSerial.value : undefined
-        let namespaceNameMonograph = !!this.selectedNamespaceMonograph ? this.selectedNamespaceMonograph.value : undefined
+      let namespaceNameSerial = !!this.selectedNamespaceSerial ? this.selectedNamespaceSerial.value : undefined
+      let namespaceNameMonograph = !!this.selectedNamespaceMonograph ? this.selectedNamespaceMonograph.value : undefined
 
       const validationResult = await kbartServices.validate(this.selectedFile, namespaceName, this.useStrict, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 

@@ -256,6 +256,7 @@
         this.options.addOnly = false
         this.options.deleteMissing = false
         this.options.selectedFile = file
+        this.loadedFile.valid = undefined
       },
       mixedContent (val) {
         if (!val) {
