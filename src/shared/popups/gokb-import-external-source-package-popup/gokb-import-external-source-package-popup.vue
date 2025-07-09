@@ -242,19 +242,19 @@
             {{ $t('popups.externalSourceImport.titleIdentifierInfoSelect') }}
           </span>
         </v-col>
-        <v-col cols="4" v-if="showJournalNamespaceSelect">
-          <gokb-namespace-field
-            v-model="namespaceJournal"
-            target-type="Journal"
-            :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.serials')])"
-            exclude-isxn
-          />
-        </v-col>
         <v-col cols="4" v-if="showMonographNamespaceSelect">
           <gokb-namespace-field
             v-model="namespaceMonograph"
             target-type="Book"
             :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.monographs')])"
+            exclude-isxn
+          />
+        </v-col>
+        <v-col cols="4" v-if="showJournalNamespaceSelect">
+          <gokb-namespace-field
+            v-model="namespaceJournal"
+            target-type="Journal"
+            :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.serials')])"
             exclude-isxn
           />
         </v-col>
