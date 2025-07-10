@@ -248,6 +248,7 @@
             target-type="Book"
             :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.monographs')])"
             exclude-isxn
+            gokb-tooltip="kbart.propIdMonograph.tooltip"
           />
         </v-col>
         <v-col cols="4" v-if="showJournalNamespaceSelect">
@@ -256,6 +257,7 @@
             target-type="Journal"
             :label="$t('popups.externalSourceImport.titleIdNamespace', [$t('popups.externalSourceImport.serials')])"
             exclude-isxn
+            gokb-tooltip="kbart.propIdSerial.tooltip"
           />
         </v-col>
       </v-row>

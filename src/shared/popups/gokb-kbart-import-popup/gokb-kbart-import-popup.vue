@@ -28,6 +28,7 @@
           width="350px"
           :label="$t('kbart.propIdSerial.label')"
           exclude-isxn
+          gokb-tooltip="kbart.propIdSerial.tooltip"
         />
         <gokb-namespace-field
           v-model="options.selectedNamespaceMonograph"
@@ -35,6 +36,7 @@
           width="350px"
           :label="$t('kbart.propIdMonograph.label')"
           exclude-isxn
+          gokb-tooltip="kbart.propIdMonograph.tooltip"
         />
       </div>
       <gokb-checkbox-field
