@@ -272,7 +272,12 @@
       "btnUsePreset": "Use Package as template",
       "btnLoadPresets": "Load Presets",
       "warning": {
-        "externalSourceExcluded": "Update informationen of packages from external sources (EZB, we:kb) can not be transferred."
+        "externalSourceExcluded": "Update informationen of packages from external sources (EZB, we:kb) can not be transferred.",
+        "urlExists": "The URL must be changed."
+      },
+      "adopt": {
+        "ddc": "Adopt subject indexing",
+        "autoUpdate": "Adopt update information"
       }
     }
   },

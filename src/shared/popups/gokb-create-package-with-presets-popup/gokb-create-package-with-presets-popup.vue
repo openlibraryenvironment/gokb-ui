@@ -63,7 +63,7 @@
                 :label="packageNameValid ? $t('popups.preset.choosePackage.packageName') : ''"
                 :style="!packageNameValid ? {'color': 'red'} : {}"
               />
-              <!-- :label="$t('popups.preset.choosePackage.packageName')" -->
+
               <span v-if="!packageNameValid" style="color:red">
               <v-icon class="pb-1" color="error">
                 mdi-close-thick
@@ -75,7 +75,6 @@
           <br/>
 
           <v-row>
-            <!-- <v-col><h3>{{ $t('popups.preset.transferValues.static') }}</h3></v-col> -->
             <v-col><span class="text-h5">{{ $t('popups.preset.transferValues.general') }}</span></v-col>
           </v-row>
           <v-row>
@@ -184,7 +183,6 @@
           <br/><br/><br/>
 
           <div>
-            <!-- v-if="packageTemplate._embedded.ids.length > 0" -->
             <v-row><v-col><span class="text-h5">{{ $t('popups.preset.transferValues.identifiers') }}</span></v-col></v-row>
             <br/>
             <v-table density="compact" >
@@ -202,7 +200,7 @@
 
               </tr>
               </thead>
-              <tbody v-if="packageTemplate._embedded.ids.length > 0">
+              <tbody v-if="packageTemplate._embedded.ids?.length > 0">
               <tr
                 v-for="(id, index) in packageTemplate._embedded.ids"
               >
@@ -213,7 +211,7 @@
                 /></td>
               </tr>
               </tbody>
-              <tbody v-else><tr><td/><td>Keine Einträge</td><td/></tr></tbody>
+              <tbody v-else><tr><td/><td>{{ $t('default.table.noData.props') }}</td><td/></tr></tbody>
 
             </v-table>
 
@@ -240,7 +238,7 @@
                 </th>
               </tr>
               </thead>
-              <tbody v-if="packageTemplate._embedded.subjects.length > 0">
+              <tbody v-if="packageTemplate._embedded.subjects?.length > 0">
               <tr
                 v-for="(subject, index) in packageTemplate._embedded.subjects"
               >
@@ -249,18 +247,17 @@
                 <td></td>
               </tr>
               </tbody>
-              <tbody v-else><tr><td/><td>Keine Einträge</td><td/></tr></tbody>
+              <tbody v-else><tr><td/><td>{{ $t('default.table.noData.props') }}</td><td/></tr></tbody>
             </v-table>
             <br/>
             <v-row v-if="packageTemplate._embedded.subjects?.length > 0">
-              <v-col cols="2"><span >Sacherschließung übernehmen:</span></v-col>
+              <v-col cols="2"><span >{{ $t('popups.preset.adopt.ddc') }}</span></v-col>
               <v-col>
                 <gokb-checkbox-field
                   dense
                   v-model="acceptDDC"
                   />
               </v-col>
-              <!-- <v-col cols="2"><span >Übernehmen:</span></v-col> -->
             </v-row>
           </div>
 
@@ -281,18 +278,12 @@
                       :disabled="sourceIsExcluded"
                       label="URL"
                     />
-                  <!-- validate-on-blur -->
-                  <!-- :style="!sourceUrlValid ? {'color': 'red'} : {}" -->
-                  <!-- :rules="[sourceUrlVal || 'Not valid']"
-                      validate-on-generic="eager"
-                  -->
 
                     <span v-if="acceptAutoUpdate && !sourceUrlValid" style="color:red">
                       <v-icon class="pb-1" color="error">
                         mdi-close-thick
                       </v-icon>
-                      <!-- {{ $t('popups.preset.choosePackage.packageExistsMessage') }} -->
-                      Die URL muss geändert werden
+                      {{ $t('popups.preset.warning.urlExists') }}
                     </span>
 
                   </v-col>
@@ -336,7 +327,6 @@
             <br/>
             <v-row v-if="sourceIsExcluded">
               <v-col>
-                <!-- <span>{{ $t('popups.preset.warning.externalSourceExcluded') }}</span> -->
                 <v-alert
                   type="warning"
                   class="text-body-2"
@@ -346,7 +336,7 @@
               </v-col>
             </v-row>
             <v-row v-else>
-              <v-col cols="2"><span >Update-Infos übernehmen:</span></v-col>
+              <v-col cols="2"><span >{{ $t('popups.preset.adopt.autoUpdate') }}</span></v-col>
               <v-col>
                 <gokb-checkbox-field
                   dense
@@ -363,6 +353,11 @@
 
     <template #buttons>
       <v-spacer />
+      <gokb-button
+        @click="close"
+      >
+        {{ $t('btn.cancel') }}
+      </gokb-button>
 
       <gokb-button
         v-if="presetDataLoaded"
@@ -492,6 +487,9 @@ export default {
   mounted () {
   },
   methods: {
+    close () {
+      this.localValue = false
+    },
     async checkIfSourceUrlIsValid() {
       console.log("check Source URL...")
       let valid = true

@@ -699,7 +699,7 @@
         <gokb-button
           color="orange"
           @click="showCreateWithPresetsPopup"
-          v-show="isEdit && step == 1"
+          v-show="isEdit && step == 1 && loggedIn"
         >
           {{ $t('popups.preset.btnUsePreset') }}
         </gokb-button>

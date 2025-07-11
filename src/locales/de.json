@@ -273,7 +273,12 @@
       "btnUsePreset": "Paket als Vorlage nutzen",
       "btnLoadPresets": "Vorgabewerte laden",
       "warning": {
-        "externalSourceExcluded": "Update-Informationen von Paketen aus fremden Quellen (EZB, we:kb) können nicht übernommen werden."
+        "externalSourceExcluded": "Update-Informationen von Paketen aus fremden Quellen (EZB, we:kb) können nicht übernommen werden.",
+        "urlExists": "Die URL muss geändert werden."
+      },
+      "adopt": {
+        "ddc": "Sacherschließung übernehmen",
+        "autoUpdate": "Update-Infos übernehmen"
       }
     }
   },
