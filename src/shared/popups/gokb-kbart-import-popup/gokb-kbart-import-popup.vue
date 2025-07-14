@@ -256,6 +256,7 @@
         this.options.addOnly = false
         this.options.deleteMissing = false
         this.options.selectedFile = file
+        this.loadedFile.valid = undefined
       },
       mixedContent (val) {
         if (!val) {
@@ -287,20 +288,21 @@
         this.expandOtherOptions = !this.expandOtherOptions
       },
       async fetchDefaultNamespace () {
-        const providerResult = await this.catchError({
-          promise: providerServices.get(this.provider.id, this.cancelToken.token),
-          instance: this
-        })
+        if (!!this.contentType) {
+          const providerResult = await this.catchError({
+            promise: providerServices.get(this.provider.id, this.cancelToken.token),
+            instance: this
+          })
 
-        if (providerResult?.status === 200) {
-          const fullProvider = providerResult.data
+          let ctype = this.contentType.value || this.contentType.name
 
-          if (!!this.contentType) {
+          if (providerResult?.status === 200) {
+            const fullProvider = providerResult.data
 
-            if ( (this.contentType.value === 'Book' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceMonograph) {
+            if ( (ctype === 'Book' || ctype === 'Mixed') && fullProvider.titleNamespaceMonograph) {
               this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
             }
-            if ( (this.contentType.value === 'Journal' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceSerial) {
+            if ( (ctype === 'Journal' || ctype === 'Mixed') && fullProvider.titleNamespaceSerial) {
               this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
             }
             this.mixedContent = true
