@@ -4,6 +4,7 @@
     :loading="loading"
     :color="roleColor"
     :class="[elevationClass, isDeleted ? 'text-disabled' : '']"
+    width="auto"
     outlined
   >
     <v-card-subtitle
@@ -18,7 +19,7 @@
         <v-col>
           <router-link
             v-if="!nameEditActive"
-            class="text-primary font-weight-bold"
+            :class="[$vuetify.theme.current.dark ? 'text-white' : 'text-black', 'font-weight-bold']"
             :to="{ name: route, params: { 'id': originalRecord.id } }"
             target="_blank"
           >
@@ -49,7 +50,7 @@
         <v-col>
           <span> {{ $tc('component.package.label') }}: </span>
           <router-link
-            class="text-primary"
+            :class="[$vuetify.theme.current.dark ? 'text-white' : 'text-black']"
             :to="{ name: '/package', params: { 'id': linkedPackage.id } }"
             target="_blank"
           >
@@ -62,7 +63,7 @@
           <span> {{ $tc('component.title.label') }}: </span>
           <router-link
             v-if="!!linkedTitle"
-            class="text-primary"
+            :class="[$vuetify.theme.current.dark ? 'text-white' : 'text-black']"
             :to="{ name: '/title', params: { 'id': linkedTitle.id } }"
             target="_blank"
           >

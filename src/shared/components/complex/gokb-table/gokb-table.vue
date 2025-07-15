@@ -348,6 +348,11 @@
         type: String,
         required: false,
         default: null
+      },
+      overflow: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {

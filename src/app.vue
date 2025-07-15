@@ -252,7 +252,7 @@
     <v-main>
       <v-container fluid>
           <router-view v-slot="{Component}" :key="$route.fullPath">
-            <keep-alive :exclude="/^Edit\w*$/">
+            <keep-alive :include="/^(S|\/s)earch\w*$/">
               <component :is="Component" />
             </keep-alive>
           </router-view>

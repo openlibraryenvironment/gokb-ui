@@ -1207,6 +1207,9 @@
       "additionalInfo": {
         "label": "Strukturierte Detailansicht"
       },
+      "editingNotes": {
+        "label": "Bearbeitungsvermerk"
+      },
       "referenceBase": {
         "label": "Weitere Informationen",
         "message": "Dokumentation für '{0}'",
@@ -1231,7 +1234,8 @@
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
           "closed": "Prüfanfrage geschlossen",
           "closedBulk": "Prüfanfrage wurde geschlossen | {0} Prüfanfragen wurden geschlossen",
-          "reopened": "Die Prüfanfrage wurde erneut geöffnet."
+          "reopened": "Die Prüfanfrage wurde erneut geöffnet.",
+          "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert."
         },
         "confirm": {
           "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage schließen möchten.",

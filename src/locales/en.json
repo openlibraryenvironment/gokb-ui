@@ -1207,6 +1207,9 @@
       "additionalInfo": {
         "label": "Structured info"
       },
+      "editingNotes": {
+        "label": "Editing notes"
+      },
       "referenceBase": {
         "label": "Further information",
         "message": "Documentation for '{0}'",
@@ -1231,7 +1234,8 @@
           "deescalated" : "The request has been successfully deescalated.",
           "closed": "Request closed",
           "closedBulk": "Request closed | {0} requests closed",
-          "reopened": "Request has been reopened."
+          "reopened": "Request has been reopened.",
+          "editingNotes": "The editing notes have been sucessfully updated."
         },
         "confirm": {
           "close": "Please confirm closing this review.",

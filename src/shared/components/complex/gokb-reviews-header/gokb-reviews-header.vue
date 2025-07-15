@@ -71,7 +71,7 @@
       </v-col>
     </v-row>
     <v-row
-      class="mb-5"
+      class="mb-5 mr-7"
       dense
     >
       <v-col md="12">
@@ -105,6 +105,7 @@
                 >
                   <template v-slot:firstOtherLink>
                     <router-link
+                        v-if="!!reviewComponent.otherComponents && reviewComponent.otherComponents.size > 0"
                         :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
                         class="text-primary font-weight-bold"
                         target="_blank"
@@ -130,24 +131,23 @@
                   </template>
                   <template v-slot:secondArray>
                     <span v-if="!!additionalVars">
-                      [
-                        <span
-                          v-for="(entry, idx) in additionalVars[1]"
-                          :key="idx"
-                        >
-                          <span v-if="typeof entry === 'string' || typeof entry === 'number'">
-                            {{ entry }}
-                          </span>
-                          <span v-else>
-                            <span
-                              v-for="(value, namespace) in entry"
-                              :key="namespace + '_' + value"
-                            >
-                              {{namespace}}: {{value}}
-                            </span>
+                      <span
+                        v-for="(entry, idx) in additionalVars[1]"
+                        :key="idx"
+                      >
+                        <span v-if="idx > 0">, </span>
+                        <span v-if="typeof entry === 'string' || typeof entry === 'number'">
+                          {{ entry }}
+                        </span>
+                        <span v-else>
+                          <span
+                            v-for="(value, namespace) in entry"
+                            :key="namespace + '_' + value"
+                          >
+                            {{ namespace }}: {{ value }}
                           </span>
                         </span>
-                      ]
+                      </span>
                     </span>
                   </template>
                   <template v-slot:thirdInfo>
@@ -243,7 +243,7 @@
               </div>
             </v-col>
           </v-row>
-          <v-row>
+          <v-row dense>
             <v-col>
               <label
                 class="v-label"
@@ -256,6 +256,16 @@
                 {{ $t('component.review.referenceBase.message', [typeLabel]) }}
                 <v-icon size="small" class="ml-1 mt-n1"> mdi-open-in-new </v-icon>
               </a>
+            </v-col>
+          </v-row>
+          <v-row v-if="editable" dense>
+            <v-col cols="6">
+              <gokb-textarea-field
+                v-model="editingNotes"
+                append-icon="mdi-check-bold"
+                :label="$t('component.review.editingNotes.label')"
+                @click:append="saveEditingNotes"
+              />
             </v-col>
           </v-row>
         </div>
@@ -271,6 +281,13 @@
             required
             disabled
             :label="$t('component.review.request.label')"
+          />
+          <gokb-textarea-field
+            v-if="editable"
+            append-icon="mdi-check-bold"
+            v-model="editingNotes"
+            :label="$t('component.review.editingNotes.label')"
+            @click:append="saveEditingNotes"
           />
         </div>
       </v-col>
@@ -292,7 +309,6 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
-  import accountModel from '@/shared/models/account-model'
   import GokbCuratoryGroupPopup from '@/shared/popups/gokb-curatory-group-popup'
 
   export default {
@@ -328,6 +344,7 @@
       return {
         error: undefined,
         showGroupInfo: false,
+        editingNotes: undefined,
         selectedGroup: undefined,
         componentRoutes: {
           package: '/package',
@@ -346,6 +363,9 @@
           otherinstance: '/title'
         }
       }
+    },
+    mounted () {
+      this.editingNotes = this.reviewComponent?.editingNotes || undefined
     },
     computed: {
       cmpType () {
@@ -375,6 +395,9 @@
         this.selectedGroup = groupInfo
         this.showGroupInfo = true
       },
+      saveEditingNotes() {
+        this.$emit('set-editing-notes', this.editingNotes)
+      }
     }
   }
 </script>

@@ -198,7 +198,7 @@
       clearInterval(this.interval)
       this.interval = undefined
     },
-    preDestroy () {
+    beforeUnmount () {
       clearInterval(this.interval)
       this.interval = undefined
     },
@@ -269,6 +269,9 @@
             )
           )
           this.totalNumberOfItems = result.data?._pagination?.total
+        }
+        else if (result?.status === 401) {
+          this.stopAutoUpdate()
         }
       },
       determineStatusText (record) {

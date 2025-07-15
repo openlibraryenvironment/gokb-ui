@@ -5,11 +5,13 @@
     :disabled="!editable"
     rows="1"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
+    :append-icon="appendIcon"
     :required="required"
     variant="underlined"
     validate-on-blur
     auto-grow
     clearable
+    @click:append="$emit('click:append', $event)"
   >
     <template #label>
       {{ label }}
@@ -26,7 +28,7 @@
 <script>
   export default {
     name: 'GokbTextareaField',
-    emits: ['update:model-value'],
+    emits: ['update:model-value', 'click:append'],
     props: {
       modelValue: {
         required: true,
@@ -71,6 +73,11 @@
         default: false,
       },
       prependIcon: {
+        type: String,
+        required: false,
+        default: undefined,
+      },
+      appendIcon: {
         type: String,
         required: false,
         default: undefined,

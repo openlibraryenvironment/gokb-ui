@@ -42,6 +42,7 @@
         ref="jobs"
         v-model="groupId"
         :group="activeGroup"
+        :auto-refresh="false"
       />
     </div>
     <gokb-packages-section
