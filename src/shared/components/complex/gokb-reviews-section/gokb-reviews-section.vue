@@ -263,6 +263,7 @@
           const componentId = entry?.componentToReview.id
           const type = entry?.componentToReview?.type ? this.$i18n.tc('component.' + entry?.componentToReview?.type.toLowerCase() + '.label') : undefined
           const dateCreated = new Date(entry?.dateCreated).toLocaleString('sv')
+          const lastUpdated = new Date(entry?.lastUpdated).toLocaleString('sv')
           const request = entry?.reviewRequest
           const description = entry?.descriptionOfCause
           const status = entry?.status
@@ -275,7 +276,7 @@
           const link = { value: component.name, route: componentRoutes[entry?.componentToReview?.type?.toLowerCase()], id: 'componentId' }
           const groupsList = entry.allocatedGroups.map(ag => ag.name).join(', ')
           const isClosable = !!(status?.name === 'Open' && updateUrl)
-          return { id, status, dateCreated, statusLabel, stdDescLabel, groupsList, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
+          return { id, status, dateCreated, lastUpdated, statusLabel, stdDescLabel, groupsList, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
         })
       },
       isContrib () {
@@ -319,6 +320,13 @@
             sortable: true,
             nowrap: true,
             key: 'dateCreated'
+          },
+          {
+            title: this.$i18n.t('component.general.lastUpdated'),
+            align: 'end',
+            sortable: true,
+            nowrap: true,
+            key: 'lastUpdated'
           }
         ]
         const pkgTitlesConfig = [
@@ -348,6 +356,13 @@
             sortable: true,
             nowrap: true,
             key: 'dateCreated'
+          },
+          {
+            title: this.$i18n.t('component.general.lastUpdated'),
+            align: 'end',
+            sortable: true,
+            nowrap: true,
+            key: 'lastUpdated'
           }
         ]
         const defaultConfig = [
@@ -384,6 +399,13 @@
             sortable: true,
             nowrap: true,
             value: 'dateCreated'
+          },
+          {
+            title: this.$i18n.t('component.general.lastUpdated'),
+            align: 'end',
+            sortable: true,
+            nowrap: true,
+            key: 'lastUpdated'
           }
         ]
 
