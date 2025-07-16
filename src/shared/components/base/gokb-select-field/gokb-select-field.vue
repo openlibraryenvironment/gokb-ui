@@ -42,10 +42,10 @@
             *
           </span>
         </template>
+        <template #append>
+          <gokb-tooltip v-if="!!gokbTooltip" classes="mt-1 opacity-100" :code="gokbTooltip" />
+        </template>
       </v-select>
-    </span>
-    <span v-if="!!gokbTooltip" cols="1" align-self="center">
-      <gokb-tooltip classes="" :code="gokbTooltip" />
     </span>
   </div>
 </template>
