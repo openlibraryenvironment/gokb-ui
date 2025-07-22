@@ -283,22 +283,30 @@
         this.expandOtherOptions = !this.expandOtherOptions
       },
       async fetchDefaultNamespace () {
+        const providerResult = await this.catchError({
+          promise: providerServices.get(this.provider.id, this.cancelToken.token),
+          instance: this
+        })
 
-          const providerResult = await this.catchError({
-            promise: providerServices.get(this.provider.id, this.cancelToken.token),
-            instance: this
-          })
+        if (providerResult?.status === 200) {
+          const fullProvider = providerResult.data
 
-          if (providerResult?.status === 200) {
-            const fullProvider = providerResult.data
+          this.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph ? ({ ...fullProvider.titleNamespaceMonograph,name: fullProvider.titleNamespaceMonograph.name || fullProvider.titleNamespaceMonograph.value }) : undefined
+          this.selectedNamespaceSerial = fullProvider.titleNamespaceSerial ? { ...fullProvider.titleNamespaceSerial,name: fullProvider.titleNamespaceSerial.name || fullProvider.titleNamespaceSerial.value } : undefined
 
-            this.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
-            this.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
+          if (!!this.contentType) {
+            let ctype = this.contentType.value || this.contentType.name
 
-            if (!this.selectedNamespaceMonograph && !this.selectedNamespaceSerial) {
+            if (ctype === 'Book') {
+              this.selectedNamespace = this.selectedNamespaceMonograph
               this.mixedContent = false
+            } else if (ctype === 'Journal') {
+              this.selectedNamespace = this.selectedNamespaceSerial
+              this.mixedContent = false
+            } else {
+              this.mixedContent = true
             }
-
+          }
         }
       },
       importKbart () {

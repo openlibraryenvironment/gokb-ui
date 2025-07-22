@@ -24,6 +24,15 @@
       }
     },
     computed: {
+      localValue: {
+        get () {
+          return this.modelValue
+        },
+        set (value) {
+          // console.log('select field', value)
+          this.$emit('update:model-value', value)
+        }
+      },
       localName () {
         return this.localValue?.name || this.localValue?.value
       },
@@ -32,10 +41,7 @@
       modelValue: {
         handler (val) {
           if (!!val && !val.name) {
-            this.localValue.name = val.value
-          }
-          else {
-            this.itemTitle = 'name'
+            this.localValue = { ...val, name: val.value }
           }
         },
         deep: true
@@ -53,6 +59,12 @@
       }
     },
     methods: {
+      updateItems () {
+        this.localizedItems = this.rawItems.map(item => ({
+          ...item,
+          name: item.name || item.value
+        }))
+      },
       transform (result) {
         const { data: { data: values } } = result
         return values?.map(ns => ({

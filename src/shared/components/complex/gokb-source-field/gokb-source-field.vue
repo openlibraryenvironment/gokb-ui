@@ -212,6 +212,7 @@
             this.item.titleIdSerial = val.titleIdSerial
             this.item.titleIdMonograph = val.titleIdMonograph
             this.item.update = val.update
+
             if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
               this.item.targetNamespace = undefined
               this.mixedContent = true
@@ -235,14 +236,6 @@
           }
         },
         deep: true
-      },
-      mixedContent (val) {
-        if (!val) {
-          this.item.titleIdSerial = undefined
-          this.item.titleIdMonograph = undefined
-        } else {
-          this.item.targetNamespace = undefined
-        }
       }
     },
     async mounted () {
@@ -256,7 +249,6 @@
 
         if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
           this.mixedContent = true
-          this.item.targetNamespace = undefined
         }
       } else if (!!this.provider){
         this.fetchDefaultNamespace()
@@ -281,8 +273,8 @@
             this.item.importConfig = result.data.importConfig
             this.item.titleIdSerial = result.data.titleIdSerial
             this.item.titleIdMonograph = result.data.titleIdMonograph
+
             if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
-              this.item.targetNamespace = undefined
               this.mixedContent = true
             }
             if (!!this.item.url) {
@@ -292,7 +284,6 @@
         }
       },
       async fetchDefaultNamespace () {
-
         const providerResult = await this.catchError({
           promise: providerServices.get(this.provider.id, this.cancelToken.token),
           instance: this
@@ -300,24 +291,16 @@
 
         if (providerResult?.status === 200) {
           const fullProvider = providerResult.data
-          this.mixedContent = true
 
           this.item.titleIdMonograph = fullProvider.titleNamespaceMonograph
           this.item.titleIdSerial = fullProvider.titleNamespaceSerial
 
-          if (!!this.contentType) {
-            let ctype = this.contentType.value || this.contentType.name
-            if (ctype === 'Book') {
-              this.item.titleIdSerial = undefined
-            } else if (ctype === 'Journal') {
-              this.item.titleIdMonograph = undefined
-            }
-          }
-
           if (!this.item.titleIdMonograph && !this.item.titleIdSerial) {
             this.mixedContent = false
           }
-
+          else {
+            this.mixedContent = true
+          }
         }
       },
     }
