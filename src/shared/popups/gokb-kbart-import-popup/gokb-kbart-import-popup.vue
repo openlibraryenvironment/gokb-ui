@@ -14,7 +14,7 @@
       />
       <gokb-namespace-field
         v-if="!mixedContent"
-        v-model="options.selectedNamespace"
+        v-model="selectedNamespace"
         :target-type="targetType"
         width="350px"
         :label="$t('kbart.propId.label')"
@@ -23,7 +23,7 @@
       />
       <div v-else>
         <gokb-namespace-field
-          v-model="options.selectedNamespaceSerial"
+          v-model="selectedNamespaceSerial"
           target-type="Journal"
           width="350px"
           :label="$t('kbart.propIdSerial.label')"
@@ -31,7 +31,7 @@
           gokb-tooltip="kbart.propIdSerial.tooltip"
         />
         <gokb-namespace-field
-          v-model="options.selectedNamespaceMonograph"
+          v-model="selectedNamespaceMonograph"
           target-type="Book"
           width="350px"
           :label="$t('kbart.propIdMonograph.label')"
@@ -184,6 +184,9 @@
         },
         selectedFile: undefined,
         completion: undefined,
+        selectedNamespace: undefined,
+        selectedNamespaceSerial: undefined,
+        selectedNamespaceMonograph: undefined,
         options: {
           selectedFile: undefined,
           selectedNamespace: undefined,
@@ -258,14 +261,6 @@
         this.options.selectedFile = file
         this.loadedFile.valid = undefined
       },
-      mixedContent (val) {
-        if (!val) {
-          this.options.selectedNamespaceSerial = undefined
-          this.options.selectedNamespaceMonograph = undefined
-        } else {
-          this.options.selectedNamespace = undefined
-        }
-      },
       provider: {
         handler(val) {
           if (!!val) {
@@ -296,21 +291,11 @@
 
           if (providerResult?.status === 200) {
             const fullProvider = providerResult.data
-            this.mixedContent = true
 
-            this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
-            this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
+            this.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
+            this.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
 
-            if (!!this.contentType) {
-              let ctype = this.contentType.value || this.contentType.name
-              if (ctype === 'Book') {
-                this.options.selectedNamespaceSerial = undefined
-              } else if (ctype === 'Journal') {
-                this.options.selectedNamespaceMonograph = undefined
-              }
-            }
-
-            if (!this.options.selectedNamespaceMonograph && !this.options.selectedNamespaceSerial) {
+            if (!this.selectedNamespaceMonograph && !this.selectedNamespaceSerial) {
               this.mixedContent = false
             }
 
@@ -318,6 +303,13 @@
       },
       importKbart () {
         if (this.completion === 100) {
+          if (this.mixedContent) {
+            this.options.selectedNamespaceSerial = this.selectedNamespaceSerial
+            this.options.selectedNamespaceMonograph = this.selectedNamespaceMonograph
+          }
+          else {
+            this.options.selectedNamespace = this.selectedNamespace
+          }
           this.$emit('kbart', this.options)
           this.close()
         } else {
@@ -328,9 +320,17 @@
         this.errors = []
         this.importRunning = true
         this.completion = 0
-        let namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
-        let namespaceNameSerial = this.options.selectedNamespaceSerial ? this.options.selectedNamespaceSerial.value : undefined
-        let namespaceNameMonograph = this.options.selectedNamespaceMonograph ? this.options.selectedNamespaceMonograph.value : undefined
+        let namespaceName = undefined
+        let namespaceNameSerial = undefined
+        let namespaceNameMonograph = undefined
+
+        if (mixedContent) {
+          namespaceNameSerial = this.selectedNamespaceSerial ? this.selectedNamespaceSerial.value : undefined
+          namespaceNameMonograph = this.selectedNamespaceMonograph ? this.selectedNamespaceMonograph.value : undefined
+        }
+        else if (!namespaceNameSerial && !namespaceNameMonograph && !!this.selectedNamespace) {
+          namespaceName = this.selectedNamespace.value
+        }
 
         const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 
