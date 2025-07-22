@@ -464,7 +464,7 @@
               v-if="loggedIn"
               ref="source"
               v-model="sourceItem"
-              :provider="providerSelect"
+              :provider="packageItem.provider"
               :content-type="packageItem.contentType"
               :expanded="false"
               :api-errors="errors?.source"
