@@ -82,7 +82,7 @@
             color="red"
             :title="item.markError"
           >
-            mdi-alert
+            mdi-close-thick
           </v-icon>
           <span class="text-error" style="white-space:nowrap;"> {{ item.markError }}</span>
         </div>
