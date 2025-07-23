@@ -222,15 +222,7 @@
       },
       provider: {
         handler(val) {
-          if (!!val && !this.modelValue?.id) {
-            this.fetchDefaultNamespace()
-          }
-        },
-        deep: true
-      },
-      contentType: {
-        handler(val) {
-          if (!!val && !this.modelValue?.id) {
+          if (!!val && !this.modelValue.id) {
             this.fetchDefaultNamespace()
           }
         },
@@ -258,7 +250,7 @@
           this.mixedContent = true
           this.item.targetNamespace = undefined
         }
-      } else if (!!this.provider){
+      } else if (!!this.provider && !!this.contentType){
         this.fetchDefaultNamespace()
       }
     },
@@ -292,7 +284,6 @@
         }
       },
       async fetchDefaultNamespace () {
-
         const providerResult = await this.catchError({
           promise: providerServices.get(this.provider.id, this.cancelToken.token),
           instance: this
@@ -300,24 +291,21 @@
 
         if (providerResult?.status === 200) {
           const fullProvider = providerResult.data
-          this.mixedContent = true
-
-          this.item.titleIdMonograph = fullProvider.titleNamespaceMonograph
-          this.item.titleIdSerial = fullProvider.titleNamespaceSerial
 
           if (!!this.contentType) {
-            let ctype = this.contentType.value || this.contentType.name
-            if (ctype === 'Book') {
-              this.item.titleIdSerial = undefined
-            } else if (ctype === 'Journal') {
-              this.item.titleIdMonograph = undefined
+            if ( (this.contentType.value === 'Book' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceMonograph) {
+              this.titleIdMonograph = fullProvider.titleNamespaceMonograph
+            }
+            if ( (this.contentType.value === 'Journal' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceSerial) {
+              this.titleIdSerial = fullProvider.titleNamespaceSerial
+            }
+            this.mixedContent = true
+            //Rückfallwert
+            if (!this.titleIdMonograph && !this.titleIdSerial) {
+              this.mixedContent = false
+              this.targetNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
             }
           }
-
-          if (!this.item.titleIdMonograph && !this.item.titleIdSerial) {
-            this.mixedContent = false
-          }
-
         }
       },
     }
