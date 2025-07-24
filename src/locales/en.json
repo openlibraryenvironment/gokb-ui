@@ -1650,6 +1650,12 @@
           "info": "The coverage date range ({0}) is in conflict with the publication dates of the matched reference title ({1}).",
           "action": "-",
           "toDo": "Check if the correct reference title has been linked and if its publishing dates are correct."
+        },
+        "Missing TIPP Name": {
+          "label": "Missing Title Name",
+          "info": "The package title could not be linked to a reference title due to its missing name",
+          "action": "-",
+          "toDo": "Research and add a name to the package title or delete it."
         }
       }
     },
