@@ -31,7 +31,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-if="!mixedContent">
+      <v-col v-if="!ignoreLegacyTitleID">
         <v-row>
           <v-col cols="3">
             <gokb-namespace-field
@@ -44,43 +44,44 @@
               exclude-isxn
             />
           </v-col>
-          <v-col>
+          <!-- <v-col>
             <gokb-checkbox-field
-              v-model="mixedContent"
+              v-model="ignoreLegacyTitleID"
               class="pt-4"
               width="350px"
               :label="$t('kbart.propId.typed.label')"
               dense
             />
-          </v-col>
+          </v-col> -->
         </v-row>
       </v-col>
       <v-col v-else>
         <v-row>
           <v-col cols="3">
             <gokb-namespace-field
+              v-if="serialVisible"
               v-model="item.titleIdSerial"
               target-type="Journal"
               width="100%"
               :label="$t('kbart.propIdSerial.label')"
               exclude-isxn
               gokb-tooltip="kbart.propIdSerial.tooltip"
-              required
             />
           </v-col>
           <v-col cols="3">
             <gokb-namespace-field
+              v-if="monographVisible"
               v-model="item.titleIdMonograph"
               target-type="Book"
               width="100%"
               :label="$t('kbart.propIdMonograph.label')"
               exclude-isxn
               gokb-tooltip="kbart.propIdMonograph.tooltip"
-              required
             />
           </v-col>
           <v-col>
             <gokb-checkbox-field
+              v-if="mixedContentVisible"
               v-model="mixedContent"
               class="pt-4"
               :label="$t('kbart.propId.typed.label')"
@@ -181,6 +182,10 @@
         errors: [],
         mixedContent: false,
         isExpanded: true,
+        serialVisible: true,
+        monographVisible: true,
+        mixedContentVisible: true,
+        ignoreLegacyTitleID: true
       }
     },
     computed: {
@@ -212,10 +217,10 @@
             this.item.titleIdSerial = val.titleIdSerial
             this.item.titleIdMonograph = val.titleIdMonograph
             this.item.update = val.update
-            if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
+            /*if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
               this.item.targetNamespace = undefined
               this.mixedContent = true
-            }
+            } */
           }
         },
         deep: true
@@ -237,12 +242,13 @@
         deep: true
       },
       mixedContent (val) {
-        if (!val) {
+        this.setVisibleStatusForTitleIdFields()
+        /* if (!val) {
           this.item.titleIdSerial = undefined
           this.item.titleIdMonograph = undefined
         } else {
           this.item.targetNamespace = undefined
-        }
+        } */
       }
     },
     async mounted () {
@@ -263,6 +269,16 @@
       }
     },
     methods: {
+      setVisibleStatusForTitleIdFields () {
+        if (this.mixedContent) {
+          this.serialVisible = true
+          this.monographVisible = true
+        } else if (!!this.contentType) {
+          let ctype = this.contentType.value || this.contentType.name
+          this.serialVisible = (ctype === 'Journal')
+          this.monographVisible = (ctype === 'Book')
+        }
+      },
       async fetch (sid) {
         if (!!sid) {
           const result = await this.catchError({
@@ -283,7 +299,10 @@
             this.item.titleIdMonograph = result.data.titleIdMonograph
             if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
               this.item.targetNamespace = undefined
-              this.mixedContent = true
+              this.ignoreLegacyTitleID = true
+              // this.mixedContent = true
+            } else if (!!this.item.targetNamespace) {
+              this.ignoreLegacyTitleID = false
             }
             if (!!this.item.url) {
               this.isExpanded = true

@@ -13,33 +13,25 @@
         dense
       />
       <gokb-namespace-field
-        v-if="!mixedContent"
-        v-model="options.selectedNamespace"
-        :target-type="targetType"
+        v-if="serialVisible"
+        v-model="options.selectedNamespaceSerial"
+        target-type="Journal"
         width="350px"
-        :label="$t('kbart.propId.label')"
-        gokb-tooltip="kbart.propId.tooltip"
+        :label="$t('kbart.propIdSerial.label')"
         exclude-isxn
+        gokb-tooltip="kbart.propIdSerial.tooltip"
       />
-      <div v-else>
-        <gokb-namespace-field
-          v-model="options.selectedNamespaceSerial"
-          target-type="Journal"
-          width="350px"
-          :label="$t('kbart.propIdSerial.label')"
-          exclude-isxn
-          gokb-tooltip="kbart.propIdSerial.tooltip"
-        />
-        <gokb-namespace-field
-          v-model="options.selectedNamespaceMonograph"
-          target-type="Book"
-          width="350px"
-          :label="$t('kbart.propIdMonograph.label')"
-          exclude-isxn
-          gokb-tooltip="kbart.propIdMonograph.tooltip"
-        />
-      </div>
+      <gokb-namespace-field
+        v-if="monographVisible"
+        v-model="options.selectedNamespaceMonograph"
+        target-type="Book"
+        width="350px"
+        :label="$t('kbart.propIdMonograph.label')"
+        exclude-isxn
+        gokb-tooltip="kbart.propIdMonograph.tooltip"
+      />
       <gokb-checkbox-field
+          v-if="mixedContentVisible"
           v-model="mixedContent"
           class="pt-4"
           :label="$t('kbart.propId.typed.label')"
@@ -193,7 +185,10 @@
           addOnly: false,
           dryRun: false
         },
-        expandOtherOptions: false
+        expandOtherOptions: false,
+        serialVisible: true,
+        monographVisible: true,
+        mixedContentVisible: true
       }
     },
     computed: {
@@ -258,13 +253,8 @@
         this.options.selectedFile = file
         this.loadedFile.valid = undefined
       },
-      mixedContent (val) {
-        if (!val) {
-          this.options.selectedNamespaceSerial = undefined
-          this.options.selectedNamespaceMonograph = undefined
-        } else {
-          this.options.selectedNamespace = undefined
-        }
+      mixedContent () {
+        this.setVisibleStatusForTitleIdFields()
       },
       provider: {
         handler(val) {
@@ -287,31 +277,41 @@
       toggleOptions () {
         this.expandOtherOptions = !this.expandOtherOptions
       },
-      async fetchDefaultNamespace () {
-        if (!!this.contentType) {
-          const providerResult = await this.catchError({
-            promise: providerServices.get(this.provider.id, this.cancelToken.token),
-            instance: this
-          })
-
+      setVisibleStatusForTitleIdFields () {
+        if (this.mixedContent) {
+          this.serialVisible = true
+          this.monographVisible = true
+        } else if (!!this.contentType) {
           let ctype = this.contentType.value || this.contentType.name
+          this.serialVisible = (ctype === 'Journal')
+          this.monographVisible = (ctype === 'Book')
+        }
+      },
+      async fetchDefaultNamespace () {
 
-          if (providerResult?.status === 200) {
-            const fullProvider = providerResult.data
+        const providerResult = await this.catchError({
+          promise: providerServices.get(this.provider.id, this.cancelToken.token),
+          instance: this
+        })
 
-            if ( (ctype === 'Book' || ctype === 'Mixed') && fullProvider.titleNamespaceMonograph) {
-              this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
-            }
-            if ( (ctype === 'Journal' || ctype === 'Mixed') && fullProvider.titleNamespaceSerial) {
-              this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
-            }
+        if (providerResult?.status === 200) {
+          const fullProvider = providerResult.data
+
+          this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
+          this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
+
+          if (!!this.contentType) {
+
+            let ctype = this.contentType.value || this.contentType.name
+
+            this.mixedContent = (ctype === 'Mixed')
+            this.mixedContentVisible = true
+
+          } else {
             this.mixedContent = true
-            //Rückfallwert
-            if (!this.options.selectedNamespaceMonograph && !this.options.selectedNamespaceSerial) {
-              this.mixedContent = false
-              this.options.selectedNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
-            }
+            this.mixedContentVisible = false
           }
+          this.setVisibleStatusForTitleIdFields()
         }
       },
       importKbart () {
