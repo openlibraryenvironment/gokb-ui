@@ -82,6 +82,9 @@
         </div>
       </v-list-item>
     </template>
+    <template #append>
+      <gokb-tooltip v-if="!!gokbTooltip" classes="mt-1 opacity-100" :code="gokbTooltip" />
+    </template>
   </v-combobox>
   <v-autocomplete
     v-else
@@ -161,6 +164,9 @@
           <span> {{ $t(item.raw.disabledMessage) }} </span>
         </v-chip>
       </v-list-item>
+    </template>
+    <template #append>
+      <gokb-tooltip v-if="!!gokbTooltip" classes="mt-1 opacity-100" :code="gokbTooltip" />
     </template>
   </v-autocomplete>
 </template>
@@ -248,6 +254,11 @@
       },
       initItem: {
         type: Object,
+        required: false,
+        default: undefined
+      },
+      gokbTooltip: {
+        type: String,
         required: false,
         default: undefined
       }

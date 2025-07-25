@@ -7,7 +7,7 @@
         :color="color"
         v-bind="props"
         :class="classes"
-        size="small"
+        :size="size"
       >
         {{ iconId }}
       </v-icon>
@@ -34,10 +34,10 @@
         required: false,
         default: 'mdi-help-circle',
       },
-      small: {
-        type: Boolean,
+      size: {
+        type: String,
         required: false,
-        default: true
+        default: '20px'
       },
       code: {
         type: String,

@@ -29,6 +29,9 @@
         *
       </span>
     </template>
+    <template #append>
+      <gokb-tooltip v-if="!!gokbTooltip" classes="mt-0 opacity-100" :code="gokbTooltip" />
+    </template>
   </v-text-field>
 </template>
 
@@ -119,6 +122,11 @@
         type: Boolean,
         required: false,
         default: true
+      },
+      gokbTooltip: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {
