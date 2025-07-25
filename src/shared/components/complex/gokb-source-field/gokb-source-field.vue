@@ -185,11 +185,7 @@
         serialVisible: true,
         monographVisible: true,
         mixedContentVisible: true,
-        ignoreLegacyTitleID: true,
-        providerIds: {
-          titleIdSerial: undefined,
-          titleIdMonograph: undefined
-        }
+        ignoreLegacyTitleID: true
       }
     },
     computed: {
@@ -223,12 +219,12 @@
               this.item.targetNamespace = val.targetNamespace
             }
             else if (this.mixedContent) {
-              this.item.titleIdSerial = (val.titleIdSerial || this.providerIds.titleIdSerial)
-              this.item.titleIdMonograph = (val.titleIdMonograph || this.providerIds.titleIdSerial)
+              this.item.titleIdSerial = val.titleIdSerial
+              this.item.titleIdMonograph = val.titleIdMonograph
             }
             else {
-              this.item.titleIdSerial = this.serialVisible ? (val.titleIdSerial || this.providerIds.titleIdSerial) : undefined
-              this.item.titleIdMonograph = this.monographVisible ? (val.titleIdMonograph || this.providerIds.titleIdSerial) : undefined
+              this.item.titleIdSerial = this.serialVisible ? val.titleIdSerial : undefined
+              this.item.titleIdMonograph = this.monographVisible ? val.titleIdMonograph : undefined
             }
           }
         },
@@ -279,12 +275,12 @@
         }
         else {
           if (!!this.item.targetNamespace && !this.item.titleIdSerial && !this.item.titleIdMonograph) {
-              this.ignoreLegacyTitleID = false
+            this.ignoreLegacyTitleID = false
           }
           else if (!!this.contentType) {
             let ctype = this.contentType.value || this.contentType.name
-            this.serialVisible = (ctype === 'Journal' || ctype === 'Mixed' || 'Database')
-            this.monographVisible = (ctype === 'Book' || ctype === 'Mixed' || 'Database')
+            this.serialVisible = (ctype === 'Journal' || ctype === 'Mixed' || ctype === 'Database')
+            this.monographVisible = (ctype === 'Book' || ctype === 'Mixed' || ctype === 'Database')
           }
         }
       },
@@ -332,9 +328,6 @@
 
             this.item.titleIdMonograph = fullProvider.titleNamespaceMonograph
             this.item.titleIdSerial = fullProvider.titleNamespaceSerial
-
-            this.providerIds.titleIdSerial = result.data.titleIdSerial
-            this.providerIds.titleIdMonograph = result.data.titleIdMonograph
 
             if (!!this.contentType) {
 
