@@ -239,7 +239,7 @@
       },
       exportableDataExists() {
         return (this.validatorResult.errors.missingColumns.length > 0 || this.validatorResult.warnings.missingColumns.length > 0
-          || this.validatorResult.warnings.single.length > 0 || this.validatorResult.errors.single.length > 0)
+          || this.validatorResult.warnings.single?.length > 0 || this.validatorResult.errors.single?.length > 0)
       }
     },
     methods: {

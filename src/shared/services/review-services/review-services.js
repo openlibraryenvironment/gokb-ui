@@ -13,7 +13,7 @@ const api = (baseServices) => ({
   get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: import.meta.env.VITE_API_BASE_URL + `${REVIEW_PATH}/${id}?_include=id,reviewRequest,componentToReview,descriptionOfCause,stdDesc,status,dateCreated,additionalInfo&_embed=allocatedGroups`,
+      url: import.meta.env.VITE_API_BASE_URL + `${REVIEW_PATH}/${id}?_include=id,reviewRequest,componentToReview,descriptionOfCause,stdDesc,status,dateCreated,editingNotes,additionalInfo&_embed=allocatedGroups`,
     }, cancelToken)
   },
 

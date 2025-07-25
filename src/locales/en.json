@@ -1208,6 +1208,9 @@
       "additionalInfo": {
         "label": "Structured info"
       },
+      "editingNotes": {
+        "label": "Editing notes"
+      },
       "referenceBase": {
         "label": "Further information",
         "message": "Documentation for '{0}'",
@@ -1232,7 +1235,8 @@
           "deescalated" : "The request has been successfully deescalated.",
           "closed": "Request closed",
           "closedBulk": "Request closed | {0} requests closed",
-          "reopened": "Request has been reopened."
+          "reopened": "Request has been reopened.",
+          "editingNotes": "The editing notes have been sucessfully updated."
         },
         "confirm": {
           "close": "Please confirm closing this review.",
@@ -1265,6 +1269,11 @@
             "titleReview": {
               "label": "Identifier check",
               "toDo": "Please check the title information (name/identifiers) for errors."
+            }
+          },
+          "ids": {
+            "conflict": {
+              "label": "This identifier is in conflict with the value of the same namespace linked to the component to review."
             }
           },
           "merge": {
@@ -1567,7 +1576,7 @@
         },
         "Secondary Identifier Conflict": {
           "label": "Identifier Conflict (ID added)",
-          "info": "When matching with a reference title, an identifier was found that does not match the existing identifiers of the reference title. Nevertheless, it seems to be the same title because, for example, the name matches.",
+          "info": "When matching with a reference title '{firstOtherLink}', at least one identifier was found that does not match the existing identifiers of the reference title ({secondArray}). Nevertheless, it seems to be the same title because, for example, the name matches.",
           "action": "The GOKB has added the identifier in the reference title.",
           "toDo": "Check identifiers of the reference title and remove the incorrect identifiers if necessary."
         },
@@ -1642,6 +1651,12 @@
           "info": "The coverage date range ({0}) is in conflict with the publication dates of the matched reference title ({1}).",
           "action": "-",
           "toDo": "Check if the correct reference title has been linked and if its publishing dates are correct."
+        },
+        "Missing TIPP Name": {
+          "label": "Missing Title Name",
+          "info": "The package title could not be linked to a reference title due to its missing name",
+          "action": "-",
+          "toDo": "Research and add a name to the package title or delete it."
         }
       }
     },

@@ -201,6 +201,7 @@
           stdDesc: undefined,
           request: undefined,
           allocatedGroups: [],
+          editingNotes: undefined,
           description: undefined,
           dateCreated: undefined,
           component: undefined,

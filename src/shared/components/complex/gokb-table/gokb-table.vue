@@ -82,7 +82,7 @@
             color="red"
             :title="item.markError"
           >
-            mdi-alert
+            mdi-close-thick
           </v-icon>
           <span class="text-error" style="white-space:nowrap;"> {{ item.markError }}</span>
         </div>
@@ -140,6 +140,16 @@
           @edit="editItem"
         />
         <div class="table-action-icons">
+          <v-icon
+            v-if="!!item.conflictMessage"
+            class="mr-2"
+            color="warning"
+            :title="$t(item.conflictMessage)"
+            right
+            small
+          >
+            mdi-alert
+          </v-icon>
           <a
             v-if="!!item.extlink"
             :href="item.extlink"
@@ -156,7 +166,7 @@
             </v-icon>
           </a>
           <v-icon
-            v-if="item.popup"
+            v-if="!!item.popup"
             class="mr-2"
             style="cursor:pointer"
             color="primary"
@@ -338,6 +348,11 @@
         type: String,
         required: false,
         default: null
+      },
+      overflow: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {

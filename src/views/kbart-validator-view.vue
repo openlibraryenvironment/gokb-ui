@@ -46,6 +46,8 @@
             target-type="Title"
             width="100%"
             :label="$t('kbart.propId.label')"
+            gokb-tooltip="kbart.propId.tooltip"
+            exclude-isxn
           />
         </v-col>
         <v-col v-else cols="6">
@@ -56,6 +58,8 @@
                 target-type="Title"
                 width="100%"
                 :label="$t('kbart.propIdSerial.label')"
+                exclude-isxn
+                gokb-tooltip="kbart.propIdSerial.tooltip"
               />
             </v-col>
             <v-col cols="6">
@@ -64,6 +68,8 @@
                 target-type="Title"
                 width="100%"
                 :label="$t('kbart.propIdMonograph.label')"
+                exclude-isxn
+                gokb-tooltip="kbart.propIdMonograph.tooltip"
               />
             </v-col>
           </v-row>
@@ -169,7 +175,8 @@ export default {
         lineCount: undefined,
         addOnly: false,
         dryRun: false
-      }
+      },
+      mixedContent: false
     }
   },
   computed: {
@@ -203,18 +210,33 @@ export default {
       this.loadedFile.warnings.single = []
       this.loadedFile.warnings.type = {}
       this.executedOnce = false
+      this.options.selectedNamespaceSerial = undefined
+      this.options.selectedNamespaceMonograph = undefined
+      this.options.selectedNamespace = undefined
+      this.mixedContent = false
+    },
+    mixedContent (val) {
+      if (!val) {
+        this.options.selectedNamespaceSerial = undefined
+        this.options.selectedNamespaceMonograph = undefined
+      } else {
+        this.options.selectedNamespace = undefined
+      }
     },
     '$i18n.locale' () {
       if (!!this.selectedFile) {
         this.doImport()
       }
-    },
-    useStrict () {
-      this.completion = 0
-    },
-    'options.selectedNamespace' () {
-      this.completion = 0
     }
+  },
+  mounted () {
+    this.$watch(vm => [vm.useStrict, vm.options.selectedNamespace, vm.options.selectedNamespaceSerial, vm.options.selectedNamespaceMonograph],
+      val => {
+        this.completion = 0
+      }, {
+      immediate: true,
+      // deep: true
+    })
   },
   methods: {
     reset() {
@@ -227,8 +249,8 @@ export default {
       this.importRunning = true
       this.completion = 0
       let namespaceName = !!this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
-        let namespaceNameSerial = !!this.selectedNamespaceSerial ? this.selectedNamespaceSerial.value : undefined
-        let namespaceNameMonograph = !!this.selectedNamespaceMonograph ? this.selectedNamespaceMonograph.value : undefined
+      let namespaceNameSerial = !!this.selectedNamespaceSerial ? this.selectedNamespaceSerial.value : undefined
+      let namespaceNameMonograph = !!this.selectedNamespaceMonograph ? this.selectedNamespaceMonograph.value : undefined
 
       const validationResult = await kbartServices.validate(this.selectedFile, namespaceName, this.useStrict, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 

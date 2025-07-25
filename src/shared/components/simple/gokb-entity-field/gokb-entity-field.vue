@@ -23,7 +23,7 @@
     },
     computed: {
       searchParams () {
-        return (this.typeFilter ? { componentType: this.typeFilter } : {})
+        return (this.typeFilter ? { componentType: this.typeFilter, es: 'true' } : { es: 'true' })
       }
     },
     created () {

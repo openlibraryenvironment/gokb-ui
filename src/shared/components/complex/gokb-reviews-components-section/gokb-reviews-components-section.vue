@@ -16,9 +16,9 @@
       <v-row>
         <v-col
           v-if="workflow.showReviewed"
-          :md="colGridWidth"
-          :cols="colGridWidth"
-          xl="3"
+          :sm="colGridWidthSmall"
+          :lg="colGridWidth"
+          :xl="3"
           class="pa-1"
         >
           <v-row>
@@ -30,7 +30,7 @@
                 {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
               </div>
               <gokb-reviews-title-card
-                :id="reviewedComponent.id"
+                :info="reviewedComponent"
                 :ref="reviewedComponent.id.toString()"
                 role="reviewedComponent"
                 :route="reviewedComponent.route"
@@ -56,9 +56,9 @@
           </v-row>
         </v-col>
         <v-col
-          :md="colGridWidth"
-          :cols="colGridWidth"
-          xl="3"
+          :cols="colGridWidthSmall"
+          :lg="colGridWidth"
+          :xl="3"
           class="pa-1"
           v-for="i, idx in referenceComponents"
           :key="i.id"
@@ -85,7 +85,7 @@
                 </v-icon>
               </div>
               <gokb-reviews-title-card
-                :id="i.id"
+                :info="i"
                 :ref="i.id.toString()"
                 role="candidateComponent"
                 :route="i.route"
@@ -110,9 +110,9 @@
         </v-col>
         <v-col
           v-if="isAddEnabled"
-          :md="colGridWidth"
-          :cols="colGridWidth"
-          xl="3"
+          :cols="colGridWidthSmall"
+          :lg="colGridWidth"
+          :xl="3"
         >
           <v-card class="mt-4 mb-2" height="95%">
             <v-container fill-height fluid>
@@ -261,7 +261,10 @@
         }
       },
       colGridWidth () {
-        return 12 / (this.referenceComponents.length + (this.isAddEnabled ? 2 : 1) > 3 ? (12 / this.referenceComponents.length + (this.isAddEnabled ? 2 : 1)) : 3)
+        return this.referenceComponents.length + (this.isAddEnabled ? 2 : 1) > 3 ? 3 : 4
+      },
+      colGridWidthSmall () {
+        return this.referenceComponents.length + (this.isAddEnabled ? 2 : 1) > 2 ? 4 : 6
       },
       isSingleCardReview () {
         return this.referenceComponents.length === 0
