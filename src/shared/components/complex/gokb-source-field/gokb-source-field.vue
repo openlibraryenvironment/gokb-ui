@@ -44,6 +44,15 @@
               exclude-isxn
             />
           </v-col>
+          <v-col>
+            <gokb-checkbox-field
+              v-if="mixedContentVisible"
+              v-model="mixedContent"
+              class="pt-4"
+              :label="$t('kbart.propId.typed.label')"
+              dense
+            />
+          </v-col>
         </v-row>
       </v-col>
       <v-col v-else>
@@ -176,7 +185,11 @@
         serialVisible: true,
         monographVisible: true,
         mixedContentVisible: true,
-        ignoreLegacyTitleID: true
+        ignoreLegacyTitleID: true,
+        providerIds: {
+          titleIdSerial: undefined,
+          titleIdMonograph: undefined
+        }
       }
     },
     computed: {
@@ -205,16 +218,17 @@
             this.item.frequency = val.frequency
             this.item.automaticUpdates = val.automaticUpdates
             this.item.update = val.update
+
             if (!this.ignoreLegacyTitleID) {
               this.item.targetNamespace = val.targetNamespace
             }
             else if (this.mixedContent) {
-              this.item.titleIdSerial = val.titleIdSerial
-              this.item.titleIdMonograph = val.titleIdMonograph
+              this.item.titleIdSerial = (val.titleIdSerial || this.providerIds.titleIdSerial)
+              this.item.titleIdMonograph = (val.titleIdMonograph || this.providerIds.titleIdSerial)
             }
             else {
-              this.item.titleIdSerial = this.serialVisible ? val.titleIdSerial : undefined
-              this.item.titleIdMonograph = this.monographVisible ? val.titleIdMonograph : undefined
+              this.item.titleIdSerial = this.serialVisible ? (val.titleIdSerial || this.providerIds.titleIdSerial) : undefined
+              this.item.titleIdMonograph = this.monographVisible ? (val.titleIdMonograph || this.providerIds.titleIdSerial) : undefined
             }
           }
         },
@@ -252,26 +266,26 @@
       } else if (!!this.modelValue?.url) {
         this.isExpanded = true
         this.item = this.modelValue
-        // TODO: ????????
-
       } else if (!!this.provider){
         this.fetchDefaultNamespace()
       }
     },
     methods: {
       setVisibleStatusForTitleIdFields () {
-        if (!this.ignoreLegacyTitleID) {
-          this.serialVisible = false
-          this.monographVisible = false
-        }
-        else if (this.mixedContent) {
+        if (this.mixedContent) {
           this.serialVisible = true
           this.monographVisible = true
+          this.ignoreLegacyTitleID = true
         }
-        else if (!!this.contentType) {
-          let ctype = this.contentType.value || this.contentType.name
-          this.serialVisible = (ctype === 'Journal' || ctype === 'Mixed')
-          this.monographVisible = (ctype === 'Book' || ctype === 'Mixed')
+        else {
+          if (!!this.item.targetNamespace && !this.item.titleIdSerial && !this.item.titleIdMonograph) {
+              this.ignoreLegacyTitleID = false
+          }
+          else if (!!this.contentType) {
+            let ctype = this.contentType.value || this.contentType.name
+            this.serialVisible = (ctype === 'Journal' || ctype === 'Mixed' || 'Database')
+            this.monographVisible = (ctype === 'Book' || ctype === 'Mixed' || 'Database')
+          }
         }
       },
       async fetch (sid) {
@@ -292,6 +306,7 @@
             this.item.importConfig = result.data.importConfig
             this.item.titleIdSerial = result.data.titleIdSerial
             this.item.titleIdMonograph = result.data.titleIdMonograph
+
             if (!!this.item.targetNamespace && !this.item.titleIdSerial && !this.item.titleIdMonograph) {
               this.ignoreLegacyTitleID = false
             }
@@ -317,6 +332,9 @@
 
             this.item.titleIdMonograph = fullProvider.titleNamespaceMonograph
             this.item.titleIdSerial = fullProvider.titleNamespaceSerial
+
+            this.providerIds.titleIdSerial = result.data.titleIdSerial
+            this.providerIds.titleIdMonograph = result.data.titleIdMonograph
 
             if (!!this.contentType) {
 

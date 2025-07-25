@@ -178,7 +178,6 @@
         completion: undefined,
         options: {
           selectedFile: undefined,
-          selectedNamespace: undefined,
           selectedNamespaceSerial: undefined,
           selectedNamespaceMonograph: undefined,
           lineCount: undefined,
@@ -255,17 +254,16 @@
       },
       mixedContent () {
         this.setVisibleStatusForTitleIdFields()
-      },
-      provider: {
-        handler(val) {
-          if (!!val) {
-            this.fetchDefaultNamespace()
-          }
-        },
-        deep: true
       }
     },
     mounted () {
+      if (this.contentType === 'Book') {
+        this.serialVisible = false
+      }
+      else if (this.contentType === 'Journal') {
+        this.monographVisible = false
+      }
+
       if (!!this.provider) {
         this.fetchDefaultNamespace()
       }
@@ -288,7 +286,6 @@
         }
       },
       async fetchDefaultNamespace () {
-
         const providerResult = await this.catchError({
           promise: providerServices.get(this.provider.id, this.cancelToken.token),
           instance: this
@@ -301,21 +298,29 @@
           this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
 
           if (!!this.contentType) {
-
             let ctype = this.contentType.value || this.contentType.name
 
-            this.mixedContent = (ctype === 'Mixed')
+            this.mixedContent = (ctype === 'Mixed' || ctype === 'Database')
             this.mixedContentVisible = true
 
           } else {
             this.mixedContent = true
             this.mixedContentVisible = false
           }
+
           this.setVisibleStatusForTitleIdFields()
         }
       },
       importKbart () {
         if (this.completion === 100) {
+          if (!this.serialVisible) {
+            this.options.selectedNamespaceSerial = undefined
+          }
+
+          if (!this.monographVisible) {
+            this.options.selectedNamespaceMonograph = undefined
+          }
+
           this.$emit('kbart', this.options)
           this.close()
         } else {
@@ -326,11 +331,11 @@
         this.errors = []
         this.importRunning = true
         this.completion = 0
-        let namespaceName = this.options.selectedNamespace ? this.options.selectedNamespace.value : undefined
-        let namespaceNameSerial = this.options.selectedNamespaceSerial ? this.options.selectedNamespaceSerial.value : undefined
-        let namespaceNameMonograph = this.options.selectedNamespaceMonograph ? this.options.selectedNamespaceMonograph.value : undefined
 
-        const validationResult = await kbartServices.validate(this.options.selectedFile, namespaceName, false, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
+        let namespaceNameSerial = (this.serialVisible && this.options.selectedNamespaceSerial) ? this.options.selectedNamespaceSerial.value : undefined
+        let namespaceNameMonograph = (this.monographVisible && this.options.selectedNamespaceMonograph) ? this.options.selectedNamespaceMonograph.value : undefined
+
+        const validationResult = await kbartServices.validate(this.options.selectedFile, undefined, false, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 
         if (validationResult.status === 200 && validationResult?.data?.errors.hasOwnProperty("encoding")) {
           this.errors.push(this.$i18n.t('kbart.validator.alert.encoding'))
