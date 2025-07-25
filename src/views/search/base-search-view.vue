@@ -225,6 +225,7 @@
         selection.set(value)
       },
       '$i18n.locale' (loc) {
+        log.debug("Locale change .. ")
         this.search()
       },
       searchFilters: {
@@ -236,22 +237,25 @@
     },
     mounted () {
       log.debug("base-search-view :: mounted ..")
-      this.searchServices = searchServices(this.searchServicesUrl)
-      var initFilters = this.searchFilters
 
-      Object.keys(this.searchFilters).forEach(filter => {
-        var filter_val = this.$route.query[filter]
+      if (this.resultItems.length === 0) {
+        this.searchServices = searchServices(this.searchServicesUrl)
+        var initFilters = this.searchFilters
 
-        if (typeof filter_val === 'string') {
-          initFilters[filter] = /^[1-9]\d+$/.test(filter_val) ? parseInt(filter_val) : filter_val
-        } else if (typeof filter_val === 'array') {
-          initFilters[filter] = filter_val
-        }
-      })
+        Object.keys(this.searchFilters).forEach(filter => {
+          var filter_val = this.$route.query[filter]
 
-      this.searchFilters = initFilters
+          if (typeof filter_val === 'string') {
+            initFilters[filter] = /^[1-9]\d+$/.test(filter_val) ? parseInt(filter_val) : filter_val
+          } else if (typeof filter_val === 'array') {
+            initFilters[filter] = filter_val
+          }
+        })
 
-      this.search()
+        this.searchFilters = initFilters
+
+        this.search()
+      }
     },
     activated () {
       log.debug("base-search-view :: activated ..")

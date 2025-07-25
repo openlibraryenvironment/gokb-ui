@@ -79,9 +79,14 @@
         }
       }
     },
-    created () {
-      this.selectedItem = this.selected
-
+    watch: {
+      selected (val) {
+        if (!!val) {
+          this.fetchGroup()
+        }
+      }
+    },
+    mounted () {
       if (!!this.selected) {
         this.fetchGroup()
       }

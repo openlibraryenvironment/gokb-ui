@@ -79,6 +79,13 @@
             width: '150px',
             sortable: true,
             value: 'dateCreated'
+          },
+          {
+            title: this.$i18n.t('component.general.lastUpdated'),
+            align: 'end',
+            width: '150px',
+            sortable: true,
+            value: 'lastUpdated'
           }
         ]
       },
@@ -204,12 +211,13 @@
           database: '/title'
         }
 
-        return data.map(({ id, reviewRequest, dateCreated, _embedded: { allocatedGroups }, componentToReview, descriptionOfCause, status, stdDesc, _links }) => ({
+        return data.map(({ id, reviewRequest, dateCreated, lastUpdated, _embedded: { allocatedGroups }, componentToReview, descriptionOfCause, status, stdDesc, _links }) => ({
           id,
           component: componentToReview,
           componentId: componentToReview.id,
           type: this.$i18n.tc('component.' + componentToReview.type.toLowerCase() + '.label'),
           dateCreated: new Date(dateCreated).toISOString().substring(0, 10),
+          lastUpdated: new Date(lastUpdated).toISOString().substring(0, 10),
           allocatedGroups,
           request: reviewRequest,
           description: descriptionOfCause,

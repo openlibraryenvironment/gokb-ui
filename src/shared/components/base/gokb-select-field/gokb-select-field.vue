@@ -10,8 +10,11 @@
     <div style="color:red;" v-if="localErrorMessage.length > 0"> {{ localErrorMessage }} </div>
   </div>
 
-  <v-row v-else-if="!!localizedItems" no-gutters>
-    <v-col>
+  <div
+    v-else-if="!!localizedItems"
+    no-gutters
+  >
+    <span>
       <v-select
         ref="select"
         v-model="localValue"
@@ -39,12 +42,12 @@
             *
           </span>
         </template>
+        <template #append>
+          <gokb-tooltip v-if="!!gokbTooltip" classes="mt-1 opacity-100" :code="gokbTooltip" />
+        </template>
       </v-select>
-    </v-col>
-    <v-col v-if="!!gokbTooltip" cols="1" align-self="center">
-      <gokb-tooltip classes="" :code="gokbTooltip" />
-    </v-col>
-  </v-row>
+    </span>
+  </div>
 </template>
 
 <script>
