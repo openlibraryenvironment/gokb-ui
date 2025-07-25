@@ -689,8 +689,12 @@
         return result
       },
       validatePackageUUID() {
-        //lax validation
-        return /^([a-zA-Z0-9\-]{6,40})$/.test(this.external_package_uuid)
+        if (this.external_package_uuid) {
+          this.external_package_uuid = this.external_package_uuid.replaceAll(" ", "")
+          //lax validation
+          return /^([a-zA-Z0-9\-]{6,40})$/.test(this.external_package_uuid)
+        }
+        return false
       },
       async platformExists() {
         const externalPlatform = {
