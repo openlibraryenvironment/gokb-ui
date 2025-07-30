@@ -643,7 +643,7 @@
                   })),
                   prices: tipp._embedded.prices,
                   popup: {
-                    value: (this.ttl ? tipp.pkg.name : (tipp.name || tipp.title?.name || this.$i18n.t('component.tipp.label') + ' ' + tipp.id)),
+                    value: (this.ttl ? tipp.pkg.name : this.buildDisplayName(tipp)),
                     label: 'tipp',
                     type: 'GokbAddTitlePopup'
                   },
@@ -658,6 +658,30 @@
 
           this.loading = false
         }
+      },
+      buildDisplayName(tipp) {
+        let result = (tipp.name || tipp.title?.name || this.$i18n.t('component.tipp.label') + ' ' + tipp.id)
+
+        if (!!tipp.name) {
+          if (tipp.volumeNumber || tipp.editionStatement) {
+            result = result + " ("
+
+            if (tipp.volumeNumber) {
+              result = result + this.$i18n.t('component.title.volumeNumber.short') + " " + tipp.volumeNumber
+            }
+            if (tipp.editionStatement) {
+              if (tipp.volumeNumber) {
+                result = result + ", "
+              }
+
+              result = result + this.$i18n.t('component.title.editionStatement.short') + " " + tipp.editionStatement
+            }
+
+            result = result + ")"
+          }
+        }
+
+        return
       }
     }
   }

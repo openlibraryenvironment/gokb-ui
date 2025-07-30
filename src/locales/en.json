@@ -750,9 +750,15 @@
       "name": {
         "label": "Title Name | Title Names"
       },
-      "volumeNumber": "Volume no.",
+      "volumeNumber": {
+        "label": "Volume no.",
+        "short": "Vol.:"
+      },
       "editionNumber": "Edition no.",
-      "editionStatement": "Edition Statement",
+      "editionStatement": {
+        "label": "Edition Statement",
+        "short": "Ed.:"
+      },
       "firstPublishedInPrint": "First Published (Print)",
       "firstPublishedOnline": "First Published (Online)",
       "firstAuthor": {
@@ -1761,6 +1767,11 @@
           "delete": {
             "confirm": "Please note that this status is reserved for erroneous entries and will trigger changes that cannot be simply reversed."
           }
+        }
+      },
+      "error": {
+        "missingName": {
+          "label": "- Missing Title -"
         }
       },
       "editStatus": {

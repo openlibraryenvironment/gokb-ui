@@ -750,9 +750,15 @@
       "name": {
         "label": "Titelname | Titelnamen"
       },
-      "volumeNumber": "Bandnummer",
+      "volumeNumber": {
+        "label": "Bandnummer",
+        "short": "Bd.:"
+      },
       "editionNumber": "Ausgabenr.",
-      "editionStatement": "Auflage",
+      "editionStatement": {
+        "label": "Auflage",
+        "short": "Aufl.:"
+      },
       "firstPublishedInPrint": "Print-Erscheinungsdatum",
       "firstPublishedOnline": "Online-Erscheinungsdatum",
       "firstAuthor": {
@@ -1771,6 +1777,11 @@
           "delete": {
             "confirm": "Bitte beachten Sie, dass dieser Status nur für fehlerhafte Einträge verwendet werden sollte und nicht rückgängig gemacht werden kann."
           }
+        }
+      },
+      "error": {
+        "missingName": {
+          "label": "- Kein Titel -"
         }
       },
       "editStatus": {
