@@ -1,6 +1,6 @@
 <template>
   <v-card
-    v-if="!!originalRecord?.name"
+    v-if="!!originalRecord?.id"
     :loading="loading"
     :color="roleColor"
     :class="[elevationClass, isDeleted ? 'text-disabled' : '']"
@@ -23,7 +23,7 @@
             :to="{ name: route, params: { 'id': originalRecord.id } }"
             target="_blank"
           >
-            {{ originalRecord.name }}
+            {{ originalRecord.name || $t('component.general.error.missingName.label') }}
           </router-link>
           <gokb-text-field
             v-else
