@@ -1773,6 +1773,11 @@
           }
         }
       },
+      "error": {
+        "missingName": {
+          "label": "- Kein Titel -"
+        }
+      },
       "editStatus": {
         "label": "Bearbeitungs-Status",
         "In Progress": {
