@@ -2,7 +2,7 @@
 import GokbSelectField from '@/shared/components/base/gokb-select-field'
 
 export default {
-  name: 'GokbSearchWebendpointField',
+  name: 'GokbWebendpointField',
   extends: GokbSelectField,
   props: {
     label: {
@@ -12,7 +12,7 @@ export default {
     }
   },
   created () {
-    this.entityName = 'webHookEndpoint'
+    this.entityName = 'web-endpoint'
   }
 
 }

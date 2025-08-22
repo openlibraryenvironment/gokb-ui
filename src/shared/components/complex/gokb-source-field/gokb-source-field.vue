@@ -114,6 +114,17 @@
         />
       </v-col>
     </v-row>
+
+    <v-row>
+      <v-col>
+        <gokb-webendpoint-field
+          v-model="item.selectedWebEndpoint"
+          width="100%"
+
+        />
+      </v-col>
+    </v-row>
+
   </gokb-section>
 </template>
 
@@ -121,9 +132,11 @@
   import sourceServices from '@/shared/services/source-services'
   import providerServices from '@/shared/services/provider-services'
   import BaseComponent from '@/shared/components/base-component'
+  import GokbWebendpointField from "../../simple/gokb-webendpoint-field/gokb-webendpoint-field.vue";
 
   export default {
     name: 'GokbSourceField',
+    components: {GokbWebendpointField},
     extends: BaseComponent,
     emits: ['update:model-value'],
     props: {
@@ -177,7 +190,8 @@
           titleIdMonograph: undefined,
           automaticUpdates: undefined,
           importConfig: undefined,
-          update: false
+          update: false,
+          selectedWebEndpoint: undefined
         },
         errors: [],
         mixedContent: false,
