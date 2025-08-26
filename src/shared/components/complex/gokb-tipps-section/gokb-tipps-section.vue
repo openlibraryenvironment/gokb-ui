@@ -332,7 +332,8 @@
         isExpanded: true,
         bulkSelect: false,
         linkSearchParameterValues: {
-          popup: 'name'
+          popup: 'name',
+          lastUpdatedDate: 'lastUpdated'
         },
         searchFilters: {
           status: 'Current',

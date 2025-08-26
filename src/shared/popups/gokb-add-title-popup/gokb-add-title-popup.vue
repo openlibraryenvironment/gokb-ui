@@ -844,8 +844,16 @@
             })),
             status: typeof this.packageTitleItem.status === 'string' ? { name: this.packageTitleItem.status } : this.packageTitleItem.status,
             publicationType: this.packageTitleItem.publicationType ? (this.packageTitleItem.publicationType.name || this.packageTitleItem.publicationType.value) : null,
-            popup: { value: this.packageTitleItem.name, label: 'tipp', type: 'GokbAddTitlePopup' },
-            link: { value: (this.packageTitleItem.title?.name), route: EDIT_TITLE_ROUTE, id: 'connectedTitleId' },
+            popup: {
+              value: this.packageTitleItem.name,
+              label: 'tipp',
+              type: 'GokbAddTitlePopup'
+            },
+            link: {
+              value: (this.packageTitleItem.title?.name),
+              route: EDIT_TITLE_ROUTE,
+              id: (this.packageTitleItem.title?.id || null)
+            },
             hostPlatformName: this.packageTitleItem.hostPlatform?.name,
             version: this.version,
             updateUrl: '',
