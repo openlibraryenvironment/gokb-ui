@@ -135,7 +135,7 @@
         apiErrorMessages: [],
         hasApiErrors: false,
         badApiValue: undefined,
-        localRules: []
+        localRules: [v => (v?.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
       }
     },
     computed: {
@@ -169,9 +169,6 @@
           if (r?.length > 0) {
             this.localRules = r
           }
-          else {
-            this.localRules = [v => (v.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
-          }
         },
         deep: true
       },
@@ -197,6 +194,11 @@
           this.apiErrorMessages = []
           this.hasApiErrors = false
         }
+      }
+    },
+    created () {
+      if (!!this.rules) {
+        this.localRules = this.rules
       }
     },
     methods: {
