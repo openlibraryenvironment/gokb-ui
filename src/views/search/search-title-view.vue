@@ -204,27 +204,19 @@
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({
-          id,
-          name,
-          type,
-          status,
-          publishedFrom,
-          publisher,
-          dateFirstInPrint,
-          dateFirstOnline,
-          _embedded,
-          _links
-        }) => ({
-          id,
-          type: this.$i18n.tc('component.title.type.' + type),
-          startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
-          link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
-          linkTwo: publisher ? { value: publisher.name, route: EDIT_PROVIDER_ROUTE, id: 'publisherId' } : undefined,
-          publisher: _embedded.publisher.map(pub => pub.name).join(', '),
-          status: status?.value,
-          deleteUrl: _links?.delete?.href || undefined,
-          updateUrl: _links?.update?.href || undefined
+        return data.map(item => ({
+          ...item,
+          type: this.$i18n.tc('component.title.type.' + item.type),
+          startDate: (item.dateFirstInPrint || (item.dateFirstOnline || item.publishedFrom))?.substr(0, 4),
+          link: {
+            value: item.type === 'Book' ? this.buildMonographName(item.name, item.volumeNumber, item.editionStatement) : item.name,
+            route: EDIT_TITLE_ROUTE, id: 'id'
+          },
+          linkTwo: item.publisher ? { value: item.publisher.name, route: EDIT_PROVIDER_ROUTE, id: 'publisherId' } : undefined,
+          publisher: item._embedded.publisher.map(pub => pub.name).join(', '),
+          status: item.status?.value,
+          deleteUrl: item._links?.delete?.href || undefined,
+          updateUrl: item._links?.update?.href || undefined
         }))
       },
       _transformForExport (data) {
@@ -259,6 +251,28 @@
         this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.title.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
+      },
+      buildMonographName(name, volume, edition) {
+        let result = name
+
+        if (volume || edition) {
+          result = result + " ("
+
+          if (volume) {
+            result = result + this.$i18n.t('component.title.volumeNumber.short') + " " + volume
+          }
+          if (edition) {
+            if (volume) {
+              result = result + ", "
+            }
+
+            result = result + this.$i18n.t('component.title.editionStatement.short') + " " + edition
+          }
+
+          result = result + ")"
+        }
+
+        return result
       }
     }
   }

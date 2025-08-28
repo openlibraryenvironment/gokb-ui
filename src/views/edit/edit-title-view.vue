@@ -127,7 +127,7 @@
             <gokb-number-field
               v-model="titleItem.volumeNumber"
               :disabled="isReadonly"
-              :label="$t('component.title.volumeNumber')"
+              :label="$t('component.title.volumeNumber.label')"
               :api-errors="errors.volumeNumber"
               dense
             />
@@ -135,7 +135,7 @@
           <v-col>
             <gokb-text-field
               v-model="titleItem.editionStatement"
-              :label="$t('component.title.editionStatement')"
+              :label="$t('component.title.editionStatement.label')"
               :disabled="isReadonly"
               :api-errors="errors.editionStatement"
               dense

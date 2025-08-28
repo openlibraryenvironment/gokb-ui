@@ -371,7 +371,7 @@
                       v-model="packageTitleItem.volumeNumber"
                       :disabled="isReadonly"
                       dense
-                      :label="$t('component.title.volumeNumber')"
+                      :label="$t('component.title.volumeNumber.label')"
                     />
                   </v-col>
                 </v-row>
@@ -400,7 +400,7 @@
                       v-model="packageTitleItem.editionStatement"
                       :disabled="isReadonly"
                       dense
-                      :label="$t('component.title.editionStatement')"
+                      :label="$t('component.title.editionStatement.label')"
                     />
                   </v-col>
                 </v-row>

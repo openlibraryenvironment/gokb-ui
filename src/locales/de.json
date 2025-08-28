@@ -750,9 +750,15 @@
       "name": {
         "label": "Titelname | Titelnamen"
       },
-      "volumeNumber": "Bandnummer",
+      "volumeNumber": {
+        "label": "Bandnummer",
+        "short": "Bd.:"
+      },
       "editionNumber": "Ausgabenr.",
-      "editionStatement": "Auflage",
+      "editionStatement": {
+        "label": "Auflage",
+        "short": "Aufl.:"
+      },
       "firstPublishedInPrint": "Print-Erscheinungsdatum",
       "firstPublishedOnline": "Online-Erscheinungsdatum",
       "firstAuthor": {

@@ -750,9 +750,15 @@
       "name": {
         "label": "Title Name | Title Names"
       },
-      "volumeNumber": "Volume no.",
+      "volumeNumber": {
+        "label": "Volume no.",
+        "short": "Vol.:"
+      },
       "editionNumber": "Edition no.",
-      "editionStatement": "Edition Statement",
+      "editionStatement": {
+        "label": "Edition Statement",
+        "short": "Ed.:"
+      },
       "firstPublishedInPrint": "First Published (Print)",
       "firstPublishedOnline": "First Published (Online)",
       "firstAuthor": {
