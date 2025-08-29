@@ -9,10 +9,18 @@ export default {
       type: String,
       required: false,
       default: 'Endpoint Configs',
+    },
+    filterByProtocol: {
+      type: String,
+      required: false
     }
   },
   created () {
     this.entityName = 'web-endpoint'
+    if (this.filterByProtocol) {
+      this.searchParams = { method:this.filterByProtocol }
+    }
+
   }
 
 }

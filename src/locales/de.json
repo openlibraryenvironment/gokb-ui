@@ -1701,6 +1701,16 @@
       "ezbMatch": "EZB-Abgleich",
       "enableUpdate": "Aktiviert",
       "url": "URL",
+      "filePath": "Dateipfad",
+      "transferMethod": {
+        "label": "Transfer Methode",
+        "HTTP": {
+          "label": "HTTP"
+        },
+        "FTP": {
+          "label": "FTP"
+        }
+      },
       "frequency": {
         "label": "Update-Zyklus",
         "Daily": {

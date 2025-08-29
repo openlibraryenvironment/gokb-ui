@@ -5,7 +5,47 @@
     :hide-default="!expanded"
     :sub-title="$tc('component.source.label')"
   >
+
+    <v-row>
+      <v-col cols="3">
+        <gokb-state-field
+          v-model="item.transferMethod"
+          :init-item="item.transferMethod"
+          url="refdata/categories/Source.TransferMethod"
+          :label="$t('component.source.transferMethod.label')"
+          message-path="component.source.transferMethod"
+          return-object
+          dense
+        />
+      </v-col>
+    </v-row>
+
+    <v-row v-if="isFTPTransfer">
+      <v-col cols="3">
+        <gokb-webendpoint-field
+          v-model="item.webEndpoint"
+          filterByProtocol="FTP"
+          width="100%"
+          return-object
+        />
+      </v-col>
+      <v-col cols="8">
+        <gokb-text-field
+          v-model="item.ftpUrl"
+          :label="$t('component.source.filePath')"
+          :disabled="readonly"
+        />
+        <span>
+            <!-- <v-icon class="pb-1" color="error">
+              mdi-close-thick
+            </v-icon> -->
+            Complete Path: {{ fullFtpUrl }}
+          </span>
+      </v-col>
+    </v-row>
+
     <gokb-url-field
+      v-else
       v-model="item.url"
       :label="$t('component.source.url')"
       :readonly="readonly || isImportFromExternalSource"
@@ -115,15 +155,6 @@
       </v-col>
     </v-row>
 
-    <v-row>
-      <v-col>
-        <gokb-webendpoint-field
-          v-model="item.selectedWebEndpoint"
-          width="100%"
-
-        />
-      </v-col>
-    </v-row>
 
   </gokb-section>
 </template>
@@ -133,10 +164,12 @@
   import providerServices from '@/shared/services/provider-services'
   import BaseComponent from '@/shared/components/base-component'
   import GokbWebendpointField from "../../simple/gokb-webendpoint-field/gokb-webendpoint-field.vue";
+  import GokbEntityField from "../../simple/gokb-entity-field/gokb-entity-field.vue";
+  import GokbSelectField from "../../base/gokb-select-field/gokb-select-field.vue";
 
   export default {
     name: 'GokbSourceField',
-    components: {GokbWebendpointField},
+    components: {GokbSelectField, GokbEntityField, GokbWebendpointField},
     extends: BaseComponent,
     emits: ['update:model-value'],
     props: {
@@ -191,7 +224,9 @@
           automaticUpdates: undefined,
           importConfig: undefined,
           update: false,
-          selectedWebEndpoint: undefined
+          webEndpoint: undefined,
+          transferMethod: undefined,
+          ftpUrl: undefined,
         },
         errors: [],
         mixedContent: false,
@@ -199,7 +234,8 @@
         serialVisible: true,
         monographVisible: true,
         mixedContentVisible: true,
-        ignoreLegacyTitleID: true
+        ignoreLegacyTitleID: true,
+        isFTPTransfer: false
       }
     },
     computed: {
@@ -211,6 +247,9 @@
       },
       activatedErrorMessage () {
         return !this.readonly && (!this.item.url || !this.item.frequency) && this.item.automaticUpdates ? this.$i18n.t("component.source.error.activatedNoInfo") : undefined
+      },
+      fullFtpUrl () {
+        return this.formatFtpPath()
       }
     },
     watch: {
@@ -266,6 +305,16 @@
       },
       mixedContent () {
         this.setVisibleStatusForTitleIdFields()
+      },
+      'item.transferMethod': {
+        handler(val) {
+          if (!!val && this.item?.transferMethod?.value === 'FTP') {
+            this.isFTPTransfer = true
+          }
+          else {
+            this.isFTPTransfer = false
+          }
+        }
       }
     },
     async mounted () {
@@ -281,6 +330,15 @@
       }
     },
     methods: {
+      formatFtpPath () {
+        let result = this.item.webEndpoint?.url ? this.item.webEndpoint.url + '' + (this.item.ftpUrl ? this.item.ftpUrl : '') : ''
+        /* TODO:
+        if (this.item.selectedWebEndpoint?.url) {
+          let serverParts = this.item.selectedWebEndpoint.url.split('/')
+          let fileParts = this.item.ftpUrl?.split('/')
+        } */
+        return result
+      },
       setVisibleStatusForTitleIdFields () {
         if (this.mixedContent) {
           this.serialVisible = true
@@ -316,6 +374,13 @@
             this.item.importConfig = result.data.importConfig
             this.item.titleIdSerial = result.data.titleIdSerial
             this.item.titleIdMonograph = result.data.titleIdMonograph
+
+            this.item.ftpUrl = result.data.ftpUrl
+            this.item.transferMethod = result.data.transferMethod
+            this.item.webEndpoint = result.data.webEndpoint
+            if (this.item.transferMethod?.value === 'FTP' || this.item.transferMethod?.name === 'FTP') {
+              this.isFTPTransfer = true
+            }
 
             if (!!this.item.targetNamespace && !this.item.titleIdSerial && !this.item.titleIdMonograph) {
               this.ignoreLegacyTitleID = false

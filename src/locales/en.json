@@ -1691,6 +1691,16 @@
       "ezbMatch": "Match EZB",
       "enableUpdate": "Activated",
       "url": "URL",
+      "filePath": "File Path",
+      "transferMethod": {
+        "label": "Transfer Method",
+        "HTTP": {
+          "label": "HTTP"
+        },
+        "FTP": {
+          "label": "FTP"
+        }
+      },
       "frequency": {
         "label": "Update Cycle",
         "Daily": {
