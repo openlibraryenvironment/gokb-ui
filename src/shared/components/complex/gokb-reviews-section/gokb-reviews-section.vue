@@ -9,11 +9,11 @@
     :items-total="totalNumberOfItems"
   >
     <template #buttons>
-      <v-switch
+      <gokb-checkbox-field
         v-if="isPackageComponent"
         v-model="fetchTitleReviews"
         class="pt-8 pr-6"
-        :label="$tc('component.title.label', 2)"
+        :label="$t('component.review.titleReviews.label')"
       />
       <gokb-state-field
         v-model="searchFilters.stdDesc"

@@ -1215,6 +1215,9 @@
         "message": "Dokumentation für '{0}'",
         "urlBase": "https://gokb.org/prufanfragen/"
       },
+      "titleReviews": {
+        "label": "Referenztitel-Anfragen"
+      },
       "otherComponents": {
         "label": "Weitere Komponenten",
         "add": "Weitere Komponente verknüpfen",

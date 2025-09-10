@@ -753,7 +753,7 @@
         this.errors = {}
         this.showSnackbar = false
 
-        if (this.selected && typeof this.selected.id === 'number') {
+        if (!!this.selected && typeof this.selected.id === 'number') {
           const activeGroup = accountModel.activeGroup()
 
           const newTipp = {
@@ -933,10 +933,7 @@
 
         this.lastLoad = structuredClone(utils.toRawDeep(new_item_info))
 
-        new_item_info.subjects = data._embedded.subjects.map(subject => ({
-          ...subject,
-          isDeletable: !!this.updateUrl
-        }))
+        new_item_info.subjects = data.subjects
 
         this.allNames = {
           name: data.name,

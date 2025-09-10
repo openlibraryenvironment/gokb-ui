@@ -449,7 +449,7 @@
             </v-row>
             <gokb-tipps-section
               ref="tipps"
-              :pkg="id"
+              :pkg="uuid"
               :filter-align="isEdit"
               :is-import-from-external-source="!!externalSource"
               :platform="packageItem.nominalPlatform"
