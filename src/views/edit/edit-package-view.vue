@@ -449,7 +449,7 @@
             </v-row>
             <gokb-tipps-section
               ref="tipps"
-              :pkg="id"
+              :pkg="uuid"
               :filter-align="isEdit"
               :is-import-from-external-source="!!externalSource"
               :platform="packageItem.nominalPlatform"
@@ -464,7 +464,7 @@
               v-if="loggedIn"
               ref="source"
               v-model="sourceItem"
-              :provider="providerSelect"
+              :provider="packageItem.provider"
               :content-type="packageItem.contentType"
               :expanded="false"
               :api-errors="errors?.source"

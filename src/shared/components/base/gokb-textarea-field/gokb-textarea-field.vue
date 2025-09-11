@@ -5,11 +5,13 @@
     :disabled="!editable"
     rows="1"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
+    :append-icon="appendIcon"
     :required="required"
     variant="underlined"
     validate-on-blur
     auto-grow
     clearable
+    @click:append="$emit('click:append', $event)"
   >
     <template #label>
       {{ label }}
@@ -20,13 +22,16 @@
         *
       </span>
     </template>
+    <template #append>
+      <gokb-tooltip v-if="!!gokbTooltip" classes="mt-0 opacity-100" :code="gokbTooltip" />
+    </template>
   </v-textarea>
 </template>
 
 <script>
   export default {
     name: 'GokbTextareaField',
-    emits: ['update:model-value'],
+    emits: ['update:model-value', 'click:append'],
     props: {
       modelValue: {
         required: true,
@@ -75,6 +80,11 @@
         required: false,
         default: undefined,
       },
+      appendIcon: {
+        type: String,
+        required: false,
+        default: undefined,
+      },
       autocomplete: {
         type: String,
         required: false,
@@ -85,6 +95,11 @@
         required: false,
         default: undefined,
       },
+      gokbTooltip: {
+        type: String,
+        required: false,
+        default: undefined
+      }
     },
     data () {
       return {

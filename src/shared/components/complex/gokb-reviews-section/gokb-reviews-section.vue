@@ -9,11 +9,11 @@
     :items-total="totalNumberOfItems"
   >
     <template #buttons>
-      <v-switch
+      <gokb-checkbox-field
         v-if="isPackageComponent"
         v-model="fetchTitleReviews"
         class="pt-8 pr-6"
-        :label="$tc('component.title.label', 2)"
+        :label="$t('component.review.titleReviews.label')"
       />
       <gokb-state-field
         v-model="searchFilters.stdDesc"
@@ -263,6 +263,7 @@
           const componentId = entry?.componentToReview.id
           const type = entry?.componentToReview?.type ? this.$i18n.tc('component.' + entry?.componentToReview?.type.toLowerCase() + '.label') : undefined
           const dateCreated = new Date(entry?.dateCreated).toLocaleString('sv')
+          const lastUpdated = new Date(entry?.lastUpdated).toLocaleString('sv')
           const request = entry?.reviewRequest
           const description = entry?.descriptionOfCause
           const status = entry?.status
@@ -275,7 +276,7 @@
           const link = { value: component.name, route: componentRoutes[entry?.componentToReview?.type?.toLowerCase()], id: 'componentId' }
           const groupsList = entry.allocatedGroups.map(ag => ag.name).join(', ')
           const isClosable = !!(status?.name === 'Open' && updateUrl)
-          return { id, status, dateCreated, statusLabel, stdDescLabel, groupsList, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
+          return { id, status, dateCreated, lastUpdated, statusLabel, stdDescLabel, groupsList, component, popup, type, stdDesc, link, componentId, request, description, updateUrl, deleteUrl, isClosable }
         })
       },
       isContrib () {
@@ -319,6 +320,13 @@
             sortable: true,
             nowrap: true,
             key: 'dateCreated'
+          },
+          {
+            title: this.$i18n.t('component.general.lastUpdated'),
+            align: 'end',
+            sortable: true,
+            nowrap: true,
+            key: 'lastUpdated'
           }
         ]
         const pkgTitlesConfig = [
@@ -348,6 +356,13 @@
             sortable: true,
             nowrap: true,
             key: 'dateCreated'
+          },
+          {
+            title: this.$i18n.t('component.general.lastUpdated'),
+            align: 'end',
+            sortable: true,
+            nowrap: true,
+            key: 'lastUpdated'
           }
         ]
         const defaultConfig = [
@@ -384,6 +399,13 @@
             sortable: true,
             nowrap: true,
             value: 'dateCreated'
+          },
+          {
+            title: this.$i18n.t('component.general.lastUpdated'),
+            align: 'end',
+            sortable: true,
+            nowrap: true,
+            key: 'lastUpdated'
           }
         ]
 
@@ -553,7 +575,7 @@
         const searchParams = {}
 
         Object.keys(this.searchFilters).forEach(key => {
-          if (this.searchFilters[key] instanceof String || typeof this.searchFilters[key] === 'number') {
+          if (typeof this.searchFilters[key] === 'string' || typeof this.searchFilters[key] === 'number') {
             searchParams[key] = this.searchFilters[key]
           } else if (this.searchFilters[key] instanceof Object) {
             if (this.searchFilters[key].id) {

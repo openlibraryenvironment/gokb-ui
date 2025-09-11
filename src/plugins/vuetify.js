@@ -12,6 +12,17 @@ const vuetify = createVuetify({
   icons: {
     iconfont: 'mdiSvg',
   },
+  display: {
+    mobileBreakpoint: 'sm',
+    thresholds: {
+      xs: 0,
+      sm: 530,
+      md: 890,
+      lg: 1210,
+      xl: 1850,
+      xxl: 2490
+    },
+  },
   styles: {
     configFile: 'src/styles/settings.scss',
   },

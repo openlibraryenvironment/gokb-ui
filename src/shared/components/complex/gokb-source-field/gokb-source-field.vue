@@ -31,7 +31,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-if="!mixedContent">
+      <v-col v-if="!ignoreLegacyTitleID">
         <v-row>
           <v-col cols="3">
             <gokb-namespace-field
@@ -40,14 +40,15 @@
               width="350px"
               :readonly="readonly"
               :label="$t('kbart.propId.label')"
+              gokb-tooltip="kbart.propId.tooltip"
               exclude-isxn
             />
           </v-col>
           <v-col>
             <gokb-checkbox-field
+              v-if="mixedContentVisible"
               v-model="mixedContent"
               class="pt-4"
-              width="350px"
               :label="$t('kbart.propId.typed.label')"
               dense
             />
@@ -58,26 +59,29 @@
         <v-row>
           <v-col cols="3">
             <gokb-namespace-field
+              v-if="serialVisible"
               v-model="item.titleIdSerial"
               target-type="Journal"
               width="100%"
               :label="$t('kbart.propIdSerial.label')"
               exclude-isxn
-              required
+              gokb-tooltip="kbart.propIdSerial.tooltip"
             />
           </v-col>
           <v-col cols="3">
             <gokb-namespace-field
+              v-if="monographVisible"
               v-model="item.titleIdMonograph"
               target-type="Book"
               width="100%"
               :label="$t('kbart.propIdMonograph.label')"
               exclude-isxn
-              required
+              gokb-tooltip="kbart.propIdMonograph.tooltip"
             />
           </v-col>
           <v-col>
             <gokb-checkbox-field
+              v-if="mixedContentVisible"
               v-model="mixedContent"
               class="pt-4"
               :label="$t('kbart.propId.typed.label')"
@@ -178,6 +182,10 @@
         errors: [],
         mixedContent: false,
         isExpanded: true,
+        serialVisible: true,
+        monographVisible: true,
+        mixedContentVisible: true,
+        ignoreLegacyTitleID: true
       }
     },
     computed: {
@@ -204,14 +212,19 @@
             this.item.type = val.type
             this.item.url = val.url
             this.item.frequency = val.frequency
-            this.item.targetNamespace = val.targetNamespace
             this.item.automaticUpdates = val.automaticUpdates
-            this.item.titleIdSerial = val.titleIdSerial
-            this.item.titleIdMonograph = val.titleIdMonograph
             this.item.update = val.update
-            if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
-              this.item.targetNamespace = undefined
-              this.mixedContent = true
+
+            if (!this.ignoreLegacyTitleID) {
+              this.item.targetNamespace = val.targetNamespace
+            }
+            else if (this.mixedContent) {
+              this.item.titleIdSerial = val.titleIdSerial
+              this.item.titleIdMonograph = val.titleIdMonograph
+            }
+            else {
+              this.item.titleIdSerial = this.serialVisible ? val.titleIdSerial : undefined
+              this.item.titleIdMonograph = this.monographVisible ? val.titleIdMonograph : undefined
             }
           }
         },
@@ -219,19 +232,26 @@
       },
       provider: {
         handler(val) {
-          if (!!val && !this.modelValue.id) {
+          if (!!val && !this.modelValue?.id) {
             this.fetchDefaultNamespace()
+          } else {
+            this.setVisibleStatusForTitleIdFields()
           }
         },
         deep: true
       },
-      mixedContent (val) {
-        if (!val) {
-          this.item.titleIdSerial = undefined
-          this.item.titleIdMonograph = undefined
-        } else {
-          this.item.targetNamespace = undefined
-        }
+      contentType: {
+        handler(val) {
+          if (!!val && !this.modelValue?.id) {
+            this.fetchDefaultNamespace()
+          } else {
+            this.setVisibleStatusForTitleIdFields()
+          }
+        },
+        deep: true
+      },
+      mixedContent () {
+        this.setVisibleStatusForTitleIdFields()
       }
     },
     async mounted () {
@@ -242,16 +262,28 @@
       } else if (!!this.modelValue?.url) {
         this.isExpanded = true
         this.item = this.modelValue
-
-        if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
-          this.mixedContent = true
-          this.item.targetNamespace = undefined
-        }
-      } else if (!!this.provider && !!this.contentType){
+      } else if (!!this.provider){
         this.fetchDefaultNamespace()
       }
     },
     methods: {
+      setVisibleStatusForTitleIdFields () {
+        if (this.mixedContent) {
+          this.serialVisible = true
+          this.monographVisible = true
+          this.ignoreLegacyTitleID = true
+        }
+        else {
+          if (!!this.item.targetNamespace && !this.item.titleIdSerial && !this.item.titleIdMonograph) {
+            this.ignoreLegacyTitleID = false
+          }
+          else if (!!this.contentType) {
+            let ctype = this.contentType.value || this.contentType.name
+            this.serialVisible = (ctype === 'Journal' || ctype === 'Mixed' || ctype === 'Database')
+            this.monographVisible = (ctype === 'Book' || ctype === 'Mixed' || ctype === 'Database')
+          }
+        }
+      },
       async fetch (sid) {
         if (!!sid) {
           const result = await this.catchError({
@@ -270,39 +302,45 @@
             this.item.importConfig = result.data.importConfig
             this.item.titleIdSerial = result.data.titleIdSerial
             this.item.titleIdMonograph = result.data.titleIdMonograph
-            if (!!this.item.titleIdSerial || !!this.item.titleIdMonograph) {
-              this.item.targetNamespace = undefined
+
+            if (!!this.item.targetNamespace && !this.item.titleIdSerial && !this.item.titleIdMonograph) {
+              this.ignoreLegacyTitleID = false
+            }
+            else if (!!this.item.titleIdSerial && !!this.item.titleIdMonograph) {
               this.mixedContent = true
             }
             if (!!this.item.url) {
               this.isExpanded = true
             }
+            this.setVisibleStatusForTitleIdFields()
           }
         }
       },
       async fetchDefaultNamespace () {
-        const providerResult = await this.catchError({
-          promise: providerServices.get(this.provider.id, this.cancelToken.token),
-          instance: this
-        })
 
-        if (providerResult?.status === 200) {
-          const fullProvider = providerResult.data
+          const providerResult = await this.catchError({
+            promise: providerServices.get(this.provider.id, this.cancelToken.token),
+            instance: this
+          })
 
-          if (!!this.contentType) {
-            if ( (this.contentType.value === 'Book' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceMonograph) {
-              this.titleIdMonograph = fullProvider.titleNamespaceMonograph
+          if (providerResult?.status === 200) {
+            const fullProvider = providerResult.data
+
+            this.item.titleIdMonograph = fullProvider.titleNamespaceMonograph
+            this.item.titleIdSerial = fullProvider.titleNamespaceSerial
+
+            if (!!this.contentType) {
+
+              let ctype = this.contentType.value || this.contentType.name
+
+              this.mixedContent = (ctype === 'Mixed')
+              this.mixedContentVisible = true
+
+            } else {
+              this.mixedContent = true
+              this.mixedContentVisible = false
             }
-            if ( (this.contentType.value === 'Journal' || this.contentType.value === 'Mixed') && fullProvider.titleNamespaceSerial) {
-              this.titleIdSerial = fullProvider.titleNamespaceSerial
-            }
-            this.mixedContent = true
-            //Rückfallwert
-            if (!this.titleIdMonograph && !this.titleIdSerial) {
-              this.mixedContent = false
-              this.targetNamespace = fullProvider.titleNamespaceMonograph || fullProvider.titleNamespaceSerial || undefined
-            }
-          }
+            this.setVisibleStatusForTitleIdFields()
         }
       },
     }
