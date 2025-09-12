@@ -8,7 +8,7 @@
     :rules="localRules"
     :type="type"
     :error="hasApiErrors"
-    :error-messages="errorMessages"
+    :error-messages="computedErrorMessages"
     min-width="150px"
     :placeholder="placeholder"
     :append-icon="appendIcon"
@@ -157,7 +157,7 @@
       isValid () {
         return !this.localErrorMessages && !this.hasApiErrors
       },
-      errorMessages () {
+      computedErrorMessages () {
         return this.localErrorMessages || this.apiErrorMessages
       },
       editable () {

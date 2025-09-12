@@ -550,6 +550,9 @@
     "delete": {
       "label": "Delete Profile",
       "confirm": "Are you sure you want to delete your profile? This can not be reverted!"
+    },
+    "groupAdmin": {
+      "label": "Group Administration"
     }
   },
   "register": {

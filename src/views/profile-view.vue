@@ -11,7 +11,7 @@
     @valid="valid = $event"
   >
     <gokb-error-component :value="error" />
-    <gokb-section :title="$t('component.general.general')">
+    <gokb-section :sub-title="$t('component.general.general')">
       <v-row>
         <v-col>
           <gokb-email-field
@@ -35,7 +35,7 @@
         </v-col>
       </v-row>
     </gokb-section>
-    <gokb-section :title="$t('component.user.password')">
+    <gokb-section :sub-title="$t('component.user.password')">
       <gokb-password-field
         id="current-password"
         ref="passwordField"
@@ -67,48 +67,57 @@
     <gokb-curatory-group-section
       v-model="allCuratoryGroups"
       :disabled="!isAdmin"
-      :title="$tc('component.curatoryGroup.label', 2)"
+      :sub-title="$tc('component.curatoryGroup.label', 2)"
+      :expanded="false"
     />
 
-    <div v-for="group in allCuratoryGroups">
+    <div v-if="administrableGroups.length > 0">
       <gokb-section
-        v-if="group.updateEnabled"
-        :sub-title=group.name
+        v-model="groupAdminExpanded"
+        :sub-title="$t('profile.groupAdmin.label')"
+        expandable
       >
-        <v-row dense>
-          <v-col>
-            <gokb-email-field
-              class="ml-2"
-              v-model="group.email"
-              width="400px"
-            />
-          </v-col>
-        </v-row>
-        <v-row dense>
-          <v-col>
-            <gokb-checkbox-field
-              v-model="group.cancelledImportAlerts"
-              :disabled="!group.email"
-              :label="$t('component.curatoryGroup.cancelledImportAlerts.label')"
-            />
-          </v-col>
-        </v-row>
-        <v-row dense>
-          <v-col>
-            <gokb-checkbox-field
-              v-model="group.newReviewsAlerts"
-              :disabled="!group.email"
-              :label="$t('component.curatoryGroup.newReviewsAlerts.label')"
-            />
-          </v-col>
-        </v-row>
-        <v-row dense>
-          <v-col>
-            <gokb-button class="ma-3" @click="updateGroupInfo(group)">
-              {{ $t('btn.update') }}
-            </gokb-button>
-          </v-col>
-        </v-row>
+        <div v-for="group in administrableGroups">
+          <gokb-section
+            v-if="group.updateEnabled"
+            :sub-title=group.name
+          >
+            <v-row dense>
+              <v-col>
+                <gokb-email-field
+                  class="ml-2"
+                  v-model="group.email"
+                  width="400px"
+                />
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col>
+                <gokb-checkbox-field
+                  v-model="group.cancelledImportAlerts"
+                  :disabled="!group.email"
+                  :label="$t('component.curatoryGroup.cancelledImportAlerts.label')"
+                />
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col>
+                <gokb-checkbox-field
+                  v-model="group.newReviewsAlerts"
+                  :disabled="!group.email"
+                  :label="$t('component.curatoryGroup.newReviewsAlerts.label')"
+                />
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col>
+                <gokb-button class="ma-3" @click="updateGroupInfo(group)">
+                  {{ $t('btn.update') }}
+                </gokb-button>
+              </v-col>
+            </v-row>
+          </gokb-section>
+        </div>
       </gokb-section>
     </div>
 
@@ -170,6 +179,8 @@
         newpass: undefined,
         repeatpass: undefined,
         allCuratoryGroups: [],
+        administrableGroups: [],
+        groupAdminExpanded: false,
         languageOptions: ['de', 'en'],
         preferredLocaleString: undefined,
         updateProfileUrl: undefined,
@@ -222,7 +233,7 @@
         }
       }
     },
-    async activated () {
+    async created () {
       if (account.loggedIn()) {
         this.fetchProfile()
       }
@@ -275,7 +286,8 @@
             newReviewsAlerts: (group.newReviewsAlerts === true),
             updateEnabled: (!!group._links?.update?.href),
             isDeletable: true
-          }))
+          })).sort((a, b) => a.name.localeCompare(b.name))
+          this.administrableGroups = this.allCuratoryGroups.filter(grp => (grp.updateEnabled))
         }
       },
       async updateProfile () {
@@ -326,7 +338,7 @@
         })
 
         if (result.status === 200) {
-          this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.curatoryGroup.label')])
+          this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.curatoryGroup.label') + ' ' + info.name])
           this.messageColor = 'success'
           this.showSnackbar = true
         }

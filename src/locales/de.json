@@ -550,6 +550,9 @@
     "delete": {
       "label": "Profil Löschen",
       "confirm": "Sind Sie sicher, dass Sie das Profil löschen möchten? Die Löschung kann nicht rückgängig gemacht werden!"
+    },
+    "groupAdmin": {
+      "label": "Gruppen-Administration"
     }
   },
   "register": {
@@ -1127,7 +1130,7 @@
       "label": "Benutzer | Benutzer",
       "username": "Benutzername",
       "register": "Registrierung",
-      "password": "Kennwort",
+      "password": "Passwort",
       "preferredLocaleString": {
         "label": "Bevorzugte Sprache"
       },
