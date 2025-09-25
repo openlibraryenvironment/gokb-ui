@@ -308,7 +308,7 @@
       },
       'item.transferMethod': {
         handler(val) {
-          if (!!val && this.item?.transferMethod?.value === 'FTP') {
+          if (!!val && (this.item?.transferMethod?.value === 'FTP' || this.item?.transferMethod?.name === 'FTP')) {
             this.isFTPTransfer = true
           }
           else {
@@ -328,6 +328,16 @@
       } else if (!!this.provider){
         this.fetchDefaultNamespace()
       }
+
+      console.log("mounted: ", this.item?.transferMethod)
+      if (this.item?.transferMethod?.value === 'FTP') {
+        console.log("iss FTP")
+        this.isFTPTransfer = true
+      }
+
+    },
+    created () {
+      console.log("created: ", this.item?.transferMethod)
     },
     methods: {
       formatFtpPath () {
@@ -378,6 +388,7 @@
             this.item.ftpUrl = result.data.ftpUrl
             this.item.transferMethod = result.data.transferMethod
             this.item.webEndpoint = result.data.webEndpoint
+            console.log("fetch: ", this.item.transferMethod)
             if (this.item.transferMethod?.value === 'FTP' || this.item.transferMethod?.name === 'FTP') {
               this.isFTPTransfer = true
             }
