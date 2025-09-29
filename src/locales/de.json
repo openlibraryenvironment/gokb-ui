@@ -1804,6 +1804,9 @@
           "label": "Stabile URL in die Zwischenablage kopieren",
           "success": "Die stabile URL wurde in die Zwischenablage kopiert!"
         }
+      },
+      "comment": {
+        "label": "Bemerkung | Bemerkungen"
       }
     }
   }

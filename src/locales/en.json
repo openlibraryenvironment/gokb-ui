@@ -1794,6 +1794,9 @@
           "label": "Copy stable URL to clipboard",
           "success": "The stable URL has been copied to your clipboard!"
         }
+      },
+      "comment": {
+        "label": "Comment | Comments"
       }
     }
   }
