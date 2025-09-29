@@ -4,9 +4,17 @@
       <gokb-add-comment-popup
         v-if="addCommentPopupVisible"
         v-model="addCommentPopupVisible"
+        :existing-langs="currentLanguages"
         @add="addNewComment"
       />
-      <span>Languages:</span>
+      <gokb-confirmation-popup
+          v-model="confirmDeleteVisible"
+          :message="confirmDeletionMessage"
+          @confirmed="deleteComment"
+        />
+      <div v-if="showTitle" class="text-primary mb-2">
+        {{ $t('component.general.comment.label', 2) }}
+      </div>
       <span v-for="comment in localValue">
         <v-chip
           v-if="activeLang === comment.language.name"
@@ -16,7 +24,7 @@
           style="cursor:default"
           density="comfortable"
           label>
-          {{ comment.language.name }}
+          {{ $t('default.languages.' + comment.language.name) }}
         </v-chip>
         <v-chip
           v-else
@@ -27,36 +35,78 @@
           label
           @click="selectActiveLang(comment.language.name)"
         >
-          {{ comment.language.name }}
+          {{ $t('default.languages.' + comment.language.name) }}
         </v-chip>
       </span>
-      <v-btn color="primary" size="small" class="ml-2" @click="showAddCommentPopup"> <v-icon>mdi-plus-thick</v-icon></v-btn>
+      <v-btn
+        v-if="localValue.length < knownLanguages.length"
+        color="primary"
+        size="small"
+        class="ml-2"
+        @click="showAddCommentPopup"
+      >
+        <v-icon>mdi-plus-thick</v-icon>
+      </v-btn>
     </div>
     <div v-for="comment in localValue" class="mt-2">
       <v-textarea
         v-if="comment.language.name === activeLang"
         v-model="comment.value"
-        :readonly="!disabled || !editEnabled"
-      />
+        :disabled="disabled"
+        :readonly="!disabled && !editEnabled"
+      >
+        <template #append-inner>
+          <v-icon
+            v-if="!disabled && !editEnabled"
+            :title="$t('btn.edit')"
+            @click="editEnabled = true"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            v-else-if="!disabled"
+            :title="$t('btn.confirm')"
+            @click="editEnabled = false"
+
+          >
+            mdi-check-bold
+          </v-icon>
+          <v-icon
+            v-if="!disabled"
+            :title="$t('btn.delete')"
+            @click="showDeleteConfirm"
+          >
+            mdi-close-thick
+          </v-icon>
+        </template>
+      </v-textarea>
     </div>
-    <div v-if="!activeLang">
-      No comment for your language!
-    </div>
+    <v-card v-if="!activeLang" class="py-10 my-3">
+      <v-card-text class="justify-center">
+        <span>{{ $t('component.general.comment.notFound') }}</span>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
 <script>
-  import languageServices from '@/shared/services/language-services'
   import GokbAddCommentPopup from '@/shared/popups/gokb-add-comment-popup'
+  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import languageService from '@/shared/services/language-services'
 
   export default {
     name: 'GokbCommentsField',
-    components: { GokbAddCommentPopup },
+    components: { GokbAddCommentPopup, GokbConfirmationPopup },
     emits: ['update:model-value', 'update'],
     props: {
       modelValue: {
         type: Array,
         required: true
+      },
+      showTitle: {
+        type: Boolean,
+        required: false,
+        default: true
       },
       disabled: {
         type: Boolean,
@@ -69,7 +119,11 @@
         addCommentPopupVisible: false,
         showError: false,
         activeLang: undefined,
-        editEnabled: false
+        editEnabled: false,
+        knownLanguages: ['eng', 'ger'],
+        currentLanguages: [],
+        confirmDeleteVisible: false,
+        confirmDeletionMessage: undefined
       }
     },
     computed: {
@@ -89,6 +143,8 @@
     },
     created () {
       this.selectActiveLang(this.currentLocale)
+
+      this.currentLanguages = this.localValue.map(cmt => (cmt.language.name))
     },
     methods: {
       tempId () {
@@ -107,6 +163,8 @@
             isDeletable: undefined,
             _pending: 'added'
           })
+
+          this.currentLanguages.push(cmt.language.name)
         }
 
         this.selectActiveLang(cmt.language.name)
@@ -114,8 +172,8 @@
         this.$emit('update', 'comments')
       },
       selectActiveLang(lang) {
-        let cmt_eng = this.localValue.filter(item => (item.language.name === 'eng'))
-        let cmt_ger = this.localValue.filter(item => (item.language.name === 'ger'))
+        let cmt_eng = this.localValue.filter(item => (item.language.name === 'eng')).length > 0
+        let cmt_ger = this.localValue.filter(item => (item.language.name === 'ger')).length > 0
 
         if (lang === 'en') {
           this.activeLang = !!cmt_eng ? 'eng' : undefined
@@ -129,6 +187,18 @@
       },
       showAddCommentPopup() {
         this.addCommentPopupVisible = true
+      },
+      showDeleteConfirm () {
+        this.confirmDeletionMessage = {
+          text: 'popups.confirm.deleteComment.label',
+          vars: [languageService.getLanguage(this.activeLang, this.currentLocale)]
+        }
+
+        this.confirmDeleteVisible = true
+      },
+      deleteComment() {
+        this.localValue = this.localValue.filter(v => v.language.name !== this.activeLang)
+        this.selectActiveLang(this.currentLocale)
       }
     }
   }

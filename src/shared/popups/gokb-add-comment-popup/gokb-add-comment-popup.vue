@@ -7,10 +7,13 @@
     @submit="addItem"
   >
     <div>
-      <gokb-locale-field
+      <gokb-select-field
           v-model="item.language"
+          :static-items="localLanguages"
           class="mr-4"
           :label="$t('component.general.language.label')"
+          item-title="label"
+          item-value="name"
           return-object
           required
         />
@@ -82,6 +85,18 @@
       isValid () {
         return !!this.item.value && !!this.item.language
       },
+      localLanguages() {
+        return [
+          {
+            "name": "eng",
+            "label": this.$i18n.t('default.languages.en')
+          },
+          {
+            "name": "ger",
+            "label": this.$i18n.t('default.languages.de')
+          }
+        ]
+      }
     },
     methods: {
       addItem () {

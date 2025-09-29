@@ -63,8 +63,11 @@
     "ISOdateHint": "YYYY-MM-DD",
     "loading": "Loading ...",
     "languages": {
+      "label": "Language | Languages",
       "en": "English",
-      "de": "German"
+      "de": "German",
+      "eng": "English",
+      "ger": "German"
     },
     "error": {
       "label": "Error | Errors"
@@ -189,6 +192,9 @@
       },
       "pendingChanges": {
         "label": "You have unsaved changes! Are you sure you want to discard them?"
+      },
+      "deleteComment": {
+        "label": "Please confirm the deletion of all comments for this language."
       }
     },
     "login": {
@@ -1796,7 +1802,8 @@
         }
       },
       "comment": {
-        "label": "Comment | Comments"
+        "label": "Comment | Comments",
+        "notFound": "No comments found for the selected language!"
       }
     }
   }

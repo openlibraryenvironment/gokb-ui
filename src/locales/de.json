@@ -63,8 +63,11 @@
     "ISOdateHint": "JJJJ-MM-TT",
     "loading": "Lädt ...",
     "languages": {
+      "label": "Sprache | Sprachen",
       "en": "Englisch",
-      "de": "Deutsch"
+      "de": "Deutsch",
+      "eng": "Englisch",
+      "ger": "Deutsch"
     },
     "error": {
       "label": "Fehler | Fehler"
@@ -190,6 +193,9 @@
       },
       "pendingChanges": {
         "label": "Es gibt ungespeicherte Änderungen! Bitte bestätigen Sie, dass diese verworfen werden sollen."
+      },
+      "deleteComment": {
+        "label": "Bitte bestätigen Sie, dass die Bemerkungen für diese Sprache gelöscht werden sollen."
       }
     },
     "login": {
@@ -1806,7 +1812,8 @@
         }
       },
       "comment": {
-        "label": "Bemerkung | Bemerkungen"
+        "label": "Bemerkung | Bemerkungen",
+        "notFound": "Es sind keine Bemerkungen in der aktuellen Sprache vorhanden!"
       }
     }
   }
