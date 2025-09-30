@@ -47,39 +47,42 @@
       >
         <v-icon>mdi-plus-thick</v-icon>
       </v-btn>
+      <span class="float-right mt-1">
+        <v-icon
+          v-if="!disabled && !editEnabled"
+          :title="$t('btn.edit')"
+          color="primary"
+          @click="enableEdit"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          v-else-if="!disabled"
+          :title="$t('btn.confirm')"
+          color="primary"
+          @click="editEnabled = false"
+
+        >
+          mdi-check-bold
+        </v-icon>
+        <v-icon
+          v-if="!disabled"
+          :title="$t('btn.delete')"
+          class="ml-4"
+          color="primary"
+          @click="showDeleteConfirm"
+        >
+          mdi-close-thick
+        </v-icon>
+      </span>
     </div>
     <div v-for="comment in localValue" class="mt-2">
       <v-textarea
+        ref="activearea"
         v-if="comment.language.name === activeLang"
         v-model="comment.value"
-        :disabled="disabled"
-        :readonly="!disabled && !editEnabled"
-      >
-        <template #append-inner>
-          <v-icon
-            v-if="!disabled && !editEnabled"
-            :title="$t('btn.edit')"
-            @click="editEnabled = true"
-          >
-            mdi-pencil
-          </v-icon>
-          <v-icon
-            v-else-if="!disabled"
-            :title="$t('btn.confirm')"
-            @click="editEnabled = false"
-
-          >
-            mdi-check-bold
-          </v-icon>
-          <v-icon
-            v-if="!disabled"
-            :title="$t('btn.delete')"
-            @click="showDeleteConfirm"
-          >
-            mdi-close-thick
-          </v-icon>
-        </template>
-      </v-textarea>
+        :disabled="!disabled && !editEnabled"
+      />
     </div>
     <v-card v-if="!activeLang" class="py-10 my-3">
       <v-card-text class="justify-center">
@@ -199,6 +202,14 @@
       deleteComment() {
         this.localValue = this.localValue.filter(v => v.language.name !== this.activeLang)
         this.selectActiveLang(this.currentLocale)
+      },
+      enableEdit() {
+        this.editEnabled = true
+        let element = this.$refs.activearea[0].$el.querySelector('textarea')
+
+        this.$nextTick(() => {
+          element.focus()
+        })
       }
     }
   }

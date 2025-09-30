@@ -9,7 +9,7 @@
     <div>
       <gokb-select-field
           v-model="item.language"
-          :static-items="localLanguages"
+          :static-items="availableLanguages"
           class="mr-4"
           :label="$t('component.general.language.label')"
           item-title="label"
@@ -45,6 +45,7 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
+  import languageServices from '@/shared/services/language-services'
 
   export default {
     name: 'GokbAddCommentPopup',
@@ -59,6 +60,10 @@
         type: [Number, String],
         required: false,
         default: 600
+      },
+      existingLangs: {
+        type: Array,
+        required: true
       }
     },
     data () {
@@ -67,7 +72,8 @@
           value: undefined,
           namespace: undefined
         },
-        failedValidation: false
+        failedValidation: false,
+        availableLanguages: []
       }
     },
     computed: {
@@ -84,19 +90,20 @@
       },
       isValid () {
         return !!this.item.value && !!this.item.language
-      },
-      localLanguages() {
-        return [
-          {
-            "name": "eng",
-            "label": this.$i18n.t('default.languages.en')
-          },
-          {
-            "name": "ger",
-            "label": this.$i18n.t('default.languages.de')
-          }
-        ]
       }
+    },
+    mounted() {
+      let configured_locales = languageServices.getAllLocales()
+
+      for (const locale in configured_locales) {
+        if (!this.existingLangs.some(lng => (lng === configured_locales[locale]))) {
+          this.availableLanguages.push({
+            label: this.$i18n.t('default.languages.' + locale),
+            name: configured_locales[locale]
+          })
+        }
+      }
+
     },
     methods: {
       addItem () {

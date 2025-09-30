@@ -47,6 +47,9 @@ const api = (baseServices) => ({
     const localeLang = localetoIso3(locale)
     const lang = languagesModel.getLanguage(langKey)
     return getLang(langKey, lang, localeLang)
+  },
+  getAllLocales () {
+    return languagesModel.getAllLocales()
   }
 })
 

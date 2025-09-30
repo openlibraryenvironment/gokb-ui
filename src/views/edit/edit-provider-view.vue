@@ -87,11 +87,11 @@
           </v-col>
           <v-col lg="2" />
         </v-row>
-        <v-row>
+        <!-- <v-row>
           <v-col>
-            <gokb-comments-field v-model="providerObject.comments" :disabled="isReadonly" />
+            <gokb-comments-field v-model="providerObject.comments" :disabled="isReadonly" show-title />
           </v-col>
-        </v-row>
+        </v-row> -->
       </gokb-section>
       <v-row
         v-if="tabsView"
