@@ -17,7 +17,7 @@ const api = (browserStorage) => {
       localStorage.remove(PERSISTENCE_KEY)
     },
     needsRefresh () {
-      return Date.now() > (localStorage.get(EXPIRATION_KEY, true) - 600000)
+      return Date.now() > (localStorage.get(EXPIRATION_KEY, true) - 300000)
     },
     isExpired () {
       return !localStorage.get(EXPIRATION_KEY, true) || !/^\d+$/.test(localStorage.get(EXPIRATION_KEY, true)) || (!!this.getToken() && Date.now() > parseInt(localStorage.get(EXPIRATION_KEY, true)))

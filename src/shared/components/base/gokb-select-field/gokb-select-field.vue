@@ -136,15 +136,23 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      itemTitle: {
+        type: String,
+        required: false,
+        default: 'name'
+      },
+      itemValue: {
+        type: String,
+        required: false,
+        default: 'id'
       }
     },
     data () {
       return {
         rawItems: [],
         localizedItems: [],
-        stateLabel: undefined,
-        itemTitle: 'name',
-        itemValue: 'id'
+        stateLabel: undefined
       }
     },
     computed: {

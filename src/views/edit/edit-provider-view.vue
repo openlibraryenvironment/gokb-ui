@@ -87,6 +87,11 @@
           </v-col>
           <v-col lg="2" />
         </v-row>
+        <!-- <v-row>
+          <v-col>
+            <gokb-comments-field v-model="providerObject.comments" :disabled="isReadonly" show-title />
+          </v-col>
+        </v-row> -->
       </gokb-section>
       <v-row
         v-if="tabsView"
@@ -435,6 +440,7 @@
           titleNamespaceMonograph: undefined,
           packageNamespace: undefined,
           homepage: undefined,
+          comments: []
         }
       }
     },
@@ -599,6 +605,10 @@
             variantType,
             id: typeof id === 'number' ? id : null
           })),
+          comments: this.providerObject.comments.map(( cmt ) => ({
+            ...cmt,
+            id: typeof id === 'number' ? id : null
+          })),
           offices: this.offices.map(office => ({
             ...office,
             id: (typeof office.id === 'number' ? office.id : null)
@@ -696,7 +706,8 @@
           titleNamespaceSerial: undefined,
           packageNamespac: undefined,
           homepage: undefined,
-          preferredShortname: undefined
+          preferredShortname: undefined,
+          comments: []
         }
         this.reload()
       },
@@ -758,6 +769,13 @@
           nslabel: namespace.name || namespace.value,
           isDeletable: !!this.updateUrl
         }))
+
+        new_item_info.comments = data._embedded.comments.map(({ id, value, language }) => ({
+          id,
+          value,
+          language,
+          isDeletable: !!this.updateUrl
+        })) || []
 
         this.providerObject = new_item_info
 
