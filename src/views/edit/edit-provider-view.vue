@@ -192,6 +192,14 @@
                 mdi-alert-decagram
               </v-icon>
             </v-tab>
+
+            <v-tab
+              value="information"
+              :active-class="tabClass"
+            >
+              Anmerkungen
+            </v-tab>
+
           </v-tabs>
           <v-window v-model="tab">
             <v-window-item
@@ -267,6 +275,13 @@
                 :api-errors="errors.offices"
                 @update="addPendingChange"
               />
+            </v-window-item>
+
+            <v-window-item
+              value="information"
+              class="mt-4"
+            >
+
             </v-window-item>
           </v-window>
         </v-col>
