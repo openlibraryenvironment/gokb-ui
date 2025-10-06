@@ -126,7 +126,8 @@
   import GokbNamespaceField from '@/shared/components/simple/gokb-namespace-field'
   import providerServices from '@/shared/services/provider-services'
   import kbartServices from '@/shared/services/kbart-services'
-  import GokbExportValidatorResults from "../../components/complex/gokb-export-validator-results/index.js";
+  import GokbExportValidatorResults from "../../components/complex/gokb-export-validator-results/index.js"
+  import namespacesModel from '@/shared/models/namespaces-model'
 
   export default {
     name: 'GokbKbartImportPopup',
@@ -153,10 +154,12 @@
     data () {
       return {
         errors: [],
+        warnings: [],
         cancelValidation: false,
         useProprietaryNamespace: false,
         importRunning: undefined,
         mixedContent: false,
+        checkedForRevalidate: false,
         loadedFile: {
           errors: {
             missingColumns: [],
@@ -238,6 +241,8 @@
     watch: {
       selectedFile (file) {
         this.errors = []
+        this.warnings = []
+        this.checkedForRevalidate = false
         this.options.lineCount = undefined
         this.completion = 0
         this.loadedFile.rows = { total: 0, warning: 0, error: 0 }
@@ -329,6 +334,7 @@
       },
       async doImport () {
         this.errors = []
+        this.warnings = []
         this.importRunning = true
         this.completion = 0
 
@@ -341,10 +347,37 @@
           this.errors.push(this.$i18n.t('kbart.validator.alert.encoding'))
         }
         else if (validationResult.status === 200 && validationResult?.data?.report) {
+          let needsRevalidate = false
           this.loadedFile = validationResult.data.report
 
           this.options.lineCount = validationResult.data.report.rows.total
-          this.completion = 100
+
+          if (validationResult.data.report.doi_ns_detected_serial && !this.checkedForRevalidate) {
+            if (!!namespaceNameSerial && namespaceNameSerial !== 'doi') {
+              this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Serial']))
+              this.options.selectedNamespaceSerial = namespacesModel.getNamespace('doi')
+
+              needsRevalidate = true
+            }
+          }
+
+          if (validationResult.data.report.doi_ns_detected_monograph && !this.checkedForRevalidate) {
+            if (!!namespaceNameMonograph && namespaceNameMonograph !== 'doi') {
+              this.warnings.push(this.$i18n.t('kbart.validator.alert.doiReplaced', ['Monograph']))
+              this.options.selectedNamespaceMonograph = namespacesModel.getNamespace('doi')
+
+              needsRevalidate = true
+            }
+          }
+
+          this.checkedForRevalidate = true
+
+          if (!needsRevalidate) {
+            this.completion = 100
+          }
+          else {
+            this.completion = 0
+          }
         } else {
           this.errors.push(this.$i18n.t('kbart.transmission.error.unknown'))
           this.completion = 100
