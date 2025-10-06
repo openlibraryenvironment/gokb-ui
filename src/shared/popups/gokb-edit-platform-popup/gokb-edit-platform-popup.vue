@@ -14,139 +14,50 @@
         {{ localErrorMessage }}
       </v-alert>
     </span>
-    <v-tabs
-      v-if="!isEdit"
-      v-model="tab"
+    <v-row
+      dense
+      class="mt-4"
     >
-      <v-tab
-        value="search"
-        @click="resetFields()"
-      >
-        {{ $tc('btn.select') }}
-      </v-tab>
-      <v-tab
-        v-if="!isEdit"
-        value="new"
-        :disabled="!searched"
-        @click="resetFields()"
-      >
-        {{ $tc('btn.new') }}
-      </v-tab>
-    </v-tabs>
-    <v-window v-model="tab" v-if="!isEdit" >
-      <v-window-item value="search">
-        <v-row
-          v-if="isEdit"
-          class="text-h6 mt-4 ml-0"
+      <v-col>
+        <gokb-text-field
+          v-model="platform.name"
+          :readonly="isReadonly"
+          :label="$tc('component.general.name')"
+          required
+        />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <gokb-url-field
+          ref="urlinput"
+          v-model="platform.primaryUrl"
+          :api-errors="errors.primaryUrl"
+          :readonly="isReadonly"
+          :required="!isReadonly"
+          @valid="updateUrlValidationState"
+        />
+      </v-col>
+    </v-row>
+    <v-row
+      v-for="c in conflictLinks"
+      :key="c.id"
+      dense
+    >
+      <v-col v-if="!c.id">
+        {{ $t('component.platform.conflict.noProvider', [c.platformId]) }}
+      </v-col>
+      <v-col v-else>
+        {{ $t('component.platform.conflict.' + c.type, [c.platformName]) }}
+        {{ $t('component.platform.conflict.providerLink') }}
+        <router-link
+          :style="{ color: 'primary' }"
+          :to="{ name: '/provider', params: { 'id': c.id } }"
         >
-          {{ $tc('route.platform.edit') }}
-        </v-row>
-        <v-row
-          v-else
-          class="text-h6 mt-4 ml-0"
-        >
-          {{ $tc('route.platform.searchExisting') }}
-        </v-row>
-        <v-row
-          dense
-          class="mt-4"
-        >
-          <v-col>
-            <gokb-search-platform-field
-              v-model="platformName"
-              :label="$tc('component.general.name')"
-              :query-fields="['name', 'primaryUrl']"
-              return-object
-              disable-if-linked
-              only-current
-              @searched="hasSearched"
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <gokb-url-field
-              ref="urlinput"
-              v-if="!!platformUrl"
-              v-model="platformUrl"
-              :api-errors="errors.primaryUrl"
-              readonly
-              @valid="updateUrlValidationState"
-            />
-          </v-col>
-        </v-row>
-        <v-row
-          v-for="c in conflictLinks"
-          :key="c.id"
-          dense
-        >
-          <v-col v-if="!c.id">
-            {{ $t('component.platform.conflict.noProvider', [c.platformId]) }}
-          </v-col>
-          <v-col v-else>
-            {{ $t('component.platform.conflict.' + c.type, [c.platformName]) }}
-            {{ $t('component.platform.conflict.providerLink') }}
-            <router-link
-              :style="{ color: 'primary' }"
-              :to="{ name: '/provider', params: { 'id': c.id } }"
-            >
-              {{ c.name }}
-            </router-link>
-          </v-col>
-        </v-row>
-      </v-window-item>
-      <v-window-item value="new">
-        <v-row
-          class="text-h6 mt-4 ml-0"
-        >
-          {{ $tc('route.platform.createNew') }}
-        </v-row>
-        <v-row
-          dense
-          class="mt-4"
-        >
-          <v-col>
-            <gokb-text-field
-              v-model="platform.name"
-              :readonly="isReadonly"
-              :label="$tc('component.general.name')"
-              required
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <gokb-url-field
-              ref="urlinput"
-              v-model="platform.primaryUrl"
-              :api-errors="errors.primaryUrl"
-              :readonly="isReadonly"
-              :required="!isReadonly"
-              @valid="updateUrlValidationState"
-            />
-          </v-col>
-        </v-row>
-        <v-row
-          v-for="c in conflictLinks"
-          :key="c.id"
-          dense
-        >
-          <v-col v-if="!c.id">
-            {{ $t('component.platform.conflict.noProvider', [c.platformId]) }}
-          </v-col>
-          <v-col v-else>
-            {{ $t('component.platform.conflict.' + c.type, [c.platformName]) }}
-            {{ $t('component.platform.conflict.providerLink') }}
-            <router-link
-              :style="{ color: 'primary' }"
-              :to="{ name: '/provider', params: { 'id': c.id } }"
-            >
-              {{ c.name }}
-            </router-link>
-          </v-col>
-        </v-row>
-      </v-window-item>
-    </v-window>
+          {{ c.name }}
+        </router-link>
+      </v-col>
+    </v-row>
     <div v-if="isEdit">
       <v-row
         dense

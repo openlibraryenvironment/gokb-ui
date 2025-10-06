@@ -1095,6 +1095,49 @@
       },
       "preferredShortname": {
         "label": "Empfohlene Kurzform"
+      },
+      "role": {
+        "label": "Rolle | Rollen",
+        "Publisher": {
+          "label": "Verlag"
+        },
+        "Platform Provider": {
+          "label": "Plattformanbieter"
+        },
+        "Imprint": {
+          "label": "Imprint"
+        },
+        "Content Provider": {
+          "label": "Inhaltsanbieter"
+        },
+        "Issuing Body": {
+          "label": "Herausgeber"
+        },
+        "Broker": {
+          "label": "Broker"
+        },
+        "Vendor": {
+          "label": "Anbieter"
+        },
+        "Licensor": {
+          "label": "Lizenzgeber"
+        },
+        "Licensee": {
+          "label": "Lizenznehmer"
+        }
+      },
+      "error": {
+        "missingPlatform": {
+          "label": "Für den angegebenen Plattformanbieter wurde keine Plattform ausgewählt."
+        },
+        "missingRole": {
+          "platform": "Für die angegebene Plattform wurde kein Plattformanbieter ausgewählt."
+        }
+      },
+      "warning": {
+        "noPlatformRole": {
+          "label": "Das Hinzufügen von Plattformen ist nur für Plattformanbieter möglich."
+        }
       }
     },
     "organization": {

@@ -14,7 +14,8 @@
           identifierValue: undefined,
           titleNamespace: undefined,
           curatoryGroupIds: undefined,
-          status: 'Current'
+          status: 'Current',
+          roles: undefined
         }
       }
     },
@@ -102,17 +103,29 @@
               type: 'GokbStateField',
               name: 'status',
               value: 'status',
+              md: 2,
               properties: {
                 initItem: 'Current',
-                width: '100%',
                 messagePath: 'component.general.status',
                 label: this.$i18n.tc('component.general.status.label')
+              }
+            },
+            {
+              type: 'GokbStateField',
+              name: 'roles',
+              value: 'roles',
+              md: 2,
+              properties: {
+                messagePath: 'component.provider.role',
+                url: 'refdata/categories/Org.Role',
+                label: this.$i18n.tc('component.provider.role.label')
               }
             },
             {
               type: 'GokbNamespaceField',
               name: 'titleNamespace',
               value: 'titleNamespaceId',
+              md: 2,
               properties: {
                 label: this.$i18n.t('component.provider.titleNamespace.label'),
                 returnObject: false
