@@ -270,7 +270,9 @@
     "issueRange": "Das erste Heft muss vor dem letzten Heft liegen.",
     "missingStartIssue": "Die Angabe eines letzten Hefts erfordert ein Anfangsheft.",
     "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband.",
-    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden."
+    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden.",
+    "yearFormat": "Bitte geben Sie ein vierstelliges Jahr an.",
+    "missingStart": "Bitte geben Sie einen Startwert an."
   },
   "job": {
     "label": "Import | Importe",
@@ -910,7 +912,17 @@
       "globalNote": {
         "label": "Region/Konsortium"
       },
-      "descriptionUrl": "URL zur Beschreibung des Pakets"
+      "descriptionUrl": "URL zur Beschreibung des Pakets",
+      "startYear": {
+        "label": "Anfangsjahr"
+      },
+      "endYear": {
+        "label": "Endjahr"
+      },
+      "singleYear": {
+        "label": "Jahresabschnitt"
+      },
+      "multiYear": "Mehrjährig"
     },
     "tipp": {
       "label": "Pakettitel | Pakettitel",

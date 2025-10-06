@@ -270,7 +270,9 @@
     "issueRange": "The start issue must be before the end issue",
     "missingStartIssue": "An end issue requires a set start issue!",
     "missingStartVolume": "An end volume requires a set start volume!",
-    "refdataLookup": "Unable to save unrecognized value!"
+    "refdataLookup": "Unable to save unrecognized value!",
+    "yearFormat": "Please enter a four digit year.",
+    "missingStart": "Please first provide a start value."
   },
   "job": {
     "label": "Import | Imports",
@@ -910,7 +912,18 @@
       "globalNote": {
         "label": "Region/Consortium"
       },
-      "descriptionUrl": "URL to package description"
+      "descriptionUrl": "URL to package description",
+      "startYear": {
+        "label": "Start Year"
+      },
+      "endYear": {
+        "label": "End Year"
+      },
+      "singleYear": {
+        "label": "Licensing Year",
+        "tooltip": "If this package represents a yearly selection of a bigger package, please enter the year it represents."
+      },
+      "multiYear": "Multi-year Span"
     },
     "tipp": {
       "label": "Package Title | Package Titles",
