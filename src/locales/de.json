@@ -1094,6 +1094,18 @@
       },
       "preferredShortname": {
         "label": "Empfohlene Kurzform"
+      },
+      "preferredSupplyMethod": {
+        "label": "Bevorzugte Methode",
+        "FTP": {
+          "label": "FTP"
+        },
+        "HTTPSAuth": {
+          "label": "Download per HTTPS mit Authentifizierung"
+        },
+        "HTTPSNoAuth": {
+          "label": "Download per HTTPS ohne Authentifizierung"
+        }
       }
     },
     "organization": {

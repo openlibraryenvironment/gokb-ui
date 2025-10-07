@@ -281,6 +281,187 @@
               value="information"
               class="mt-4"
             >
+             <!--  <gokb-org-notes-section
+                v-model="providerObject"
+                :disabled="isReadonly"
+              /> -->
+
+              <gokb-section>
+
+                <v-row>
+                  <v-col cols="5"><h3>Format der Datenlieferung</h3></v-col>
+                  <v-col cols="5"><h3>GOKB-spezifische Erweiterung von KBART</h3></v-col>
+                </v-row>
+
+                <br/>
+                <v-row>
+                  <v-col cols="5">
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.supplyKbart"
+                                         class="ml-3"
+                                         label="KBART"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.supplyCsv"
+                                         class="ml-3"
+                                         label="Proprietäres CSV"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.supplyMarc"
+                                         class="ml-3"
+                                         label="MARC21"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.supplyOnix"
+                                         class="ml-3"
+                                         label="ONIX for Books 2.0/3.0"
+                                         :readonly="isReadonly"
+                    />
+
+                    <br/>
+
+                    <h3>Bereitstellung von globalen KBART-Dateien</h3>
+                    <br/>
+
+                    <gokb-state-field
+                      v-model="providerObject.preferredSupplyMethod"
+                      :init-item="providerObject.preferredSupplyMethod"
+                      url="refdata/categories/Org.PreferredSupplyMethod"
+                      :label="$t('component.provider.preferredSupplyMethod.label')"
+                      message-path="component.provider.preferredSupplyMethod"
+                      :readonly="isReadonly"
+                    />
+
+                    <gokb-url-field
+                      v-model="providerObject.kbartHostUrl"
+                      :disabled="isReadonly"
+                      label="URL zur KBART-Seite"
+                    />
+
+                    <br/>
+
+                    <h3>Autoupdate</h3>
+                    <br/>
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.autoImportSupported"
+                                         class="ml-3"
+                                         label="Autoimport unterstützt"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.kbartUrlWithDateMask"
+                                         class="ml-3"
+                                         label="URL mit Datumsmaskierung"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-state-field
+                      v-model="providerObject.kbartUpdateCycle"
+                      :init-item="providerObject.kbartUpdateCycle"
+                      message-path="component.source.frequency"
+                      url="refdata/categories/Org.KbartUpdateCycle"
+                      :label="$t('component.source.frequency.label')"
+                      :readonly="isReadonly"
+                    />
+
+
+                  </v-col>
+
+
+                  <v-col cols="5">
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.kbartExtensionZdbId"
+                                         class="ml-3"
+                                         label="zdb_id"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.kbartExtensionEzbId"
+                                         class="ml-3"
+                                         label="ezb_id"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.kbartExtensionLastChanged"
+                                         class="ml-3"
+                                         label="last_changed"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.kbartExtensionAccessStartDate"
+                                         class="ml-3"
+                                         label="access_start_date"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.kbartExtensionAccessEndDate"
+                                         class="ml-3"
+                                         label="access_end_date"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.kbartExtensionMedium"
+                                         class="ml-3"
+                                         label="medium"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.kbartExtensionMonographParentCollectionTitle"
+                                         class="ml-3"
+                                         label="monograph_parent_collection_title"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.kbartExtensionSeries"
+                                         class="ml-3"
+                                         label="series"
+                                         :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                                         v-model="providerObject.kbartExtensionSubjetArea"
+                                         class="ms-3"
+                                         label="subject_area"
+                                         :readonly="isReadonly"
+                    />
+
+                    <br/>
+
+                    <h3>Allgemeine Bemerkung</h3>
+
+                    <v-col>
+                      <gokb-comments-field
+                        v-model="providerObject.comments"
+                        :disabled="isReadonly"
+                        show-title
+                      />
+                    </v-col>
+
+                  </v-col>
+
+                </v-row>
+
+              </gokb-section>
+
+
+
+
+
 
             </v-window-item>
           </v-window>
@@ -404,10 +585,16 @@
   import loading from '@/shared/models/loading'
   import log from '@/shared/utils/logger'
   import utils from '@/shared/utils/utils'
+  import GokbOrgNotesSection from "../../shared/components/complex/gokb-org-notes-section/index.js";
+  import GokbSection from "../../shared/components/complex/gokb-section/index.js";
+  import GokbUrlField from "../../shared/components/simple/gokb-url-field/index.js";
 
   export default {
     name: 'EditProviderView',
-    components: { GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection },
+    components: {
+      GokbUrlField,
+      GokbSection,
+      GokbOrgNotesSection, GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection },
     extends: BaseComponent,
     props: {
       id: {
@@ -455,7 +642,26 @@
           titleNamespaceMonograph: undefined,
           packageNamespace: undefined,
           homepage: undefined,
-          comments: []
+          comments: [],
+          supplyKbart: undefined,
+          supplyCsv: undefined,
+          supplyMarc: undefined,
+          supplyOnix: undefined,
+          kbartExtensionZdbId: undefined,
+          kbartExtensionEzbId: undefined,
+          kbartExtensionLastChanged: undefined,
+          kbartExtensionAccessStartDate: undefined,
+          kbartExtensionAccessEndDate: undefined,
+          kbartExtensionMedium: undefined,
+          kbartExtensionMonographParentCollectionTitle: undefined,
+          kbartExtensionSeries: undefined,
+          kbartExtensionSubjetArea: undefined,
+          autoImportSupported: undefined,
+          kbartUrlWithDateMask: undefined,
+          kbartUpdateCycle: undefined,
+          kbartHostUrl: undefined,
+          preferredSupplyMethod: undefined
+          //providerInformation: {}
         }
       }
     },
@@ -640,6 +846,10 @@
           })),
           activeGroup: activeGroup
         }
+
+
+        console.log("+++ UPDATE: ", data)
+
         const response = await this.catchError({
           promise: providerServices.createOrUpdate(data, this.cancelToken.token),
           instance: this
@@ -687,6 +897,7 @@
         }
       },
       reset () {
+        console.log("!!! RESET !!!!")
         this.tab = null
         this.uuid = undefined
         this.pendingChanges = {}
@@ -722,7 +933,8 @@
           packageNamespac: undefined,
           homepage: undefined,
           preferredShortname: undefined,
-          comments: []
+          comments: [],
+          //providerInformation: {}
         }
         this.reload()
       },
@@ -754,6 +966,8 @@
         }
       },
       async mapRecord (data) {
+
+        console.log("+++++++ MAP RECORD: ", data)
         this.name = data.name
 
         this.version = data.version
@@ -772,7 +986,26 @@
           titleNamespaceSerial: data.titleNamespaceSerial,
           titleNamespaceMonograph: data.titleNamespaceMonograph,
           packageNamespace: data.packageNamespace,
-          preferredShortname: data.preferredShortname
+          preferredShortname: data.preferredShortname,
+          supplyKbart: data.supplyKbart,
+          supplyCsv: data.supplyCsv,
+          supplyMarc: data.supplyMarc,
+          supplyOnix: data.supplyOnix,
+          kbartExtensionZdbId: data.kbartExtensionZdbId,
+          kbartExtensionEzbId: data.kbartExtensionEzbId,
+          kbartExtensionLastChanged: data.kbartExtensionLastChanged,
+          kbartExtensionAccessStartDate: data.kbartExtensionAccessStartDate,
+          kbartExtensionAccessEndDate: data.kbartExtensionAccessEndDate,
+          kbartExtensionMedium: data.kbartExtensionMedium,
+          kbartExtensionMonographParentCollectionTitle: data.kbartExtensionMonographParentCollectionTitle,
+          kbartExtensionSeries: data.kbartExtensionSeries,
+          kbartExtensionSubjetArea: data.kbartExtensionSubjetArea,
+          autoImportSupported: data.autoImportSupported,
+          kbartUrlWithDateMask: data.kbartUrlWithDateMask,
+          kbartUpdateCycle: data.kbartUpdateCycle,
+          kbartHostUrl: data.kbartHostUrl,
+          comments: data.comments,
+          preferredSupplyMethod: data.preferredSupplyMethod,
         }
 
         this.lastLoad = structuredClone(new_item_info)
