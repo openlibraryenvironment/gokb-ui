@@ -559,6 +559,9 @@
     "delete": {
       "label": "Delete Profile",
       "confirm": "Are you sure you want to delete your profile? This can not be reverted!"
+    },
+    "groupAdmin": {
+      "label": "Group Administration"
     }
   },
   "register": {
@@ -1741,6 +1744,12 @@
         "Consortium": {
           "label": "Consortium"
         }
+      },
+      "cancelledImportAlerts": {
+        "label": "Enable daily alerts for failed automated package imports"
+      },
+      "newReviewsAlerts": {
+        "label": "Enable daily alerts for newly created review requests"
       }
     },
     "variantName": {

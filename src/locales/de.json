@@ -559,6 +559,9 @@
     "delete": {
       "label": "Profil Löschen",
       "confirm": "Sind Sie sicher, dass Sie das Profil löschen möchten? Die Löschung kann nicht rückgängig gemacht werden!"
+    },
+    "groupAdmin": {
+      "label": "Gruppen-Administration"
     }
   },
   "register": {
@@ -1189,7 +1192,7 @@
       "label": "Benutzer | Benutzer",
       "username": "Benutzername",
       "register": "Registrierung",
-      "password": "Kennwort",
+      "password": "Passwort",
       "preferredLocaleString": {
         "label": "Bevorzugte Sprache"
       },
@@ -1750,6 +1753,12 @@
         "Consortium": {
           "label": "Konsortium"
         }
+      },
+      "cancelledImportAlerts": {
+        "label": "Benachrichtigungen für fehlgeschlagene automatische Paket-Importe aktiviert"
+      },
+      "newReviewsAlerts": {
+        "label": "Benachrichtigungen für neue Prüfanfragen aktiviert"
       }
     },
     "variantName": {

@@ -8,7 +8,7 @@
     :rules="localRules"
     :type="type"
     :error="hasApiErrors"
-    :error-messages="errorMessages"
+    :error-messages="computedErrorMessages"
     min-width="150px"
     :placeholder="placeholder"
     :append-icon="appendIcon"
@@ -16,6 +16,7 @@
     :clearable="allowClear && editable"
     :density="dense ? 'compact' : 'default'"
     :persistent-placeholder="!!placeholder"
+    :autocomplete="autocomplete"
     variant="underlined"
     @click:append="$emit('click:append', $event)"
     @click:prepend="iconAction"
@@ -156,7 +157,7 @@
       isValid () {
         return !this.localErrorMessages && !this.hasApiErrors
       },
-      errorMessages () {
+      computedErrorMessages () {
         return this.localErrorMessages || this.apiErrorMessages
       },
       editable () {
