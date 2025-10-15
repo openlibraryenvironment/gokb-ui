@@ -262,11 +262,21 @@
       }
     },
     mounted () {
-      if (this.contentType === 'Book') {
-        this.serialVisible = false
-      }
-      else if (this.contentType === 'Journal') {
-        this.monographVisible = false
+      if (!!this.contentType) {
+        let ctype = this.contentType.value || this.contentType.name
+
+        if (ctype === 'Book') {
+          this.serialVisible = false
+        }
+        else if (ctype === 'Journal') {
+          this.monographVisible = false
+        }
+
+        this.mixedContent = (ctype === 'Mixed' || ctype === 'Database')
+        this.mixedContentVisible = true
+      } else {
+        this.mixedContent = true
+        this.mixedContentVisible = false
       }
 
       if (!!this.provider) {
@@ -301,17 +311,6 @@
 
           this.options.selectedNamespaceMonograph = fullProvider.titleNamespaceMonograph
           this.options.selectedNamespaceSerial = fullProvider.titleNamespaceSerial
-
-          if (!!this.contentType) {
-            let ctype = this.contentType.value || this.contentType.name
-
-            this.mixedContent = (ctype === 'Mixed' || ctype === 'Database')
-            this.mixedContentVisible = true
-
-          } else {
-            this.mixedContent = true
-            this.mixedContentVisible = false
-          }
 
           this.setVisibleStatusForTitleIdFields()
         }

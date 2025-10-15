@@ -1306,6 +1306,11 @@
           "reopened": "Request has been reopened.",
           "editingNotes": "The editing notes have been sucessfully updated."
         },
+        "error": {
+          "escalate": {
+            "conflict": "This request has already been escalated to this group!"
+          }
+        },
         "confirm": {
           "close": "Please confirm closing this review.",
           "reopen": "Please confirm the reopening of this review."

@@ -1305,6 +1305,11 @@
           "reopened": "Die Prüfanfrage wurde erneut geöffnet.",
           "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert."
         },
+        "error": {
+          "escalate": {
+            "conflict": "Diese Prüfanfrage wurde bereits an diese Gruppe eskaliert!"
+          }
+        },
         "confirm": {
           "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage schließen möchten.",
           "reopen": "Bitte bestätigen Sie, dass Sie diese abgeschlossene Prüfanfrage erneut öffnen möchten."

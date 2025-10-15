@@ -21,7 +21,7 @@
         :items="localizedItems"
         :label="label"
         :placeholder="placeholder"
-        :item-title="itemTitle"
+        :item-title="itemTitleActive"
         :item-value="itemValue"
         :rules="selectRules"
         :no-data-text="$t('search.results.empty')"
@@ -152,7 +152,8 @@
       return {
         rawItems: [],
         localizedItems: [],
-        stateLabel: undefined
+        stateLabel: undefined,
+        itemTitleActive: undefined
       }
     },
     computed: {
@@ -197,6 +198,7 @@
           this.setInit(this.initItem)
         }
       }
+      this.itemTitleActive = this.itemTitle
     },
     methods: {
       transform (result) {
