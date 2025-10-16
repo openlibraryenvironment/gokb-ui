@@ -682,7 +682,7 @@
           })),
           comments: this.providerObject.comments.map(( cmt ) => ({
             ...cmt,
-            id: typeof id === 'number' ? id : null
+            id: (typeof cmt.id === 'number' ? cmt.id : null)
           })),
           offices: this.offices.map(office => ({
             ...office,
