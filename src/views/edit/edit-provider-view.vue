@@ -452,6 +452,22 @@
                       />
                     </v-col>
 
+                    Last Update Anmerkungen
+                    <v-chip
+                      class="ma-1"
+                      label
+                    >
+                      <v-icon
+                        :title="$t('component.general.lastUpdated')"
+                        class="pb-1"
+                        label
+                        medium
+                      >
+                        mdi-refresh
+                      </v-icon>
+                      <span class="ml-1">{{ providerObject?.importInfoLastUpdated }}</span>
+                    </v-chip>
+
                   </v-col>
 
                 </v-row>
@@ -660,8 +676,8 @@
           kbartUrlWithDateMask: undefined,
           kbartUpdateCycle: undefined,
           kbartHostUrl: undefined,
-          preferredSupplyMethod: undefined
-          //providerInformation: {}
+          preferredSupplyMethod: undefined,
+          importInfoLastUpdated: undefined
         }
       }
     },
@@ -698,6 +714,9 @@
       },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
+      },
+      'providerObject.importInfoLastUpdated' () {
+        return this.providerObject.importInfoLastUpdated ? new Date(this.providerObject.importInfoLastUpdated).toLocaleDateString('sv') : ''
       }
     },
     watch: {
@@ -828,7 +847,7 @@
           })),
           comments: this.providerObject.comments.map(( cmt ) => ({
             ...cmt,
-            id: typeof id === 'number' ? id : null
+            id: (typeof cmt.id === 'number' ? cmt.id : null)
           })),
           offices: this.offices.map(office => ({
             ...office,
@@ -1006,6 +1025,7 @@
           kbartHostUrl: data.kbartHostUrl,
           comments: data.comments,
           preferredSupplyMethod: data.preferredSupplyMethod,
+          importInfoLastUpdated: data.importInfoLastUpdated
         }
 
         this.lastLoad = structuredClone(new_item_info)
