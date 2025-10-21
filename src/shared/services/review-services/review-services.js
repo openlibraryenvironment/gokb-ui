@@ -74,6 +74,15 @@ const api = (baseServices) => ({
       method: 'GET',
       url,
     }, cancelToken)
+  },
+
+  fetchEditorialGroups (cancelToken) {
+    const url = import.meta.env.VITE_API_BASE_URL + `${REVIEW_PATH}/editorialGroups`
+
+    return baseServices.request({
+      method: 'GET',
+      url,
+    }, cancelToken)
   }
 })
 

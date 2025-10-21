@@ -149,6 +149,13 @@
     </template>
     <template #item="{ props, item }">
       <v-list-item v-bind="props" :title="undefined">
+        <span
+          v-if="showTypeIcon && !!item.raw.type"
+        >
+          <v-icon color="primary" size="small" class="mt-n1" :title="item.raw.type">
+            {{ typeIcon(item.raw.type) }}
+          </v-icon>
+        </span>
         <span> {{ item.raw[itemText] }} </span>
         <span
           v-if="!!item.raw.status"
@@ -261,6 +268,11 @@
         type: String,
         required: false,
         default: undefined
+      },
+      showTypeIcon: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -385,6 +397,16 @@
         if (status?.name == "Deleted") return "mdi-delete"
         if (status?.name == "Expected") return "mdi-clock"
         if (status?.name == "Retired") return "mdi-close-circle"
+        return undefined
+      },
+      typeIcon (type) {
+        if (type === 'Organization') return 'mdi-domain'
+        if (type === 'Journal') return 'mdi-text-box'
+        if (type === 'Book') return 'mdi-book'
+        if (type === 'Database') return 'mdi-text-box'
+        if (type === 'Package') return 'mdi-folder'
+        if (type === 'Platform') return 'mdi-domain'
+        if (type === 'TIPP') return 'mdi-folder-file'
         return undefined
       }
     }

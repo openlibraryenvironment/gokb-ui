@@ -1209,12 +1209,14 @@
         "ROLE_USER": "User",
         "ROLE_SUPERUSER": "System",
         "ROLE_API": "API",
+        "ROLE_POWERUSER": "Power User",
         "Contributor": "Contributor",
         "Editor": "Editor",
         "Admin": "Admin",
         "User": "User",
         "API": "API",
-        "System": "System"
+        "System": "System",
+        "Power User": "Power User"
       },
       "enabled": {
         "label": "Enabled",
@@ -1293,6 +1295,12 @@
       },
       "candidates": {
         "label": "Candidates"
+      },
+      "targetGroup": {
+        "label": "Target Group"
+      },
+      "escalatedOnly": {
+        "label": "Only Escalated"
       },
       "showClosed": "Show closed requests",
       "edit": {
@@ -1730,6 +1738,12 @@
           "info": "The package title could not be linked to a reference title due to its missing name",
           "action": "-",
           "toDo": "Research and add a name to the package title or delete it."
+        },
+        "External Editorial Request": {
+          "label": "External Editorial Request",
+          "info": "There has been a request to verify the records of linked identifiers in their source system.",
+          "action": "-",
+          "toDo": "Check linked systems for inconsistencies."
         }
       }
     },

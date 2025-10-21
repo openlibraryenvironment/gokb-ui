@@ -380,7 +380,7 @@
           { type: 'Journal', path: '/title/', icon: 'mdi-text-box', label: this.$i18n.tc('component.title.type.Journal') },
           { type: 'JournalInstance', path: '/title/', icon: 'mdi-text-box', label: this.$i18n.tc('component.title.type.Journal') },
           { type: 'Book', path: '/title/', icon: 'mdi-book', label: this.$i18n.tc('component.title.type.Book') },
-          { type: 'BookInstance', path: '/title/', icon: 'mdi-text-box', label: this.$i18n.tc('component.title.type.Book') },
+          { type: 'BookInstance', path: '/title/', icon: 'mdi-book', label: this.$i18n.tc('component.title.type.Book') },
           { type: 'Database', path: '/title/', icon: 'mdi-text-box', label: this.$i18n.tc('component.title.type.Database') },
           { type: 'DatabaseInstance', path: '/title/', icon: 'mdi-text-box', label: this.$i18n.tc('component.title.type.Database') },
         ]

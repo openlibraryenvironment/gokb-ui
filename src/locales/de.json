@@ -1208,12 +1208,14 @@
         "ROLE_USER": "Benutzer",
         "ROLE_SUPERUSER": "System",
         "ROLE_API": "API",
+        "ROLE_POWERUSER": "Power-User",
         "Contributor": "Bearbeiter",
         "Editor": "Editor",
         "Admin": "Admin",
         "User": "Benutzer",
         "API": "API",
-        "System": "System"
+        "System": "System",
+        "Power User": "Power-User"
       },
       "enabled": {
         "label": "Status",
@@ -1292,6 +1294,12 @@
       },
       "candidates": {
         "label": "Kandidaten"
+      },
+      "targetGroup": {
+        "label": "Zielgruppe"
+      },
+      "escalatedOnly": {
+        "label": "Nur Eskaliert"
       },
       "showClosed": "Abgeschlossene anzeigen",
       "edit": {
@@ -1739,6 +1747,12 @@
           "info": "Für den Pakettitel kann auf Grund des fehlenden Namens kein neuer Referenztitel erzeugt werden",
           "action": "-",
           "toDo": "Fügen Sie manuell den korrekten Namen hinzu, oder löschen Sie den Pakettitel."
+        },
+        "External Editorial Request": {
+          "label": "Externe Redaktionsanfrage",
+          "info": "Es gab eine Anfrage zur Überprüfung der verknüpften Identifikatoren in ihrem Ursprungssystem.",
+          "action": "-",
+          "toDo": "Bitte überprüfen Sie die Identifikatoren im verknüpften System."
         }
       }
     },

@@ -75,7 +75,7 @@
       dense
     >
       <v-col md="12">
-        <div v-if="!!reviewComponent.stdDesc && reviewComponent.stdDesc.name != 'Manual Request'">
+        <div v-if="!!reviewComponent.stdDesc && !this.isManualRequest && !this.isExternalReview">
           <v-row>
             <v-col md="12">
               <div>
@@ -345,6 +345,8 @@
         error: undefined,
         showGroupInfo: false,
         editingNotes: undefined,
+        isManualRequest: undefined,
+        isExternalReview: false,
         selectedGroup: undefined,
         componentRoutes: {
           package: '/package',
@@ -366,6 +368,13 @@
     },
     mounted () {
       this.editingNotes = this.reviewComponent?.editingNotes || undefined
+
+      if (this.reviewComponent?.stdDesc?.name === 'External Editorial Request') {
+        this.isExternalReview = true
+      }
+      else if (this.reviewComponent?.stdDesc?.name === 'Manual Request') {
+        this.isManualRequest = true
+      }
     },
     computed: {
       cmpType () {
