@@ -1205,7 +1205,7 @@ import { isReadonly } from 'vue'
             return true
           }
           else if (this.lastLoad.source.hasOwnProperty('url')) {
-            let trackedFields = ['url', 'automaticUpdates', 'targetNamespace', 'frequency', 'titleIdMonograph', 'titleIdSerial']
+            let trackedFields = ['url', 'automaticUpdates', 'targetNamespace', 'frequency', 'titleIdMonograph', 'titleIdSerial', 'ignoreSizeLimit']
 
             for (var [key, val] of Object.entries(this.lastLoad.source)) {
               if (trackedFields.includes(key) && typeof val === 'object') {

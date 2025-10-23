@@ -92,7 +92,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col cols="3">
         <gokb-checkbox-field
           v-model="item.automaticUpdates"
           :disabled="activatedDisabled"
@@ -100,6 +100,14 @@
           :label="$t('component.source.enableUpdate')"
           :opacity="activatedDisabled ? 0.33 : undefined"
           :error-messages="activatedErrorMessage"
+          dense
+        />
+      </v-col>
+      <v-col cols="3">
+        <gokb-checkbox-field
+          v-if="isAdmin"
+          v-model="item.ignoreSizeLimit"
+          :label="$t('component.source.ignoreSizeLimit')"
           dense
         />
       </v-col>
@@ -121,6 +129,7 @@
   import sourceServices from '@/shared/services/source-services'
   import providerServices from '@/shared/services/provider-services'
   import BaseComponent from '@/shared/components/base-component'
+  import account from '@/shared/models/account-model'
 
   export default {
     name: 'GokbSourceField',
@@ -177,6 +186,7 @@
           titleIdMonograph: undefined,
           automaticUpdates: undefined,
           importConfig: undefined,
+          ignoreSizeLimit: undefined,
           update: false
         },
         errors: [],
@@ -197,6 +207,9 @@
       },
       activatedErrorMessage () {
         return !this.readonly && (!this.item.url || !this.item.frequency) && this.item.automaticUpdates ? this.$i18n.t("component.source.error.activatedNoInfo") : undefined
+      },
+      isAdmin() {
+        return account.loggedIn() && account.hasRole('ROLE_ADMIN')
       }
     },
     watch: {
@@ -213,6 +226,7 @@
             this.item.url = val.url
             this.item.frequency = val.frequency
             this.item.automaticUpdates = val.automaticUpdates
+            this.item.ignoreSizeLimit = val.ignoreSizeLimit
             this.item.update = val.update
 
             if (!this.ignoreLegacyTitleID) {
@@ -302,6 +316,7 @@
             this.item.importConfig = result.data.importConfig
             this.item.titleIdSerial = result.data.titleIdSerial
             this.item.titleIdMonograph = result.data.titleIdMonograph
+            this.item.ignoreSizeLimit = result.data.ignoreSizeLimit
 
             if (!!this.item.targetNamespace && !this.item.titleIdSerial && !this.item.titleIdMonograph) {
               this.ignoreLegacyTitleID = false

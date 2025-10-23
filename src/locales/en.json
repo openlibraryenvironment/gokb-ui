@@ -1784,6 +1784,7 @@
       "lastRun": "Last Run",
       "ezbMatch": "Match EZB",
       "enableUpdate": "Activated",
+      "ignoreSizeLimit": "Ignore Size Limit",
       "url": "URL",
       "frequency": {
         "label": "Update Cycle",
