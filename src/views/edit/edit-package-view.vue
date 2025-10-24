@@ -121,6 +121,7 @@
       <v-stepper
         v-model="step"
         alt-labels
+        bg-color="bg"
         :non-linear="isEdit"
       >
         <v-stepper-header>
@@ -241,6 +242,7 @@
                   :mark-required="!isReadonly"
                 >
                   <gokb-search-organisation-field
+                    ref="providersearch"
                     v-model="packageItem.provider"
                     :show-link="true"
                     :readonly="isReadonly"
@@ -259,6 +261,7 @@
                   <gokb-search-platform-field
                     v-model="packageItem.nominalPlatform"
                     :readonly="isReadonly"
+                    :provider="packageItem.provider?.id"
                     return-object
                     only-current
                   />
@@ -1101,6 +1104,11 @@ import { isReadonly } from 'vue'
       },
       'packageItem.startYear' (v) {
         this.$refs.endYear?.validate()
+      },
+      'packageItem.nominalPlatform' (val) {
+        if (!!val && !this.packageItem.provider) {
+          this.fillProviderFromPlatform()
+        }
       }
     },
     async created () {
@@ -1951,6 +1959,11 @@ import { isReadonly } from 'vue'
       },
       showGroupDetails (info) {
         this.showGroupInfoPopup = true
+      },
+      fillProviderFromPlatform() {
+        if (this.packageItem.nominalPlatform.provider) {
+          this.packageItem.provider = this.packageItem.nominalPlatform.provider
+        }
       }
     }
   }

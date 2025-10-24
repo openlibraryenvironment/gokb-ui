@@ -59,9 +59,9 @@ const vuetify = createVuetify({
       dark: {
         dark: true,
         colors: {
-          bg: '#121212',
+          bg: '#212121',
           header: '#212121',
-          card: '#212121',
+          card: '#313131',
           primary: '#d9d9d9',
           'primary-darken-1': '#bdbdbd',
           anchor: '#d9d9d9',

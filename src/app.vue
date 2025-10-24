@@ -249,7 +249,7 @@
         <v-row style="height:20px"></v-row>
       </template>
     </v-navigation-drawer>
-    <v-main>
+    <v-main class="bg-bg">
       <v-container fluid>
           <router-view v-slot="{Component}" :key="$route.fullPath">
             <keep-alive :include="/^(S|\/s)earch\w*$/">

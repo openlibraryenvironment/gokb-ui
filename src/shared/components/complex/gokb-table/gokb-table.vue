@@ -21,6 +21,7 @@
       :item-selectable="itemSelectable"
       :items-per-page="options.itemsPerPage"
       density="compact"
+      :class="tableBackground"
       return-object
       @update:sortBy="changeSortBy"
     >
@@ -389,6 +390,9 @@
       },
       pagesizeButtonInactive () {
         return this.$vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].card
+      },
+      tableBackground () {
+        return this.$vuetify.theme.name === 'dark' ? 'bg-card' : 'bg-bg'
       }
     },
     watch: {
