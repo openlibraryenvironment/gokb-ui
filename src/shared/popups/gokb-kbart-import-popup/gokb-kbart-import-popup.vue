@@ -5,7 +5,7 @@
     :width="expandWidth"
     @submit="importKbart"
   >
-    <gokb-section>
+    <gokb-section no-tool-bar>
       <gokb-file-input-field
         v-model="selectedFile"
         :label="$t('kbart.file.label')"

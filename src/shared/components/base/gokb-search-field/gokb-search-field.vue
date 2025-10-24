@@ -67,7 +67,7 @@
         <div :style="{ color: (item.raw.disabled ? '#888888' : 'inherit') }">
           {{ item.raw[itemText] }}
           <span
-            v-if="!!item.raw.status"
+            v-if="this.showStatusIcon && !!item.raw.status"
           >
             <v-icon :color="statusColor(item.raw.status)">
               {{ statusIcon(item.raw.status) }}
@@ -151,7 +151,7 @@
       <v-list-item v-bind="props" :title="undefined">
         <span> {{ item.raw[itemText] }} </span>
         <span
-          v-if="!!item.raw.status"
+          v-if="this.showStatusIcon && !!item.raw.status"
         >
           <v-icon :color="statusColor(item.raw.status)">
             {{ statusIcon(item.raw.status) }}
@@ -271,6 +271,7 @@
         items: [],
         selectedVal: null,
         search: null,
+        showStatusIcon: true,
         knownRoutes: {
           Organization: '/provider',
           Org: '/provider',

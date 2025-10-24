@@ -1,5 +1,4 @@
 <template>
-
   <gokb-section
     :sub-title="$t('header.results')"
   >
@@ -306,4 +305,3 @@
   }
 
 </script>
-

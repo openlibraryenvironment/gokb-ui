@@ -181,8 +181,7 @@
           <v-col>
             <v-toolbar
               density="compact"
-              class="ml-4"
-              color="header"
+              color="bg"
               flat
             >
               <span class="text-h6">

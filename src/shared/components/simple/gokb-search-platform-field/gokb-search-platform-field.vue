@@ -37,6 +37,20 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      provider: {
+        type: Number,
+        required: false,
+        default: undefined
+      }
+    },
+    watch: {
+      provider (val) {
+        if (!this.localValue) {
+          this.searchParams['provider'] = val
+          this.clear()
+          this.query({ text: "" })
+        }
       }
     },
     created () {
@@ -45,12 +59,23 @@
 
       if (this.onlyCurrent) {
         this.searchParams.status = 'Current'
+        this.showStatusIcon = false
+      }
+
+      if (!!this.provider) {
+        this.searchParams['provider'] = this.provider
       }
     },
     methods: {
       transform (result) {
         const { data: { data } } = result
-        return data?.map(item => ({ ...item, disabled: (this.disableIfLinked && !!item.provider ? true : false), disabledMessage: (this.disableIfLinked && !!item.provider ? 'component.platform.conflict.alreadyLinked' : null) }))
+        return data?.map(item =>
+                ({
+                  ...item,
+                  name: item.name + ' (' + item.primaryUrl + ')',
+                  disabled: (this.disableIfLinked && !!item.provider ? true : false),
+                  disabledMessage: (this.disableIfLinked && !!item.provider ? 'component.platform.conflict.alreadyLinked' : null)
+                }))
       },
     }
   }

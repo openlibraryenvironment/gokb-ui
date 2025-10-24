@@ -168,7 +168,6 @@
         <v-col>
           <v-tabs
             v-model="tab"
-            class="mx-4"
           >
             <v-tab
               value="identifiers"
