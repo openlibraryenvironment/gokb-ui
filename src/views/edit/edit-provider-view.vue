@@ -496,6 +496,7 @@
                         v-model="providerObject.comments"
                         :disabled="isReadonly"
                         show-title
+                        @update="addPendingChange"
                       />
                     </v-col>
 
