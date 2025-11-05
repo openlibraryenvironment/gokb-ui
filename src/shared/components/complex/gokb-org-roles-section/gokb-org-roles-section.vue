@@ -3,14 +3,15 @@
     v-model="isExpanded"
     expandable
     :hide-default="!expanded"
+    :errors="!!apiErrors"
     :sub-title="title"
     :items-total="totalNumberOfItems"
-    :errors="!!apiErrors"
   >
     <gokb-add-item-popup
       v-if="addItemPopupVisible"
       v-model="addItemPopupVisible"
-      :component="{ type: 'GokbOfficeField', name: $tc('component.office.label') }"
+      width="500px"
+      :component="{ type: 'GokbStateField', name: $tc('component.provider.role.label'), properties: { url: 'refdata/categories/Org.Role', messagePath: 'component.provider.role', returnObject: true } }"
       @add="addItem"
     />
     <template #buttons>
@@ -38,13 +39,22 @@
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <span v-if="errorMessage">
+      <v-alert
+        v-model="showErrorMessage"
+        type="error"
+        dismissible
+      >
+        {{ errorMessage }}
+      </v-alert>
+    </span>
     <gokb-table
       :headers="tableHeaders"
-      :items="offices"
+      :items="currentRoles"
       :editable="isEditable"
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
-      :options.sync="options"
+      :options.sync="searchOptions"
       :hide-select="!isEditable"
       @selected-items="selectedItems = $event"
       @delete-item="confirmDeleteItem"
@@ -53,14 +63,13 @@
 </template>
 
 <script>
-  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
-  import languageServices from '@/shared/services/language-services'
+  import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
 
   const ROWS_PER_PAGE = 10
 
   export default {
-    name: 'GokbOfficesSection',
+    name: 'GokbOrgRolesSection',
     components: { GokbAddItemPopup, GokbConfirmationPopup },
     emits: ['update:model-value', 'update'],
     props: {
@@ -92,21 +101,33 @@
     data () {
       return {
         addItemPopupVisible: false,
-        options: {
+        searchOptions: {
           page: 1,
-          itemsPerPage: ROWS_PER_PAGE,
-          sortBy: ['popup'],
-          desc: [false]
+          sortBy: [],
+          itemsPerPage: ROWS_PER_PAGE
         },
-        isExpanded: true,
+        errorMessage: undefined,
+        showErrorMessage: false,
         selectedItems: [],
+        isExpanded: true,
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         messageToConfirm: { text: undefined, vars: undefined }
       }
     },
+    mounted() {
+      this.updateItems()
+    },
     computed: {
+      localValue: {
+        get () {
+          return this.modelValue
+        },
+        set (localValue) {
+          this.$emit('update:model-value', localValue)
+        }
+      },
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
       },
@@ -116,54 +137,49 @@
       isEditable () {
         return !this.disabled
       },
-      localValue: {
-        get () {
-          return this.modelValue
-        },
-        set (localValue) {
-          this.$emit('update:model-value', localValue)
-        }
-      },
-      offices () {
-        return [...this.modelValue]
-          .map(item => ({
-            ...item,
-            lang: !!item.language && languageServices.getLanguage(item.language.name ? item.language.name : item.language, this.$i18n.locale).name
-          }))
-          .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-          .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
-      },
       tableHeaders () {
         return [
-          { title: this.$i18n.tc('component.office.type.label'), align: 'start', value: 'function.name', sortable: false, width: '15%' },
-          { title: this.$i18n.tc('component.office.name'), align: 'start', value: 'name', sortable: false, width: '15%' },
-          { title: this.$i18n.tc('component.general.language.label'), align: 'start', value: 'lang', sortable: false, width: '15%' },
-          { title: this.$i18n.tc('component.office.email'), align: 'start', value: 'email', sortable: false }
+          {
+            title: this.$i18n.tc('component.provider.role.label'),
+            align: 'start',
+            value: 'value',
+            sortable: false,
+            width: '100%'
+          }
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.office.label', 2) : undefined
+        return this.showTitle ? this.$i18n.tc('component.provider.role.label', 2) : undefined
+      },
+      currentRoles () {
+        return this.localValue.map(role => ({ value: this.$i18n.t('component.provider.role.' + role.value + '.label'), id: role.id }))
       }
     },
-    mounted () {
+    mounted (){
       this.isExpanded = this.expanded
     },
     methods: {
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
-      tempId () {
-        return 'tempId' + Math.random().toString(36).substring(2, 5)
-      },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.office.label', this.selectedItems.length)] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [
+            this.selectedItems.length,
+            this.$i18n.tc('component.provider.role.label', this.selectedItems.length)
+          ]
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      confirmDeleteItem ({ id, name }) {
+      confirmDeleteItem ({ id, value }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: ['', name] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: ['', value]
+        }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -171,19 +187,18 @@
         this.localValue = this.localValue.filter(({ id }) => !this.selectedItems
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedItems = []
-        this.$emit('update', 'offices')
+        this.$emit('update', 'roles')
       },
       _deleteItem (idToDelete) {
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
-        this.$emit('update', 'offices')
+        this.$emit('update', 'roles')
       },
       showAddItem () {
         this.addItemPopupVisible = true
       },
       addItem (item) {
-        this.localValue.push({ ...item, id: this.tempId(), isDeletable: true, _pending: 'added' })
-        this.$emit('update', 'offices')
+        this.localValue.push(item)
       }
     }
   }

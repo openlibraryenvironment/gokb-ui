@@ -270,7 +270,9 @@
     "issueRange": "The start issue must be before the end issue",
     "missingStartIssue": "An end issue requires a set start issue!",
     "missingStartVolume": "An end volume requires a set start volume!",
-    "refdataLookup": "Unable to save unrecognized value!"
+    "refdataLookup": "Unable to save unrecognized value!",
+    "yearFormat": "Please enter a four digit year.",
+    "missingStart": "Please first provide a start value."
   },
   "job": {
     "label": "Import | Imports",
@@ -535,7 +537,8 @@
         "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If errors are identified in the file structure, the validation is aborted. This means that no individual titles are validated. Please correct the errors in the file structure and then run the validation again to obtain a complete result.",
         "warning": "Title lists that generate warnings can be imported into the GOKB even if they contain anomalies. It is strongly recommended that you check the anomalies first to make sure they are harmless.",
         "rowError": "Errors have been detected in title data rows. The file cannot be imported until these errors have been corrected.",
-        "encoding": "The encoding of this file is not UTF-8 and therefore cannot be processed. Please refer to the documentation on the GOKB website to find out how to solve this problem."
+        "encoding": "The encoding of this file is not UTF-8 and therefore cannot be processed. Please refer to the documentation on the GOKB website to find out how to solve this problem.",
+        "doiReplaced": "The namespace for the 'title_id' column of type '{0}' has been detected and automatically selected as 'DOI'. If this is not correct, please choose another value via the dropdown."
       }
     }
   },
@@ -556,6 +559,9 @@
     "delete": {
       "label": "Delete Profile",
       "confirm": "Are you sure you want to delete your profile? This can not be reverted!"
+    },
+    "groupAdmin": {
+      "label": "Group Administration"
     }
   },
   "register": {
@@ -909,7 +915,18 @@
       "globalNote": {
         "label": "Region/Consortium"
       },
-      "descriptionUrl": "URL to package description"
+      "descriptionUrl": "URL to package description",
+      "startYear": {
+        "label": "Start Year"
+      },
+      "endYear": {
+        "label": "End Year"
+      },
+      "singleYear": {
+        "label": "Licensing Year",
+        "tooltip": "If this package represents a yearly selection of a bigger package, please enter the year it represents."
+      },
+      "multiYear": "Multi-year Span"
     },
     "tipp": {
       "label": "Package Title | Package Titles",
@@ -1094,6 +1111,49 @@
       },
       "preferredShortname": {
         "label": "Preferred Short Name"
+      },
+      "role": {
+        "label": "Role | Roles",
+        "Publisher": {
+          "label": "Publisher"
+        },
+        "Platform Provider": {
+          "label": "Platform Provider"
+        },
+        "Imprint": {
+          "label": "Imprint"
+        },
+        "Content Provider": {
+          "label": "Content Provider"
+        },
+        "Issuing Body": {
+          "label": "Issuing Body"
+        },
+        "Broker": {
+          "label": "Broker"
+        },
+        "Vendor": {
+          "label": "Vendor"
+        },
+        "Licensor": {
+          "label": "Licensor"
+        },
+        "Licensee": {
+          "label": "Licensee"
+        }
+      },
+      "error": {
+        "missingPlatform": {
+          "label": "No platform was selected for the specified platform provider."
+        },
+        "missingRole": {
+          "platform": "No platform provider was selected for the specified platform."
+        }
+      },
+      "warning": {
+        "noPlatformRole": {
+          "label": "Adding platforms is only possible for platform providers."
+        }
       }
     },
     "organization": {
@@ -1245,6 +1305,11 @@
           "closedBulk": "Request closed | {0} requests closed",
           "reopened": "Request has been reopened.",
           "editingNotes": "The editing notes have been sucessfully updated."
+        },
+        "error": {
+          "escalate": {
+            "conflict": "This request has already been escalated to this group!"
+          }
         },
         "confirm": {
           "close": "Please confirm closing this review.",
@@ -1684,6 +1749,12 @@
         "Consortium": {
           "label": "Consortium"
         }
+      },
+      "cancelledImportAlerts": {
+        "label": "Enable daily alerts for failed automated package imports"
+      },
+      "newReviewsAlerts": {
+        "label": "Enable daily alerts for newly created review requests"
       }
     },
     "variantName": {

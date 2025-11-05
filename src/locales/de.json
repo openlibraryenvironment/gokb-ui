@@ -270,7 +270,9 @@
     "issueRange": "Das erste Heft muss vor dem letzten Heft liegen.",
     "missingStartIssue": "Die Angabe eines letzten Hefts erfordert ein Anfangsheft.",
     "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband.",
-    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden."
+    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden.",
+    "yearFormat": "Bitte geben Sie ein vierstelliges Jahr an.",
+    "missingStart": "Bitte geben Sie einen Startwert an."
   },
   "job": {
     "label": "Import | Importe",
@@ -535,7 +537,8 @@
         "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn Fehler in der Dateistruktur identifiziert wurden, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten.",
         "warning": "Titellisten, die Warnungen erzeugen, können in die GOKB importiert werden, auch wenn es Auffälligkeiten gibt. Es wird dringend empfohlen, vorab die Auffälligkeiten auf ihre Unbedenklichkeit zu prüfen.",
         "rowError": "Es wurden Fehler in einzelnen Titeldaten festgestellt. Die Datei kann erst importiert werden, wenn diese Fehler behoben wurden.",
-        "encoding": "Diese Datei ist nicht in UTF-8 codiert und kann daher nicht verarbeitet werden. Lesen Sie in der Dokumentation auf der GOKB-Webseite nach, wie Sie dieses Problem beheben können."
+        "encoding": "Diese Datei ist nicht in UTF-8 codiert und kann daher nicht verarbeitet werden. Lesen Sie in der Dokumentation auf der GOKB-Webseite nach, wie Sie dieses Problem beheben können.",
+        "doiReplaced": "Der Namensraum für die Spalte 'title_id' des Typs '{0}' wurde als 'DOI' identifiziert und die entsprechende Auswahl angepasst. Falls dies nicht korrekt ist, wählen Sie bitte den korrekten Namensraum manuell aus."
       }
     }
   },
@@ -556,6 +559,9 @@
     "delete": {
       "label": "Profil Löschen",
       "confirm": "Sind Sie sicher, dass Sie das Profil löschen möchten? Die Löschung kann nicht rückgängig gemacht werden!"
+    },
+    "groupAdmin": {
+      "label": "Gruppen-Administration"
     }
   },
   "register": {
@@ -909,7 +915,17 @@
       "globalNote": {
         "label": "Region/Konsortium"
       },
-      "descriptionUrl": "URL zur Beschreibung des Pakets"
+      "descriptionUrl": "URL zur Beschreibung des Pakets",
+      "startYear": {
+        "label": "Anfangsjahr"
+      },
+      "endYear": {
+        "label": "Endjahr"
+      },
+      "singleYear": {
+        "label": "Jahresabschnitt"
+      },
+      "multiYear": "Mehrjährig"
     },
     "tipp": {
       "label": "Pakettitel | Pakettitel",
@@ -1106,6 +1122,49 @@
         "HTTPSNoAuth": {
           "label": "Download per HTTPS ohne Authentifizierung"
         }
+      },
+      "role": {
+        "label": "Rolle | Rollen",
+        "Publisher": {
+          "label": "Verlag"
+        },
+        "Platform Provider": {
+          "label": "Plattformanbieter"
+        },
+        "Imprint": {
+          "label": "Imprint"
+        },
+        "Content Provider": {
+          "label": "Inhaltsanbieter"
+        },
+        "Issuing Body": {
+          "label": "Herausgeber"
+        },
+        "Broker": {
+          "label": "Broker"
+        },
+        "Vendor": {
+          "label": "Anbieter"
+        },
+        "Licensor": {
+          "label": "Lizenzgeber"
+        },
+        "Licensee": {
+          "label": "Lizenznehmer"
+        }
+      },
+      "error": {
+        "missingPlatform": {
+          "label": "Für den angegebenen Plattformanbieter wurde keine Plattform ausgewählt."
+        },
+        "missingRole": {
+          "platform": "Für die angegebene Plattform wurde kein Plattformanbieter ausgewählt."
+        }
+      },
+      "warning": {
+        "noPlatformRole": {
+          "label": "Das Hinzufügen von Plattformen ist nur für Plattformanbieter möglich."
+        }
       }
     },
     "organization": {
@@ -1145,7 +1204,7 @@
       "label": "Benutzer | Benutzer",
       "username": "Benutzername",
       "register": "Registrierung",
-      "password": "Kennwort",
+      "password": "Passwort",
       "preferredLocaleString": {
         "label": "Bevorzugte Sprache"
       },
@@ -1257,6 +1316,11 @@
           "closedBulk": "Prüfanfrage wurde geschlossen | {0} Prüfanfragen wurden geschlossen",
           "reopened": "Die Prüfanfrage wurde erneut geöffnet.",
           "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert."
+        },
+        "error": {
+          "escalate": {
+            "conflict": "Diese Prüfanfrage wurde bereits an diese Gruppe eskaliert!"
+          }
         },
         "confirm": {
           "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage schließen möchten.",
@@ -1706,6 +1770,12 @@
         "Consortium": {
           "label": "Konsortium"
         }
+      },
+      "cancelledImportAlerts": {
+        "label": "Benachrichtigungen für fehlgeschlagene automatische Paket-Importe aktiviert"
+      },
+      "newReviewsAlerts": {
+        "label": "Benachrichtigungen für neue Prüfanfragen aktiviert"
       }
     },
     "variantName": {

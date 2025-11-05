@@ -17,7 +17,7 @@
       <v-col>
         <div
           v-if="!!selectedItem.link"
-          class="text-caption v-field-label"
+          class="text-caption text-primary"
         >
           {{ $tc('component.package.label') }}
         </div>
@@ -49,7 +49,7 @@
     <v-row v-if="!!selectedItem.results">
       <v-col>
         <div
-          class="text-caption v-field-label mb-1"
+          class="text-caption text-primary mb-1"
         >
           {{ selectedItem.dryRun ? $t('job.report.dryRunLabel') : $t('job.report.label') }}
         </div>
@@ -84,10 +84,10 @@
         </div>
       </v-col>
     </v-row>
-    <v-row v-if="selectedItem.messages">
+    <v-row v-if="!!selectedItem.messages">
       <v-col>
         <div
-          class="text-caption v-field-label"
+          class="text-caption text-primary"
         >
           {{ $t('job.messages') }}
         </div>

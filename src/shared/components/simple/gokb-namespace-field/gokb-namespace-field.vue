@@ -35,7 +35,7 @@
             this.localValue.name = val.value
           }
           else {
-            this.itemTitle = 'name'
+            this.itemTitleActive = 'name'
           }
         },
         deep: true

@@ -8,7 +8,7 @@
     :rules="localRules"
     :type="type"
     :error="hasApiErrors"
-    :error-messages="errorMessages"
+    :error-messages="computedErrorMessages"
     min-width="150px"
     :placeholder="placeholder"
     :append-icon="appendIcon"
@@ -16,6 +16,7 @@
     :clearable="allowClear && editable"
     :density="dense ? 'compact' : 'default'"
     :persistent-placeholder="!!placeholder"
+    :autocomplete="autocomplete"
     variant="underlined"
     @click:append="$emit('click:append', $event)"
     @click:prepend="iconAction"
@@ -135,7 +136,7 @@
         apiErrorMessages: [],
         hasApiErrors: false,
         badApiValue: undefined,
-        localRules: []
+        localRules: [v => (v?.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
       }
     },
     computed: {
@@ -156,7 +157,7 @@
       isValid () {
         return !this.localErrorMessages && !this.hasApiErrors
       },
-      errorMessages () {
+      computedErrorMessages () {
         return this.localErrorMessages || this.apiErrorMessages
       },
       editable () {
@@ -168,9 +169,6 @@
         handler (r) {
           if (r?.length > 0) {
             this.localRules = r
-          }
-          else {
-            this.localRules = [v => (v.length > 0 || !this.required) || this.$i18n.t('validation.missingValue')]
           }
         },
         deep: true
@@ -197,6 +195,11 @@
           this.apiErrorMessages = []
           this.hasApiErrors = false
         }
+      }
+    },
+    created () {
+      if (!!this.rules) {
+        this.localRules = this.rules
       }
     },
     methods: {
