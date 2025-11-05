@@ -777,6 +777,7 @@
       window.removeEventListener('beforeunload', this.checkForChanges)
     },
     beforeRouteLeave (to, from) {
+      console.log("before route leave")
       if (this.hasUnsavedChanges()) {
         const answer = window.confirm(this.$i18n.t('popups.confirm.pendingChanges.label'))
 
@@ -1023,7 +1024,7 @@
           kbartUrlWithDateMask: data.kbartUrlWithDateMask,
           kbartUpdateCycle: data.kbartUpdateCycle,
           kbartHostUrl: data.kbartHostUrl,
-          comments: data.comments,
+          //comments: data._embedded.comments,
           preferredSupplyMethod: data.preferredSupplyMethod,
           importInfoLastUpdated: data.importInfoLastUpdated
         }
