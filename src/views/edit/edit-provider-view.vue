@@ -87,11 +87,6 @@
           </v-col>
           <v-col lg="2" />
         </v-row>
-        <!-- <v-row>
-          <v-col>
-            <gokb-comments-field v-model="providerObject.comments" :disabled="isReadonly" show-title />
-          </v-col>
-        </v-row> -->
       </gokb-section>
       <v-row
         v-if="tabsView"
@@ -655,16 +650,16 @@
   import loading from '@/shared/models/loading'
   import log from '@/shared/utils/logger'
   import utils from '@/shared/utils/utils'
-  import GokbOrgNotesSection from "../../shared/components/complex/gokb-org-notes-section/index.js";
-  import GokbSection from "../../shared/components/complex/gokb-section/index.js";
-  import GokbUrlField from "../../shared/components/simple/gokb-url-field/index.js";
+
 
   export default {
     name: 'EditProviderView',
     components: {
-      GokbUrlField,
-      GokbSection,
-      GokbOrgNotesSection, GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection, GokbOrgRolesSection },
+      GokbErrorComponent,
+      GokbCuratoryGroupSection,
+      GokbAlternateNamesSection,
+      GokbOrgRolesSection
+    },
     extends: BaseComponent,
     props: {
       id: {
@@ -848,7 +843,6 @@
       window.removeEventListener('beforeunload', this.checkForChanges)
     },
     beforeRouteLeave (to, from) {
-      console.log("before route leave")
       if (this.hasUnsavedChanges()) {
         const answer = window.confirm(this.$i18n.t('popups.confirm.pendingChanges.label'))
 
@@ -859,6 +853,9 @@
       }
     },
     methods: {
+      isInfoUpdate () {
+        return true
+      },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
@@ -906,6 +903,11 @@
         var isUpdate = !!this.id
         this.showSnackbar = false
         const activeGroup = accountModel.activeGroup()
+
+        if (this.isInfoUpdate()) {
+          var date = new Date()
+          this.providerObject.importInfoLastUpdated = date.getFullYear() + '-' + (date.getMonth().toString().length === 2 ? date.getMonth() : '0' + date.getMonth())+ '-' + (date.getDate().toString().length === 2 ? date.getDate() : '0' + date.getDate())
+        }
 
         const data = {
           ...this.providerObject,
