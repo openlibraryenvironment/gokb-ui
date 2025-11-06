@@ -108,6 +108,7 @@
     hide-no-data
     return-object
     @update:search="prepareQuery"
+    @click:clear="clear"
   >
     <template #label>
       {{ label }}

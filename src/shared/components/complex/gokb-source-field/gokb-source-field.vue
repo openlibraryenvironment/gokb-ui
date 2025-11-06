@@ -186,7 +186,7 @@
           titleIdMonograph: undefined,
           automaticUpdates: undefined,
           importConfig: undefined,
-          ignoreSizeLimit: undefined,
+          ignoreSizeLimit: false,
           update: false
         },
         errors: [],
@@ -226,7 +226,7 @@
             this.item.url = val.url
             this.item.frequency = val.frequency
             this.item.automaticUpdates = val.automaticUpdates
-            this.item.ignoreSizeLimit = val.ignoreSizeLimit
+            this.item.ignoreSizeLimit = val.ignoreSizeLimit === true
             this.item.update = val.update
 
             if (!this.ignoreLegacyTitleID) {
@@ -316,7 +316,7 @@
             this.item.importConfig = result.data.importConfig
             this.item.titleIdSerial = result.data.titleIdSerial
             this.item.titleIdMonograph = result.data.titleIdMonograph
-            this.item.ignoreSizeLimit = result.data.ignoreSizeLimit
+            this.item.ignoreSizeLimit = result.data.ignoreSizeLimit === true
 
             if (!!this.item.targetNamespace && !this.item.titleIdSerial && !this.item.titleIdMonograph) {
               this.ignoreLegacyTitleID = false

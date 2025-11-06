@@ -450,6 +450,7 @@
       "noTitleId": "This line does not contain a value for the common title id!",
       "noImportIds": "This line contains no reference identifiers (print/online), and no default namespace was selected!",
       "noAuthIds": "This line contains neither a 'print_identifier' nor an 'online_identifier'!",
+      "fileSize": "This uploaded KBART file is too big. Packages with KBART file sizes bigger than 20 MB have to be authorized by an administrator.",
       "url": {
         "mimeType": "KBART URL returned a wrong content type!",
         "unknown": "There were errors saving the KBART file!",

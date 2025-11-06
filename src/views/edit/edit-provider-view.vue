@@ -432,10 +432,6 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
-  import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
-  import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
-  import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
-  import GokbOrgRolesSection from '@/shared/components/complex/gokb-org-roles-section'
   import providerServices from '@/shared/services/provider-services'
   import searchServices from '@/shared/services/search-services'
   import accountModel from '@/shared/models/account-model'
@@ -445,12 +441,6 @@
 
   export default {
     name: 'EditProviderView',
-    components: {
-      GokbErrorComponent,
-      GokbCuratoryGroupSection,
-      GokbAlternateNamesSection,
-      GokbOrgRolesSection
-    },
     extends: BaseComponent,
     props: {
       id: {

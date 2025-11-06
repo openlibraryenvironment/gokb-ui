@@ -241,7 +241,7 @@
                   :sub-title="$t('component.package.provider')"
                   :mark-required="!isReadonly"
                 >
-                  <gokb-search-organisation-field
+                  <gokb-search-provider-field
                     ref="providersearch"
                     v-model="packageItem.provider"
                     :show-link="true"

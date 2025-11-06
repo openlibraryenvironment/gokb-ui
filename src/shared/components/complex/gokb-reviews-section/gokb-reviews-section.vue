@@ -698,10 +698,10 @@
         this.$emit('update', this.totalNumberOfItems)
       },
       showAddReviewPopup () {
-        this.addReviewPopupVisible = 1
+        this.addReviewPopupVisible = true
       },
       showAddExternalReviewPopup () {
-        this.addExternalReviewPopupVisible = 1
+        this.addExternalReviewPopupVisible = true
       },
       confirmBulkClose () {
         if (this.allPagesSelected) {
@@ -801,13 +801,13 @@
 
         const profile_response = await profileServices.get(this.cancelToken.token)
 
-        if (profile_response.status === 200 && profile_response.status === 200) {
+        if (options_response.status === 200 && profile_response.status === 200) {
           let user_groups = profile_response.data.data.curatoryGroups
           let all_editorial_groups = options_response.data.external
 
-          Object.keys(options_response.data.typed).forEach (key => {
-            if (!all_editorial_groups.some(item => (item === options_response.data.typed[key]))) {
-              all_editorial_groups.push(options_response.data.typed[key])
+          Object.values(options_response.data.typed).forEach (val => {
+            if (!all_editorial_groups.some(item => (item === val))) {
+              all_editorial_groups.push(val)
             }
           })
 
