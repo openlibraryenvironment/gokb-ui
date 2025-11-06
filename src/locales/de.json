@@ -450,6 +450,7 @@
       "noTitleId": "Diese Zeile enthält keinen Wert für den Anbieternamensraum!",
       "noImportIds": "Diese Zeile enthält keine Identifikatoren (print/online), und es wurde kein Anbieternamensraum ausgewählt!",
       "noAuthIds": "Diese Zeile enthält weder einen 'print_identifier' noch einen 'online_identifier'!",
+      "fileSize": "Die KBART-Datei ist zu groß. Der Import von Dateien größer als 20 MB muss für ein Paket von einem Administrator autorisiert werden.",
       "url": {
         "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
         "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
@@ -1208,12 +1209,14 @@
         "ROLE_USER": "Benutzer",
         "ROLE_SUPERUSER": "System",
         "ROLE_API": "API",
+        "ROLE_POWERUSER": "Power-User",
         "Contributor": "Bearbeiter",
         "Editor": "Editor",
         "Admin": "Admin",
         "User": "Benutzer",
         "API": "API",
-        "System": "System"
+        "System": "System",
+        "Power User": "Power-User"
       },
       "enabled": {
         "label": "Status",
@@ -1292,6 +1295,12 @@
       },
       "candidates": {
         "label": "Kandidaten"
+      },
+      "targetGroup": {
+        "label": "Zielgruppe"
+      },
+      "escalatedOnly": {
+        "label": "Nur Eskaliert"
       },
       "showClosed": "Abgeschlossene anzeigen",
       "edit": {
@@ -1739,6 +1748,12 @@
           "info": "Für den Pakettitel kann auf Grund des fehlenden Namens kein neuer Referenztitel erzeugt werden",
           "action": "-",
           "toDo": "Fügen Sie manuell den korrekten Namen hinzu, oder löschen Sie den Pakettitel."
+        },
+        "External Editorial Request": {
+          "label": "Externe Redaktionsanfrage",
+          "info": "Es gab eine Anfrage zur Überprüfung der verknüpften Identifikatoren in ihrem Ursprungssystem.",
+          "action": "-",
+          "toDo": "Bitte überprüfen Sie die Identifikatoren im verknüpften System."
         }
       }
     },
@@ -1779,6 +1794,7 @@
       "lastRun": "Letzter Durchlauf",
       "ezbMatch": "EZB-Abgleich",
       "enableUpdate": "Aktiviert",
+      "ignoreSizeLimit": "Dateigröße ignorieren",
       "url": "URL",
       "frequency": {
         "label": "Update-Zyklus",

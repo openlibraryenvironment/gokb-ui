@@ -424,14 +424,12 @@
     watch: {
       loggedIn (value) {
         if (!!value) {
-          log.debug("tipp-section :: logged in")
           this.fetchTipps(this.searchOptions)
         }
       },
       searchFilters: {
         handler (val) {
           if (!!val) {
-            log.debug("tipp-section :: changed filters")
             this.searchOptions.page = 1
             this.fetchTipps(this.searchOptions)
           }
@@ -578,8 +576,6 @@
       },
       async fetchTipps () {
         if (this.pkg || this.ttl) {
-          log.debug("fetchTipps :: ", this.searchFilters)
-
           this.selectedItems = []
           const reqId = this.pkg || this.ttl
           const searchService = this.pkg ? packageServices : titleServices

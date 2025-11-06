@@ -15,6 +15,12 @@
         class="pt-8 pr-6"
         :label="$t('component.review.titleReviews.label')"
       />
+      <gokb-checkbox-field
+        v-if="!!group && isAdmin"
+        v-model="fetchEscalatedOnly"
+        class="pt-8 pr-6"
+        :label="$t('component.review.escalatedOnly.label')"
+      />
       <gokb-state-field
         v-model="searchFilters.stdDesc"
         class="mr-4 mt-4"
@@ -47,8 +53,15 @@
         :component="reviewComponent"
         @edit="handlePopupChange"
       />
+      <gokb-add-review-popup
+        v-if="addExternalReviewPopupVisible"
+        v-model="addExternalReviewPopupVisible"
+        :component="reviewComponent"
+        editorial-request
+        @edit="handlePopupChange"
+      />
       <gokb-button
-        v-if="!!reviewComponent"
+        v-if="!!reviewComponent && !externalRequestEnabled"
         class="mr-4"
         icon-id="mdi-plus"
         color="primary"
@@ -56,6 +69,35 @@
       >
         {{ $t('btn.add') }}
       </gokb-button>
+
+      <v-menu v-else-if="!!reviewComponent">
+        <template v-slot:activator="{ props }">
+          <gokb-button
+            icon-id="mdi-swap-vertical"
+            color="primary"
+            :disabled="disabled"
+            v-bind="props"
+          >
+            {{ $t('btn.add') }}
+          </gokb-button>
+        </template>
+        <v-list>
+          <v-list-item
+            :value="1"
+          >
+            <v-list-item-title @click="showAddReviewPopup">
+              <span>{{ $t('component.review.stdDesc.Manual Request.label') }}</span>
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item
+            :value="2"
+          >
+            <v-list-item-title @click="showAddExternalReviewPopup">
+              <span>{{ $t('component.review.stdDesc.External Editorial Request.label') }}</span>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
 
       <gokb-button
         v-if="isPackageComponent && totalNumberOfItems > 0"
@@ -140,6 +182,7 @@
   import GokbReviewPopup from '@/shared/popups/gokb-review-popup'
   import GokbAddReviewPopup from '@/shared/popups/gokb-add-review-popup'
   import reviewServices from '@/shared/services/review-services'
+  import profileServices from '@/shared/services/profile-services'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
   import exportServices from "@/shared/services/export-services";
@@ -204,6 +247,7 @@
         rawReviews: undefined,
         confirmationPopUpVisible: false,
         addReviewPopupVisible: undefined,
+        addExternalReviewPopupVisible: undefined,
         allPagesSelected: false,
         enableBulkCheck: false,
         successMessage: undefined,
@@ -215,6 +259,7 @@
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
         fetchTitleReviews: false,
+        fetchEscalatedOnly: false,
         totalNumberOfItems: 0,
         messageToConfirm: undefined,
         reviewBaseUrl: `${window.location.origin}${import.meta.env.VITE_PUBLIC_PATH}review/`,
@@ -230,7 +275,8 @@
           status: 'Open',
           stdDesc: undefined
         },
-        exportIsLoading: false
+        exportIsLoading: false,
+        externalRequestEnabled: false
       }
     },
     computed: {
@@ -281,6 +327,9 @@
       },
       isContrib () {
         return account.loggedIn() && account.hasRole('ROLE_CONTRIBUTOR')
+      },
+      isAdmin () {
+        return account.loggedIn() && account.hasRole('ROLE_ADMIN')
       },
       showBulkActions () {
         return this.selectedItemsTotal > 0 || this.allPagesSelected
@@ -443,7 +492,13 @@
       },
       fetchTitleReviews () {
         this.retrieveReviews()
+      },
+      fetchEscalatedOnly () {
+        this.retrieveReviews()
       }
+    },
+    async mounted() {
+      this.checkForEditorialReviewOption()
     },
     methods: {
       async exportReviewRequests () {
@@ -462,6 +517,10 @@
 
         if (this.fetchTitleReviews) {
           parameters.titlereviews = true
+        }
+
+        if (this.fetchEscalatedOnly) {
+          parameters.escalatedOnly = true
         }
 
         let result = await this.catchError({
@@ -598,6 +657,10 @@
           searchParams.titlereviews = true
         }
 
+        if (this.fetchEscalatedOnly) {
+          searchParams.escalatedOnly = true
+        }
+
         const parameters = {
           ...(searchParams || {}),
           _sort: this.reviewsOptions.sortBy[0].key,
@@ -635,7 +698,10 @@
         this.$emit('update', this.totalNumberOfItems)
       },
       showAddReviewPopup () {
-        this.addReviewPopupVisible = 1
+        this.addReviewPopupVisible = true
+      },
+      showAddExternalReviewPopup () {
+        this.addExternalReviewPopupVisible = true
       },
       confirmBulkClose () {
         if (this.allPagesSelected) {
@@ -726,6 +792,31 @@
         this.successMessage = this.$i18n.t('component.review.edit.success.' + type)
         await this.retrieveReviews()
         this.$emit('update', this.totalNumberOfItems)
+      },
+      async checkForEditorialReviewOption() {
+        const options_response = await this.catchError({
+          promise: reviewServices.fetchEditorialGroups(this.cancelToken.token),
+          instance: this
+        })
+
+        const profile_response = await profileServices.get(this.cancelToken.token)
+
+        if (options_response.status === 200 && profile_response.status === 200) {
+          let user_groups = profile_response.data.data.curatoryGroups
+          let all_editorial_groups = options_response.data.external
+
+          Object.values(options_response.data.typed).forEach (val => {
+            if (!all_editorial_groups.some(item => (item === val))) {
+              all_editorial_groups.push(val)
+            }
+          })
+
+          for (const idx in all_editorial_groups) {
+            if (user_groups.some(ug => (ug.id === all_editorial_groups[idx].id)) && this.reviewComponent?.type === 'Journal') {
+              this.externalRequestEnabled = true
+            }
+          }
+        }
       }
     }
   }

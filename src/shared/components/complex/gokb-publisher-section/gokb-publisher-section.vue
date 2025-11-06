@@ -10,7 +10,7 @@
     <gokb-add-item-popup
       v-if="addPublisherPopupVisible"
       v-model="addPublisherPopupVisible"
-      :component="{ type: 'GokbSearchProviderField', name: $tc('component.title.publisher.label'), properties: {returnObject: true} }"
+      :component="{ type: 'GokbSearchPublisherField', name: $tc('component.title.publisher.label'), properties: {returnObject: true} }"
       @add="addNewPublisher"
     />
     <template #buttons>

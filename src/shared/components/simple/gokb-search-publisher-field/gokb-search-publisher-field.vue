@@ -14,7 +14,7 @@
     },
     created () {
       this.searchServicesResourceUrl = 'rest/publisher'
-      this.searchParams = { max: 20, es: true }
+      this.searchParams = { max: 20, es: true, role: 'Publisher' }
     },
   }
 </script>

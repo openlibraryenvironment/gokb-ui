@@ -22,6 +22,24 @@
         {{ localErrorMessage }}
       </v-alert>
     </span>
+    <v-row v-if="availableEditorialGroups.length > 0 && editorialRequest" dense>
+      <v-col cols="12">
+        <gokb-radiobutton-group
+          v-model="manualTargetId"
+          :label="$t('component.review.targetGroup.label')"
+          class="ml-n4"
+          required
+          dense
+        >
+          <gokb-radiobutton-field
+            v-for="group in availableEditorialGroups"
+            :label="group.name"
+            :value="group.id"
+            dense
+          />
+        </gokb-radiobutton-group>
+      </v-col>
+    </v-row>
     <v-row dense>
       <v-col md="12">
         <gokb-entity-field
@@ -32,6 +50,7 @@
           :show-link="true"
           :label="cmpLabel"
           return-object
+          dense
         />
       </v-col>
     </v-row>
@@ -107,6 +126,7 @@
                 :show-link="true"
                 :label="$t('component.review.otherComponents.add')"
                 return-object
+                show-type-icon
                 @update:modelValue="addNewOtherComponent"
               />
               <div
@@ -179,6 +199,11 @@
         type: Object,
         required: false,
         default: undefined
+      },
+      editorialRequest: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
@@ -223,7 +248,9 @@
           bookinstance: '/title',
           databaseinstance: '/title',
           otherinstance: '/title'
-        }
+        },
+        manualTargetId: undefined,
+        availableEditorialGroups: []
       }
     },
     computed: {
@@ -242,7 +269,7 @@
         return !!this.id
       },
       isValid () {
-        return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
+        return !!this.reviewItem.component && !!this.reviewItem.request && !!this.reviewItem.description && (!this.editorialRequest || !!this.manualTargetId)
       },
       stdDesc () {
         return this.selectedItem?.stdDesc || undefined
@@ -266,13 +293,18 @@
         return this.reviewItem?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.action') : undefined
       },
       localTitle () {
-        return this.$i18n.tc('component.review.label') + (this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
-      }
+        return this.$i18n.t('header.create.label', [this.$i18n.t('component.review.label')]) + ' – ' + this.$i18n.t('component.review.stdDesc.' + this.reviewItem.stdDesc + '.label')
+      },
     },
     created () {
       if (this.component) {
         this.reviewItem.component = this.component
       }
+
+      this.reviewItem.stdDesc = this.editorialRequest ? "External Editorial Request" : "Manual Request"
+    },
+    async mounted() {
+      this.fetchEditorialGroups()
     },
     methods: {
       close () {
@@ -283,12 +315,16 @@
 
         const newReview = {
           status: this.reviewItem.status?.id || null,
-          stdDesc: "Manual Request",
+          stdDesc: this.reviewItem.stdDesc,
           reviewRequest: this.reviewItem.request,
           descriptionOfCause: this.reviewItem.description,
           activeGroup,
           componentToReview: this.reviewItem.component.id,
           additionalInfo: { otherComponents: this.reviewItem.otherComponents }
+        }
+
+        if (this.editorialRequest) {
+          newReview.targetGroup = this.manualTargetId
         }
 
         const response = await this.catchError({
@@ -326,6 +362,16 @@
       },
       removeOtherComponent (cmpId) {
         this.reviewItem.otherComponents = this.reviewItem.otherComponents.filter(({ id }) => id !== cmpId)
+      },
+      async fetchEditorialGroups() {
+        const response = await this.catchError({
+          promise: reviewServices.fetchEditorialGroups(this.cancelToken.token),
+          instance: this
+        })
+
+        if (response.status == 200) {
+          this.availableEditorialGroups = response.data.external
+        }
       }
     }
   }
