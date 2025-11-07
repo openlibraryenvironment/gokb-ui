@@ -12,6 +12,17 @@ const vuetify = createVuetify({
   icons: {
     iconfont: 'mdiSvg',
   },
+  display: {
+    mobileBreakpoint: 'sm',
+    thresholds: {
+      xs: 0,
+      sm: 530,
+      md: 890,
+      lg: 1210,
+      xl: 1850,
+      xxl: 2490
+    },
+  },
   styles: {
     configFile: 'src/styles/settings.scss',
   },
@@ -48,9 +59,9 @@ const vuetify = createVuetify({
       dark: {
         dark: true,
         colors: {
-          bg: '#121212',
+          bg: '#212121',
           header: '#212121',
-          card: '#212121',
+          card: '#313131',
           primary: '#d9d9d9',
           'primary-darken-1': '#bdbdbd',
           anchor: '#d9d9d9',

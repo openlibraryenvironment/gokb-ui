@@ -127,6 +127,7 @@
       <v-stepper
         v-model="step"
         alt-labels
+        bg-color="bg"
         :non-linear="isEdit"
       >
         <v-stepper-header>
@@ -195,6 +196,36 @@
                 check-dupes="Package"
                 :item-id="packageItem.id"
               />
+              <v-row class="mt-2 mb-2" dense>
+                <v-col>
+                  <gokb-text-field
+                    v-if="!isReadonly || !!packageItem.startYear"
+                    v-model="packageItem.startYear"
+                    :label="showEndYearField ? $t('component.package.startYear.label') : $t('component.package.singleYear.label')"
+                    :rules="dateRules"
+                    class="d-inline-block"
+                    width="200px"
+                    dense
+                  />
+                  <gokb-text-field
+                    v-if="showEndYearField"
+                    ref="endYear"
+                    v-model="packageItem.endYear"
+                    :label="$t('component.package.endYear.label')"
+                    :rules="endDateRules"
+                    class="d-inline-block ml-3"
+                    width="200px"
+                    dense
+                  />
+                  <gokb-checkbox-field
+                    v-if="!isReadonly"
+                    v-model="showEndYearField"
+                    class="d-inline-block ml-3"
+                    :label="$t('component.package.multiYear')"
+                    dense
+                  />
+                </v-col>
+              </v-row>
               <gokb-url-field
                 v-model="packageItem.descriptionURL"
                 :disabled="isReadonly"
@@ -216,7 +247,8 @@
                   :sub-title="$t('component.package.provider')"
                   :mark-required="!isReadonly"
                 >
-                  <gokb-search-organisation-field
+                  <gokb-search-provider-field
+                    ref="providersearch"
                     v-model="packageItem.provider"
                     :show-link="true"
                     :readonly="isReadonly"
@@ -235,6 +267,7 @@
                   <gokb-search-platform-field
                     v-model="packageItem.nominalPlatform"
                     :readonly="isReadonly"
+                    :provider="packageItem.provider?.id"
                     return-object
                     only-current
                   />
@@ -455,7 +488,7 @@
             </v-row>
             <gokb-tipps-section
               ref="tipps"
-              :pkg="id"
+              :pkg="uuid"
               :filter-align="isEdit"
               :is-import-from-external-source="!!externalSource"
               :platform="packageItem.nominalPlatform"
@@ -470,7 +503,7 @@
               v-if="loggedIn"
               ref="source"
               v-model="sourceItem"
-              :provider="providerSelect"
+              :provider="packageItem.provider"
               :content-type="packageItem.contentType"
               :expanded="false"
               :api-errors="errors?.source"
@@ -822,12 +855,12 @@
   import { HOME_ROUTE } from '@/router/route-paths'
   import packageServices from '@/shared/services/package-services'
   import jobServices from '@/shared/services/job-services'
-  import providerServices from '@/shared/services/provider-services'
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
   import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
   import GokbCreatePackageWithPresetsPopup from '@/shared/popups/gokb-create-package-with-presets-popup'
   import log from '@/shared/utils/logger'
+import { isReadonly } from 'vue'
 
   const ROWS_PER_PAGE = 10
 
@@ -910,6 +943,7 @@
         showSubmitConfirm: false,
         selectedGroupPopup: undefined,
         showGroupInfoPopup: false,
+        showEndYearField: false,
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
         externalSourceImportPopupVisible: false,
@@ -961,6 +995,8 @@
           editStatus: undefined,
           provider: undefined, // organisation
           nominalPlatform: undefined,
+          startYear: undefined,
+          endYear: undefined,
         },
         lastLoad: {},
         pendingChanges: {},
@@ -1001,7 +1037,8 @@
             color: 'orange'
           }
         },
-        autoUpdate: false
+        autoUpdate: false,
+        dateRules: [v => ((v?.length === 0 || /^[1-9][0-9]{3}$/.test(v)) || this.$i18n.t('validation.yearFormat'))]
       }
     },
     computed: {
@@ -1079,6 +1116,12 @@
       },
       externalSourceColor () {
         return !!this.knownSources[this.externalSource] ? this.knownSources[this.externalSource].color : undefined
+      },
+      endDateRules () {
+        return [
+          v => ((v?.length === 0 || /^[1-9][0-9]{3}$/.test(v)) || this.$i18n.t('validation.yearFormat')),
+          v => (v?.length === 0 || !!this.packageItem.startYear || this.$i18n.t('validation.missingStart'))
+        ]
       }
     },
     watch: {
@@ -1106,6 +1149,14 @@
       isValid (val) {
         if (!val) {
           this.updateStepErrors()
+        }
+      },
+      'packageItem.startYear' (v) {
+        this.$refs.endYear?.validate()
+      },
+      'packageItem.nominalPlatform' (val) {
+        if (!!val && !this.packageItem.provider) {
+          this.fillProviderFromPlatform()
         }
       }
     },
@@ -1215,7 +1266,7 @@
             return true
           }
           else if (this.lastLoad.source.hasOwnProperty('url')) {
-            let trackedFields = ['url', 'automaticUpdates', 'targetNamespace', 'frequency', 'titleIdMonograph', 'titleIdSerial']
+            let trackedFields = ['url', 'automaticUpdates', 'targetNamespace', 'frequency', 'titleIdMonograph', 'titleIdSerial', 'ignoreSizeLimit']
 
             for (var [key, val] of Object.entries(this.lastLoad.source)) {
               if (trackedFields.includes(key) && typeof val === 'object') {
@@ -1700,6 +1751,8 @@
           this.packageItem.provider = undefined // organisation
           this.packageItem.nominalPlatform = undefined
           this.allNames = { name: undefined, alts: [] }
+          this.packageItem.startYear = undefined
+          this.packageItem.endYear = undefined
         }
         this.step = 1
         this.kbart = undefined
@@ -1918,7 +1971,13 @@
           nominalPlatform: data.nominalPlatform,
           contentType: data.contentType,
           listStatus: data.listStatus,
-          editStatus: data.editStatus
+          editStatus: data.editStatus,
+          startYear: data.startYear,
+          endYear: data.endYear
+        }
+
+        if (!!data.endYear) {
+          this.showEndYearField = true
         }
 
         this.lastLoad = structuredClone(new_item_info)
@@ -1987,6 +2046,11 @@
       },
       showGroupDetails (info) {
         this.showGroupInfoPopup = true
+      },
+      fillProviderFromPlatform() {
+        if (this.packageItem.nominalPlatform.provider) {
+          this.packageItem.provider = this.packageItem.nominalPlatform.provider
+        }
       }
     }
   }

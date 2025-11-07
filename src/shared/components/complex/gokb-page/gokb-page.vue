@@ -4,25 +4,26 @@
       ref="pageform"
       @update:model-value="$emit('valid', $event)"
       @submit.prevent="doSubmit"
+      class="bg-bg"
     >
       <v-card flat>
         <v-toolbar
           flat
           height="70"
-          color="header"
+          color="bg"
           class="pl-3"
         >
-          <div class="ml-4">
+          <div>
             <v-toolbar-title>
               <div class="text-h4">{{ title }}</div>
               <div v-if="subTitle">{{ subTitle }}</div>
             </v-toolbar-title>
           </div>
         </v-toolbar>
-        <v-card-text>
+        <v-card-text class="bg-bg">
           <slot />
         </v-card-text>
-        <v-card-actions v-if="!hideActions" class="ml-6 mr-6">
+        <v-card-actions v-if="!hideActions" class="pl-6 pr-6 bg-bg">
           <slot name="buttons" />
         </v-card-actions>
       </v-card>

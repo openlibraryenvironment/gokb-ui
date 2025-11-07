@@ -21,6 +21,7 @@
       :item-selectable="itemSelectable"
       :items-per-page="options.itemsPerPage"
       density="compact"
+      :class="tableBackground"
       return-object
       @update:sortBy="changeSortBy"
     >
@@ -82,7 +83,7 @@
             color="red"
             :title="item.markError"
           >
-            mdi-alert
+            mdi-close-thick
           </v-icon>
           <span class="text-error" style="white-space:nowrap;"> {{ item.markError }}</span>
         </div>
@@ -140,6 +141,16 @@
           @edit="editItem"
         />
         <div class="table-action-icons">
+          <v-icon
+            v-if="!!item.conflictMessage"
+            class="mr-2"
+            color="warning"
+            :title="$t(item.conflictMessage)"
+            right
+            small
+          >
+            mdi-alert
+          </v-icon>
           <a
             v-if="!!item.extlink"
             :href="item.extlink"
@@ -156,7 +167,7 @@
             </v-icon>
           </a>
           <v-icon
-            v-if="item.popup"
+            v-if="!!item.popup"
             class="mr-2"
             style="cursor:pointer"
             color="primary"
@@ -338,6 +349,11 @@
         type: String,
         required: false,
         default: null
+      },
+      overflow: {
+        type: String,
+        required: false,
+        default: undefined
       }
     },
     data () {
@@ -374,6 +390,9 @@
       },
       pagesizeButtonInactive () {
         return this.$vuetify.theme.themes[this.$vuetify.theme.dark ? 'dark' : 'light'].card
+      },
+      tableBackground () {
+        return this.$vuetify.theme.name === 'dark' ? 'bg-card' : 'bg-bg'
       }
     },
     watch: {

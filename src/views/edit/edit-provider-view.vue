@@ -87,6 +87,11 @@
           </v-col>
           <v-col lg="2" />
         </v-row>
+        <!-- <v-row>
+          <v-col>
+            <gokb-comments-field v-model="providerObject.comments" :disabled="isReadonly" show-title />
+          </v-col>
+        </v-row> -->
       </gokb-section>
       <v-row
         v-if="tabsView"
@@ -97,6 +102,57 @@
             v-model="tab"
             class="mx-4"
           >
+            <v-tab
+              value="roles"
+              :active-class="tabClass"
+            >
+              {{ $tc('component.provider.role.label', 2) }}
+              <v-chip class="ma-2">
+                {{ allRoles.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.roles"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+              <v-icon
+                v-if="!isReadonly"
+                v-for="e in errors.roles"
+                :title="$t(e.messageCode)"
+                color="error"
+                small
+              >
+                mdi-alert-outline
+              </v-icon>
+            </v-tab>
+            <v-tab
+              value="platforms"
+              :disabled="!isPlatformProvider"
+              :active-class="tabClass"
+            >
+              {{ $tc('component.platform.label', 2) }}
+              <v-chip class="ma-2">
+                {{ allPlatforms.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.platforms"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert
+              </v-icon>
+              <v-icon
+                v-if="!isReadonly"
+                v-for="e in errors.platforms"
+                :title="$t(e.messageCode)"
+                color="error"
+                small
+              >
+                mdi-alert
+              </v-icon>
+            </v-tab>
             <v-tab
               value="variants"
               :active-class="tabClass"
@@ -123,22 +179,6 @@
               </v-chip>
               <v-icon
                 v-if="pendingChanges.ids"
-                :title="$t('pending.lists.changed')"
-                small
-              >
-                mdi-alert-decagram
-              </v-icon>
-            </v-tab>
-            <v-tab
-              value="platforms"
-              :active-class="tabClass"
-            >
-              {{ $tc('component.platform.label', 2) }}
-              <v-chip class="ma-2">
-                {{ allPlatforms.length }}
-              </v-chip>
-              <v-icon
-                v-if="pendingChanges.platforms"
                 :title="$t('pending.lists.changed')"
                 small
               >
@@ -190,6 +230,31 @@
           </v-tabs>
           <v-window v-model="tab">
             <v-window-item
+              value="roles"
+              class="mt-4"
+            >
+              <gokb-org-roles-section
+                v-model="allRoles"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.roles"
+                @update="addPendingChange"
+              />
+            </v-window-item>
+            <v-window-item
+              value="platforms"
+              class="mt-4"
+            >
+              <gokb-platform-section
+                v-model="allPlatforms"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.providedPlatforms"
+                :provider-id="providerObject.id"
+                @update="addPendingChange"
+              />
+            </v-window-item>
+            <v-window-item
               value="variants"
               class="mt-4"
             >
@@ -210,19 +275,6 @@
                 :show-title="false"
                 :disabled="isReadonly"
                 :api-errors="errors.ids"
-                @update="addPendingChange"
-              />
-            </v-window-item>
-            <v-window-item
-              value="platforms"
-              class="mt-4"
-            >
-              <gokb-platform-section
-                v-model="allPlatforms"
-                :show-title="false"
-                :disabled="isReadonly"
-                :api-errors="errors.providedPlatforms"
-                :provider-id="providerObject.id"
                 @update="addPendingChange"
               />
             </v-window-item>
@@ -267,6 +319,18 @@
         </v-col>
       </v-row>
       <div v-else>
+        <gokb-org-roles-section
+          v-model="allRoles"
+          :expanded="allRoles.length > 0"
+          :disabled="isReadonly"
+        />
+        <gokb-platform-section
+          v-model="allPlatforms"
+          :expanded="allPlatforms.length > 0"
+          :sub-title="$tc('component.platform.label', 2)"
+          :provider-id="providerObject.id"
+          :disabled="isReadonly"
+        />
         <gokb-alternate-names-section
           v-model="allNames.alts"
           :expanded="allNames.alts.length > 0"
@@ -275,13 +339,6 @@
         <gokb-identifier-section
           v-model="providerObject.ids"
           :expanded="providerObject.ids.length > 0"
-          :disabled="isReadonly"
-        />
-        <gokb-platform-section
-          v-model="allPlatforms"
-          :expanded="allPlatforms.length > 0"
-          :sub-title="$tc('component.platform.label', 2)"
-          :provider-id="providerObject.id"
           :disabled="isReadonly"
         />
         <gokb-packages-section
@@ -375,9 +432,6 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
-  import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
-  import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
-  import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import providerServices from '@/shared/services/provider-services'
   import searchServices from '@/shared/services/search-services'
   import accountModel from '@/shared/models/account-model'
@@ -387,7 +441,6 @@
 
   export default {
     name: 'EditProviderView',
-    components: { GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection },
     extends: BaseComponent,
     props: {
       id: {
@@ -416,8 +469,10 @@
           alts: []
         },
         allPlatforms: [],
+        allRoles: [],
         offices: [],
         errors: {},
+        hasErrors: false,
         updateUrl: undefined,
         showSnackbar: false,
         snackbarMessage: undefined,
@@ -435,6 +490,7 @@
           titleNamespaceMonograph: undefined,
           packageNamespace: undefined,
           homepage: undefined,
+          comments: []
         }
       }
     },
@@ -471,6 +527,9 @@
       },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
+      },
+      isPlatformProvider () {
+        return this.allRoles.some(role => (role.value === 'Platform Provider'))
       }
     },
     watch: {
@@ -491,6 +550,18 @@
       },
       tab (val) {
         history.replaceState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
+      },
+      allRoles: {
+        handler (vals) {
+          this.validate()
+        },
+        deep: true
+      },
+      allPlatforms: {
+        handler (vals) {
+          this.validate()
+        },
+        deep: true
       }
     },
     async created () {
@@ -599,6 +670,10 @@
             variantType,
             id: typeof id === 'number' ? id : null
           })),
+          comments: this.providerObject.comments.map(( cmt ) => ({
+            ...cmt,
+            id: (typeof cmt.id === 'number' ? cmt.id : null)
+          })),
           offices: this.offices.map(office => ({
             ...office,
             id: (typeof office.id === 'number' ? office.id : null)
@@ -607,6 +682,7 @@
             value: id.value,
             type: id.namespace
           })),
+          roles: this.allRoles.map (({ id }) => id),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
           providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({
             name,
@@ -696,7 +772,8 @@
           titleNamespaceSerial: undefined,
           packageNamespac: undefined,
           homepage: undefined,
-          preferredShortname: undefined
+          preferredShortname: undefined,
+          comments: []
         }
         this.reload()
       },
@@ -759,7 +836,19 @@
           isDeletable: !!this.updateUrl
         }))
 
+        new_item_info.comments = data._embedded.comments.map(({ id, value, language }) => ({
+          id,
+          value,
+          language,
+          isDeletable: !!this.updateUrl
+        })) || []
+
         this.providerObject = new_item_info
+
+        this.allRoles = data._embedded.roles.map(role => ({
+          ...role,
+          isDeletable: !!this.updateUrl
+        }))
 
         this.allNames = {
           name: data.name,
@@ -810,6 +899,25 @@
       },
       markDeleted (val) {
         this.toDelete = val
+      },
+      validate () {
+        this.valid = true
+
+        if (!this.allNames.name) {
+          this.valid = false
+        }
+
+        if (this.isPlatformProvider && this.allPlatforms.length === 0) {
+          this.valid = false
+          this.errors.platforms = [{
+            messageCode: "component.provider.error.missingPlatform.label"
+          }]
+        } else if (this.allPlatforms.length > 0 && !this.isPlatformProvider) {
+          this.valid = false
+          this.errors.roles = [{
+            messageCode: "component.provider.error.missingRole.platform"
+          }]
+        }
       }
     }
   }

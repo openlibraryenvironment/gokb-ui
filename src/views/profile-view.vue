@@ -1,17 +1,17 @@
 <template>
+  <v-snackbar v-model="showSnackbar" :color="messageColor" :timeout="currentSnackBarTimeout">
+      {{ snackbarMessage }}
+      <template #actions>
+        <v-icon @click="showSnackbar = false" color="white">mdi-close</v-icon>
+      </template>
+  </v-snackbar>
   <gokb-page
     v-if="loggedIn"
     :title="$t('profile.label')"
     @valid="valid = $event"
-    @submit="updateProfile"
   >
     <gokb-error-component :value="error" />
-    <span v-if="successMsgShown">
-      <v-alert type="success">
-        {{ $t('success.update', [$t('profile.label'),'']) }}
-      </v-alert>
-    </span>
-    <gokb-section :title="$t('component.general.general')">
+    <gokb-section :sub-title="$t('component.general.general')">
       <v-row>
         <v-col>
           <gokb-email-field
@@ -35,12 +35,13 @@
         </v-col>
       </v-row>
     </gokb-section>
-    <gokb-section :title="$t('component.user.password')">
+    <gokb-section :sub-title="$t('component.user.password')">
       <gokb-password-field
         id="current-password"
         ref="passwordField"
         v-model="origpass"
         :disabled="!updateProfileAvailable"
+        autocomplete="current-password"
         :label="$t('profile.currentPass.label')"
         :rules="[isOldPasswordEmpty, isPasswordWrong]"
       />
@@ -66,8 +67,60 @@
     <gokb-curatory-group-section
       v-model="allCuratoryGroups"
       :disabled="!isAdmin"
-      :title="$tc('component.curatoryGroup.label', 2)"
+      :sub-title="$tc('component.curatoryGroup.label', 2)"
+      :expanded="false"
     />
+
+    <div v-if="administrableGroups.length > 0">
+      <gokb-section
+        v-model="groupAdminExpanded"
+        :sub-title="$t('profile.groupAdmin.label')"
+        expandable
+      >
+        <div v-for="group in administrableGroups">
+          <gokb-section
+            v-if="group.updateEnabled"
+            :sub-title=group.name
+          >
+            <v-row dense>
+              <v-col>
+                <gokb-email-field
+                  class="ml-2"
+                  v-model="group.email"
+                  width="400px"
+                />
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col>
+                <gokb-checkbox-field
+                  v-model="group.cancelledImportAlerts"
+                  :disabled="!group.email"
+                  :label="$t('component.curatoryGroup.cancelledImportAlerts.label')"
+                />
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col>
+                <gokb-checkbox-field
+                  v-model="group.newReviewsAlerts"
+                  :disabled="!group.email"
+                  :label="$t('component.curatoryGroup.newReviewsAlerts.label')"
+                />
+              </v-col>
+            </v-row>
+            <v-row dense>
+              <v-col>
+                <gokb-button class="ma-3" @click="updateGroupInfo(group)">
+                  {{ $t('btn.update') }}
+                </gokb-button>
+              </v-col>
+            </v-row>
+          </gokb-section>
+        </div>
+      </gokb-section>
+    </div>
+
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
       :message="messageToConfirm"
@@ -83,7 +136,7 @@
       <v-spacer />
       <gokb-button
         :disabled="!updateProfileAvailable || !valid"
-        default
+        @click="updateProfile"
       >
         {{ $t('btn.update') }}
       </gokb-button>
@@ -96,6 +149,7 @@
   import { HOME_ROUTE } from '@/router/route-paths'
   import account from '@/shared/models/account-model'
   import profileServices from '@/shared/services/profile-services'
+  import curatoryGroupServices from '@/shared/services/curatory-group-services'
   import BaseComponent from '@/shared/components/base-component'
   import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
@@ -125,6 +179,8 @@
         newpass: undefined,
         repeatpass: undefined,
         allCuratoryGroups: [],
+        administrableGroups: [],
+        groupAdminExpanded: false,
         languageOptions: ['de', 'en'],
         preferredLocaleString: undefined,
         updateProfileUrl: undefined,
@@ -136,6 +192,10 @@
           text: undefined,
           vars: undefined
         },
+        showSnackbar: false,
+        snackbarMessage: undefined,
+        messageColor: undefined,
+        currentSnackBarTimeout: '-1',
         passwordWrongMessage: undefined,
       }
     },
@@ -173,7 +233,7 @@
         }
       }
     },
-    async activated () {
+    async created () {
       if (account.loggedIn()) {
         this.fetchProfile()
       }
@@ -222,12 +282,16 @@
           this.email = response.data.data.email
           this.allCuratoryGroups = response.data.data.curatoryGroups.map(group => ({
             ...group,
+            cancelledImportAlerts: (group.cancelledImportAlerts === true),
+            newReviewsAlerts: (group.newReviewsAlerts === true),
+            updateEnabled: (!!group._links?.update?.href),
             isDeletable: true
-          }))
+          })).sort((a, b) => a.name.localeCompare(b.name))
+          this.administrableGroups = this.allCuratoryGroups.filter(grp => (grp.updateEnabled))
         }
       },
       async updateProfile () {
-        this.successMsgShown = false
+        this.showSnackbar = false
 
         const result = await this.catchError({
           promise: profileServices.update(this.updateProfileUrl, {
@@ -248,10 +312,15 @@
         this.repeatpass = undefined
 
         if (result.status === 200) {
-          this.successMsgShown = true
+          this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.t('profile.label')])
+          this.messageColor = 'success'
+          this.showSnackbar = true
           this.fetchProfile()
         } else {
           this.errors = result.data.errors
+          this.snackbarMessage = this.$i18n.t('error.update.400')
+          this.messageColor = 'error'
+          this.showSnackbar = true
         }
       },
       async _removeProfile () {
@@ -261,6 +330,23 @@
         })
         await account.logout()
         await this.$router.push(HOME_ROUTE)
+      },
+      async updateGroupInfo (info) {
+        const result = await this.catchError({
+          promise: curatoryGroupServices.createOrUpdate(info, this.cancelToken.token),
+          instance: this
+        })
+
+        if (result.status === 200) {
+          this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.curatoryGroup.label') + ' ' + info.name])
+          this.messageColor = 'success'
+          this.showSnackbar = true
+        }
+        else {
+          this.snackbarMessage = this.$i18n.t('error.update.400')
+          this.messageColor = 'error'
+          this.showSnackbar = true
+        }
       }
     },
   }

@@ -151,7 +151,41 @@
         >
           {{ $t('profile.delete.label') }}
         </gokb-button>
+
         <v-spacer />
+
+        <div v-if="!!id && !!localDateCreated">
+          <v-chip
+            class="ma-1"
+            label
+          >
+            <v-icon
+              :title="$t('component.general.dateCreated')"
+              class="pb-1"
+              medium
+            >
+              mdi-file-plus-outline
+            </v-icon>
+            <span class="ml-1">{{ localDateCreated }}</span>
+          </v-chip>
+          <v-chip
+            class="ma-1"
+            label
+          >
+            <v-icon
+              :title="$t('component.general.lastUpdated')"
+              class="pb-1"
+              label
+              medium
+            >
+              mdi-refresh
+            </v-icon>
+            <span class="ml-1">{{ localLastUpdated }}</span>
+          </v-chip>
+        </div>
+
+        <v-spacer />
+
         <gokb-button
           @click="fetch"
         >
@@ -236,6 +270,8 @@
         version: undefined,
         successMsg: undefined,
         accountLocked: undefined,
+        dateCreated: undefined,
+        lastUpdated: undefined,
         // organisation: undefined,
 
         rolesOptions: {
@@ -320,6 +356,12 @@
       },
       passwordValidMessage () {
         return this.isPasswordValid || this.$i18n.t('validation.passwordLength')
+      },
+      localDateCreated () {
+        return this.dateCreated ? new Date(this.dateCreated).toLocaleString('sv') : ''
+      },
+      localLastUpdated () {
+        return this.lastUpdated ? new Date(this.lastUpdated).toLocaleString('sv') : ''
       },
       valid () {
         return this.active.username && (this.isEdit || this.isPasswordValid)
@@ -500,6 +542,8 @@
         if (response?.status === 200) {
           this.addedRoles = []
           this.version = response.data.data.version
+          this.dateCreated = response.data.data.dateCreated
+          this.lastUpdated = response.data.data.lastUpdated
           this.persisted.username = response.data.data.username
           this.persisted.email = response.data.data.email
           this.persisted.accountLocked = response.data.data.accountLocked

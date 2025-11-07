@@ -10,15 +10,18 @@
     <div style="color:red;" v-if="localErrorMessage.length > 0"> {{ localErrorMessage }} </div>
   </div>
 
-  <v-row v-else-if="!!localizedItems" no-gutters>
-    <v-col>
+  <div
+    v-else-if="!!localizedItems"
+    no-gutters
+  >
+    <span>
       <v-select
         ref="select"
         v-model="localValue"
         :items="localizedItems"
         :label="label"
         :placeholder="placeholder"
-        :item-title="itemTitle"
+        :item-title="itemTitleActive"
         :item-value="itemValue"
         :rules="selectRules"
         :no-data-text="$t('search.results.empty')"
@@ -39,12 +42,12 @@
             *
           </span>
         </template>
+        <template #append>
+          <gokb-tooltip v-if="!!gokbTooltip" classes="mt-1 opacity-100" :code="gokbTooltip" />
+        </template>
       </v-select>
-    </v-col>
-    <v-col v-if="!!gokbTooltip" cols="1" align-self="center">
-      <gokb-tooltip classes="" :code="gokbTooltip" />
-    </v-col>
-  </v-row>
+    </span>
+  </div>
 </template>
 
 <script>
@@ -133,6 +136,16 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      itemTitle: {
+        type: String,
+        required: false,
+        default: 'name'
+      },
+      itemValue: {
+        type: String,
+        required: false,
+        default: 'id'
       }
     },
     data () {
@@ -140,8 +153,7 @@
         rawItems: [],
         localizedItems: [],
         stateLabel: undefined,
-        itemTitle: 'name',
-        itemValue: 'id'
+        itemTitleActive: undefined
       }
     },
     computed: {
@@ -186,6 +198,7 @@
           this.setInit(this.initItem)
         }
       }
+      this.itemTitleActive = this.itemTitle
     },
     methods: {
       transform (result) {

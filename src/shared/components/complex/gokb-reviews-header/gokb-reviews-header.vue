@@ -71,11 +71,11 @@
       </v-col>
     </v-row>
     <v-row
-      class="mb-5"
+      class="mb-5 mr-7"
       dense
     >
       <v-col md="12">
-        <div v-if="!!reviewComponent.stdDesc && reviewComponent.stdDesc.name != 'Manual Request'">
+        <div v-if="!!reviewComponent.stdDesc && !this.isManualRequest && !this.isExternalReview">
           <v-row>
             <v-col md="12">
               <div>
@@ -103,59 +103,55 @@
                   scope="global"
                   :keypath="'component.review.stdDesc.' + (reviewComponent.stdDesc.value || reviewComponent.stdDesc.name) + '.info'"
                 >
-                  <template v-slot:0>
+                  <template v-slot:firstOtherLink>
                     <router-link
-                      v-if="numMessageVars > 0 && typeof additionalVars[0] === 'number'"
-                      :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': additionalVars[0] } }"
-                      :style="{ color: 'primary' }"
+                        v-if="!!reviewComponent.otherComponents && reviewComponent.otherComponents.size > 0"
+                        :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
+                        class="text-primary font-weight-bold"
+                        target="_blank"
                     >
-                      {{ additionalVars[0] === reviewComponent.component.id ? reviewComponent.component.name : additionalVars[1] }}
-                    </router-link>
-                    <b v-else-if="numMessageVars > 0">{{ additionalVars[0] }}</b>
-                    <router-link
-                      v-else-if="!!reviewComponent.otherComponents && reviewComponent.otherComponents.length > 0"
-                      :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
-                      :style="{ color: 'primary' }"
-                    >
-                      {{ reviewComponent.otherComponents[0].name }}
-                    </router-link>
-                    <router-link
-                      v-else-if="reviewComponent.component"
-                      :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': reviewComponent.component.id } }"
-                      :style="{ color: 'primary' }"
-                    >
-                      {{ reviewComponent.component.name }}
+                      {{ reviewComponent.otherComponents[0].name}}
                     </router-link>
                   </template>
-                  <template v-slot:1>
-                    <b v-if="numMessageVars > 1">
-                      <span v-if="typeof additionalVars[1] === 'string' || typeof additionalVars[1] === 'number'">
-                        {{ additionalVars[1] }}
-                      </span>
-                      <span v-else-if="Array.isArray(additionalVars[1])">
-                        (
-                        <span
-                          v-for="(entry, idx) in additionalVars[1]"
-                          :key="idx"
-                        >
-                          <span v-if="typeof entry === 'string'">
-                            {{ entry }}
-                          </span>
-                          <span v-else>
-                            <span
-                              v-for="(value, namespace) in entry"
-                              :key="namespace + '_' + value"
-                            >
-                              {{ namespace }}:{{ value }}
-                            </span>
+                  <template v-slot:firstInfo>
+                    {{ !!additionalVars && additionalVars[0] }}
+                  </template>
+                  <template v-slot:secondInfo>
+                    {{ !!additionalVars && additionalVars[1] }}
+                  </template>
+                  <template v-slot:secondLink>
+                    <router-link
+                        v-if="!!additionalVars"
+                        :to="{ name: componentRoutes[reviewComponent.component.type.toLowerCase()], params: { 'id': additionalVars[1] } }"
+                        class="text-primary"
+                        target="_blank"
+                    >
+                      {{ additionalVars[1] === reviewComponent.component.id ? reviewComponent.component.name : additionalVars[0] }}
+                    </router-link>
+                  </template>
+                  <template v-slot:secondArray>
+                    <span v-if="!!additionalVars">
+                      <span
+                        v-for="(entry, idx) in additionalVars[1]"
+                        :key="idx"
+                      >
+                        <span v-if="idx > 0">, </span>
+                        <span v-if="typeof entry === 'string' || typeof entry === 'number'">
+                          {{ entry }}
+                        </span>
+                        <span v-else>
+                          <span
+                            v-for="(value, namespace) in entry"
+                            :key="namespace + '_' + value"
+                          >
+                            {{ namespace }}: {{ value }}
                           </span>
                         </span>
-                        )
                       </span>
-                    </b>
+                    </span>
                   </template>
-                  <template v-slot:2>
-                    <b v-if="numMessageVars > 2">{{ additionalVars[2] }}</b>
+                  <template v-slot:thirdInfo>
+                    {{ !!additionalVars && additionalVars[2] }}
                   </template>
                 </i18n-t>
               </div>
@@ -247,7 +243,7 @@
               </div>
             </v-col>
           </v-row>
-          <v-row>
+          <v-row dense>
             <v-col>
               <label
                 class="v-label"
@@ -260,6 +256,16 @@
                 {{ $t('component.review.referenceBase.message', [typeLabel]) }}
                 <v-icon size="small" class="ml-1 mt-n1"> mdi-open-in-new </v-icon>
               </a>
+            </v-col>
+          </v-row>
+          <v-row v-if="editable" dense>
+            <v-col cols="6">
+              <gokb-textarea-field
+                v-model="editingNotes"
+                append-icon="mdi-check-bold"
+                :label="$t('component.review.editingNotes.label')"
+                @click:append="saveEditingNotes"
+              />
             </v-col>
           </v-row>
         </div>
@@ -275,6 +281,13 @@
             required
             disabled
             :label="$t('component.review.request.label')"
+          />
+          <gokb-textarea-field
+            v-if="editable"
+            append-icon="mdi-check-bold"
+            v-model="editingNotes"
+            :label="$t('component.review.editingNotes.label')"
+            @click:append="saveEditingNotes"
           />
         </div>
       </v-col>
@@ -296,7 +309,6 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
-  import accountModel from '@/shared/models/account-model'
   import GokbCuratoryGroupPopup from '@/shared/popups/gokb-curatory-group-popup'
 
   export default {
@@ -332,6 +344,9 @@
       return {
         error: undefined,
         showGroupInfo: false,
+        editingNotes: undefined,
+        isManualRequest: undefined,
+        isExternalReview: false,
         selectedGroup: undefined,
         componentRoutes: {
           package: '/package',
@@ -351,30 +366,46 @@
         }
       }
     },
+    mounted () {
+      this.editingNotes = this.reviewComponent?.editingNotes || undefined
+
+      if (this.reviewComponent?.stdDesc?.name === 'External Editorial Request') {
+        this.isExternalReview = true
+      }
+      else if (this.reviewComponent?.stdDesc?.name === 'Manual Request') {
+        this.isManualRequest = true
+      }
+    },
     computed: {
       cmpType () {
-        return this.reviewComponent?.component?.type || undefined
+        return !!this.reviewComponent?.component?.type || undefined
       },
       cmpLabel () {
-        return (this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+        return (!!this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       numMessageVars () {
-        return this.additionalVars ? this.additionalVars.length : 0
+        return !!this.additionalVars ? this.additionalVars.length : 0
       },
       localAction () {
-        return this.reviewComponent?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewComponent.stdDesc.value || this.reviewComponent.stdDesc.name) + '.action') : undefined
+        return !!this.reviewComponent?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewComponent.stdDesc.value || this.reviewComponent.stdDesc.name) + '.action') : undefined
       },
       typeLabel () {
-        return this.reviewComponent?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewComponent.stdDesc.value || this.reviewComponent.stdDesc.name) + '.label') : undefined
+        return !!this.reviewComponent?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewComponent.stdDesc.value || this.reviewComponent.stdDesc.name) + '.label') : undefined
       },
       moreInfoLink () {
         return !!this.reviewComponent.stdDesc ? this.$i18n.t('component.review.referenceBase.urlBase') + '#' + this.reviewComponent.stdDesc.name.replace(/\s/g, '_').toLowerCase() : undefined
-      }
+      },
+      darkMode () {
+        return this.$vuetify.theme.global.current.dark
+      },
     },
     methods: {
       triggerSelectedGroup(groupInfo) {
         this.selectedGroup = groupInfo
         this.showGroupInfo = true
+      },
+      saveEditingNotes() {
+        this.$emit('set-editing-notes', this.editingNotes)
       }
     }
   }

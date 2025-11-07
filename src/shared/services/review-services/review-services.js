@@ -13,7 +13,7 @@ const api = (baseServices) => ({
   get (id, cancelToken) {
     return baseServices.request({
       method: 'GET',
-      url: import.meta.env.VITE_API_BASE_URL + `${REVIEW_PATH}/${id}?_include=id,reviewRequest,componentToReview,descriptionOfCause,stdDesc,status,dateCreated,additionalInfo&_embed=allocatedGroups`,
+      url: import.meta.env.VITE_API_BASE_URL + `${REVIEW_PATH}/${id}?_include=id,reviewRequest,componentToReview,descriptionOfCause,stdDesc,status,dateCreated,editingNotes,additionalInfo&_embed=allocatedGroups`,
     }, cancelToken)
   },
 
@@ -69,6 +69,15 @@ const api = (baseServices) => ({
   bulkUpdate (parameters, field, value, cancelToken) {
     const urlParameters = baseServices.createQueryParameters(parameters)
     const url = import.meta.env.VITE_API_BASE_URL + `${REVIEW_PATH}/bulk?_field=${field}&_value=${value}&${urlParameters}`
+
+    return baseServices.request({
+      method: 'GET',
+      url,
+    }, cancelToken)
+  },
+
+  fetchEditorialGroups (cancelToken) {
+    const url = import.meta.env.VITE_API_BASE_URL + `${REVIEW_PATH}/editorialGroups`
 
     return baseServices.request({
       method: 'GET',

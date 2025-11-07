@@ -1,9 +1,10 @@
 <template>
   <v-card
-    v-if="!!originalRecord?.name"
+    v-if="!!originalRecord?.id"
     :loading="loading"
     :color="roleColor"
     :class="[elevationClass, isDeleted ? 'text-disabled' : '']"
+    width="auto"
     outlined
   >
     <v-card-subtitle
@@ -18,11 +19,11 @@
         <v-col>
           <router-link
             v-if="!nameEditActive"
-            :class="[darkMode ? 'text-primary' : 'text-black', 'font-weight-bold']"
+            :class="[$vuetify.theme.current.dark ? 'text-white' : 'text-black', 'font-weight-bold']"
             :to="{ name: route, params: { 'id': originalRecord.id } }"
             target="_blank"
           >
-            {{ originalRecord.name }}
+            {{ originalRecord.name || $t('component.general.error.missingName.label') }}
           </router-link>
           <gokb-text-field
             v-else
@@ -49,7 +50,7 @@
         <v-col>
           <span> {{ $tc('component.package.label') }}: </span>
           <router-link
-            :class="[darkMode ? 'text-primary' : 'text-black']"
+            :class="[$vuetify.theme.current.dark ? 'text-white' : 'text-black']"
             :to="{ name: '/package', params: { 'id': linkedPackage.id } }"
             target="_blank"
           >
@@ -62,7 +63,7 @@
           <span> {{ $tc('component.title.label') }}: </span>
           <router-link
             v-if="!!linkedTitle"
-            :class="[darkMode ? 'text-primary' : 'text-black']"
+            :class="[$vuetify.theme.current.dark ? 'text-white' : 'text-black']"
             :to="{ name: '/title', params: { 'id': linkedTitle.id } }"
             target="_blank"
           >
@@ -323,8 +324,8 @@
     ],
     extends: BaseComponent,
     props: {
-      id: {
-        type: Number,
+      info: {
+        type: Object,
         required: true
       },
       candidateIndex: {
@@ -392,6 +393,7 @@
     },
     data () {
       return {
+        id: undefined,
         originalRecord: undefined,
         activeService: undefined,
         nameEditActive: false,
@@ -450,7 +452,7 @@
         return this.route === '/package-title'
       },
       darkMode () {
-        return this.$vuetify.theme.dark
+        return this.$vuetify.theme.current.dark
       },
       roleColor () {
         if (this.role == "reviewedComponent") {
@@ -577,6 +579,7 @@
       this.activeService = this.route === '/title' ? titleServices : tippServices
     },
     async mounted () {
+      this.id = this.info.id
       this.fetchTitle()
 
       if (this.editable && this.isReviewedCard) {
@@ -809,6 +812,12 @@
             extlink: namespaceServices.getBaseurl(item.namespace.value) ? namespaceServices.getBaseurl(item.namespace.value) + item.value : undefined,
             value: item.value,
             isDeletable: this.isItemDeletable,
+            ...(
+                (
+                  this.info?.matchResults &&
+                  this.info.matchResults.some(mr => (item.namespace.value === mr.namespace && item.value !== mr.value && mr.match === 'FAIL')) &&
+                  !this.info.matchResults.some(mr => (item.namespace.value === mr.namespace && item.value === mr.value && mr.match === 'OK'))
+                ) ? { conflictMessage: 'component.review.edit.components.ids.conflict.label' } : {} ),
             _pending: this.pendingStatuses[item.id]
           }))
 

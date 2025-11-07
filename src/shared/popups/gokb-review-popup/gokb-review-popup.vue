@@ -30,6 +30,7 @@
           :review-component="reviewItem"
           :has-component-cards="showComponentCards"
           :additional-vars="reviewItem.additionalVars"
+          @set-editing-notes="updateEditingNotes"
         />
 
         <gokb-reviews-components-section
@@ -279,6 +280,7 @@
         this.reviewItem.status = record.status
         this.reviewItem.stdDesc = record.stdDesc
         this.reviewItem.request = record.reviewRequest
+        this.reviewItem.editingNotes = record.editingNotes
         this.reviewItem.description = record.descriptionOfCause
         this.reviewItem.dateCreated = record.dateCreated ? new Date(record.dateCreated).toLocaleString('sv') : ''
         this.reviewItem.component = {
@@ -288,11 +290,19 @@
         this.reviewItem.isClosed = record.status.name === 'Closed'
         this.reviewItem.allocatedGroups = record.allocatedGroups
         this.reviewItem.additionalVars = record.additionalInfo?.vars
+
+        let matchFailsFromVars = undefined
+
+        if (record.additionalInfo?.vars?.length === 2 && Array.isArray(record.additionalInfo.vars[1])) {
+          matchFailsFromVars = record.additionalInfo.vars[1].map(ido => ({ value: Object.values(ido)[0], namespace: Object.keys(ido)[0], match: 'FAIL' }))
+        }
+
         this.reviewItem.otherComponents = record.additionalInfo?.otherComponents ? record.additionalInfo.otherComponents.map(oc => ({
           name: oc.name,
           id: (oc.id || parseInt(oc.oid.split(':')[1])),
           type: (oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase()),
           route: this.componentRoutes[(oc.type ? oc.type.toLowerCase() : oc.oid.split(':')[0].split('.')[3].toLowerCase())],
+          ...(!!oc.matchResults ? { matchResults: oc.matchResults} : ( !!matchFailsFromVars ? { matchResults: matchFailsFromVars } : {}))
         })) : []
         this.reviewItem.candidates = record.additionalInfo?.candidates
         this.updateUrl = record._links?.update?.href || undefined
@@ -560,6 +570,24 @@
       },
       save () {
         this.$emit('edit', 'edited')
+      },
+      async updateEditingNotes (val) {
+        let body = {
+          id: this.id,
+          editingNotes: val
+        }
+
+        const resp = await reviewServices.createOrUpdate(body, this.cancelToken.token)
+
+        if (resp.status == 200) {
+          this.mapRecord(resp.data)
+
+          this.successMsg = this.$i18n.t('component.review.edit.success.editingNotes')
+          this.showSuccessMsg = true
+        }
+        else {
+          this.errorMsg = this.$i18n.t('error.update.400')
+        }
       }
     }
   }

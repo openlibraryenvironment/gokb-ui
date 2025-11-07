@@ -63,8 +63,11 @@
     "ISOdateHint": "JJJJ-MM-TT",
     "loading": "Lädt ...",
     "languages": {
+      "label": "Sprache | Sprachen",
       "en": "Englisch",
-      "de": "Deutsch"
+      "de": "Deutsch",
+      "eng": "Englisch",
+      "ger": "Deutsch"
     },
     "error": {
       "label": "Fehler | Fehler"
@@ -190,6 +193,9 @@
       },
       "pendingChanges": {
         "label": "Es gibt ungespeicherte Änderungen! Bitte bestätigen Sie, dass diese verworfen werden sollen."
+      },
+      "deleteComment": {
+        "label": "Bitte bestätigen Sie, dass die Bemerkungen für diese Sprache gelöscht werden sollen."
       }
     },
     "login": {
@@ -299,7 +305,9 @@
     "issueRange": "Das erste Heft muss vor dem letzten Heft liegen.",
     "missingStartIssue": "Die Angabe eines letzten Hefts erfordert ein Anfangsheft.",
     "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband.",
-    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden."
+    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden.",
+    "yearFormat": "Bitte geben Sie ein vierstelliges Jahr an.",
+    "missingStart": "Bitte geben Sie einen Startwert an."
   },
   "job": {
     "label": "Import | Importe",
@@ -477,6 +485,7 @@
       "noTitleId": "Diese Zeile enthält keinen Wert für den Anbieternamensraum!",
       "noImportIds": "Diese Zeile enthält keine Identifikatoren (print/online), und es wurde kein Anbieternamensraum ausgewählt!",
       "noAuthIds": "Diese Zeile enthält weder einen 'print_identifier' noch einen 'online_identifier'!",
+      "fileSize": "Die KBART-Datei ist zu groß. Der Import von Dateien größer als 20 MB muss für ein Paket von einem Administrator autorisiert werden.",
       "url": {
         "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
         "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
@@ -564,7 +573,8 @@
         "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn Fehler in der Dateistruktur identifiziert wurden, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten.",
         "warning": "Titellisten, die Warnungen erzeugen, können in die GOKB importiert werden, auch wenn es Auffälligkeiten gibt. Es wird dringend empfohlen, vorab die Auffälligkeiten auf ihre Unbedenklichkeit zu prüfen.",
         "rowError": "Es wurden Fehler in einzelnen Titeldaten festgestellt. Die Datei kann erst importiert werden, wenn diese Fehler behoben wurden.",
-        "encoding": "Diese Datei ist nicht in UTF-8 codiert und kann daher nicht verarbeitet werden. Lesen Sie in der Dokumentation auf der GOKB-Webseite nach, wie Sie dieses Problem beheben können."
+        "encoding": "Diese Datei ist nicht in UTF-8 codiert und kann daher nicht verarbeitet werden. Lesen Sie in der Dokumentation auf der GOKB-Webseite nach, wie Sie dieses Problem beheben können.",
+        "doiReplaced": "Der Namensraum für die Spalte 'title_id' des Typs '{0}' wurde als 'DOI' identifiziert und die entsprechende Auswahl angepasst. Falls dies nicht korrekt ist, wählen Sie bitte den korrekten Namensraum manuell aus."
       }
     }
   },
@@ -585,6 +595,9 @@
     "delete": {
       "label": "Profil Löschen",
       "confirm": "Sind Sie sicher, dass Sie das Profil löschen möchten? Die Löschung kann nicht rückgängig gemacht werden!"
+    },
+    "groupAdmin": {
+      "label": "Gruppen-Administration"
     }
   },
   "register": {
@@ -938,7 +951,17 @@
       "globalNote": {
         "label": "Region/Konsortium"
       },
-      "descriptionUrl": "URL zur Beschreibung des Pakets"
+      "descriptionUrl": "URL zur Beschreibung des Pakets",
+      "startYear": {
+        "label": "Anfangsjahr"
+      },
+      "endYear": {
+        "label": "Endjahr"
+      },
+      "singleYear": {
+        "label": "Jahresabschnitt"
+      },
+      "multiYear": "Mehrjährig"
     },
     "tipp": {
       "label": "Pakettitel | Pakettitel",
@@ -1112,7 +1135,7 @@
       "titleNamespaceSerial": {
         "label": "Titel-Namensraum (Serial)"
       },
-      "titleNamespaceMongraph": {
+      "titleNamespaceMonograph": {
         "label": "Titel-Namensraum (Monograph)"
       },
       "packageNamespace": {
@@ -1123,6 +1146,49 @@
       },
       "preferredShortname": {
         "label": "Empfohlene Kurzform"
+      },
+      "role": {
+        "label": "Rolle | Rollen",
+        "Publisher": {
+          "label": "Verlag"
+        },
+        "Platform Provider": {
+          "label": "Plattformanbieter"
+        },
+        "Imprint": {
+          "label": "Imprint"
+        },
+        "Content Provider": {
+          "label": "Inhaltsanbieter"
+        },
+        "Issuing Body": {
+          "label": "Herausgeber"
+        },
+        "Broker": {
+          "label": "Broker"
+        },
+        "Vendor": {
+          "label": "Anbieter"
+        },
+        "Licensor": {
+          "label": "Lizenzgeber"
+        },
+        "Licensee": {
+          "label": "Lizenznehmer"
+        }
+      },
+      "error": {
+        "missingPlatform": {
+          "label": "Für den angegebenen Plattformanbieter wurde keine Plattform ausgewählt."
+        },
+        "missingRole": {
+          "platform": "Für die angegebene Plattform wurde kein Plattformanbieter ausgewählt."
+        }
+      },
+      "warning": {
+        "noPlatformRole": {
+          "label": "Das Hinzufügen von Plattformen ist nur für Plattformanbieter möglich."
+        }
       }
     },
     "organization": {
@@ -1162,7 +1228,7 @@
       "label": "Benutzer | Benutzer",
       "username": "Benutzername",
       "register": "Registrierung",
-      "password": "Kennwort",
+      "password": "Passwort",
       "preferredLocaleString": {
         "label": "Bevorzugte Sprache"
       },
@@ -1178,12 +1244,14 @@
         "ROLE_USER": "Benutzer",
         "ROLE_SUPERUSER": "System",
         "ROLE_API": "API",
+        "ROLE_POWERUSER": "Power-User",
         "Contributor": "Bearbeiter",
         "Editor": "Editor",
         "Admin": "Admin",
         "User": "Benutzer",
         "API": "API",
-        "System": "System"
+        "System": "System",
+        "Power User": "Power-User"
       },
       "enabled": {
         "label": "Status",
@@ -1242,10 +1310,16 @@
       "additionalInfo": {
         "label": "Strukturierte Detailansicht"
       },
+      "editingNotes": {
+        "label": "Bearbeitungsvermerk"
+      },
       "referenceBase": {
         "label": "Weitere Informationen",
         "message": "Dokumentation für '{0}'",
         "urlBase": "https://gokb.org/prufanfragen/"
+      },
+      "titleReviews": {
+        "label": "Referenztitel-Anfragen"
       },
       "otherComponents": {
         "label": "Weitere Komponenten",
@@ -1257,6 +1331,12 @@
       "candidates": {
         "label": "Kandidaten"
       },
+      "targetGroup": {
+        "label": "Zielgruppe"
+      },
+      "escalatedOnly": {
+        "label": "Nur Eskaliert"
+      },
       "showClosed": "Abgeschlossene anzeigen",
       "edit": {
         "success": {
@@ -1266,7 +1346,13 @@
           "deescalated" : "Die Prüfanfrage wurde erfolgreich deeskaliert.",
           "closed": "Prüfanfrage geschlossen",
           "closedBulk": "Prüfanfrage wurde geschlossen | {0} Prüfanfragen wurden geschlossen",
-          "reopened": "Die Prüfanfrage wurde erneut geöffnet."
+          "reopened": "Die Prüfanfrage wurde erneut geöffnet.",
+          "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert."
+        },
+        "error": {
+          "escalate": {
+            "conflict": "Diese Prüfanfrage wurde bereits an diese Gruppe eskaliert!"
+          }
         },
         "confirm": {
           "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage schließen möchten.",
@@ -1299,6 +1385,11 @@
             "titleReview": {
               "label": "Titelüberprüfung",
               "toDo": "Bitte überprüfen Sie die vorliegenden Titelinformationen (Namen/Identifikatoren) auf mögliche Fehler."
+            }
+          },
+          "ids": {
+            "conflict": {
+              "label": "Dieser Identifikator steht im Konflikt mit dem im gleichen Namensraum verknüpften Wert am zu prüfenden Titel."
             }
           },
           "merge": {
@@ -1605,13 +1696,13 @@
         },
         "Critical Identifier Conflict": {
           "label": "Referenztitelkonflikt",
-          "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Der neue Referenztitel stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel überein; andere Identifikatoren stimmen nicht überein. Zudem unterscheidet sich der Referenztitelname.",
+          "info": "Aufgrund eines Identifikatorenkonflikts wurde ein neuer Referenztitel erzeugt. Der neue Referenztitel stimmt anhand mindestens eines Identifikators mit einem vorhandenen Referenztitel '{firstOtherLink}' überein; andere Identifikatoren stimmen nicht überein ({secondArray}). Zudem unterscheidet sich der Referenztitelname.",
           "action": "Die GOKB erstellte einen neuen Referenztitel mit den Identifikatoren des Pakettitels. Der Pakettitel wurde mit dem neuen Referenztitel verknüpft.",
           "toDo": "Überprüfen Sie, ob bei den Referenztiteln Dubletten vorliegen. Liegen Dubletten vor, wählen Sie den zu verbleibenden Titel über den Button 'Ziel auswählen' aus. Sie haben nun die Möglichkeit, zusätzlich benötigte Identifikatoren aus der Dublette zu markieren, um sie im Rahmen der Zusammenführung zu behalten. Anschließend können Sie die Bereingung per 'Dublette zusammenführen' auslösen (dies schließt gleichzeitig auch die Prüfanfrage und diese Ansicht). Liegen keine Dubletten vor, überprüfen Sie die Identifikatoren und löschen Sie fehlerhafte. Fehlende Identifikatoren können Sie nachtragen, indem Sie über den Namen in die Bearbeitungssicht eines Titels springen. Sie können die Anfrage nun als abgeschlossen markieren."
         },
         "Secondary Identifier Conflict": {
           "label": "Identifikatoren-Konflikt (ID ergänzt)",
-          "info": "Beim Abgleich mit einem Referenztitel wurde ein Identifikator gefunden, der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
+          "info": "Beim Abgleich mit einem Referenztitel '{firstOtherLink}' wurde mindestens ein Identifikator gefunden ({secondArray}), der nicht mit den vorhandenen Identifikatoren des Referenztitels übereinstimmt. Trotzdem scheint es sich um denselben Titel zu handeln, da z. B. der Name übereinstimmt.",
           "action": "Die GOKB hat im Referenztitel Identifikatoren hinzugefügt.",
           "toDo": "Überprüfen Sie die Identifikatoren des Referenztitels, und entfernen sie fehlerhafte Einträge."
         },
@@ -1635,7 +1726,7 @@
         },
         "Import Identifier Mismatch": {
           "label": "Identifikatoren-Konflikt beim KBART-Import",
-          "info": "Ein KBART-Datensatz konnte zwar anhand eines oder mehrerer Identifikatoren einem bestehenden Pakettitel zugordnet werden, allerdings unterscheiden sich ein oder mehrere andere Identifikatoren.",
+          "info": "Ein KBART-Datensatz überschneidet sich zwar anhand dessen Identifikatoren mit einem oder mehreren bestehenden Pakettitel(n), allerdings unterscheidet sich jeweils mindestens ein anderer Identifikator.",
           "action": "Ein neuer Pakettitel wurde erstellt.",
           "toDo": "Überprüfen Sie die Identifikatoren und Referenztitel, ob es Konflikte gibt, die gelöst werden müssen. Es kann sein, dass mehr Pakettitel angezeigt werden als betroffen sind."
         },
@@ -1686,6 +1777,18 @@
           "info": "Der Abdeckungszeitraum ({0}) steht im Konflikt zu dem Erscheinungszeitraum des verknüpften Referenztitel ({1}).",
           "action": "-",
           "toDo": "Überprüfen Sie, ob der richtige Referenztitel verknüpft wurde, und korrigieren Sie eventuell fehlerhafte Erscheinungsdaten."
+        },
+        "Missing TIPP Name": {
+          "label": "Fehlender Titelname",
+          "info": "Für den Pakettitel kann auf Grund des fehlenden Namens kein neuer Referenztitel erzeugt werden",
+          "action": "-",
+          "toDo": "Fügen Sie manuell den korrekten Namen hinzu, oder löschen Sie den Pakettitel."
+        },
+        "External Editorial Request": {
+          "label": "Externe Redaktionsanfrage",
+          "info": "Es gab eine Anfrage zur Überprüfung der verknüpften Identifikatoren in ihrem Ursprungssystem.",
+          "action": "-",
+          "toDo": "Bitte überprüfen Sie die Identifikatoren im verknüpften System."
         }
       }
     },
@@ -1705,6 +1808,12 @@
         "Consortium": {
           "label": "Konsortium"
         }
+      },
+      "cancelledImportAlerts": {
+        "label": "Benachrichtigungen für fehlgeschlagene automatische Paket-Importe aktiviert"
+      },
+      "newReviewsAlerts": {
+        "label": "Benachrichtigungen für neue Prüfanfragen aktiviert"
       }
     },
     "variantName": {
@@ -1720,6 +1829,7 @@
       "lastRun": "Letzter Durchlauf",
       "ezbMatch": "EZB-Abgleich",
       "enableUpdate": "Aktiviert",
+      "ignoreSizeLimit": "Dateigröße ignorieren",
       "url": "URL",
       "frequency": {
         "label": "Update-Zyklus",
@@ -1793,6 +1903,11 @@
           }
         }
       },
+      "error": {
+        "missingName": {
+          "label": "- Kein Titel -"
+        }
+      },
       "editStatus": {
         "label": "Bearbeitungs-Status",
         "In Progress": {
@@ -1816,6 +1931,10 @@
           "label": "Stabile URL in die Zwischenablage kopieren",
           "success": "Die stabile URL wurde in die Zwischenablage kopiert!"
         }
+      },
+      "comment": {
+        "label": "Bemerkung | Bemerkungen",
+        "notFound": "Es sind keine Bemerkungen in der aktuellen Sprache vorhanden!"
       }
     }
   }

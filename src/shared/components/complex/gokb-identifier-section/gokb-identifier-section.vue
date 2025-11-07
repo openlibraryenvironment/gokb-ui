@@ -240,7 +240,7 @@
         else {
           this.localValue.push({
             id: this.tempId(),
-            value: id.value,
+            value: id.value.trim(),
             namespace: id.namespace.value,
             nslabel: (id.namespace.name || id.namespace.value),
             isDeletable: undefined,

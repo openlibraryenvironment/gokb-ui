@@ -33,10 +33,10 @@
             </v-btn>
           </v-toolbar>
         </v-card-title>
-        <v-card-text>
+        <v-card-text class="bg-bg">
           <slot />
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="bg-bg">
           <slot name="buttons" />
         </v-card-actions>
       </v-card>

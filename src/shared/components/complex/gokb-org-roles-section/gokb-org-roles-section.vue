@@ -3,22 +3,23 @@
     v-model="isExpanded"
     expandable
     :hide-default="!expanded"
+    :errors="!!apiErrors"
     :sub-title="title"
     :items-total="totalNumberOfItems"
-    :errors="!!apiErrors"
   >
     <gokb-add-item-popup
-      v-if="addPublisherPopupVisible"
-      v-model="addPublisherPopupVisible"
-      :component="{ type: 'GokbSearchPublisherField', name: $tc('component.title.publisher.label'), properties: {returnObject: true} }"
-      @add="addNewPublisher"
+      v-if="addItemPopupVisible"
+      v-model="addItemPopupVisible"
+      width="500px"
+      :component="{ type: 'GokbStateField', name: $tc('component.provider.role.label'), properties: { url: 'refdata/categories/Org.Role', messagePath: 'component.provider.role', returnObject: true } }"
+      @add="addItem"
     />
     <template #buttons>
       <gokb-button
         v-if="isEditable"
         icon-id="mdi-plus"
         color="primary"
-        @click.prevent="showAddPublisherPopup"
+        @click.prevent="showAddItem"
       >
         {{ $i18n.t('btn.add') }}
       </gokb-button>
@@ -33,19 +34,27 @@
         {{ $i18n.t('btn.delete') }}
       </gokb-button>
     </template>
-
     <gokb-confirmation-popup
       v-model="confirmationPopUpVisible"
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <span v-if="errorMessage">
+      <v-alert
+        v-model="showErrorMessage"
+        type="error"
+        dismissible
+      >
+        {{ errorMessage }}
+      </v-alert>
+    </span>
     <gokb-table
       :headers="tableHeaders"
-      :items="publishers"
+      :items="currentRoles"
       :editable="isEditable"
       :selected-items="selectedItems"
       :total-number-of-items="totalNumberOfItems"
-      :options.sync="options"
+      :options.sync="searchOptions"
       :hide-select="!isEditable"
       @selected-items="selectedItems = $event"
       @delete-item="confirmDeleteItem"
@@ -56,17 +65,13 @@
 <script>
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
-  import { EDIT_PROVIDER_ROUTE } from '@/router/route-paths'
 
   const ROWS_PER_PAGE = 10
 
   export default {
-    name: 'GokbPublisherSection',
+    name: 'GokbOrgRolesSection',
+    components: { GokbAddItemPopup, GokbConfirmationPopup },
     emits: ['update:model-value', 'update'],
-    components: {
-      GokbAddItemPopup,
-      GokbConfirmationPopup
-    },
     props: {
       modelValue: {
         type: Array,
@@ -95,18 +100,24 @@
     },
     data () {
       return {
-        addPublisherPopupVisible: false,
-        options: {
+        addItemPopupVisible: false,
+        searchOptions: {
           page: 1,
+          sortBy: [],
           itemsPerPage: ROWS_PER_PAGE
         },
+        errorMessage: undefined,
+        showErrorMessage: false,
         selectedItems: [],
         isExpanded: true,
         confirmationPopUpVisible: false,
         actionToConfirm: undefined,
         parameterToConfirm: undefined,
-        messageToConfirm: { text: undefined, vars: undefined },
+        messageToConfirm: { text: undefined, vars: undefined }
       }
+    },
+    mounted() {
+      this.updateItems()
     },
     computed: {
       localValue: {
@@ -116,11 +127,6 @@
         set (localValue) {
           this.$emit('update:model-value', localValue)
         }
-      },
-      publishers () {
-        return [...this.modelValue]
-          .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
-          .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
       },
       isDeleteSelectedDisabled () {
         return !this.selectedItems.length
@@ -134,19 +140,22 @@
       tableHeaders () {
         return [
           {
-            title: this.$i18n.tc('component.general.name'),
+            title: this.$i18n.tc('component.provider.role.label'),
             align: 'start',
-            value: 'link',
+            value: 'value',
             sortable: false,
             width: '100%'
           }
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.title.publisher.label', 2) : undefined
+        return this.showTitle ? this.$i18n.tc('component.provider.role.label', 2) : undefined
+      },
+      currentRoles () {
+        return this.localValue.map(role => ({ value: this.$i18n.t('component.provider.role.' + role.value + '.label'), id: role.id }))
       }
     },
-    mounted () {
+    mounted (){
       this.isExpanded = this.expanded
     },
     methods: {
@@ -154,34 +163,42 @@
         this[actionMethodName](actionMethodParameter)
       },
       confirmDeleteSelectedItems () {
-        this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.title.publisher.label', this.selectedItems.length)] }
+        this.actionToConfirm = '_deleteSelected'
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: [
+            this.selectedItems.length,
+            this.$i18n.tc('component.provider.role.label', this.selectedItems.length)
+          ]
+        }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
-      confirmDeleteItem ({ id, name }) {
+      confirmDeleteItem ({ id, value }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.title.publisher.label'), name] }
+        this.messageToConfirm = {
+          text: 'popups.confirm.delete.list',
+          vars: ['', value]
+        }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
-      _deleteSelectedItems () {
+      _deleteSelected () {
         this.localValue = this.localValue.filter(({ id }) => !this.selectedItems
           .find(({ id: selectedId }) => id === selectedId))
         this.selectedItems = []
-        this.$emit('update', 'publisher')
+        this.$emit('update', 'roles')
       },
       _deleteItem (idToDelete) {
         this.localValue = this.localValue.filter(({ id }) => id !== idToDelete)
         this.selectedItems = this.selectedItems.filter(({ id }) => id !== idToDelete)
-        this.$emit('update', 'publisher')
+        this.$emit('update', 'roles')
       },
-      showAddPublisherPopup () {
-        this.addPublisherPopupVisible = true
+      showAddItem () {
+        this.addItemPopupVisible = true
       },
-      addNewPublisher (item) {
-        this.localValue.push({ id: item.id, name: item.name, link: { id: 'id', route: EDIT_PROVIDER_ROUTE, value: item.name }, isDeletable: true })
-        this.$emit('update', 'publisher')
+      addItem (item) {
+        this.localValue.push(item)
       }
     }
   }
