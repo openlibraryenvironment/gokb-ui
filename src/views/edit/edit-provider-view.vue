@@ -699,6 +699,7 @@
         currentSnackBarTimeout: '-1',
         version: undefined,
         lastLoad: undefined,
+        lastLoadComments: undefined,
         providerObject: {
           id: undefined,
           ids: [],
@@ -834,6 +835,8 @@
       if (this.loggedIn) {
         this.tabsView = accountModel.tabbedView()
       }
+
+
     },
     mounted () {
       window.addEventListener('beforeunload', this.checkForChanges)
@@ -853,8 +856,64 @@
       }
     },
     methods: {
+      saveInitialCommentsState () {
+        if (this.providerObject.comments?.length > 0) {
+          //this.providerObject.comments.forEach(c => this.lastLoadComments.push(c.value))
+          this.lastLoadComments = this.providerObject.comments.map( (comment) => {
+             return comment.value
+            }
+          )
+        }
+      },
       isInfoUpdate () {
-        return true
+
+        let changed = false
+
+        if (!!this.lastLoad?.id) {
+          let compareState = [this.lastLoad.supplyKbart, this.lastLoad.supplyCsv, this.lastLoad.supplyMarc, this.lastLoad.supplyOnix, this.lastLoad.kbartExtensionZdbId, this.lastLoad.kbartExtensionEzbId,
+            this.lastLoad.kbartExtensionLastChanged, this.lastLoad.kbartExtensionAccessStartDate, this.lastLoad.kbartExtensionAccessEndDate, this.lastLoad.kbartExtensionMedium, this.lastLoad.kbartExtensionMonographParentCollectionTitle,
+            this.lastLoad.kbartExtensionSeries, this.lastLoad.kbartExtensionSubjetArea, this.lastLoad.autoImportSupported, this.lastLoad.kbartUrlWithDateMask, this.lastLoad.kbartUpdateCycle?.id, this.lastLoad.kbartHostUrl,
+            this.lastLoad.preferredSupplyMethod?.id]
+
+          let actualState = [this.providerObject.supplyKbart, this.providerObject.supplyCsv, this.providerObject.supplyMarc, this.providerObject.supplyOnix, this.providerObject.kbartExtensionZdbId, this.providerObject.kbartExtensionEzbId,
+            this.providerObject.kbartExtensionLastChanged, this.providerObject.kbartExtensionAccessStartDate, this.providerObject.kbartExtensionAccessEndDate, this.providerObject.kbartExtensionMedium, this.providerObject.kbartExtensionMonographParentCollectionTitle,
+            this.providerObject.kbartExtensionSeries, this.providerObject.kbartExtensionSubjetArea, this.providerObject.autoImportSupported, this.providerObject.kbartUrlWithDateMask, this.providerObject.kbartUpdateCycle?.id, this.providerObject.kbartHostUrl,
+            this.providerObject.preferredSupplyMethod?.id]
+
+          console.log("old: ", compareState)
+          console.log("new: ", actualState)
+
+          for (var i = 0; i < compareState.length; i++) {
+            if (compareState[i] !== actualState[i]) {
+              console.log("CHANGE: ", i, compareState[i], actualState[i])
+              changed = true
+              break;
+            }
+          }
+
+          // check comments
+          if (this.lastLoadComments?.length !== this.providerObject.comments.length) {
+            changed = true
+          }
+          else {
+            for (var i = 0; i < this.providerObject.length; i++) {
+              let com = this.providerObject[i].value
+              let exists = false
+              for (var j = 0; j < this.lastLoadComments.length; j++) {
+                if (com === this.lastLoadComments[j]) {
+                  exists = true
+                  break
+                }
+              }
+              if (!exists) {
+                changed = true
+                break
+              }
+            }
+          }
+
+        }
+        return changed
       },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
@@ -904,9 +963,12 @@
         this.showSnackbar = false
         const activeGroup = accountModel.activeGroup()
 
-        if (this.isInfoUpdate()) {
+        if (!this.providerObject.importInfoLastUpdated || this.isInfoUpdate()) {
           var date = new Date()
-          this.providerObject.importInfoLastUpdated = date.getFullYear() + '-' + (date.getMonth().toString().length === 2 ? date.getMonth() : '0' + date.getMonth())+ '-' + (date.getDate().toString().length === 2 ? date.getDate() : '0' + date.getDate())
+          // make date compatible to Backend, i.e. format YYYY-MM-DD as String
+          this.providerObject.importInfoLastUpdated = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1).toString()).slice(-2) + '-' + ('0' + date.getDate().toString()).slice(-2)
+
+          console.log("+++ Info last updated set new ++++ ", this.providerObject.importInfoLastUpdated)
         }
 
         const data = {
@@ -1045,7 +1107,9 @@
 
           if (result.status === 200) {
             this.lastLoad = {}
+            this.lastLoadComments = []
             this.mapRecord(result.data)
+            this.saveInitialCommentsState()
           } else if (result.status === 404) {
             this.notFound = true
           }
