@@ -730,7 +730,6 @@
         />
 
         <gokb-button
-          color="orange"
           @click="showCreateWithPresetsPopup"
           v-show="isEdit && step == 1 && loggedIn"
         >
@@ -782,7 +781,6 @@
         <v-spacer />
 
         <gokb-button
-          color="blue"
           :disabled="false"
           @click="showCreateWithPresetsPopup"
           v-show="!isEdit && step == 1 && !isPresetsCreateFromEditView"

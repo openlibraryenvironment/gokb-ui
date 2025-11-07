@@ -463,7 +463,6 @@ export default {
       this.checkIfSourceUrlIsValid()
     },
     packageId () {
-      console.log("******** ", this.packageId)
       if (this.packageId) {
         this.loadPackageTemplate()
       } else {
@@ -483,7 +482,6 @@ export default {
     }
   },
   async created () {
-    console.log("CREATED: ", this.packagePreset)
     if (!!this.packagePreset?.id) {
       this.packageId = this.packagePreset.id
       this.isFromEditRoute = true
@@ -496,14 +494,12 @@ export default {
       this.localValue = false
     },
     async checkIfSourceUrlIsValid() {
-      console.log("check Source URL...")
       let valid = true
 
       let urlToCheck = this.packageItem.source.url
       let oldUrl = this.packageTemplate._embedded?.source?.url
 
       if (urlToCheck === oldUrl) {
-        console.log("URL not changed")
         valid = false
       } else {
         const validationResult = await genericServices('rest/entities').checkUrl(urlToCheck, true, this.cancelToken.token)
@@ -514,7 +510,7 @@ export default {
       }
 
       this.sourceUrlValid = valid
-      console.log("Return Source URL valid: ", valid)
+
     },
     getLabelForDDC(id) {
       return ddcModel.getDdcLabel(id, this.$i18n.locale)
@@ -543,7 +539,6 @@ export default {
 
         if (result?.data) {
           this.packageTemplate = result.data
-          console.log("PACKAGE-TEMPLATE: ", this.packageTemplate)
           this.loadPresets()
         }
         this.presetDataIsLoading = false
@@ -551,9 +546,7 @@ export default {
       }
     },
     submit () {
-      console.log("+++ submit +++")
       const pckg = {
-        //presetId: this.packageId,
         provider: this.acceptProvider ? this.packageItem.provider : undefined,
         platform: this.acceptPlatform ? this.packageItem.nominalPlatform : undefined,
         name: this.packageItem.name,
@@ -615,7 +608,6 @@ export default {
       }
     },
     async loadPresets () {
-      console.log("***** CREATED ****** ", this.packageTemplate)
       this.packageItem.name = this.packageTemplate.name
       this.packageItem.provider = this.packageTemplate.provider
       this.packageItem.nominalPlatform = this.packageTemplate.nominalPlatform
@@ -672,29 +664,9 @@ export default {
         this.acceptFixed = false
       }
 
-
-      console.log("****** ", this.packageItem)
     }
   }
 
 
 }
 </script>
-<style>
-/* .table-action-icons {
-  white-space: nowrap;
-  text-align: right;
-}
-
-td > a {
-  color: rgba(var(--v-theme-primary));
-}
-
-.v-data-table-header__content > span {
-  color: rgba(var(--v-theme-primary));
-  font-weight: 700;
-  font-size: 12px !important;
-  letter-spacing: 0.1px;
-  white-space:nowrap;
-} */
-</style>
