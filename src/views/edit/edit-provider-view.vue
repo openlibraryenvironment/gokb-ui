@@ -227,7 +227,7 @@
               value="information"
               :active-class="tabClass"
             >
-              Anmerkungen
+              {{ $t('component.provider.infos.label') }}
             </v-tab>
 
           </v-tabs>
@@ -323,52 +323,45 @@
               value="information"
               class="mt-4"
             >
-             <!--  <gokb-org-notes-section
-                v-model="providerObject"
-                :disabled="isReadonly"
-              /> -->
-
               <gokb-section>
-
                 <v-row>
-                  <v-col cols="5"><h3>Format der Datenlieferung</h3></v-col>
-                  <v-col cols="5"><h3>GOKB-spezifische Erweiterung von KBART</h3></v-col>
+                  <v-col cols="5"><h3>{{ $t('component.provider.infos.format') }}</h3></v-col>
+                  <v-col cols="5"><h3>{{ $t('component.provider.infos.kbartExtension') }}</h3></v-col>
                 </v-row>
-
                 <br/>
                 <v-row>
                   <v-col cols="5">
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.supplyKbart"
-                                         class="ml-3"
-                                         label="KBART"
-                                         :readonly="isReadonly"
+                      v-model="providerObject.supplyKbart"
+                      class="ml-3"
+                      :label="$t('component.provider.infos.supply.kbart')"
+                      :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.supplyCsv"
-                                         class="ml-3"
-                                         label="Proprietäres CSV"
-                                         :readonly="isReadonly"
+                      v-model="providerObject.supplyCsv"
+                      class="ml-3"
+                      :label="$t('component.provider.infos.supply.csv')"
+                      :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.supplyMarc"
-                                         class="ml-3"
-                                         label="MARC21"
-                                         :readonly="isReadonly"
+                      v-model="providerObject.supplyMarc"
+                      class="ml-3"
+                      :label="$t('component.provider.infos.supply.marc')"
+                      :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.supplyOnix"
-                                         class="ml-3"
-                                         label="ONIX for Books 2.0/3.0"
-                                         :readonly="isReadonly"
+                      v-model="providerObject.supplyOnix"
+                      class="ml-3"
+                      :label="$t('component.provider.infos.supply.onix')"
+                      :readonly="isReadonly"
                     />
 
                     <br/>
 
-                    <h3>Bereitstellung von globalen KBART-Dateien</h3>
+                    <h3>{{ $t('component.provider.infos.supply.heading') }}</h3>
                     <br/>
 
                     <gokb-state-field
@@ -383,26 +376,26 @@
                     <gokb-url-field
                       v-model="providerObject.kbartHostUrl"
                       :disabled="isReadonly"
-                      label="URL zur KBART-Seite"
+                      :label="$t('component.provider.infos.supply.url')"
                     />
 
                     <br/>
 
-                    <h3>Autoupdate</h3>
+                    <h3>{{ $t('component.provider.infos.autoUpdate.label') }}</h3>
                     <br/>
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.autoImportSupported"
-                                         class="ml-3"
-                                         label="Autoimport unterstützt"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.autoImportSupported"
+                     class="ml-3"
+                     :label="$t('component.provider.infos.autoUpdate.supported')"
+                     :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.kbartUrlWithDateMask"
-                                         class="ml-3"
-                                         label="URL mit Datumsmaskierung"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.kbartUrlWithDateMask"
+                     class="ml-3"
+                     :label="$t('component.provider.infos.autoUpdate.dateMask')"
+                     :readonly="isReadonly"
                     />
 
                     <gokb-state-field
@@ -414,77 +407,73 @@
                       :readonly="isReadonly"
                     />
 
-
                   </v-col>
-
-
                   <v-col cols="5">
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.kbartExtensionZdbId"
-                                         class="ml-3"
-                                         label="zdb_id"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.kbartExtensionZdbId"
+                     class="ml-3"
+                     label="zdb_id"
+                     :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.kbartExtensionEzbId"
-                                         class="ml-3"
-                                         label="ezb_id"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.kbartExtensionEzbId"
+                     class="ml-3"
+                     label="ezb_id"
+                     :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.kbartExtensionLastChanged"
-                                         class="ml-3"
-                                         label="last_changed"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.kbartExtensionLastChanged"
+                     class="ml-3"
+                     label="last_changed"
+                     :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.kbartExtensionAccessStartDate"
-                                         class="ml-3"
-                                         label="access_start_date"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.kbartExtensionAccessStartDate"
+                     class="ml-3"
+                     label="access_start_date"
+                     :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.kbartExtensionAccessEndDate"
-                                         class="ml-3"
-                                         label="access_end_date"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.kbartExtensionAccessEndDate"
+                     class="ml-3"
+                     label="access_end_date"
+                     :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.kbartExtensionMedium"
-                                         class="ml-3"
-                                         label="medium"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.kbartExtensionMedium"
+                     class="ml-3"
+                     label="medium"
+                     :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.kbartExtensionMonographParentCollectionTitle"
-                                         class="ml-3"
-                                         label="monograph_parent_collection_title"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.kbartExtensionMonographParentCollectionTitle"
+                     class="ml-3"
+                     label="monograph_parent_collection_title"
+                     :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.kbartExtensionSeries"
-                                         class="ml-3"
-                                         label="series"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.kbartExtensionSeries"
+                     class="ml-3"
+                     label="series"
+                     :readonly="isReadonly"
                     />
 
                     <gokb-checkbox-field dense
-                                         v-model="providerObject.kbartExtensionSubjetArea"
-                                         class="ms-3"
-                                         label="subject_area"
-                                         :readonly="isReadonly"
+                     v-model="providerObject.kbartExtensionSubjetArea"
+                     class="ms-3"
+                     label="subject_area"
+                     :readonly="isReadonly"
                     />
-
                     <br/>
 
-                    <h3>Allgemeine Bemerkung</h3>
+                    <h3>{{ $t('component.provider.infos.generalNotes.label') }}</h3>
 
                     <v-col>
                       <gokb-comments-field
@@ -495,7 +484,7 @@
                       />
                     </v-col>
 
-                    Last Update Anmerkungen
+                    {{ $t('component.provider.infos.lastUpdated')  }}
                     <v-chip
                       class="ma-1"
                       label
@@ -510,18 +499,9 @@
                       </v-icon>
                       <span class="ml-1">{{ providerObject?.importInfoLastUpdated }}</span>
                     </v-chip>
-
                   </v-col>
-
                 </v-row>
-
               </gokb-section>
-
-
-
-
-
-
             </v-window-item>
           </v-window>
         </v-col>
@@ -568,6 +548,192 @@
           :sub-title="$tc('component.office.label', 2)"
           :disabled="isReadonly"
         />
+
+
+        <gokb-section
+          :sub-title="$t('component.provider.infos.label')"
+          v-model="infosExpanded"
+          expandable
+        >
+          <v-row>
+            <v-col cols="5"><h3>{{ $t('component.provider.infos.format') }}</h3></v-col>
+            <v-col cols="5"><h3>{{ $t('component.provider.infos.kbartExtension') }}</h3></v-col>
+          </v-row>
+          <br/>
+          <v-row>
+            <v-col cols="5">
+              <gokb-checkbox-field dense
+               v-model="providerObject.supplyKbart"
+               class="ml-3"
+               :label="$t('component.provider.infos.supply.kbart')"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.supplyCsv"
+               class="ml-3"
+               :label="$t('component.provider.infos.supply.csv')"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.supplyMarc"
+               class="ml-3"
+               :label="$t('component.provider.infos.supply.marc')"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.supplyOnix"
+               class="ml-3"
+               :label="$t('component.provider.infos.supply.onix')"
+               :readonly="isReadonly"
+              />
+
+              <br/>
+
+              <h3>{{ $t('component.provider.infos.supply.heading') }}</h3>
+              <br/>
+
+              <gokb-state-field
+                v-model="providerObject.preferredSupplyMethod"
+                :init-item="providerObject.preferredSupplyMethod"
+                url="refdata/categories/Org.PreferredSupplyMethod"
+                :label="$t('component.provider.preferredSupplyMethod.label')"
+                message-path="component.provider.preferredSupplyMethod"
+                :readonly="isReadonly"
+              />
+
+              <gokb-url-field
+                v-model="providerObject.kbartHostUrl"
+                :disabled="isReadonly"
+                :label="$t('component.provider.infos.supply.url')"
+              />
+
+              <br/>
+
+              <h3>{{ $t('component.provider.infos.autoUpdate.label') }}</h3>
+              <br/>
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.autoImportSupported"
+               class="ml-3"
+               :label="$t('component.provider.infos.autoUpdate.supported')"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartUrlWithDateMask"
+               class="ml-3"
+               :label="$t('component.provider.infos.autoUpdate.dateMask')"
+               :readonly="isReadonly"
+              />
+
+              <gokb-state-field
+                v-model="providerObject.kbartUpdateCycle"
+                :init-item="providerObject.kbartUpdateCycle"
+                message-path="component.source.frequency"
+                url="refdata/categories/Org.KbartUpdateCycle"
+                :label="$t('component.source.frequency.label')"
+                :readonly="isReadonly"
+              />
+
+            </v-col>
+            <v-col cols="5">
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionZdbId"
+               class="ml-3"
+               label="zdb_id"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionEzbId"
+               class="ml-3"
+               label="ezb_id"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionLastChanged"
+               class="ml-3"
+               label="last_changed"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionAccessStartDate"
+               class="ml-3"
+               label="access_start_date"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionAccessEndDate"
+               class="ml-3"
+               label="access_end_date"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionMedium"
+               class="ml-3"
+               label="medium"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionMonographParentCollectionTitle"
+               class="ml-3"
+               label="monograph_parent_collection_title"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionSeries"
+               class="ml-3"
+               label="series"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionSubjetArea"
+               class="ms-3"
+               label="subject_area"
+               :readonly="isReadonly"
+              />
+              <br/>
+
+              <h3>{{ $t('component.provider.infos.generalNotes.label') }}</h3>
+
+              <v-col>
+                <gokb-comments-field
+                  v-model="providerObject.comments"
+                  :disabled="isReadonly"
+                  show-title
+                  @update="addPendingChange"
+                />
+              </v-col>
+
+              {{ $t('component.provider.infos.lastUpdated')  }}
+              <v-chip
+                class="ma-1"
+                label
+              >
+                <v-icon
+                  :title="$t('component.general.lastUpdated')"
+                  class="pb-1"
+                  label
+                  medium
+                >
+                  mdi-refresh
+                </v-icon>
+                <span class="ml-1">{{ providerObject?.importInfoLastUpdated }}</span>
+              </v-chip>
+            </v-col>
+          </v-row>
+        </gokb-section>
+
       </div>
       <template #buttons>
         <gokb-button
@@ -677,6 +843,7 @@
         valid: true,
         notFound: false,
         tabsView: true,
+        infosExpanded: false,
         dateCreated: undefined,
         lastUpdated: undefined,
         deleteUrl: undefined,
@@ -858,10 +1025,10 @@
     methods: {
       saveInitialCommentsState () {
         if (this.providerObject.comments?.length > 0) {
-          //this.providerObject.comments.forEach(c => this.lastLoadComments.push(c.value))
-          this.lastLoadComments = this.providerObject.comments.map( (comment) => {
-             return comment.value
-            }
+          this.lastLoadComments = this.providerObject.comments.map( comment => ({
+            id: comment.id,
+            value: comment.value
+            })
           )
         }
       },
@@ -880,38 +1047,23 @@
             this.providerObject.kbartExtensionSeries, this.providerObject.kbartExtensionSubjetArea, this.providerObject.autoImportSupported, this.providerObject.kbartUrlWithDateMask, this.providerObject.kbartUpdateCycle?.id, this.providerObject.kbartHostUrl,
             this.providerObject.preferredSupplyMethod?.id]
 
-          console.log("old: ", compareState)
-          console.log("new: ", actualState)
-
           for (var i = 0; i < compareState.length; i++) {
             if (compareState[i] !== actualState[i]) {
-              console.log("CHANGE: ", i, compareState[i], actualState[i])
               changed = true
               break;
             }
           }
 
           // check comments
-          if (this.lastLoadComments?.length !== this.providerObject.comments.length) {
-            changed = true
-          }
-          else {
-            for (var i = 0; i < this.providerObject.length; i++) {
-              let com = this.providerObject[i].value
-              let exists = false
-              for (var j = 0; j < this.lastLoadComments.length; j++) {
-                if (com === this.lastLoadComments[j]) {
-                  exists = true
-                  break
-                }
-              }
-              if (!exists) {
-                changed = true
-                break
-              }
+          if (!changed) {
+            if (this.lastLoadComments?.length !== this.providerObject.comments.length) {
+              changed = true
+            } else {
+              //filter the identical comments and check if number is == the actual number of comments
+              let identicalComments = this.providerObject.comments.filter(c1 => this.lastLoadComments.some(c2 => c1.id === c2.id && c1.value === c2.value))
+              changed = (identicalComments.length !== this.providerObject.comments.length)
             }
           }
-
         }
         return changed
       },
@@ -968,7 +1120,7 @@
           // make date compatible to Backend, i.e. format YYYY-MM-DD as String
           this.providerObject.importInfoLastUpdated = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1).toString()).slice(-2) + '-' + ('0' + date.getDate().toString()).slice(-2)
 
-          console.log("+++ Info last updated set new ++++ ", this.providerObject.importInfoLastUpdated)
+          log.debug("Info last updated set new: ", this.providerObject.importInfoLastUpdated)
         }
 
         const data = {
@@ -1002,9 +1154,6 @@
           })),
           activeGroup: activeGroup
         }
-
-
-        console.log("+++ UPDATE: ", data)
 
         const response = await this.catchError({
           promise: providerServices.createOrUpdate(data, this.cancelToken.token),
@@ -1053,7 +1202,6 @@
         }
       },
       reset () {
-        console.log("!!! RESET !!!!")
         this.tab = null
         this.uuid = undefined
         this.pendingChanges = {}
@@ -1124,7 +1272,6 @@
       },
       async mapRecord (data) {
 
-        console.log("+++++++ MAP RECORD: ", data)
         this.name = data.name
 
         this.version = data.version

@@ -1153,6 +1153,29 @@
           "label": "Lizenznehmer"
         }
       },
+      "infos": {
+        "label": "Anmerkungen",
+        "format": "Format der Datenlieferung",
+        "kbartExtension": "GOKB-spezifische Erweiterung von KBART",
+        "supply": {
+          "kbart": "KBART",
+          "csv": "Proprietäres CSV",
+          "marc": "MARC21",
+          "onix": "ONIX for Books 2.0/3.0",
+          "heading": "Bereitstellung von globalen KBART-Dateien",
+          "url": "URL zur KBART-Seite"
+        },
+        "autoUpdate": {
+          "label": "Autoupdate",
+          "supported": "Autoimport unterstützt",
+          "dateMask": "URL mit Datumsmaskierung"
+        },
+        "generalNotes": {
+          "label": "Allgemeine Bemerkung"
+        },
+        "lastUpdated": "Änderungsstand"
+
+      },
       "error": {
         "missingPlatform": {
           "label": "Für den angegebenen Plattformanbieter wurde keine Plattform ausgewählt."

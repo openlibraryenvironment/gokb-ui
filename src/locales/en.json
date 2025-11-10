@@ -1112,6 +1112,18 @@
       "preferredShortname": {
         "label": "Preferred Short Name"
       },
+      "preferredSupplyMethod": {
+        "label": "Preferred Method",
+        "FTP": {
+          "label": "FTP"
+        },
+        "HTTPSAuth": {
+          "label": "HTTPS Download with Authentification"
+        },
+        "HTTPSNoAuth": {
+          "label": "HTTPS Download without Authentification"
+        }
+      },
       "role": {
         "label": "Role | Roles",
         "Publisher": {
@@ -1141,6 +1153,29 @@
         "Licensee": {
           "label": "Licensee"
         }
+      },
+      "infos": {
+        "label": "Notes",
+        "format": "Format of data delivery",
+        "kbartExtension": "GOKB-specific Extension of KBART",
+        "supply": {
+          "kbart": "KBART",
+          "csv": "Proprietary CSV",
+          "marc": "MARC21",
+          "onix": "ONIX for Books 2.0/3.0",
+          "heading": "Provision of global KBART files",
+          "url": "URL to the KBART page"
+        },
+        "autoUpdate": {
+          "label": "Autoupdate",
+          "supported": "Autoimport supported",
+          "dateMask": "URL with date masking"
+        },
+        "generalNotes": {
+          "label": "General Notes"
+        },
+        "lastUpdated": "Revision"
+
       },
       "error": {
         "missingPlatform": {
