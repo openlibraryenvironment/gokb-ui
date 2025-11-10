@@ -251,6 +251,41 @@
       "titleIdNamespace": "title_id Namensraum für {0}",
       "monographs": "Monographien",
       "serials": "Serials"
+    },
+    "preset": {
+      "label": "Paket mit Vorgabewerten erstellen",
+      "tableHead": {
+        "field": "Feld",
+        "value": "Wert",
+        "accept": "Übernehmen?",
+        "identifier": "Identifikator",
+        "scheme": "Schema"
+      },
+      "choosePackage": {
+        "label": "Wählen Sie das Paket, dessen Werte Sie übernehmen möchten.",
+        "searchFieldLabel": "Paket-Vorlage",
+        "packageName": "Paketname",
+        "advice": "Sie können nach dem Namen des Pakets oder nach dem exakten Wert eines Paket-Identifikators suchen.",
+        "packageExistsMessage": "Ändern Sie bitte den Namen des Pakets."
+      },
+      "loading": "Paketdaten werden geladen...",
+      "transferValues": {
+        "general": "Allgemeine Informationen",
+        "static": "Folgende Werte können Sie übernehmen",
+        "identifiers": "Identifikatoren",
+        "ddc": "Sacherschließung",
+        "autoUpdate": "Update-Informationen"
+      },
+      "btnUsePreset": "Paket als Vorlage nutzen",
+      "btnLoadPresets": "Vorgabewerte laden",
+      "warning": {
+        "externalSourceExcluded": "Update-Informationen von Paketen aus fremden Quellen (EZB, we:kb) können nicht übernommen werden.",
+        "urlExists": "Die URL muss geändert werden."
+      },
+      "adopt": {
+        "ddc": "Sacherschließung übernehmen",
+        "autoUpdate": "Update-Infos übernehmen"
+      }
     }
   },
   "validation": {

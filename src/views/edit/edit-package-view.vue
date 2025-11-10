@@ -117,6 +117,12 @@
         @import="mapImportData"
       />
 
+      <gokb-create-package-with-presets-popup
+        v-if="createWithPresetsPopupVisible"
+        v-model="createWithPresetsPopupVisible"
+        :packagePreset="packageItem"
+        @loadPresets="mapPresetData"
+      />
 
       <v-stepper
         v-model="step"
@@ -722,6 +728,14 @@
           :message="submitConfirmationMessage"
           @confirmed="submitPackage"
         />
+
+        <gokb-button
+          @click="showCreateWithPresetsPopup"
+          v-show="isEdit && step == 1 && loggedIn"
+        >
+          {{ $t('popups.preset.btnUsePreset') }}
+        </gokb-button>
+
         <gokb-button
           v-if="!isReadonly"
           @click="reset"
@@ -767,7 +781,15 @@
         <v-spacer />
 
         <gokb-button
-          color="primary"
+          :disabled="false"
+          @click="showCreateWithPresetsPopup"
+          v-show="!isEdit && step == 1 && !isPresetsCreateFromEditView"
+        >
+          {{ $t('popups.preset.btnLoadPresets') }}
+        </gokb-button>
+
+
+        <gokb-button
           :disabled="false"
           @click="showExternalSourceImportPopup"
           v-show="!isEdit && step == 1"
@@ -833,6 +855,7 @@
   import sourceServices from '@/shared/services/source-services'
   import loading from '@/shared/models/loading'
   import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
+  import GokbCreatePackageWithPresetsPopup from '@/shared/popups/gokb-create-package-with-presets-popup'
   import log from '@/shared/utils/logger'
 import { isReadonly } from 'vue'
 
@@ -868,12 +891,33 @@ import { isReadonly } from 'vue'
       GokbAlternateNamesSection,
       GokbConfirmationPopup,
       GokbEditJobPopup,
-      GokbImportExternalSourcePackagePopup
+      GokbImportExternalSourcePackagePopup,
+      GokbCreatePackageWithPresetsPopup
     },
     extends: BaseComponent,
     props: {
       id: {
         type: [Number, String],
+        required: false,
+        default: undefined
+      },
+      maintenance: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      kbartJob: {
+        type: String,
+        required: false,
+        default: undefined
+      },
+      initMessageCode: {
+        type: String,
+        required: false,
+        default: undefined
+      },
+      packagePresets: {
+        type: Object,
         required: false,
         default: undefined
       }
@@ -900,7 +944,9 @@ import { isReadonly } from 'vue'
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
         externalSourceImportPopupVisible: false,
+        createWithPresetsPopupVisible: false,
         isImportFromExternalSource: false,
+        isPresetsCreateFromEditView: false,
         externalSource: undefined,
         urlUpdate: false,
         currentName: undefined,
@@ -1116,6 +1162,10 @@ import { isReadonly } from 'vue'
 
       let pars = history?.state
 
+      if (pars?.loadPresets === "true") {
+        this.mapPresetData(null)
+      }
+
       if (!!pars?.initMessageCode) {
         if (pars.initMessageCode.includes('success')) {
           this.messageColor = 'success'
@@ -1234,6 +1284,9 @@ import { isReadonly } from 'vue'
 
         return false
       },
+      showCreateWithPresetsPopup () {
+        this.createWithPresetsPopupVisible = true
+      },
       showExternalSourceImportPopup () {
         this.externalSourceImportPopupVisible = true
       },
@@ -1251,6 +1304,32 @@ import { isReadonly } from 'vue'
         this.pendingChanges.provider = true
         this.pendingChanges.nominalPlatform = true
         this.pendingChanges.source = true
+      },
+      async mapPresetData (preset) {
+        console.log("++++ EDIT PACKAGE VIEW +++++ ", preset)
+
+        if (!preset) {
+          //try loading from local storage
+          preset = JSON.parse(localStorage.getItem("PackagePreset"))
+          this.isPresetsCreateFromEditView = true
+        }
+
+        if (!!preset) {
+          this.allNames.name = preset.name
+          this.packageItem.provider = preset.provider
+          this.packageItem.nominalPlatform = preset.platform
+          this.packageItem.scope = preset.scope
+          this.packageItem.contentType = preset.contentType
+          this.packageItem.global = preset.global.name
+          this.packageItem.consistent = preset.consistent
+          this.packageItem.breakable = preset.breakable
+          this.packageItem.fixed = preset.fixed
+          this.packageItem.ids = preset.ids
+          this.packageItem.subjects = preset.subjects
+          this.sourceItem = preset.source
+        }
+        this.createWithPresetsPopupVisible = false
+
       },
       go2NextStep () {
         if (this.step < 4) {
@@ -1355,6 +1434,10 @@ import { isReadonly } from 'vue'
         this.showSnackbar = false
         this.errors = {}
         this.updateStepErrors()
+
+        if (this.isPresetsCreateFromEditView) {
+          localStorage.removeItem("PackagePreset")
+        }
 
         if (this.importStatus !== 'info') {
           this.importStatus = undefined
@@ -1465,6 +1548,7 @@ import { isReadonly } from 'vue'
               })
 
               this.kbart = undefined
+              let kbartMessage = undefined
 
               if (kbartResult.status === 403) {
                 kbartMessage = 'kbart.transmission.error.denied'

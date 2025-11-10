@@ -48,6 +48,7 @@ const api = (log, errorModel, accountModel, createRouter, HomeView, loading, cre
         meta: {
           code: 'route.package.create'
         },
+        props: true,
         component: () => import('@/views/edit/edit-package-view.vue')
       },
       {

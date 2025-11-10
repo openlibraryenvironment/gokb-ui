@@ -476,6 +476,7 @@
 
       namespaceServices.fetchNamespacesList(this.cancelToken.token)
       languageServices.fetchLanguagesList(this.cancelToken.token)
+
     },
     methods: {
       toggleDarkMode () {

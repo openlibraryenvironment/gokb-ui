@@ -12,7 +12,7 @@
     min-width="150px"
     :placeholder="placeholder"
     :append-icon="appendIcon"
-    :validate-on="validateOnBlur ? 'blur' : 'input'"
+    :validate-on="validateOnGeneric ? validateOnGeneric : validateOnBlur ? 'blur' : 'input'"
     :clearable="allowClear && editable"
     :density="dense ? 'compact' : 'default'"
     :persistent-placeholder="!!placeholder"
@@ -69,6 +69,11 @@
         type: String,
         required: false,
         default: 'text',
+      },
+      validateOnGeneric: {
+        type: String,
+        required: false,
+        default: undefined
       },
       validateOnBlur: {
         type: Boolean,
