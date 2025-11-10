@@ -39,7 +39,7 @@
         </v-chip>
       </span>
       <v-btn
-        v-if="localValue.length < knownLanguages.length"
+        v-if="localValue.length < knownLanguages.length && !disabled"
         color="primary"
         size="small"
         class="ml-2"
