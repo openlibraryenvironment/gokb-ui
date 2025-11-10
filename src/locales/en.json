@@ -252,38 +252,38 @@
       "serials": "Serials"
     },
     "preset": {
-      "label": "Create a package with default values",
+      "label": "Create Package from Template",
       "tableHead": {
-        "field": "field",
-        "value": "value",
-        "accept": "Accept?",
-        "identifier": "identifier",
-        "scheme": "scheme"
+        "field": "Field",
+        "value": "Value",
+        "accept": "Transfer?",
+        "identifier": "Identifier",
+        "scheme": "Scheme"
       },
       "choosePackage": {
         "label": "Select the package whose values you want to transfer.",
-        "searchFieldLabel": "Package template",
-        "advice": "You can search for the name of the package or for the exact value of a package identifier.",
-        "packageName": "Package name",
+        "searchFieldLabel": "Package Template",
+        "advice": "You can search for the name of the package or the exact value of a package identifier.",
+        "packageName": "Package Name",
         "packageExistsMessage": "Please change the name of the package."
       },
-      "loading": "The package data will be loaded.",
+      "loading": "Loading package data...",
       "transferValues": {
         "general": "General Information",
-        "static": "You can adopt the following values",
+        "static": "You can transfer the following values",
         "identifiers": "Identifiers",
         "ddc": "Cataloging",
-        "autoUpdate": "Update information"
+        "autoUpdate": "Update Information"
       },
       "btnUsePreset": "Use Package as template",
       "btnLoadPresets": "Load Presets",
       "warning": {
-        "externalSourceExcluded": "Update informationen of packages from external sources (EZB, we:kb) can not be transferred.",
+        "externalSourceExcluded": "Update information of packages from external sources (EZB, we:kb) can not be transferred.",
         "urlExists": "The URL must be changed."
       },
       "adopt": {
-        "ddc": "Adopt subject indexing",
-        "autoUpdate": "Adopt update information"
+        "ddc": "Transfer subject indexing",
+        "autoUpdate": "Transfer update information"
       }
     }
   },

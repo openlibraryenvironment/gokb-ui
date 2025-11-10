@@ -102,17 +102,23 @@
             <tr>
               <td>{{ $t('component.types.Org', 1) }}</td>
               <td>{{ packageTemplate.provider?.name }}</td>
-              <td><gokb-checkbox-field dense
-                v-model="acceptProvider"
-              /></td>
+              <td>
+                <gokb-checkbox-field
+                  dense
+                  v-model="acceptProvider"
+                  hide-details
+                />
+              </td>
             </tr>
 
             <tr>
               <td>{{ $t('component.types.Platform', 1) }}</td>
               <td>{{ packageTemplate.nominalPlatform?.name }}</td>
                 <td>
-                  <gokb-checkbox-field dense
+                  <gokb-checkbox-field
+                    dense
                     v-model="acceptPlatform"
+                    hide-details
                   />
                 </td>
             </tr>
@@ -121,8 +127,10 @@
               <td>{{ $t('component.package.scope.label') }}</td>
               <td>{{ packageTemplate.scope?.name ? $t('component.package.scope.' + packageTemplate.scope?.name + '.label') : '' }}</td>
               <td>
-                <gokb-checkbox-field dense
+                <gokb-checkbox-field
+                  dense
                   v-model="acceptScope"
+                  hide-details
                 />
               </td>
             </tr>
@@ -131,8 +139,10 @@
               <td>{{ $t('component.package.contentType.label') }}</td>
               <td>{{ packageTemplate.contentType?.name ? $t('component.package.contentType.' + packageTemplate.contentType?.name + '.label') : '' }}</td>
               <td>
-                <gokb-checkbox-field dense
+                <gokb-checkbox-field
+                  dense
                   v-model="acceptContentType"
+                  hide-details
                 />
               </td>
             </tr>
@@ -143,8 +153,8 @@
               <td>
                 <gokb-checkbox-field
                   dense
-                  class="mt-4"
                   v-model="acceptGlobal"
+                  hide-details
                 />
               </td>
             </tr>
@@ -154,8 +164,8 @@
               <td>{{ packageTemplate.consistent?.name === 'Yes' ? $t('default.true') : $t('default.false') }}</td>
               <td>
                 <gokb-checkbox-field dense
-                  class="mt-4"
                   v-model="acceptConsistent"
+                  hide-details
                 />
               </td>
             </tr>
@@ -165,8 +175,8 @@
               <td>{{ packageTemplate.fixed?.name === 'Yes' ? $t('default.true') : $t('default.false') }}</td>
               <td>
                 <gokb-checkbox-field dense
-                  class="mt-4"
                   v-model="acceptFixed"
+                  hide-details
                 />
               </td>
             </tr>
@@ -176,8 +186,8 @@
               <td>{{ packageTemplate.breakable?.name === 'Yes' ? $t('default.true') : $t('default.false') }}</td>
               <td>
                 <gokb-checkbox-field dense
-                  class="mt-4"
                   v-model="acceptBreakable"
+                  hide-details
                 />
               </td>
             </tr>
@@ -276,7 +286,7 @@
                 <br/>
 
                 <v-row>
-                  <v-col cols="8">
+                  <v-col>
                     <gokb-text-field
                       v-model="packageItem.source.url"
                       :style="acceptAutoUpdate && !sourceUrlValid ? {'color': 'red'} : {}"
@@ -341,12 +351,10 @@
               </v-col>
             </v-row>
             <v-row v-else>
-              <v-col cols="2"><span >{{ $t('popups.preset.adopt.autoUpdate') }}</span></v-col>
               <v-col>
                 <gokb-checkbox-field
-                  dense
                   v-model="acceptAutoUpdate"
-
+                  :label="$t('popups.preset.adopt.autoUpdate')"
                 />
               </v-col>
             </v-row>

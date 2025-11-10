@@ -265,10 +265,10 @@
         "label": "Wählen Sie das Paket, dessen Werte Sie übernehmen möchten.",
         "searchFieldLabel": "Paket-Vorlage",
         "packageName": "Paketname",
-        "advice": "Sie können nach dem Namen des Pakets, oder nach dem exakten Wert eines Paket-Identifikators suchen.",
+        "advice": "Sie können nach dem Namen des Pakets oder nach dem exakten Wert eines Paket-Identifikators suchen.",
         "packageExistsMessage": "Ändern Sie bitte den Namen des Pakets."
       },
-      "loading": "Die Paketdaten werden geladen.",
+      "loading": "Paketdaten werden geladen...",
       "transferValues": {
         "general": "Allgemeine Informationen",
         "static": "Folgende Werte können Sie übernehmen",

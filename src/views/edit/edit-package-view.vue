@@ -790,7 +790,6 @@
 
 
         <gokb-button
-          color="primary"
           :disabled="false"
           @click="showExternalSourceImportPopup"
           v-show="!isEdit && step == 1"
