@@ -170,13 +170,13 @@
   import providerServices from '@/shared/services/provider-services'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
-  import GokbWebendpointField from "../../simple/gokb-webendpoint-field/gokb-webendpoint-field.vue";
-  import GokbEntityField from "../../simple/gokb-entity-field/gokb-entity-field.vue";
-  import GokbSelectField from "../../base/gokb-select-field/gokb-select-field.vue";
+  //import GokbWebendpointField from "../../simple/gokb-webendpoint-field/gokb-webendpoint-field.vue";
+  //import GokbEntityField from "../../simple/gokb-entity-field/gokb-entity-field.vue";
+  //import GokbSelectField from "../../base/gokb-select-field/gokb-select-field.vue";
 
   export default {
     name: 'GokbSourceField',
-    components: {GokbSelectField, GokbEntityField, GokbWebendpointField},
+    // components: {GokbSelectField, GokbEntityField, GokbWebendpointField},
     extends: BaseComponent,
     emits: ['update:model-value'],
     props: {
@@ -248,7 +248,7 @@
     },
     computed: {
       importNowDisabled () {
-        return !this.readonly && !this.item.url
+        return !this.readonly && (!this.item.url && !(this.isFTPTransfer && !!this.item.ftpUrl))
       },
       activatedDisabled () {
         return !this.readonly && (!this.item.url || !this.item.frequency) && !this.item.automaticUpdates
@@ -257,7 +257,7 @@
         return !this.readonly && (!this.item.url || !this.item.frequency) && this.item.automaticUpdates ? this.$i18n.t("component.source.error.activatedNoInfo") : undefined
       },
       fullFtpUrl () {
-        return this.formatFtpPath()
+        return this.formatFtpPath(this.item.ftpUrl)
       },
       isAdmin() {
         return account.loggedIn() && account.hasRole('ROLE_ADMIN')
@@ -352,14 +352,43 @@
       console.log("created: ", this.item?.transferMethod)
     },
     methods: {
-      formatFtpPath () {
-        let result = this.item.webEndpoint?.url ? this.item.webEndpoint.url + '' + (this.item.ftpUrl ? this.item.ftpUrl : '') : ''
+      formatFtpPath (filepath) {
+        console.log("+++ format path +++")
+        //let result = this.item.webEndpoint?.url ? this.item.webEndpoint.url + '' + (this.item.ftpUrl ? this.item.ftpUrl : '') : ''
         /* TODO:
         if (this.item.selectedWebEndpoint?.url) {
           let serverParts = this.item.selectedWebEndpoint.url.split('/')
           let fileParts = this.item.ftpUrl?.split('/')
         } */
-        return result
+
+        let hostname = this.item.webEndpoint?.url
+        let filename = ""
+        let directory = "/"
+
+        if (hostname?.includes("/")) {
+          let parts = hostname.split("/")
+          hostname = parts[0]
+          for(var i = 1; i < parts.length; i++){
+            directory = directory.concat(parts[i] + "/")
+          }
+        }
+
+        let ftpUrl = this.item.ftpUrl
+        if (ftpUrl?.startsWith("/")) {
+          ftpUrl = ftpUrl.substring(1)
+        }
+
+        if(ftpUrl?.includes("/")){
+          let parts = ftpUrl.split("/")
+          filename = parts[parts.length - 1]
+          directory = directory + ftpUrl.substring(0, ftpUrl.lastIndexOf("/") + 1)
+        }
+        else {
+          filename = ftpUrl
+        }
+
+
+        return hostname + directory + filename
       },
       setVisibleStatusForTitleIdFields () {
         if (this.mixedContent) {
