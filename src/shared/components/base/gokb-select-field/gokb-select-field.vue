@@ -21,7 +21,7 @@
         :items="localizedItems"
         :label="label"
         :placeholder="placeholder"
-        :item-title="itemTitle"
+        :item-title="itemTitleActive"
         :item-value="itemValue"
         :rules="selectRules"
         :no-data-text="$t('search.results.empty')"
@@ -136,6 +136,16 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      itemTitle: {
+        type: String,
+        required: false,
+        default: 'name'
+      },
+      itemValue: {
+        type: String,
+        required: false,
+        default: 'id'
       }
     },
     data () {
@@ -143,8 +153,7 @@
         rawItems: [],
         localizedItems: [],
         stateLabel: undefined,
-        itemTitle: 'name',
-        itemValue: 'id'
+        itemTitleActive: undefined
       }
     },
     computed: {
@@ -189,6 +198,7 @@
           this.setInit(this.initItem)
         }
       }
+      this.itemTitleActive = this.itemTitle
     },
     methods: {
       transform (result) {

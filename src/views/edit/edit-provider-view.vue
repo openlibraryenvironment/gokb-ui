@@ -98,6 +98,57 @@
             class="mx-4"
           >
             <v-tab
+              value="roles"
+              :active-class="tabClass"
+            >
+              {{ $tc('component.provider.role.label', 2) }}
+              <v-chip class="ma-2">
+                {{ allRoles.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.roles"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert-decagram
+              </v-icon>
+              <v-icon
+                v-if="!isReadonly"
+                v-for="e in errors.roles"
+                :title="$t(e.messageCode)"
+                color="error"
+                small
+              >
+                mdi-alert-outline
+              </v-icon>
+            </v-tab>
+            <v-tab
+              value="platforms"
+              :disabled="!isPlatformProvider"
+              :active-class="tabClass"
+            >
+              {{ $tc('component.platform.label', 2) }}
+              <v-chip class="ma-2">
+                {{ allPlatforms.length }}
+              </v-chip>
+              <v-icon
+                v-if="pendingChanges.platforms"
+                :title="$t('pending.lists.changed')"
+                small
+              >
+                mdi-alert
+              </v-icon>
+              <v-icon
+                v-if="!isReadonly"
+                v-for="e in errors.platforms"
+                :title="$t(e.messageCode)"
+                color="error"
+                small
+              >
+                mdi-alert
+              </v-icon>
+            </v-tab>
+            <v-tab
               value="variants"
               :active-class="tabClass"
             >
@@ -123,22 +174,6 @@
               </v-chip>
               <v-icon
                 v-if="pendingChanges.ids"
-                :title="$t('pending.lists.changed')"
-                small
-              >
-                mdi-alert-decagram
-              </v-icon>
-            </v-tab>
-            <v-tab
-              value="platforms"
-              :active-class="tabClass"
-            >
-              {{ $tc('component.platform.label', 2) }}
-              <v-chip class="ma-2">
-                {{ allPlatforms.length }}
-              </v-chip>
-              <v-icon
-                v-if="pendingChanges.platforms"
                 :title="$t('pending.lists.changed')"
                 small
               >
@@ -187,8 +222,41 @@
                 mdi-alert-decagram
               </v-icon>
             </v-tab>
+
+            <v-tab
+              value="information"
+              :active-class="tabClass"
+            >
+              {{ $t('component.provider.infos.label') }}
+            </v-tab>
+
           </v-tabs>
           <v-window v-model="tab">
+            <v-window-item
+              value="roles"
+              class="mt-4"
+            >
+              <gokb-org-roles-section
+                v-model="allRoles"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.roles"
+                @update="addPendingChange"
+              />
+            </v-window-item>
+            <v-window-item
+              value="platforms"
+              class="mt-4"
+            >
+              <gokb-platform-section
+                v-model="allPlatforms"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.providedPlatforms"
+                :provider-id="providerObject.id"
+                @update="addPendingChange"
+              />
+            </v-window-item>
             <v-window-item
               value="variants"
               class="mt-4"
@@ -210,19 +278,6 @@
                 :show-title="false"
                 :disabled="isReadonly"
                 :api-errors="errors.ids"
-                @update="addPendingChange"
-              />
-            </v-window-item>
-            <v-window-item
-              value="platforms"
-              class="mt-4"
-            >
-              <gokb-platform-section
-                v-model="allPlatforms"
-                :show-title="false"
-                :disabled="isReadonly"
-                :api-errors="errors.providedPlatforms"
-                :provider-id="providerObject.id"
                 @update="addPendingChange"
               />
             </v-window-item>
@@ -263,10 +318,207 @@
                 @update="addPendingChange"
               />
             </v-window-item>
+
+            <v-window-item
+              value="information"
+              class="mt-4"
+            >
+              <gokb-section>
+                <v-row>
+                  <v-col cols="5"><h3>{{ $t('component.provider.infos.format') }}</h3></v-col>
+                  <v-col cols="5"><h3>{{ $t('component.provider.infos.kbartExtension') }}</h3></v-col>
+                </v-row>
+                <br/>
+                <v-row>
+                  <v-col cols="5">
+                    <gokb-checkbox-field dense
+                      v-model="providerObject.supplyKbart"
+                      class="ml-3"
+                      :label="$t('component.provider.infos.supply.kbart')"
+                      :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                      v-model="providerObject.supplyCsv"
+                      class="ml-3"
+                      :label="$t('component.provider.infos.supply.csv')"
+                      :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                      v-model="providerObject.supplyMarc"
+                      class="ml-3"
+                      :label="$t('component.provider.infos.supply.marc')"
+                      :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                      v-model="providerObject.supplyOnix"
+                      class="ml-3"
+                      :label="$t('component.provider.infos.supply.onix')"
+                      :readonly="isReadonly"
+                    />
+
+                    <br/>
+
+                    <h3>{{ $t('component.provider.infos.supply.heading') }}</h3>
+                    <br/>
+
+                    <gokb-state-field
+                      v-model="providerObject.preferredSupplyMethod"
+                      :init-item="providerObject.preferredSupplyMethod"
+                      url="refdata/categories/Org.PreferredSupplyMethod"
+                      :label="$t('component.provider.preferredSupplyMethod.label')"
+                      message-path="component.provider.preferredSupplyMethod"
+                      :readonly="isReadonly"
+                    />
+
+                    <gokb-url-field
+                      v-model="providerObject.kbartHostUrl"
+                      :disabled="isReadonly"
+                      :label="$t('component.provider.infos.supply.url')"
+                    />
+
+                    <br/>
+
+                    <h3>{{ $t('component.provider.infos.autoUpdate.label') }}</h3>
+                    <br/>
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.autoImportSupported"
+                     class="ml-3"
+                     :label="$t('component.provider.infos.autoUpdate.supported')"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartUrlWithDateMask"
+                     class="ml-3"
+                     :label="$t('component.provider.infos.autoUpdate.dateMask')"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-state-field
+                      v-model="providerObject.kbartUpdateCycle"
+                      :init-item="providerObject.kbartUpdateCycle"
+                      message-path="component.source.frequency"
+                      url="refdata/categories/Org.KbartUpdateCycle"
+                      :label="$t('component.source.frequency.label')"
+                      :readonly="isReadonly"
+                    />
+
+                  </v-col>
+                  <v-col cols="5">
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionZdbId"
+                     class="ml-3"
+                     label="zdb_id"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionEzbId"
+                     class="ml-3"
+                     label="ezb_id"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionLastChanged"
+                     class="ml-3"
+                     label="last_changed"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionAccessStartDate"
+                     class="ml-3"
+                     label="access_start_date"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionAccessEndDate"
+                     class="ml-3"
+                     label="access_end_date"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionMedium"
+                     class="ml-3"
+                     label="medium"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionMonographParentCollectionTitle"
+                     class="ml-3"
+                     label="monograph_parent_collection_title"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionSeries"
+                     class="ml-3"
+                     label="series"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionSubjetArea"
+                     class="ms-3"
+                     label="subject_area"
+                     :readonly="isReadonly"
+                    />
+                    <br/>
+
+                    <h3>{{ $t('component.provider.infos.generalNotes.label') }}</h3>
+
+                    <v-col>
+                      <gokb-comments-field
+                        v-model="providerObject.comments"
+                        :disabled="isReadonly"
+                        show-title
+                        @update="addPendingChange"
+                      />
+                    </v-col>
+
+                    {{ $t('component.provider.infos.lastUpdated')  }}
+                    <v-chip
+                      class="ma-1"
+                      label
+                    >
+                      <v-icon
+                        :title="$t('component.general.lastUpdated')"
+                        class="pb-1"
+                        label
+                        medium
+                      >
+                        mdi-refresh
+                      </v-icon>
+                      <span class="ml-1">{{ providerObject?.importInfoLastUpdated }}</span>
+                    </v-chip>
+                  </v-col>
+                </v-row>
+              </gokb-section>
+            </v-window-item>
           </v-window>
         </v-col>
       </v-row>
       <div v-else>
+        <gokb-org-roles-section
+          v-model="allRoles"
+          :expanded="allRoles.length > 0"
+          :disabled="isReadonly"
+        />
+        <gokb-platform-section
+          v-model="allPlatforms"
+          :expanded="allPlatforms.length > 0"
+          :sub-title="$tc('component.platform.label', 2)"
+          :provider-id="providerObject.id"
+          :disabled="isReadonly"
+        />
         <gokb-alternate-names-section
           v-model="allNames.alts"
           :expanded="allNames.alts.length > 0"
@@ -275,13 +527,6 @@
         <gokb-identifier-section
           v-model="providerObject.ids"
           :expanded="providerObject.ids.length > 0"
-          :disabled="isReadonly"
-        />
-        <gokb-platform-section
-          v-model="allPlatforms"
-          :expanded="allPlatforms.length > 0"
-          :sub-title="$tc('component.platform.label', 2)"
-          :provider-id="providerObject.id"
           :disabled="isReadonly"
         />
         <gokb-packages-section
@@ -303,6 +548,192 @@
           :sub-title="$tc('component.office.label', 2)"
           :disabled="isReadonly"
         />
+
+
+        <gokb-section
+          :sub-title="$t('component.provider.infos.label')"
+          v-model="infosExpanded"
+          expandable
+        >
+          <v-row>
+            <v-col cols="5"><h3>{{ $t('component.provider.infos.format') }}</h3></v-col>
+            <v-col cols="5"><h3>{{ $t('component.provider.infos.kbartExtension') }}</h3></v-col>
+          </v-row>
+          <br/>
+          <v-row>
+            <v-col cols="5">
+              <gokb-checkbox-field dense
+               v-model="providerObject.supplyKbart"
+               class="ml-3"
+               :label="$t('component.provider.infos.supply.kbart')"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.supplyCsv"
+               class="ml-3"
+               :label="$t('component.provider.infos.supply.csv')"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.supplyMarc"
+               class="ml-3"
+               :label="$t('component.provider.infos.supply.marc')"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.supplyOnix"
+               class="ml-3"
+               :label="$t('component.provider.infos.supply.onix')"
+               :readonly="isReadonly"
+              />
+
+              <br/>
+
+              <h3>{{ $t('component.provider.infos.supply.heading') }}</h3>
+              <br/>
+
+              <gokb-state-field
+                v-model="providerObject.preferredSupplyMethod"
+                :init-item="providerObject.preferredSupplyMethod"
+                url="refdata/categories/Org.PreferredSupplyMethod"
+                :label="$t('component.provider.preferredSupplyMethod.label')"
+                message-path="component.provider.preferredSupplyMethod"
+                :readonly="isReadonly"
+              />
+
+              <gokb-url-field
+                v-model="providerObject.kbartHostUrl"
+                :disabled="isReadonly"
+                :label="$t('component.provider.infos.supply.url')"
+              />
+
+              <br/>
+
+              <h3>{{ $t('component.provider.infos.autoUpdate.label') }}</h3>
+              <br/>
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.autoImportSupported"
+               class="ml-3"
+               :label="$t('component.provider.infos.autoUpdate.supported')"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartUrlWithDateMask"
+               class="ml-3"
+               :label="$t('component.provider.infos.autoUpdate.dateMask')"
+               :readonly="isReadonly"
+              />
+
+              <gokb-state-field
+                v-model="providerObject.kbartUpdateCycle"
+                :init-item="providerObject.kbartUpdateCycle"
+                message-path="component.source.frequency"
+                url="refdata/categories/Org.KbartUpdateCycle"
+                :label="$t('component.source.frequency.label')"
+                :readonly="isReadonly"
+              />
+
+            </v-col>
+            <v-col cols="5">
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionZdbId"
+               class="ml-3"
+               label="zdb_id"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionEzbId"
+               class="ml-3"
+               label="ezb_id"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionLastChanged"
+               class="ml-3"
+               label="last_changed"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionAccessStartDate"
+               class="ml-3"
+               label="access_start_date"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionAccessEndDate"
+               class="ml-3"
+               label="access_end_date"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionMedium"
+               class="ml-3"
+               label="medium"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionMonographParentCollectionTitle"
+               class="ml-3"
+               label="monograph_parent_collection_title"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionSeries"
+               class="ml-3"
+               label="series"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionSubjetArea"
+               class="ms-3"
+               label="subject_area"
+               :readonly="isReadonly"
+              />
+              <br/>
+
+              <h3>{{ $t('component.provider.infos.generalNotes.label') }}</h3>
+
+              <v-col>
+                <gokb-comments-field
+                  v-model="providerObject.comments"
+                  :disabled="isReadonly"
+                  show-title
+                  @update="addPendingChange"
+                />
+              </v-col>
+
+              {{ $t('component.provider.infos.lastUpdated')  }}
+              <v-chip
+                class="ma-1"
+                label
+              >
+                <v-icon
+                  :title="$t('component.general.lastUpdated')"
+                  class="pb-1"
+                  label
+                  medium
+                >
+                  mdi-refresh
+                </v-icon>
+                <span class="ml-1">{{ providerObject?.importInfoLastUpdated }}</span>
+              </v-chip>
+            </v-col>
+          </v-row>
+        </gokb-section>
+
       </div>
       <template #buttons>
         <gokb-button
@@ -375,9 +806,6 @@
 
 <script>
   import BaseComponent from '@/shared/components/base-component'
-  import GokbErrorComponent from '@/shared/components/complex/gokb-error-component'
-  import GokbCuratoryGroupSection from '@/shared/components/complex/gokb-curatory-group-section'
-  import GokbAlternateNamesSection from '@/shared/components/complex/gokb-alternate-names-section'
   import providerServices from '@/shared/services/provider-services'
   import searchServices from '@/shared/services/search-services'
   import accountModel from '@/shared/models/account-model'
@@ -385,9 +813,9 @@
   import log from '@/shared/utils/logger'
   import utils from '@/shared/utils/utils'
 
+
   export default {
     name: 'EditProviderView',
-    components: { GokbErrorComponent, GokbCuratoryGroupSection, GokbAlternateNamesSection },
     extends: BaseComponent,
     props: {
       id: {
@@ -405,6 +833,7 @@
         valid: true,
         notFound: false,
         tabsView: true,
+        infosExpanded: false,
         dateCreated: undefined,
         lastUpdated: undefined,
         deleteUrl: undefined,
@@ -416,8 +845,10 @@
           alts: []
         },
         allPlatforms: [],
+        allRoles: [],
         offices: [],
         errors: {},
+        hasErrors: false,
         updateUrl: undefined,
         showSnackbar: false,
         snackbarMessage: undefined,
@@ -425,6 +856,7 @@
         currentSnackBarTimeout: '-1',
         version: undefined,
         lastLoad: undefined,
+        lastLoadComments: undefined,
         providerObject: {
           id: undefined,
           ids: [],
@@ -435,6 +867,26 @@
           titleNamespaceMonograph: undefined,
           packageNamespace: undefined,
           homepage: undefined,
+          comments: [],
+          supplyKbart: undefined,
+          supplyCsv: undefined,
+          supplyMarc: undefined,
+          supplyOnix: undefined,
+          kbartExtensionZdbId: undefined,
+          kbartExtensionEzbId: undefined,
+          kbartExtensionLastChanged: undefined,
+          kbartExtensionAccessStartDate: undefined,
+          kbartExtensionAccessEndDate: undefined,
+          kbartExtensionMedium: undefined,
+          kbartExtensionMonographParentCollectionTitle: undefined,
+          kbartExtensionSeries: undefined,
+          kbartExtensionSubjetArea: undefined,
+          autoImportSupported: undefined,
+          kbartUrlWithDateMask: undefined,
+          kbartUpdateCycle: undefined,
+          kbartHostUrl: undefined,
+          preferredSupplyMethod: undefined,
+          importInfoLastUpdated: undefined
         }
       }
     },
@@ -471,6 +923,12 @@
       },
       accessible () {
         return this.isEdit || (accountModel.loggedIn() && accountModel.hasRole('ROLE_CONTRIBUTOR'))
+      },
+      'providerObject.importInfoLastUpdated' () {
+        return this.providerObject.importInfoLastUpdated ? new Date(this.providerObject.importInfoLastUpdated).toLocaleDateString('sv') : ''
+      },
+      isPlatformProvider () {
+        return this.allRoles.some(role => (role.value === 'Platform Provider'))
       }
     },
     watch: {
@@ -491,6 +949,18 @@
       },
       tab (val) {
         history.replaceState({}, "", window.location.toString().split('?')[0] + (!!val ? ('?tab=' + val) : ''))
+      },
+      allRoles: {
+        handler (vals) {
+          this.validate()
+        },
+        deep: true
+      },
+      allPlatforms: {
+        handler (vals) {
+          this.validate()
+        },
+        deep: true
       }
     },
     async created () {
@@ -522,6 +992,8 @@
       if (this.loggedIn) {
         this.tabsView = accountModel.tabbedView()
       }
+
+
     },
     mounted () {
       window.addEventListener('beforeunload', this.checkForChanges)
@@ -541,6 +1013,50 @@
       }
     },
     methods: {
+      saveInitialCommentsState () {
+        if (this.providerObject.comments?.length > 0) {
+          this.lastLoadComments = this.providerObject.comments.map( comment => ({
+            id: comment.id,
+            value: comment.value
+            })
+          )
+        }
+      },
+      isInfoUpdate () {
+
+        let changed = false
+
+        if (!!this.lastLoad?.id) {
+          let compareState = [this.lastLoad.supplyKbart, this.lastLoad.supplyCsv, this.lastLoad.supplyMarc, this.lastLoad.supplyOnix, this.lastLoad.kbartExtensionZdbId, this.lastLoad.kbartExtensionEzbId,
+            this.lastLoad.kbartExtensionLastChanged, this.lastLoad.kbartExtensionAccessStartDate, this.lastLoad.kbartExtensionAccessEndDate, this.lastLoad.kbartExtensionMedium, this.lastLoad.kbartExtensionMonographParentCollectionTitle,
+            this.lastLoad.kbartExtensionSeries, this.lastLoad.kbartExtensionSubjetArea, this.lastLoad.autoImportSupported, this.lastLoad.kbartUrlWithDateMask, this.lastLoad.kbartUpdateCycle?.id, this.lastLoad.kbartHostUrl,
+            this.lastLoad.preferredSupplyMethod?.id]
+
+          let actualState = [this.providerObject.supplyKbart, this.providerObject.supplyCsv, this.providerObject.supplyMarc, this.providerObject.supplyOnix, this.providerObject.kbartExtensionZdbId, this.providerObject.kbartExtensionEzbId,
+            this.providerObject.kbartExtensionLastChanged, this.providerObject.kbartExtensionAccessStartDate, this.providerObject.kbartExtensionAccessEndDate, this.providerObject.kbartExtensionMedium, this.providerObject.kbartExtensionMonographParentCollectionTitle,
+            this.providerObject.kbartExtensionSeries, this.providerObject.kbartExtensionSubjetArea, this.providerObject.autoImportSupported, this.providerObject.kbartUrlWithDateMask, this.providerObject.kbartUpdateCycle?.id, this.providerObject.kbartHostUrl,
+            this.providerObject.preferredSupplyMethod?.id]
+
+          for (var i = 0; i < compareState.length; i++) {
+            if (compareState[i] !== actualState[i]) {
+              changed = true
+              break;
+            }
+          }
+
+          // check comments
+          if (!changed) {
+            if (this.lastLoadComments?.length !== this.providerObject.comments.length) {
+              changed = true
+            } else {
+              //filter the identical comments and check if number is == the actual number of comments
+              let identicalComments = this.providerObject.comments.filter(c1 => this.lastLoadComments.some(c2 => c1.id === c2.id && c1.value === c2.value))
+              changed = (identicalComments.length !== this.providerObject.comments.length)
+            }
+          }
+        }
+        return changed
+      },
       executeAction (actionMethodName, actionMethodParameter) {
         this[actionMethodName](actionMethodParameter)
       },
@@ -589,6 +1105,14 @@
         this.showSnackbar = false
         const activeGroup = accountModel.activeGroup()
 
+        if (!this.providerObject.importInfoLastUpdated || this.isInfoUpdate()) {
+          var date = new Date()
+          // make date compatible to Backend, i.e. format YYYY-MM-DD as String
+          this.providerObject.importInfoLastUpdated = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1).toString()).slice(-2) + '-' + ('0' + date.getDate().toString()).slice(-2)
+
+          log.debug("Info last updated set new: ", this.providerObject.importInfoLastUpdated)
+        }
+
         const data = {
           ...this.providerObject,
           name: this.allNames.name,
@@ -599,6 +1123,10 @@
             variantType,
             id: typeof id === 'number' ? id : null
           })),
+          comments: this.providerObject.comments.map(( cmt ) => ({
+            ...cmt,
+            id: (typeof cmt.id === 'number' ? cmt.id : null)
+          })),
           offices: this.offices.map(office => ({
             ...office,
             id: (typeof office.id === 'number' ? office.id : null)
@@ -607,6 +1135,7 @@
             value: id.value,
             type: id.namespace
           })),
+          roles: this.allRoles.map (({ id }) => id),
           curatoryGroups: this.allCuratoryGroups.map(({ id }) => id),
           providedPlatforms: this.allPlatforms.map(({ name, primaryUrl, id }) => ({
             name,
@@ -615,6 +1144,7 @@
           })),
           activeGroup: activeGroup
         }
+
         const response = await this.catchError({
           promise: providerServices.createOrUpdate(data, this.cancelToken.token),
           instance: this
@@ -696,7 +1226,8 @@
           titleNamespaceSerial: undefined,
           packageNamespac: undefined,
           homepage: undefined,
-          preferredShortname: undefined
+          preferredShortname: undefined,
+          comments: []
         }
         this.reload()
       },
@@ -714,7 +1245,9 @@
 
           if (result.status === 200) {
             this.lastLoad = {}
+            this.lastLoadComments = []
             this.mapRecord(result.data)
+            this.saveInitialCommentsState()
           } else if (result.status === 404) {
             this.notFound = true
           }
@@ -728,6 +1261,7 @@
         }
       },
       async mapRecord (data) {
+
         this.name = data.name
 
         this.version = data.version
@@ -746,7 +1280,27 @@
           titleNamespaceSerial: data.titleNamespaceSerial,
           titleNamespaceMonograph: data.titleNamespaceMonograph,
           packageNamespace: data.packageNamespace,
-          preferredShortname: data.preferredShortname
+          preferredShortname: data.preferredShortname,
+          supplyKbart: data.supplyKbart,
+          supplyCsv: data.supplyCsv,
+          supplyMarc: data.supplyMarc,
+          supplyOnix: data.supplyOnix,
+          kbartExtensionZdbId: data.kbartExtensionZdbId,
+          kbartExtensionEzbId: data.kbartExtensionEzbId,
+          kbartExtensionLastChanged: data.kbartExtensionLastChanged,
+          kbartExtensionAccessStartDate: data.kbartExtensionAccessStartDate,
+          kbartExtensionAccessEndDate: data.kbartExtensionAccessEndDate,
+          kbartExtensionMedium: data.kbartExtensionMedium,
+          kbartExtensionMonographParentCollectionTitle: data.kbartExtensionMonographParentCollectionTitle,
+          kbartExtensionSeries: data.kbartExtensionSeries,
+          kbartExtensionSubjetArea: data.kbartExtensionSubjetArea,
+          autoImportSupported: data.autoImportSupported,
+          kbartUrlWithDateMask: data.kbartUrlWithDateMask,
+          kbartUpdateCycle: data.kbartUpdateCycle,
+          kbartHostUrl: data.kbartHostUrl,
+          //comments: data._embedded.comments,
+          preferredSupplyMethod: data.preferredSupplyMethod,
+          importInfoLastUpdated: data.importInfoLastUpdated
         }
 
         this.lastLoad = structuredClone(new_item_info)
@@ -759,7 +1313,19 @@
           isDeletable: !!this.updateUrl
         }))
 
+        new_item_info.comments = data._embedded.comments.map(({ id, value, language }) => ({
+          id,
+          value,
+          language,
+          isDeletable: !!this.updateUrl
+        })) || []
+
         this.providerObject = new_item_info
+
+        this.allRoles = data._embedded.roles.map(role => ({
+          ...role,
+          isDeletable: !!this.updateUrl
+        }))
 
         this.allNames = {
           name: data.name,
@@ -810,6 +1376,25 @@
       },
       markDeleted (val) {
         this.toDelete = val
+      },
+      validate () {
+        this.valid = true
+
+        if (!this.allNames.name) {
+          this.valid = false
+        }
+
+        if (this.isPlatformProvider && this.allPlatforms.length === 0) {
+          this.valid = false
+          this.errors.platforms = [{
+            messageCode: "component.provider.error.missingPlatform.label"
+          }]
+        } else if (this.allPlatforms.length > 0 && !this.isPlatformProvider) {
+          this.valid = false
+          this.errors.roles = [{
+            messageCode: "component.provider.error.missingRole.platform"
+          }]
+        }
       }
     }
   }

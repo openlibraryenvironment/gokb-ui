@@ -132,7 +132,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col cols="3">
         <gokb-checkbox-field
           v-model="item.automaticUpdates"
           :disabled="activatedDisabled"
@@ -140,6 +140,14 @@
           :label="$t('component.source.enableUpdate')"
           :opacity="activatedDisabled ? 0.33 : undefined"
           :error-messages="activatedErrorMessage"
+          dense
+        />
+      </v-col>
+      <v-col cols="3">
+        <gokb-checkbox-field
+          v-if="isAdmin"
+          v-model="item.ignoreSizeLimit"
+          :label="$t('component.source.ignoreSizeLimit')"
           dense
         />
       </v-col>
@@ -154,8 +162,6 @@
         />
       </v-col>
     </v-row>
-
-
   </gokb-section>
 </template>
 
@@ -163,6 +169,7 @@
   import sourceServices from '@/shared/services/source-services'
   import providerServices from '@/shared/services/provider-services'
   import BaseComponent from '@/shared/components/base-component'
+  import account from '@/shared/models/account-model'
   import GokbWebendpointField from "../../simple/gokb-webendpoint-field/gokb-webendpoint-field.vue";
   import GokbEntityField from "../../simple/gokb-entity-field/gokb-entity-field.vue";
   import GokbSelectField from "../../base/gokb-select-field/gokb-select-field.vue";
@@ -223,6 +230,7 @@
           titleIdMonograph: undefined,
           automaticUpdates: undefined,
           importConfig: undefined,
+          ignoreSizeLimit: false,
           update: false,
           webEndpoint: undefined,
           transferMethod: undefined,
@@ -250,6 +258,9 @@
       },
       fullFtpUrl () {
         return this.formatFtpPath()
+      },
+      isAdmin() {
+        return account.loggedIn() && account.hasRole('ROLE_ADMIN')
       }
     },
     watch: {
@@ -266,6 +277,7 @@
             this.item.url = val.url
             this.item.frequency = val.frequency
             this.item.automaticUpdates = val.automaticUpdates
+            this.item.ignoreSizeLimit = val.ignoreSizeLimit === true
             this.item.update = val.update
 
             if (!this.ignoreLegacyTitleID) {
@@ -384,6 +396,7 @@
             this.item.importConfig = result.data.importConfig
             this.item.titleIdSerial = result.data.titleIdSerial
             this.item.titleIdMonograph = result.data.titleIdMonograph
+            this.item.ignoreSizeLimit = result.data.ignoreSizeLimit === true
 
             this.item.ftpUrl = result.data.ftpUrl
             this.item.transferMethod = result.data.transferMethod

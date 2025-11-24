@@ -489,7 +489,7 @@
             }
             else if (response.resp.status === 500) {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('error.update.500', [this.$i18n.tc('component.review.label')]),
+              this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.review.label')]),
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
             }

@@ -63,8 +63,11 @@
     "ISOdateHint": "YYYY-MM-DD",
     "loading": "Loading ...",
     "languages": {
+      "label": "Language | Languages",
       "en": "English",
-      "de": "German"
+      "de": "German",
+      "eng": "English",
+      "ger": "German"
     },
     "error": {
       "label": "Error | Errors"
@@ -189,6 +192,9 @@
       },
       "pendingChanges": {
         "label": "You have unsaved changes! Are you sure you want to discard them?"
+      },
+      "deleteComment": {
+        "label": "Please confirm the deletion of all comments for this language."
       }
     },
     "login": {
@@ -244,6 +250,41 @@
       "titleIdNamespace": "title_id namespace for {0}",
       "monographs": "Monographs",
       "serials": "Serials"
+    },
+    "preset": {
+      "label": "Create Package from Template",
+      "tableHead": {
+        "field": "Field",
+        "value": "Value",
+        "accept": "Transfer?",
+        "identifier": "Identifier",
+        "scheme": "Scheme"
+      },
+      "choosePackage": {
+        "label": "Select the package whose values you want to transfer.",
+        "searchFieldLabel": "Package Template",
+        "advice": "You can search for the name of the package or the exact value of a package identifier.",
+        "packageName": "Package Name",
+        "packageExistsMessage": "Please change the name of the package."
+      },
+      "loading": "Loading package data...",
+      "transferValues": {
+        "general": "General Information",
+        "static": "You can transfer the following values",
+        "identifiers": "Identifiers",
+        "ddc": "Cataloging",
+        "autoUpdate": "Update Information"
+      },
+      "btnUsePreset": "Use Package as template",
+      "btnLoadPresets": "Load Presets",
+      "warning": {
+        "externalSourceExcluded": "Update information of packages from external sources (EZB, we:kb) can not be transferred.",
+        "urlExists": "The URL must be changed."
+      },
+      "adopt": {
+        "ddc": "Transfer subject indexing",
+        "autoUpdate": "Transfer update information"
+      }
     }
   },
   "validation": {
@@ -264,7 +305,9 @@
     "issueRange": "The start issue must be before the end issue",
     "missingStartIssue": "An end issue requires a set start issue!",
     "missingStartVolume": "An end volume requires a set start volume!",
-    "refdataLookup": "Unable to save unrecognized value!"
+    "refdataLookup": "Unable to save unrecognized value!",
+    "yearFormat": "Please enter a four digit year.",
+    "missingStart": "Please first provide a start value."
   },
   "job": {
     "label": "Import | Imports",
@@ -442,6 +485,7 @@
       "noTitleId": "This line does not contain a value for the common title id!",
       "noImportIds": "This line contains no reference identifiers (print/online), and no default namespace was selected!",
       "noAuthIds": "This line contains neither a 'print_identifier' nor an 'online_identifier'!",
+      "fileSize": "This uploaded KBART file is too big. Packages with KBART file sizes bigger than 20 MB have to be authorized by an administrator.",
       "url": {
         "mimeType": "KBART URL returned a wrong content type!",
         "unknown": "There were errors saving the KBART file!",
@@ -529,7 +573,8 @@
         "error": "The validator distinguishes between errors in the file structure itself and errors in individual data records within the file. If errors are identified in the file structure, the validation is aborted. This means that no individual titles are validated. Please correct the errors in the file structure and then run the validation again to obtain a complete result.",
         "warning": "Title lists that generate warnings can be imported into the GOKB even if they contain anomalies. It is strongly recommended that you check the anomalies first to make sure they are harmless.",
         "rowError": "Errors have been detected in title data rows. The file cannot be imported until these errors have been corrected.",
-        "encoding": "The encoding of this file is not UTF-8 and therefore cannot be processed. Please refer to the documentation on the GOKB website to find out how to solve this problem."
+        "encoding": "The encoding of this file is not UTF-8 and therefore cannot be processed. Please refer to the documentation on the GOKB website to find out how to solve this problem.",
+        "doiReplaced": "The namespace for the 'title_id' column of type '{0}' has been detected and automatically selected as 'DOI'. If this is not correct, please choose another value via the dropdown."
       }
     }
   },
@@ -550,6 +595,9 @@
     "delete": {
       "label": "Delete Profile",
       "confirm": "Are you sure you want to delete your profile? This can not be reverted!"
+    },
+    "groupAdmin": {
+      "label": "Group Administration"
     }
   },
   "register": {
@@ -903,7 +951,18 @@
       "globalNote": {
         "label": "Region/Consortium"
       },
-      "descriptionUrl": "URL to package description"
+      "descriptionUrl": "URL to package description",
+      "startYear": {
+        "label": "Start Year"
+      },
+      "endYear": {
+        "label": "End Year"
+      },
+      "singleYear": {
+        "label": "Licensing Year",
+        "tooltip": "If this package represents a yearly selection of a bigger package, please enter the year it represents."
+      },
+      "multiYear": "Multi-year Span"
     },
     "tipp": {
       "label": "Package Title | Package Titles",
@@ -1088,6 +1147,84 @@
       },
       "preferredShortname": {
         "label": "Preferred Short Name"
+      },
+      "preferredSupplyMethod": {
+        "label": "Preferred Method",
+        "FTP": {
+          "label": "FTP"
+        },
+        "HTTPSAuth": {
+          "label": "HTTPS Download with Authentification"
+        },
+        "HTTPSNoAuth": {
+          "label": "HTTPS Download without Authentification"
+        }
+      },
+      "role": {
+        "label": "Role | Roles",
+        "Publisher": {
+          "label": "Publisher"
+        },
+        "Platform Provider": {
+          "label": "Platform Provider"
+        },
+        "Imprint": {
+          "label": "Imprint"
+        },
+        "Content Provider": {
+          "label": "Content Provider"
+        },
+        "Issuing Body": {
+          "label": "Issuing Body"
+        },
+        "Broker": {
+          "label": "Broker"
+        },
+        "Vendor": {
+          "label": "Vendor"
+        },
+        "Licensor": {
+          "label": "Licensor"
+        },
+        "Licensee": {
+          "label": "Licensee"
+        }
+      },
+      "infos": {
+        "label": "Notes",
+        "format": "Format of data delivery",
+        "kbartExtension": "GOKB-specific Extension of KBART",
+        "supply": {
+          "kbart": "KBART",
+          "csv": "Proprietary CSV",
+          "marc": "MARC21",
+          "onix": "ONIX for Books 2.0/3.0",
+          "heading": "Provision of global KBART files",
+          "url": "URL to the KBART page"
+        },
+        "autoUpdate": {
+          "label": "Autoupdate",
+          "supported": "Autoimport supported",
+          "dateMask": "URL with date masking"
+        },
+        "generalNotes": {
+          "label": "General Notes"
+        },
+        "lastUpdated": "Revision"
+
+      },
+      "error": {
+        "missingPlatform": {
+          "label": "No platform was selected for the specified platform provider."
+        },
+        "missingRole": {
+          "platform": "No platform provider was selected for the specified platform."
+        }
+      },
+      "warning": {
+        "noPlatformRole": {
+          "label": "Adding platforms is only possible for platform providers."
+        }
       }
     },
     "organization": {
@@ -1143,12 +1280,14 @@
         "ROLE_USER": "User",
         "ROLE_SUPERUSER": "System",
         "ROLE_API": "API",
+        "ROLE_POWERUSER": "Power User",
         "Contributor": "Contributor",
         "Editor": "Editor",
         "Admin": "Admin",
         "User": "User",
         "API": "API",
-        "System": "System"
+        "System": "System",
+        "Power User": "Power User"
       },
       "enabled": {
         "label": "Enabled",
@@ -1215,6 +1354,9 @@
         "message": "Documentation for '{0}'",
         "urlBase": "https://gokb.org/en-gb/working-with-review-requests/"
       },
+      "titleReviews": {
+        "label": "Reference Title Reviews"
+      },
       "otherComponents": {
         "label": "Other Components",
         "add": "Link new component",
@@ -1224,6 +1366,12 @@
       },
       "candidates": {
         "label": "Candidates"
+      },
+      "targetGroup": {
+        "label": "Target Group"
+      },
+      "escalatedOnly": {
+        "label": "Only Escalated"
       },
       "showClosed": "Show closed requests",
       "edit": {
@@ -1236,6 +1384,11 @@
           "closedBulk": "Request closed | {0} requests closed",
           "reopened": "Request has been reopened.",
           "editingNotes": "The editing notes have been sucessfully updated."
+        },
+        "error": {
+          "escalate": {
+            "conflict": "This request has already been escalated to this group!"
+          }
         },
         "confirm": {
           "close": "Please confirm closing this review.",
@@ -1656,6 +1809,12 @@
           "info": "The package title could not be linked to a reference title due to its missing name",
           "action": "-",
           "toDo": "Research and add a name to the package title or delete it."
+        },
+        "External Editorial Request": {
+          "label": "External Editorial Request",
+          "info": "There has been a request to verify the records of linked identifiers in their source system.",
+          "action": "-",
+          "toDo": "Check linked systems for inconsistencies."
         }
       }
     },
@@ -1675,6 +1834,12 @@
         "Consortium": {
           "label": "Consortium"
         }
+      },
+      "cancelledImportAlerts": {
+        "label": "Enable daily alerts for failed automated package imports"
+      },
+      "newReviewsAlerts": {
+        "label": "Enable daily alerts for newly created review requests"
       }
     },
     "variantName": {
@@ -1690,6 +1855,7 @@
       "lastRun": "Last Run",
       "ezbMatch": "Match EZB",
       "enableUpdate": "Activated",
+      "ignoreSizeLimit": "Ignore Size Limit",
       "url": "URL",
       "filePath": "File Path",
       "transferMethod": {
@@ -1801,6 +1967,10 @@
           "label": "Copy stable URL to clipboard",
           "success": "The stable URL has been copied to your clipboard!"
         }
+      },
+      "comment": {
+        "label": "Comment | Comments",
+        "notFound": "No comments found for the selected language!"
       }
     }
   }

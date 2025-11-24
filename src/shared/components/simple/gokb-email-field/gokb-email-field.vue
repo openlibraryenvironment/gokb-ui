@@ -33,15 +33,24 @@
       rules: {
         type: Array,
         required: false,
-        default (props) {
-          return [v => (((!props.required && (!v || v.length === 0))) || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) || props.localError]
-        }
-      }
+        default: undefined
+      },
     },
-    computed: {
-      localError () {
-        return this.$i18n.t('validation.missingEmail')
-      }
+    watch: {
+      rules: {
+        handler (r) {
+          if (r?.length > 0) {
+            this.localRules = r
+          }
+          else {
+            this.localRules = [v => (((!this.required && (!v || v.length === 0))) || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) || this.$i18n.t('validation.missingEmail')]
+          }
+        },
+        deep: true
+      },
+    },
+    mounted () {
+      this.localRules = [v => (((!this.required && (!v || v.length === 0))) || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) || this.$i18n.t('validation.missingEmail')]
     }
   }
 </script>

@@ -6,6 +6,15 @@
     :label="label"
     :disabled="disabled"
   >
+    <template #label>
+      {{ label }}
+      <span
+        v-if="required"
+        style="color:red"
+      >
+        *
+      </span>
+    </template>
     <slot />
   </v-radio-group>
 </template>
@@ -29,7 +38,7 @@
         required: true,
         default: '',
         validator: function (value) {
-          return value === undefined || value === null || typeof value === 'string'
+          return value === undefined || value === null || typeof value === 'string' || typeof value === 'number'
         }
       },
       disabled: {
@@ -37,6 +46,11 @@
         required: false,
         default: false,
       },
+      required: {
+        type: Boolean,
+        required: false,
+        default: false
+      }
     },
     computed: {
       localValue: {

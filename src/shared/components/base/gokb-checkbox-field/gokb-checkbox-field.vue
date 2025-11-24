@@ -6,6 +6,7 @@
     :disabled="disabled || readonly"
     :readonly="readonly"
     :density="dense ? 'compact' : 'default'"
+    :hide-details="hideDetails"
   >
     <template #append>
       <gokb-tooltip v-if="!!gokbTooltip" classes="opacity-100" :code="gokbTooltip" />
@@ -30,7 +31,7 @@
       },
       modelValue: {
         type: Boolean,
-        required: true,
+        required: false,
         default: false
       },
       readonly: {
@@ -52,6 +53,11 @@
         type: Number,
         required: false,
         default: 0.87
+      },
+      hideDetails: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     computed: {

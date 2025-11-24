@@ -135,10 +135,10 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.office.type.label'), align: 'start', value: 'function.name', sortable: false, width: '15%' },
-          { text: this.$i18n.tc('component.office.name'), align: 'start', value: 'name', sortable: false, width: '15%' },
-          { text: this.$i18n.tc('component.general.language.label'), align: 'start', value: 'lang', sortable: false, width: '15%' },
-          { text: this.$i18n.tc('component.office.email'), align: 'start', value: 'email', sortable: false }
+          { title: this.$i18n.tc('component.office.type.label'), align: 'start', value: 'function.name', sortable: false, width: '15%' },
+          { title: this.$i18n.tc('component.office.name'), align: 'start', value: 'name', sortable: false, width: '15%' },
+          { title: this.$i18n.tc('component.general.language.label'), align: 'start', value: 'lang', sortable: false, width: '15%' },
+          { title: this.$i18n.tc('component.office.email'), align: 'start', value: 'email', sortable: false }
         ]
       },
       title () {
@@ -153,7 +153,7 @@
         this[actionMethodName](actionMethodParameter)
       },
       tempId () {
-        return 'tempId' + Math.random().toString(36).substr(2, 5)
+        return 'tempId' + Math.random().toString(36).substring(2, 5)
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'

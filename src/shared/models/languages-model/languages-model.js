@@ -18,6 +18,9 @@ const api = (reactive) => {
     },
     iso2toIso3 (iso2) {
       return iso2iso3[iso2]
+    },
+    getAllLocales () {
+      return iso2iso3
     }
   }
 }

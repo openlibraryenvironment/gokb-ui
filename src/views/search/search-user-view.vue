@@ -66,39 +66,45 @@
         return [
           {
             title: this.$i18n.t('component.user.username'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             value: 'link'
           },
           {
             title: this.$i18n.t('component.user.enabled.label'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             value: 'enabled'
           },
           {
             title: this.$i18n.t('component.user.role.contributor'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             value: 'contributor'
           },
           {
             title: this.$i18n.t('component.user.role.editor'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             value: 'editor'
           },
           {
             title: this.$i18n.t('component.user.role.API'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             value: 'api'
           },
           {
             title: this.$i18n.t('component.user.role.admin'),
-            align: 'left',
+            align: 'start',
             sortable: false,
             value: 'admin'
+          },
+          {
+            title: this.$i18n.t('component.general.dateCreated'),
+            align: 'end',
+            sortable: true,
+            value: 'dateCreated'
           }
         ]
       },
@@ -147,15 +153,17 @@
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({ id, username, roles, status, _links: { update: { href: updateUrl } } }) => ({
-          id,
-          link: { value: username, route: EDIT_USER_ROUTE, id: 'id' },
-          enabled: this.$i18n.t('component.user.enabled.' + (status ? 'active' : 'inactive') + '.label'),
-          contributor: roles.filter(role => role.authority === 'ROLE_CONTRIBUTOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
-          editor: roles.filter(role => role.authority === 'ROLE_EDITOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
-          admin: roles.filter(role => role.authority === 'ROLE_ADMIN').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
-          api: roles.filter(role => role.authority === 'ROLE_API').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
-          updateUrl
+        return data.map((item) => ({
+          id: item.id,
+          link: { value: item.username, route: EDIT_USER_ROUTE, id: 'id' },
+          enabled: this.$i18n.t('component.user.enabled.' + (item.status ? 'active' : 'inactive') + '.label'),
+          contributor: item.roles.filter(role => role.authority === 'ROLE_CONTRIBUTOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
+          editor: item.roles.filter(role => role.authority === 'ROLE_EDITOR').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
+          admin: item.roles.filter(role => role.authority === 'ROLE_ADMIN').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
+          api: item.roles.filter(role => role.authority === 'ROLE_API').length > 0 ? this.$i18n.t('default.true') : this.$i18n.t('default.false'),
+          lastUpdated: !!item.lastUpdated ? new Date(item.lastUpdated).toLocaleString('sv').substring(0, 10) : undefined,
+          dateCreated: !!item.dateCreated ? new Date(item.dateCreated).toLocaleString('sv').substring(0, 10) : undefined,
+          updateUrl: item._links?.update?.href || undefined
         }))
       },
       _confirmDeactivateSelectedItems () {

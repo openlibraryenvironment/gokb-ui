@@ -204,27 +204,16 @@
     },
     methods: {
       _transformForTable (data) {
-        return data.map(({
-          id,
-          name,
-          type,
-          status,
-          publishedFrom,
-          publisher,
-          dateFirstInPrint,
-          dateFirstOnline,
-          _embedded,
-          _links
-        }) => ({
-          id,
-          type: this.$i18n.tc('component.title.type.' + type),
-          startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
-          link: { value: name, route: EDIT_TITLE_ROUTE, id: 'id' },
-          linkTwo: publisher ? { value: publisher.name, route: EDIT_PROVIDER_ROUTE, id: 'publisherId' } : undefined,
-          publisher: _embedded.publisher.map(pub => pub.name).join(', '),
-          status: status?.value,
-          deleteUrl: _links?.delete?.href || undefined,
-          updateUrl: _links?.update?.href || undefined
+        return data.map((item) => ({
+          id: item.id,
+          type: this.$i18n.tc('component.title.type.' + item.type),
+          startDate: (item.dateFirstInPrint || (item.dateFirstOnline || item.publishedFrom))?.substr(0, 4),
+          link: { value: item.name, route: EDIT_TITLE_ROUTE, id: 'id' },
+          linkTwo: item.publisher ? { value: item.publisher.name, route: EDIT_PROVIDER_ROUTE, id: 'publisherId' } : undefined,
+          publisher: item._embedded.publisher.map(pub => pub.name).join(', '),
+          status: item.status?.value,
+          deleteUrl: item._links?.delete?.href || undefined,
+          updateUrl: item._links?.update?.href || undefined
         }))
       },
       _transformForExport (data) {

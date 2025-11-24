@@ -63,8 +63,11 @@
     "ISOdateHint": "JJJJ-MM-TT",
     "loading": "Lädt ...",
     "languages": {
+      "label": "Sprache | Sprachen",
       "en": "Englisch",
-      "de": "Deutsch"
+      "de": "Deutsch",
+      "eng": "Englisch",
+      "ger": "Deutsch"
     },
     "error": {
       "label": "Fehler | Fehler"
@@ -190,6 +193,9 @@
       },
       "pendingChanges": {
         "label": "Es gibt ungespeicherte Änderungen! Bitte bestätigen Sie, dass diese verworfen werden sollen."
+      },
+      "deleteComment": {
+        "label": "Bitte bestätigen Sie, dass die Bemerkungen für diese Sprache gelöscht werden sollen."
       }
     },
     "login": {
@@ -245,6 +251,41 @@
       "titleIdNamespace": "title_id Namensraum für {0}",
       "monographs": "Monographien",
       "serials": "Serials"
+    },
+    "preset": {
+      "label": "Paket mit Vorgabewerten erstellen",
+      "tableHead": {
+        "field": "Feld",
+        "value": "Wert",
+        "accept": "Übernehmen?",
+        "identifier": "Identifikator",
+        "scheme": "Schema"
+      },
+      "choosePackage": {
+        "label": "Wählen Sie das Paket, dessen Werte Sie übernehmen möchten.",
+        "searchFieldLabel": "Paket-Vorlage",
+        "packageName": "Paketname",
+        "advice": "Sie können nach dem Namen des Pakets oder nach dem exakten Wert eines Paket-Identifikators suchen.",
+        "packageExistsMessage": "Ändern Sie bitte den Namen des Pakets."
+      },
+      "loading": "Paketdaten werden geladen...",
+      "transferValues": {
+        "general": "Allgemeine Informationen",
+        "static": "Folgende Werte können Sie übernehmen",
+        "identifiers": "Identifikatoren",
+        "ddc": "Sacherschließung",
+        "autoUpdate": "Update-Informationen"
+      },
+      "btnUsePreset": "Paket als Vorlage nutzen",
+      "btnLoadPresets": "Vorgabewerte laden",
+      "warning": {
+        "externalSourceExcluded": "Update-Informationen von Paketen aus fremden Quellen (EZB, we:kb) können nicht übernommen werden.",
+        "urlExists": "Die URL muss geändert werden."
+      },
+      "adopt": {
+        "ddc": "Sacherschließung übernehmen",
+        "autoUpdate": "Update-Infos übernehmen"
+      }
     }
   },
   "validation": {
@@ -264,7 +305,9 @@
     "issueRange": "Das erste Heft muss vor dem letzten Heft liegen.",
     "missingStartIssue": "Die Angabe eines letzten Hefts erfordert ein Anfangsheft.",
     "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband.",
-    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden."
+    "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden.",
+    "yearFormat": "Bitte geben Sie ein vierstelliges Jahr an.",
+    "missingStart": "Bitte geben Sie einen Startwert an."
   },
   "job": {
     "label": "Import | Importe",
@@ -442,6 +485,7 @@
       "noTitleId": "Diese Zeile enthält keinen Wert für den Anbieternamensraum!",
       "noImportIds": "Diese Zeile enthält keine Identifikatoren (print/online), und es wurde kein Anbieternamensraum ausgewählt!",
       "noAuthIds": "Diese Zeile enthält weder einen 'print_identifier' noch einen 'online_identifier'!",
+      "fileSize": "Die KBART-Datei ist zu groß. Der Import von Dateien größer als 20 MB muss für ein Paket von einem Administrator autorisiert werden.",
       "url": {
         "mimeType": "Die KBART-URL liefert kein akzeptiertes Dateiformat zurück!",
         "unknown": "Bei der Abholung der KBART-Datei sind Fehler aufgetreten!",
@@ -529,7 +573,8 @@
         "error": "Der Validator unterscheidet zwischen Fehlern in der Dateistruktur selbst und Fehlern einzelner Datensätze innerhalb der Datei. Wenn Fehler in der Dateistruktur identifiziert wurden, bricht die Validierung ab. Dadurch werden keine einzelnen Titel validiert. Bitte beheben Sie die Fehler in der Dateistruktur und führen Sie danach die Validierung erneut durch, um ein vollständiges Ergebnis zu erhalten.",
         "warning": "Titellisten, die Warnungen erzeugen, können in die GOKB importiert werden, auch wenn es Auffälligkeiten gibt. Es wird dringend empfohlen, vorab die Auffälligkeiten auf ihre Unbedenklichkeit zu prüfen.",
         "rowError": "Es wurden Fehler in einzelnen Titeldaten festgestellt. Die Datei kann erst importiert werden, wenn diese Fehler behoben wurden.",
-        "encoding": "Diese Datei ist nicht in UTF-8 codiert und kann daher nicht verarbeitet werden. Lesen Sie in der Dokumentation auf der GOKB-Webseite nach, wie Sie dieses Problem beheben können."
+        "encoding": "Diese Datei ist nicht in UTF-8 codiert und kann daher nicht verarbeitet werden. Lesen Sie in der Dokumentation auf der GOKB-Webseite nach, wie Sie dieses Problem beheben können.",
+        "doiReplaced": "Der Namensraum für die Spalte 'title_id' des Typs '{0}' wurde als 'DOI' identifiziert und die entsprechende Auswahl angepasst. Falls dies nicht korrekt ist, wählen Sie bitte den korrekten Namensraum manuell aus."
       }
     }
   },
@@ -550,6 +595,9 @@
     "delete": {
       "label": "Profil Löschen",
       "confirm": "Sind Sie sicher, dass Sie das Profil löschen möchten? Die Löschung kann nicht rückgängig gemacht werden!"
+    },
+    "groupAdmin": {
+      "label": "Gruppen-Administration"
     }
   },
   "register": {
@@ -903,7 +951,17 @@
       "globalNote": {
         "label": "Region/Konsortium"
       },
-      "descriptionUrl": "URL zur Beschreibung des Pakets"
+      "descriptionUrl": "URL zur Beschreibung des Pakets",
+      "startYear": {
+        "label": "Anfangsjahr"
+      },
+      "endYear": {
+        "label": "Endjahr"
+      },
+      "singleYear": {
+        "label": "Jahresabschnitt"
+      },
+      "multiYear": "Mehrjährig"
     },
     "tipp": {
       "label": "Pakettitel | Pakettitel",
@@ -1088,6 +1146,84 @@
       },
       "preferredShortname": {
         "label": "Empfohlene Kurzform"
+      },
+      "preferredSupplyMethod": {
+        "label": "Bevorzugte Methode",
+        "FTP": {
+          "label": "FTP"
+        },
+        "HTTPSAuth": {
+          "label": "Download per HTTPS mit Authentifizierung"
+        },
+        "HTTPSNoAuth": {
+          "label": "Download per HTTPS ohne Authentifizierung"
+        }
+      },
+      "role": {
+        "label": "Rolle | Rollen",
+        "Publisher": {
+          "label": "Verlag"
+        },
+        "Platform Provider": {
+          "label": "Plattformanbieter"
+        },
+        "Imprint": {
+          "label": "Imprint"
+        },
+        "Content Provider": {
+          "label": "Inhaltsanbieter"
+        },
+        "Issuing Body": {
+          "label": "Herausgeber"
+        },
+        "Broker": {
+          "label": "Broker"
+        },
+        "Vendor": {
+          "label": "Anbieter"
+        },
+        "Licensor": {
+          "label": "Lizenzgeber"
+        },
+        "Licensee": {
+          "label": "Lizenznehmer"
+        }
+      },
+      "infos": {
+        "label": "Anmerkungen",
+        "format": "Format der Datenlieferung",
+        "kbartExtension": "GOKB-spezifische Erweiterung von KBART",
+        "supply": {
+          "kbart": "KBART",
+          "csv": "Proprietäres CSV",
+          "marc": "MARC21",
+          "onix": "ONIX for Books 2.0/3.0",
+          "heading": "Bereitstellung von globalen KBART-Dateien",
+          "url": "URL zur KBART-Seite"
+        },
+        "autoUpdate": {
+          "label": "Autoupdate",
+          "supported": "Autoimport unterstützt",
+          "dateMask": "URL mit Datumsmaskierung"
+        },
+        "generalNotes": {
+          "label": "Allgemeine Bemerkung"
+        },
+        "lastUpdated": "Änderungsstand"
+
+      },
+      "error": {
+        "missingPlatform": {
+          "label": "Für den angegebenen Plattformanbieter wurde keine Plattform ausgewählt."
+        },
+        "missingRole": {
+          "platform": "Für die angegebene Plattform wurde kein Plattformanbieter ausgewählt."
+        }
+      },
+      "warning": {
+        "noPlatformRole": {
+          "label": "Das Hinzufügen von Plattformen ist nur für Plattformanbieter möglich."
+        }
       }
     },
     "organization": {
@@ -1127,7 +1263,7 @@
       "label": "Benutzer | Benutzer",
       "username": "Benutzername",
       "register": "Registrierung",
-      "password": "Kennwort",
+      "password": "Passwort",
       "preferredLocaleString": {
         "label": "Bevorzugte Sprache"
       },
@@ -1143,12 +1279,14 @@
         "ROLE_USER": "Benutzer",
         "ROLE_SUPERUSER": "System",
         "ROLE_API": "API",
+        "ROLE_POWERUSER": "Power-User",
         "Contributor": "Bearbeiter",
         "Editor": "Editor",
         "Admin": "Admin",
         "User": "Benutzer",
         "API": "API",
-        "System": "System"
+        "System": "System",
+        "Power User": "Power-User"
       },
       "enabled": {
         "label": "Status",
@@ -1215,6 +1353,9 @@
         "message": "Dokumentation für '{0}'",
         "urlBase": "https://gokb.org/prufanfragen/"
       },
+      "titleReviews": {
+        "label": "Referenztitel-Anfragen"
+      },
       "otherComponents": {
         "label": "Weitere Komponenten",
         "add": "Weitere Komponente verknüpfen",
@@ -1224,6 +1365,12 @@
       },
       "candidates": {
         "label": "Kandidaten"
+      },
+      "targetGroup": {
+        "label": "Zielgruppe"
+      },
+      "escalatedOnly": {
+        "label": "Nur Eskaliert"
       },
       "showClosed": "Abgeschlossene anzeigen",
       "edit": {
@@ -1236,6 +1383,11 @@
           "closedBulk": "Prüfanfrage wurde geschlossen | {0} Prüfanfragen wurden geschlossen",
           "reopened": "Die Prüfanfrage wurde erneut geöffnet.",
           "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert."
+        },
+        "error": {
+          "escalate": {
+            "conflict": "Diese Prüfanfrage wurde bereits an diese Gruppe eskaliert!"
+          }
         },
         "confirm": {
           "close": "Bitte bestätigen Sie, dass Sie diese Prüfanfrage schließen möchten.",
@@ -1666,6 +1818,12 @@
           "info": "Für den Pakettitel kann auf Grund des fehlenden Namens kein neuer Referenztitel erzeugt werden",
           "action": "-",
           "toDo": "Fügen Sie manuell den korrekten Namen hinzu, oder löschen Sie den Pakettitel."
+        },
+        "External Editorial Request": {
+          "label": "Externe Redaktionsanfrage",
+          "info": "Es gab eine Anfrage zur Überprüfung der verknüpften Identifikatoren in ihrem Ursprungssystem.",
+          "action": "-",
+          "toDo": "Bitte überprüfen Sie die Identifikatoren im verknüpften System."
         }
       }
     },
@@ -1685,6 +1843,12 @@
         "Consortium": {
           "label": "Konsortium"
         }
+      },
+      "cancelledImportAlerts": {
+        "label": "Benachrichtigungen für fehlgeschlagene automatische Paket-Importe aktiviert"
+      },
+      "newReviewsAlerts": {
+        "label": "Benachrichtigungen für neue Prüfanfragen aktiviert"
       }
     },
     "variantName": {
@@ -1700,6 +1864,7 @@
       "lastRun": "Letzter Durchlauf",
       "ezbMatch": "EZB-Abgleich",
       "enableUpdate": "Aktiviert",
+      "ignoreSizeLimit": "Dateigröße ignorieren",
       "url": "URL",
       "filePath": "Dateipfad",
       "transferMethod": {
@@ -1811,6 +1976,10 @@
           "label": "Stabile URL in die Zwischenablage kopieren",
           "success": "Die stabile URL wurde in die Zwischenablage kopiert!"
         }
+      },
+      "comment": {
+        "label": "Bemerkung | Bemerkungen",
+        "notFound": "Es sind keine Bemerkungen in der aktuellen Sprache vorhanden!"
       }
     }
   }

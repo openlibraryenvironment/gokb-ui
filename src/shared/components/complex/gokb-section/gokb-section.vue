@@ -2,12 +2,12 @@
   <span>
     <v-card
       flat
-      class="mb-2"
+      class="mb-2 ml-n4"
+      color="bg"
       :style="styles"
     >
       <v-toolbar
         v-if="!!mainTitle && !subTitle"
-        color="header"
         class="pl-4 pr-4"
         density="compact"
         flat
@@ -44,7 +44,7 @@
       <v-toolbar
         v-else-if="!mainTitle && !!subTitle"
         height="63"
-        color="header"
+        color="bg"
         class="pl-4 pr-4"
         density="compact"
         flat
@@ -84,7 +84,7 @@
       <v-toolbar
         v-if="showActions && filters && localValue"
         height="63"
-        color="header"
+        color="bg"
         class="pt-1 pl-4"
         flat
       >
@@ -106,7 +106,7 @@
       <v-toolbar
         v-else-if="!subTitle && !mainTitle && !noToolBar"
         height="63"
-        color="header"
+        color="bg"
         class="pl-4 pr-4"
         density="compact"
         flat
