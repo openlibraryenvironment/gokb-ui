@@ -591,16 +591,13 @@ export default {
       if(this.acceptAutoUpdate) {
         source = {
           url: this.packageItem.source.url,
-          frequency: this.packageItem.source.frequency.id,
+          frequency: this.packageItem.source.frequency?.id,
           titleIdMonograph: this.packageItem.source.titleIdMonograph,
           titleIdSerial: this.packageItem.source.titleIdSerial,
           automaticUpdates: true
         }
       }
       pckg.source = source
-
-
-      //pckg.isFromEditRoute = this.isFromEditRoute
 
       if ( this.isFromEditRoute ) {
         localStorage.setItem("PackagePreset", JSON.stringify(pckg))
