@@ -812,7 +812,7 @@
           })
 
           for (const idx in all_editorial_groups) {
-            if (user_groups.some(ug => (ug.id === all_editorial_groups[idx].id)) && this.reviewComponent?.type === 'Journal') {
+            if (user_groups.some(ug => (ug.id === all_editorial_groups[idx].id)) && this.reviewComponent?.type === 'Journal' && this.reviewComponent?.type === 'Database') {
               this.externalRequestEnabled = true
             }
           }
