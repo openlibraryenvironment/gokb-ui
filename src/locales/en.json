@@ -1858,6 +1858,16 @@
       "ignoreSizeLimit": "Ignore Size Limit",
       "url": "URL",
       "filePath": "File Path",
+      "completePath": "Complete FTP Path",
+      "testFtpConnection": {
+        "label": "Test Connection",
+        "message": {
+          "success": "Connection successful",
+          "partlySuccessful": "Could connect to FTP Server but the File does not exist (at the moment).",
+          "connectError": "Could not connect to FTP Server.",
+          "configurationError": "The Configuration is incorrect."
+        }
+      },
       "transferMethod": {
         "label": "Transfer Method",
         "HTTP": {

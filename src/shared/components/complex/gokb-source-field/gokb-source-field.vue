@@ -29,18 +29,33 @@
           return-object
         />
       </v-col>
-      <v-col cols="8">
+      <v-col cols="6">
         <gokb-text-field
           v-model="item.ftpUrl"
           :label="$t('component.source.filePath')"
           :disabled="readonly"
+
         />
-        <span>
-            <!-- <v-icon class="pb-1" color="error">
-              mdi-close-thick
-            </v-icon> -->
-            Complete Path: {{ fullFtpUrl }}
+
+          <span >
+            {{ $t('component.source.completePath') }}: ftp://<i>{{ fullFtpUrl }}</i>
+            <v-icon color="success" v-if="ftpTestSuccessful" >
+              mdi-check-circle
+            </v-icon>
           </span>
+      </v-col>
+      <v-col cols="2">
+        <gokb-button
+          v-if="isFTPTransfer && item.webEndpoint && item.ftpUrl"
+          @click.prevent="testFTPConnection"
+          append-icon="mdi-lightbulb-on-10"
+          :disabled="ftpTestSuccessful"
+        >
+          {{ $t('component.source.testFtpConnection.label') }}
+        </gokb-button>
+
+        <span :style="{ 'color': ftpTestSuccessful ? 'green' : 'red' }"><br/><br/>{{ ftpTestMessage }}</span>
+
       </v-col>
     </v-row>
 
@@ -170,13 +185,10 @@
   import providerServices from '@/shared/services/provider-services'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
-  //import GokbWebendpointField from "../../simple/gokb-webendpoint-field/gokb-webendpoint-field.vue";
-  //import GokbEntityField from "../../simple/gokb-entity-field/gokb-entity-field.vue";
-  //import GokbSelectField from "../../base/gokb-select-field/gokb-select-field.vue";
+  import webendpointServices from "@/shared/services/webendpoint-services"
 
   export default {
     name: 'GokbSourceField',
-    // components: {GokbSelectField, GokbEntityField, GokbWebendpointField},
     extends: BaseComponent,
     emits: ['update:model-value'],
     props: {
@@ -243,7 +255,9 @@
         monographVisible: true,
         mixedContentVisible: true,
         ignoreLegacyTitleID: true,
-        isFTPTransfer: false
+        isFTPTransfer: false,
+        ftpTestSuccessful: false,
+        ftpTestMessage: undefined
       }
     },
     computed: {
@@ -341,25 +355,24 @@
         this.fetchDefaultNamespace()
       }
 
-      console.log("mounted: ", this.item?.transferMethod)
       if (this.item?.transferMethod?.value === 'FTP') {
-        console.log("iss FTP")
         this.isFTPTransfer = true
       }
 
+      this.$watch(vm => [vm.item.ftpUrl, vm.item.transferMethod, vm.item.webEndpoint],
+        val => {
+          this.ftpTestSuccessful = false
+          this.ftpTestMessage = undefined
+        }, {
+          immediate: true,
+        })
+
     },
     created () {
-      console.log("created: ", this.item?.transferMethod)
+
     },
     methods: {
       formatFtpPath (filepath) {
-        console.log("+++ format path +++")
-        //let result = this.item.webEndpoint?.url ? this.item.webEndpoint.url + '' + (this.item.ftpUrl ? this.item.ftpUrl : '') : ''
-        /* TODO:
-        if (this.item.selectedWebEndpoint?.url) {
-          let serverParts = this.item.selectedWebEndpoint.url.split('/')
-          let fileParts = this.item.ftpUrl?.split('/')
-        } */
 
         let hostname = this.item.webEndpoint?.url
         let filename = ""
@@ -386,7 +399,6 @@
         else {
           filename = ftpUrl
         }
-
 
         return hostname + directory + filename
       },
@@ -430,9 +442,21 @@
             this.item.ftpUrl = result.data.ftpUrl
             this.item.transferMethod = result.data.transferMethod
             this.item.webEndpoint = result.data.webEndpoint
-            console.log("fetch: ", this.item.transferMethod)
+
             if (this.item.transferMethod?.value === 'FTP' || this.item.transferMethod?.name === 'FTP') {
               this.isFTPTransfer = true
+
+              if(!!result.data.webEndpoint?.id) {
+                // complete webendpoint object must be loaded
+                const response = await this.catchError({
+                  promise: webendpointServices.get(result.data.webEndpoint.id, this.cancelToken.token),
+                  instance: this
+                })
+
+                this.item.webEndpoint = response.data.data
+
+              }
+
             }
 
             if (!!this.item.targetNamespace && !this.item.titleIdSerial && !this.item.titleIdMonograph) {
@@ -444,6 +468,7 @@
             if (!!this.item.url) {
               this.isExpanded = true
             }
+
             this.setVisibleStatusForTitleIdFields()
           }
         }
@@ -475,6 +500,17 @@
             this.setVisibleStatusForTitleIdFields()
         }
       },
+      async testFTPConnection () {
+
+        const checkResult = await this.catchError({
+          promise: webendpointServices.check({webhookendpoint: this.item.webEndpoint.id, url: this.item.ftpUrl}, this.cancelToken.token),
+          instance: this
+        })
+
+        this.ftpTestSuccessful = (checkResult?.data?.result === 'success')
+        this.ftpTestMessage = this.$i18n.t('component.source.testFtpConnection.message.' + checkResult?.data?.message)
+
+      }
     }
   }
 </script>
