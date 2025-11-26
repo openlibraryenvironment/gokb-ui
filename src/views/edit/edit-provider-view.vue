@@ -424,6 +424,13 @@
                     />
 
                     <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionDoiId"
+                     class="ml-3"
+                     label="doi_identifier"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
                      v-model="providerObject.kbartExtensionLastChanged"
                      class="ml-3"
                      label="last_changed"
@@ -651,6 +658,13 @@
                v-model="providerObject.kbartExtensionEzbId"
                class="ml-3"
                label="ezb_id"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionDoiId"
+               class="ml-3"
+               label="doi_identifier"
                :readonly="isReadonly"
               />
 
@@ -884,6 +898,7 @@
           supplyOnix: undefined,
           kbartExtensionZdbId: undefined,
           kbartExtensionEzbId: undefined,
+          kbartExtensionDoiId: undefined,
           kbartExtensionLastChanged: undefined,
           kbartExtensionAccessStartDate: undefined,
           kbartExtensionAccessEndDate: undefined,
@@ -1037,15 +1052,15 @@
         let changed = false
 
         if (!!this.lastLoad?.id) {
-          let compareState = [this.lastLoad.supplyKbart, this.lastLoad.supplyCsv, this.lastLoad.supplyMarc, this.lastLoad.supplyOnix, this.lastLoad.kbartExtensionZdbId, this.lastLoad.kbartExtensionEzbId,
+          let compareState = [this.lastLoad.supplyKbart, this.lastLoad.supplyCsv, this.lastLoad.supplyMarc, this.lastLoad.supplyOnix, this.lastLoad.kbartExtensionZdbId, this.lastLoad.kbartExtensionEzbId, this.lastLoad.kbartExtensionDoiId,
             this.lastLoad.kbartExtensionLastChanged, this.lastLoad.kbartExtensionAccessStartDate, this.lastLoad.kbartExtensionAccessEndDate, this.lastLoad.kbartExtensionMedium, this.lastLoad.kbartExtensionMonographParentCollectionTitle,
             this.lastLoad.kbartExtensionSeries, this.lastLoad.kbartExtensionSubjetArea, this.lastLoad.autoImportSupported, this.lastLoad.kbartUrlWithDateMask, this.lastLoad.kbartUpdateCycle?.id, this.lastLoad.kbartHostUrl,
             this.lastLoad.preferredSupplyMethod?.id]
 
           let actualState = [this.providerObject.supplyKbart, this.providerObject.supplyCsv, this.providerObject.supplyMarc, this.providerObject.supplyOnix, this.providerObject.kbartExtensionZdbId, this.providerObject.kbartExtensionEzbId,
-            this.providerObject.kbartExtensionLastChanged, this.providerObject.kbartExtensionAccessStartDate, this.providerObject.kbartExtensionAccessEndDate, this.providerObject.kbartExtensionMedium, this.providerObject.kbartExtensionMonographParentCollectionTitle,
-            this.providerObject.kbartExtensionSeries, this.providerObject.kbartExtensionSubjetArea, this.providerObject.autoImportSupported, this.providerObject.kbartUrlWithDateMask, this.providerObject.kbartUpdateCycle?.id, this.providerObject.kbartHostUrl,
-            this.providerObject.preferredSupplyMethod?.id]
+            this.providerObject.kbartExtensionDoiId, this.providerObject.kbartExtensionLastChanged, this.providerObject.kbartExtensionAccessStartDate, this.providerObject.kbartExtensionAccessEndDate, this.providerObject.kbartExtensionMedium,
+            this.providerObject.kbartExtensionMonographParentCollectionTitle, this.providerObject.kbartExtensionSeries, this.providerObject.kbartExtensionSubjetArea, this.providerObject.autoImportSupported, this.providerObject.kbartUrlWithDateMask,
+            this.providerObject.kbartUpdateCycle?.id, this.providerObject.kbartHostUrl, this.providerObject.preferredSupplyMethod?.id]
 
           for (var i = 0; i < compareState.length; i++) {
             if (compareState[i] !== actualState[i]) {
@@ -1297,6 +1312,7 @@
           supplyOnix: data.supplyOnix,
           kbartExtensionZdbId: data.kbartExtensionZdbId,
           kbartExtensionEzbId: data.kbartExtensionEzbId,
+          kbartExtensionDoiId: data.kbartExtensionDoiId,
           kbartExtensionLastChanged: data.kbartExtensionLastChanged,
           kbartExtensionAccessStartDate: data.kbartExtensionAccessStartDate,
           kbartExtensionAccessEndDate: data.kbartExtensionAccessEndDate,
