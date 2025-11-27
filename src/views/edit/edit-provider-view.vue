@@ -379,6 +379,24 @@
                       :label="$t('component.provider.infos.supply.url')"
                     />
 
+                    <gokb-state-field
+                      v-model="providerObject.kbartScope"
+                      :init-item="providerObject.kbartScope"
+                      url="refdata/categories/Org.KbartScope"
+                      :label="$t('component.provider.kbartScope.label')"
+                      message-path="component.provider.kbartScope"
+                      :readonly="isReadonly"
+                    />
+
+                    <gokb-state-field
+                      v-model="providerObject.kbartPublicationType"
+                      :init-item="providerObject.kbartPublicationType"
+                      url="refdata/categories/Org.KbartPublicationType"
+                      :label="$t('component.provider.kbartPublicationType.label')"
+                      message-path="component.provider.kbartPublicationType"
+                      :readonly="isReadonly"
+                    />
+
                     <br/>
 
                     <h3>{{ $t('component.provider.infos.autoUpdate.label') }}</h3>
@@ -615,6 +633,24 @@
                 v-model="providerObject.kbartHostUrl"
                 :disabled="isReadonly"
                 :label="$t('component.provider.infos.supply.url')"
+              />
+
+              <gokb-state-field
+                v-model="providerObject.kbartScope"
+                :init-item="providerObject.kbartScope"
+                url="refdata/categories/Org.KbartScope"
+                :label="$t('component.provider.kbartScope.label')"
+                message-path="component.provider.kbartScope"
+                :readonly="isReadonly"
+              />
+
+              <gokb-state-field
+                v-model="providerObject.kbartPublicationType"
+                :init-item="providerObject.kbartPublicationType"
+                url="refdata/categories/Org.KbartPublicationType"
+                :label="$t('component.provider.kbartPublicationType.label')"
+                message-path="component.provider.kbartPublicationType"
+                :readonly="isReadonly"
               />
 
               <br/>
@@ -911,7 +947,9 @@
           kbartUpdateCycle: undefined,
           kbartHostUrl: undefined,
           preferredSupplyMethod: undefined,
-          importInfoLastUpdated: undefined
+          importInfoLastUpdated: undefined,
+          kbartScope: undefined,
+          kbartPublicationType: undefined
         }
       }
     },
@@ -1055,12 +1093,12 @@
           let compareState = [this.lastLoad.supplyKbart, this.lastLoad.supplyCsv, this.lastLoad.supplyMarc, this.lastLoad.supplyOnix, this.lastLoad.kbartExtensionZdbId, this.lastLoad.kbartExtensionEzbId, this.lastLoad.kbartExtensionDoiId,
             this.lastLoad.kbartExtensionLastChanged, this.lastLoad.kbartExtensionAccessStartDate, this.lastLoad.kbartExtensionAccessEndDate, this.lastLoad.kbartExtensionMedium, this.lastLoad.kbartExtensionMonographParentCollectionTitle,
             this.lastLoad.kbartExtensionSeries, this.lastLoad.kbartExtensionSubjetArea, this.lastLoad.autoImportSupported, this.lastLoad.kbartUrlWithDateMask, this.lastLoad.kbartUpdateCycle?.id, this.lastLoad.kbartHostUrl,
-            this.lastLoad.preferredSupplyMethod?.id]
+            this.lastLoad.preferredSupplyMethod?.id, this.lastLoad.kbartScope?.id, this.lastLoad.kbartPublicationType?.id]
 
           let actualState = [this.providerObject.supplyKbart, this.providerObject.supplyCsv, this.providerObject.supplyMarc, this.providerObject.supplyOnix, this.providerObject.kbartExtensionZdbId, this.providerObject.kbartExtensionEzbId,
             this.providerObject.kbartExtensionDoiId, this.providerObject.kbartExtensionLastChanged, this.providerObject.kbartExtensionAccessStartDate, this.providerObject.kbartExtensionAccessEndDate, this.providerObject.kbartExtensionMedium,
             this.providerObject.kbartExtensionMonographParentCollectionTitle, this.providerObject.kbartExtensionSeries, this.providerObject.kbartExtensionSubjetArea, this.providerObject.autoImportSupported, this.providerObject.kbartUrlWithDateMask,
-            this.providerObject.kbartUpdateCycle?.id, this.providerObject.kbartHostUrl, this.providerObject.preferredSupplyMethod?.id]
+            this.providerObject.kbartUpdateCycle?.id, this.providerObject.kbartHostUrl, this.providerObject.preferredSupplyMethod?.id, this.providerObject.kbartScope?.id, this.providerObject.kbartPublicationType?.id]
 
           for (var i = 0; i < compareState.length; i++) {
             if (compareState[i] !== actualState[i]) {
@@ -1326,6 +1364,8 @@
           kbartHostUrl: data.kbartHostUrl,
           //comments: data._embedded.comments,
           preferredSupplyMethod: data.preferredSupplyMethod,
+          kbartScope: data.kbartScope,
+          kbartPublicationType: data.kbartPublicationType,
           importInfoLastUpdated: data.importInfoLastUpdated
         }
 
