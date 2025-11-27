@@ -1179,7 +1179,7 @@
         }
       },
       "infos": {
-        "label": "Notes",
+        "label": "Delivery",
         "format": "Format of data delivery",
         "kbartExtension": "GOKB-specific Extension of KBART",
         "supply": {

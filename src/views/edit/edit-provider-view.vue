@@ -191,6 +191,12 @@
               </v-chip>
             </v-tab>
             <v-tab
+              value="information"
+              :active-class="tabClass"
+            >
+              {{ $t('component.provider.infos.label') }}
+            </v-tab>
+            <v-tab
               value="curators"
               :active-class="tabClass"
             >
@@ -221,13 +227,6 @@
               >
                 mdi-alert-decagram
               </v-icon>
-            </v-tab>
-
-            <v-tab
-              value="information"
-              :active-class="tabClass"
-            >
-              {{ $t('component.provider.infos.label') }}
             </v-tab>
 
           </v-tabs>
@@ -292,30 +291,6 @@
                 :api-errors="errors.providedPackages"
                 :provider-id="providerObject.id"
                 @update="updatePackageCount"
-              />
-            </v-window-item>
-            <v-window-item
-              value="curators"
-              class="mt-4"
-            >
-              <gokb-curatory-group-section
-                v-model="allCuratoryGroups"
-                :show-title="false"
-                :disabled="isReadonly"
-                :api-errors="errors.curatoryGroups"
-                @update="addPendingChange"
-              />
-            </v-window-item>
-            <v-window-item
-              value="offices"
-              class="mt-4"
-            >
-              <gokb-offices-section
-                v-model="offices"
-                :show-title="false"
-                :disabled="isReadonly"
-                :api-errors="errors.offices"
-                @update="addPendingChange"
               />
             </v-window-item>
 
@@ -528,6 +503,30 @@
                 </v-row>
               </gokb-section>
             </v-window-item>
+            <v-window-item
+              value="curators"
+              class="mt-4"
+            >
+              <gokb-curatory-group-section
+                v-model="allCuratoryGroups"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.curatoryGroups"
+                @update="addPendingChange"
+              />
+            </v-window-item>
+            <v-window-item
+              value="offices"
+              class="mt-4"
+            >
+              <gokb-offices-section
+                v-model="offices"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.offices"
+                @update="addPendingChange"
+              />
+            </v-window-item>
           </v-window>
         </v-col>
       </v-row>
@@ -561,20 +560,6 @@
           :provider-id="providerObject.id"
           disabled
         />
-        <gokb-curatory-group-section
-          v-model="allCuratoryGroups"
-          :expanded="allCuratoryGroups.length > 0"
-          :sub-title="$tc('component.curatoryGroup.label', 2)"
-          :disabled="isReadonly"
-        />
-        <gokb-offices-section
-          v-model="offices"
-          :expanded="offices.length > 0"
-          :sub-title="$tc('component.office.label', 2)"
-          :disabled="isReadonly"
-        />
-
-
         <gokb-section
           :sub-title="$t('component.provider.infos.label')"
           v-model="infosExpanded"
@@ -783,6 +768,18 @@
             </v-col>
           </v-row>
         </gokb-section>
+        <gokb-curatory-group-section
+          v-model="allCuratoryGroups"
+          :expanded="allCuratoryGroups.length > 0"
+          :sub-title="$tc('component.curatoryGroup.label', 2)"
+          :disabled="isReadonly"
+        />
+        <gokb-offices-section
+          v-model="offices"
+          :expanded="offices.length > 0"
+          :sub-title="$tc('component.office.label', 2)"
+          :disabled="isReadonly"
+        />
 
       </div>
       <template #buttons>
