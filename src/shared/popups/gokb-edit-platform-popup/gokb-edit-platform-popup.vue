@@ -53,6 +53,7 @@
         <router-link
           :style="{ color: 'primary' }"
           :to="{ name: '/provider', params: { 'id': c.id } }"
+          target="_blank"
         >
           {{ c.name }}
         </router-link>
