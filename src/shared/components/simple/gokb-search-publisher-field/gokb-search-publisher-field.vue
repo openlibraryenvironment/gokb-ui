@@ -9,7 +9,7 @@
       label: {
         type: String,
         required: false,
-        default: 'Publisher'
+        default: ''
       }
     },
     created () {
