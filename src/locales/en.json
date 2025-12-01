@@ -1160,6 +1160,30 @@
           "label": "HTTPS Download without Authentification"
         }
       },
+      "kbartScope": {
+        "label": "KBART Scope",
+        "Complete": {
+          "label": "Complete Inventory"
+        },
+        "Subject": {
+          "label":"Subject Packages"
+        },
+        "Own": {
+          "label":"Cumulated list of own Titles"
+        }
+      },
+      "kbartPublicationType": {
+        "label": "KBART for Publication Types",
+        "BooksAndJournals": {
+          "label":"E-Books and E-Journals"
+        },
+        "Journals": {
+          "label":"Only E-Journals"
+        },
+        "Books": {
+          "label":"Only E-Books"
+        }
+      },
       "role": {
         "label": "Role | Roles",
         "Publisher": {
@@ -1191,7 +1215,7 @@
         }
       },
       "infos": {
-        "label": "Notes",
+        "label": "Delivery",
         "format": "Format of data delivery",
         "kbartExtension": "GOKB-specific Extension of KBART",
         "supply": {
