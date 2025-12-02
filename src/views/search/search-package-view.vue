@@ -21,6 +21,7 @@
           status: 'Current',
           listStatus: undefined,
           editStatus: undefined,
+          updateMethod: undefined,
           global: ['Global', 'Consortium', 'Regional', 'Other'],
           label: undefined,
         },
@@ -205,6 +206,22 @@
                 width: '100%',
                 url: 'refdata/categories/KBComponent.EditStatus',
                 messagePath: 'component.general.editStatus'
+              }
+            },
+            {
+              type: 'GokbSelectField',
+              name: 'updateMethod',
+              value: 'updateMethod',
+              md: 3,
+              properties: {
+                label: 'Update-Methode',
+                width: '100%',
+                staticItems: [
+                  { name: 'we:kb', id: 'wekb' },
+                  { name: 'EZB', id: 'ezb' },
+                  { name: 'Auto-Update', id: 'auto' },
+                  //{ name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
+                ]
               }
             },
           ],
