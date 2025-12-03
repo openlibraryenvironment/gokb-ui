@@ -961,7 +961,13 @@
       "singleYear": {
         "label": "Jahresabschnitt"
       },
-      "multiYear": "Mehrjährig"
+      "multiYear": "Mehrjährig",
+      "updateMethod": {
+        "label": "Update-Methode",
+        "wekb": "we:kb",
+        "ezb": "EZB",
+        "auto": "Auto-Update"
+      }
     },
     "tipp": {
       "label": "Pakettitel | Pakettitel",

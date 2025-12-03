@@ -214,13 +214,11 @@
               value: 'updateMethod',
               md: 3,
               properties: {
-                label: 'Update-Methode',
-                width: '100%',
+                label: this.$i18n.t('component.package.updateMethod.label'),
                 staticItems: [
-                  { name: 'we:kb', id: 'wekb' },
-                  { name: 'EZB', id: 'ezb' },
-                  { name: 'Auto-Update', id: 'auto' },
-                  //{ name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
+                  { name: this.$i18n.t('component.package.updateMethod.auto'), id: 'auto' },
+                  { name: this.$i18n.t('component.package.updateMethod.ezb'), id: 'ezb' },
+                  { name: this.$i18n.t('component.package.updateMethod.wekb'), id: 'wekb' }
                 ]
               }
             },
