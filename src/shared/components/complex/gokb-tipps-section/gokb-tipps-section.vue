@@ -240,7 +240,6 @@
   import titleServices from '@/shared/services/title-services'
   import BaseComponent from '@/shared/components/base-component'
   import accountModel from '@/shared/models/account-model'
-  import log from '@/shared/utils/logger'
 
   const ROWS_PER_PAGE = 10
 
@@ -252,7 +251,7 @@
       GokbKbartImportPopup
     },
     extends: BaseComponent,
-    emits: ['update', 'kbart'],
+    emits: ['update', 'kbart', 'count'],
     props: {
       disabled: {
         type: Boolean,
@@ -650,7 +649,7 @@
             )
             this.itemCount = result?.data?._pagination?.total
 
-            this.$emit('update', this.itemCount)
+            this.$emit('count', this.itemCount)
           }
 
           this.loading = false
