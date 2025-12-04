@@ -675,6 +675,9 @@
     "results": {
       "label": "Ergebnisse",
       "empty": "Keine Ergebnisse"
+    },
+    "package": {
+      "anyProvider": "auch nach Inhaltsanbieter/Verlag durchsuchen"
     }
   },
   "welcome": {
@@ -928,7 +931,12 @@
       },
       "breakable": "Einzeltitelauswahl möglich",
       "fixed": "Paket ist unveränderbar",
-      "provider": "Anbieter",
+      "provider": "Plattformanbieter",
+      "contentProvider": {
+        "label": "Inhaltsanbieter/Verlag",
+        "info": "Sollte das Paket Titel von mehr als einen Inhaltsanbieter/Verlag enthalten, lassen Sie das Feld bitte unbelegt.",
+        "checkLabel": "Abweichender Inhaltsanbieter"
+      },
       "platform": "Plattform",
       "global": {
         "label": "Gültigkeit",

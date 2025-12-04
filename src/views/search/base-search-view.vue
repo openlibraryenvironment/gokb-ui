@@ -246,7 +246,21 @@
           var filter_val = this.$route.query[filter]
 
           if (typeof filter_val === 'string') {
-            initFilters[filter] = /^[1-9]\d+$/.test(filter_val) ? parseInt(filter_val) : filter_val
+            if (filter_val === 'true') {
+              initFilters[filter] = true
+            }
+            else if (filter_val === 'false') {
+              initFilters[filter] = false
+            }
+            else if (filter === 'global') {
+              initFilters[filter] = [filter_val]
+            }
+            else if (/^[1-9]\d+$/.test(filter_val)) {
+              initFilters[filter] = parseInt(filter_val)
+            }
+            else {
+              initFilters[filter] = filter_val
+            }
           } else if (typeof filter_val === 'array') {
             initFilters[filter] = filter_val
           }

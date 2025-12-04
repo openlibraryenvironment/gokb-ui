@@ -238,8 +238,9 @@
                 :disabled="isReadonly"
               />
             </gokb-section>
-            <v-row>
+            <v-row class="pt-0">
               <v-col
+                class="pt-0"
                 cols="12"
                 md="6"
               >
@@ -255,8 +256,16 @@
                     return-object
                   />
                 </gokb-section>
+                <gokb-checkbox-field
+                  v-model="showContentProviderSelect"
+                  label="Abweichender Inhaltsanbieter"
+                  class="ml-n1 mt-n4"
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col
+                class="pt-0"
                 cols="12"
                 md="6"
               >
@@ -270,6 +279,24 @@
                     :provider="packageItem.provider?.id"
                     return-object
                     only-current
+                  />
+                </gokb-section>
+              </v-col>
+            </v-row>
+            <v-row v-if="showContentProviderSelect" class="mt-n8">
+              <v-col
+                cols="12"
+                md="6"
+              >
+                <v-alert type="info" :text="$t('component.package.contentProvider.info')" class="mr-4"/>
+                <gokb-section
+                  :sub-title="$t('component.package.contentProvider.label')"
+                >
+                  <gokb-search-publisher-field
+                    v-model="packageItem.contentProvider"
+                    :show-link="true"
+                    :readonly="isReadonly"
+                    return-object
                   />
                 </gokb-section>
               </v-col>
@@ -592,6 +619,13 @@
                     disabled
                   />
                 </v-col>
+                <v-col v-if="!!packageItem.contentProvider">
+                  <gokb-text-field
+                    v-model="contentProviderName"
+                    :label="$t('component.package.contentProvider.label')"
+                    disabled
+                  />
+                </v-col>
                 <v-col>
                   <gokb-text-field
                     v-model="platformName"
@@ -600,7 +634,7 @@
                   />
                 </v-col>
               </v-row>
-              <v-row v-if="packageItem.description">
+              <v-row v-if="!!packageItem.description">
                 <v-col>
                   <gokb-textarea-field
                     ref="descInfo"
@@ -688,7 +722,7 @@
                 </v-col>
               </v-row>
               <v-row>
-                <v-col v-if="kbart && kbart.selectedFile">
+                <v-col v-if="!!kbart && !!kbart.selectedFile">
                   <gokb-text-field
                     v-model="kbart.selectedFile.name"
                     :label="kbartLabel"
@@ -701,7 +735,7 @@
             <v-row>
               <v-col>
                 <gokb-reviews-section
-                  v-if="id && isContrib"
+                  v-if="!!id && isContrib"
                   :expandable="false"
                   :review-component="packageItem"
                   :api-errors="errors?.listStatus"
@@ -709,7 +743,7 @@
                 />
               </v-col>
             </v-row>
-            <v-row v-if="id && !isReadonly">
+            <v-row v-if="!!id && !isReadonly">
               <v-col>
                 <gokb-jobs-section
                   :linked-component="id"
@@ -941,6 +975,7 @@ import { isReadonly } from 'vue'
         selectedGroupPopup: undefined,
         showGroupInfoPopup: false,
         showEndYearField: false,
+        showContentProviderSelect: false,
         submitConfirmationMessage: undefined,
         editJobPopupVisible: false,
         externalSourceImportPopupVisible: false,
@@ -991,6 +1026,7 @@ import { isReadonly } from 'vue'
           listStatus: undefined,
           editStatus: undefined,
           provider: undefined, // organisation
+          contentProvider: undefined,
           nominalPlatform: undefined,
           startYear: undefined,
           endYear: undefined,
@@ -1012,6 +1048,7 @@ import { isReadonly } from 'vue'
         },
         providerSelect: [],
         platformSelect: [],
+        contentProviderSelect: [],
         selectedTitles: [],
         allAlternateNames: [],
         allNames: {
@@ -1071,6 +1108,9 @@ import { isReadonly } from 'vue'
       },
       providerName () {
         return this.packageItem?.provider?.name
+      },
+      contentProviderName () {
+        return this.packageItem?.contentProvider?.name
       },
       platformName () {
         return this.packageItem?.nominalPlatform?.name
@@ -1306,8 +1346,6 @@ import { isReadonly } from 'vue'
         this.pendingChanges.source = true
       },
       async mapPresetData (preset) {
-        console.log("++++ EDIT PACKAGE VIEW +++++ ", preset)
-
         if (!preset) {
           //try loading from local storage
           preset = JSON.parse(localStorage.getItem("PackagePreset"))
@@ -1508,7 +1546,15 @@ import { isReadonly } from 'vue'
             fixed: utils.asYesNo(this.packageItem.fixed),
             nominalPlatform: this.packageItem.nominalPlatform?.id,
             provider: this.packageItem.provider?.id,
+            contentProvider: this.packageItem.contentProvider?.id,
             activeGroup: this.activeGroup
+          }
+
+          if (!!newPackage.startYear && !newPackage.endYear) {
+            newPackage.endYear = newPackage.startYear
+          }
+          else if (!newPackage.startYear && !!newPackage.endYear) {
+            newPackage.endYear = null
           }
 
           if (!this.isUpdate || !!this.kbart || this.urlUpdate) {
@@ -1746,6 +1792,7 @@ import { isReadonly } from 'vue'
           this.packageItem.ids = []
           this.packageItem.subjects = []
           this.packageItem.provider = undefined // organisation
+          this.packageItem.contentProvider = undefined
           this.packageItem.nominalPlatform = undefined
           this.allNames = { name: undefined, alts: [] }
           this.packageItem.startYear = undefined
@@ -1782,7 +1829,6 @@ import { isReadonly } from 'vue'
             } else if (result?.data?._embedded?.source?.automaticUpdates && result?.data?._embedded?.source?.frequency && result?.data?._embedded?.source?.url) {
               this.autoUpdate = true
             }
-
           } else if (result.status === 404) {
             this.notFound = true
           } else {
@@ -1947,6 +1993,7 @@ import { isReadonly } from 'vue'
         this.version = data.version
         this.reviewRequests = data._embedded.reviewRequests
         this.providerSelect = data.provider
+        this.contentProviderSelect = data.contentProvider
         this.platformSelect = data.nominalPlatform
         this.titleCount = data._tippCount
         this.listVerifiedDate = data.listVerifiedDate
@@ -1965,6 +2012,7 @@ import { isReadonly } from 'vue'
           breakable: (data.breakable?.name === 'Yes'),
           fixed: (data.fixed?.name === 'Yes'),
           provider: data.provider,
+          contentProvider: data.contentProvider,
           nominalPlatform: data.nominalPlatform,
           contentType: data.contentType,
           listStatus: data.listStatus,
@@ -1975,6 +2023,10 @@ import { isReadonly } from 'vue'
 
         if (!!data.endYear) {
           this.showEndYearField = true
+        }
+
+        if (!!data.contentProvider) {
+          this.showContentProviderSelect = true
         }
 
         this.lastLoad = structuredClone(new_item_info)
