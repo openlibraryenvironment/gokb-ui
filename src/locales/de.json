@@ -966,7 +966,8 @@
         "label": "Update-Methode",
         "wekb": "we:kb",
         "ezb": "EZB",
-        "auto": "Auto-Update"
+        "auto": "Auto-Update",
+        "none": "Keine"
       }
     },
     "tipp": {

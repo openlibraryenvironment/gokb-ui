@@ -218,7 +218,8 @@
                 staticItems: [
                   { name: this.$i18n.t('component.package.updateMethod.auto'), id: 'auto' },
                   { name: this.$i18n.t('component.package.updateMethod.ezb'), id: 'ezb' },
-                  { name: this.$i18n.t('component.package.updateMethod.wekb'), id: 'wekb' }
+                  { name: this.$i18n.t('component.package.updateMethod.wekb'), id: 'wekb' },
+                  { name: this.$i18n.t('component.package.updateMethod.none'), id: 'none' }
                 ]
               }
             },
