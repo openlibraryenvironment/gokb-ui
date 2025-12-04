@@ -31,7 +31,11 @@ const api = {
         } else if (value !== undefined && value !== null) {
           if (typeof value === 'object') {
             pars.push(`${name}=${value.id || value.name }`)
-          } else {
+          }
+          else if (typeof value === 'boolean') {
+            pars.push(`${name}=${value}`)
+          }
+          else {
             pars.push(`${name}=${typeof value === 'string' ? encodeURIComponent(value.trim()) : value}`)
           }
         }

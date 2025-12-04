@@ -676,6 +676,9 @@
     "results": {
       "label": "Results",
       "empty": "No Results"
+    },
+    "package": {
+      "anyProvider": "include Content Provider/Publisher links"
     }
   },
   "welcome": {
@@ -929,7 +932,12 @@
       },
       "breakable": "Content may be split",
       "fixed": "Content is fixed",
-      "provider": "Provider",
+      "provider": "Platform Provider",
+      "contentProvider": {
+        "label": "Content Provider/Publisher",
+        "info": "If the package contains titles from more than one publisher, please leave the field blank.",
+        "checkLabel": "Abweichender Inhaltsanbieter"
+      },
       "platform": "Platform",
       "global": {
         "label": "Validity",
