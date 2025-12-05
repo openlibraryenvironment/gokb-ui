@@ -21,6 +21,7 @@
           status: 'Current',
           listStatus: undefined,
           editStatus: undefined,
+          updateMethod: undefined,
           global: ['Global', 'Consortium', 'Regional', 'Other'],
           label: undefined,
           anyProvider: false
@@ -217,6 +218,21 @@
                 returnObject: false
               }
             },
+            {
+              type: 'GokbSelectField',
+              name: 'updateMethod',
+              value: 'updateMethod',
+              md: 2,
+              properties: {
+                label: this.$i18n.t('component.package.updateMethod.label'),
+                staticItems: [
+                  { name: this.$i18n.t('component.package.updateMethod.auto'), id: 'auto' },
+                  { name: this.$i18n.t('component.package.updateMethod.ezb'), id: 'ezb' },
+                  { name: this.$i18n.t('component.package.updateMethod.wekb'), id: 'wekb' },
+                  { name: this.$i18n.t('component.package.updateMethod.none'), id: 'none' }
+                ]
+              }
+            }
           ],
           [
             {

@@ -971,7 +971,14 @@
         "label": "Licensing Year",
         "tooltip": "If this package represents a yearly selection of a bigger package, please enter the year it represents."
       },
-      "multiYear": "Multi-year Span"
+      "multiYear": "Multi-year Span",
+      "updateMethod": {
+        "label": "Update Method",
+        "wekb": "we:kb",
+        "ezb": "EZB",
+        "auto": "Auto Update",
+        "none": "None"
+      }
     },
     "tipp": {
       "label": "Package Title | Package Titles",
