@@ -22,7 +22,7 @@
               download
               class="text-primary"
               :href="exportType.url"
-              :type="type"
+              :type="exportType.type"
             >
               {{ exportType.label }}
             </a>
@@ -61,7 +61,7 @@
   import selection from '@/shared/models/selection'
   import GokbButton from '@/shared/components/base/gokb-button'
   import kbartServices from '@/shared/services/kbart-services'
-    import BaseComponent from '@/shared/components/base-component'
+  import BaseComponent from '@/shared/components/base-component'
 
   export default {
     name: 'GokbPackageExportMenu',
@@ -111,13 +111,12 @@
         }
       },
       currentTippUrl () {
-        var fullUrl = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart`
 
         if (this.pkgId) {
           fullUrl = fullUrl + `/${this.pkgId}` + `?exportType=tipp`
         } else if (this.selectedItems?.length === 1) {
           fullUrl = fullUrl + `/${this.selectedItems[0].uuid}` + `?exportType=tipp`
-        } else if (this.selectedItems) {
+        } else if (this.selectedItems?.length > 1) {
           fullUrl = fullUrl + `?exportType=tipp`
 
           this.selectedItems.forEach(pkg => {
@@ -127,19 +126,13 @@
 
         return fullUrl
       },
-      currentTitleUrl () {
-        var fullUrl = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart`
-
-        if (this.selectedItems?.length > 1) {
-          fullUrl = fullUrl + `?exportType=title`
-
-          this.selectedItems.forEach(pkg => {
-            fullUrl = fullUrl + `&pkg=${pkg.uuid}`
-          })
+    },
+    watch: {
+      selectedItems (vals) {
+        if (!this.pkgId) {
+          this.refreshUrls()
         }
-
-        return fullUrl
-      },
+      }
     },
     mounted () {
       if (!!this.pkgId) {
@@ -148,8 +141,28 @@
     },
     methods: {
       refreshUrls () {
-        this.buildKbartUrl(this.pkgId, 'tipp')
-        this.buildKbartUrl(this.pkgId, 'title')
+        if (!!this.pkgId) {
+          this.buildKbartUrl(this.pkgId, 'tipp')
+          this.buildKbartUrl(this.pkgId, 'title')
+        }
+        else {
+          ['tipp','title'].forEach(type => {
+            var fullUrl = `${import.meta.env.VITE_API_BASE_URL}/packages/kbart`
+
+            if (this.selectedItems?.length === 1) {
+              this.kbartUrls[type] = fullUrl + `/${this.selectedItems[0].uuid}` + `?exportType=${type}`
+            }
+            else {
+              fullUrl = fullUrl + `?exportType=${type}`
+
+              this.selectedItems.forEach(pkg => {
+                fullUrl = fullUrl + `&pkg=${pkg.uuid}`
+              })
+
+              this.kbartUrls[type] = fullUrl
+            }
+          })
+        }
       },
       async buildKbartUrl(id, type) {
         const fileLookupResp = await this.catchError({

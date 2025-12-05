@@ -24,6 +24,7 @@
           updateMethod: undefined,
           global: ['Global', 'Consortium', 'Regional', 'Other'],
           label: undefined,
+          anyProvider: false
         },
         sortMappings: {
           link: 'name',
@@ -132,22 +133,19 @@
           ],
           [
             {
-              type: 'GokbCuratoryGroupField',
-              name: 'curatoryGroups',
-              value: 'curatoryGroupIds',
-              properties: {
-                label: this.$i18n.tc('component.curatoryGroup.label'),
-                width: '100%',
-                multiple: true,
-                returnObject: false
-              }
-            },
-            {
-              type: 'GokbSearchProviderField',
+              type: 'GokbSearchOrganisationField',
               name: 'provider',
               value: 'providerId',
               properties: {
                 label: this.$i18n.tc('component.provider.label'),
+              }
+            },
+            {
+              type: 'GokbCheckboxField',
+              name: 'anyProvider',
+              value: 'anyProvider',
+              properties: {
+                label: this.$i18n.tc('search.package.anyProvider'),
               }
             },
             {
@@ -209,6 +207,18 @@
               }
             },
             {
+              type: 'GokbCuratoryGroupField',
+              name: 'curatoryGroups',
+              md: 2,
+              value: 'curatoryGroupIds',
+              properties: {
+                label: this.$i18n.tc('component.curatoryGroup.label'),
+                width: '100%',
+                multiple: true,
+                returnObject: false
+              }
+            },
+            {
               type: 'GokbSelectField',
               name: 'updateMethod',
               value: 'updateMethod',
@@ -222,7 +232,7 @@
                   { name: this.$i18n.t('component.package.updateMethod.none'), id: 'none' }
                 ]
               }
-            },
+            }
           ],
           [
             {

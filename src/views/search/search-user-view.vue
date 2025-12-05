@@ -169,7 +169,7 @@
       _confirmDeactivateSelectedItems () {
         this.actionToConfirm = '_deactivateSelectedItems'
         this.messageToConfirm = {
-          text: this.$i18n.t('popups.confirm.deactivate.generic'),
+          text: 'popups.confirm.deactivate.generic',
           vars: []
         }
         this.parameterToConfirm = undefined
@@ -178,7 +178,7 @@
       async _deactivateSelectedItems () {
         await Promise.all(this.selectedItems.map(({ updateUrl }) =>
           this.catchError({
-            promise: userServices.deactivateUser(updateUrl, this.cancelToken.token),
+            promise: userServices.deactivate(updateUrl, this.cancelToken.token),
             instance: this
           })
         ))

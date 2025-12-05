@@ -473,6 +473,7 @@
       "replacementCharsRow": "This line contains the illegal character '�', which points to a failed conversion to UTF-8.",
       "unusualChars": "This line contains unusual characters, which may point to a corrupted file conversion.",
       "unusualCharsVal": "Value '{0}' contains unusual characters. This may point to a corrupted file conversion.",
+      "controlCharsVal": "This value contains Unicode control characters. These may lead to processing and display issues and should be avoided.",
       "namespaceNotFound": "Unable to reference namespace for value '{0}'.",
       "illegalVal": "Value '{0}' is not valid!",
       "illegalValForNamespace": "Value '{0}' is not valid for namespace '{1}'.",
@@ -675,6 +676,9 @@
     "results": {
       "label": "Results",
       "empty": "No Results"
+    },
+    "package": {
+      "anyProvider": "include Content Provider/Publisher links"
     }
   },
   "welcome": {
@@ -928,7 +932,12 @@
       },
       "breakable": "Content may be split",
       "fixed": "Content is fixed",
-      "provider": "Provider",
+      "provider": "Platform Provider",
+      "contentProvider": {
+        "label": "Content Provider/Publisher",
+        "info": "If the package contains titles from more than one publisher, please leave the field blank.",
+        "checkLabel": "Abweichender Inhaltsanbieter"
+      },
       "platform": "Platform",
       "global": {
         "label": "Validity",

@@ -354,7 +354,7 @@
                 :show-title="false"
                 :api-errors="errors.tipps"
                 disabled
-                @update="updateTippCount"
+                @count="updateTippCount"
               />
             </v-window-item>
             <v-window-item
