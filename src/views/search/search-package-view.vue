@@ -222,7 +222,7 @@
               type: 'GokbSelectField',
               name: 'updateMethod',
               value: 'updateMethod',
-              md: 3,
+              md: 2,
               properties: {
                 label: this.$i18n.t('component.package.updateMethod.label'),
                 staticItems: [
