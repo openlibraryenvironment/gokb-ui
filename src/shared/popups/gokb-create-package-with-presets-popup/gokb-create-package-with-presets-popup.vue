@@ -167,6 +167,7 @@
                   dense
                   v-model="acceptEndYear"
                   hide-details
+                  :disabled="!acceptStartYear"
                 />
               </td>
             </tr>
@@ -385,17 +386,24 @@
                       <td></td>
                     </tr>
 
-                    <tr>
+                    <tr v-if="legacyTitleId">
+                      <td>{{ $t('kbart.propId.label') }}</td>
+                      <td>{{ packageTemplate._embedded.source.targetNamespace?.name }}</td>
+                      <td></td>
+                    </tr>
+
+                    <tr v-if="!legacyTitleId">
                       <td>{{ $t('kbart.propIdMonograph.label') }}</td>
                       <td>{{  packageTemplate._embedded.source.titleIdMonograph?.name }}</td>
                       <td></td>
                     </tr>
 
-                    <tr>
+                    <tr v-if="!legacyTitleId">
                       <td>{{ $t('kbart.propIdSerial.label') }}</td>
                       <td>{{ packageTemplate._embedded.source.titleIdSerial?.name }}</td>
                       <td></td>
                     </tr>
+
                   </tbody>
 
             </v-table>
@@ -529,6 +537,9 @@ export default {
     },
     isValid() {
       return this.packageNameValid && (!this.acceptAutoUpdate || this.sourceUrlValid)
+    },
+    legacyTitleId() {
+      return this.packageItem.source?.targetNamespace?.name && !(this.packageItem.source?.titleIdMonograph || this.packageItem.source?.titleIdSerial)
     }
   },
   watch: {
@@ -664,6 +675,7 @@ export default {
           frequency: this.packageItem.source.frequency?.id,
           titleIdMonograph: this.packageItem.source.titleIdMonograph,
           titleIdSerial: this.packageItem.source.titleIdSerial,
+          targetNamespace: this.packageItem.source.targetNamespace,
           automaticUpdates: true
         }
       }
@@ -706,6 +718,7 @@ export default {
       // frequency object are not going to be manipulated
       this.packageItem.source.titleIdMonograph = this.packageTemplate._embedded.source.titleIdMonograph
       this.packageItem.source.titleIdSerial = this.packageTemplate._embedded.source.titleIdSerial
+      this.packageItem.source.targetNamespace = this.packageTemplate._embedded.source.targetNamespace
       this.packageItem.source.frequency = this.packageTemplate._embedded.source.frequency
 
       // set default to accept all identifiers
