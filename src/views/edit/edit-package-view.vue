@@ -1364,7 +1364,17 @@ import { isReadonly } from 'vue'
           this.packageItem.fixed = preset.fixed
           this.packageItem.ids = preset.ids
           this.packageItem.subjects = preset.subjects
+          this.packageItem.description = preset.description
+          this.packageItem.descriptionURL = preset.descriptionURL
+          this.packageItem.startYear = preset.startYear
+          this.packageItem.endYear = preset.endYear
+          this.packageItem.globalNote = preset.globalNote
           this.sourceItem = preset.source
+
+          if (!!preset.endYear) {
+            this.showEndYearField = true
+          }
+
         }
         this.createWithPresetsPopupVisible = false
 
