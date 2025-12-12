@@ -274,8 +274,15 @@
       if (!!this.modelValue?.id) {
         this.fetch(this.modelValue.id)
       } else if (!!this.modelValue?.url) {
+        // value is from external Source Import or from package copy
         this.isExpanded = true
         this.item = this.modelValue
+        if(!!this.item.titleIdMonograph && !!this.item.titleIdSerial){
+          this.mixedContent = true
+        }
+        else {
+          this.setVisibleStatusForTitleIdFields()
+        }
       } else if (!!this.provider){
         this.fetchDefaultNamespace()
       }
