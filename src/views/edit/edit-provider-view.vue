@@ -1047,7 +1047,7 @@
     },
     mounted () {
       window.addEventListener('beforeunload', this.checkForChanges)
-      this.tab = this.$route?.query?.tab || 'variants'
+      this.tab = this.$route?.query?.tab || (!!this.id ? 'variants' : 'roles')
     },
     unmounted() {
       window.removeEventListener('beforeunload', this.checkForChanges)
@@ -1258,6 +1258,7 @@
           name: undefined,
           alts: []
         }
+        this.allRoles = []
         this.allPlatforms = []
         this.offices = []
         this.errors = {}

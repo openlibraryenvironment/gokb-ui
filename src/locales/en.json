@@ -934,9 +934,9 @@
       "fixed": "Content is fixed",
       "provider": "Platform Provider",
       "contentProvider": {
-        "label": "Content Provider/Publisher",
-        "info": "If the package contains titles from more than one publisher, please leave the field blank.",
-        "checkLabel": "Abweichender Inhaltsanbieter"
+        "label": "Publisher",
+        "info": "If the package contains only titles from a single publisher which is not the platform provider, you may add this information here. Otherwise, please leave the field blank.",
+        "checkLabel": "Deviating consistent publisher"
       },
       "platform": "Platform",
       "global": {

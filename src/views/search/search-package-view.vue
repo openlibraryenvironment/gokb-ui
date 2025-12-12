@@ -12,6 +12,7 @@
         searchFilters: {
           curatoryGroupIds: [],
           providerId: undefined,
+          contentProviderId: undefined,
           platformId: undefined,
           lastUpdated: undefined,
           identifierValue: undefined,
@@ -133,7 +134,7 @@
           ],
           [
             {
-              type: 'GokbSearchOrganisationField',
+              type: 'GokbSearchProviderField',
               name: 'provider',
               value: 'providerId',
               properties: {
@@ -141,11 +142,11 @@
               }
             },
             {
-              type: 'GokbCheckboxField',
-              name: 'anyProvider',
-              value: 'anyProvider',
+              type: 'GokbSearchPublisherField',
+              name: 'contentProvider',
+              value: 'contentProviderId',
               properties: {
-                label: this.$i18n.tc('search.package.anyProvider'),
+                label: this.$i18n.tc('component.package.contentProvider.label'),
               }
             },
             {
