@@ -346,12 +346,14 @@
                       :label="$t('component.provider.preferredSupplyMethod.label')"
                       message-path="component.provider.preferredSupplyMethod"
                       :readonly="isReadonly"
+                      width="80%"
                     />
 
                     <gokb-url-field
                       v-model="providerObject.kbartHostUrl"
                       :disabled="isReadonly"
                       :label="$t('component.provider.infos.supply.url')"
+                      width="80%"
                     />
 
                     <gokb-state-field
@@ -361,6 +363,7 @@
                       :label="$t('component.provider.kbartScope.label')"
                       message-path="component.provider.kbartScope"
                       :readonly="isReadonly"
+                      width="80%"
                     />
 
                     <gokb-state-field
@@ -370,6 +373,7 @@
                       :label="$t('component.provider.kbartPublicationType.label')"
                       message-path="component.provider.kbartPublicationType"
                       :readonly="isReadonly"
+                      width="80%"
                     />
 
                     <br/>
@@ -612,12 +616,14 @@
                 :label="$t('component.provider.preferredSupplyMethod.label')"
                 message-path="component.provider.preferredSupplyMethod"
                 :readonly="isReadonly"
+                width="80%"
               />
 
               <gokb-url-field
                 v-model="providerObject.kbartHostUrl"
                 :disabled="isReadonly"
                 :label="$t('component.provider.infos.supply.url')"
+                width="80%"
               />
 
               <gokb-state-field
@@ -627,6 +633,7 @@
                 :label="$t('component.provider.kbartScope.label')"
                 message-path="component.provider.kbartScope"
                 :readonly="isReadonly"
+                width="80%"
               />
 
               <gokb-state-field
@@ -636,6 +643,7 @@
                 :label="$t('component.provider.kbartPublicationType.label')"
                 message-path="component.provider.kbartPublicationType"
                 :readonly="isReadonly"
+                width="80%"
               />
 
               <br/>
