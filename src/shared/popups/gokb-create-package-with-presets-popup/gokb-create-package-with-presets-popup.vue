@@ -563,6 +563,11 @@ export default {
       if(!!value) {
         this.checkIfSourceUrlIsValid()
       }
+    },
+    acceptStartYear() {
+      if(!this.acceptStartYear) {
+        this.acceptEndYear = false
+      }
     }
   },
   async created () {
