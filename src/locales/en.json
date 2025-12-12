@@ -1762,7 +1762,7 @@
         },
         "Critical Identifier Conflict": {
           "label": "Reference Title Conflict",
-          "info": "A new reference title was created due to an identifier conflict. The new reference title matches an existing reference title based on at least one identifier while other identifiers do not match. In addition, the reference title name differs significantly.",
+          "info": "A new reference title was created due to an identifier conflict. The new reference title matches an existing reference title '{firstOtherLink}' based on at least one identifier while other identifiers do not match ({secondArray}). In addition, the reference title name differs significantly.",
           "action": "The GOKB created a new reference title using the identifiers of the package title. The package title was linked to the new reference title.",
           "toDo": "Check for duplicates in the reference titles. If this is the case, merge them by first selecting a reference title via 'Select Merge Target' and then clicking on 'Merge Duplicate'. All remaining identifiers of the title to be deleted will be taken over. If there is no duplicate, check the identifiers and delete any that are incorrect."
         },
