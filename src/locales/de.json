@@ -934,9 +934,9 @@
       "fixed": "Paket ist unveränderbar",
       "provider": "Plattformanbieter",
       "contentProvider": {
-        "label": "Inhaltsanbieter/Verlag",
-        "info": "Sollte das Paket Titel von mehr als einen Inhaltsanbieter/Verlag enthalten, lassen Sie das Feld bitte unbelegt.",
-        "checkLabel": "Abweichender Inhaltsanbieter"
+        "label": "Verlag",
+        "info": "Sollte das Paket ausschließlich Titel eines einzelnen Verlags (außer dem Plattformanbieter) enthalten, können Sie diesen hier zusätzlich auswählen. Andernfalls lassen Sie das Feld bitte unbelegt.",
+        "checkLabel": "Abweichender Verlag"
       },
       "platform": "Plattform",
       "global": {

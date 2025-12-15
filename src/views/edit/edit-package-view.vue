@@ -258,7 +258,7 @@
                 </gokb-section>
                 <gokb-checkbox-field
                   v-model="showContentProviderSelect"
-                  label="Abweichender Inhaltsanbieter"
+                  :label="$t('component.package.contentProvider.checkLabel')"
                   class="ml-n1 mt-n4"
                   dense
                   hide-details
@@ -1194,6 +1194,11 @@ import { isReadonly } from 'vue'
       'packageItem.nominalPlatform' (val) {
         if (!!val && !this.packageItem.provider) {
           this.fillProviderFromPlatform()
+        }
+      },
+      showContentProviderSelect (val) {
+        if (!val && !!this.packageItem.contentProvider) {
+          this.packageItem.contentProvider = null
         }
       }
     },
