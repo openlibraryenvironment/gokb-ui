@@ -257,6 +257,7 @@
                   />
                 </gokb-section>
                 <gokb-checkbox-field
+                  v-if="!isReadonly"
                   v-model="showContentProviderSelect"
                   :label="$t('component.package.contentProvider.checkLabel')"
                   class="ml-n1 mt-n4"
