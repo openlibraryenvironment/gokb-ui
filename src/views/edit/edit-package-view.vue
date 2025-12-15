@@ -1377,7 +1377,7 @@ import { isReadonly } from 'vue'
           this.packageItem.globalNote = preset.globalNote
           this.sourceItem = preset.source
 
-          if (!!preset.endYear) {
+          if (!!preset.endYear && preset.endYear != preset.startYear) {
             this.showEndYearField = true
           }
 
@@ -2037,7 +2037,7 @@ import { isReadonly } from 'vue'
           endYear: data.endYear
         }
 
-        if (!!data.endYear) {
+        if (!!data.endYear && data.endYear != data.startYear) {
           this.showEndYearField = true
         }
 

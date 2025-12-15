@@ -16,7 +16,7 @@
         v-if="serialVisible"
         v-model="options.selectedNamespaceSerial"
         target-type="Journal"
-        width="350px"
+        width="100%"
         :label="$t('kbart.propIdSerial.label')"
         exclude-isxn
         gokb-tooltip="kbart.propIdSerial.tooltip"
@@ -25,7 +25,7 @@
         v-if="monographVisible"
         v-model="options.selectedNamespaceMonograph"
         target-type="Book"
-        width="350px"
+        width="100%"
         :label="$t('kbart.propIdMonograph.label')"
         exclude-isxn
         gokb-tooltip="kbart.propIdMonograph.tooltip"
@@ -81,6 +81,16 @@
           :key="er"
           class="ma-2 text-error font-weight-bold">
           {{ er }}
+        </div>
+      </div>
+      <div
+        v-if="warnings.length > 0"
+      >
+        <div
+          v-for="wa in warnings"
+          :key="wa"
+          class="ma-2 text-error font-weight-bold">
+          {{ wa }}
         </div>
       </div>
       <!-- <div
