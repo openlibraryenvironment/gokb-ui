@@ -24,7 +24,8 @@
           updateMethod: undefined,
           global: ['Global', 'Consortium', 'Regional', 'Other'],
           label: undefined,
-          anyProvider: false
+          anyProvider: false,
+          packageYear: undefined
         },
         sortMappings: {
           link: 'name',
@@ -231,6 +232,16 @@
                   { name: this.$i18n.t('component.package.updateMethod.wekb'), id: 'wekb' },
                   { name: this.$i18n.t('component.package.updateMethod.none'), id: 'none' }
                 ]
+              }
+            },
+            {
+              type: 'GokbTextField',
+              name: 'packageYear',
+              value: 'packageYear',
+              md: 1,
+              properties: {
+                label: this.$i18n.t('component.package.singleYear.label'),
+                type: 'number'
               }
             }
           ],
