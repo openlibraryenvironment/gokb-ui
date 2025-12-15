@@ -973,10 +973,10 @@
       },
       "multiYear": "Multi-year Span",
       "updateMethod": {
-        "label": "Update Method",
+        "label": "Import Method",
         "wekb": "we:kb",
         "ezb": "EZB",
-        "auto": "Auto Update",
+        "auto": "Auto Import",
         "none": "None"
       }
     },
