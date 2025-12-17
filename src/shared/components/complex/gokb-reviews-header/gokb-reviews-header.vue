@@ -105,7 +105,7 @@
                 >
                   <template v-slot:firstOtherLink>
                     <router-link
-                        v-if="!!reviewComponent.otherComponents && reviewComponent.otherComponents.size > 0"
+                        v-if="!!reviewComponent.otherComponents && reviewComponent.otherComponents.length > 0"
                         :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
                         class="text-primary font-weight-bold"
                         target="_blank"
@@ -224,7 +224,7 @@
                 >
                   <template v-slot:0>
                     <router-link
-                      v-if="reviewComponent.otherComponents && reviewComponent.otherComponents.size > 0"
+                      v-if="reviewComponent.otherComponents && reviewComponent.otherComponents.length > 0"
                       :style="{ color: 'primary' }"
                       :to="{ name: reviewComponent.otherComponents[0].route, params: { 'id': reviewComponent.otherComponents[0].id } }"
                       color="primary"

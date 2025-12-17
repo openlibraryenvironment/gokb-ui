@@ -102,7 +102,7 @@
         <v-col cols="5"><span>{{ externalPlatformName }}</span><br/><span>{{ externalPlatformURL }}</span></v-col>
         <v-col cols="5" v-if="platformAlreadyExists">
           <gokb-text-field
-            v-model="platformName"
+            v-model="platformDisplay"
             :label="$t('component.types.Platform')"
             disabled
           />
@@ -372,6 +372,9 @@
       },
       sourceLabel() {
         return this.externalSourceType ? this.$i18n.t('component.source.importConfig.' + this.externalSourceType?.value + '.label') : '...'
+      },
+      platformDisplay() {
+        return this.platformName + ' (' + this.platformURL + ')'
       }
     },
     watch: {
@@ -383,6 +386,7 @@
     },
     methods: {
       async checkIfPackageExists() {
+
           let response = await genericServices('rest/entities').checkNewName(
             encodeURIComponent(this.packageName),
             'Package',
@@ -830,6 +834,21 @@
                   }
                 ]
               }
+
+              // add Platform Provider role to Provider
+              let roles = []
+              let entityService = genericEntityServices('refdata/categories/Org.Role')
+              const responseOrgRole = await this.catchError({
+                promise: entityService.get({}, this.cancelToken.token),
+                instance: this
+              })
+
+              let roleValues = responseOrgRole?.data?._embedded.values
+              let roleCode = roleValues.filter(a => a.value === "Platform Provider")[0].id
+              if (!!roleCode) {
+                roles.push(roleCode)
+              }
+              newProvider.roles = roles
 
               const provResponse = await this.catchError({
                 promise: providerServices.createOrUpdate(newProvider, this.cancelToken.token),

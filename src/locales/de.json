@@ -473,6 +473,7 @@
       "replacementCharsRow": "Diese Zeile enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
       "unusualChars": "Diese Zeile enthält unübliche Zeichen, die auf eine fehlgeschlagene Dateikonvertierung hinweisen.",
       "unusualCharsVal": "Wert '{0}' enthält unübliche Zeichen. Dies könnte auf ein fehlgeschlagene Dateikonvertierung hinweisen.",
+      "controlCharsVal": "Der Wert enthält Unicode-Steuerzeichen, die zu Verarbeitungs- und Anzeigefehlern führen können.",
       "namespaceNotFound": "Namensraum für Wert '{0}' konnte nicht identifiziert werden!",
       "illegalVal": "Wert '{0}' ist fehlerhaft!",
       "illegalValForNamespace": "Wert '{0}' ist nicht zulässig für den Namensraum '{1}'.",
@@ -675,6 +676,9 @@
     "results": {
       "label": "Ergebnisse",
       "empty": "Keine Ergebnisse"
+    },
+    "package": {
+      "anyProvider": "auch nach Inhaltsanbieter/Verlag durchsuchen"
     }
   },
   "welcome": {
@@ -928,7 +932,12 @@
       },
       "breakable": "Einzeltitelauswahl möglich",
       "fixed": "Paket ist unveränderbar",
-      "provider": "Anbieter",
+      "provider": "Plattformanbieter",
+      "contentProvider": {
+        "label": "Verlag",
+        "info": "Sollte das Paket ausschließlich Titel eines einzelnen Verlags (außer dem Plattformanbieter) enthalten, können Sie diesen hier zusätzlich auswählen. Andernfalls lassen Sie das Feld bitte unbelegt.",
+        "checkLabel": "Abweichender Verlag"
+      },
       "platform": "Plattform",
       "global": {
         "label": "Gültigkeit",
@@ -959,9 +968,16 @@
         "label": "Endjahr"
       },
       "singleYear": {
-        "label": "Jahresabschnitt"
+        "label": "Jahr"
       },
-      "multiYear": "Mehrjährig"
+      "multiYear": "Mehrjährig",
+      "updateMethod": {
+        "label": "Update-Methode",
+        "wekb": "we:kb",
+        "ezb": "EZB",
+        "auto": "Auto-Update",
+        "none": "Keine"
+      }
     },
     "tipp": {
       "label": "Pakettitel | Pakettitel",
@@ -1159,6 +1175,30 @@
           "label": "Download per HTTPS ohne Authentifizierung"
         }
       },
+      "kbartScope": {
+        "label": "KBART Umfang",
+        "Complete": {
+          "label": "Komplettbestand"
+        },
+        "Subject": {
+          "label":"Fachpakete"
+        },
+        "Own": {
+          "label":"Kumulierte Liste eigener Titel"
+        }
+      },
+      "kbartPublicationType": {
+        "label": "KBART zu Publikationstypen",
+        "BooksAndJournals": {
+          "label":"E-Books und E-Journals"
+        },
+        "Journals": {
+          "label":"Nur E-Journals"
+        },
+        "Books": {
+          "label":"Nur E-Books"
+        }
+      },
       "role": {
         "label": "Rolle | Rollen",
         "Publisher": {
@@ -1190,7 +1230,7 @@
         }
       },
       "infos": {
-        "label": "Anmerkungen",
+        "label": "Lieferdaten",
         "format": "Format der Datenlieferung",
         "kbartExtension": "GOKB-spezifische Erweiterung von KBART",
         "supply": {

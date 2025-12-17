@@ -191,6 +191,12 @@
               </v-chip>
             </v-tab>
             <v-tab
+              value="information"
+              :active-class="tabClass"
+            >
+              {{ $t('component.provider.infos.label') }}
+            </v-tab>
+            <v-tab
               value="curators"
               :active-class="tabClass"
             >
@@ -221,13 +227,6 @@
               >
                 mdi-alert-decagram
               </v-icon>
-            </v-tab>
-
-            <v-tab
-              value="information"
-              :active-class="tabClass"
-            >
-              {{ $t('component.provider.infos.label') }}
             </v-tab>
 
           </v-tabs>
@@ -294,30 +293,6 @@
                 @update="updatePackageCount"
               />
             </v-window-item>
-            <v-window-item
-              value="curators"
-              class="mt-4"
-            >
-              <gokb-curatory-group-section
-                v-model="allCuratoryGroups"
-                :show-title="false"
-                :disabled="isReadonly"
-                :api-errors="errors.curatoryGroups"
-                @update="addPendingChange"
-              />
-            </v-window-item>
-            <v-window-item
-              value="offices"
-              class="mt-4"
-            >
-              <gokb-offices-section
-                v-model="offices"
-                :show-title="false"
-                :disabled="isReadonly"
-                :api-errors="errors.offices"
-                @update="addPendingChange"
-              />
-            </v-window-item>
 
             <v-window-item
               value="information"
@@ -371,12 +346,34 @@
                       :label="$t('component.provider.preferredSupplyMethod.label')"
                       message-path="component.provider.preferredSupplyMethod"
                       :readonly="isReadonly"
+                      width="80%"
                     />
 
                     <gokb-url-field
                       v-model="providerObject.kbartHostUrl"
                       :disabled="isReadonly"
                       :label="$t('component.provider.infos.supply.url')"
+                      width="80%"
+                    />
+
+                    <gokb-state-field
+                      v-model="providerObject.kbartScope"
+                      :init-item="providerObject.kbartScope"
+                      url="refdata/categories/Org.KbartScope"
+                      :label="$t('component.provider.kbartScope.label')"
+                      message-path="component.provider.kbartScope"
+                      :readonly="isReadonly"
+                      width="80%"
+                    />
+
+                    <gokb-state-field
+                      v-model="providerObject.kbartPublicationType"
+                      :init-item="providerObject.kbartPublicationType"
+                      url="refdata/categories/Org.KbartPublicationType"
+                      :label="$t('component.provider.kbartPublicationType.label')"
+                      message-path="component.provider.kbartPublicationType"
+                      :readonly="isReadonly"
+                      width="80%"
                     />
 
                     <br/>
@@ -420,6 +417,13 @@
                      v-model="providerObject.kbartExtensionEzbId"
                      class="ml-3"
                      label="ezb_id"
+                     :readonly="isReadonly"
+                    />
+
+                    <gokb-checkbox-field dense
+                     v-model="providerObject.kbartExtensionDoiId"
+                     class="ml-3"
+                     label="doi_identifier"
                      :readonly="isReadonly"
                     />
 
@@ -503,6 +507,30 @@
                 </v-row>
               </gokb-section>
             </v-window-item>
+            <v-window-item
+              value="curators"
+              class="mt-4"
+            >
+              <gokb-curatory-group-section
+                v-model="allCuratoryGroups"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.curatoryGroups"
+                @update="addPendingChange"
+              />
+            </v-window-item>
+            <v-window-item
+              value="offices"
+              class="mt-4"
+            >
+              <gokb-offices-section
+                v-model="offices"
+                :show-title="false"
+                :disabled="isReadonly"
+                :api-errors="errors.offices"
+                @update="addPendingChange"
+              />
+            </v-window-item>
           </v-window>
         </v-col>
       </v-row>
@@ -536,20 +564,6 @@
           :provider-id="providerObject.id"
           disabled
         />
-        <gokb-curatory-group-section
-          v-model="allCuratoryGroups"
-          :expanded="allCuratoryGroups.length > 0"
-          :sub-title="$tc('component.curatoryGroup.label', 2)"
-          :disabled="isReadonly"
-        />
-        <gokb-offices-section
-          v-model="offices"
-          :expanded="offices.length > 0"
-          :sub-title="$tc('component.office.label', 2)"
-          :disabled="isReadonly"
-        />
-
-
         <gokb-section
           :sub-title="$t('component.provider.infos.label')"
           v-model="infosExpanded"
@@ -602,12 +616,34 @@
                 :label="$t('component.provider.preferredSupplyMethod.label')"
                 message-path="component.provider.preferredSupplyMethod"
                 :readonly="isReadonly"
+                width="80%"
               />
 
               <gokb-url-field
                 v-model="providerObject.kbartHostUrl"
                 :disabled="isReadonly"
                 :label="$t('component.provider.infos.supply.url')"
+                width="80%"
+              />
+
+              <gokb-state-field
+                v-model="providerObject.kbartScope"
+                :init-item="providerObject.kbartScope"
+                url="refdata/categories/Org.KbartScope"
+                :label="$t('component.provider.kbartScope.label')"
+                message-path="component.provider.kbartScope"
+                :readonly="isReadonly"
+                width="80%"
+              />
+
+              <gokb-state-field
+                v-model="providerObject.kbartPublicationType"
+                :init-item="providerObject.kbartPublicationType"
+                url="refdata/categories/Org.KbartPublicationType"
+                :label="$t('component.provider.kbartPublicationType.label')"
+                message-path="component.provider.kbartPublicationType"
+                :readonly="isReadonly"
+                width="80%"
               />
 
               <br/>
@@ -651,6 +687,13 @@
                v-model="providerObject.kbartExtensionEzbId"
                class="ml-3"
                label="ezb_id"
+               :readonly="isReadonly"
+              />
+
+              <gokb-checkbox-field dense
+               v-model="providerObject.kbartExtensionDoiId"
+               class="ml-3"
+               label="doi_identifier"
                :readonly="isReadonly"
               />
 
@@ -733,6 +776,18 @@
             </v-col>
           </v-row>
         </gokb-section>
+        <gokb-curatory-group-section
+          v-model="allCuratoryGroups"
+          :expanded="allCuratoryGroups.length > 0"
+          :sub-title="$tc('component.curatoryGroup.label', 2)"
+          :disabled="isReadonly"
+        />
+        <gokb-offices-section
+          v-model="offices"
+          :expanded="offices.length > 0"
+          :sub-title="$tc('component.office.label', 2)"
+          :disabled="isReadonly"
+        />
 
       </div>
       <template #buttons>
@@ -874,6 +929,7 @@
           supplyOnix: undefined,
           kbartExtensionZdbId: undefined,
           kbartExtensionEzbId: undefined,
+          kbartExtensionDoiId: undefined,
           kbartExtensionLastChanged: undefined,
           kbartExtensionAccessStartDate: undefined,
           kbartExtensionAccessEndDate: undefined,
@@ -886,7 +942,9 @@
           kbartUpdateCycle: undefined,
           kbartHostUrl: undefined,
           preferredSupplyMethod: undefined,
-          importInfoLastUpdated: undefined
+          importInfoLastUpdated: undefined,
+          kbartScope: undefined,
+          kbartPublicationType: undefined
         }
       }
     },
@@ -997,7 +1055,7 @@
     },
     mounted () {
       window.addEventListener('beforeunload', this.checkForChanges)
-      this.tab = this.$route?.query?.tab || 'variants'
+      this.tab = this.$route?.query?.tab || (!!this.id ? 'variants' : 'roles')
     },
     unmounted() {
       window.removeEventListener('beforeunload', this.checkForChanges)
@@ -1027,15 +1085,15 @@
         let changed = false
 
         if (!!this.lastLoad?.id) {
-          let compareState = [this.lastLoad.supplyKbart, this.lastLoad.supplyCsv, this.lastLoad.supplyMarc, this.lastLoad.supplyOnix, this.lastLoad.kbartExtensionZdbId, this.lastLoad.kbartExtensionEzbId,
+          let compareState = [this.lastLoad.supplyKbart, this.lastLoad.supplyCsv, this.lastLoad.supplyMarc, this.lastLoad.supplyOnix, this.lastLoad.kbartExtensionZdbId, this.lastLoad.kbartExtensionEzbId, this.lastLoad.kbartExtensionDoiId,
             this.lastLoad.kbartExtensionLastChanged, this.lastLoad.kbartExtensionAccessStartDate, this.lastLoad.kbartExtensionAccessEndDate, this.lastLoad.kbartExtensionMedium, this.lastLoad.kbartExtensionMonographParentCollectionTitle,
             this.lastLoad.kbartExtensionSeries, this.lastLoad.kbartExtensionSubjetArea, this.lastLoad.autoImportSupported, this.lastLoad.kbartUrlWithDateMask, this.lastLoad.kbartUpdateCycle?.id, this.lastLoad.kbartHostUrl,
-            this.lastLoad.preferredSupplyMethod?.id]
+            this.lastLoad.preferredSupplyMethod?.id, this.lastLoad.kbartScope?.id, this.lastLoad.kbartPublicationType?.id]
 
           let actualState = [this.providerObject.supplyKbart, this.providerObject.supplyCsv, this.providerObject.supplyMarc, this.providerObject.supplyOnix, this.providerObject.kbartExtensionZdbId, this.providerObject.kbartExtensionEzbId,
-            this.providerObject.kbartExtensionLastChanged, this.providerObject.kbartExtensionAccessStartDate, this.providerObject.kbartExtensionAccessEndDate, this.providerObject.kbartExtensionMedium, this.providerObject.kbartExtensionMonographParentCollectionTitle,
-            this.providerObject.kbartExtensionSeries, this.providerObject.kbartExtensionSubjetArea, this.providerObject.autoImportSupported, this.providerObject.kbartUrlWithDateMask, this.providerObject.kbartUpdateCycle?.id, this.providerObject.kbartHostUrl,
-            this.providerObject.preferredSupplyMethod?.id]
+            this.providerObject.kbartExtensionDoiId, this.providerObject.kbartExtensionLastChanged, this.providerObject.kbartExtensionAccessStartDate, this.providerObject.kbartExtensionAccessEndDate, this.providerObject.kbartExtensionMedium,
+            this.providerObject.kbartExtensionMonographParentCollectionTitle, this.providerObject.kbartExtensionSeries, this.providerObject.kbartExtensionSubjetArea, this.providerObject.autoImportSupported, this.providerObject.kbartUrlWithDateMask,
+            this.providerObject.kbartUpdateCycle?.id, this.providerObject.kbartHostUrl, this.providerObject.preferredSupplyMethod?.id, this.providerObject.kbartScope?.id, this.providerObject.kbartPublicationType?.id]
 
           for (var i = 0; i < compareState.length; i++) {
             if (compareState[i] !== actualState[i]) {
@@ -1208,6 +1266,7 @@
           name: undefined,
           alts: []
         }
+        this.allRoles = []
         this.allPlatforms = []
         this.offices = []
         this.errors = {}
@@ -1287,6 +1346,7 @@
           supplyOnix: data.supplyOnix,
           kbartExtensionZdbId: data.kbartExtensionZdbId,
           kbartExtensionEzbId: data.kbartExtensionEzbId,
+          kbartExtensionDoiId: data.kbartExtensionDoiId,
           kbartExtensionLastChanged: data.kbartExtensionLastChanged,
           kbartExtensionAccessStartDate: data.kbartExtensionAccessStartDate,
           kbartExtensionAccessEndDate: data.kbartExtensionAccessEndDate,
@@ -1300,6 +1360,8 @@
           kbartHostUrl: data.kbartHostUrl,
           //comments: data._embedded.comments,
           preferredSupplyMethod: data.preferredSupplyMethod,
+          kbartScope: data.kbartScope,
+          kbartPublicationType: data.kbartPublicationType,
           importInfoLastUpdated: data.importInfoLastUpdated
         }
 

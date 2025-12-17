@@ -12,6 +12,7 @@
         searchFilters: {
           curatoryGroupIds: [],
           providerId: undefined,
+          contentProviderId: undefined,
           platformId: undefined,
           lastUpdated: undefined,
           identifierValue: undefined,
@@ -21,8 +22,11 @@
           status: 'Current',
           listStatus: undefined,
           editStatus: undefined,
+          updateMethod: undefined,
           global: ['Global', 'Consortium', 'Regional', 'Other'],
           label: undefined,
+          anyProvider: false,
+          packageYear: undefined
         },
         sortMappings: {
           link: 'name',
@@ -131,22 +135,19 @@
           ],
           [
             {
-              type: 'GokbCuratoryGroupField',
-              name: 'curatoryGroups',
-              value: 'curatoryGroupIds',
-              properties: {
-                label: this.$i18n.tc('component.curatoryGroup.label'),
-                width: '100%',
-                multiple: true,
-                returnObject: false
-              }
-            },
-            {
               type: 'GokbSearchProviderField',
               name: 'provider',
               value: 'providerId',
               properties: {
                 label: this.$i18n.tc('component.provider.label'),
+              }
+            },
+            {
+              type: 'GokbSearchPublisherField',
+              name: 'contentProvider',
+              value: 'contentProviderId',
+              properties: {
+                label: this.$i18n.tc('component.package.contentProvider.label'),
               }
             },
             {
@@ -207,6 +208,43 @@
                 messagePath: 'component.general.editStatus'
               }
             },
+            {
+              type: 'GokbCuratoryGroupField',
+              name: 'curatoryGroups',
+              md: 2,
+              value: 'curatoryGroupIds',
+              properties: {
+                label: this.$i18n.tc('component.curatoryGroup.label'),
+                width: '100%',
+                multiple: true,
+                returnObject: false
+              }
+            },
+            {
+              type: 'GokbSelectField',
+              name: 'updateMethod',
+              value: 'updateMethod',
+              md: 2,
+              properties: {
+                label: this.$i18n.t('component.package.updateMethod.label'),
+                staticItems: [
+                  { name: this.$i18n.t('component.package.updateMethod.auto'), id: 'auto' },
+                  { name: this.$i18n.t('component.package.updateMethod.ezb'), id: 'ezb' },
+                  { name: this.$i18n.t('component.package.updateMethod.wekb'), id: 'wekb' },
+                  { name: this.$i18n.t('component.package.updateMethod.none'), id: 'none' }
+                ]
+              }
+            },
+            {
+              type: 'GokbTextField',
+              name: 'packageYear',
+              value: 'packageYear',
+              md: 1,
+              properties: {
+                label: this.$i18n.t('component.package.singleYear.label'),
+                type: 'number'
+              }
+            }
           ],
           [
             {

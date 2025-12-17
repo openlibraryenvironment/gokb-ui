@@ -124,6 +124,55 @@
             </tr>
 
             <tr>
+              <td>{{ $t('component.package.description') }}</td>
+              <td>{{ packageTemplate.description }}</td>
+              <td>
+                <gokb-checkbox-field
+                  dense
+                  v-model="acceptDescription"
+                  hide-details
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{ $t('component.package.descriptionUrl') }}</td>
+              <td>{{ packageTemplate.descriptionURL }}</td>
+              <td>
+                <gokb-checkbox-field
+                  dense
+                  v-model="acceptDescriptionURL"
+                  hide-details
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <td>{{ $t('component.package.startYear.label') }}</td>
+              <td>{{ packageTemplate.startYear }}</td>
+              <td>
+                <gokb-checkbox-field
+                  dense
+                  v-model="acceptStartYear"
+                  hide-details
+                />
+              </td>
+            </tr>
+
+            <tr v-if="packageTemplate.endYear">
+              <td>{{ $t('component.package.endYear.label') }}</td>
+              <td>{{ packageTemplate.endYear }}</td>
+              <td>
+                <gokb-checkbox-field
+                  dense
+                  v-model="acceptEndYear"
+                  hide-details
+                  :disabled="!acceptStartYear"
+                />
+              </td>
+            </tr>
+
+            <tr>
               <td>{{ $t('component.package.scope.label') }}</td>
               <td>{{ packageTemplate.scope?.name ? $t('component.package.scope.' + packageTemplate.scope?.name + '.label') : '' }}</td>
               <td>
@@ -154,6 +203,18 @@
                 <gokb-checkbox-field
                   dense
                   v-model="acceptGlobal"
+                  hide-details
+                />
+              </td>
+            </tr>
+
+            <tr v-if="packageTemplate.global?.name === 'Consortium'">
+              <td>{{ $t('component.package.globalNote.label') }}</td>
+              <td>{{ packageTemplate.globalNote }}</td>
+              <td>
+                <gokb-checkbox-field
+                  dense
+                  v-model="acceptGlobalNote"
                   hide-details
                 />
               </td>
@@ -325,17 +386,24 @@
                       <td></td>
                     </tr>
 
-                    <tr>
+                    <tr v-if="legacyTitleId">
+                      <td>{{ $t('kbart.propId.label') }}</td>
+                      <td>{{ packageTemplate._embedded.source.targetNamespace?.name }}</td>
+                      <td></td>
+                    </tr>
+
+                    <tr v-if="!legacyTitleId">
                       <td>{{ $t('kbart.propIdMonograph.label') }}</td>
                       <td>{{  packageTemplate._embedded.source.titleIdMonograph?.name }}</td>
                       <td></td>
                     </tr>
 
-                    <tr>
+                    <tr v-if="!legacyTitleId">
                       <td>{{ $t('kbart.propIdSerial.label') }}</td>
                       <td>{{ packageTemplate._embedded.source.titleIdSerial?.name }}</td>
                       <td></td>
                     </tr>
+
                   </tbody>
 
             </v-table>
@@ -427,6 +495,11 @@ export default {
       },
       acceptProvider: true,
       acceptPlatform: true,
+      acceptDescription: true,
+      acceptDescriptionURL: true,
+      acceptGlobalNote: true,
+      acceptStartYear: false,
+      acceptEndYear: false,
       acceptContentType: true,
       acceptScope: true,
       acceptGlobal: true,
@@ -464,6 +537,9 @@ export default {
     },
     isValid() {
       return this.packageNameValid && (!this.acceptAutoUpdate || this.sourceUrlValid)
+    },
+    legacyTitleId() {
+      return this.packageItem.source?.targetNamespace?.name && !(this.packageItem.source?.titleIdMonograph || this.packageItem.source?.titleIdSerial)
     }
   },
   watch: {
@@ -486,6 +562,11 @@ export default {
     sourceUrl (value) {
       if(!!value) {
         this.checkIfSourceUrlIsValid()
+      }
+    },
+    acceptStartYear() {
+      if(!this.acceptStartYear) {
+        this.acceptEndYear = false
       }
     }
   },
@@ -563,7 +644,12 @@ export default {
         global: this.acceptGlobal ? this.packageItem.global : undefined,
         consistent: this.acceptConsistent ? this.packageItem.consistent.name !== 'No' : undefined,
         breakable: this.acceptBreakable ? this.packageItem.breakable.name !== 'No' : undefined,
-        fixed: this.acceptFixed ? this.packageItem.fixed.name !== 'No' : undefined
+        fixed: this.acceptFixed ? this.packageItem.fixed.name !== 'No' : undefined,
+        description: this.acceptDescription ? this.packageItem.description : undefined,
+        descriptionURL: this.acceptDescriptionURL ? this.packageItem.descriptionURL : undefined,
+        startYear: this.acceptStartYear ? this.packageItem.startYear : undefined,
+        endYear: this.acceptEndYear ? this.packageItem.endYear : undefined,
+        globalNote: this.acceptGlobalNote ? this.packageItem.globalNote : undefined,
       }
 
       let ids = []
@@ -594,6 +680,7 @@ export default {
           frequency: this.packageItem.source.frequency?.id,
           titleIdMonograph: this.packageItem.source.titleIdMonograph,
           titleIdSerial: this.packageItem.source.titleIdSerial,
+          targetNamespace: this.packageItem.source.targetNamespace,
           automaticUpdates: true
         }
       }
@@ -616,6 +703,11 @@ export default {
       this.packageItem.name = this.packageTemplate.name
       this.packageItem.provider = this.packageTemplate.provider
       this.packageItem.nominalPlatform = this.packageTemplate.nominalPlatform
+      this.packageItem.description = this.packageTemplate.description
+      this.packageItem.descriptionURL = this.packageTemplate.descriptionURL
+      this.packageItem.startYear = this.packageTemplate.startYear
+      this.packageItem.endYear = this.packageTemplate.endYear
+      this.packageItem.globalNote = this.packageTemplate.globalNote
       this.packageItem.scope = this.packageTemplate.scope
       this.packageItem.contentType = this.packageTemplate.contentType
       this.packageItem.global = this.packageTemplate.global
@@ -631,6 +723,7 @@ export default {
       // frequency object are not going to be manipulated
       this.packageItem.source.titleIdMonograph = this.packageTemplate._embedded.source.titleIdMonograph
       this.packageItem.source.titleIdSerial = this.packageTemplate._embedded.source.titleIdSerial
+      this.packageItem.source.targetNamespace = this.packageTemplate._embedded.source.targetNamespace
       this.packageItem.source.frequency = this.packageTemplate._embedded.source.frequency
 
       // set default to accept all identifiers
