@@ -38,7 +38,7 @@
         />
 
           <span >
-            {{ $t('component.source.completePath') }}: ftp://<i>{{ fullFtpUrl }}</i>
+            {{ $t('component.source.completePath') }}: <i>{{ fullFtpUrl }}</i>
             <v-icon color="success" v-if="ftpTestSuccessful" >
               mdi-check-circle
             </v-icon>
@@ -48,7 +48,7 @@
         <gokb-button
           v-if="isFTPTransfer && item.webEndpoint && item.ftpUrl"
           @click.prevent="testFTPConnection"
-          append-icon="mdi-lightbulb-on-10"
+          append-icon="mdi-access-point"
           :disabled="ftpTestSuccessful"
         >
           {{ $t('component.source.testFtpConnection.label') }}
