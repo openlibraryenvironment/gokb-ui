@@ -68,7 +68,7 @@
           {{ $t('kbart.processing.error.fields') }}
         </h4>
         <ul
-          v-for="(val, col) in validatorResult.errors.type"
+          v-for="(val, col) in counts.errors"
           :key="col"
           class="ml-4"
         >
@@ -92,7 +92,7 @@
           {{ $t('kbart.processing.warning.fields') }}
         </h4>
         <ul
-          v-for="(val, col) in validatorResult.warnings.type"
+          v-for="(val, col) in counts.warnings"
           :key="col"
           class="ml-4"
         >
@@ -114,7 +114,7 @@
             </v-expansion-panel-title>
             <v-expansion-panel-text>
               <v-data-table
-                :items="validatorResult.errors.single"
+                :items="errors"
                 :headers="errorHeaders"
                 width="1000px"
                 :sort-by="[{key: 'row', order: 'asc'}]"
@@ -127,7 +127,7 @@
             </v-expansion-panel-title>
             <v-expansion-panel-text>
               <v-data-table
-                :items="validatorResult.warnings.single"
+                :items="warnings"
                 :headers="errorHeaders"
                 :sort-by="[{key: 'row', order: 'asc'}]"
               >
@@ -187,40 +187,43 @@
     },
     data () {
       return {
-
+        errors: [],
+        warnings: [],
+        counts: {
+          errors: {},
+          warnings: {}
+        }
       }
     },
     created () {
       let typedReport = !!this.validatorResult.errors.type
 
-      this.validatorResult.errors.single = []
       Object.entries(this.validatorResult.errors.rows).forEach(([rownum, colobj]) => {
         Object.entries(colobj).forEach(([colname, eo]) => {
-          this.validatorResult.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+          this.errors.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
 
-          if (!this.validatorResult.errors.type[colname]) {
-            this.validatorResult.errors.type[colname] = 1
+          if (!this.counts.errors[colname]) {
+            this.counts.errors[colname] = 1
           } else if (!typedReport) {
-            this.validatorResult.errors.type[colname]++
+            this.counts.errors[colname]++
           }
         })
       })
 
       typedReport = !!this.validatorResult.warnings.type
 
-      this.validatorResult.warnings.single = []
       Object.entries(this.validatorResult.warnings.rows).forEach(([rownum, colobj]) => {
         Object.entries(colobj).forEach(([colname, wo]) => {
-          this.validatorResult.warnings.single.push({
+          this.warnings.push({
             row: rownum,
             column: colname,
             reason: this.$i18n.t(wo.messageCode, wo.args)
           })
 
-          if (!this.validatorResult.warnings.type[colname]) {
-            this.validatorResult.warnings.type[colname] = 1
+          if (!this.counts.warnings[colname]) {
+            this.counts.warnings[colname] = 1
           } else if (!typedReport) {
-            this.validatorResult.warnings.type[colname]++
+            this.counts.warnings[colname]++
           }
         })
       })
