@@ -124,7 +124,6 @@
             </v-tab>
             <v-tab
               value="platforms"
-              :disabled="!isPlatformProvider"
               :active-class="tabClass"
             >
               {{ $tc('component.platform.label', 2) }}
@@ -136,11 +135,11 @@
                 :title="$t('pending.lists.changed')"
                 small
               >
-                mdi-alert
+                mdi-alert-decagram
               </v-icon>
               <v-icon
                 v-if="!isReadonly"
-                v-for="e in errors.platforms"
+                v-for="e in errors.providedPlatforms"
                 :title="$t(e.messageCode)"
                 color="error"
                 small
@@ -251,6 +250,7 @@
                 v-model="allPlatforms"
                 :show-title="false"
                 :disabled="isReadonly"
+                :warn-missing-role="!isPlatformProvider"
                 :api-errors="errors.providedPlatforms"
                 :provider-id="providerObject.id"
                 @update="addPendingChange"
@@ -1317,6 +1317,10 @@
       addPendingChange (prop) {
         if (!this.pendingChanges[prop]) {
           this.pendingChanges[prop] = true
+        }
+
+        if (prop === 'roles' && !!this.errors.providedPlatforms && this.allRoles.some(role => (role.value === 'Platform Provider'))) {
+          delete this.errors.providedPlatforms
         }
       },
       async mapRecord (data) {

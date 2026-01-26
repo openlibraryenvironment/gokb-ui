@@ -199,6 +199,7 @@
       },
       addItem (item) {
         this.localValue.push(item)
+        this.$emit('update', 'roles')
       }
     }
   }

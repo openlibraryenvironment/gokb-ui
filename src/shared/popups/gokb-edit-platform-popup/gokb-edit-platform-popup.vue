@@ -59,33 +59,6 @@
         </router-link>
       </v-col>
     </v-row>
-    <div v-if="isEdit">
-      <v-row
-        dense
-        class="mt-4"
-      >
-        <v-col>
-          <gokb-text-field
-            v-model="platform.name"
-            :readonly="isReadonly"
-            :label="$tc('component.general.name')"
-            required
-          />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <gokb-url-field
-            ref="urlinput"
-            v-model="platformUrl"
-            :readonly="isReadonly"
-            :api-errors="errors.primaryUrl"
-            required
-            @valid="updateUrlValidationState"
-          />
-        </v-col>
-      </v-row>
-    </div>
     <template #buttons>
       <gokb-button
         @click="close"

@@ -744,7 +744,7 @@
                 />
               </v-col>
             </v-row>
-            <v-row v-if="!!id && !isReadonly">
+            <v-row v-if="!!id && isContrib">
               <v-col>
                 <gokb-jobs-section
                   :linked-component="id"
