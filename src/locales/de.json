@@ -972,10 +972,10 @@
       },
       "multiYear": "Mehrjährig",
       "updateMethod": {
-        "label": "Update-Methode",
+        "label": "Import-Methode",
         "wekb": "we:kb",
         "ezb": "EZB",
-        "auto": "Auto-Update",
+        "auto": "Auto-Import",
         "none": "Keine"
       }
     },
