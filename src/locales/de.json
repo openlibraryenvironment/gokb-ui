@@ -1914,7 +1914,9 @@
           "success": "Verbindung erfolgreich",
           "partlySuccessful": "Die Verbindung zum Server konnte hergestellt werden, die Datei ist (derzeit) aber nicht vorhanden.",
           "connectError": "Es konnte keine Verbindung zum FTP-Server hergestellt werden.",
-          "configurationError": "Die Konfiguration ist fehlerhaft."
+          "configurationError": "Die Konfiguration ist fehlerhaft.",
+          "dateMaskFound": "Eine Datei mit diesem Namen und einem Datumszusatz wurde gefunden.",
+          "dateMaskNotFound": "Eine Datei mit diesem Namen und einem Datumszusatz ist derzeit nicht vorhanden."
         }
       },
       "transferMethod": {

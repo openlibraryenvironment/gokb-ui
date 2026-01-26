@@ -1905,7 +1905,9 @@
           "success": "Connection successful",
           "partlySuccessful": "Could connect to FTP Server but the File does not exist (at the moment).",
           "connectError": "Could not connect to FTP Server.",
-          "configurationError": "The Configuration is incorrect."
+          "configurationError": "The Configuration is incorrect.",
+          "dateMaskFound": "A File with this name and a date addition was found.",
+          "dateMaskNotFound": "A File with this name and a date addition was not found."
         }
       },
       "transferMethod": {
