@@ -892,7 +892,6 @@
   import GokbImportExternalSourcePackagePopup from '@/shared/popups/gokb-import-external-source-package-popup'
   import GokbCreatePackageWithPresetsPopup from '@/shared/popups/gokb-create-package-with-presets-popup'
   import log from '@/shared/utils/logger'
-import { isReadonly } from 'vue'
 
   const ROWS_PER_PAGE = 10
 
@@ -1275,6 +1274,10 @@ import { isReadonly } from 'vue'
         log.debug("Check for unsaved changes ..")
         if (Object.keys(this.pendingChanges).length > 0) {
           log.debug('hasUnsavedChanges :: pendingChanges: ' + this.pendingChanges)
+          return true
+        }
+
+        if (this.newTipps.length > 0) {
           return true
         }
 
