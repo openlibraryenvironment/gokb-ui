@@ -361,7 +361,7 @@
         ]
       }
     },
-    async created () {
+    created () {
       this.searchServicesUrl = 'rest/packages'
       this.searchByEs = true
       this.initVals = {
