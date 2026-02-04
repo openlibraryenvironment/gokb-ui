@@ -25,6 +25,7 @@
         <gokb-webendpoint-field
           v-model="item.webEndpoint"
           filterByProtocol="FTP"
+          :label="$t('component.source.endpointConfiguration.label')"
           width="100%"
           return-object
         />

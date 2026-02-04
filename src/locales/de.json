@@ -1928,6 +1928,9 @@
           "label": "FTP"
         }
       },
+      "endpointConfiguration": {
+        "label": "Konfiguration"
+      },
       "frequency": {
         "label": "Update-Zyklus",
         "Daily": {
