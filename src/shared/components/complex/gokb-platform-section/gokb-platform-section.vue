@@ -17,6 +17,7 @@
     <template #buttons>
       <gokb-button
         v-if="isEditable"
+        :disabled="showMissingRoleAlert"
         icon-id="mdi-plus"
         color="primary"
         @click.prevent="showAddPlatformPopup"
@@ -40,6 +41,7 @@
       :message="messageToConfirm"
       @confirmed="executeAction(actionToConfirm, parameterToConfirm)"
     />
+    <v-alert v-if="showMissingRoleAlert" :text="$t('component.platform.conflict.missingProviderRole')" type="error"/>
     <gokb-table
       :headers="tableHeaders"
       :items="platforms"
@@ -110,6 +112,11 @@
         required: false,
         default: undefined
       },
+      warnMissingRole: {
+        type: Boolean,
+        required: false,
+        default: false
+      }
     },
     data () {
       return {
@@ -155,6 +162,9 @@
       },
       localTitle () {
         return this.showTitle ? (this.title || this.$i18n.tc('component.platform.label', 2)) : undefined
+      },
+      showMissingRoleAlert() {
+        return !this.disabled && this.warnMissingRole
       }
     },
     created () {

@@ -5,13 +5,11 @@
     :disabled="!editable"
     rows="1"
     :prepend-icon-id="hideIcon ? '' : prependIcon"
-    :append-icon="appendIcon"
     :required="required"
     variant="underlined"
     validate-on-blur
     auto-grow
     clearable
-    @click:append="$emit('click:append', $event)"
   >
     <template #label>
       {{ label }}
@@ -23,6 +21,7 @@
       </span>
     </template>
     <template #append>
+      <v-icon v-if="!!appendIcon" @click="$emit('click:append', true)" style="cursor:pointer"> {{ appendIcon }}</v-icon>
       <gokb-tooltip v-if="!!gokbTooltip" classes="mt-0 opacity-100" :code="gokbTooltip" />
     </template>
   </v-textarea>

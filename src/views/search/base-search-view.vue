@@ -245,7 +245,9 @@
         Object.keys(this.searchFilters).forEach(filter => {
           var filter_val = this.$route.query[filter]
 
-          if (typeof filter_val === 'string') {
+          if (Array.isArray(filter_val)) {
+            initFilters[filter] = filter_val
+          } else{
             if (filter_val === 'true') {
               initFilters[filter] = true
             }
@@ -261,8 +263,6 @@
             else {
               initFilters[filter] = filter_val
             }
-          } else if (typeof filter_val === 'array') {
-            initFilters[filter] = filter_val
           }
         })
 

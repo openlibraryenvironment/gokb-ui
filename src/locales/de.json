@@ -470,10 +470,10 @@
       "missingCols": "Fehlende Spalte: {0}",
       "correctedVal": "Wert '{0}' wird automatisch durch '{1}' ersetzt werden.",
       "replacementChars": "Die Datei enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
-      "replacementCharsRow": "Diese Zeile enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
+      "replacementCharsRow": "Die Spalte {0} enthält das ungültige Zeichen '�', welches auf eine fehlerhafte Konvertierung nach UTF-8 hinweist.",
       "unusualChars": "Diese Zeile enthält unübliche Zeichen, die auf eine fehlgeschlagene Dateikonvertierung hinweisen.",
       "unusualCharsVal": "Wert '{0}' enthält unübliche Zeichen. Dies könnte auf ein fehlgeschlagene Dateikonvertierung hinweisen.",
-      "controlCharsVal": "Der Wert enthält Unicode-Steuerzeichen, die zu Verarbeitungs- und Anzeigefehlern führen können.",
+      "controlCharsVal": "Der Wert '{0}' enthält Unicode-Steuerzeichen, die zu Verarbeitungs- und Anzeigefehlern führen können.",
       "namespaceNotFound": "Namensraum für Wert '{0}' konnte nicht identifiziert werden!",
       "illegalVal": "Wert '{0}' ist fehlerhaft!",
       "illegalValForNamespace": "Wert '{0}' ist nicht zulässig für den Namensraum '{1}'.",
@@ -1137,7 +1137,8 @@
         "name": "Der angegebene Name wird bereits verwendet. ",
         "general": "Die angegebenen Werte werden bereits in einer anderen Plattform verwendet. ",
         "noProvider": "Die Plattform konnte nicht angelegt werden, da ein Konflikt mit einer anderen Plattform vorliegt (ID {0}). Bitte melden Sie dies an einen Administrator.",
-        "alreadyLinked": "Bereits verknüpft"
+        "alreadyLinked": "Bereits verknüpft",
+        "missingProviderRole": "Bitte fügen Sie die Rolle Plattformanbieter hinzu, bevor sie eine Plattform verknüpfen."
       }
     },
     "provider": {
