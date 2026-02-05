@@ -247,7 +247,7 @@
 
           if (Array.isArray(filter_val)) {
             initFilters[filter] = filter_val
-          } else{
+          } else if (!!filter_val) {
             if (filter_val === 'true') {
               initFilters[filter] = true
             }
