@@ -27,10 +27,12 @@
           </v-col>
           <v-col>
             <gokb-text-field
+              v-if="validSource"
               :label="$t('popups.externalSourceImport.uuidFieldLabel', [sourceLabel])"
               v-model="external_package_uuid"
               required
             />
+            <span v-else style="color:red"><br/>{{ $t('popups.externalSourceImport.error.wrongImportSource') }}</span>
           </v-col>
         </v-row>
 
@@ -375,6 +377,10 @@
       },
       platformDisplay() {
         return this.platformName + ' (' + this.platformURL + ')'
+      },
+      validSource() {
+        // at the moment only wekb is valid source
+        return ["WEKB"].includes(this.externalSourceType?.value)
       }
     },
     watch: {

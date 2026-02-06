@@ -233,7 +233,8 @@
         "packageNotExist": "A package with this UUID does not seem to exist in the chosen import repository",
         "packageExists": "A package with this name already exists in the GOKB. Please check if this is a unique package you are trying to import.",
         "platformExists": "The platform doesn't exist in the GOKB yet. Choose an existing platform in the search field or adopt the platform from the import source.",
-        "providerExists": "The provider doesn't exist in the GOKB yet. Choose an existing provider in the search field or adopt the provider from the import source."
+        "providerExists": "The provider doesn't exist in the GOKB yet. Choose an existing provider in the search field or adopt the provider from the import source.",
+        "wrongImportSource": "An import from the selected source is not possible."
       },
       "adaptSource": "Adopt from source",
       "packageName": "Package name",
