@@ -24,7 +24,7 @@
       <v-col cols="3">
         <gokb-webendpoint-field
           v-model="item.webEndpoint"
-          filterByProtocol="FTP"
+          filter-by-protocol="FTP"
           :label="$t('component.source.endpointConfiguration.label')"
           width="100%"
           return-object
@@ -341,7 +341,14 @@
           else {
             this.isFTPTransfer = false
           }
+          this.resetTestConnectionProps()
         }
+      },
+      'item.ftpUrl'() {
+        this.resetTestConnectionProps()
+      },
+      'item.webEndpoint'() {
+        this.resetTestConnectionProps()
       }
     },
     async mounted () {
@@ -367,21 +374,16 @@
         this.isFTPTransfer = true
       }
 
-      this.$watch(vm => [vm.item.ftpUrl, vm.item.transferMethod, vm.item.webEndpoint],
-        val => {
-          this.ftpTestSuccessful = false
-          this.ftpTestMessage = undefined
-        }, {
-          immediate: true,
-        })
-
     },
     created () {
 
     },
     methods: {
+      resetTestConnectionProps () {
+        this.ftpTestSuccessful = false
+        this.ftpTestMessage = undefined
+      },
       formatFtpPath (filepath) {
-
         let hostname = this.item.webEndpoint?.url
         let filename = ""
         let directory = "/"

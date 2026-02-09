@@ -1922,7 +1922,7 @@
         }
       },
       "transferMethod": {
-        "label": "Transfer Methode",
+        "label": "Transfer-Methode",
         "HTTP": {
           "label": "HTTP"
         },
