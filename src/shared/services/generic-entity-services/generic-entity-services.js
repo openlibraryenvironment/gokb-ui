@@ -33,8 +33,8 @@ const api = (baseServices) =>
       return result
     },
 
-    checkUrl (value, replaceDate, cancelToken) {
-      const url = import.meta.env.VITE_API_BASE_URL + `/validation/url?replaceDate=${replaceDate}`
+    checkUrl (value, replaceDate, rejectFtpUrl, cancelToken) {
+      const url = import.meta.env.VITE_API_BASE_URL + `/validation/url?replaceDate=${replaceDate}&rejectFtpUrl=${rejectFtpUrl}`
       const data = { value: value }
       const result = baseServices.request({
         method: 'POST',

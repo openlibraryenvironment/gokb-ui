@@ -32,7 +32,7 @@
       </v-col>
       <v-col cols="6">
         <gokb-text-field
-          v-model="item.ftpUrl"
+          v-model="item.ftpPath"
           :label="$t('component.source.filePath')"
           :disabled="readonly"
 
@@ -47,7 +47,7 @@
       </v-col>
       <v-col cols="2">
         <gokb-button
-          v-if="isFTPTransfer && item.webEndpoint && item.ftpUrl"
+          v-if="isFTPTransfer && item.webEndpoint && item.ftpPath"
           @click.prevent="testFTPConnection"
           append-icon="mdi-access-point"
           :disabled="ftpTestSuccessful"
@@ -66,6 +66,7 @@
       :label="$t('component.source.url')"
       :readonly="readonly || isImportFromExternalSource"
       replace-date
+      reject-ftp-url
     />
     <v-row>
       <v-col cols="3">
@@ -247,7 +248,7 @@
           update: false,
           webEndpoint: undefined,
           transferMethod: undefined,
-          ftpUrl: undefined,
+          ftpPath: undefined,
         },
         errors: [],
         mixedContent: false,
@@ -263,7 +264,7 @@
     },
     computed: {
       importNowDisabled () {
-        return !this.readonly && (!this.item.url && !(this.isFTPTransfer && !!this.item.ftpUrl))
+        return !this.readonly && (!this.item.url && !(this.isFTPTransfer && !!this.item.ftpPath))
       },
       activatedDisabled () {
         return !this.readonly && (!this.item.url || !this.item.frequency) && !this.item.automaticUpdates
@@ -272,7 +273,7 @@
         return !this.readonly && (!this.item.url || !this.item.frequency) && this.item.automaticUpdates ? this.$i18n.t("component.source.error.activatedNoInfo") : undefined
       },
       fullFtpUrl () {
-        return this.formatFtpPath(this.item.ftpUrl)
+        return this.formatFtpPath(this.item.ftpPath)
       },
       isAdmin() {
         return account.loggedIn() && account.hasRole('ROLE_ADMIN')
@@ -344,7 +345,7 @@
           this.resetTestConnectionProps()
         }
       },
-      'item.ftpUrl'() {
+      'item.ftpPath'() {
         this.resetTestConnectionProps()
       },
       'item.webEndpoint'() {
@@ -396,18 +397,18 @@
           }
         }
 
-        let ftpUrl = this.item.ftpUrl
-        if (ftpUrl?.startsWith("/")) {
-          ftpUrl = ftpUrl.substring(1)
+        let ftpPath = this.item.ftpPath
+        if (ftpPath?.startsWith("/")) {
+          ftpPath = ftpPath.substring(1)
         }
 
-        if(ftpUrl?.includes("/")){
-          let parts = ftpUrl.split("/")
+        if(ftpPath?.includes("/")){
+          let parts = ftpPath.split("/")
           filename = parts[parts.length - 1]
-          directory = directory + ftpUrl.substring(0, ftpUrl.lastIndexOf("/") + 1)
+          directory = directory + ftpPath.substring(0, ftpPath.lastIndexOf("/") + 1)
         }
         else {
-          filename = ftpUrl
+          filename = ftpPath
         }
 
         return hostname + directory + filename
@@ -449,7 +450,7 @@
             this.item.titleIdMonograph = result.data.titleIdMonograph
             this.item.ignoreSizeLimit = result.data.ignoreSizeLimit === true
 
-            this.item.ftpUrl = result.data.ftpUrl
+            this.item.ftpPath = result.data.ftpPath
             this.item.transferMethod = result.data.transferMethod
             this.item.webEndpoint = result.data.webEndpoint
 
@@ -513,7 +514,7 @@
       async testFTPConnection () {
 
         const checkResult = await this.catchError({
-          promise: webendpointServices.check({webhookendpoint: this.item.webEndpoint.id, url: this.item.ftpUrl}, this.cancelToken.token),
+          promise: webendpointServices.check({webhookendpoint: this.item.webEndpoint.id, url: this.item.ftpPath}, this.cancelToken.token),
           instance: this
         })
 
