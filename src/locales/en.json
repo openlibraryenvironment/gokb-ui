@@ -308,7 +308,9 @@
     "missingStartVolume": "An end volume requires a set start volume!",
     "refdataLookup": "Unable to save unrecognized value!",
     "yearFormat": "Please enter a four digit year.",
-    "missingStart": "Please first provide a start value."
+    "missingStart": "Please first provide a start value.",
+    "ftpUrlRejected": "Configure an FTP connection under Transfer method.",
+    "urlEmpty": "Please provide a URL."
   },
   "job": {
     "label": "Import | Imports",

@@ -308,7 +308,9 @@
     "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband.",
     "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden.",
     "yearFormat": "Bitte geben Sie ein vierstelliges Jahr an.",
-    "missingStart": "Bitte geben Sie einen Startwert an."
+    "missingStart": "Bitte geben Sie einen Startwert an.",
+    "ftpUrlRejected": "Konfigurieren Sie eine FTP-Verbindung unter Transfer-Methode.",
+    "urlEmpty": "Bitte geben Sie eine URL an."
   },
   "job": {
     "label": "Import | Importe",
