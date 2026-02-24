@@ -5,11 +5,68 @@
     :hide-default="!expanded"
     :sub-title="$tc('component.source.label')"
   >
+
+    <v-row>
+      <v-col cols="3">
+        <gokb-state-field
+          v-model="item.transferMethod"
+          :init-item="item.transferMethod"
+          url="refdata/categories/Source.TransferMethod"
+          :label="$t('component.source.transferMethod.label')"
+          message-path="component.source.transferMethod"
+          return-object
+          dense
+        />
+      </v-col>
+    </v-row>
+
+    <v-row v-if="isFTPTransfer">
+      <v-col cols="3">
+        <gokb-webendpoint-field
+          v-model="item.webEndpoint"
+          filter-by-protocol="FTP"
+          :label="$t('component.source.endpointConfiguration.label')"
+          width="100%"
+          return-object
+        />
+      </v-col>
+      <v-col cols="6">
+        <gokb-text-field
+          v-model="item.ftpPath"
+          :label="$t('component.source.filePath')"
+          :disabled="readonly"
+
+        />
+
+          <span >
+            {{ $t('component.source.completePath') }}: <i>{{ fullFtpUrl }}</i>
+            <v-icon color="success" v-if="ftpTestSuccessful" >
+              mdi-check-circle
+            </v-icon>
+          </span>
+      </v-col>
+      <v-col cols="2">
+        <gokb-button
+          v-if="isFTPTransfer && item.webEndpoint && item.ftpPath"
+          @click.prevent="testFTPConnection"
+          append-icon="mdi-access-point"
+          :disabled="ftpTestSuccessful"
+        >
+          {{ $t('component.source.testFtpConnection.label') }}
+        </gokb-button>
+
+        <span :style="{ 'color': ftpTestSuccessful ? 'green' : 'red' }"><br/><br/>{{ ftpTestMessage }}</span>
+
+      </v-col>
+    </v-row>
+
     <gokb-url-field
+      v-else
       v-model="item.url"
       :label="$t('component.source.url')"
       :readonly="readonly || isImportFromExternalSource"
       replace-date
+      reject-ftp-url
     />
     <v-row>
       <v-col cols="3">
@@ -130,6 +187,7 @@
   import providerServices from '@/shared/services/provider-services'
   import BaseComponent from '@/shared/components/base-component'
   import account from '@/shared/models/account-model'
+  import webendpointServices from "@/shared/services/webendpoint-services"
 
   export default {
     name: 'GokbSourceField',
@@ -187,7 +245,10 @@
           automaticUpdates: undefined,
           importConfig: undefined,
           ignoreSizeLimit: false,
-          update: false
+          update: false,
+          webEndpoint: undefined,
+          transferMethod: undefined,
+          ftpPath: undefined,
         },
         errors: [],
         mixedContent: false,
@@ -195,18 +256,24 @@
         serialVisible: true,
         monographVisible: true,
         mixedContentVisible: true,
-        ignoreLegacyTitleID: true
+        ignoreLegacyTitleID: true,
+        isFTPTransfer: false,
+        ftpTestSuccessful: false,
+        ftpTestMessage: undefined
       }
     },
     computed: {
       importNowDisabled () {
-        return !this.readonly && !this.item.url
+        return !this.readonly && (!this.item.url && !(this.isFTPTransfer && !!this.item.ftpPath))
       },
       activatedDisabled () {
         return !this.readonly && (!this.item.url || !this.item.frequency) && !this.item.automaticUpdates
       },
       activatedErrorMessage () {
         return !this.readonly && (!this.item.url || !this.item.frequency) && this.item.automaticUpdates ? this.$i18n.t("component.source.error.activatedNoInfo") : undefined
+      },
+      fullFtpUrl () {
+        return this.formatFtpPath(this.item.ftpPath)
       },
       isAdmin() {
         return account.loggedIn() && account.hasRole('ROLE_ADMIN')
@@ -266,6 +333,23 @@
       },
       mixedContent () {
         this.setVisibleStatusForTitleIdFields()
+      },
+      'item.transferMethod': {
+        handler(val) {
+          if (!!val && (this.item?.transferMethod?.value === 'FTP' || this.item?.transferMethod?.name === 'FTP')) {
+            this.isFTPTransfer = true
+          }
+          else {
+            this.isFTPTransfer = false
+          }
+          this.resetTestConnectionProps()
+        }
+      },
+      'item.ftpPath'() {
+        this.resetTestConnectionProps()
+      },
+      'item.webEndpoint'() {
+        this.resetTestConnectionProps()
       }
     },
     async mounted () {
@@ -286,8 +370,49 @@
       } else if (!!this.provider){
         this.fetchDefaultNamespace()
       }
+
+      if (this.item?.transferMethod?.value === 'FTP') {
+        this.isFTPTransfer = true
+      }
+
+    },
+    created () {
+
     },
     methods: {
+      resetTestConnectionProps () {
+        this.ftpTestSuccessful = false
+        this.ftpTestMessage = undefined
+      },
+      formatFtpPath (filepath) {
+        let hostname = this.item.webEndpoint?.url
+        let filename = ""
+        let directory = "/"
+
+        if (hostname?.includes("/")) {
+          let parts = hostname.split("/")
+          hostname = parts[0]
+          for(var i = 1; i < parts.length; i++){
+            directory = directory.concat(parts[i] + "/")
+          }
+        }
+
+        let ftpPath = this.item.ftpPath
+        if (ftpPath?.startsWith("/")) {
+          ftpPath = ftpPath.substring(1)
+        }
+
+        if(ftpPath?.includes("/")){
+          let parts = ftpPath.split("/")
+          filename = parts[parts.length - 1]
+          directory = directory + ftpPath.substring(0, ftpPath.lastIndexOf("/") + 1)
+        }
+        else {
+          filename = ftpPath
+        }
+
+        return hostname + directory + filename
+      },
       setVisibleStatusForTitleIdFields () {
         if (this.mixedContent) {
           this.serialVisible = true
@@ -325,6 +450,26 @@
             this.item.titleIdMonograph = result.data.titleIdMonograph
             this.item.ignoreSizeLimit = result.data.ignoreSizeLimit === true
 
+            this.item.ftpPath = result.data.ftpPath
+            this.item.transferMethod = result.data.transferMethod
+            this.item.webEndpoint = result.data.webEndpoint
+
+            if (this.item.transferMethod?.value === 'FTP' || this.item.transferMethod?.name === 'FTP') {
+              this.isFTPTransfer = true
+
+              if(!!result.data.webEndpoint?.id) {
+                // complete webendpoint object must be loaded
+                const response = await this.catchError({
+                  promise: webendpointServices.get(result.data.webEndpoint.id, this.cancelToken.token),
+                  instance: this
+                })
+
+                this.item.webEndpoint = response.data.data
+
+              }
+
+            }
+
             if (!!this.item.targetNamespace && !this.item.titleIdSerial && !this.item.titleIdMonograph) {
               this.ignoreLegacyTitleID = false
             }
@@ -334,6 +479,7 @@
             if (!!this.item.url) {
               this.isExpanded = true
             }
+
             this.setVisibleStatusForTitleIdFields()
           }
         }
@@ -365,6 +511,17 @@
             this.setVisibleStatusForTitleIdFields()
         }
       },
+      async testFTPConnection () {
+
+        const checkResult = await this.catchError({
+          promise: webendpointServices.check({webhookendpoint: this.item.webEndpoint.id, url: this.item.ftpPath}, this.cancelToken.token),
+          instance: this
+        })
+
+        this.ftpTestSuccessful = (checkResult?.data?.result === 'success')
+        this.ftpTestMessage = this.$i18n.t('component.source.testFtpConnection.message.' + checkResult?.data?.message)
+
+      }
     }
   }
 </script>

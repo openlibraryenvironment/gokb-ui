@@ -26,6 +26,11 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      rejectFtpUrl: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     computed: {
@@ -40,13 +45,11 @@
     },
     methods: {
       async validate () {
-        const validResult = await genericServices('rest/entities').checkUrl(this.localValue, this.replaceDate, createCancelToken.token)
+        const validResult = await genericServices('rest/entities').checkUrl(this.localValue, this.replaceDate, this.rejectFtpUrl, createCancelToken.token)
 
         if (validResult.data?.result === 'ERROR') {
-          if (!this.localErrorMessages || this.localErrorMessages.length === 0) {
-            this.localErrorMessages = [this.$i18n.t('validation.urlForm')]
-            this.$emit('valid', false)
-          }
+          this.localErrorMessages = [this.$i18n.t(validResult.data?.errors?.value?.messageCode)]
+          this.$emit('valid', false)
         }
         else {
           if (!!this.localErrorMessages) {

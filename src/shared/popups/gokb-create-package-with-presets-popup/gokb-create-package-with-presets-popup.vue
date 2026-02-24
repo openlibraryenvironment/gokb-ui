@@ -591,7 +591,7 @@ export default {
       if (urlToCheck === oldUrl) {
         valid = false
       } else {
-        const validationResult = await genericServices('rest/entities').checkUrl(urlToCheck, true, this.cancelToken.token)
+        const validationResult = await genericServices('rest/entities').checkUrl(urlToCheck, true, false, this.cancelToken.token)
 
         if (validationResult.data?.result === 'ERROR') {
           valid = false

@@ -234,7 +234,8 @@
         "packageNotExist": "Ein Paket mit dieser UUID existiert anscheinend nicht in der gewählten Importquelle",
         "packageExists": "Ein Paket mit diesem Namen existiert bereits in der GOKB. Prüfen Sie bitte, ob es sich um das selbe Paket handelt.",
         "platformExists": "Die Plattform ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder eine schon existierende Plattform oder übernehmen Sie die Plattform von der Importquelle.",
-        "providerExists": "Der Anbieter des Pakets ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder einen schon existierenden Anbieter oder übernehmen Sie den Anbieter von der Importquelle."
+        "providerExists": "Der Anbieter des Pakets ist in dieser Form noch nicht in der GOKB vorhanden. Wählen Sie in dem Suchfeld entweder einen schon existierenden Anbieter oder übernehmen Sie den Anbieter von der Importquelle.",
+        "wrongImportSource": "Ein Import aus der gewählten Quelle ist aktuell nicht möglich."
       },
       "adaptSource": "Quelle übernehmen",
       "packageName": "Paketname",
@@ -307,7 +308,9 @@
     "missingStartVolume": "Die Angabe eines letzten Bands erfordert ein Anfangsband.",
     "refdataLookup": "Unbekannter Wert konnte nicht gespeichert werden.",
     "yearFormat": "Bitte geben Sie ein vierstelliges Jahr an.",
-    "missingStart": "Bitte geben Sie einen Startwert an."
+    "missingStart": "Bitte geben Sie einen Startwert an.",
+    "ftpUrlRejected": "Konfigurieren Sie eine FTP-Verbindung unter Transfer-Methode.",
+    "urlEmpty": "Bitte geben Sie eine URL an."
   },
   "job": {
     "label": "Import | Importe",
@@ -1907,6 +1910,31 @@
       "enableUpdate": "Aktiviert",
       "ignoreSizeLimit": "Dateigröße ignorieren",
       "url": "URL",
+      "filePath": "Dateipfad",
+      "completePath": "Vollständiger FTP-Pfad",
+      "testFtpConnection": {
+        "label": "Verbindung testen",
+        "message": {
+          "success": "Verbindung erfolgreich",
+          "partlySuccessful": "Die Verbindung zum Server konnte hergestellt werden, die Datei ist (derzeit) aber nicht vorhanden.",
+          "connectError": "Es konnte keine Verbindung zum FTP-Server hergestellt werden.",
+          "configurationError": "Die Konfiguration ist fehlerhaft.",
+          "dateMaskFound": "Eine Datei mit diesem Namen und einem Datumszusatz wurde gefunden.",
+          "dateMaskNotFound": "Eine Datei mit diesem Namen und einem Datumszusatz ist derzeit nicht vorhanden."
+        }
+      },
+      "transferMethod": {
+        "label": "Transfer-Methode",
+        "HTTP": {
+          "label": "HTTP"
+        },
+        "FTP": {
+          "label": "FTP"
+        }
+      },
+      "endpointConfiguration": {
+        "label": "Konfiguration"
+      },
       "frequency": {
         "label": "Update-Zyklus",
         "Daily": {

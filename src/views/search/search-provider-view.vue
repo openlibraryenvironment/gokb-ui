@@ -12,7 +12,7 @@
         searchFilters: {
           qsName: undefined,
           identifierValue: undefined,
-          titleNamespace: undefined,
+          // titleNamespace: undefined,
           curatoryGroupIds: undefined,
           status: 'Current',
           roles: undefined
@@ -120,8 +120,8 @@
                 url: 'refdata/categories/Org.Role',
                 label: this.$i18n.tc('component.provider.role.label')
               }
-            },
-            {
+            }
+            /* {
               type: 'GokbNamespaceField',
               name: 'titleNamespace',
               value: 'titleNamespaceId',
@@ -130,7 +130,7 @@
                 label: this.$i18n.t('component.provider.titleNamespace.label'),
                 returnObject: false
               }
-            },
+            }, */
           ],
         ]
       },
