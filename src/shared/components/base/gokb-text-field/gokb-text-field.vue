@@ -11,14 +11,12 @@
     :error-messages="computedErrorMessages"
     min-width="150px"
     :placeholder="placeholder"
-    :append-icon="appendIcon"
     :validate-on="validateOnGeneric ? validateOnGeneric : validateOnBlur ? 'blur' : 'input'"
     :clearable="allowClear && editable"
     :density="dense ? 'compact' : 'default'"
     :persistent-placeholder="!!placeholder"
     :autocomplete="autocomplete"
     variant="underlined"
-    @click:append="$emit('click:append', $event)"
     @click:prepend="iconAction"
   >
     <template #label>
@@ -31,6 +29,7 @@
       </span>
     </template>
     <template #append>
+      <v-icon v-if="!!appendIcon" @click="$emit('click:append', true)" style="cursor:pointer"> {{ appendIcon }}</v-icon>
       <gokb-tooltip v-if="!!gokbTooltip" classes="mt-0 opacity-100" :code="gokbTooltip" />
     </template>
   </v-text-field>
