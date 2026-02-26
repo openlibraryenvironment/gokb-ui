@@ -12,6 +12,7 @@
         v-model="editedVal"
         :rules="rules"
         :api-errors="activeApiError"
+        autofocus
       />
       <v-checkbox
         v-if="currentName"

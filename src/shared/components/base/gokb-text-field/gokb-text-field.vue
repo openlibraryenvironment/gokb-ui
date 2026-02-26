@@ -16,6 +16,7 @@
     :density="dense ? 'compact' : 'default'"
     :persistent-placeholder="!!placeholder"
     :autocomplete="autocomplete"
+    :autofocus="autofocus"
     variant="underlined"
     @click:prepend="iconAction"
   >
@@ -132,6 +133,11 @@
         type: String,
         required: false,
         default: undefined
+      },
+      autofocus: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data () {
