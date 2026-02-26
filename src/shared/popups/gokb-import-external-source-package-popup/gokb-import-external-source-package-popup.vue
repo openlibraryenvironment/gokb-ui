@@ -489,7 +489,7 @@
                 states.addCategory('Source.Frequency', frequencyValues)
               }
 
-              let frequencyCode = frequencyValues.filter(a => a.value === "Daily")[0].id
+              let frequencyCode = frequencyValues.filter(a => a.value === "Weekly")[0].id
 
               // SOURCE
               let source = {
