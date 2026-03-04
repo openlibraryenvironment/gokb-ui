@@ -281,8 +281,12 @@
         this[actionMethodName](actionMethodParameter)
       },
       resultPaginate (options) {
-        if (options.sortBy) {
+        if (!!options.sortBy) {
           this.resultOptions.sortBy = options.sortBy
+        }
+
+        if (!!options.itemsPerPage) {
+          this.resultOptions.itemsPerPage = options.itemsPerPage
         }
 
         this.retrievePackages()
@@ -304,6 +308,8 @@
             }
           }
         })
+
+        console.log("+++ ", this.resultOptions.page, this.resultOptions.itemsPerPage)
 
         this.loading = true
 
