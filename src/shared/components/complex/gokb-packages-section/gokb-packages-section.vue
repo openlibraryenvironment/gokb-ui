@@ -309,8 +309,6 @@
           }
         })
 
-        console.log("+++ ", this.resultOptions.page, this.resultOptions.itemsPerPage)
-
         this.loading = true
 
         this.rawPackages = await this.catchError({
