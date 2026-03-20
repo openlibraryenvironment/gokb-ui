@@ -496,7 +496,9 @@
         "notFound": "No KBART file was found for the provided URL!",
         "protocol": "KBART URL has an unsupported protocol!",
         "fileSize": "The file returned is too big. Automated imports of files bigger than 20 MB need to be authorized by an administrator.",
-        "invalid": "The provided source URL is invalid!"
+        "invalid": "The provided source URL is invalid!",
+        "denied": "The download request was rejected. Either the file is password protected, or the site provider does not allow automated access.",
+        "serverError": "Der Server der angegebenen URL meldet einen Fehler bei der Anfrage."
       },
       "reason": {
         "label": "Reason | Reasons"
