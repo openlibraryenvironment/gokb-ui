@@ -498,7 +498,7 @@
         "fileSize": "The file returned is too big. Automated imports of files bigger than 20 MB need to be authorized by an administrator.",
         "invalid": "The provided source URL is invalid!",
         "denied": "The download request was rejected. Either the file is password protected, or the site provider does not allow automated access.",
-        "serverError": "Der Server der angegebenen URL meldet einen Fehler bei der Anfrage."
+        "serverError": "The server returned an error when requesting the KBART file!"
       },
       "reason": {
         "label": "Reason | Reasons"
