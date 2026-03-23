@@ -140,7 +140,10 @@
     "noaccess": "No Access",
     "kbartValidator": "KBART Validator",
     "error": "Error",
-    "notFound": "Not Found"
+    "notFound": "Not Found",
+    "admin": {
+      "label": "Admininstration"
+    }
   },
   "pending": {
     "lists": {

@@ -2,7 +2,7 @@ import {
   HOME_ROUTE, PROFILE_ROUTE, REGISTER_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE, CREATE_USER_ROUTE,
   SEARCH_MAINTENANCE_ROUTE, SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
   SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, EDIT_USER_ROUTE, ERROR_ROUTE, EDIT_PACKAGE_ROUTE,
-  EDIT_PROVIDER_ROUTE, CREATE_PROVIDER_ROUTE, EDIT_TITLE_ROUTE, NO_ACCESS_ROUTE, EDIT_TIPP_ROUTE, EDIT_REVIEW_ROUTE, VALIDATOR_ROUTE, NOT_FOUND_ROUTE
+  EDIT_PROVIDER_ROUTE, CREATE_PROVIDER_ROUTE, EDIT_TITLE_ROUTE, NO_ACCESS_ROUTE, EDIT_TIPP_ROUTE, EDIT_REVIEW_ROUTE, VALIDATOR_ROUTE, NOT_FOUND_ROUTE, ADMIN_ROUTE
 } from './route-paths'
 
 const api = (log, errorModel, accountModel, createRouter, HomeView, loading, createWebHistory) => {
@@ -196,6 +196,14 @@ const api = (log, errorModel, accountModel, createRouter, HomeView, loading, cre
           code: 'route.notFound'
         },
         component: () => import('@/views/not-found-view.vue')
+      },
+      {
+        path: ADMIN_ROUTE,
+        name: ADMIN_ROUTE,
+        meta: {
+          code: 'route.admin.label'
+        },
+        component: () => import('@/views/admin-view.vue')
       },
       {
         path: VALIDATOR_ROUTE,

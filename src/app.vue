@@ -113,6 +113,22 @@
           </v-list-item>
         </div>
 
+        <v-divider v-if="isAdmin" />
+
+        <v-list-item
+          v-if="isAdmin"
+          key="admin"
+          to="/admin"
+        >
+          <template #prepend>
+            <v-icon>
+              mdi-wrench
+            </v-icon>
+          </template>
+          <v-list-item-title class="font-weight-bold" v-text="$t('route.admin.label')" />
+
+        </v-list-item>
+
         <v-divider />
 
         <v-list-item
@@ -277,7 +293,7 @@
     HOME_ROUTE, CREATE_PACKAGE_ROUTE, CREATE_TITLE_ROUTE, CREATE_USER_ROUTE,
     SEARCH_PACKAGE_ROUTE, SEARCH_REVIEW_ROUTE, SEARCH_TITLE_ROUTE,
     SEARCH_PROVIDER_ROUTE, SEARCH_USER_ROUTE, CREATE_PROVIDER_ROUTE,
-    VALIDATOR_ROUTE
+    VALIDATOR_ROUTE, ADMIN_ROUTE
   } from '@/router/route-paths'
   import { createCancelToken } from '@/shared/services/http'
   import profileServices from '@/shared/services/profile-services'
@@ -365,6 +381,9 @@
       },
       canCreate () {
         return this.loggedIn && accountModel.hasRole('ROLE_CONTRIBUTOR')
+      },
+      isAdmin () {
+        return this.loggedIn && accountModel.hasRole('ROLE_ADMIN')
       },
       globalSearchPlaceholder () {
         return this.$i18n.t('search.global.placeholder')

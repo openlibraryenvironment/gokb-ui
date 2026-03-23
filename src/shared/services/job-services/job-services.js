@@ -17,6 +17,16 @@ const api = (baseServices) => ({
     }, cancelToken)
   },
 
+
+  getJobs (parameters, cancelToken) {
+    const urlParameters = baseServices.createQueryParameters(parameters)
+    const url = import.meta.env.VITE_API_BASE_URL + `${REST_PATH}?${urlParameters}`
+    return baseServices.request({
+      method: 'GET',
+      url,
+    }, cancelToken)
+  },
+
   cancel (data, cancelToken) {
     const { id } = data
     const url = id ? import.meta.env.VITE_API_BASE_URL + `${REST_PATH}/${id}` : import.meta.env.VITE_API_BASE_URL + REST_PATH

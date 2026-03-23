@@ -8,7 +8,7 @@
   >
     <template #buttons>
       <v-btn
-        v-if="group && showGroupJobs"
+        v-if="!!group && showGroupJobs"
         icon
         :title="$t('job.context.profile')"
         @click="switchContext"
@@ -18,7 +18,7 @@
         </v-icon>
       </v-btn>
       <v-btn
-        v-else-if="group"
+        v-else-if="!!group"
         icon
         :title="$t('job.context.group')"
         @click="switchContext"
@@ -27,6 +27,18 @@
           mdi-account-group
         </v-icon>
       </v-btn>
+      <gokb-checkbox-field
+        v-model="searchFilters.archived"
+        label="Archived"
+        class="mt-7"
+        dense
+      />
+      <gokb-select-field
+        v-model="searchFilters.status"
+        class="ms-4 mt-3"
+        :static-items="statusTypes"
+        :label="$t('component.general.status.label')"
+      />
       <v-btn
         icon
         :title="$t('btn.refresh')"
@@ -82,6 +94,7 @@
   import profileServices from '@/shared/services/profile-services'
   import groupServices from '@/shared/services/curatory-group-services'
   import packageServices from '@/shared/services/package-services'
+  import jobServices from '@/shared/services/job-services'
   import BaseComponent from '@/shared/components/base-component'
 
   const ROWS_PER_PAGE = 10
@@ -118,7 +131,18 @@
         type: Boolean,
         required: false,
         default: false
+      },
+      showAdminJobs: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      defaultExpand: {
+        type: Boolean,
+        required: false,
+        default: false
       }
+
     },
     data () {
       return {
@@ -127,6 +151,10 @@
           itemsPerPage: ROWS_PER_PAGE
         },
         selectedItems: [],
+        searchFilters: {
+          archived: true,
+          status: undefined
+        },
         jobPanel: 0,
         jobs: [],
         expanded: false,
@@ -148,14 +176,25 @@
         return false
       },
       tableHeaders () {
-        if (this.linkedComponent) {
+        if (this.showAdminJobs) {
+          return [
+            { title: this.$i18n.t('job.type'), align: 'start', key: 'popup', sortable: false, width: '15%' },
+            { title: this.$i18n.t('job.linkedComponent'), align: 'start', key: 'link', sortable: false, width: '40%' },
+            { title: this.$i18n.tc('component.curatoryGroup.label'), align: 'start', key: 'group', sortable: false, width: '10%' },
+            { title: this.$i18n.t('job.status'), align: 'start', key: 'status', sortable: false, width: '8%' },
+            { title: this.$i18n.t('job.startTime'), align: 'start', key: 'startTime', sortable: false, width: '11%' },
+            { title: this.$i18n.t('job.endTime'), align: 'start', key: 'endTime', sortable: false, width: '11%' },
+          ]
+        }
+        else if (this.linkedComponent) {
           return [
             { title: this.$i18n.t('job.type'), align: 'start', key: 'popup', sortable: false },
             { title: this.$i18n.t('job.status'), align: 'start', key: 'status', sortable: false, width: '15%' },
             { title: this.$i18n.t('job.startTime'), align: 'start', key: 'startTime', sortable: false, width: '15%' },
             { title: this.$i18n.t('job.endTime'), align: 'start', key: 'endTime', sortable: false, width: '15%' },
           ]
-        } else {
+        }
+        else {
           return [
             { title: this.$i18n.t('job.type'), align: 'start', key: 'popup', sortable: false, width: '25%' },
             { title: this.$i18n.t('job.linkedComponent'), align: 'start', key: 'link', sortable: false, width: '40%' },
@@ -165,6 +204,13 @@
           ]
         }
       },
+      statusTypes () {
+        return [
+          { id: 'OK', name: this.$i18n.tc('job.ok'), icon: 'mdi-check-circle-outline' },
+          { id: 'ERROR', name: this.$i18n.t('job.error'), icon: 'mdi-close' },
+          { id: 'SKIPPED', name: this.$i18n.t('job.skipped'), icon: 'mdi-debug-step-over' },
+        ]
+      },
       title () {
         return this.$i18n.tc('job.label', 2) + (this.showGroupJobs ? (' (' + this.group.name + ')') : '')
       }
@@ -172,9 +218,19 @@
     watch: {
       '$i18n.locale' (l) {
         this.fetchJobs()
+      },
+      searchFilters: {
+        handler () {
+          this.fetchJobs()
+        },
+        deep: true
       }
     },
     created () {
+      if (this.showAdminJobs) {
+        this.searchFilters.archived = true
+      }
+
       this.fetchJobs()
       clearInterval(this.interval)
       this.interval = undefined
@@ -190,6 +246,10 @@
       this.startAutoUpdate()
     },
     mounted () {
+      if (this.defaultExpand) {
+        this.expanded = true
+      }
+
       if (this.autoJobRefresh && !this.interval) {
         this.startAutoUpdate()
       }
@@ -228,6 +288,8 @@
           lookupService = packageServices
         } else if (this.showGroupJobs) {
           lookupService = groupServices
+        } else if (this.showAdminJobs) {
+          lookupService = jobServices
         }
 
         const result = await this.catchError({
@@ -235,7 +297,8 @@
             offset: this.options.page ? (this.options.page - 1) * this.options.itemsPerPage : 0,
             ...(this.showGroupJobs ? { id: this.group.id } : {}),
             ...(!!this.linkedComponent ? { id: this.linkedComponent } : {}),
-            combined: true,
+            ...(this.searchFilters.archived == true ? { archived: true } : { combined: true }),
+            ...(!!this.searchFilters.status ? { status: this.searchFilters.status } : {}),
             limit: this.options.itemsPerPage
           }, this.cancelToken.token),
           instance: this
@@ -259,6 +322,7 @@
                 componentId: record.linkedItem?.id || null,
                 componentType: record.linkedItem && this.$i18n.tc('component.' + record.linkedItem.type.toLowerCase() + '.label'),
                 link: record.linkedItem ? { value: record.linkedItem?.name, route: componentRoutes[record.linkedItem.type.toLowerCase()], id: 'componentId' } : {},
+                group: record.group?.name || null,
                 archived: !!record.status || false,
                 progress: record.progress,
                 messages: record.messages,

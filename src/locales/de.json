@@ -141,7 +141,10 @@
     "noaccess": "Kein Zugang",
     "kbartValidator": "KBART-Validator",
     "error": "Fehler",
-    "notFound": "Nicht gefunden"
+    "notFound": "Nicht gefunden",
+    "admin": {
+      "label": "Verwaltung"
+    }
   },
   "pending": {
     "lists": {
