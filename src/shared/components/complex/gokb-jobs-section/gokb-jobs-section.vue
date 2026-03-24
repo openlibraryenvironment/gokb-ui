@@ -28,6 +28,7 @@
         </v-icon>
       </v-btn>
       <gokb-checkbox-field
+        v-if="showAdminJobs"
         v-model="searchFilters.archived"
         label="Archived"
         class="mt-7"
@@ -152,7 +153,7 @@
         },
         selectedItems: [],
         searchFilters: {
-          archived: true,
+          archived: false,
           status: undefined
         },
         jobPanel: 0,
