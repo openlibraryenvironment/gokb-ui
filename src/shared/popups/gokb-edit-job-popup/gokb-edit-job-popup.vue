@@ -272,8 +272,8 @@
               this.rowErrors.push({ row: badrow.row, column: colname, reason: this.$i18n.t(v.messageCode, v.args) })
             })
           })
-        } else if (!!record.job_result?.validation) {
-
+        }
+        else if (!!record.job_result?.validation) {
           this.kbartValidation = record.job_result.validation
 
           this.kbartValidation.errors.single = []
