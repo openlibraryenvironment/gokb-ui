@@ -904,6 +904,12 @@
         },
         "Master File": {
           "label": "Master File"
+        },
+        "EBA Master": {
+          "label": "EBA Master List"
+        },
+        "EBA Selection": {
+          "label": "EBA Selection"
         }
       },
       "consistent": "Content is consistent",

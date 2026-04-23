@@ -904,6 +904,12 @@
         },
         "Master File": {
           "label": "Gesamttitelliste"
+        },
+        "EBA Master": {
+          "label": "EBS/EBA-Gesamtliste"
+        },
+        "EBA Selection": {
+          "label": "EBS/EBA-Auswahl"
         }
       },
       "consistent": "Paketinhalt ist einheitlich",
