@@ -111,6 +111,7 @@
           <v-expansion-panel>
             <v-expansion-panel-title>
               {{ $tc('kbart.processing.error.label', 2) }}
+              <v-chip pill class="ml-3" color="error">{{ errors.length }}</v-chip>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
               <v-data-table
@@ -124,6 +125,7 @@
           <v-expansion-panel>
             <v-expansion-panel-title>
               {{ $tc('kbart.processing.warning.label', 2) }}
+              <v-chip pill class="ml-3" color="warning">{{ warnings.length }}</v-chip>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
               <v-data-table
@@ -196,21 +198,30 @@
       }
     },
     created () {
-      let typedReport = !!this.validatorResult.errors.type
+      let typedReport = !!this.validatorResult.errors.type || !!this.validatorResult.warnings.type
+
+
+      if (typedReport) {
+        this.counts.warnings = this.validatorResult.errors.type
+      }
 
       Object.entries(this.validatorResult.errors.rows).forEach(([rownum, colobj]) => {
         Object.entries(colobj).forEach(([colname, eo]) => {
           this.errors.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
 
-          if (!this.counts.errors[colname]) {
-            this.counts.errors[colname] = 1
-          } else if (!typedReport) {
-            this.counts.errors[colname]++
+          if (!typedReport) {
+            if (!this.counts.errors[colname]) {
+              this.counts.errors[colname] = 1
+            } else {
+              this.counts.errors[colname]++
+            }
           }
         })
       })
 
-      typedReport = !!this.validatorResult.warnings.type
+      if (typedReport) {
+        this.counts.warnings = this.validatorResult.warnings.type
+      }
 
       Object.entries(this.validatorResult.warnings.rows).forEach(([rownum, colobj]) => {
         Object.entries(colobj).forEach(([colname, wo]) => {
@@ -220,10 +231,12 @@
             reason: this.$i18n.t(wo.messageCode, wo.args)
           })
 
-          if (!this.counts.warnings[colname]) {
-            this.counts.warnings[colname] = 1
-          } else if (!typedReport) {
-            this.counts.warnings[colname]++
+          if (!typedReport) {
+            if (!this.counts.warnings[colname]) {
+              this.counts.warnings[colname] = 1
+            } else {
+              this.counts.warnings[colname]++
+            }
           }
         })
       })
