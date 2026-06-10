@@ -502,6 +502,9 @@
       },
       "reason": {
         "label": "Reason | Reasons"
+      },
+      "skipped": {
+        "noFileForAYear": "No KBART file has been found for one complete yearly cycle. Please consider disabling the automated update if this package is not expected to change any more."
       }
     },
     "processing": {
