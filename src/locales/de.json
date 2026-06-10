@@ -310,7 +310,14 @@
     "yearFormat": "Bitte geben Sie ein vierstelliges Jahr an.",
     "missingStart": "Bitte geben Sie einen Startwert an.",
     "ftpUrlRejected": "Konfigurieren Sie eine FTP-Verbindung unter Transfer-Methode.",
-    "urlEmpty": "Bitte geben Sie eine URL an."
+    "urlEmpty": "Bitte geben Sie eine URL an.",
+    "name": {
+      "inUse": "Dieser Name ist bereits in Verwendung!",
+      "nameAsName": "Dieser Name ist bereits in Verwendung!",
+      "nameAsVariant": "Dieser Name ist bereits anderweitig als Namensvariante vergeben!",
+      "variantAsName": "Diese Namensvariante ist bereits anderweitig als Hauptname vergeben!",
+      "variantAsVariant": "Diese Namensvariante ist bereits anderweitig als Namensvariante vergeben!"
+    }
   },
   "job": {
     "label": "Import | Importe",
@@ -1108,7 +1115,7 @@
         }
       },
       "paymentType": {
-        "label": "Zugiffstyp",
+        "label": "Zugriffstyp",
         "OA": {
           "label": "Free"
         },
@@ -1906,8 +1913,8 @@
     "variantName": {
       "label": "Namensvariante | Namensvarianten",
       "error": {
-        "duplicate": "Eine ähnliche Variante zu '{0}' existiert bereits!",
-        "inUse": "Diese Variante ist bereits anderweitig verknüpft!"
+        "duplicate": "Eine ähnliche Namensvariante zu '{0}' existiert bereits!",
+        "inUse": "Diese Namensvariante ist bereits anderweitig verknüpft!"
       }
     },
     "source": {

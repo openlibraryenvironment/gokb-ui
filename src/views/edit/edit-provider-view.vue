@@ -262,6 +262,7 @@
             >
               <gokb-alternate-names-section
                 v-model="allNames.alts"
+                component-type="Org"
                 :show-title="false"
                 :disabled="isReadonly"
                 :api-errors="errors.variantNames"

@@ -473,6 +473,7 @@
                 <gokb-alternate-names-section
                   v-model="allNames.alts"
                   :disabled="isReadonly"
+                  component-type="Package"
                   :api-errors="errors?.variantNames"
                   @update="addPendingChange"
                 />
