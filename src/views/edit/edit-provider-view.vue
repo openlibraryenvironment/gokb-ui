@@ -550,6 +550,7 @@
         />
         <gokb-alternate-names-section
           v-model="allNames.alts"
+          component-type="Org"
           :expanded="allNames.alts.length > 0"
           :disabled="isReadonly"
         />
