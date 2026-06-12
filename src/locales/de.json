@@ -39,7 +39,8 @@
     "moreFilters": "Mehr Filter",
     "moreOptions": "Weitere Optionen",
     "externalSourceImport": "Aus externer Datenquelle importieren",
-    "hide": "Ausblenden"
+    "hide": "Ausblenden",
+    "transfer": "Transferieren"
   },
   "main": {
     "docs": {
@@ -1425,6 +1426,12 @@
         "label": "Nur Eskaliert"
       },
       "showClosed": "Abgeschlossene anzeigen",
+      "transfer": {
+        "label": "Transferieren",
+        "targetSelect": {
+          "label": "Neuen Kurator auswählen"
+        }
+      },
       "edit": {
         "success": {
           "created": "Eine neue Prüfanfrage wurde erfolgreich angelegt.",
@@ -1434,7 +1441,8 @@
           "closed": "Prüfanfrage geschlossen",
           "closedBulk": "Prüfanfrage wurde geschlossen | {0} Prüfanfragen wurden geschlossen",
           "reopened": "Die Prüfanfrage wurde erneut geöffnet.",
-          "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert."
+          "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert.",
+          "transferred": "Die Prüfanfrage wurde erfolgreich transferiert."
         },
         "error": {
           "escalate": {

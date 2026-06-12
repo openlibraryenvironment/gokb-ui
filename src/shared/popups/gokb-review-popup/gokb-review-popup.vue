@@ -31,6 +31,7 @@
           :has-component-cards="showComponentCards"
           :additional-vars="reviewItem.additionalVars"
           @set-editing-notes="updateEditingNotes"
+          @transfer="transfer"
         />
 
         <gokb-reviews-components-section
@@ -560,6 +561,23 @@
           this.successMsg = this.$i18n.t('component.review.edit.success.deescalated')
           this.showSuccessMsg = true
           this.deescalatable = false
+
+          this.fetchReview (this.id)
+        }
+        else {
+          this.errorMsg = this.$i18n.t('error.general.500')
+          this.showErrorMsg = true
+        }
+      },
+      async transfer (target) {
+        const response = await this.catchError({
+          promise: reviewServices.transfer(this.id, target),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.successMsg = this.$i18n.t('component.review.edit.success.transferred')
+          this.showSuccessMsg = true
 
           this.fetchReview (this.id)
         }
