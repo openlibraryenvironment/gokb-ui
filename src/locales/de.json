@@ -39,7 +39,8 @@
     "moreFilters": "Mehr Filter",
     "moreOptions": "Weitere Optionen",
     "externalSourceImport": "Aus externer Datenquelle importieren",
-    "hide": "Ausblenden"
+    "hide": "Ausblenden",
+    "transfer": "Transferieren"
   },
   "main": {
     "docs": {
@@ -509,6 +510,9 @@
       },
       "reason": {
         "label": "Ursache | Ursachen"
+      },
+      "skipped": {
+        "noFileForAYear": "Für den gesamten jährlichen Zyklus konnte keine KBART-Datei gefunden werden. Bitte überprüfen Sie, ob das automatische Update weiterhin benötigt wird."
       }
     },
     "processing": {
@@ -1432,6 +1436,12 @@
         "label": "Nur Eskaliert"
       },
       "showClosed": "Abgeschlossene anzeigen",
+      "transfer": {
+        "label": "Transferieren",
+        "targetSelect": {
+          "label": "Neuen Kurator auswählen"
+        }
+      },
       "edit": {
         "success": {
           "created": "Eine neue Prüfanfrage wurde erfolgreich angelegt.",
@@ -1441,7 +1451,8 @@
           "closed": "Prüfanfrage geschlossen",
           "closedBulk": "Prüfanfrage wurde geschlossen | {0} Prüfanfragen wurden geschlossen",
           "reopened": "Die Prüfanfrage wurde erneut geöffnet.",
-          "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert."
+          "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert.",
+          "transferred": "Die Prüfanfrage wurde erfolgreich transferiert."
         },
         "error": {
           "escalate": {

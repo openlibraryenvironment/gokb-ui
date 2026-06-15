@@ -3,6 +3,11 @@
     <v-row
       align="center"
     >
+      <gokb-transfer-review-popup
+        v-if="selectTransferTargetPopupVisible"
+        v-model="selectTransferTargetPopupVisible"
+        @submit="selectTransferTarget"
+      />
       <v-col cols="3">
         <gokb-text-field
           v-model="reviewComponent.dateCreated"
@@ -36,7 +41,9 @@
           <label
             class="v-label"
             style="display:block;font-size:0.9em;"
-          > {{ $tc('component.curatoryGroup.label', 2) }}: </label>
+          >
+            {{ $tc('component.curatoryGroup.label', 2) }}:
+          </label>
         </div>
         <div style="margin-top:-6px">
           <v-chip-group>
@@ -51,6 +58,12 @@
             </v-chip>
           </v-chip-group>
         </div>
+      </v-col>
+      <v-col
+        v-if="isAdmin"
+        cols="3"
+      >
+        <gokb-button @click="selectTransferTargetPopupVisible = true"> {{ $t('component.review.transfer.label') }}</gokb-button>
       </v-col>
     </v-row>
     <v-row
@@ -308,12 +321,14 @@
 </template>
 
 <script>
+  import accountModel from '@/shared/models/account-model'
   import BaseComponent from '@/shared/components/base-component'
   import GokbCuratoryGroupPopup from '@/shared/popups/gokb-curatory-group-popup'
+  import GokbTransferReviewPopup from '@/shared/popups/gokb-transfer-review-popup'
 
   export default {
     name: 'GokbReviewsHeader',
-    components: { GokbCuratoryGroupPopup },
+    components: { GokbCuratoryGroupPopup, GokbTransferReviewPopup },
     extends: BaseComponent,
     props: {
       component: {
@@ -348,6 +363,7 @@
         isManualRequest: undefined,
         isExternalReview: false,
         selectedGroup: undefined,
+        selectTransferTargetPopupVisible: false,
         componentRoutes: {
           package: '/package',
           org: '/provider',
@@ -398,6 +414,9 @@
       darkMode () {
         return this.$vuetify.theme.global.current.dark
       },
+      isAdmin () {
+        return accountModel.hasRole('ROLE_ADMIN')
+      },
     },
     methods: {
       triggerSelectedGroup(groupInfo) {
@@ -406,6 +425,11 @@
       },
       saveEditingNotes() {
         this.$emit('set-editing-notes', this.editingNotes)
+      },
+      selectTransferTarget(targetGroup) {
+        if (!!targetGroup) {
+          this.$emit('transfer', targetGroup)
+        }
       }
     }
   }

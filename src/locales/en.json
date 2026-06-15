@@ -39,7 +39,8 @@
     "moreFilters": "More Filters",
     "moreOptions": "More Options",
     "externalSourceImport": "Import from external source",
-    "hide": "Hide"
+    "hide": "Hide",
+    "transfer": "Transfer"
   },
   "main": {
     "docs": {
@@ -509,6 +510,9 @@
       },
       "reason": {
         "label": "Reason | Reasons"
+      },
+      "skipped": {
+        "noFileForAYear": "No KBART file has been found for one complete yearly cycle. Please consider disabling the automated update if this package is not expected to change any more."
       }
     },
     "processing": {
@@ -1433,6 +1437,12 @@
         "label": "Only Escalated"
       },
       "showClosed": "Show closed requests",
+      "transfer": {
+        "label": "Transfer",
+        "targetSelect": {
+          "label": "Select a new curator"
+        }
+      },
       "edit": {
         "success": {
           "created": "A new request was successfully created.",
@@ -1442,7 +1452,8 @@
           "closed": "Request closed",
           "closedBulk": "Request closed | {0} requests closed",
           "reopened": "Request has been reopened.",
-          "editingNotes": "The editing notes have been sucessfully updated."
+          "editingNotes": "The editing notes have been sucessfully updated.",
+          "transfer": "The request has been successfully transferred."
         },
         "error": {
           "escalate": {

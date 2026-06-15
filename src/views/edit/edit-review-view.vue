@@ -567,6 +567,23 @@
           this.showSnackbar = true
         }
       },
+      async transfer (target) {
+        const response = await this.catchError({
+          promise: reviewServices.transfer(this.id, target),
+          instance: this
+        })
+
+        if (response.status === 200) {
+          this.successMsg = this.$i18n.t('component.review.edit.success.transferred')
+          this.showSuccessMsg = true
+
+          this.fetchReview (this.id)
+        }
+        else {
+          this.errorMsg = this.$i18n.t('error.general.500')
+          this.showErrorMsg = true
+        }
+      },
       hideOtherComponent (id) {
         this.reviewItem.otherComponents = this.reviewItem.otherComponents.filter(oc => (oc.id != id))
       },
