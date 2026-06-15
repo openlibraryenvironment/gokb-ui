@@ -503,6 +503,9 @@
       },
       "reason": {
         "label": "Ursache | Ursachen"
+      },
+      "skipped": {
+        "noFileForAYear": "Für den gesamten jährlichen Zyklus konnte keine KBART-Datei gefunden werden. Bitte überprüfen Sie, ob das automatische Update weiterhin benötigt wird."
       }
     },
     "processing": {
