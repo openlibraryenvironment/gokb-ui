@@ -311,7 +311,14 @@
     "yearFormat": "Please enter a four digit year.",
     "missingStart": "Please first provide a start value.",
     "ftpUrlRejected": "Configure an FTP connection under Transfer method.",
-    "urlEmpty": "Please provide a URL."
+    "urlEmpty": "Please provide a URL.",
+    "name": {
+      "inUse": "This name is already in use!",
+      "nameAsName": "This name is already in use!",
+      "nameAsVariant": "This name is already in use as a variant!",
+      "variantAsName": "This variant is already in use as a name elsewhere!",
+      "variantAsVariant": "This variant is already in use as a variant elsewhere!"
+    }
   },
   "job": {
     "label": "Import | Imports",

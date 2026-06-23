@@ -313,6 +313,7 @@
             >
               <gokb-alternate-names-section
                 v-model="allNames.alts"
+                component-type="Title"
                 :show-title="false"
                 :disabled="isReadonly"
                 :api-errors="errors.variantNames"
@@ -387,6 +388,7 @@
         />
         <gokb-alternate-names-section
           v-model="allNames.alts"
+          component-type="Title"
           :disabled="isReadonly"
           :api-errors="errors.variantNames"
         />

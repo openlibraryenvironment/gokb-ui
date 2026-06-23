@@ -66,6 +66,8 @@
 <script>
   import GokbAddItemPopup from '@/shared/popups/gokb-add-item-popup'
   import GokbConfirmationPopup from '@/shared/popups/gokb-confirmation-popup'
+  import genericServices from '@/shared/services/generic-entity-services'
+  import { createCancelToken } from '@/shared/services/http'
 
   const ROWS_PER_PAGE = 10
 
@@ -97,6 +99,10 @@
         type: Array,
         required: false,
         default: undefined
+      },
+      componentType: {
+        type: String,
+        required: true
       }
     },
     data () {
@@ -117,9 +123,6 @@
         messageToConfirm: { text: undefined, vars: undefined },
         variantNames: []
       }
-    },
-    mounted() {
-      this.updateItems()
     },
     computed: {
       localValue: {
@@ -206,13 +209,39 @@
         var result = variant.normalize('NFKD').replace(/[^\w]/g, '')
         return result
       },
-      addItem (item) {
+      async addItem (item) {
         if (!this.localValue.find(({ variantName }) => this.normalizeVariant(variantName) === this.normalizeVariant(item.variantName))) {
-          this.localValue.push({ id: this.tempId(), variantName: item.variantName, locale: item.locale, variantType: null, isDeletable: true, _pending: 'added' })
-          this.$emit('update', 'variants')
+          let isDupe = await this.checkName(item.variantName)
+
+          if (isDupe) {
+            this.errorMessage = this.$i18n.t('component.variantName.error.inUse')
+            this.showErrorMessage = true
+          }
+          else {
+            this.localValue.push({ id: this.tempId(), variantName: item.variantName, locale: item.locale, variantType: null, isDeletable: true, _pending: 'added' })
+            this.$emit('update', 'variants')
+          }
         } else {
           this.errorMessage = this.$i18n.t('component.variantName.error.duplicate', [item.variantName])
           this.showErrorMessage = true
+        }
+      },
+      async checkName (val) {
+        this.cancelToken = createCancelToken()
+        var response = await genericServices('rest/entities').checkNewVariantName(
+          encodeURIComponent(val),
+          this.componentType,
+          this.cancelToken.token
+        )
+
+        if (response?.status < 400) {
+          if (response.data.result === 'ERROR') {
+            return true
+          } else {
+            return false
+          }
+        } else {
+          return false
         }
       },
       updateItems(options) {
