@@ -198,48 +198,7 @@
       }
     },
     created () {
-      let typedReport = !!this.validatorResult.errors.type || !!this.validatorResult.warnings.type
-
-
-      if (typedReport) {
-        this.counts.warnings = this.validatorResult.errors.type
-      }
-
-      Object.entries(this.validatorResult.errors.rows).forEach(([rownum, colobj]) => {
-        Object.entries(colobj).forEach(([colname, eo]) => {
-          this.errors.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
-
-          if (!typedReport) {
-            if (!this.counts.errors[colname]) {
-              this.counts.errors[colname] = 1
-            } else {
-              this.counts.errors[colname]++
-            }
-          }
-        })
-      })
-
-      if (typedReport) {
-        this.counts.warnings = this.validatorResult.warnings.type
-      }
-
-      Object.entries(this.validatorResult.warnings.rows).forEach(([rownum, colobj]) => {
-        Object.entries(colobj).forEach(([colname, wo]) => {
-          this.warnings.push({
-            row: rownum,
-            column: colname,
-            reason: this.$i18n.t(wo.messageCode, wo.args)
-          })
-
-          if (!typedReport) {
-            if (!this.counts.warnings[colname]) {
-              this.counts.warnings[colname] = 1
-            } else {
-              this.counts.warnings[colname]++
-            }
-          }
-        })
-      })
+      this.mapResults()
     },
     computed: {
       errorHeaders() {
@@ -257,7 +216,56 @@
           || this.validatorResult.warnings.single?.length > 0 || this.validatorResult.errors.single?.length > 0)
       }
     },
+    watch: {
+      validatorResult () {
+        this.mapResults()
+      }
+    },
     methods: {
+      mapResults () {
+        let typedReport = !!this.validatorResult.errors.type || !!this.validatorResult.warnings.type
+
+
+        if (typedReport) {
+          this.counts.warnings = this.validatorResult.errors.type
+        }
+
+        Object.entries(this.validatorResult.errors.rows).forEach(([rownum, colobj]) => {
+          Object.entries(colobj).forEach(([colname, eo]) => {
+            this.errors.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+
+            if (!typedReport) {
+              if (!this.counts.errors[colname]) {
+                this.counts.errors[colname] = 1
+              } else {
+                this.counts.errors[colname]++
+              }
+            }
+          })
+        })
+
+        if (typedReport) {
+          this.counts.warnings = this.validatorResult.warnings.type
+        }
+
+        Object.entries(this.validatorResult.warnings.rows).forEach(([rownum, colobj]) => {
+          Object.entries(colobj).forEach(([colname, wo]) => {
+            this.warnings.push({
+              row: rownum,
+              column: colname,
+              reason: this.$i18n.t(wo.messageCode, wo.args)
+            })
+
+            if (!typedReport) {
+              if (!this.counts.warnings[colname]) {
+                this.counts.warnings[colname] = 1
+              } else {
+                this.counts.warnings[colname]++
+              }
+            }
+          })
+        })
+      },
       exportResults () {
         let that = this
         let allResults = []
