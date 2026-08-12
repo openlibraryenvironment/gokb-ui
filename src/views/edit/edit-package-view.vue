@@ -1846,7 +1846,8 @@
 
             if (result?.data?._embedded?.source?.importConfig) {
               this.externalSource = result.data._embedded.source.importConfig.name
-            } else if (result?.data?._embedded?.source?.automaticUpdates && result?.data?._embedded?.source?.frequency && result?.data?._embedded?.source?.url) {
+            } else if (result?.data?._embedded?.source?.automaticUpdates && result?.data?._embedded?.source?.frequency
+              && ( result?.data?._embedded?.source?.url || (result?.data?._embedded?.source?.transferMethod?.name === "FTP" && result?.data?._embedded?.source?.ftpPath))) {
               this.autoUpdate = true
             }
           } else if (result.status === 404) {

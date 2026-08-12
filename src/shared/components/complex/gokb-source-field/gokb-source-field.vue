@@ -476,7 +476,7 @@
             else if (!!this.item.titleIdSerial && !!this.item.titleIdMonograph) {
               this.mixedContent = true
             }
-            if (!!this.item.url) {
+            if (!!this.item.url || (this.isFTPTransfer && !!this.item.ftpPath)) {
               this.isExpanded = true
             }
 
