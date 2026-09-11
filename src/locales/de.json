@@ -136,6 +136,11 @@
       "create": "Pflegeauftrag beantragen",
       "search": "Pflegeauftrag"
     },
+    "curatoryGroup": {
+      "edit": "Kuratorengruppe bearbeiten",
+      "create": "Kuratorengruppe erstellen",
+      "search": "Kuratorengruppe"
+    },
     "home": "GOKB",
     "profile": "Profil",
     "register": "Registrierung",

@@ -285,6 +285,7 @@
   import languageServices from '@/shared/services/language-services'
   import namespaceServices from '@/shared/services/namespace-services'
   import log from '@/shared/utils/logger'
+  import {SEARCH_CURATORY_GROUP_ROUTE} from "./router/route-paths.js";
 
   // const SEARCH_COMPONENTS = [COMPONENT_TYPE_PACKAGE, COMPONENT_TYPE_JOURNAL_INSTANCE, COMPONENT_TYPE_ORG, COMPONENT_TYPE_BOOK_INSTANCE]
 
@@ -321,7 +322,8 @@
           { icon: 'mdi-domain', text: this.$i18n.tc('component.provider.label', 2), route: SEARCH_PROVIDER_ROUTE },
           { icon: 'mdi-message-draw', text: this.$i18n.tc('component.review.label', 2), route: SEARCH_REVIEW_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
           // { icon: 'keyboard', text: this.$i18n.tc('component.maintenance.label', 2), route: SEARCH_MAINTENANCE_ROUTE, needsLogin: true, needsRole: ROLE_EDITOR },
-          { icon: 'mdi-account-multiple', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN }
+          { icon: 'mdi-account-multiple', text: this.$i18n.tc('component.user.label', 2), route: SEARCH_USER_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN },
+          { icon: 'mdi-account-supervisor-circle', text: 'Kuratorengruppen', route: SEARCH_CURATORY_GROUP_ROUTE, needsLogin: true, needsRole: ROLE_ADMIN }
         ]
 
         return menuItems.filter(item => (!accountModel.loggedIn() && !item.needsLogin) || (accountModel.loggedIn() && (!item.needsRole || accountModel.hasRole(item.needsRole))))

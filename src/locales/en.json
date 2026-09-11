@@ -135,6 +135,11 @@
       "create": "Create Maintenance",
       "search": "Maintenance"
     },
+    "curatoryGroup": {
+      "edit": "Edit Curatory Group",
+      "create": "Create Curatory Group",
+      "search": "Curatory Group"
+    },
     "home": "GOKB",
     "profile": "Profile",
     "register": "Registration",
