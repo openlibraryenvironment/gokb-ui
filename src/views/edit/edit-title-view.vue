@@ -965,13 +965,15 @@
 
         document.title = this.$i18n.tc('component.title.label') + ' – ' + this.allNames.name
 
-        const tippsResult = await this.catchError({
-          promise: titleServices.getTipps(this.id, { status: 'Current' }, this.cancelToken.token),
-          instance: this
-        })
+        if (!this.tippCount) {
+          const tippsResult = await this.catchError({
+            promise: titleServices.getTipps(this.id, { status: 'Current' }, this.cancelToken.token),
+            instance: this
+          })
 
-        if (tippsResult.status === 200) {
-          this.tippCount = tippsResult.data._pagination.total
+          if (tippsResult.status === 200) {
+            this.tippCount = tippsResult.data._pagination.total
+          }
         }
       },
       addPendingChange (prop) {
