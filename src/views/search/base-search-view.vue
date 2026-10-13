@@ -487,7 +487,9 @@
             this.requestOptions.page = 1
           }
 
-          this.totalNumberOfItems = _pagination.total
+          // TODO: pagination im entspr. REST-Controller in result zurückgeben?
+          // this.totalNumberOfItems = _pagination.total
+          this.totalNumberOfItems = _pagination?.total ? _pagination.total : data?.length
           this.resultItems = this._transformForTable(data)
         }
         else {

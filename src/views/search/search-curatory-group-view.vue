@@ -1,6 +1,7 @@
 <script>
 
 import BaseSearch from "./base-search-view.vue";
+import account from '@/shared/models/account-model';
 
 export default {
   name: 'SearchCuratoryGroup',
@@ -18,7 +19,17 @@ export default {
   },
   computed: {
     showSelect() {
-      return this.isUserAdmin
+      return this.isAdmin
+    },
+    title () {
+      // return this.$i18n.tc('component.user.label', 2)
+      return "Kuratorengruppen"
+    },
+    isAdmin () {
+      return account?.loggedIn() && account?.hasRole('ROLE_ADMIN')
+    },
+    isReadonly () {
+      return !this.isAdmin
     },
     searchInputFields() {
       return [
@@ -69,7 +80,7 @@ export default {
           title: 'Organisationstyp',
           align: 'start',
           sortable: false,
-          value: 'organiszation'
+          value: 'organization'
         },
         {
           title: 'Typ',
@@ -86,6 +97,42 @@ export default {
       ]
     },
 
+  }, // end computed
+  watch: {
+    isAdmin (val) {
+      if (val) {
+        this.accessible = true
+      } else {
+        this.accessible = false
+      }
+    }
+  }, // end watch
+  created () {
+    this.searchServicesUrl = 'rest/curatoryGroups'
+    // this.searchServiceIncludes = 'id,username'
+    // this.linkSearchParameterValues = {
+    //  link: 'username'
+    // }
+
+    if (!this.isAdmin) {
+      this.accessible = false
+    }
+  },
+  methods: {
+    _transformForTable (data) {
+      console.log("++++: ", data)
+      return data.map((item) => ({
+        id: item.id,
+        name: item.name,
+        mail: item.email,
+        organization: item.organizationType.name,
+        type: item.type?.name,
+        status: item.status?.name,
+        //lastUpdated: !!item.lastUpdated ? new Date(item.lastUpdated).toLocaleString('sv').substring(0, 10) : undefined,
+        //dateCreated: !!item.dateCreated ? new Date(item.dateCreated).toLocaleString('sv').substring(0, 10) : undefined,
+        updateUrl: item._links?.update?.href || undefined
+      }))
+    }
   }
 
 }
