@@ -22,7 +22,8 @@ import {
   EDIT_REVIEW_ROUTE,
   VALIDATOR_ROUTE,
   NOT_FOUND_ROUTE,
-  SEARCH_CURATORY_GROUP_ROUTE
+  SEARCH_CURATORY_GROUP_ROUTE,
+  EDIT_CURATORY_GROUP_ROUTE
 } from './route-paths'
 
 const api = (log, errorModel, accountModel, createRouter, HomeView, loading, createWebHistory) => {
@@ -233,6 +234,15 @@ const api = (log, errorModel, accountModel, createRouter, HomeView, loading, cre
         },
         props: true,
         component: () => import('@/views/search/search-curatory-group-view.vue')
+      },
+      {
+        path: `${EDIT_CURATORY_GROUP_ROUTE}/:id`,
+        name: EDIT_CURATORY_GROUP_ROUTE,
+        meta: {
+          code: 'route.curatoryGroup.edit'
+        },
+        props: true,
+        component: () => import('@/views/edit/edit-curatory-group-view.vue')
       }
     ]
   })

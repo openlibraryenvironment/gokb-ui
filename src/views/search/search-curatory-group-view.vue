@@ -2,6 +2,7 @@
 
 import BaseSearch from "./base-search-view.vue";
 import account from '@/shared/models/account-model';
+import { EDIT_CURATORY_GROUP_ROUTE } from '@/router/route-paths'
 
 export default {
   name: 'SearchCuratoryGroup',
@@ -40,7 +41,8 @@ export default {
             value: 'curatoryGroupName',
             properties: {
               hideIcon: true,
-              label: 'Kuratorengruppe'
+              label: 'Kuratorengruppe',
+              width: '75%'
             }
           },
           {
@@ -49,15 +51,22 @@ export default {
             value: 'eMail',
             properties: {
               hideIcon: true,
-              label: 'E-Mail'
+              label: 'E-Mail',
+              width: '75%'
             }
           }
         ],
         [
           {
-            type: 'GokbActiveField',
+            type: 'GokbStateField',
             name: 'status',
-            value: 'status'
+            value: 'status',
+            properties: {
+              initItem: 'Current',
+              width: '50%',
+              messagePath: 'component.general.status',
+              label: this.$i18n.tc('component.general.status.label')
+            }
           }
         ]
       ]
@@ -68,7 +77,7 @@ export default {
           title: 'Name',
           align: 'start',
           sortable: true,
-          value: 'name'
+          value: 'link'
         },
         {
           title: 'E-Mail',
@@ -110,9 +119,9 @@ export default {
   created () {
     this.searchServicesUrl = 'rest/curatoryGroups'
     // this.searchServiceIncludes = 'id,username'
-    // this.linkSearchParameterValues = {
-    //  link: 'username'
-    // }
+    this.linkSearchParameterValues = {
+      link: 'name'
+    }
 
     if (!this.isAdmin) {
       this.accessible = false
@@ -123,6 +132,7 @@ export default {
       console.log("++++: ", data)
       return data.map((item) => ({
         id: item.id,
+        link: { value: item.name, route: EDIT_CURATORY_GROUP_ROUTE, id: 'id' },
         name: item.name,
         mail: item.email,
         organization: item.organizationType.name,
