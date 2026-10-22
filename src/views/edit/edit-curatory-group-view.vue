@@ -27,6 +27,26 @@
               dense
             />
           </v-col>
+          <v-col>
+            <gokb-email-field
+              v-model="active.email">
+            </gokb-email-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <gokb-textarea-field
+              v-model="active.description"
+              label="Beschreibung"
+              rows="2"
+            ></gokb-textarea-field>
+          </v-col>
+          <v-col>
+
+          </v-col>
+          <v-col>
+
+          </v-col>
         </v-row>
       </gokb-section>
 
@@ -37,11 +57,16 @@
 <script>
   import BaseComponent from "../../shared/components/base-component.js";
   import curatoryGroupServices from '@/shared/services/curatory-group-services'
+  import userServices from '@/shared/services/user-services'
   import account from '@/shared/models/account-model'
+  import GokbEmailField from "../../shared/components/simple/gokb-email-field/index.js";
+  import GokbTextareaField from "../../shared/components/base/gokb-textarea-field/index.js";
 
   export default {
     name: 'EditCuratoryGroupView',
     components: {
+      GokbTextareaField,
+      GokbEmailField
 
     },
     extends: BaseComponent,
@@ -56,9 +81,13 @@
       return {
         persisted: {
           curatoryGroupName: undefined,
+          email: undefined,
+          description: undefined,
         },
         active: {
           curatoryGroupName: undefined,
+          email: undefined,
+          description: undefined,
         }
       }
     },
@@ -85,10 +114,18 @@
         if (response?.status === 200) {
           console.log("11111 ", response)
           this.persisted.curatoryGroupName = response.data.data.name
-
+          this.persisted.email = response.data.data.email
+          this.persisted.description = response.data.data.description
 
           this.active = this.persisted
         }
+
+        const resMembers = await this.catchError({
+          promise: userServices.getAllMembersofCG(this.id, this.cancelToken.token),
+          instance: this
+        })
+
+        console.log("2222 ", resMembers.data)
       },
     }
   }

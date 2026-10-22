@@ -33,7 +33,13 @@ const api = (baseServices) => ({
       method: 'DELETE',
       url: import.meta.env.VITE_API_BASE_URL + `${USER_URL}/${id}`
     }, cancelToken)
-  }
+  },
+  getAllMembersofCG (cgid, cancelToken) {
+    return baseServices.request({
+      method: 'GET',
+      url: import.meta.env.VITE_API_BASE_URL + `${USER_URL}?curatoryGroupId=${cgid}`,
+    }, cancelToken)
+  },
 })
 
 export default api
