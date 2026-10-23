@@ -32,6 +32,9 @@
               v-model="active.email">
             </gokb-email-field>
           </v-col>
+          <v-col>
+            <!-- OWNER -->
+          </v-col>
         </v-row>
         <v-row>
           <v-col>
@@ -42,10 +45,37 @@
             ></gokb-textarea-field>
           </v-col>
           <v-col>
-
+            <gokb-state-field
+              v-model="active.organizationType"
+              :init-item="active.organizationType"
+              url="refdata/categories/CuratoryGroup.OrganizationType"
+              :label="$t('component.curatoryGroup.organisationType.label')"
+              message-path="component.curatoryGroup.organisationType"
+            />
           </v-col>
           <v-col>
+            <gokb-state-field
+              v-model="active.status"
+              :init-item="active.status"
+              url="refdata/categories/KBComponent.Status"
+              message-path="component.general.status"
+              :label="$t('component.general.status.label')"
+            />
 
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <!-- TYPE -->
+          </v-col>
+          <v-col>
+            <gokb-state-field
+              v-model="active.editStatus"
+              :init-item="active.editStatus"
+              url="refdata/categories/KBComponent.EditStatus"
+              message-path="component.general.editStatus"
+              :label="$t('component.general.editStatus.label')"
+            />
           </v-col>
         </v-row>
       </gokb-section>
@@ -83,11 +113,17 @@
           curatoryGroupName: undefined,
           email: undefined,
           description: undefined,
+          organizationType: undefined,
+          status: undefined,
+          editStatus: undefined,
         },
         active: {
           curatoryGroupName: undefined,
           email: undefined,
           description: undefined,
+          organizationType: undefined,
+          status: undefined,
+          editStatus: undefined,
         }
       }
     },
@@ -112,10 +148,13 @@
         })
 
         if (response?.status === 200) {
-          console.log("11111 ", response)
+          console.log("11111 ", response.data.data)
           this.persisted.curatoryGroupName = response.data.data.name
           this.persisted.email = response.data.data.email
           this.persisted.description = response.data.data.description
+          this.persisted.organizationType = response.data.data.organizationType
+          this.persisted.status = response.data.data.status
+          this.persisted.editStatus = response.data.data.editStatus
 
           this.active = this.persisted
         }
