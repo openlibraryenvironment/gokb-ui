@@ -11,7 +11,7 @@
       v-if="addItemPopupVisible"
       v-model="addItemPopupVisible"
       width="500px"
-      :component="{ type: 'GokbAlternateNamesField', name: $tc('component.variantName.label') }"
+      :component="{ type: 'GokbAlternateNamesField', name: $t('component.variantName.label') }"
       @add="addItem"
     />
     <template #buttons>
@@ -147,12 +147,12 @@
       },
       tableHeaders () {
         return [
-          { title: this.$i18n.tc('component.general.name'), align: 'start', value: 'variantName', sortable: false, width: '100%' },
+          { title: this.$i18n.t('component.general.name'), align: 'start', value: 'variantName', sortable: false, width: '100%' },
           { title: this.$i18n.t('component.general.language.label'), align: 'start', value: 'locale', sortable: false },
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.variantName.label', 2) : undefined
+        return this.showTitle ? this.$i18n.t('component.variantName.label', 2) : undefined
       }
     },
     watch: {
@@ -180,7 +180,7 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedVariantNames.length, this.$i18n.tc('component.variantName.label', this.selectedVariantNames.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedVariantNames.length, this.$i18n.t('component.variantName.label', this.selectedVariantNames.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

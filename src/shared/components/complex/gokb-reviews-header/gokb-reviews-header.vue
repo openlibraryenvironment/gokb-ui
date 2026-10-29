@@ -42,7 +42,7 @@
             class="v-label"
             style="display:block;font-size:0.9em;"
           >
-            {{ $tc('component.curatoryGroup.label', 2) }}:
+            {{ $t('component.curatoryGroup.label', 2) }}:
           </label>
         </div>
         <div style="margin-top:-6px">
@@ -197,7 +197,7 @@
                   style="display:block;font-size:0.9em;"
                   for="otherComponents"
                 >
-                  {{ $tc('component.review.otherComponents.label') }}
+                  {{ $t('component.review.otherComponents.label') }}
                 </label>
                 <v-row
                   v-for="(oc, idx) in reviewComponent.otherComponents"
@@ -397,7 +397,7 @@
         return !!this.reviewComponent?.component?.type || undefined
       },
       cmpLabel () {
-        return (!!this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+        return (!!this.reviewComponent?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.t('component.' + this.reviewComponent.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       numMessageVars () {
         return !!this.additionalVars ? this.additionalVars.length : 0

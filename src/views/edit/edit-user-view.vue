@@ -92,7 +92,7 @@
           cols="12"
           xl="6"
         >
-          <gokb-section :sub-title="$tc('component.user.role.label', 2)">
+          <gokb-section :sub-title="$t('component.user.role.label', 2)">
             <template #buttons>
               <gokb-button
                 class="mr-4"
@@ -134,7 +134,7 @@
         >
           <gokb-curatory-group-section
             v-model="active.curatoryGroups"
-            :sub-title="$tc('component.curatoryGroup.label', 2)"
+            :sub-title="$t('component.curatoryGroup.label', 2)"
           />
         </v-col>
       </v-row>
@@ -221,7 +221,7 @@
       <v-card>
         <v-card-text align="center">
           <div class="text-h5 primary--text">
-            {{ $t('component.general.notFound', [$tc('component.user.label')]) }}
+            {{ $t('component.general.notFound', [$t('component.user.label')]) }}
           </div>
         </v-card-text>
       </v-card>
@@ -322,7 +322,7 @@
       rolesTableHeaders () {
         return [
           {
-            title: this.$i18n.tc('component.user.role.label'),
+            title: this.$i18n.t('component.user.role.label'),
             align: 'left',
             value: 'localName',
             sortable: false,
@@ -346,7 +346,7 @@
         return !!this.id
       },
       title () {
-        return this.isEdit ? this.$i18n.t('header.edit.label', [this.$i18n.tc('component.user.label')]) : this.$i18n.t('header.add.label', [this.$i18n.tc('component.user.label')])
+        return this.isEdit ? this.$i18n.t('header.edit.label', [this.$i18n.t('component.user.label')]) : this.$i18n.t('header.add.label', [this.$i18n.t('component.user.label')])
       },
       updateButtonText () {
         return this.id ? this.$i18n.t('btn.update') : this.$i18n.t('btn.add')
@@ -390,7 +390,7 @@
 
         if (pars.isCreated) {
           this.messageColor = 'success'
-          this.snackbarMessage = this.$i18n.t('success.create', [this.$i18n.tc('component.user.label'), this.username])
+          this.snackbarMessage = this.$i18n.t('success.create', [this.$i18n.t('component.user.label'), this.username])
           this.currentSnackBarTimeout = 4000
           this.showSnackbar = true
 
@@ -445,7 +445,7 @@
           this.notFound = true
         } else {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')])
+          this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.t('component.user.label')])
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         }
@@ -466,7 +466,7 @@
         if (response?.status < 400) {
           if (this.isEdit) {
             this.messageColor = 'success'
-            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username])
+            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.t('component.user.label'), this.username])
             this.currentSnackBarTimeout = 4000
             this.showSnackbar = true
 
@@ -484,7 +484,7 @@
           }
         } else if (response.status === 409) {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.user.label')])
+          this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.t('component.user.label')])
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         } else if (response?.status === 404) {
@@ -496,7 +496,7 @@
           this.showSnackbar = true
         } else {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.user.label')])
+          this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.t('component.user.label')])
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         }
@@ -522,7 +522,7 @@
           }
           else {
             this.messageColor = 'success'
-            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.user.label'), this.username])
+            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.t('component.user.label'), this.username])
             this.currentSnackBarTimeout = 4000
             this.showSnackbar = true
           }
@@ -571,7 +571,7 @@
         this.actionToConfirm = '_deleteRole'
         this.messageToConfirm = {
           text: 'popups.confirm.delete.list',
-          vars: [this.$i18n.tc('component.user.role.label'), value]
+          vars: [this.$i18n.t('component.user.role.label'), value]
         }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
@@ -585,7 +585,7 @@
         this.actionToConfirm = '_deleteSelectedRoles'
         this.messageToConfirm = {
           text: 'popups.confirm.delete.list',
-          vars: [this.selectedRoles.length, this.$i18n.tc('component.user.role.label', this.selectedRoles.length)]
+          vars: [this.selectedRoles.length, this.$i18n.t('component.user.role.label', this.selectedRoles.length)]
         }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true

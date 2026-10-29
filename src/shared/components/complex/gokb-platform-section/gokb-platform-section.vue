@@ -163,7 +163,7 @@
         return !this.disabled
       },
       localTitle () {
-        return this.showTitle ? (this.title || this.$i18n.tc('component.platform.label', 2)) : undefined
+        return this.showTitle ? (this.title || this.$i18n.t('component.platform.label', 2)) : undefined
       },
       showMissingRoleAlert() {
         return !this.disabled && this.warnMissingRole
@@ -179,7 +179,7 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.platform.label', this.selectedItems.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.t('component.platform.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

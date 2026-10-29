@@ -22,7 +22,7 @@
         <gokb-text-field
           v-model="platform.name"
           :readonly="isReadonly"
-          :label="$tc('component.general.name')"
+          :label="$t('component.general.name')"
           required
         />
       </v-col>
@@ -155,19 +155,19 @@
         return !!this.platform?.name && !!this.platform?.primaryUrl && this.validUrl
       },
       localSuccessMessage () {
-        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.platform.label')]) : undefined
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.t('component.platform.label')]) : undefined
       },
       localErrorMessage () {
-        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.platform.label')]) : undefined
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.t('component.platform.label')]) : undefined
       },
       submitButtonLabel () {
-        return this.isEdit ? this.$i18n.tc('route.platform.edit') : this.$i18n.tc('route.platform.add')
+        return this.isEdit ? this.$i18n.t('route.platform.edit') : this.$i18n.t('route.platform.add')
       },
       localTitle () {
         if (this.isEdit) {
-          return this.isReadonly ? this.$i18n.tc('component.platform.label') : this.$i18n.t('header.edit.label', [this.$i18n.tc('component.platform.label')])
+          return this.isReadonly ? this.$i18n.t('component.platform.label') : this.$i18n.t('header.edit.label', [this.$i18n.t('component.platform.label')])
         } else {
-          return this.$i18n.tc('route.platform.add')
+          return this.$i18n.t('route.platform.add')
         }
       }
     },

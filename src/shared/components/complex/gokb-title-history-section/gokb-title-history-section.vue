@@ -188,7 +188,7 @@
         return this.$i18n.t('component.title.history.label')
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.title.history.label', 2) : undefined
+        return this.showTitle ? this.$i18n.t('component.title.history.label', 2) : undefined
       }
     },
     methods: {
@@ -200,7 +200,7 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedEvents.length, this.$i18n.tc('component.title.history.label', this.selectedEvents.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedEvents.length, this.$i18n.t('component.title.history.label', this.selectedEvents.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

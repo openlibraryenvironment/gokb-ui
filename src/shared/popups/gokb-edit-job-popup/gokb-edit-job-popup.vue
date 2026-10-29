@@ -19,14 +19,14 @@
           v-if="!!selectedItem.link"
           class="text-caption text-primary"
         >
-          {{ $tc('component.package.label') }}
+          {{ $t('component.package.label') }}
         </div>
         <router-link
           v-if="!!selectedItem.link"
           :style="{ color: 'primary' }"
           :to="{ name: '/package', params: { 'id': selectedItem.componentId } }"
         >
-          {{ selectedItem.link.value || $tc('component.package.label') + ' ' + selectedItem.componentId }}
+          {{ selectedItem.link.value || $t('component.package.label') + ' ' + selectedItem.componentId }}
         </router-link>
       </v-col>
     </v-row>
@@ -59,28 +59,28 @@
           <span v-if="!!selectedItem.results.report.hasOwnProperty('matched')" class="mr-4">{{ $t('job.report.matched.label') }}: {{ selectedItem.results.report.matched }}</span>
           <span v-if="!!selectedItem.results.report.hasOwnProperty('partial')" class="mr-4">{{ $t('job.report.partial.label') }}: {{ selectedItem.results.report.partial }}</span>
           <span v-if="!!selectedItem.results.report.hasOwnProperty('created')" class="mr-4">{{ $t('job.report.created.label') }}: {{ selectedItem.results.report.created }}</span>
-          <span v-if="!!selectedItem.results.report.hasOwnProperty('reviews')" class="mr-4">{{ $tc('component.review.label', 2) }}: {{ selectedItem.results.report.reviews }}</span>
+          <span v-if="!!selectedItem.results.report.hasOwnProperty('reviews')" class="mr-4">{{ $t('component.review.label', 2) }}: {{ selectedItem.results.report.reviews }}</span>
           <span v-if="!selectedItem.dryRun && !!selectedItem.results.report.hasOwnProperty('retired')">{{ $t('job.report.retired.label') }}: {{ selectedItem.results.report.retired }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.matched">
           <span class="mr-4">{{ $t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
           <span class="mr-4">{{ $t('job.report.created.label') }}: {{ selectedItem.results.created }}</span>
           <span class="mr-4">{{ $t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
-          <span class="mr-4">{{ $tc('default.error.label', 2) }}: {{ selectedItem.results.error }}</span>
+          <span class="mr-4">{{ $t('default.error.label', 2) }}: {{ selectedItem.results.error }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.validation">
           <span class="mr-4">{{ $t('job.report.invalid.label') }}: {{ selectedItem.results.validation.rows.error }}/{{ selectedItem.results.validation.rows.total }}</span>
-          <span class="mr-4">{{ $tc('kbart.processing.warning.label', 2) }}: {{ selectedItem.results.validation.rows.warning }}</span>
+          <span class="mr-4">{{ $t('kbart.processing.warning.label', 2) }}: {{ selectedItem.results.validation.rows.warning }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.messageCode">
-          <span class="pt-4">{{ $tc('default.error.label') }} - {{ $t(selectedItem.results.messageCode) }}</span>
+          <span class="pt-4">{{ $t('default.error.label') }} - {{ $t(selectedItem.results.messageCode) }}</span>
         </div>
         <div v-else-if="!!selectedItem.results.result">
           <span v-if="!!selectedItem.results.hasOwnProperty('error')" class="mr-4">{{ $t('job.error') }}: {{ selectedItem.results.error }}</span>
           <span v-if="!!selectedItem.results.hasOwnProperty('matched')" class="mr-4">{{ $t('job.report.matched.label') }}: {{ selectedItem.results.matched }}</span>
           <span v-if="!!selectedItem.results.hasOwnProperty('unmatched')" class="mr-4">{{ $t('job.report.unmatched.label') }}: {{ selectedItem.results.unmatched }}</span>
           <span v-if="!!selectedItem.results.hasOwnProperty('created')" class="mr-4">{{ $t('job.report.created.label') }}: {{ selectedItem.results.created }}</span>
-          <span v-if="!!selectedItem.results.hasOwnProperty('reviews')" class="mr-4">{{ $tc('component.review.label', 2) }}: {{ selectedItem.results.reviews }}</span>
+          <span v-if="!!selectedItem.results.hasOwnProperty('reviews')" class="mr-4">{{ $t('component.review.label', 2) }}: {{ selectedItem.results.reviews }}</span>
         </div>
       </v-col>
     </v-row>
@@ -209,9 +209,9 @@
       },
       errorHeaders () {
         return [
-          { title: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
-          { title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
-          { title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
+          { title: this.$i18n.t('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
+          { title: this.$i18n.t('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
+          { title: this.$i18n.t('kbart.errors.reason.label'), align: 'start', value: 'reason' },
         ]
       },
       showKbartValidation () {
@@ -240,7 +240,7 @@
         const record = result?.data
 
         this.selectedItem.componentId = record.linkedItem?.id
-        this.selectedItem.componentType = record.linkedItem && this.$i18n.tc('component.' + record.linkedItem.type.toLowerCase() + '.label')
+        this.selectedItem.componentType = record.linkedItem && this.$i18n.t('component.' + record.linkedItem.type.toLowerCase() + '.label')
         this.selectedItem.link = record.linkedItem ? { value: record.linkedItem.name, route: componentRoutes[record.linkedItem.type.toLowerCase()], id: 'componentId' } : {}
         this.selectedItem.type = record.type
         this.selectedItem.description = record.description

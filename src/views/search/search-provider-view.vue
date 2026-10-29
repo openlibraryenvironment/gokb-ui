@@ -21,7 +21,7 @@
     },
     computed: {
       title () {
-        return this.$i18n.tc('component.provider.label', 2)
+        return this.$i18n.t('component.provider.label', 2)
       },
       isDeleteSelectedDisabled () {
         return this.isReadonly || !this.selectedItems.length || this.selectedItems.some(item => (!item.deleteUrl))
@@ -83,7 +83,7 @@
               name: 'ids',
               value: 'identifierValue',
               properties: {
-                label: this.$i18n.tc('component.identifier.label'),
+                label: this.$i18n.t('component.identifier.label'),
                 targetType: 'Org'
               }
             },
@@ -92,7 +92,7 @@
               name: 'curatoryGroups',
               value: 'curatoryGroupIds',
               properties: {
-                label: this.$i18n.tc('component.curatoryGroup.label'),
+                label: this.$i18n.t('component.curatoryGroup.label'),
                 multiple: true,
                 returnObject: false
               }
@@ -107,7 +107,7 @@
               properties: {
                 initItem: 'Current',
                 messagePath: 'component.general.status',
-                label: this.$i18n.tc('component.general.status.label')
+                label: this.$i18n.t('component.general.status.label')
               }
             },
             {
@@ -118,7 +118,7 @@
               properties: {
                 messagePath: 'component.provider.role',
                 url: 'refdata/categories/Org.Role',
-                label: this.$i18n.tc('component.provider.role.label')
+                label: this.$i18n.t('component.provider.role.label')
               }
             }
             /* {
@@ -143,7 +143,7 @@
             value: 'link'
           },
           {
-            title: this.$i18n.tc('component.platform.label', 2),
+            title: this.$i18n.t('component.platform.label', 2),
             align: 'end',
             sortable: false,
             value: 'platforms'
@@ -186,7 +186,7 @@
         this.actionToConfirm = '_archiveSelectedItems'
         this.messageToConfirm = {
           text: 'popups.confirm.retire.list',
-          vars: [this.selectedItems.length, this.$i18n.tc('component.provider.label', this.selectedItems.length)]
+          vars: [this.selectedItems.length, this.$i18n.t('component.provider.label', this.selectedItems.length)]
         }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
@@ -195,7 +195,7 @@
         this.actionToConfirm = '_deleteSelectedItems'
         this.messageToConfirm = {
           text: 'popups.confirm.delete.list',
-          vars: [this.selectedItems.length, this.$i18n.tc('component.provider.label', this.selectedItems.length)]
+          vars: [this.selectedItems.length, this.$i18n.t('component.provider.label', this.selectedItems.length)]
         }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true

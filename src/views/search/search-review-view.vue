@@ -51,7 +51,7 @@
         return this.isUserAdmin
       },
       title () {
-        return this.$i18n.tc('component.review.label', 2)
+        return this.$i18n.t('component.review.label', 2)
       },
       resultHeaders () {
         return [
@@ -68,7 +68,7 @@
             value: 'type'
           },
           {
-            title: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.t('component.review.stdDesc.label'),
             align: 'start',
             sortable: true,
             value: 'localDesc'
@@ -107,7 +107,7 @@
               name: 'stdDesc',
               value: 'stdDesc',
               properties: {
-                label: this.$i18n.tc('component.review.stdDesc.label'),
+                label: this.$i18n.t('component.review.stdDesc.label'),
                 messagePath: 'component.review.stdDesc',
                 url: 'refdata/categories/ReviewRequest.StdDesc',
                 width: '100%'
@@ -132,7 +132,7 @@
               name: 'allocatedGroups',
               value: 'curatoryGroupIds',
               properties: {
-                label: this.$i18n.tc('component.curatoryGroup.label'),
+                label: this.$i18n.t('component.curatoryGroup.label'),
                 width: '100%',
                 returnObject: false
               }
@@ -146,27 +146,27 @@
       localLinkedComponentTypes () {
         return [
           {
-            name: this.$i18n.tc('component.package.label'),
+            name: this.$i18n.t('component.package.label'),
             id: 'Package'
           },
           {
-            name: this.$i18n.tc('component.title.label'),
+            name: this.$i18n.t('component.title.label'),
             id: 'ReferenceTitle'
           },
           {
-            name: this.$i18n.tc('component.tipp.label'),
+            name: this.$i18n.t('component.tipp.label'),
             id: 'PackageTitle'
           },
           {
-            name: this.$i18n.tc('component.journal.label'),
+            name: this.$i18n.t('component.journal.label'),
             id: 'Journal'
           },
           {
-            name: this.$i18n.tc('component.book.label'),
+            name: this.$i18n.t('component.book.label'),
             id: 'Monograph'
           },
           {
-            name: this.$i18n.tc('component.database.label'),
+            name: this.$i18n.t('component.database.label'),
             id: 'Database'
           },
         ]
@@ -215,7 +215,7 @@
           id,
           component: componentToReview,
           componentId: componentToReview.id,
-          type: this.$i18n.tc('component.' + componentToReview.type.toLowerCase() + '.label'),
+          type: this.$i18n.t('component.' + componentToReview.type.toLowerCase() + '.label'),
           dateCreated: new Date(dateCreated).toISOString().substring(0, 10),
           lastUpdated: new Date(lastUpdated).toISOString().substring(0, 10),
           allocatedGroups,
@@ -223,7 +223,7 @@
           description: descriptionOfCause,
           status,
           stdDesc,
-          localDesc: !!stdDesc?.name ? this.$i18n.tc('component.review.stdDesc.' + stdDesc.name + '.label') : undefined,
+          localDesc: !!stdDesc?.name ? this.$i18n.t('component.review.stdDesc.' + stdDesc.name + '.label') : undefined,
           popup: { value: (componentToReview.name || componentToReview.type + ' ' + componentToReview.id), label: 'review', type: 'GokbReviewPopup' },
           link: { value: componentToReview.name, route: componentRoutes[componentToReview.type.toLowerCase()], id: 'componentId' },
           updateUrl: _links?.update?.href,
@@ -234,7 +234,7 @@
         this.actionToConfirm = '_closeSelectedItems'
         this.messageToConfirm = {
           text: 'popups.confirm.close.list',
-          vars: [this.selectedItems.length, this.$i18n.tc('component.review.label', this.selectedItems.length)]
+          vars: [this.selectedItems.length, this.$i18n.t('component.review.label', this.selectedItems.length)]
         }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true

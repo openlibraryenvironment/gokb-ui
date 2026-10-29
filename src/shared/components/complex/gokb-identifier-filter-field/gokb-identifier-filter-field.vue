@@ -1,20 +1,20 @@
 <template>
   <div style="margin-top:-5px">
-    <div style="font-size:12px;margin-bottom:-16px" class="text-medium-emphasis"> {{ $tc('component.identifier.label') }} </div>
+    <div style="font-size:12px;margin-bottom:-16px" class="text-medium-emphasis"> {{ $t('component.identifier.label') }} </div>
     <v-row dense>
       <v-col cols="5">
         <gokb-namespace-field
           v-model="namespace"
           :target-type="targetType"
           width="250px"
-          :placeholder="$tc('component.identifier.namespace')"
+          :placeholder="$t('component.identifier.namespace')"
           :density="dense ? 'compact' : 'default'"
         />
       </v-col>
       <v-col cols="7">
         <gokb-text-field
           v-model="val"
-          :placeholder="$tc('component.identifier.value')"
+          :placeholder="$t('component.identifier.value')"
           clearable
           :density="dense ? 'compact' : 'default'"
         />

@@ -9,7 +9,7 @@
     <gokb-add-item-popup
       v-if="addCuratoryGroupPopupVisible"
       v-model="addCuratoryGroupPopupVisible"
-      :component="{ type: 'GokbCuratoryGroupField', name: $tc('component.curatoryGroup.label'), properties: { returnObject: true } }"
+      :component="{ type: 'GokbCuratoryGroupField', name: $t('component.curatoryGroup.label'), properties: { returnObject: true } }"
       @add="addNewCuratoryGroup"
     />
     <template #buttons>
@@ -157,7 +157,7 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedCuratoryGroups'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedCuratoryGroups.length, this.$i18n.tc('component.curatoryGroup.label', this.selectedCuratoryGroups.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedCuratoryGroups.length, this.$i18n.t('component.curatoryGroup.label', this.selectedCuratoryGroups.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

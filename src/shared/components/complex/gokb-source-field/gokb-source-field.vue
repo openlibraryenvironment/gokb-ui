@@ -3,7 +3,7 @@
     v-model="isExpanded"
     expandable
     :hide-default="!expanded"
-    :sub-title="$tc('component.source.label')"
+    :sub-title="$t('component.source.label')"
   >
 
     <v-row>

@@ -67,7 +67,7 @@
     <gokb-curatory-group-section
       v-model="allCuratoryGroups"
       :disabled="!isAdmin"
-      :sub-title="$tc('component.curatoryGroup.label', 2)"
+      :sub-title="$t('component.curatoryGroup.label', 2)"
       :expanded="false"
     />
 
@@ -338,7 +338,7 @@
         })
 
         if (result.status === 200) {
-          this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.curatoryGroup.label') + ' ' + info.name])
+          this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.t('component.curatoryGroup.label') + ' ' + info.name])
           this.messageColor = 'success'
           this.showSnackbar = true
         }

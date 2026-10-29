@@ -11,7 +11,7 @@
       v-if="addItemPopupVisible"
       v-model="addItemPopupVisible"
       width="500px"
-      :component="{ type: 'GokbStateField', name: $tc('component.provider.role.label'), properties: { url: 'refdata/categories/Org.Role', messagePath: 'component.provider.role', returnObject: true } }"
+      :component="{ type: 'GokbStateField', name: $t('component.provider.role.label'), properties: { url: 'refdata/categories/Org.Role', messagePath: 'component.provider.role', returnObject: true } }"
       @add="addItem"
     />
     <template #buttons>
@@ -140,7 +140,7 @@
       tableHeaders () {
         return [
           {
-            title: this.$i18n.tc('component.provider.role.label'),
+            title: this.$i18n.t('component.provider.role.label'),
             align: 'start',
             value: 'value',
             sortable: false,
@@ -149,7 +149,7 @@
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.provider.role.label', 2) : undefined
+        return this.showTitle ? this.$i18n.t('component.provider.role.label', 2) : undefined
       },
       currentRoles () {
         return this.localValue.map(role => ({ value: this.$i18n.t('component.provider.role.' + role.value + '.label'), id: role.id }))
@@ -168,7 +168,7 @@
           text: 'popups.confirm.delete.list',
           vars: [
             this.selectedItems.length,
-            this.$i18n.tc('component.provider.role.label', this.selectedItems.length)
+            this.$i18n.t('component.provider.role.label', this.selectedItems.length)
           ]
         }
         this.parameterToConfirm = undefined

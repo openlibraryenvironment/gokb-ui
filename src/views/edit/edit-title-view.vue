@@ -174,7 +174,7 @@
               :style="[!!errors.ids ? { border: '1px solid red', borderRadius: '2px' } : {}]"
               class="font-weight-bold"
             >
-              {{ $tc('component.identifier.label', 2) }}
+              {{ $t('component.identifier.label', 2) }}
               <v-chip class="ma-2">
                 {{ titleItem.ids.length }}
               </v-chip>
@@ -190,7 +190,7 @@
               value="publishers"
               class="font-weight-bold"
             >
-              {{ $tc('component.title.publisher.label', 2) }}
+              {{ $t('component.title.publisher.label', 2) }}
               <v-chip class="ma-2">
                 {{ publishers.length }}
               </v-chip>
@@ -206,7 +206,7 @@
               value="variants"
               class="font-weight-bold"
             >
-              {{ $tc('component.variantName.label', 2) }}
+              {{ $t('component.variantName.label', 2) }}
               <v-chip class="ma-2">
                 {{ allNames.alts.length }}
               </v-chip>
@@ -223,7 +223,7 @@
               value="reviews"
               class="font-weight-bold"
             >
-              {{ $tc('component.review.label', 2) }}
+              {{ $t('component.review.label', 2) }}
               <v-chip class="ma-2">
                 {{ reviewsCount }}
               </v-chip>
@@ -240,7 +240,7 @@
               value="tipps"
               class="font-weight-bold"
             >
-              {{ $tc('component.tipp.label', 2) }}
+              {{ $t('component.tipp.label', 2) }}
               <v-chip class="ma-2">
                 {{ tippCount }}
               </v-chip>
@@ -266,7 +266,7 @@
               value="subjects"
               class="font-weight-bold"
             >
-              {{ $tc('component.subject.label', 2) }}
+              {{ $t('component.subject.label', 2) }}
               <v-chip class="ma-2">
                 {{ titleItem.subjects.length }}
               </v-chip>
@@ -472,7 +472,7 @@
       <v-card>
         <v-card-text align="center">
           <div class="text-h5 primary--text">
-            {{ $t('component.general.notFound', [$tc('component.title.label')]) }}
+            {{ $t('component.general.notFound', [$t('component.title.label')]) }}
           </div>
         </v-card-text>
       </v-card>
@@ -564,10 +564,10 @@
         messageColor: undefined,
         currentSnackBarTimeout: '-1',
         allTypes: [
-          { name: this.$i18n.tc('component.title.type.Journal'), id: 'Journal' },
-          { name: this.$i18n.tc('component.title.type.Book'), id: 'Book' },
-          { name: this.$i18n.tc('component.title.type.Database'), id: 'Database' },
-          { name: this.$i18n.tc('component.title.type.Title'), id: 'Other' }
+          { name: this.$i18n.t('component.title.type.Journal'), id: 'Journal' },
+          { name: this.$i18n.t('component.title.type.Book'), id: 'Book' },
+          { name: this.$i18n.t('component.title.type.Database'), id: 'Database' },
+          { name: this.$i18n.t('component.title.type.Title'), id: 'Other' }
         ]
       }
     },
@@ -576,13 +576,13 @@
         return !!this.id
       },
       title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.title.label')])
+        return this.$i18n.t(this.titleCode, [this.$i18n.t('component.title.label')])
       },
       titleCode () {
         return this.isEdit ? (this.isReadonly ? 'header.show.label' : 'header.edit.label') : 'header.create.label'
       },
       typeDisplay () {
-        return this.currentType ? this.$i18n.tc('component.title.type.' + this.currentType) : this.$i18n.tc('component.title.label')
+        return this.currentType ? this.$i18n.t('component.title.type.' + this.currentType) : this.$i18n.t('component.title.label')
       },
       isReadonly () {
         return !accountModel.loggedIn() || (this.isEdit && !this.updateUrl) || !accountModel.hasRole('ROLE_EDITOR') || (this.isEdit && this.isDeleted && !accountModel.hasRole('ROLE_ADMIN'))
@@ -622,7 +622,7 @@
       },
       '$i18n.locale' (l) {
         if (this.isEdit) {
-          document.title = this.$i18n.tc('component.title.label') + ' – ' + this.allNames.name
+          document.title = this.$i18n.t('component.title.label') + ' – ' + this.allNames.name
         }
       },
       tab (val) {
@@ -641,17 +641,17 @@
       if (!!pars.initMessageCode) {
         if (pars.initMessageCode.includes('success')) {
           this.messageColor = 'success'
-          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.t('component.title.label'), this.allNames.name])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
         } else if (pars.initMessageCode.includes('failure')) {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.title.label')])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.t('component.title.label')])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
         } else if (pars.initMessageCode.includes('warning')) {
           this.messageColor = 'warning'
-          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.title.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.t('component.title.label'), this.allNames.name])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
         }
@@ -776,7 +776,7 @@
               await this.reload()
 
               this.messageColor = 'success'
-              this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.title.label'), this.allNames.name])
+              this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.t('component.title.label'), this.allNames.name])
               this.currentSnackBarTimeout = 5000
               this.showSnackbar = true
             } else {
@@ -796,17 +796,17 @@
         } else {
           if (response.status === 409) {
             this.messageColor = 'error'
-            this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.title.label')])
+            this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.t('component.title.label')])
             this.currentSnackBarTimeout = -1
             this.showSnackbar = true
           } else if (response.status === 500) {
             this.messageColor = 'error'
-            this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.title.label')]),
+            this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.t('component.title.label')]),
             this.currentSnackBarTimeout = -1
             this.showSnackbar = true
           } else {
             this.messageColor = 'error'
-            this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.title.label')]),
+            this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.t('component.title.label')]),
             this.currentSnackBarTimeout = -1
             this.showSnackbar = true
             this.errors = response.data.error
@@ -963,7 +963,7 @@
         this.reviewRequests = data._embedded.reviewRequests
         this.reviewsCount = this.reviewRequests.filter(req => req.status.name === 'Open').length
 
-        document.title = this.$i18n.tc('component.title.label') + ' – ' + this.allNames.name
+        document.title = this.$i18n.t('component.title.label') + ' – ' + this.allNames.name
 
         if (!this.tippCount) {
           const tippsResult = await this.catchError({

@@ -462,7 +462,7 @@
                   v-model="allCuratoryGroups"
                   :filter-align="false"
                   :expandable="false"
-                  :sub-title="$tc('component.curatoryGroup.label', 2)"
+                  :sub-title="$t('component.curatoryGroup.label', 2)"
                   @update="addPendingChange"
                 />
               </v-col>
@@ -503,7 +503,7 @@
                   closable
                   @click:close="kbart = undefined"
                 >
-                  {{ kbart.selectedFile.name }} ({{ kbart.lineCount }} {{ $tc('kbart.row.label', kbart.lineCount) }})
+                  {{ kbart.selectedFile.name }} ({{ kbart.lineCount }} {{ $t('kbart.row.label', kbart.lineCount) }})
                   <v-icon
                     v-if="kbart.dryRun"
                     class="ml-1"
@@ -654,7 +654,7 @@
                     :selected="selectedGroupPopup"
                   />
                   <div class="text-caption text-medium-emphasis" style="margin-top:-2px">
-                    {{ $tc('component.curatoryGroup.label', allCuratoryGroups.length || 1) }}
+                    {{ $t('component.curatoryGroup.label', allCuratoryGroups.length || 1) }}
                   </div>
                   <v-chip-group
                     v-model="selectedGroupPopup"
@@ -861,7 +861,7 @@
       <v-card>
         <v-card-text align="center">
           <div class="text-h5 primary--text">
-            {{ $t('component.general.notFound', [$tc('component.package.label')]) }}
+            {{ $t('component.general.notFound', [$t('component.package.label')]) }}
           </div>
         </v-card-text>
       </v-card>
@@ -1078,7 +1078,7 @@
     },
     computed: {
       title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.package.label')])
+        return this.$i18n.t(this.titleCode, [this.$i18n.t('component.package.label')])
       },
       subTitle () {
         return this.currentName
@@ -1173,7 +1173,7 @@
       },
       '$i18n.locale' (l) {
         if (this.isEdit) {
-          document.title = this.$i18n.tc('component.package.label') + ' – ' + this.allNames.name
+          document.title = this.$i18n.t('component.package.label') + ' – ' + this.allNames.name
         }
 
         this.showSnackbar = false
@@ -1215,17 +1215,17 @@
       if (!!pars?.initMessageCode) {
         if (pars.initMessageCode.includes('success')) {
           this.messageColor = 'success'
-          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.t('component.package.label'), this.allNames.name])
           this.currentSnackBarTimeout = 4000
           this.showSnackbar = true
         } else if (pars.initMessageCode.includes('error')) {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.package.label')])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.t('component.package.label')])
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         } else if (pars.initMessageCode.includes('warning')) {
           this.messageColor = 'warning'
-          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.t('component.package.label'), this.allNames.name])
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         }
@@ -1638,7 +1638,7 @@
 
                 if (kbartResult.status === 200) {
                   this.messageColor = 'success'
-                  this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name])
+                  this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.t('component.package.label'), this.allNames.name])
                   this.currentSnackBarTimeout = 4000
                 }
                 this.showSnackbar = true
@@ -1698,7 +1698,7 @@
 
                 if (sourceUpdateResult.status === 200) {
                   this.messageColor = 'success'
-                  this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name])
+                  this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.t('component.package.label'), this.allNames.name])
                   this.currentSnackBarTimeout = 4000
                 }
                 this.showSnackbar = true
@@ -1729,7 +1729,7 @@
                 this.reload()
 
                 this.messageColor = 'success'
-                this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.tc('component.package.label'), this.allNames.name])
+                this.snackbarMessage = this.$i18n.t(this.isEdit ? 'success.update' : 'success.create', [this.$i18n.t('component.package.label'), this.allNames.name])
                 this.currentSnackBarTimeout = 4000
                 this.showSnackbar = true
               } else {
@@ -1752,17 +1752,17 @@
           } else {
             if (response.status === 409) {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.package.label')])
+              this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.t('component.package.label')])
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
             } else if (response.status === 500) {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.package.label')]),
+              this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.t('component.package.label')]),
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
             } else {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
+              this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.t('component.package.label')]),
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
               this.errors = response?.data?.error || {}
@@ -1881,14 +1881,14 @@
 
         if (response.status === 200) {
           this.messageColor = 'success'
-          this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.package.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.t('component.package.label'), this.allNames.name])
           this.currentSnackBarTimeout = 4000
           this.showSnackbar = true
           this.reload()
         }
         else {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.package.label')]),
+          this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.t('component.package.label')]),
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
           this.errors = response?.data?.error || {}
@@ -2103,7 +2103,7 @@
         this.overviewStates.contentType = data.contentType
         this.overviewStates.global = data.global
 
-        document.title = this.$i18n.tc('component.package.label') + ' – ' + data.name
+        document.title = this.$i18n.t('component.package.label') + ' – ' + data.name
       },
       triggerUpdate (checked) {
         this.urlUpdate = checked

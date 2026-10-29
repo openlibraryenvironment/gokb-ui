@@ -207,7 +207,7 @@
         return this.reviewItem?.component?.type || undefined
       },
       cmpLabel () {
-        return (this.isEdit && !!this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+        return (this.isEdit && !!this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.t('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       isReadonly () {
         return !this.updateUrl
@@ -219,7 +219,7 @@
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
       },
       localTitle () {
-        return this.$i18n.tc('component.review.label') + (!!this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
+        return this.$i18n.t('component.review.label') + (!!this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
       },
       closeReviewButtonDisabledText () {
         return this.showComponentCards && this.activeStep != this.workflow.length-1 ? this.$i18n.t('component.review.edit.close.error.moreSteps') : undefined
@@ -430,7 +430,7 @@
           if (resp.status < 400) {
             this.showResponse({
               type: 'success',
-              message: this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), info.name])
+              message: this.$i18n.t('success.add', [this.$i18n.t('component.title.label'), info.name])
             })
           } else {
             this.showResponse({ type: 'error', resp: resp })

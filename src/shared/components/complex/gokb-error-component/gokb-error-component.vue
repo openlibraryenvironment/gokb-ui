@@ -13,7 +13,7 @@
     <v-dialog v-model="show">
       <v-card class="elevation-12">
         <v-toolbar color="error">
-          <v-toolbar-title>{{ $tc('error.label') }}</v-toolbar-title>
+          <v-toolbar-title>{{ $t('error.label') }}</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
           <div class="my-6">

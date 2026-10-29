@@ -101,7 +101,7 @@
               value="roles"
               :active-class="tabClass"
             >
-              {{ $tc('component.provider.role.label', 2) }}
+              {{ $t('component.provider.role.label', 2) }}
               <v-chip class="ma-2">
                 {{ allRoles.length }}
               </v-chip>
@@ -126,7 +126,7 @@
               value="platforms"
               :active-class="tabClass"
             >
-              {{ $tc('component.platform.label', 2) }}
+              {{ $t('component.platform.label', 2) }}
               <v-chip class="ma-2">
                 {{ allPlatforms.length }}
               </v-chip>
@@ -151,7 +151,7 @@
               value="variants"
               :active-class="tabClass"
             >
-              {{ $tc('component.variantName.label', 2) }}
+              {{ $t('component.variantName.label', 2) }}
               <v-chip class="ma-2">
                 {{ allNames.alts.length }}
               </v-chip>
@@ -167,7 +167,7 @@
               value="identifiers"
               :active-class="tabClass"
             >
-              {{ $tc('component.identifier.label', 2) }}
+              {{ $t('component.identifier.label', 2) }}
               <v-chip class="ma-2">
                 {{ providerObject.ids.length }}
               </v-chip>
@@ -184,7 +184,7 @@
               value="packages"
               :active-class="tabClass"
             >
-              {{ $tc('component.package.label', 2) }}
+              {{ $t('component.package.label', 2) }}
               <v-chip class="ma-2">
                 {{ packageCount }}
               </v-chip>
@@ -199,7 +199,7 @@
               value="curators"
               :active-class="tabClass"
             >
-              {{ $tc('component.curatoryGroup.label', 2) }}
+              {{ $t('component.curatoryGroup.label', 2) }}
               <v-chip class="ma-2">
                 {{ allCuratoryGroups.length }}
               </v-chip>
@@ -215,7 +215,7 @@
               value="offices"
               :active-class="tabClass"
             >
-              {{ $tc('component.office.label', 2) }}
+              {{ $t('component.office.label', 2) }}
               <v-chip class="ma-2">
                 {{ offices.length }}
               </v-chip>
@@ -544,7 +544,7 @@
         <gokb-platform-section
           v-model="allPlatforms"
           :expanded="allPlatforms.length > 0"
-          :sub-title="$tc('component.platform.label', 2)"
+          :sub-title="$t('component.platform.label', 2)"
           :provider-id="providerObject.id"
           :disabled="isReadonly"
         />
@@ -561,7 +561,7 @@
         />
         <gokb-packages-section
           v-if="!!id"
-          :sub-title="$tc('component.package.label', 2)"
+          :sub-title="$t('component.package.label', 2)"
           :expanded="packageCount > 0"
           :provider-id="providerObject.id"
           disabled
@@ -781,13 +781,13 @@
         <gokb-curatory-group-section
           v-model="allCuratoryGroups"
           :expanded="allCuratoryGroups.length > 0"
-          :sub-title="$tc('component.curatoryGroup.label', 2)"
+          :sub-title="$t('component.curatoryGroup.label', 2)"
           :disabled="isReadonly"
         />
         <gokb-offices-section
           v-model="offices"
           :expanded="offices.length > 0"
-          :sub-title="$tc('component.office.label', 2)"
+          :sub-title="$t('component.office.label', 2)"
           :disabled="isReadonly"
         />
 
@@ -853,7 +853,7 @@
       <v-card>
         <v-card-text align="center">
           <div class="text-h5 primary--text">
-            {{ $t('component.general.notFound', [$tc('component.provider.label')]) }}
+            {{ $t('component.general.notFound', [$t('component.provider.label')]) }}
           </div>
         </v-card-text>
       </v-card>
@@ -955,7 +955,7 @@
         return !!this.id
       },
       title () {
-        return this.$i18n.t(this.titleCode, [this.$i18n.tc('component.provider.label')])
+        return this.$i18n.t(this.titleCode, [this.$i18n.t('component.provider.label')])
       },
       titleCode () {
         return this.isEdit ? (this.updateUrl ? 'header.edit.label' : 'header.show.label') : 'header.create.label'
@@ -999,7 +999,7 @@
       },
       '$i18n.locale' (l) {
         if (this.isEdit) {
-          document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
+          document.title = this.$i18n.t('component.provider.label') + ' – ' + this.allNames.name
         }
       },
       tabsView (value) {
@@ -1031,17 +1031,17 @@
       if (!!pars.initMessageCode) {
         if (pars.initMessageCode.includes('success')) {
           this.messageColor = 'success'
-          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.t('component.provider.label'), this.allNames.name])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
         } else if (pars.initMessageCode.includes('failure')) {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.provider.label')])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.t('component.provider.label')])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
         } else if (pars.initMessageCode.includes('warning')) {
           this.messageColor = 'warning'
-          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.tc('component.provider.label'), this.allNames.name])
+          this.snackbarMessage = this.$i18n.t(pars.initMessageCode, [this.$i18n.t('component.provider.label'), this.allNames.name])
           this.currentSnackBarTimeout = 5000
           this.showSnackbar = true
         }
@@ -1213,7 +1213,7 @@
         if (response?.status < 400) {
           if (isUpdate) {
             this.messageColor = 'success'
-            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.provider.label'), this.allNames.name])
+            this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.t('component.provider.label'), this.allNames.name])
             this.currentSnackBarTimeout = 4000
             this.showSnackbar = true
 
@@ -1234,17 +1234,17 @@
         } else {
           if (response.status === 409) {
             this.messageColor = 'error'
-            this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.provider.label')])
+            this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.t('component.provider.label')])
             this.currentSnackBarTimeout = -1
             this.showSnackbar = true
           } else if (response.status === 500) {
             this.messageColor = 'error'
-            this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.provider.label')]),
+            this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.t('component.provider.label')]),
             this.currentSnackBarTimeout = -1
             this.showSnackbar = true
           } else {
             this.messageColor = 'error'
-            this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.provider.label')]),
+            this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.t('component.provider.label')]),
             this.currentSnackBarTimeout = -1
             this.showSnackbar = true
             this.errors = response.data.error
@@ -1423,7 +1423,7 @@
 
         this.uuid = data.uuid
 
-        document.title = this.$i18n.tc('component.provider.label') + ' – ' + this.allNames.name
+        document.title = this.$i18n.t('component.provider.label') + ' – ' + this.allNames.name
 
         const pkgResult = await this.catchError({
           promise: searchServices('rest/packages').search({

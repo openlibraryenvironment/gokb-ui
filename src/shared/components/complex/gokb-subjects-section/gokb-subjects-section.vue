@@ -162,12 +162,12 @@
       },
       tableHeaders () {
         return [
-          { title: this.$i18n.tc('component.subject.scheme.label'), align: 'start', value: 'schemeName', sortable: false },
-          { title: this.$i18n.tc('component.subject.heading.label'), align: 'start', value: 'label', sortable: false },
+          { title: this.$i18n.t('component.subject.scheme.label'), align: 'start', value: 'schemeName', sortable: false },
+          { title: this.$i18n.t('component.subject.heading.label'), align: 'start', value: 'label', sortable: false },
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.subject.label', 2) : undefined
+        return this.showTitle ? this.$i18n.t('component.subject.label', 2) : undefined
       }
     },
     watch: {
@@ -194,7 +194,7 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.subject.label', this.selectedItems.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.t('component.subject.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

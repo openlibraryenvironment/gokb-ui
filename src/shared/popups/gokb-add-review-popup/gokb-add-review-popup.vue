@@ -88,7 +88,7 @@
             style="display:block;font-size:0.9em;"
             for="otherComponents"
           >
-            {{ $tc('component.review.otherComponents.label') }}
+            {{ $t('component.review.otherComponents.label') }}
           </label>
           <v-row
             v-for="(oc, idx) in reviewItem.otherComponents"
@@ -281,13 +281,13 @@
         return this.reviewItem?.component?.type || undefined
       },
       cmpLabel () {
-        return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+        return (this.isEdit && this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.t('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       localSuccessMessage () {
-        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.review.label')]) : undefined
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.t('component.review.label')]) : undefined
       },
       localErrorMessage () {
-        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label')]) : undefined
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.t('component.review.label')]) : undefined
       },
       localAction () {
         return this.reviewItem?.stdDesc ? this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.action') : undefined

@@ -97,7 +97,7 @@
       <v-card>
         <v-card-text>
           <div class="text-h5 primary--text">
-            {{ $t('component.general.notFound', [$tc('component.review.label')]) }}
+            {{ $t('component.general.notFound', [$t('component.review.label')]) }}
           </div>
         </v-card-text>
       </v-card>
@@ -183,7 +183,7 @@
         return this.reviewItem?.component?.type || undefined
       },
       cmpLabel () {
-        return (!!this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.tc('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
+        return (!!this.reviewItem?.component ? this.$i18n.t('component.review.componentToReview.label') + ' (' + this.$i18n.t('component.' + this.reviewItem.component.type.toLowerCase() + '.label') + ')' : this.$i18n.t('component.review.componentToReview.label'))
       },
       isReadonly () {
         return !this.updateUrl
@@ -195,7 +195,7 @@
         return !!this.reviewItem.component && ((!!this.reviewItem.request && !!this.reviewItem.description) || !!this.reviewItem.stdDesc)
       },
       localTitle () {
-        return this.$i18n.tc('component.review.label') + (!!this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
+        return this.$i18n.t('component.review.label') + (!!this.reviewItem?.stdDesc ? (' – ' + this.$i18n.t('component.review.stdDesc.' + (this.reviewItem.stdDesc.value || this.reviewItem.stdDesc.name) + '.label')) : '')
       },
       closeReviewButtonDisabledText () {
         return this.showComponentCards && this.activeStep != this.workflow.length-1 ? this.$i18n.t('component.review.edit.close.error.moreSteps') : undefined
@@ -354,7 +354,7 @@
           this.mapRecord(resp.data)
         } else {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+          this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.t('component.review.label')]),
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         }
@@ -378,7 +378,7 @@
           this.mapRecord(resp.data)
         } else {
           this.messageColor = 'error'
-          this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+          this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.t('component.review.label')]),
           this.currentSnackBarTimeout = -1
           this.showSnackbar = true
         }
@@ -409,7 +409,7 @@
           if (resp.status < 400) {
             this.showResponse({
               type: 'success',
-              message: this.$i18n.t('success.add', [this.$i18n.tc('component.title.label'), info.name])
+              message: this.$i18n.t('success.add', [this.$i18n.t('component.title.label'), info.name])
             })
           } else {
             this.showResponse({ type: 'error', resp: resp })
@@ -461,12 +461,12 @@
           if (response?.message) {
             if (response.type == 'success') {
               this.messageColor = 'success'
-              this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.review.label'), ""])
+              this.snackbarMessage = this.$i18n.t('success.update', [this.$i18n.t('component.review.label'), ""])
               this.currentSnackBarTimeout = 5000
               this.showSnackbar = true
             } else {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+              this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.t('component.review.label')]),
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
             }
@@ -477,25 +477,25 @@
 
             if (response.resp.status === 403) {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('error.update.404', [this.$i18n.tc('component.review.label')]),
+              this.snackbarMessage = this.$i18n.t('error.update.404', [this.$i18n.t('component.review.label')]),
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
             }
             else if (response.resp.status === 409) {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.review.label')]),
+              this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.t('component.review.label')]),
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
             }
             else if (response.resp.status === 500) {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.review.label')]),
+              this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.t('component.review.label')]),
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
             }
             else {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.tc('component.review.label')]),
+              this.snackbarMessage = this.$i18n.t('error.update.400', [this.$i18n.t('component.review.label')]),
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
             }

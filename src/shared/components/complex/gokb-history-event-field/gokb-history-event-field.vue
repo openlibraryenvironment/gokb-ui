@@ -13,7 +13,7 @@
           :disabled="disabled"
           :show-link="true"
           :required="true"
-          :label="$tc('component.title.label')"
+          :label="$t('component.title.label')"
           type-filter="Journal"
           @click:append="$emit('delete', value)"
         />
@@ -43,7 +43,7 @@
           :disabled="disabled"
           :show-link="true"
           :required="true"
-          :label="$tc('component.title.label')"
+          :label="$t('component.title.label')"
           return-object
           type-filter="Journal"
           @click:append="$emit('delete', value)"

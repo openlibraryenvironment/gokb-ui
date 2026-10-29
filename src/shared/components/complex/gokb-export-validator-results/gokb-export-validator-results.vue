@@ -7,20 +7,20 @@
       class="pa-4"
     >
       <v-col>
-        <h4>{{ $tc('kbart.processing.error.structure', 2) }}</h4>
+        <h4>{{ $t('kbart.processing.error.structure', 2) }}</h4>
         <ul>
           <li
             v-for="er in validatorResult.errors.missingColumns"
             :key="er"
             class="ml-4">
-            {{ $tc('kbart.errors.missingCols' ) + ' ' + er }}
+            {{ $t('kbart.errors.missingCols' ) + ' ' + er }}
           </li>
         </ul>
       </v-col>
 
       <v-col>
         <v-alert type="error" v-if="!hideAlerts">
-          {{ $tc('kbart.validator.alert.error' ) }}
+          {{ $t('kbart.validator.alert.error' ) }}
         </v-alert>
       </v-col>
     </v-row>
@@ -30,19 +30,19 @@
       class="pa-4"
     >
       <v-col>
-        <h4>{{ $tc('kbart.processing.warning.structure', 2) }}</h4>
+        <h4>{{ $t('kbart.processing.warning.structure', 2) }}</h4>
         <ul>
           <li
             v-for="w in validatorResult.warnings.missingColumns"
             :key="w"
             class="ml-4">
-            {{ $tc('kbart.errors.missingCols' ) + ' ' + w }}
+            {{ $t('kbart.errors.missingCols' ) + ' ' + w }}
           </li>
         </ul>
       </v-col>
       <v-col>
         <v-alert type="warning" v-if="!hideAlerts">
-          {{ $tc('kbart.validator.alert.warning' ) }}
+          {{ $t('kbart.validator.alert.warning' ) }}
         </v-alert>
       </v-col>
     </v-row>
@@ -55,8 +55,8 @@
           {{ $t('kbart.processing.rowStats') }}
         </h4>
         <span class="mr-4">{{ $t('kbart.processing.total.label') }}: {{ validatorResult.rows.total || '0' }}</span>
-        <span class="mr-4">{{ $tc('kbart.processing.warning.label', 2) }}: {{ validatorResult.rows.warning || '0' }}</span>
-        <span class="mr-4">{{ $tc('kbart.processing.error.label', 2) }}: {{ validatorResult.rows.error || '0' }}</span>
+        <span class="mr-4">{{ $t('kbart.processing.warning.label', 2) }}: {{ validatorResult.rows.warning || '0' }}</span>
+        <span class="mr-4">{{ $t('kbart.processing.error.label', 2) }}: {{ validatorResult.rows.error || '0' }}</span>
       </v-col>
     </v-row>
     <v-row
@@ -79,7 +79,7 @@
       </v-col>
       <v-col>
         <v-alert type="error" v-if="!hideAlerts">
-          {{ $tc('kbart.validator.alert.rowError' )  }}
+          {{ $t('kbart.validator.alert.rowError' )  }}
         </v-alert>
       </v-col>
     </v-row>
@@ -110,7 +110,7 @@
         <v-expansion-panels>
           <v-expansion-panel>
             <v-expansion-panel-title>
-              {{ $tc('kbart.processing.error.label', 2) }}
+              {{ $t('kbart.processing.error.label', 2) }}
               <v-chip pill class="ml-3" color="error">{{ errors.length }}</v-chip>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -124,7 +124,7 @@
           </v-expansion-panel>
           <v-expansion-panel>
             <v-expansion-panel-title>
-              {{ $tc('kbart.processing.warning.label', 2) }}
+              {{ $t('kbart.processing.warning.label', 2) }}
               <v-chip pill class="ml-3" color="warning">{{ warnings.length }}</v-chip>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -203,9 +203,9 @@
     computed: {
       errorHeaders() {
         return [
-          {title: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false},
-          {title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column'},
-          {title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason'},
+          {title: this.$i18n.t('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false},
+          {title: this.$i18n.t('kbart.column.label'), align: 'start', width: '15%', value: 'column'},
+          {title: this.$i18n.t('kbart.errors.reason.label'), align: 'start', value: 'reason'},
         ]
       },
       showRowResults() {
@@ -275,7 +275,7 @@
           mc.column = sw
           mc.row = 'n.a.'
           mc.reason = that.$i18n.t('kbart.errors.missingCols')
-          mc.type = that.$i18n.tc('kbart.processing.warning.structure', 1)
+          mc.type = that.$i18n.t('kbart.processing.warning.structure', 1)
           structureWarnings.push(mc)
         })
         allResults.push(...structureWarnings)
@@ -286,34 +286,34 @@
           mc.column = se
           mc.row = 'n.a.'
           mc.reason = that.$i18n.t('kbart.errors.missingCols')
-          mc.type = that.$i18n.tc('kbart.processing.error.structure', 1)
+          mc.type = that.$i18n.t('kbart.processing.error.structure', 1)
           structureErrors.push(mc)
         })
         allResults.push(...structureErrors)
 
         let warnings = this.validatorResult.warnings.single
         warnings.forEach(function(w) {
-          w.type = that.$i18n.tc('kbart.processing.warning.label', 1)
+          w.type = that.$i18n.t('kbart.processing.warning.label', 1)
         })
         allResults.push(...warnings)
         let errors = this.validatorResult.errors.single
         errors.forEach(function(e) {
-          e.type = that.$i18n.tc('kbart.processing.error.label', 1)
+          e.type = that.$i18n.t('kbart.processing.error.label', 1)
         })
         allResults.push(...errors)
 
         let fileName = this.selectedFile ? 'GOKB-Validation_'.concat(this.selectedFile.name.split('.')[0]).concat('.csv') : 'GOKB-KBART-Import-Validation.csv'
 
         exportServices.toTsv([{
-            text: this.$i18n.tc('kbart.row.label', 1),
+            text: this.$i18n.t('kbart.row.label', 1),
             value: 'row'
           },
             {
-              text: this.$i18n.tc('kbart.column.label', 1),
+              text: this.$i18n.t('kbart.column.label', 1),
               value: 'column'
             },
             {
-              text: this.$i18n.tc('kbart.errors.reason.label', 1),
+              text: this.$i18n.t('kbart.errors.reason.label', 1),
               value: 'reason'
             },
             {

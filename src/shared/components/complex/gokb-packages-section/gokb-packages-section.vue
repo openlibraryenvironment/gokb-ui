@@ -28,13 +28,13 @@
       <v-spacer class="ms-4" />
       <gokb-search-platform-field
         v-model="searchFilters.nominalPlatform"
-        :label="$tc('component.platform.label')"
+        :label="$t('component.platform.label')"
       />
       <v-spacer class="ms-4" />
       <gokb-search-provider-field
         v-if="!providerId"
         v-model="searchFilters.provider"
-        :label="$tc('component.provider.label')"
+        :label="$t('component.provider.label')"
       />
       <v-spacer class="ms-4" />
       <gokb-state-field
@@ -173,7 +173,7 @@
         return !this.selectedItems.length
       },
       localTitle () {
-        return this.showTitle ? (this.title || this.$i18n.tc('component.package.label', 2)) : undefined
+        return this.showTitle ? (this.title || this.$i18n.t('component.package.label', 2)) : undefined
       },
       packages () {
         const packages = this.rawPackages?.data?.data
@@ -220,28 +220,28 @@
             value: 'link'
           },
           {
-            title: (this.providerId ? this.$i18n.tc('component.platform.label') : this.$i18n.tc('component.provider.label')),
+            title: (this.providerId ? this.$i18n.t('component.platform.label') : this.$i18n.t('component.provider.label')),
             align: 'start',
             sortable: true,
             width: '20%',
             value: (this.providerId ? 'nominalPlatform' : 'linkTwo')
           },
           {
-            title: this.$i18n.tc('component.package.contentType.label'),
+            title: this.$i18n.t('component.package.contentType.label'),
             align: 'start',
             sortable: true,
             width: '15%',
             value: 'contentType'
           },
           {
-            title: this.$i18n.tc('component.package.count'),
+            title: this.$i18n.t('component.package.count'),
             align: 'start',
             sortable: false,
             width: '150px',
             value: 'count'
           },
           {
-            title: this.$i18n.tc('component.general.lastUpdated'),
+            title: this.$i18n.t('component.general.lastUpdated'),
             align: 'end',
             sortable: true,
             width: '18%',

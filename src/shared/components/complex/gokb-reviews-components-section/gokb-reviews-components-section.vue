@@ -27,7 +27,7 @@
                 <v-icon class="mr-1 mt-n1" color="primary">
                   {{ reviewedComponent.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
-                {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) }}
+                {{ $t('component.review.edit.componentToReview.label', [reviewedComponent.route === '/title' ? $t('component.title.label') : $t('component.tipp.label')]) }}
               </div>
               <gokb-reviews-title-card
                 :info="reviewedComponent"
@@ -70,8 +70,8 @@
                   {{ i.route === '/title' ? 'mdi-text-box' : 'mdi-folder-file' }}
                 </v-icon>
                 {{ selectedCard === i.id ?
-                    $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')]) :
-                    $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $tc('component.title.label') : $tc('component.tipp.label')])
+                    $t('component.review.edit.components.merge.selected.label', [i.route === '/title' ? $t('component.title.label') : $t('component.tipp.label')]) :
+                    $t('component.review.edit.components.merge.unselected.label', [i.route === '/title' ? $t('component.title.label') : $t('component.tipp.label')])
                 }}
                 <b>#{{ idx + 1 }}</b>
                 <v-icon
@@ -128,7 +128,7 @@
                         <v-col>
                           <gokb-title-field
                             v-model="newTitle"
-                            :label="$t('header.searchType.label' , [$tc('component.title.label')])"
+                            :label="$t('header.searchType.label' , [$t('component.title.label')])"
                             width="50%"
                             return-object
                           />
@@ -360,7 +360,7 @@
                   this.refreshAll()
                   this.feedbackResponse({
                     type: 'success',
-                    message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)])
+                    message: this.$i18n.t('success.merge', [this.$i18n.t('component.tipp.label', 2)])
                   })
                 }
               } else {
@@ -392,7 +392,7 @@
                   this.refreshAll()
                   this.feedbackResponse({
                     type: 'success',
-                    message: this.$i18n.t('success.merge', [this.$i18n.tc('component.tipp.label', 2)])
+                    message: this.$i18n.t('success.merge', [this.$i18n.t('component.tipp.label', 2)])
                   })
                 }
               } else {
@@ -441,7 +441,7 @@
                 this.refreshAll()
                 this.feedbackResponse({
                   type: 'success',
-                  message: this.$i18n.t('success.merge', [this.$i18n.tc('component.title.label', 2)])
+                  message: this.$i18n.t('success.merge', [this.$i18n.t('component.title.label', 2)])
                 })
               }
             } else {

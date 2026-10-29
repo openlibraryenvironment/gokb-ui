@@ -98,7 +98,7 @@
     <v-row v-if="errors.length > 0">
       <v-col>
         <v-alert type="error" >
-          {{ $tc('kbart.validator.alert.encoding' ) }}
+          {{ $t('kbart.validator.alert.encoding' ) }}
         </v-alert>
       </v-col>
       <v-col>
@@ -182,9 +182,9 @@ export default {
   computed: {
     /* errorHeaders () {
       return [
-        { title: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
-        { title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
-        { title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
+        { title: this.$i18n.t('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
+        { title: this.$i18n.t('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
+        { title: this.$i18n.t('kbart.errors.reason.label'), align: 'start', value: 'reason' },
       ]
     }, */
     expandWidth () {
