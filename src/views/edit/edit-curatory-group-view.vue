@@ -20,7 +20,7 @@
             md="4"
           >
             <gokb-text-field
-              v-model="active.curatoryGroupName"
+              v-model="active.name"
               label="Kuratorengruppe"
               hide-icon
               autocomplete="off"
@@ -34,6 +34,15 @@
           </v-col>
           <v-col>
             <!-- OWNER -->
+            <gokb-select-field
+              v-if="members"
+              v-model="active.owner"
+              label="Group Owner"
+              class="ml-4"
+              :static-items="members"
+              :init-item="active.owner"
+            >
+            </gokb-select-field>
           </v-col>
         </v-row>
         <v-row>
@@ -80,6 +89,17 @@
         </v-row>
       </gokb-section>
 
+      <gokb-section sub-title="Mitglieder">
+
+        <gokb-table
+          v-if="members"
+          :total-number-of-items="members.length"
+          headers=""
+        >
+
+        </gokb-table>
+      </gokb-section>
+
     </gokb-page>
   </div>
 </template>
@@ -91,10 +111,16 @@
   import account from '@/shared/models/account-model'
   import GokbEmailField from "../../shared/components/simple/gokb-email-field/index.js";
   import GokbTextareaField from "../../shared/components/base/gokb-textarea-field/index.js";
+  import GokbSelectField from "../../shared/components/base/gokb-select-field/index.js";
+  import GokbSection from "../../shared/components/complex/gokb-section/index.js";
+  import GokbTable from "../../shared/components/complex/gokb-table/index.js";
 
   export default {
     name: 'EditCuratoryGroupView',
     components: {
+      GokbTable,
+      GokbSection,
+      GokbSelectField,
       GokbTextareaField,
       GokbEmailField
 
@@ -110,7 +136,7 @@
     data () {
       return {
         persisted: {
-          curatoryGroupName: undefined,
+          name: undefined,
           email: undefined,
           description: undefined,
           organizationType: undefined,
@@ -118,13 +144,14 @@
           editStatus: undefined,
         },
         active: {
-          curatoryGroupName: undefined,
+          name: undefined,
           email: undefined,
           description: undefined,
           organizationType: undefined,
           status: undefined,
           editStatus: undefined,
-        }
+        },
+        members: undefined
       }
     },
     computed: {
@@ -140,6 +167,8 @@
         this.fetch()
       }
     },
+    async mounted () {
+    },
     methods: {
       async fetch () {
         const response = await this.catchError({
@@ -149,12 +178,13 @@
 
         if (response?.status === 200) {
           console.log("11111 ", response.data.data)
-          this.persisted.curatoryGroupName = response.data.data.name
+          this.persisted.name = response.data.data.name
           this.persisted.email = response.data.data.email
           this.persisted.description = response.data.data.description
           this.persisted.organizationType = response.data.data.organizationType
           this.persisted.status = response.data.data.status
           this.persisted.editStatus = response.data.data.editStatus
+          this.persisted.owner = response.data.data.owner
 
           this.active = this.persisted
         }
@@ -165,6 +195,9 @@
         })
 
         console.log("2222 ", resMembers.data)
+
+        this.members = resMembers.data.data.map(({id, username}) => ({id, name: username, type: "User"}))
+
       },
     }
   }

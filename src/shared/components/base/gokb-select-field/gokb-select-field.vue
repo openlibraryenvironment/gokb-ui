@@ -232,7 +232,7 @@
           }
 
           if (selected?.length === 1) {
-            this.localValue = selected.map (item => ({ value: item.value, id: item.id, name: this.localizeValue(item.value) }))[0]
+            this.localValue = selected.map (item => ({ value: item.value, id: item.id, name: item.value ? this.localizeValue(item.value) : item.name }))[0]
           }
         }
       },
