@@ -89,16 +89,12 @@
         </v-row>
       </gokb-section>
 
-      <gokb-section sub-title="Mitglieder">
+     <gokb-users-section
+       v-if="members"
+       :users="members"
+     >
 
-        <gokb-table
-          v-if="members"
-          :total-number-of-items="members.length"
-          headers=""
-        >
-
-        </gokb-table>
-      </gokb-section>
+     </gokb-users-section>
 
     </gokb-page>
   </div>
@@ -114,10 +110,12 @@
   import GokbSelectField from "../../shared/components/base/gokb-select-field/index.js";
   import GokbSection from "../../shared/components/complex/gokb-section/index.js";
   import GokbTable from "../../shared/components/complex/gokb-table/index.js";
+  import GokbUsersSection from "../../shared/components/complex/gokb-users-section/index.js";
 
   export default {
     name: 'EditCuratoryGroupView',
     components: {
+      GokbUsersSection,
       GokbTable,
       GokbSection,
       GokbSelectField,
