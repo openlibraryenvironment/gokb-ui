@@ -1,7 +1,7 @@
 <template>
   <gokb-dialog
     v-model="localValue"
-    :title="$tc('component.curatoryGroup.label')"
+    :title="$t('component.curatoryGroup.label')"
   >
     <v-row>
       <v-col>

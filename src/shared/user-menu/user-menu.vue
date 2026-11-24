@@ -32,7 +32,7 @@
             </v-btn>
           </template>
           <span>
-            {{ username || $tc('component.user.label') }}
+            {{ username || $t('component.user.label') }}
           </span>
         </v-tooltip>
       </template>

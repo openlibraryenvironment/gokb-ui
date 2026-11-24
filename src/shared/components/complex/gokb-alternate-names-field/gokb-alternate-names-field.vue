@@ -4,7 +4,7 @@
       <gokb-text-field
         v-model="variant"
         :disabled="disabled"
-        :label="$tc('component.variantName.label')"
+        :label="$t('component.variantName.label')"
         required
       />
     </v-col>

@@ -38,7 +38,7 @@
               name: 'curatoryGroupId',
               value: 'curatoryGroupIds',
               properties: {
-                label: this.$i18n.tc('component.curatoryGroup.label', 2),
+                label: this.$i18n.t('component.curatoryGroup.label', 2),
                 multiple: true,
               }
             }
@@ -49,7 +49,7 @@
               name: 'roleId',
               value: 'roleIds',
               properties: {
-                label: this.$i18n.tc('component.user.role.label', 2),
+                label: this.$i18n.t('component.user.role.label', 2),
                 width: '100%',
                 multiple: true
               }
@@ -119,7 +119,7 @@
         ]
       },
       title () {
-        return this.$i18n.tc('component.user.label', 2)
+        return this.$i18n.t('component.user.label', 2)
       },
       isAdmin () {
         return account?.loggedIn() && account?.hasRole('ROLE_ADMIN')

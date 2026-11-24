@@ -55,7 +55,7 @@
         return true
       },
       title () {
-        return this.$i18n.tc('component.package.label', 2)
+        return this.$i18n.t('component.package.label', 2)
       },
       resultActionButtons () {
         if (this.isUserAdmin) {
@@ -120,7 +120,7 @@
               name: 'ids',
               value: 'identifierValue',
               properties: {
-                label: this.$i18n.tc('component.identifier.label'),
+                label: this.$i18n.t('component.identifier.label'),
                 targetType: 'Package'
               }
             },
@@ -129,7 +129,7 @@
               name: 'subject',
               value: 'subjectValue',
               properties: {
-                label: this.$i18n.tc('component.subject.label')
+                label: this.$i18n.t('component.subject.label')
               }
             },
           ],
@@ -139,7 +139,7 @@
               name: 'provider',
               value: 'providerId',
               properties: {
-                label: this.$i18n.tc('component.provider.label'),
+                label: this.$i18n.t('component.provider.label'),
               }
             },
             {
@@ -147,7 +147,7 @@
               name: 'contentProvider',
               value: 'contentProviderId',
               properties: {
-                label: this.$i18n.tc('component.package.contentProvider.label'),
+                label: this.$i18n.t('component.package.contentProvider.label'),
               }
             },
             {
@@ -155,7 +155,7 @@
               name: 'nominalPlatform',
               value: 'platformId',
               properties: {
-                label: this.$i18n.tc('component.platform.label')
+                label: this.$i18n.t('component.platform.label')
               }
             }
           ],
@@ -169,7 +169,7 @@
                 initItem: 'Current',
                 width: '100%',
                 messagePath: 'component.general.status',
-                label: this.$i18n.tc('component.general.status.label')
+                label: this.$i18n.t('component.general.status.label')
               }
             },
             {
@@ -214,7 +214,7 @@
               md: 2,
               value: 'curatoryGroupIds',
               properties: {
-                label: this.$i18n.tc('component.curatoryGroup.label'),
+                label: this.$i18n.t('component.curatoryGroup.label'),
                 width: '100%',
                 multiple: true,
                 returnObject: false
@@ -275,40 +275,40 @@
             value: 'link'
           },
           {
-            title: this.$i18n.tc('component.provider.label'),
+            title: this.$i18n.t('component.provider.label'),
             align: 'start',
             sortable: true,
             value: 'linkTwo'
           },
           {
-            title: this.$i18n.tc('component.package.contentType.label'),
+            title: this.$i18n.t('component.package.contentType.label'),
             align: 'start',
             sortable: true,
             width: '150px',
             value: 'contentType'
           },
           {
-            title: this.$i18n.tc('component.package.count'),
+            title: this.$i18n.t('component.package.count'),
             align: 'start',
             sortable: false,
             width: '80px',
             value: 'count'
           },
           {
-            title: this.$i18n.tc('component.curatoryGroup.label'),
+            title: this.$i18n.t('component.curatoryGroup.label'),
             align: 'center',
             sortable: false,
             value: 'curatoryGroups'
           },
           {
-            title: this.$i18n.tc('component.general.lastUpdated'),
+            title: this.$i18n.t('component.general.lastUpdated'),
             align: 'start',
             sortable: true,
             width: '120px',
             value: 'lastUpdated'
           },
           {
-            title: this.$i18n.tc('component.general.dateCreated'),
+            title: this.$i18n.t('component.general.dateCreated'),
             align: 'start',
             sortable: true,
             width: '120px',
@@ -327,23 +327,23 @@
             value: 'name'
           },
           {
-            text: this.$i18n.tc('component.provider.label'),
+            text: this.$i18n.t('component.provider.label'),
             value: 'providerName'
           },
           {
-            text: this.$i18n.tc('component.platform.label'),
+            text: this.$i18n.t('component.platform.label'),
             value: 'nominalPlatformName'
           },
           {
-            text: this.$i18n.tc('component.package.contentType.label'),
+            text: this.$i18n.t('component.package.contentType.label'),
             value: 'contentType'
           },
           {
-            text: this.$i18n.tc('component.package.count'),
+            text: this.$i18n.t('component.package.count'),
             value: 'tippCount'
           },
           {
-            text: this.$i18n.tc('component.curatoryGroup.label'),
+            text: this.$i18n.t('component.curatoryGroup.label'),
             value: 'curatoryGroups'
           },
           {
@@ -435,7 +435,7 @@
         this.actionToConfirm = '_deleteSelectedItems'
         this.messageToConfirm = {
           text: 'popups.confirm.delete.list',
-          vars: [this.selectedItems.length, this.$i18n.tc('component.package.label', this.selectedItems.length)]
+          vars: [this.selectedItems.length, this.$i18n.t('component.package.label', this.selectedItems.length)]
         }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
@@ -444,7 +444,7 @@
         this.actionToConfirm = '_retireSelectedItems'
         this.messageToConfirm = {
           text: 'popups.confirm.retire.list',
-          vars: [this.selectedItems.length, this.$i18n.tc('component.package.label', this.selectedItems.length)]
+          vars: [this.selectedItems.length, this.$i18n.t('component.package.label', this.selectedItems.length)]
         }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true

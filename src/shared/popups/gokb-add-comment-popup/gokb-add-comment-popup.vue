@@ -21,7 +21,7 @@
     <div>
       <gokb-textarea-field
           v-model="item.value"
-          :label="$tc('component.general.comment.label')"
+          :label="$t('component.general.comment.label')"
           required
       />
     </div>

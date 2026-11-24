@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top:-5px">
-    <div style="font-size:12px;margin-bottom:-16px" class="text-medium-emphasis"> {{ $tc('component.subject.label') }} </div>
+    <div style="font-size:12px;margin-bottom:-16px" class="text-medium-emphasis"> {{ $t('component.subject.label') }} </div>
     <v-row dense>
       <v-col cols="4">
         <gokb-state-field
@@ -8,7 +8,7 @@
           width="100%"
           message-path="component.subject.scheme"
           url="refdata/categories/Subject.Scheme"
-          :placeholder="$tc('component.subject.scheme.label')"
+          :placeholder="$t('component.subject.scheme.label')"
           :density="dense ? 'compact' : 'default'"
           return-object
         />
@@ -21,7 +21,7 @@
           :items="$options.ddcList"
           :item-title="currentLabel"
           item-value="notation"
-          :placeholder="$tc('component.subject.heading.label')"
+          :placeholder="$t('component.subject.heading.label')"
           variant="underlined"
           return-object
           clearable
@@ -30,7 +30,7 @@
         <v-text-field
           v-else
           v-model="val"
-          :label="$tc('component.subject.heading.label')"
+          :label="$t('component.subject.heading.label')"
           variant="underlined"
           disabled
           :density="dense ? 'compact' : 'default'"

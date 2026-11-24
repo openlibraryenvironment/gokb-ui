@@ -351,7 +351,7 @@
         this.actionToConfirm = 'deleteItem'
         this.messageToConfirm = {
           text: 'popups.confirm.delete.list',
-          vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)]
+          vars: [this.selectedItems.length, this.$i18n.t('component.label', this.selectedItems.length)]
         }
         this.parameterToConfirm = deleteUrl
         this.confirmationPopUpVisible = true
@@ -373,7 +373,7 @@
         this.actionToConfirm = 'retireItem'
         this.messageToConfirm = {
           text: 'popups.confirm.retire.list',
-          vars: [this.selectedItems.length, this.$i18n.tc('component.label', this.selectedItems.length)]
+          vars: [this.selectedItems.length, this.$i18n.t('component.label', this.selectedItems.length)]
         }
         this.parameterToConfirm = updateUrl
         this.confirmationPopUpVisible = true

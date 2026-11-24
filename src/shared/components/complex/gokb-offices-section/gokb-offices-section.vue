@@ -10,7 +10,7 @@
     <gokb-add-item-popup
       v-if="addItemPopupVisible"
       v-model="addItemPopupVisible"
-      :component="{ type: 'GokbOfficeField', name: $tc('component.office.label') }"
+      :component="{ type: 'GokbOfficeField', name: $t('component.office.label') }"
       @add="addItem"
     />
     <template #buttons>
@@ -135,14 +135,14 @@
       },
       tableHeaders () {
         return [
-          { title: this.$i18n.tc('component.office.type.label'), align: 'start', value: 'function.name', sortable: false, width: '15%' },
-          { title: this.$i18n.tc('component.office.name'), align: 'start', value: 'name', sortable: false, width: '15%' },
-          { title: this.$i18n.tc('component.general.language.label'), align: 'start', value: 'lang', sortable: false, width: '15%' },
-          { title: this.$i18n.tc('component.office.email'), align: 'start', value: 'email', sortable: false }
+          { title: this.$i18n.t('component.office.type.label'), align: 'start', value: 'function.name', sortable: false, width: '15%' },
+          { title: this.$i18n.t('component.office.name'), align: 'start', value: 'name', sortable: false, width: '15%' },
+          { title: this.$i18n.t('component.general.language.label'), align: 'start', value: 'lang', sortable: false, width: '15%' },
+          { title: this.$i18n.t('component.office.email'), align: 'start', value: 'email', sortable: false }
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.office.label', 2) : undefined
+        return this.showTitle ? this.$i18n.t('component.office.label', 2) : undefined
       }
     },
     mounted () {
@@ -157,7 +157,7 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.office.label', this.selectedItems.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.t('component.office.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

@@ -3,7 +3,7 @@
     v-model="isExpanded"
     expandable
     :hide-default="!expanded"
-    :sub-title="$tc('component.source.label')"
+    :sub-title="$t('component.source.label')"
   >
 
     <v-row>
@@ -267,10 +267,10 @@
         return !this.readonly && (!this.item.url && !(this.isFTPTransfer && !!this.item.ftpPath))
       },
       activatedDisabled () {
-        return !this.readonly && (!this.item.url || !this.item.frequency) && !this.item.automaticUpdates
+        return !this.readonly && ( (!this.item.url && !(this.isFTPTransfer && !!this.item.ftpPath)) || !this.item.frequency) && !this.item.automaticUpdates
       },
       activatedErrorMessage () {
-        return !this.readonly && (!this.item.url || !this.item.frequency) && this.item.automaticUpdates ? this.$i18n.t("component.source.error.activatedNoInfo") : undefined
+        return !this.readonly && ( (!this.item.url && !(this.isFTPTransfer && !!this.item.ftpPath)) || !this.item.frequency) && this.item.automaticUpdates ? this.$i18n.t("component.source.error.activatedNoInfo") : undefined
       },
       fullFtpUrl () {
         return this.formatFtpPath(this.item.ftpPath)
@@ -476,7 +476,7 @@
             else if (!!this.item.titleIdSerial && !!this.item.titleIdMonograph) {
               this.mixedContent = true
             }
-            if (!!this.item.url) {
+            if (!!this.item.url || (this.isFTPTransfer && !!this.item.ftpPath)) {
               this.isExpanded = true
             }
 

@@ -101,8 +101,8 @@
           {{ $t('kbart.processing.rowStats') }}
         </h4>
         {{ $t('kbart.processing.total.label') }}: {{ loadedFile.rows.total || '0' }} –
-        {{ $tc('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }} –
-        {{ $tc('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}
+        {{ $t('kbart.processing.warning.label', 2) }}: {{ loadedFile.rows.warning || '0' }} –
+        {{ $t('kbart.processing.error.label', 2) }}: {{ loadedFile.rows.error || '0' }}
       </div>
       -->
 
@@ -218,20 +218,20 @@
       errorHeaders () {
         return [
           {
-            title: this.$i18n.tc('kbart.row.label'),
+            title: this.$i18n.t('kbart.row.label'),
             align: 'start',
             width: '10%',
             value: 'row',
             groupable: false
           },
           {
-            title: this.$i18n.tc('kbart.column.label'),
+            title: this.$i18n.t('kbart.column.label'),
             align: 'start',
             width: '15%',
             value: 'column'
           },
           {
-            title: this.$i18n.tc('kbart.errors.reason.label'),
+            title: this.$i18n.t('kbart.errors.reason.label'),
             align: 'start',
             value: 'reason'
           }

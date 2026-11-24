@@ -291,7 +291,7 @@
         ]
       },
       bulkCloseLabel () {
-        return this.$i18n.tc('btn.bulkCloseReview', (this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal), [(this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal)])
+        return this.$i18n.t('btn.bulkCloseReview', (this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal), [(this.allPagesSelected ? this.totalNumberOfItems : this.selectedItemsTotal)])
       },
       reviews () {
         const componentRoutes = {
@@ -307,7 +307,7 @@
           const id = entry?.id
           const component = entry?.componentToReview
           const componentId = entry?.componentToReview.id
-          const type = entry?.componentToReview?.type ? this.$i18n.tc('component.' + entry?.componentToReview?.type.toLowerCase() + '.label') : undefined
+          const type = entry?.componentToReview?.type ? this.$i18n.t('component.' + entry?.componentToReview?.type.toLowerCase() + '.label') : undefined
           const dateCreated = new Date(entry?.dateCreated).toLocaleString('sv')
           const lastUpdated = new Date(entry?.lastUpdated).toLocaleString('sv')
           const request = entry?.reviewRequest
@@ -341,7 +341,7 @@
         return !this.reviews || this.selectedItems.length === 0 || this.selectedItems.some(item => (item.updateUrl === null))
       },
       localErrorMessage () {
-        return !!this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.review.label', 2)]) : undefined
+        return !!this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.t('component.review.label', 2)]) : undefined
       },
       isPackageComponent () {
         return this.reviewComponent?.type === 'package'
@@ -349,7 +349,7 @@
       localizedReviewHeaders () {
         const compConfig = [
           {
-            title: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.t('component.review.stdDesc.label'),
             align: 'start',
             sortable: false,
             nowrap: true,
@@ -380,14 +380,14 @@
         ]
         const pkgTitlesConfig = [
           {
-            title: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.t('component.review.stdDesc.label'),
             align: 'start',
             sortable: false,
             width: '100%',
             key: 'popup'
           },
           {
-            title: this.$i18n.tc('component.curatoryGroup.label', 2),
+            title: this.$i18n.t('component.curatoryGroup.label', 2),
             align: 'start',
             sortable: false,
             key: 'groupsList'
@@ -429,7 +429,7 @@
             key: 'type'
           },
           {
-            title: this.$i18n.tc('component.review.stdDesc.label'),
+            title: this.$i18n.t('component.review.stdDesc.label'),
             align: 'start',
             sortable: false,
             width: '20%',
@@ -461,7 +461,7 @@
         return this.reviewComponent ? (this.fetchTitleReviews ? pkgTitlesConfig : compConfig) : defaultConfig
       },
       title () {
-        return this.showTitle ? (this.group ? this.$i18n.tc('component.review.label', 2) + ' (' + this.group.name + ')' : this.$i18n.tc('component.review.label', 2)) : undefined
+        return this.showTitle ? (this.group ? this.$i18n.t('component.review.label', 2) + ' (' + this.group.name + ')' : this.$i18n.t('component.review.label', 2)) : undefined
       }
     },
     watch: {
@@ -694,7 +694,7 @@
 
         this.reviewsOptions.page = 1
         this.retrieveReviews()
-        this.successMessage = this.$i18n.tc('component.review.edit.success.closed')
+        this.successMessage = this.$i18n.t('component.review.edit.success.closed')
         this.$emit('update', this.totalNumberOfItems)
       },
       showAddReviewPopup () {
@@ -706,12 +706,12 @@
       confirmBulkClose () {
         if (this.allPagesSelected) {
           this.actionToConfirm = '_executeBulkAction'
-          this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.totalNumberOfItems, this.$i18n.tc('component.review.label', this.selectedItems.length)] }
+          this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.totalNumberOfItems, this.$i18n.t('component.review.label', this.selectedItems.length)] }
           this.parameterToConfirm = { field: 'status', value: 'Closed' }
           this.confirmationPopUpVisible = true
         } else {
           this.actionToConfirm = '_closeSelectedItems'
-          this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.selectedItems.length, this.$i18n.tc('component.review.label', this.selectedItems.length)] }
+          this.messageToConfirm = { text: 'popups.confirm.close.list', vars: [this.selectedItems.length, this.$i18n.t('component.review.label', this.selectedItems.length)] }
           this.parameterToConfirm = undefined
           this.confirmationPopUpVisible = true
         }
@@ -755,7 +755,7 @@
           })
 
           if (response.status < 400) {
-            this.successMessage = this.$i18n.tc('component.review.edit.success.closedBulk', response.data.report.total, { count: response.data.report.total })
+            this.successMessage = this.$i18n.t('component.review.edit.success.closedBulk', response.data.report.total, { count: response.data.report.total })
           } else if (response.status === 403) {
             this.errorMsg = 'error.bulkUpdate.403'
           }
@@ -781,7 +781,7 @@
             })
           ))
 
-          this.successMessage = this.$i18n.tc('component.review.edit.success.closedBulk', this.selectedItems.length, { count: this.selectedItems.length })
+          this.successMessage = this.$i18n.t('component.review.edit.success.closedBulk', this.selectedItems.length, { count: this.selectedItems.length })
           this.reviewsOptions.page = 1
           this.loading = false
           await this.retrieveReviews()

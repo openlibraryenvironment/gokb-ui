@@ -39,7 +39,8 @@
     "moreFilters": "More Filters",
     "moreOptions": "More Options",
     "externalSourceImport": "Import from external source",
-    "hide": "Hide"
+    "hide": "Hide",
+    "transfer": "Transfer"
   },
   "main": {
     "docs": {
@@ -313,7 +314,14 @@
     "yearFormat": "Please enter a four digit year.",
     "missingStart": "Please first provide a start value.",
     "ftpUrlRejected": "Configure an FTP connection under Transfer method.",
-    "urlEmpty": "Please provide a URL."
+    "urlEmpty": "Please provide a URL.",
+    "name": {
+      "inUse": "This name is already in use!",
+      "nameAsName": "This name is already in use!",
+      "nameAsVariant": "This name is already in use as a variant!",
+      "variantAsName": "This variant is already in use as a name elsewhere!",
+      "variantAsVariant": "This variant is already in use as a variant elsewhere!"
+    }
   },
   "job": {
     "label": "Import | Imports",
@@ -505,6 +513,9 @@
       },
       "reason": {
         "label": "Reason | Reasons"
+      },
+      "skipped": {
+        "noFileForAYear": "No KBART file has been found for one complete yearly cycle. Please consider disabling the automated update if this package is not expected to change any more."
       }
     },
     "processing": {
@@ -570,7 +581,7 @@
     },
     "validator": {
       "label": "KBART Validator",
-      "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, values automatically interpolated by the GOKb are also accepted (according to the validation during package upload).",
+      "info": "In strict mode, KBART validation is performed strictly according to the NISO standard. In non-strict mode, values automatically interpolated by the GOKB are also accepted (according to the validation during package upload).",
       "mode": {
         "label": "Strict mode"
       },
@@ -907,6 +918,12 @@
         },
         "Master File": {
           "label": "Master File"
+        },
+        "EBA Master": {
+          "label": "EBA Master List"
+        },
+        "EBA Selection": {
+          "label": "EBA Selection"
         }
       },
       "consistent": "Content is consistent",
@@ -1423,6 +1440,12 @@
         "label": "Only Escalated"
       },
       "showClosed": "Show closed requests",
+      "transfer": {
+        "label": "Transfer",
+        "targetSelect": {
+          "label": "Select a new curator"
+        }
+      },
       "edit": {
         "success": {
           "created": "A new request was successfully created.",
@@ -1432,7 +1455,8 @@
           "closed": "Request closed",
           "closedBulk": "Request closed | {0} requests closed",
           "reopened": "Request has been reopened.",
-          "editingNotes": "The editing notes have been sucessfully updated."
+          "editingNotes": "The editing notes have been sucessfully updated.",
+          "transfer": "The request has been successfully transferred."
         },
         "error": {
           "escalate": {

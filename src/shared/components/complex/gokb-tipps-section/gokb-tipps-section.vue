@@ -179,21 +179,21 @@
             <gokb-text-field
               v-model="searchFilters.q"
               class="pt-3"
-              :label="$tc('search.generic.label')"
+              :label="$t('search.generic.label')"
             />
           </v-col>
           <v-col>
             <gokb-subject-filter-field
               v-model="searchFilters.subjects"
               class="mt-2"
-              :label="$tc('component.subject.label')"
+              :label="$t('component.subject.label')"
             />
           </v-col>
           <v-col v-if="!pkg">
             <gokb-search-package-field
               v-model="searchFilters.pkg"
               class="pt-3"
-              :label="$tc('component.package.label')"
+              :label="$t('component.package.label')"
             />
           </v-col>
         </v-row>
@@ -376,42 +376,42 @@
       },
       tableHeaders () {
         return [
-          { title: (!!this.ttl ? this.$i18n.tc('component.package.label') : this.$i18n.tc('component.tipp.label')), align: 'start', value: 'popup', width: '50%', sortable: true },
-          { title: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
-          { title: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
-          { title: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' },
-          { title: this.$i18n.tc('component.general.lastUpdated'), align: 'end', value: 'lastUpdatedDate', sortable: true }
+          { title: (!!this.ttl ? this.$i18n.t('component.package.label') : this.$i18n.t('component.tipp.label')), align: 'start', value: 'popup', width: '50%', sortable: true },
+          { title: this.$i18n.t('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
+          { title: this.$i18n.t('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
+          { title: this.$i18n.t('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' },
+          { title: this.$i18n.t('component.general.lastUpdated'), align: 'end', value: 'lastUpdatedDate', sortable: true }
         ]
       },
       newTableHeaders () {
         return [
-          { title: this.$i18n.tc('component.tipp.label'), align: 'start', value: 'popup', sortable: false },
-          { title: this.$i18n.tc('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
-          { title: this.$i18n.tc('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
-          { title: this.$i18n.tc('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' }
+          { title: this.$i18n.t('component.tipp.label'), align: 'start', value: 'popup', sortable: false },
+          { title: this.$i18n.t('component.general.status.label'), align: 'start', value: 'statusLocal', sortable: false, width: '10%' },
+          { title: this.$i18n.t('component.title.type.label'), align: 'start', value: 'titleType', sortable: false, width: '10%' },
+          { title: this.$i18n.t('component.platform.label'), align: 'start', value: 'hostPlatformName', sortable: false, width: '20%' }
         ]
       },
       packageTypes () {
         return [
-          { id: 'Monograph', text: this.$i18n.tc('component.title.type.Book') },
-          { id: 'Database', text: this.$i18n.tc('component.title.type.Database') },
-          { id: 'Serial', text: this.$i18n.tc('component.title.type.Journal') },
-          { id: 'Other', text: this.$i18n.tc('component.title.type.Other') },
+          { id: 'Monograph', text: this.$i18n.t('component.title.type.Book') },
+          { id: 'Database', text: this.$i18n.t('component.title.type.Database') },
+          { id: 'Serial', text: this.$i18n.t('component.title.type.Journal') },
+          { id: 'Other', text: this.$i18n.t('component.title.type.Other') },
         ]
       },
       statusTypes () {
         return [
-          { id: 'Current', text: this.$i18n.tc('component.general.status.Current.label'), icon: 'mdi-check-circle-outline' },
-          { id: 'Retired', text: this.$i18n.tc('component.general.status.Retired.label'), icon: 'mdi-close' },
-          { id: 'Expected', text: this.$i18n.tc('component.general.status.Expected.label'), icon: 'mdi-clock-outline' },
-          { id: 'Deleted', text: this.$i18n.tc('component.general.status.Deleted.label'), icon: 'mdi-delete-outline' },
+          { id: 'Current', text: this.$i18n.t('component.general.status.Current.label'), icon: 'mdi-check-circle-outline' },
+          { id: 'Retired', text: this.$i18n.t('component.general.status.Retired.label'), icon: 'mdi-close' },
+          { id: 'Expected', text: this.$i18n.t('component.general.status.Expected.label'), icon: 'mdi-clock-outline' },
+          { id: 'Deleted', text: this.$i18n.t('component.general.status.Deleted.label'), icon: 'mdi-delete-outline' },
         ]
       },
       loggedIn () {
         return accountModel.loggedIn()
       },
       sectionTitle () {
-        return this.showTitle ? this.$i18n.tc('component.tipp.label', 2) : undefined
+        return this.showTitle ? this.$i18n.t('component.tipp.label', 2) : undefined
       },
       isLoading () {
         return this.loading
@@ -469,7 +469,7 @@
       },
       confirmDeleteNew ({ id }) {
         this.actionToConfirm = '_deleteNewItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.tipp.label'), ''] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.t('component.tipp.label'), ''] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },
@@ -538,11 +538,11 @@
         this.kbartImportPopupVisible = true
       },
       editTitle (tipp) {
-        this.successMessage = this.$i18n.t('success.update', [this.$i18n.tc('component.tipp.label'), (tipp.name || tipp.title?.name)])
+        this.successMessage = this.$i18n.t('success.update', [this.$i18n.t('component.tipp.label'), (tipp.name || tipp.title?.name)])
         this.fetchTipps(this.searchOptions)
       },
       addNewTitle (tipp) {
-        this.successMessage = this.$i18n.t('success.add', [this.$i18n.tc('component.tipp.label'), (tipp.name || tipp.title?.name)])
+        this.successMessage = this.$i18n.t('success.add', [this.$i18n.t('component.tipp.label'), (tipp.name || tipp.title?.name)])
         this.newTipps.push(tipp)
         this.$emit('update', this.newTipps)
       },
@@ -624,7 +624,7 @@
                   lastUpdatedDate: this.buildDateString(tipp.lastUpdated),
                   updateUrl: tipp._links.update.href,
                   deleteUrl: tipp._links.delete.href,
-                  titleType: !!tipp.title?.type ? (!!this.$i18n && this.$i18n.tc('component.title.type.' + tipp.title.type)) : (tipp.publicationType ? this.$i18n.tc('component.title.type.' + tipp.publicationType.name) : undefined),
+                  titleType: !!tipp.title?.type ? (!!this.$i18n && this.$i18n.t('component.title.type.' + tipp.title.type)) : (tipp.publicationType ? this.$i18n.t('component.title.type.' + tipp.publicationType.name) : undefined),
                   connectedTitleId: tipp.title?.id,
                   ids: tipp._embedded.ids.map(({ id, value, namespace }) => ({
                     id,

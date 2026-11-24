@@ -58,6 +58,14 @@ const api = (baseServices) => ({
     })
   },
 
+  transfer (id, target) {
+    return baseServices.request({
+      method: 'PUT',
+      url: import.meta.env.VITE_API_BASE_URL + `${REVIEW_PATH}/transfer/${id}`,
+      data: { id: id, target: target }
+    })
+  },
+
   escalatable (id, group) {
     const result = baseServices.request({
       method: 'GET',

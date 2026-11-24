@@ -2,7 +2,7 @@
   <gokb-dialog
     ref="comp"
     v-model="localValue"
-    :title="$t('header.add.label', [$tc('component.subject.label')])"
+    :title="$t('header.add.label', [$t('component.subject.label')])"
     :width="width"
     @submit="addItem"
   >
@@ -13,7 +13,7 @@
           width="100%"
           message-path="component.subject.scheme"
           url="refdata/categories/Subject.Scheme"
-          :placeholder="$tc('component.subject.scheme.label')"
+          :placeholder="$t('component.subject.scheme.label')"
           return-object
         />
       </v-col>
@@ -25,7 +25,7 @@
           :items="$options.ddcList"
           :item-title="currentLabel"
           item-value="notation"
-          :label="$tc('component.subject.heading.label')"
+          :label="$t('component.subject.heading.label')"
           variant="underlined"
           return-object
           required

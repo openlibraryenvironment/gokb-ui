@@ -7,7 +7,7 @@
         class="ms-4"
         message-path="component.subject.scheme"
         :init-item="scheme"
-        :label="$tc('component.subject.scheme.label')"
+        :label="$t('component.subject.scheme.label')"
         return-object
         required
       />
@@ -17,7 +17,7 @@
         <gokb-text-field
           v-model="localHeading"
           :disabled="disabled"
-          :label="$tc('component.subject.heading.label')"
+          :label="$t('component.subject.heading.label')"
           required
           @click:append="$emit('delete', value)"
         />

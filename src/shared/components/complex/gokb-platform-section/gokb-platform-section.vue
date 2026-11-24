@@ -65,7 +65,8 @@
 
   const TABLE_HEADERS = [
     { title: 'Name', align: 'start', value: 'popup', sortable: false, width: '40%' },
-    { title: 'URL', align: 'start', value: 'primaryUrl', sortable: false, width: '60%' }
+    { title: 'URL', align: 'start', value: 'primaryUrl', sortable: false, width: '60%' },
+    { title: 'Status', align:'end', value: 'statusVal', sortable: false }
   ]
 
   export default {
@@ -146,7 +147,8 @@
         return [...this.localValue]
           .map(item => ({
             ...item,
-            popup: { value: item.name, label: 'platform', type: 'GokbEditPlatformPopup', otherProps: { providerId: this.providerId, editable: this.isEditable } }
+            popup: { value: item.name, label: 'platform', type: 'GokbEditPlatformPopup', otherProps: { providerId: this.providerId, editable: this.isEditable } },
+            statusVal: this.$i18n.t('component.general.status.' + item.status.name + '.label')
           }))
           .sort(({ name: first }, { name: second }) => (first > second) ? 1 : (second > first) ? -1 : 0)
           .slice((this.options.page - 1) * ROWS_PER_PAGE, this.options.page * ROWS_PER_PAGE)
@@ -161,7 +163,7 @@
         return !this.disabled
       },
       localTitle () {
-        return this.showTitle ? (this.title || this.$i18n.tc('component.platform.label', 2)) : undefined
+        return this.showTitle ? (this.title || this.$i18n.t('component.platform.label', 2)) : undefined
       },
       showMissingRoleAlert() {
         return !this.disabled && this.warnMissingRole
@@ -177,7 +179,7 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.platform.label', this.selectedItems.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.t('component.platform.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },

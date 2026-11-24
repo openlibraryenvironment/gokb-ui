@@ -29,7 +29,7 @@
         return this.isReadonly || !this.selectedItems.length || this.selectedItems.some(item => (item.retireUrl === false))
       },
       title () {
-        return this.$i18n.tc('component.title.label', 2)
+        return this.$i18n.t('component.title.label', 2)
       },
       showSelect () {
         return this.isUserAdmin
@@ -88,10 +88,10 @@
                 label: this.$i18n.t('component.title.type.label'),
                 width: '100%',
                 staticItems: [
-                  { name: this.$i18n.tc('component.title.type.Journal'), id: 'journal' },
-                  { name: this.$i18n.tc('component.title.type.Book'), id: 'book' },
-                  { name: this.$i18n.tc('component.title.type.Database'), id: 'database' },
-                  { name: this.$i18n.tc('component.title.type.Other'), id: 'other' }
+                  { name: this.$i18n.t('component.title.type.Journal'), id: 'journal' },
+                  { name: this.$i18n.t('component.title.type.Book'), id: 'book' },
+                  { name: this.$i18n.t('component.title.type.Database'), id: 'database' },
+                  { name: this.$i18n.t('component.title.type.Other'), id: 'other' }
                 ]
               }
             },
@@ -100,7 +100,7 @@
               name: 'publisher',
               value: 'publisherId',
               properties: {
-                label: this.$i18n.tc('component.title.publisher.label')
+                label: this.$i18n.t('component.title.publisher.label')
               }
             }
           ],
@@ -110,7 +110,7 @@
               name: 'ids',
               value: 'identifierValue',
               properties: {
-                label: this.$i18n.tc('component.identifier.label'),
+                label: this.$i18n.t('component.identifier.label'),
                 targetType: 'Title'
               }
             },
@@ -119,7 +119,7 @@
               name: 'subject',
               value: 'subjectValue',
               properties: {
-                label: this.$i18n.tc('component.subject.label')
+                label: this.$i18n.t('component.subject.label')
               }
             },
             {
@@ -130,7 +130,7 @@
                 initItem: 'Current',
                 width: '100%',
                 messagePath: 'component.general.status',
-                label: this.$i18n.tc('component.general.status.label')
+                label: this.$i18n.t('component.general.status.label')
               }
             }
           ]
@@ -145,7 +145,7 @@
             value: 'link'
           },
           {
-            title: this.$i18n.tc('component.title.publisher.label'),
+            title: this.$i18n.t('component.title.publisher.label'),
             align: 'start',
             width: '25%',
             sortable: true,
@@ -178,7 +178,7 @@
             value: 'name'
           },
           {
-            text: this.$i18n.tc('component.title.publisher.label'),
+            text: this.$i18n.t('component.title.publisher.label'),
             value: 'publisherName'
           },
           {
@@ -206,7 +206,7 @@
       _transformForTable (data) {
         return data.map((item) => ({
           id: item.id,
-          type: this.$i18n.tc('component.title.type.' + item.type),
+          type: this.$i18n.t('component.title.type.' + item.type),
           startDate: (item.dateFirstInPrint || (item.dateFirstOnline || item.publishedFrom))?.substr(0, 4),
           link: { value: item.name, route: EDIT_TITLE_ROUTE, id: 'id' },
           linkTwo: item.publisher ? { value: item.publisher.name, route: EDIT_PROVIDER_ROUTE, id: 'publisherId' } : undefined,
@@ -230,7 +230,7 @@
         }) => ({
           id: uuid,
           name,
-          type: this.$i18n.tc('component.title.type.' + componentType.replace('Instance', '')),
+          type: this.$i18n.t('component.title.type.' + componentType.replace('Instance', '')),
           startDate: (dateFirstInPrint || (dateFirstOnline || publishedFrom))?.substr(0, 4),
           publisherName,
           lastUpdatedDisplay,
@@ -239,13 +239,13 @@
       },
       _confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.title.label', this.selectedItems.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.t('component.title.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       _confirmRetireSelectedItems () {
         this.actionToConfirm = '_retireSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.tc('component.title.label', this.selectedItems.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.retire.list', vars: [this.selectedItems.length, this.$i18n.t('component.title.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       }

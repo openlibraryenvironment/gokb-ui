@@ -39,7 +39,8 @@
     "moreFilters": "Mehr Filter",
     "moreOptions": "Weitere Optionen",
     "externalSourceImport": "Aus externer Datenquelle importieren",
-    "hide": "Ausblenden"
+    "hide": "Ausblenden",
+    "transfer": "Transferieren"
   },
   "main": {
     "docs": {
@@ -313,7 +314,14 @@
     "yearFormat": "Bitte geben Sie ein vierstelliges Jahr an.",
     "missingStart": "Bitte geben Sie einen Startwert an.",
     "ftpUrlRejected": "Konfigurieren Sie eine FTP-Verbindung unter Transfer-Methode.",
-    "urlEmpty": "Bitte geben Sie eine URL an."
+    "urlEmpty": "Bitte geben Sie eine URL an.",
+    "name": {
+      "inUse": "Dieser Name ist bereits in Verwendung!",
+      "nameAsName": "Dieser Name ist bereits in Verwendung!",
+      "nameAsVariant": "Dieser Name ist bereits anderweitig als Namensvariante vergeben!",
+      "variantAsName": "Diese Namensvariante ist bereits anderweitig als Hauptname vergeben!",
+      "variantAsVariant": "Diese Namensvariante ist bereits anderweitig als Namensvariante vergeben!"
+    }
   },
   "job": {
     "label": "Import | Importe",
@@ -505,6 +513,9 @@
       },
       "reason": {
         "label": "Ursache | Ursachen"
+      },
+      "skipped": {
+        "noFileForAYear": "Für den gesamten jährlichen Zyklus konnte keine KBART-Datei gefunden werden. Bitte überprüfen Sie, ob das automatische Update weiterhin benötigt wird."
       }
     },
     "processing": {
@@ -570,7 +581,7 @@
     },
     "validator": {
       "label": "KBART-Validator",
-      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKb automatisch interpolierte Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
+      "info": "Im strikten Modus erfolgt die KBART-Validierung streng nach dem NISO-Standard. Im nicht strikten Modus werden auch durch die GOKB automatisch interpolierte Werte akzeptiert (entsprechend der Validierung während des Paket-Uploads).",
       "mode": {
         "label": "Strikter Modus"
       },
@@ -907,6 +918,12 @@
         },
         "Master File": {
           "label": "Gesamttitelliste"
+        },
+        "EBA Master": {
+          "label": "EBS/EBA-Gesamtliste"
+        },
+        "EBA Selection": {
+          "label": "EBS/EBA-Auswahl"
         }
       },
       "consistent": "Paketinhalt ist einheitlich",
@@ -1105,7 +1122,7 @@
         }
       },
       "paymentType": {
-        "label": "Zugiffstyp",
+        "label": "Zugriffstyp",
         "OA": {
           "label": "Free"
         },
@@ -1422,6 +1439,12 @@
         "label": "Nur Eskaliert"
       },
       "showClosed": "Abgeschlossene anzeigen",
+      "transfer": {
+        "label": "Transferieren",
+        "targetSelect": {
+          "label": "Neuen Kurator auswählen"
+        }
+      },
       "edit": {
         "success": {
           "created": "Eine neue Prüfanfrage wurde erfolgreich angelegt.",
@@ -1431,7 +1454,8 @@
           "closed": "Prüfanfrage geschlossen",
           "closedBulk": "Prüfanfrage wurde geschlossen | {0} Prüfanfragen wurden geschlossen",
           "reopened": "Die Prüfanfrage wurde erneut geöffnet.",
-          "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert."
+          "editingNotes": "Der Bearbeitungsvermerk wurde erfolgreich aktualisiert.",
+          "transferred": "Die Prüfanfrage wurde erfolgreich transferiert."
         },
         "error": {
           "escalate": {
@@ -1903,8 +1927,8 @@
     "variantName": {
       "label": "Namensvariante | Namensvarianten",
       "error": {
-        "duplicate": "Eine ähnliche Variante zu '{0}' existiert bereits!",
-        "inUse": "Diese Variante ist bereits anderweitig verknüpft!"
+        "duplicate": "Eine ähnliche Namensvariante zu '{0}' existiert bereits!",
+        "inUse": "Diese Namensvariante ist bereits anderweitig verknüpft!"
       }
     },
     "source": {

@@ -153,7 +153,7 @@
       tableHeaders () {
         return [
           {
-            title: this.$i18n.tc('component.identifier.namespace'),
+            title: this.$i18n.t('component.identifier.namespace'),
             align: 'start',
             value: 'nslabel',
             sortable: false,
@@ -169,7 +169,7 @@
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.identifier.label', 2) : undefined
+        return this.showTitle ? this.$i18n.t('component.identifier.label', 2) : undefined
       }
     },
     watch: {
@@ -201,7 +201,7 @@
         this.actionToConfirm = '_deleteSelectedItems'
         this.messageToConfirm = {
           text: 'popups.confirm.delete.list',
-          vars: [this.selectedItems.length, this.$i18n.tc('component.identifier.label', this.selectedItems.length)]
+          vars: [this.selectedItems.length, this.$i18n.t('component.identifier.label', this.selectedItems.length)]
         }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
@@ -210,7 +210,7 @@
         this.actionToConfirm = '_deleteItem'
         this.messageToConfirm = {
           text: 'popups.confirm.delete.list',
-          vars: [this.$i18n.tc('component.identifier.label'), value]
+          vars: [this.$i18n.t('component.identifier.label'), value]
         }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true

@@ -98,7 +98,7 @@
     <v-row v-if="errors.length > 0">
       <v-col>
         <v-alert type="error" >
-          {{ $tc('kbart.validator.alert.encoding' ) }}
+          {{ $t('kbart.validator.alert.encoding' ) }}
         </v-alert>
       </v-col>
       <v-col>
@@ -182,9 +182,9 @@ export default {
   computed: {
     /* errorHeaders () {
       return [
-        { title: this.$i18n.tc('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
-        { title: this.$i18n.tc('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
-        { title: this.$i18n.tc('kbart.errors.reason.label'), align: 'start', value: 'reason' },
+        { title: this.$i18n.t('kbart.row.label'), align: 'start', width: '10%', value: 'row', groupable: false },
+        { title: this.$i18n.t('kbart.column.label'), align: 'start', width: '15%', value: 'column' },
+        { title: this.$i18n.t('kbart.errors.reason.label'), align: 'start', value: 'reason' },
       ]
     }, */
     expandWidth () {
@@ -254,11 +254,26 @@ export default {
 
       const validationResult = await kbartServices.validate(this.selectedFile, namespaceName, this.useStrict, namespaceNameSerial, namespaceNameMonograph, this.cancelToken.token)
 
-      if (validationResult.status === 200 && validationResult?.data?.errors.hasOwnProperty("encoding")) {
+      if (validationResult?.status === 200 && validationResult.data?.errors.hasOwnProperty("encoding")) {
         this.errors.push(this.$i18n.t('kbart.errors.encoding'))
       }
-      else if (validationResult.status === 200 && validationResult?.data?.report) {
+      else if (validationResult?.status === 200 && validationResult.data?.report) {
         this.loadedFile = validationResult.data.report
+
+        this.loadedFile.errors.single = []
+        Object.entries(this.loadedFile.errors.rows).forEach(([rownum, colobj]) =>
+          Object.entries(colobj).forEach(([colname, eo]) =>
+            this.loadedFile.errors.single.push({ row: rownum, column: colname, reason: this.$i18n.t(eo.messageCode, eo.args)})
+          )
+        )
+
+        this.loadedFile.warnings.single = []
+        Object.entries(this.loadedFile.warnings.rows).forEach(([rownum, colobj]) =>
+          Object.entries(colobj).forEach(([colname, wo]) =>
+            this.loadedFile.warnings.single.push({ row: rownum, column: colname, reason: this.$i18n.t(wo.messageCode, wo.args)})
+          )
+        )
+
 
         this.options.lineCount = validationResult.data.report.rows.total
         this.completion = 100

@@ -33,7 +33,7 @@
                     v-model="allNames"
                     :disabled="isReadonly"
                     dense
-                    :label="$tc('component.tipp.name')"
+                    :label="$t('component.tipp.name')"
                   />
                 </v-col>
               </v-row>
@@ -64,7 +64,7 @@
                   <gokb-title-field
                     v-model="packageTitleItem.title"
                     :type-filter="titleTypeString"
-                    :label="$tc('component.title.label')"
+                    :label="$t('component.title.label')"
                     dense
                     show-link
                     :readonly="isReadonly"
@@ -77,7 +77,7 @@
                   <gokb-search-package-field
                     v-if="isEdit"
                     v-model="packageTitleItem.pkg"
-                    :label="$tc('component.package.label')"
+                    :label="$t('component.package.label')"
                     dense
                     readonly
                     return-object
@@ -103,7 +103,7 @@
                 <v-col>
                   <gokb-search-platform-field
                     v-model="packageTitleItem.hostPlatform"
-                    :label="$tc('component.platform.label')"
+                    :label="$t('component.platform.label')"
                     :readonly="isEdit || isReadonly"
                     required
                     return-object
@@ -146,7 +146,7 @@
                     :disabled="isReadonly"
                     required
                     dense
-                    :label="$tc('component.tipp.url.label')"
+                    :label="$t('component.tipp.url.label')"
                   />
                 </v-col>
               </v-row>
@@ -561,13 +561,13 @@
       header () {
         return !this.isReadonly ?
                 (this.packageTitleItem.id ?
-                    (this.$i18n.t('header.edit.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel) :
-                    (this.$i18n.t('header.add.label', [this.$i18n.tc('component.tipp.label')]) + ' – ' + this.typeLabel)
+                    (this.$i18n.t('header.edit.label', [this.$i18n.t('component.tipp.label')]) + ' – ' + this.typeLabel) :
+                    (this.$i18n.t('header.add.label', [this.$i18n.t('component.tipp.label')]) + ' – ' + this.typeLabel)
                 ) :
-                (this.typeLabel + ' – ' + this.$i18n.tc('component.tipp.label'))
+                (this.typeLabel + ' – ' + this.$i18n.t('component.tipp.label'))
       },
       typeLabel () {
-        return this.titleTypeString ? this.$i18n.tc('component.title.type.' + this.titleTypeString) : this.$i18n.tc('component.title.label')
+        return this.titleTypeString ? this.$i18n.t('component.title.type.' + this.titleTypeString) : this.$i18n.t('component.title.label')
       },
       isEdit () {
         return !!this.packageTitleItem?.id && !!this.version
@@ -596,10 +596,10 @@
         return this.coverageExpanded
       },
       localSuccessMessage () {
-        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
+        return this.successMsg ? this.$i18n.t(this.successMsg, [this.$i18n.t('component.tipp.label')]) : undefined
       },
       localErrorMessage () {
-        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.tc('component.tipp.label')]) : undefined
+        return this.errorMsg ? this.$i18n.t(this.errorMsg, [this.$i18n.t('component.tipp.label')]) : undefined
       },
       localValue: {
         get () {
@@ -798,17 +798,17 @@
           } else {
             if (response.status === 409) {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.tc('component.tipp.label')])
+              this.snackbarMessage = this.$i18n.t('error.update.409', [this.$i18n.t('component.tipp.label')])
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
             } else if (response.status === 500) {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.tc('component.tipp.label')]),
+              this.snackbarMessage = this.$i18n.t('error.general.500', [this.$i18n.t('component.tipp.label')]),
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
             } else {
               this.messageColor = 'error'
-              this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.tc('component.tipp.label')]),
+              this.snackbarMessage = this.$i18n.t(this.isEdit ? 'error.update.400' : 'error.create.400', [this.$i18n.t('component.tipp.label')]),
               this.currentSnackBarTimeout = -1
               this.showSnackbar = true
               this.errors = response.data.error

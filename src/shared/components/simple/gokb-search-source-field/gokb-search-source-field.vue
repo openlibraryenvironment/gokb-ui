@@ -7,7 +7,7 @@
     emits: ['update:model-value', 'searched'],
     computed: {
       label () {
-        return this.$i18n.tc('component.source.label')
+        return this.$i18n.t('component.source.label')
       }
     },
     created () {

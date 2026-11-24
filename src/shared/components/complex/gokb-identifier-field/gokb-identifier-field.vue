@@ -7,14 +7,14 @@
         :target-type="targetType"
         required
         width="140px"
-        :label="$tc('component.identifier.namespace')"
+        :label="$t('component.identifier.namespace')"
       />
     </v-col>
     <v-col>
       <gokb-text-field
         v-model="localValue"
         :disabled="disabled"
-        :label="namespaceFixed ? localNamespace.name : $tc('component.identifier.label')"
+        :label="namespaceFixed ? localNamespace.name : $t('component.identifier.label')"
         :rules="namespaceRules"
         :append-icon="deleteIcon"
         @click:append="$emit('delete', value)"

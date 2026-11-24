@@ -48,7 +48,7 @@
       </v-row>
       <v-row v-if="!!linkedPackage" dense>
         <v-col>
-          <span> {{ $tc('component.package.label') }}: </span>
+          <span> {{ $t('component.package.label') }}: </span>
           <router-link
             :class="[$vuetify.theme.current.dark ? 'text-white' : 'text-black']"
             :to="{ name: '/package', params: { 'id': linkedPackage.id } }"
@@ -60,7 +60,7 @@
       </v-row>
       <v-row v-if="route === '/package-title'" dense>
         <v-col>
-          <span> {{ $tc('component.title.label') }}: </span>
+          <span> {{ $t('component.title.label') }}: </span>
           <router-link
             v-if="!!linkedTitle"
             :class="[$vuetify.theme.current.dark ? 'text-white' : 'text-black']"
@@ -435,8 +435,8 @@
     computed: {
       idHeaders () {
         return [
-          { title: this.$i18n.tc('component.identifier.namespace'), align: 'start', value: 'namespace', sortable: false },
-          { title: this.$i18n.tc('component.identifier.label', 1), align: 'start', value: 'value', sortable: false }
+          { title: this.$i18n.t('component.identifier.namespace'), align: 'start', value: 'namespace', sortable: false },
+          { title: this.$i18n.t('component.identifier.label', 1), align: 'start', value: 'value', sortable: false }
         ]
       },
       isEditable () {
@@ -466,7 +466,7 @@
         }
       },
       typeLabel () {
-        return (this.route === '/title' ? this.$i18n.tc('component.title.label') : this.$i18n.tc('component.tipp.label'))
+        return (this.route === '/title' ? this.$i18n.t('component.title.label') : this.$i18n.t('component.tipp.label'))
       },
       statusIcons () {
         return {
@@ -478,9 +478,9 @@
       },
       historyHeaders () {
         return [
-          { title: this.$i18n.tc('component.title.history.date.label'), align: 'start', value: 'date', sortable: false },
-          { title: this.$i18n.tc('component.title.history.from.label', 1), align: 'start', value: 'from', sortable: false },
-          { title: this.$i18n.tc('component.title.history.to.label', 1), align: 'start', value: 'to', sortable: false }
+          { title: this.$i18n.t('component.title.history.date.label'), align: 'start', value: 'date', sortable: false },
+          { title: this.$i18n.t('component.title.history.from.label', 1), align: 'start', value: 'from', sortable: false },
+          { title: this.$i18n.t('component.title.history.to.label', 1), align: 'start', value: 'to', sortable: false }
         ]
       },
       elevationClass () {

@@ -213,7 +213,7 @@
         ]
       },
       title () {
-        return this.$i18n.tc('job.label', 2) + (this.showGroupJobs ? (' (' + this.group.name + ')') : '')
+        return this.$i18n.t('job.label', 2) + (this.showGroupJobs ? (' (' + this.group.name + ')') : '')
       }
     },
     watch: {
@@ -321,7 +321,7 @@
                 type: record.type,
                 popup: { value: (record.type ? this.$i18n.t('job.jobTypes.' + record.type.name) : this.$i18n.t('job.jobTypes.Unknown')), label: 'job', type: 'GokbEditJobPopup' },
                 componentId: record.linkedItem?.id || null,
-                componentType: record.linkedItem && this.$i18n.tc('component.' + record.linkedItem.type.toLowerCase() + '.label'),
+                componentType: record.linkedItem && this.$i18n.t('component.' + record.linkedItem.type.toLowerCase() + '.label'),
                 link: record.linkedItem ? { value: record.linkedItem?.name, route: componentRoutes[record.linkedItem.type.toLowerCase()], id: 'componentId' } : {},
                 group: record.group?.name || null,
                 archived: !!record.status || false,
@@ -368,7 +368,7 @@
       },
       confirmCancelJob ({ id }) {
         this.actionToConfirm = '_cancelJob'
-        this.messageToConfirm = { text: 'popups.confirm.cancel.list', vars: [this.$i18n.tc('job.label'), id] }
+        this.messageToConfirm = { text: 'popups.confirm.cancel.list', vars: [this.$i18n.t('job.label'), id] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },

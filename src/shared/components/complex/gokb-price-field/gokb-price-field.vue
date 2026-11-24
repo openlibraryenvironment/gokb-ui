@@ -4,7 +4,7 @@
       <v-col cols="8">
         <gokb-money-field
           v-model="localPrice"
-          :label="$tc('component.tipp.prices.price.label')"
+          :label="$t('component.tipp.prices.price.label')"
           :disabled="disabled"
           dense
         />
@@ -16,7 +16,7 @@
           return-object
           required
           dense
-          :label="$tc('component.tipp.prices.currency.label')"
+          :label="$t('component.tipp.prices.currency.label')"
         />
       </v-col>
     </v-row>

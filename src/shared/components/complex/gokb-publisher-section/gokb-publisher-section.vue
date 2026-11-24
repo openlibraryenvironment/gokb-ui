@@ -10,7 +10,7 @@
     <gokb-add-item-popup
       v-if="addPublisherPopupVisible"
       v-model="addPublisherPopupVisible"
-      :component="{ type: 'GokbSearchPublisherField', name: $tc('component.title.publisher.label'), properties: {returnObject: true} }"
+      :component="{ type: 'GokbSearchPublisherField', name: $t('component.title.publisher.label'), properties: {returnObject: true} }"
       @add="addNewPublisher"
     />
     <template #buttons>
@@ -134,7 +134,7 @@
       tableHeaders () {
         return [
           {
-            title: this.$i18n.tc('component.general.name'),
+            title: this.$i18n.t('component.general.name'),
             align: 'start',
             value: 'link',
             sortable: false,
@@ -143,7 +143,7 @@
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.title.publisher.label', 2) : undefined
+        return this.showTitle ? this.$i18n.t('component.title.publisher.label', 2) : undefined
       }
     },
     mounted () {
@@ -155,13 +155,13 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelectedItems'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.title.publisher.label', this.selectedItems.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.t('component.title.publisher.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
       confirmDeleteItem ({ id, name }) {
         this.actionToConfirm = '_deleteItem'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.tc('component.title.publisher.label'), name] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.$i18n.t('component.title.publisher.label'), name] }
         this.parameterToConfirm = id
         this.confirmationPopUpVisible = true
       },

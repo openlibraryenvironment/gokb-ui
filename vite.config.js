@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 import vuetify from 'vite-plugin-vuetify'
+import vueDevTools from 'vite-plugin-vue-devtools'
 import { execSync } from 'child_process'
 import * as sass from 'sass-embedded'
 import path from 'path'
@@ -14,9 +15,13 @@ export default defineConfig({
     port: 8081,
     host: '127.0.0.1'
   },
+  devtools: {
+    apply: 'serve',
+  },
   base: process.env.VITE_PUBLIC_PATH || '/gokb-ui', // base path for the application
   plugins: [
     vue(),
+    vueDevTools(),
     VitePWA({
       filename: 'service-worker.js',
       includeAssets: ['/img/icons/favicon.ico', '/img/icons/favicon.svg', 'img/icons/apple-touch-icon.png'],
@@ -81,15 +86,9 @@ export default defineConfig({
       },
     }
   },
-  esbuild: {
-    supported: {
-      'top-level-await': true //browsers can handle top-level-await features
-    },
-    sourcemap: true
-  },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   },

@@ -24,6 +24,15 @@ const api = (baseServices) =>
       return result
     },
 
+    checkNewVariantName (name, type, cancelToken) {
+      const url = import.meta.env.VITE_API_BASE_URL + `/validation/componentName?value=${name}&componentType=${type}&variant=true`
+      const result = baseServices.request({
+        method: 'GET',
+        url
+      }, cancelToken)
+      return result
+    },
+
     checkIdentifier (value, namespace, cancelToken) {
       const url = import.meta.env.VITE_API_BASE_URL + `/validation/identifier?value=${value}&namespace=${namespace}`
       const result = baseServices.request({

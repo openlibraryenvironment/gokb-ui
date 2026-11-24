@@ -2,7 +2,7 @@
   <gokb-dialog
     ref="comp"
     v-model="localValue"
-    :title="$t('header.add.label', [$tc('component.identifier.label')])"
+    :title="$t('header.add.label', [$t('component.identifier.label')])"
     :width="width"
     @submit="addItem"
   >
@@ -14,7 +14,7 @@
           :target-type="targetType"
           required
           width="140px"
-          :label="$tc('component.identifier.namespace')"
+          :label="$t('component.identifier.namespace')"
         />
       </v-col>
       <v-col>
@@ -22,7 +22,7 @@
           ref="valueTextField"
           v-model="item.value"
           :disabled="disabled || !item.namespace"
-          :label="namespaceFixed ? item.namespace.name : $tc('component.identifier.label')"
+          :label="namespaceFixed ? item.namespace.name : $t('component.identifier.label')"
           :rules="rules"
           :validate-on-blur="false"
           :append-icon="deleteIcon"

@@ -8,7 +8,7 @@
     <gokb-add-item-popup
       v-if="addItemPopupVisible"
       v-model="addItemPopupVisible"
-      :component="{ type: 'GokbPriceField', name: $tc('component.tipp.prices.label') }"
+      :component="{ type: 'GokbPriceField', name: $t('component.tipp.prices.label') }"
       @add="addNewItem"
     />
     <template #buttons>
@@ -136,14 +136,14 @@
       },
       tableHeaders () {
         return [
-          { text: this.$i18n.tc('component.tipp.prices.price.label'), align: 'start', value: 'localPrice', sortable: true },
-          { text: this.$i18n.tc('component.tipp.prices.currency.label'), align: 'start', value: 'localCurrency', sortable: true },
-          { text: this.$i18n.tc('component.tipp.prices.startDate.label'), align: 'start', value: 'startDate', sortable: true },
-          { text: this.$i18n.tc('component.tipp.prices.endDate.label'), align: 'start', value: 'endDate', sortable: true },
+          { text: this.$i18n.t('component.tipp.prices.price.label'), align: 'start', value: 'localPrice', sortable: true },
+          { text: this.$i18n.t('component.tipp.prices.currency.label'), align: 'start', value: 'localCurrency', sortable: true },
+          { text: this.$i18n.t('component.tipp.prices.startDate.label'), align: 'start', value: 'startDate', sortable: true },
+          { text: this.$i18n.t('component.tipp.prices.endDate.label'), align: 'start', value: 'endDate', sortable: true },
         ]
       },
       title () {
-        return this.showTitle ? this.$i18n.tc('component.tipp.prices.label') : undefined
+        return this.showTitle ? this.$i18n.t('component.tipp.prices.label') : undefined
       }
     },
     methods: {
@@ -155,7 +155,7 @@
       },
       confirmDeleteSelectedItems () {
         this.actionToConfirm = '_deleteSelected'
-        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.tc('component.tipp.prices.label', this.selectedItems.length)] }
+        this.messageToConfirm = { text: 'popups.confirm.delete.list', vars: [this.selectedItems.length, this.$i18n.t('component.tipp.prices.label', this.selectedItems.length)] }
         this.parameterToConfirm = undefined
         this.confirmationPopUpVisible = true
       },
