@@ -382,39 +382,105 @@
     "type": "Job",
     "linkedComponent": "Komponente",
     "jobTypes": {
-      "Unknown": "Unbekannt",
-      "Undefined": "Undefiniert",
-      "PackageCrossRef": "Paketimport" ,
-      "TitleCrossRef": "Titelimport" ,
-      "BootstrapIdentifierCleanup": "Startup Identifier Cleanup",
-      "DepositDatafile": "Deposit Datafile",
-      "RegenerateLicenseSummaries": "Regenerate License Summaries",
-      "TidyOrgsData": "Tidy Orgs data",
-      "EnsureUUIDs": "Ensure UUIDs for components",
-      "EnsureTIPLs": "Ensure TIPLs for all TIPPs",
-      "GenerateTIPPCoverage": "Generate missing TIPP Coverage Statements",
-      "MarkInconsDateRanges": "Mark insonsistent date ranges",
-      "UpdateFreeTextIndexes": "Update Free Text Indexes" ,
-      "ResetFreeTextIndexes": "Reset Free Text Indexes",
-      "MasterListUpdate": "Master List Update",
-      "EnrichmentService": "Enrichment Service",
-      "GeneratePackageTypes":  "Generate Missing Package Content Types",
-      "Housekeeping": "Housekeeping",
-      "CleanupDeletedComponents": "Cleanup Deleted Components",
-      "CleanupRejectedComponents": "Cleanup Rejected Components",
-      "TIPPCleanup": "Cleanup Deleted Components",
-      "DeleteTIWithoutHistory": "Delete Titles without Packages",
-      "RejectTIWithoutIdentifier": "Reject Titles without Identifier",
-      "PlatformCleanup": "Platform Cleanup",
-      "RecalculateStatistics": "Recalculate Statistics",
-      "PackageUpdateTipps": "KBART Update",
-      "KBARTIngest": "KBART-Import",
-      "KBART Ingest": "KBART-Import",
-      "KBARTSourceIngest": "Automatisierter KBART-Import",
-      "KBARTSourceIngestDryRun": "Automatisierter KBART-Import (Testlauf)",
-      "KBARTIngestDryRun": "KBART-Import (Testlauf)",
-      "PackageTitleMatch": "Referenztitel-Abgleich",
-      "EZBCollectionIngest": "EZB-Kollektionsimport"
+      "Unknown": {
+        "label": "Unbekannt"
+      },
+      "Undefined": {
+        "label": "Undefiniert"
+      },
+      "PackageCrossRef": {
+        "label": "Paketimport"
+      },
+      "TitleCrossRef": {
+        "label": "Titelimport"
+      },
+      "BootstrapIdentifierCleanup": {
+        "label": "Startup Identifier Cleanup"
+      },
+      "DepositDatafile": {
+        "label": "Deposit Datafile"
+      },
+      "RegenerateLicenseSummaries": {
+        "label": "Regenerate License Summaries"
+      },
+      "TidyOrgsData": {
+        "label": "Tidy Orgs Data"
+      },
+      "EnsureUUIDs": {
+        "label": "Ensure UUIDs for components"
+      },
+      "EnsureTIPLs": {
+        "label": "Ensure TIPLs for all TIPPs"
+      },
+      "GenerateTIPPCoverage": {
+        "label": "Generate missing TIPP Coverage Statements"
+      },
+      "MarkInconsDateRanges": {
+        "label": "Mark insonsistent date ranges"
+      },
+      "UpdateFreeTextIndexes": {
+        "label": "Update Free Text Indexes"
+      },
+      "ResetFreeTextIndexes": {
+        "label": "Reset Free Text Indexes"
+      },
+      "MasterListUpdate": {
+        "label": "Master List Update"
+      },
+      "EnrichmentService": {
+        "label": "Enrichment Service"
+      },
+      "GeneratePackageTypes": {
+        "label": "Generate Missing Package Content Types"
+      },
+      "Housekeeping": {
+        "label": "Housekeeping"
+      },
+      "CleanupDeletedComponents": {
+        "label": "Cleanup Deleted Components"
+      },
+      "CleanupRejectedComponents": {
+        "label": "Cleanup Rejected Components"
+      },
+      "TIPPCleanup": {
+        "label": "Cleanup Deleted Components"
+      },
+      "DeleteTIWithoutHistory": {
+        "label": "Delete Titles without Packages"
+      },
+      "RejectTIWithoutIdentifier": {
+        "label": "Reject Titles without Identifier"
+      },
+      "PlatformCleanup": {
+        "label": "Platform Cleanup"
+      },
+      "RecalculateStatistics": {
+        "label": "Recalculate Statistics"
+      },
+      "PackageUpdateTipps": {
+        "label": "KBART Update"
+      },
+      "KBARTIngest": {
+        "label":"KBART-Import"
+      },
+      "KBART Ingest": {
+        "label": "KBART-Import"
+      },
+      "KBARTSourceIngest": {
+        "label": "Automatisierter KBART-Import"
+      },
+      "KBARTSourceIngestDryRun": {
+        "label": "Automatisierter KBART-Import (Testlauf)"
+      },
+      "KBARTIngestDryRun": {
+        "label": "KBART-Import (Testlauf)"
+      },
+      "PackageTitleMatch": {
+        "label": "Referenztitel-Abgleich"
+      },
+      "EZBCollectionIngest": {
+        "label": "EZB-Kollektionsimport"
+      }
     },
     "fetch": {
       "error": {

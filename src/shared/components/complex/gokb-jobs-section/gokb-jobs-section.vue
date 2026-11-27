@@ -34,6 +34,14 @@
         class="mt-7"
         dense
       />
+      <gokb-state-field
+        v-if="showAdminJobs"
+        v-model="searchFilters.type"
+        message-path="job.jobTypes"
+        url="refdata/categories/Job.Type"
+        :label="$t('job.type')"
+        class="ms-4 mt-3"
+      />
       <gokb-select-field
         v-model="searchFilters.status"
         class="ms-4 mt-3"
@@ -154,7 +162,8 @@
         selectedItems: [],
         searchFilters: {
           archived: false,
-          status: undefined
+          status: undefined,
+          type: undefined
         },
         jobPanel: 0,
         jobs: [],
@@ -181,7 +190,7 @@
           return [
             { title: this.$i18n.t('job.type'), align: 'start', key: 'popup', sortable: false, width: '15%' },
             { title: this.$i18n.t('job.linkedComponent'), align: 'start', key: 'link', sortable: false, width: '40%' },
-            { title: this.$i18n.tc('component.curatoryGroup.label'), align: 'start', key: 'group', sortable: false, width: '10%' },
+            { title: this.$i18n.t('component.curatoryGroup.label'), align: 'start', key: 'group', sortable: false, width: '10%' },
             { title: this.$i18n.t('job.status'), align: 'start', key: 'status', sortable: false, width: '8%' },
             { title: this.$i18n.t('job.startTime'), align: 'start', key: 'startTime', sortable: false, width: '11%' },
             { title: this.$i18n.t('job.endTime'), align: 'start', key: 'endTime', sortable: false, width: '11%' },
@@ -207,7 +216,7 @@
       },
       statusTypes () {
         return [
-          { id: 'OK', name: this.$i18n.tc('job.ok'), icon: 'mdi-check-circle-outline' },
+          { id: 'OK', name: this.$i18n.t('job.ok'), icon: 'mdi-check-circle-outline' },
           { id: 'ERROR', name: this.$i18n.t('job.error'), icon: 'mdi-close' },
           { id: 'SKIPPED', name: this.$i18n.t('job.skipped'), icon: 'mdi-debug-step-over' },
         ]
@@ -300,6 +309,7 @@
             ...(!!this.linkedComponent ? { id: this.linkedComponent } : {}),
             ...(this.searchFilters.archived == true ? { archived: true } : { combined: true }),
             ...(!!this.searchFilters.status ? { status: this.searchFilters.status } : {}),
+            ...(!!this.searchFilters.type ? { type: this.searchFilters.type } : {}),
             limit: this.options.itemsPerPage
           }, this.cancelToken.token),
           instance: this
@@ -319,7 +329,7 @@
               {
                 id: record.uuid,
                 type: record.type,
-                popup: { value: (record.type ? this.$i18n.t('job.jobTypes.' + record.type.name) : this.$i18n.t('job.jobTypes.Unknown')), label: 'job', type: 'GokbEditJobPopup' },
+                popup: { value: (record.type ? this.$i18n.t('job.jobTypes.' + record.type.name + '.label') : this.$i18n.t('job.jobTypes.Unknown.label')), label: 'job', type: 'GokbEditJobPopup' },
                 componentId: record.linkedItem?.id || null,
                 componentType: record.linkedItem && this.$i18n.t('component.' + record.linkedItem.type.toLowerCase() + '.label'),
                 link: record.linkedItem ? { value: record.linkedItem?.name, route: componentRoutes[record.linkedItem.type.toLowerCase()], id: 'componentId' } : {},

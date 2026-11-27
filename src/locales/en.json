@@ -382,39 +382,105 @@
     "type": "Job",
     "linkedComponent": "Component",
     "jobTypes": {
-      "Unknown": "Unkown",
-      "Undefined": "Undefined",
-      "PackageCrossRef": "Package Import",
-      "TitleCrossRef": "Title Import",
-      "BootstrapIdentifierCleanup": "Startup Identifier Cleanup",
-      "DepositDatafile": "Deposit Datafile",
-      "RegenerateLicenseSummaries": "Regenerate License Summaries",
-      "TidyOrgsData": "Tidy Orgs data",
-      "EnsureUUIDs": "Ensure UUIDs for components",
-      "EnsureTIPLs": "Ensure TIPLs for all TIPPs",
-      "GenerateTIPPCoverage": "Generate missing TIPP Coverage Statements",
-      "MarkInconsDateRanges": "Mark insonsistent date ranges",
-      "UpdateFreeTextIndexes": "Update Free Text Indexes",
-      "ResetFreeTextIndexes": "Reset Free Text Indexes",
-      "MasterListUpdate": "Master List Update",
-      "EnrichmentService": "Enrichment Service",
-      "GeneratePackageTypes": "Generate Missing Package Content Types",
-      "Housekeeping": "Housekeeping",
-      "CleanupDeletedComponents": "Cleanup Deleted Components",
-      "CleanupRejectedComponents": "Cleanup Rejected Components",
-      "TIPPCleanup": "Cleanup Deleted Components",
-      "DeleteTIWithoutHistory": "Delete Titles without Packages",
-      "RejectTIWithoutIdentifier": "Reject Titles without Identifier",
-      "PlatformCleanup": "Platform Cleanup",
-      "RecalculateStatistics": "Recalculate Statistics",
-      "PackageUpdateTipps": "Package KBART Update",
-      "KBARTIngest": "KBART Package Ingest",
-      "KBART Ingest": "KBART Package Ingest",
-      "KBARTSourceIngest": "Automated KBART Ingest",
-      "KBARTSourceIngestDryRun": "Automated KBART Ingest (Dry Run)",
-      "KBARTIngestDryRun": "KBART Package Ingest (Dry Run)",
-      "PackageTitleMatch": "Reference Title Matching",
-      "EZBCollectionIngest": "EZB Collection Ingest"
+      "Unknown": {
+        "label": "Unkown"
+      },
+      "Undefined": {
+        "label": "Undefined"
+      },
+      "PackageCrossRef": {
+        "label": "Package Import"
+      },
+      "TitleCrossRef": {
+        "label": "Title Import"
+      },
+      "BootstrapIdentifierCleanup": {
+        "label": "Startup Identifier Cleanup"
+      },
+      "DepositDatafile": {
+        "label": "Deposit Datafile"
+      },
+      "RegenerateLicenseSummaries": {
+        "label": "Regenerate License Summaries"
+      },
+      "TidyOrgsData": {
+        "label": "Tidy Orgs data"
+      },
+      "EnsureUUIDs": {
+        "label": "Ensure UUIDs for components"
+      },
+      "EnsureTIPLs": {
+        "label": "Ensure TIPLs for all TIPPs"
+      },
+      "GenerateTIPPCoverage": {
+        "label": "Generate missing TIPP Coverage Statements"
+      },
+      "MarkInconsDateRanges": {
+        "label": "Mark insonsistent date ranges"
+      },
+      "UpdateFreeTextIndexes": {
+        "label": "Update Free Text Indexes"
+      },
+      "ResetFreeTextIndexes": {
+        "label": "Reset Free Text Indexes"
+      },
+      "MasterListUpdate": {
+        "label": "Master List Update"
+      },
+      "EnrichmentService": {
+        "label": "Enrichment Service"
+      },
+      "GeneratePackageTypes": {
+        "label": "Generate Missing Package Content Types"
+      },
+      "Housekeeping": {
+        "label": "Housekeeping"
+      },
+      "CleanupDeletedComponents": {
+        "label": "Cleanup Deleted Components"
+      },
+      "CleanupRejectedComponents": {
+        "label": "Cleanup Rejected Components"
+      },
+      "TIPPCleanup": {
+        "label": "Cleanup Deleted Components"
+      },
+      "DeleteTIWithoutHistory": {
+        "label": "Delete Titles without Packages"
+      },
+      "RejectTIWithoutIdentifier": {
+        "label": "Reject Titles without Identifier"
+      },
+      "PlatformCleanup": {
+        "label": "Platform Cleanup"
+      },
+      "RecalculateStatistics": {
+        "label": "Recalculate Statistics"
+      },
+      "PackageUpdateTipps": {
+        "label": "Package KBART Update"
+      },
+      "KBARTIngest": {
+        "label": "KBART Package Ingest"
+      },
+      "KBART Ingest": {
+        "label": "KBART Package Ingest"
+      },
+      "KBARTSourceIngest": {
+        "label": "Automated KBART Ingest"
+      },
+      "KBARTSourceIngestDryRun": {
+        "label": "Automated KBART Ingest (Dry Run)"
+      },
+      "KBARTIngestDryRun": {
+        "label": "KBART Package Ingest (Dry Run)"
+      },
+      "PackageTitleMatch": {
+        "label": "Reference Title Matching"
+      },
+      "EZBCollectionIngest": {
+        "label": "EZB Collection Ingest"
+      }
     },
     "fetch": {
       "error": {

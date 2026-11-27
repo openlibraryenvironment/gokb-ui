@@ -209,13 +209,14 @@
           const index = this.localValue.indexOf(existingPlatform)
           existingPlatform.name = value.name
           existingPlatform.primaryUrl = value.primaryUrl
+          existingPlatform.status = value.status
           this.localValue[index] = existingPlatform
         }
       },
       addPlatform (value) {
         var existingPlatform = this.getExistingPlatform(value)
         if (!existingPlatform) {
-          this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: value.id, isDeletable: true, _pending: 'added'  })
+          this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, status: value.status, id: value.id, isDeletable: true, _pending: 'added'  })
           this.$emit('update', 'platforms')
         }
       },

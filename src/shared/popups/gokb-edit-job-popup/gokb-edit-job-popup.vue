@@ -12,6 +12,13 @@
           :label="$t('job.type')"
         />
       </v-col>
+      <v-col md="4">
+        <gokb-text-field
+          v-model="id"
+          disabled
+          :label="$t('component.general.uuid.label')"
+        />
+      </v-col>
     </v-row>
     <v-row v-if="!!selectedItem.componentId">
       <v-col>
@@ -205,7 +212,7 @@
         }
       },
       localType () {
-        return this.selectedItem.type ? this.$i18n.t('job.jobTypes.' + this.selectedItem.type.name) : null
+        return this.selectedItem.type ? this.$i18n.t('job.jobTypes.' + this.selectedItem.type.name + '.label') : null
       },
       errorHeaders () {
         return [
