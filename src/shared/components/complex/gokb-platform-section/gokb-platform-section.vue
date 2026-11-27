@@ -215,7 +215,7 @@
       addPlatform (value) {
         var existingPlatform = this.getExistingPlatform(value)
         if (!existingPlatform) {
-          this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: value.id, isDeletable: true, _pending: 'added'  })
+          this.localValue.push({ name: value.name, primaryUrl: value.primaryUrl, id: value.id, isDeletable: true, _pending: 'added', status: value.status })
           this.$emit('update', 'platforms')
         }
       },
